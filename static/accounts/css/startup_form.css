@@ -1463,3 +1463,244 @@ body,
   position: relative;
   overflow: hidden;
 }
+
+@media (max-width: 1200px) {
+  .startup-form-container {
+    max-width: 1000px;
+  }
+  
+  .form-top-grid {
+    gap: 30px;
+  }
+  
+  .planet-display {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+@media (max-width: 992px) {
+  .startup-form-container {
+    max-width: 900px;
+  }
+  
+  .form-top-grid {
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .form-top-left,
+  .form-top-right {
+    width: 100%;
+  }
+  
+  .planet-display {
+    width: 350px;
+    height: 350px;
+  }
+  
+  .media-and-finance-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .timeline {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .timeline-step {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .startup-form-container {
+    padding: 20px 15px;
+  }
+  
+  .form-navigation-header {
+    margin-bottom: 20px;
+  }
+  
+  .form-main-title {
+    font-size: 24px;
+  }
+  
+  .form-section {
+    padding: 20px 15px;
+  }
+  
+  .planet-display {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .logo-upload-group .logo-upload-label {
+    width: 150px;
+    height: 75px;
+  }
+  
+  .form-control {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+  
+  .timeline-description-textarea {
+    font-size: 13px;
+    min-height: 80px;
+  }
+  
+  .submit-button {
+    height: 45px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .startup-form-container {
+    padding: 15px 10px;
+  }
+  
+  .form-navigation-header {
+    margin-bottom: 15px;
+  }
+  
+  .form-main-title {
+    font-size: 20px;
+  }
+  
+  .form-section {
+    padding: 15px 10px;
+  }
+  
+  .planet-display {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .logo-upload-group .logo-upload-label {
+    width: 120px;
+    height: 60px;
+  }
+  
+  .form-control {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  
+  .form-group label {
+    font-size: 12px;
+  }
+  
+  .timeline-description-textarea {
+    font-size: 12px;
+    min-height: 70px;
+  }
+  
+  .submit-button {
+    height: 40px;
+    font-size: 13px;
+  }
+  
+  .step-number-wrapper {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .step-number-wrapper .step-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  .startup-form-container {
+    padding: 10px 8px;
+  }
+  
+  .form-main-title {
+    font-size: 18px;
+  }
+  
+  .form-section {
+    padding: 12px 8px;
+  }
+  
+  .planet-display {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .logo-upload-group .logo-upload-label {
+    width: 100px;
+    height: 50px;
+  }
+  
+  .form-control {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+  
+  .form-group label {
+    font-size: 11px;
+  }
+  
+  .timeline-description-textarea {
+    font-size: 11px;
+    min-height: 60px;
+  }
+  
+  .submit-button {
+    height: 38px;
+    font-size: 12px;
+  }
+  
+  .step-number-wrapper {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .step-number-wrapper .step-icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .form-top-grid {
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  .form-top-left {
+    width: 60%;
+  }
+  
+  .form-top-right {
+    width: 40%;
+  }
+  
+  .planet-display {
+    width: 250px;
+    height: 250px;
+  }
+}
+
+@media (max-height: 600px) {
+  .startup-form-container {
+    padding: 10px 15px;
+  }
+  
+  .form-navigation-header {
+    margin-bottom: 10px;
+  }
+  
+  .form-section {
+    padding: 15px 15px;
+  }
+  
+  .planet-display {
+    height: 200px;
+  }
+}

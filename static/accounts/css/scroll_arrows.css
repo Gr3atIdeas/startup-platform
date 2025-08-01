@@ -93,3 +93,103 @@
     right: 10px;
   }
 } 
+
+@media (max-width: 360px) {
+  .scroll-arrow {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .scroll-arrow svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .scroll-arrow-up {
+    top: 8px;
+    right: 8px;
+  }
+  
+  .scroll-arrow-down {
+    bottom: 8px;
+    right: 8px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .scroll-arrow {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .scroll-arrow svg {
+    width: 17px;
+    height: 17px;
+  }
+  
+  .scroll-arrow-up {
+    top: 12px;
+    right: 12px;
+  }
+  
+  .scroll-arrow-down {
+    bottom: 12px;
+    right: 12px;
+  }
+}
+
+@media (max-height: 600px) {
+  .scroll-arrow {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .scroll-arrow svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .scroll-arrow-up {
+    top: 8px;
+    right: 8px;
+  }
+  
+  .scroll-arrow-down {
+    bottom: 8px;
+    right: 8px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .scroll-arrow {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .scroll-arrow svg {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+@media (max-width: 1200px) and (min-height: 800px) {
+  .scroll-arrow {
+    width: 52px;
+    height: 52px;
+  }
+  
+  .scroll-arrow svg {
+    width: 21px;
+    height: 21px;
+  }
+  
+  .scroll-arrow-up {
+    top: 25px;
+    right: 25px;
+  }
+  
+  .scroll-arrow-down {
+    bottom: 25px;
+    right: 25px;
+  }
+} 

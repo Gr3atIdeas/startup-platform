@@ -136,3 +136,130 @@
         max-width: 303px;
     }
 } 
+
+@media (max-width: 480px) {
+  .notfound-center-block {
+    width: 95vw;
+    min-height: 300px;
+    padding: 20px 2.5vw;
+    gap: 20px;
+  }
+  
+  .notfound-title {
+    font-size: 28px;
+  }
+  
+  .notfound-desc {
+    font-size: 14px;
+  }
+  
+  .notfound-btn {
+    width: 85vw;
+    max-width: 250px;
+    height: 48px;
+    font-size: 14px;
+  }
+  
+  .notfound-cosmoboy {
+    width: 100px;
+    height: 75px;
+  }
+  
+  .notfound-cosmoboy img {
+    width: 100px;
+    height: 75px;
+  }
+}
+
+@media (max-width: 360px) {
+  .notfound-center-block {
+    width: 92vw;
+    min-height: 250px;
+    padding: 15px 4vw;
+    gap: 15px;
+  }
+  
+  .notfound-title {
+    font-size: 24px;
+  }
+  
+  .notfound-desc {
+    font-size: 12px;
+  }
+  
+  .notfound-btn {
+    width: 80vw;
+    max-width: 200px;
+    height: 44px;
+    font-size: 13px;
+  }
+  
+  .notfound-cosmoboy {
+    width: 80px;
+    height: 60px;
+  }
+  
+  .notfound-cosmoboy img {
+    width: 80px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .notfound-center-block {
+    width: 90vw;
+    height: auto;
+    min-height: 200px;
+    padding: 20px 5vw;
+  }
+  
+  .notfound-title {
+    font-size: 32px;
+  }
+  
+  .notfound-desc {
+    font-size: 15px;
+  }
+  
+  .notfound-btn {
+    width: 200px;
+    height: 48px;
+  }
+}
+
+@media (max-height: 600px) {
+  .notfound-center-block {
+    min-height: 200px;
+    padding: 15px 5vw;
+    gap: 15px;
+  }
+  
+  .notfound-title {
+    font-size: 30px;
+  }
+  
+  .notfound-desc {
+    font-size: 14px;
+  }
+  
+  .notfound-btn {
+    height: 44px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 1200px) and (min-height: 800px) {
+  .notfound-center-block {
+    width: 80vw;
+    min-height: 400px;
+    padding: 40px 10vw;
+  }
+  
+  .notfound-title {
+    font-size: 48px;
+  }
+  
+  .notfound-desc {
+    font-size: 18px;
+  }
+} 

@@ -1937,3 +1937,238 @@ body.cosmochat-body {
     font-size: 18px;
     font-weight: 400;
 }
+
+@media (max-width: 1400px) {
+  .top-section-new {
+    width: 100%;
+    max-width: 95%;
+    gap: 40px;
+  }
+  
+  .main-chat-area-new {
+    width: 100%;
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .top-section-new {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .users-main-area-new {
+    width: 100%;
+  }
+  
+  .main-chat-area-new {
+    flex-direction: column;
+    height: auto;
+    min-height: 600px;
+  }
+  
+  .chat-list-column-new {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .chat-window-column-new {
+    height: 500px;
+  }
+}
+
+@media (max-width: 992px) {
+  .cosmochat-page-wrapper {
+    padding: 15px 0;
+    gap: 30px;
+  }
+  
+  .top-section-new {
+    padding-top: 30px;
+    padding-bottom: 40px;
+  }
+  
+  .user-search-filters-new {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .search-input-wrapper-new {
+    width: 100%;
+  }
+  
+  .role-filters-new {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .users-list-new {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  .chat-list-column-new {
+    max-width: 350px;
+  }
+  
+  .chat-window-column-new {
+    height: 450px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cosmochat-page-wrapper {
+    padding: 10px 0;
+    gap: 20px;
+  }
+  
+  .top-section-new {
+    padding-top: 20px;
+    padding-bottom: 30px;
+  }
+  
+  .users-list-new {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .user-card-new {
+    padding: 15px;
+  }
+  
+  .main-chat-area-new {
+    min-height: 500px;
+  }
+  
+  .chat-list-column-new {
+    max-width: 100%;
+  }
+  
+  .chat-window-column-new {
+    height: 400px;
+  }
+  
+  .chat-active-header {
+    padding: 10px 15px;
+  }
+  
+  .chat-messages-area {
+    padding: 10px 15px;
+  }
+  
+  .chat-input-field-area {
+    padding: 10px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cosmochat-page-wrapper {
+    padding: 5px 0;
+    gap: 15px;
+  }
+  
+  .top-section-new {
+    padding-top: 15px;
+    padding-bottom: 20px;
+  }
+  
+  .user-card-new {
+    padding: 12px;
+  }
+  
+  .user-card-new .user-info-new h3 {
+    font-size: 14px;
+  }
+  
+  .chat-window-column-new {
+    height: 350px;
+  }
+  
+  .chat-active-header {
+    padding: 8px 12px;
+  }
+  
+  .chat-messages-area {
+    padding: 8px 12px;
+  }
+  
+  .chat-input-field-area {
+    padding: 8px 12px;
+  }
+  
+  .message-bubble-new {
+    padding: 8px 12px;
+  }
+  
+  .modal {
+    width: 95%;
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 360px) {
+  .user-card-new {
+    padding: 10px;
+  }
+  
+  .user-card-new .user-info-new h3 {
+    font-size: 13px;
+  }
+  
+  .chat-window-column-new {
+    height: 300px;
+  }
+  
+  .chat-active-header {
+    padding: 6px 10px;
+  }
+  
+  .chat-messages-area {
+    padding: 6px 10px;
+  }
+  
+  .chat-input-field-area {
+    padding: 6px 10px;
+  }
+  
+  .message-bubble-new {
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .main-chat-area-new {
+    flex-direction: row;
+    min-height: 400px;
+  }
+  
+  .chat-list-column-new {
+    width: 300px;
+    max-width: 40%;
+  }
+  
+  .chat-window-column-new {
+    flex: 1;
+    height: 100%;
+  }
+}
+
+@media (max-height: 600px) {
+  .cosmochat-page-wrapper {
+    gap: 15px;
+  }
+  
+  .top-section-new {
+    padding-top: 15px;
+    padding-bottom: 20px;
+  }
+  
+  .main-chat-area-new {
+    min-height: 400px;
+  }
+  
+  .chat-window-column-new {
+    height: 350px;
+  }
+}

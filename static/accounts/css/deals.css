@@ -434,3 +434,187 @@ body {
 .chat-messages-list::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+@media (max-width: 1400px) {
+  .deals-main-wrapper {
+    width: 100%;
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .deals-main-wrapper {
+    max-width: 1000px;
+    gap: 40px;
+  }
+  
+  .chat-list-column {
+    width: 300px;
+  }
+}
+
+@media (max-width: 992px) {
+  .deals-page-container {
+    padding: 30px 15px;
+    gap: 40px;
+  }
+  
+  .deals-main-wrapper {
+    max-width: 900px;
+    gap: 30px;
+    padding: 20px 25px;
+  }
+  
+  .chat-list-column {
+    width: 280px;
+    gap: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .deals-page-container {
+    padding: 20px 10px;
+    gap: 20px;
+  }
+  
+  .deals-main-wrapper {
+    flex-direction: column;
+    height: auto;
+    min-height: 600px;
+    gap: 20px;
+    padding: 15px 20px;
+  }
+  
+  .chat-list-column {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .deal-chat-window {
+    width: 100%;
+    height: 400px;
+  }
+  
+  .deal-status-filters {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .deal-status-filters .filter-btn {
+    font-size: 11px;
+    padding: 8px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .deals-page-container {
+    padding: 15px 8px;
+    gap: 15px;
+  }
+  
+  .deals-main-wrapper {
+    padding: 12px 15px;
+    gap: 15px;
+  }
+  
+  .chat-list-column {
+    max-width: 100%;
+    gap: 20px;
+  }
+  
+  .deal-chat-window {
+    height: 350px;
+  }
+  
+  .chat-item {
+    padding: 10px 12px;
+  }
+  
+  .chat-item-name {
+    font-size: 13px;
+  }
+  
+  .chat-item-status {
+    font-size: 11px;
+  }
+  
+  .deal-status-filters .filter-btn {
+    font-size: 10px;
+    padding: 6px 15px;
+  }
+  
+  .search-bar {
+    padding: 6px 20px;
+  }
+  
+  .search-bar input {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 360px) {
+  .deals-page-container {
+    padding: 10px 5px;
+  }
+  
+  .deals-main-wrapper {
+    padding: 10px 12px;
+  }
+  
+  .chat-item {
+    padding: 8px 10px;
+  }
+  
+  .chat-item-name {
+    font-size: 12px;
+  }
+  
+  .chat-item-status {
+    font-size: 10px;
+  }
+  
+  .deal-status-filters .filter-btn {
+    font-size: 9px;
+    padding: 5px 12px;
+  }
+  
+  .search-bar {
+    padding: 5px 15px;
+  }
+  
+  .search-bar input {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .deals-main-wrapper {
+    flex-direction: row;
+    min-height: 400px;
+  }
+  
+  .chat-list-column {
+    width: 300px;
+    max-width: 40%;
+  }
+  
+  .deal-chat-window {
+    flex: 1;
+    height: 100%;
+  }
+}
+
+@media (max-height: 600px) {
+  .deals-page-container {
+    padding: 10px 15px;
+  }
+  
+  .deals-main-wrapper {
+    min-height: 400px;
+  }
+  
+  .deal-chat-window {
+    height: 300px;
+  }
+}

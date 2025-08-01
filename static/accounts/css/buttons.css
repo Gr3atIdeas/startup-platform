@@ -236,3 +236,98 @@ body .join-button.wave-active *:not(.wave-effect) {
   color: #000;
   transition: color 0.2s linear;
 }
+
+@media (max-width: 1400px) {
+  :root {
+    --btn-padding: 0.6em 1.4em;
+  }
+  
+  button:not(.login-btn, .join-button, .plyr__control),
+  .btn:not(.login-btn, .join-button, .plyr__control),
+  input[type='submit']:not(.login-btn, .join-button, .plyr__control),
+  input[type='button']:not(.login-btn, .join-button, .plyr__control),
+  .catalog-search-btn:not(.login-btn, .join-button, .plyr__control),
+  .show-button:not(.login-btn, .join-button, .plyr__control),
+  .detail-button:not(.login-btn, .join-button, .plyr__control),
+  .create-startup-btn:not(.login-btn, .join-button, .plyr__control),
+  .logout-btn:not(.login-btn, .join-button, .plyr__control),
+  .nav-menu a:not(.login-btn, .join-button, .plyr__control) {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1200px) {
+  :root {
+    --btn-padding: 0.5em 1.3em;
+  }
+  
+  button:not(.login-btn, .join-button, .plyr__control),
+  .btn:not(.login-btn, .join-button, .plyr__control),
+  input[type='submit']:not(.login-btn, .join-button, .plyr__control),
+  input[type='button']:not(.login-btn, .join-button, .plyr__control),
+  .catalog-search-btn:not(.login-btn, .join-button, .plyr__control),
+  .show-button:not(.login-btn, .join-button, .plyr__control),
+  .detail-button:not(.login-btn, .join-button, .plyr__control),
+  .create-startup-btn:not(.login-btn, .join-button, .plyr__control),
+  .logout-btn:not(.login-btn, .join-button, .plyr__control),
+  .nav-menu a:not(.login-btn, .join-button, .plyr__control) {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --btn-padding: 0.25em 0.8em;
+  }
+  
+  button:not(.login-btn, .join-button, .plyr__control),
+  .btn:not(.login-btn, .join-button, .plyr__control),
+  input[type='submit']:not(.login-btn, .join-button, .plyr__control),
+  input[type='button']:not(.login-btn, .join-button, .plyr__control),
+  .catalog-search-btn:not(.login-btn, .join-button, .plyr__control),
+  .show-button:not(.login-btn, .join-button, .plyr__control),
+  .detail-button:not(.login-btn, .join-button, .plyr__control),
+  .create-startup-btn:not(.login-btn, .join-button, .plyr__control),
+  .logout-btn:not(.login-btn, .join-button, .plyr__control),
+  .nav-menu a:not(.login-btn, .join-button, .plyr__control) {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  :root {
+    --btn-padding: 0.5em 1.3em;
+  }
+  
+  button:not(.login-btn, .join-button, .plyr__control),
+  .btn:not(.login-btn, .join-button, .plyr__control),
+  input[type='submit']:not(.login-btn, .join-button, .plyr__control),
+  input[type='button']:not(.login-btn, .join-button, .plyr__control),
+  .catalog-search-btn:not(.login-btn, .join-button, .plyr__control),
+  .show-button:not(.login-btn, .join-button, .plyr__control),
+  .detail-button:not(.login-btn, .join-button, .plyr__control),
+  .create-startup-btn:not(.login-btn, .join-button, .plyr__control),
+  .logout-btn:not(.login-btn, .join-button, .plyr__control),
+  .nav-menu a:not(.login-btn, .join-button, .plyr__control) {
+    font-size: 12px;
+  }
+}
+
+@media (max-height: 600px) {
+  :root {
+    --btn-padding: 0.4em 1.2em;
+  }
+  
+  button:not(.login-btn, .join-button, .plyr__control),
+  .btn:not(.login-btn, .join-button, .plyr__control),
+  input[type='submit']:not(.login-btn, .join-button, .plyr__control),
+  input[type='button']:not(.login-btn, .join-button, .plyr__control),
+  .catalog-search-btn:not(.login-btn, .join-button, .plyr__control),
+  .show-button:not(.login-btn, .join-button, .plyr__control),
+  .detail-button:not(.login-btn, .join-button, .plyr__control),
+  .create-startup-btn:not(.login-btn, .join-button, .plyr__control),
+  .logout-btn:not(.login-btn, .join-button, .plyr__control),
+  .nav-menu a:not(.login-btn, .join-button, .plyr__control) {
+    font-size: 11px;
+  }
+}

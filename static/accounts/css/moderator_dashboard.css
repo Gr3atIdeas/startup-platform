@@ -720,3 +720,148 @@ div.startup-card-item
   background-color: #f59e0b; 
   color: white;
 }
+
+@media (max-width: 1400px) {
+  .moderator-page-container {
+    max-width: 1200px;
+  }
+  
+  .startup-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+}
+
+@media (max-width: 360px) {
+  .moderator-page-container {
+    padding: 10px 8px;
+  }
+  
+  div.moderator-page-container
+    > header.page-header
+    > div.header-title-block
+    > h1.header-title-main,
+  div.moderator-page-container
+    > header.page-header
+    > div.header-title-block
+    > h2.header-title-highlight {
+    font-size: 24px !important;
+  }
+  
+  .filter-bar {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .filter-search {
+    width: 100%;
+  }
+  
+  .filter-search input {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  
+  .filter-button {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+  
+  .startup-card-item {
+    padding: 12px;
+  }
+  
+  .startup-card-main-info {
+    gap: 10px;
+  }
+  
+  .startup-card-image,
+  .startup-card-image-placeholder {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .startup-name {
+    font-size: 13px;
+  }
+  
+  .author-name {
+    font-size: 12px;
+  }
+  
+  .startup-description-text {
+    font-size: 11px;
+  }
+  
+  .funding-goal-label {
+    font-size: 10px;
+  }
+  
+  .funding-goal-amount {
+    font-size: 12px;
+  }
+  
+  div.startup-card-item
+    div.funding-info-actions
+    div.action-buttons-group
+    button.action-button,
+  div.startup-card-item
+    div.funding-info-actions
+    div.action-buttons-group
+    a.action-button {
+    font-size: 10px;
+    min-width: 70px;
+    padding: 0 8px;
+    height: 32px;
+  }
+  
+  .show-more-button {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .filter-bar {
+    flex-direction: row;
+    gap: 15px;
+  }
+  
+  .filter-search {
+    width: auto;
+    flex: 1;
+  }
+  
+  .startup-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (max-height: 600px) {
+  .moderator-page-container {
+    padding: 10px 15px;
+  }
+  
+  .page-header {
+    padding: 15px 0;
+  }
+  
+  .startup-card-item {
+    padding: 15px;
+  }
+  
+  .show-more-bar {
+    padding: 15px 0;
+  }
+}
+
+@media (max-width: 1200px) and (min-height: 800px) {
+  .startup-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  }
+}
+
+@media (max-width: 992px) and (min-height: 700px) {
+  .startup-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+}

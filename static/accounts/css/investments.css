@@ -1104,3 +1104,165 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
 }
+
+@media (max-width: 1400px) {
+  .investments-container {
+    max-width: 1200px;
+  }
+  
+  .analytics-section {
+    gap: 30px;
+  }
+  
+  .planetary-system-container {
+    width: 350px;
+    height: 350px;
+  }
+}
+
+@media (max-width: 360px) {
+  .investments-container {
+    padding: 10px 8px;
+  }
+  
+  .analytics-section {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .analytics-left {
+    width: 100%;
+  }
+  
+  .planetary-system-container {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .startups-header {
+    padding: 15px 10px;
+  }
+  
+  .startups-title-main {
+    font-size: 18px;
+  }
+  
+  .startups-title-sub {
+    font-size: 12px;
+  }
+  
+  .startups-filters {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .startups-search-wrapper {
+    width: 100%;
+  }
+  
+  .filter-buttons {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .filter-btn {
+    font-size: 10px;
+    padding: 6px 12px;
+  }
+  
+  .startup-card {
+    padding: 12px;
+  }
+  
+  .startup-name {
+    font-size: 13px;
+  }
+  
+  .startup-rating {
+    font-size: 10px;
+  }
+  
+  .startup-comments {
+    font-size: 10px;
+  }
+  
+  .detail-label {
+    font-size: 10px;
+  }
+  
+  .detail-value {
+    font-size: 11px;
+  }
+  
+  .startup-category-tag {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+  
+  .show-more-btn {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .analytics-section {
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  .analytics-left {
+    width: 60%;
+  }
+  
+  .planetary-system-container {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .startups-filters {
+    flex-direction: row;
+    gap: 15px;
+  }
+  
+  .startups-search-wrapper {
+    width: auto;
+    flex: 1;
+  }
+}
+
+@media (max-height: 600px) {
+  .investments-container {
+    padding: 10px 15px;
+  }
+  
+  .analytics-section {
+    gap: 15px;
+  }
+  
+  .planetary-system-container {
+    height: 200px;
+  }
+  
+  .startups-header {
+    padding: 15px;
+  }
+  
+  .startup-card {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 1200px) and (min-height: 800px) {
+  .planetary-system-container {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+@media (max-width: 992px) and (min-height: 700px) {
+  .planetary-system-container {
+    width: 350px;
+    height: 350px;
+  }
+}

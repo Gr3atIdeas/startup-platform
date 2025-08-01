@@ -1,8 +1,3 @@
-
-
-
-
-
 :root {
   
   --primary-dark-blue: #000819; 
@@ -3183,4 +3178,158 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 #currentInvestorsList .investor-item input {
   width: 100px;
   margin-left: 10px;
+}
+
+@media (max-width: 1400px) {
+  .main-content-grid {
+    max-width: 1200px;
+  }
+  
+  .planet-container {
+    width: 350px;
+    height: 350px;
+  }
+}
+
+@media (max-width: 360px) {
+  .main-content-grid {
+    padding: 10px 8px;
+  }
+  
+  .back-button {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  
+  .startup-name {
+    font-size: 18px;
+  }
+  
+  .header-meta {
+    font-size: 11px;
+  }
+  
+  .rating-comments-container {
+    font-size: 11px;
+  }
+  
+  .info-blocks {
+    gap: 8px;
+  }
+  
+  .comments-header .section-title {
+    font-size: 16px;
+  }
+  
+  .average-rating-value {
+    font-size: 18px;
+  }
+  
+  .rating-distribution {
+    font-size: 11px;
+  }
+  
+  .comments-rating-summary {
+    padding: 8px;
+  }
+  
+  .comment-header {
+    font-size: 11px;
+  }
+  
+  .comment-rating {
+    font-size: 10px;
+  }
+  
+  .similar-text,
+  .startups-text {
+    font-size: 12px;
+  }
+  
+  .actions-top-right > * {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .actions-top-right {
+    gap: 5px;
+  }
+  
+  .planet-container {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .similar-card {
+    padding: 8px;
+  }
+  
+  .similar-card-name {
+    font-size: 12px;
+  }
+  
+  .similar-card-category {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .main-content-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .left-column {
+    width: 100%;
+  }
+  
+  .right-column {
+    width: 100%;
+  }
+  
+  .planet-container {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .similar-startups-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+@media (max-height: 600px) {
+  .main-content-grid {
+    padding: 10px 15px;
+  }
+  
+  .planet-container {
+    height: 200px;
+  }
+  
+  .similar-startups-container {
+    padding: 15px;
+  }
+  
+  .comments-section {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 1200px) and (min-height: 800px) {
+  .planet-container {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+@media (max-width: 992px) and (min-height: 700px) {
+  .planet-container {
+    width: 350px;
+    height: 350px;
+  }
 }

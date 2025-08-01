@@ -142,3 +142,184 @@ body {
   background-color: #e0e0e0;
   transition: background-color 0.3s linear;
 }
+
+@media (max-width: 1400px) {
+  .container {
+    max-width: 1200px;
+  }
+  
+  .startup-card {
+    padding: 20px;
+  }
+  
+  .startup-logo img,
+  .startup-logo-placeholder {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .container {
+    max-width: 1000px;
+  }
+  
+  .startup-card {
+    padding: 18px;
+  }
+  
+  .startup-logo img,
+  .startup-logo-placeholder {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .startup-details h2 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
+  }
+  
+  .startup-card {
+    padding: 15px;
+  }
+  
+  .startup-card-content {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .startup-logo img,
+  .startup-logo-placeholder {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .startup-info {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .startup-details {
+    text-align: center;
+  }
+  
+  .startup-details h2 {
+    font-size: 1.2rem;
+  }
+  
+  .startup-meta {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 10px;
+  }
+  
+  .startup-card {
+    padding: 12px;
+  }
+  
+  .startup-card-content {
+    gap: 12px;
+  }
+  
+  .startup-logo img,
+  .startup-logo-placeholder {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .startup-details h2 {
+    font-size: 1.1rem;
+  }
+  
+  .startup-details p {
+    font-size: 0.9rem;
+  }
+  
+  .startup-meta {
+    gap: 8px;
+  }
+  
+  .startup-meta p {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .container {
+    padding: 0 8px;
+  }
+  
+  .startup-card {
+    padding: 10px;
+  }
+  
+  .startup-card-content {
+    gap: 10px;
+  }
+  
+  .startup-logo img,
+  .startup-logo-placeholder {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .startup-details h2 {
+    font-size: 1rem;
+  }
+  
+  .startup-details p {
+    font-size: 0.85rem;
+  }
+  
+  .startup-meta {
+    gap: 6px;
+  }
+  
+  .startup-meta p {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .startup-card-content {
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  .startup-info {
+    flex-direction: row;
+    gap: 16px;
+  }
+  
+  .startup-details {
+    text-align: left;
+  }
+  
+  .startup-meta {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-height: 600px) {
+  .startup-card {
+    padding: 15px;
+  }
+  
+  .startup-logo img,
+  .startup-logo-placeholder {
+    width: 120px;
+    height: 120px;
+  }
+}

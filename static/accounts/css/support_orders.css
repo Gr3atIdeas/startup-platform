@@ -387,3 +387,158 @@ body {
     align-items: flex-start;
   }
 }
+
+@media (max-width: 480px) {
+  .support-orders-container {
+    padding: 20px 10px;
+    gap: 15px;
+  }
+  
+  .back-link-container {
+    padding-top: 8px;
+  }
+  
+  .back-link {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  
+  .page-header-section h1 {
+    font-size: 24px;
+  }
+  
+  .search-section {
+    margin-bottom: 15px;
+  }
+  
+  .search-input-inline {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  
+  .order-card {
+    padding: 15px;
+  }
+  
+  .order-details-grid {
+    gap: 12px;
+  }
+  
+  .detail-label {
+    font-size: 11px;
+  }
+  
+  .detail-value {
+    font-size: 12px;
+  }
+  
+  .additional-info-section {
+    margin-top: 15px;
+    gap: 15px;
+  }
+  
+  .additional-info-section p {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .support-orders-container {
+    padding: 15px 8px;
+    gap: 12px;
+  }
+  
+  .page-header-section h1 {
+    font-size: 20px;
+  }
+  
+  .search-input-inline {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+  
+  .order-card {
+    padding: 12px;
+  }
+  
+  .order-details-grid {
+    gap: 10px;
+  }
+  
+  .detail-label {
+    font-size: 10px;
+  }
+  
+  .detail-value {
+    font-size: 11px;
+  }
+  
+  .additional-info-section {
+    margin-top: 12px;
+    gap: 12px;
+  }
+  
+  .additional-info-section p {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .support-orders-container {
+    padding: 25px 15px;
+  }
+  
+  .page-header-section {
+    flex-direction: row;
+    gap: 30px;
+    align-items: center;
+  }
+  
+  .search-section {
+    max-width: 300px;
+  }
+  
+  .order-details-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .order-detail-topic {
+    grid-column: span 2;
+  }
+}
+
+@media (max-height: 600px) {
+  .support-orders-container {
+    padding: 15px 15px;
+    gap: 15px;
+  }
+  
+  .page-header-section {
+    margin-bottom: 15px;
+  }
+  
+  .order-card {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .support-orders-container {
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 1200px) and (min-height: 800px) {
+  .support-orders-container {
+    max-width: 1000px;
+  }
+  
+  .order-card {
+    padding: 25px;
+  }
+  
+  .order-details-grid {
+    gap: 25px;
+  }
+}

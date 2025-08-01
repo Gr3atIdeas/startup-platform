@@ -1692,3 +1692,263 @@ input[type="text"].profile-edit-input::placeholder {
 .profile-news-card-link:hover .profile-news-card-item {
   transform: translateY(-5px); 
 }
+
+@media (max-width: 1400px) {
+  .profile-content-container {
+    max-width: 1200px;
+  }
+  
+  .profile-sidebar {
+    width: 280px;
+  }
+  
+  .profile-main-content {
+    width: calc(100% - 300px);
+  }
+}
+
+@media (max-width: 1200px) {
+  .profile-content-container {
+    max-width: 1000px;
+  }
+  
+  .profile-sidebar {
+    width: 250px;
+  }
+  
+  .profile-main-content {
+    width: calc(100% - 270px);
+  }
+  
+  .profile-sidebar-name {
+    font-size: 18px;
+  }
+  
+  .profile-sidebar-role {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 992px) {
+  .profile-content-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .profile-sidebar {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .profile-main-content {
+    width: 100%;
+  }
+  
+  .profile-main-tabs {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .profile-main-tab-item {
+    font-size: 13px;
+    padding: 8px 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-page-wrapper {
+    padding: 15px 0;
+  }
+  
+  .profile-content-container {
+    gap: 15px;
+  }
+  
+  .profile-sidebar {
+    padding: 20px 15px;
+  }
+  
+  .profile-sidebar-name {
+    font-size: 16px;
+  }
+  
+  .profile-sidebar-role {
+    font-size: 12px;
+  }
+  
+  .profile-main-content {
+    padding: 20px 15px;
+  }
+  
+  .profile-main-tabs {
+    gap: 8px;
+  }
+  
+  .profile-main-tab-item {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+  .profile-main-startup-card-item {
+    padding: 15px;
+  }
+  
+  .profile-main-startup-name {
+    font-size: 14px;
+  }
+  
+  .profile-news-card-item {
+    padding: 15px;
+  }
+  
+  .profile-news-card-title {
+    font-size: 14px;
+  }
+  
+  .profile-news-card-description {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-page-wrapper {
+    padding: 10px 0;
+  }
+  
+  .profile-content-container {
+    gap: 10px;
+  }
+  
+  .profile-sidebar {
+    padding: 15px 10px;
+  }
+  
+  .profile-sidebar-name {
+    font-size: 15px;
+  }
+  
+  .profile-sidebar-role {
+    font-size: 11px;
+  }
+  
+  .profile-main-content {
+    padding: 15px 10px;
+  }
+  
+  .profile-main-tabs {
+    gap: 6px;
+  }
+  
+  .profile-main-tab-item {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+  
+  .profile-main-startup-card-item {
+    padding: 12px;
+  }
+  
+  .profile-main-startup-name {
+    font-size: 13px;
+  }
+  
+  .profile-main-startup-image {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .profile-news-card-item {
+    padding: 12px;
+  }
+  
+  .profile-news-card-title {
+    font-size: 13px;
+  }
+  
+  .profile-news-card-description {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 360px) {
+  .profile-sidebar {
+    padding: 12px 8px;
+  }
+  
+  .profile-sidebar-name {
+    font-size: 14px;
+  }
+  
+  .profile-sidebar-role {
+    font-size: 10px;
+  }
+  
+  .profile-main-content {
+    padding: 12px 8px;
+  }
+  
+  .profile-main-tabs {
+    gap: 5px;
+  }
+  
+  .profile-main-tab-item {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .profile-main-startup-card-item {
+    padding: 10px;
+  }
+  
+  .profile-main-startup-name {
+    font-size: 12px;
+  }
+  
+  .profile-main-startup-image {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .profile-news-card-item {
+    padding: 10px;
+  }
+  
+  .profile-news-card-title {
+    font-size: 12px;
+  }
+  
+  .profile-news-card-description {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .profile-content-container {
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  .profile-sidebar {
+    width: 300px;
+    max-width: 40%;
+  }
+  
+  .profile-main-content {
+    width: 60%;
+  }
+}
+
+@media (max-height: 600px) {
+  .profile-page-wrapper {
+    padding: 10px 0;
+  }
+  
+  .profile-sidebar {
+    padding: 15px;
+  }
+  
+  .profile-main-content {
+    padding: 15px;
+  }
+}

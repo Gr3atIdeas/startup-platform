@@ -155,3 +155,135 @@ main.content {
      background-color: rgba(0, 0, 0, 0.8);
      border-top: 1px solid rgba(255, 255, 255, 0.1);
 } 
+
+@media (max-width: 1400px) {
+  .auth-container {
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .auth-container {
+    max-width: 1000px;
+  }
+  
+  .auth-box {
+    width: 400px;
+    padding: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 20px 15px;
+  }
+  
+  .auth-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 25px 20px;
+  }
+  
+  .auth-box h1 {
+    font-size: 24px;
+  }
+  
+  .auth-box input[type="email"],
+  .auth-box input[type="password"],
+  .auth-box input[type="text"],
+  .auth-box select {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  .auth-box button[type="submit"],
+  .telegram-login-btn {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 15px 10px;
+  }
+  
+  .auth-box {
+    padding: 20px 15px;
+  }
+  
+  .auth-box h1 {
+    font-size: 20px;
+  }
+  
+  .auth-box input[type="email"],
+  .auth-box input[type="password"],
+  .auth-box input[type="text"],
+  .auth-box select {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+  
+  .auth-box button[type="submit"],
+  .telegram-login-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+  
+  .auth-box p {
+    font-size: 0.8em;
+  }
+}
+
+@media (max-width: 360px) {
+  .auth-container {
+    padding: 10px 8px;
+  }
+  
+  .auth-box {
+    padding: 15px 12px;
+  }
+  
+  .auth-box h1 {
+    font-size: 18px;
+  }
+  
+  .auth-box input[type="email"],
+  .auth-box input[type="password"],
+  .auth-box input[type="text"],
+  .auth-box select {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+  
+  .auth-box button[type="submit"],
+  .telegram-login-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .auth-box p {
+    font-size: 0.75em;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .auth-container {
+    padding: 15px 20px;
+  }
+  
+  .auth-box {
+    width: 350px;
+    padding: 20px;
+  }
+}
+
+@media (max-height: 600px) {
+  .auth-container {
+    padding: 10px 15px;
+  }
+  
+  .auth-box {
+    padding: 20px;
+  }
+} 

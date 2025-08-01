@@ -529,3 +529,135 @@ body {
     margin-bottom: 10px;
   }
 }
+
+@media (max-width: 360px) {
+  .support-container {
+    padding: 20px 10px;
+    gap: 30px;
+  }
+  
+  .help-section h1 {
+    font-size: 20px;
+  }
+  
+  .search-bar-container {
+    gap: 10px;
+  }
+  
+  .search-input {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  
+  .search-button {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .search-button img {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .info-card,
+  .knowledge-card,
+  .article-card {
+    padding: 20px 15px;
+  }
+  
+  .info-card-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .knowledge-card img {
+    width: 100px;
+  }
+  
+  .info-card h2,
+  .knowledge-card h3,
+  .article-info h3 {
+    font-size: 16px;
+  }
+  
+  .info-card p,
+  .knowledge-card p,
+  .article-info p {
+    font-size: 12px;
+  }
+  
+  .knowledge-base-header h2,
+  .popular-articles-header h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .support-container {
+    padding: 30px 20px;
+  }
+  
+  .search-bar-container {
+    flex-direction: row;
+    gap: 15px;
+  }
+  
+  .search-input {
+    width: auto;
+    flex: 1;
+  }
+  
+  .search-button {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .info-cards-section {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .knowledge-base-cards {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  
+  .articles-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-height: 600px) {
+  .support-container {
+    padding: 20px 15px;
+    gap: 25px;
+  }
+  
+  .help-section h1 {
+    font-size: 22px;
+  }
+  
+  .info-card,
+  .knowledge-card,
+  .article-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .support-container {
+    max-width: 1200px;
+  }
+  
+  .info-cards-section {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 1200px) and (min-height: 800px) {
+  .support-container {
+    max-width: 1000px;
+  }
+  
+  .info-cards-section {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+}

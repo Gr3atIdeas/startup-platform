@@ -130,3 +130,93 @@ button:hover {
   width: 20px;
   height: 20px;
 }
+
+@media (max-width: 1400px) {
+  .btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+  
+  .btn .icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .btn {
+    padding: 8px 18px;
+    font-size: 12px;
+  }
+  
+  .btn .icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .btn {
+    padding: 6px 16px;
+    font-size: 11px;
+  }
+  
+  .btn .icon {
+    width: 14px;
+    height: 14px;
+  }
+  
+  a:hover,
+  button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+  }
+}
+
+@media (max-width: 480px) {
+  .btn {
+    padding: 5px 14px;
+    font-size: 10px;
+  }
+  
+  .btn .icon {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .btn {
+    padding: 4px 12px;
+    font-size: 9px;
+  }
+  
+  .btn .icon {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .btn {
+    padding: 8px 18px;
+    font-size: 12px;
+  }
+  
+  .btn .icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-height: 600px) {
+  .btn {
+    padding: 6px 16px;
+    font-size: 11px;
+  }
+  
+  .btn .icon {
+    width: 14px;
+    height: 14px;
+  }
+}

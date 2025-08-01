@@ -70,3 +70,159 @@
 .btn-reject-moderator {
   background-color: #dc3545; 
 }
+
+@media (max-width: 1400px) {
+  .moderation-panel {
+    padding: 20px;
+  }
+  
+  .moderation-panel h3 {
+    font-size: 18px;
+  }
+  
+  .moderation-panel .form-group-moderator label {
+    font-size: 15px;
+  }
+  
+  .moderation-panel .form-group-moderator textarea {
+    font-size: 14px;
+    min-height: 80px;
+  }
+  
+  .moderation-actions .btn-moderator {
+    padding: 8px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .moderation-panel-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .moderation-panel {
+    padding: 15px;
+  }
+  
+  .moderation-panel h3 {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .moderation-panel .form-group-moderator label {
+    font-size: 14px;
+  }
+  
+  .moderation-panel .form-group-moderator textarea {
+    font-size: 13px;
+    min-height: 70px;
+    padding: 8px;
+  }
+  
+  .moderation-actions {
+    margin-top: 15px;
+  }
+  
+  .moderation-actions .btn-moderator {
+    padding: 6px 16px;
+    font-size: 13px;
+    margin-right: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .moderation-panel-container {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .moderation-panel {
+    padding: 12px;
+  }
+  
+  .moderation-panel h3 {
+    font-size: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .moderation-panel .form-group-moderator label {
+    font-size: 13px;
+  }
+  
+  .moderation-panel .form-group-moderator textarea {
+    font-size: 12px;
+    min-height: 60px;
+    padding: 6px;
+  }
+  
+  .moderation-actions {
+    margin-top: 12px;
+  }
+  
+  .moderation-actions .btn-moderator {
+    padding: 5px 14px;
+    font-size: 12px;
+    margin-right: 6px;
+  }
+}
+
+@media (max-width: 360px) {
+  .moderation-panel {
+    padding: 10px;
+  }
+  
+  .moderation-panel h3 {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  
+  .moderation-panel .form-group-moderator label {
+    font-size: 12px;
+  }
+  
+  .moderation-panel .form-group-moderator textarea {
+    font-size: 11px;
+    min-height: 50px;
+    padding: 5px;
+  }
+  
+  .moderation-actions {
+    margin-top: 10px;
+  }
+  
+  .moderation-actions .btn-moderator {
+    padding: 4px 12px;
+    font-size: 11px;
+    margin-right: 5px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .moderation-panel {
+    padding: 18px;
+  }
+  
+  .moderation-panel h3 {
+    font-size: 17px;
+  }
+  
+  .moderation-panel .form-group-moderator textarea {
+    min-height: 75px;
+  }
+}
+
+@media (max-height: 600px) {
+  .moderation-panel-container {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .moderation-panel {
+    padding: 15px;
+  }
+  
+  .moderation-panel .form-group-moderator textarea {
+    min-height: 60px;
+  }
+}

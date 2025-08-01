@@ -804,3 +804,264 @@ main.content:has(.page-content-wrapper-white) {
   font-weight: 400;
   line-height: 1;
 }
+
+@media (max-width: 1400px) {
+  .news-detail-container {
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .news-detail-container {
+    max-width: 1000px;
+  }
+  
+  .news-content-layout {
+    gap: 30px;
+  }
+  
+  .news-article-main {
+    flex: 1;
+  }
+  
+  .sidebar-similar-articles {
+    width: 300px;
+  }
+}
+
+@media (max-width: 992px) {
+  .news-detail-container {
+    max-width: 900px;
+  }
+  
+  .news-content-layout {
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .sidebar-similar-articles {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .similar-articles-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  .article-title-large {
+    font-size: 28px;
+    line-height: 1.3;
+  }
+}
+
+@media (max-width: 768px) {
+  .news-detail-container {
+    padding: 20px 15px;
+  }
+  
+  .back-button-container {
+    margin-bottom: 20px;
+  }
+  
+  .back-button {
+    padding: 8px 15px;
+    font-size: 13px;
+  }
+  
+  .article-title-large {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+  
+  .author-info-block {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .article-stats-small {
+    justify-content: flex-start;
+  }
+  
+  .similar-articles-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .similar-article-card {
+    padding: 15px;
+  }
+  
+  .comments-section {
+    padding: 20px 15px;
+  }
+  
+  .comment-item {
+    padding: 12px 15px;
+  }
+  
+  .add-comment-textarea {
+    min-height: 80px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .news-detail-container {
+    padding: 15px 10px;
+  }
+  
+  .back-button-container {
+    margin-bottom: 15px;
+  }
+  
+  .back-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .article-title-large {
+    font-size: 20px;
+    line-height: 1.2;
+  }
+  
+  .article-main-image {
+    height: 200px;
+  }
+  
+  .similar-article-card {
+    padding: 12px;
+  }
+  
+  .similar-article-title {
+    font-size: 14px;
+  }
+  
+  .similar-article-description {
+    font-size: 12px;
+  }
+  
+  .comments-section {
+    padding: 15px 10px;
+  }
+  
+  .comment-item {
+    padding: 10px 12px;
+  }
+  
+  .comment-author-name {
+    font-size: 13px;
+  }
+  
+  .comment-text {
+    font-size: 12px;
+  }
+  
+  .add-comment-textarea {
+    min-height: 70px;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  
+  .add-comment-submit-btn {
+    height: 35px;
+    padding: 0 25px;
+  }
+  
+  .add-comment-submit-text {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .news-detail-container {
+    padding: 10px 8px;
+  }
+  
+  .back-button {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+  
+  .article-title-large {
+    font-size: 18px;
+  }
+  
+  .article-main-image {
+    height: 180px;
+  }
+  
+  .similar-article-card {
+    padding: 10px;
+  }
+  
+  .similar-article-title {
+    font-size: 13px;
+  }
+  
+  .similar-article-description {
+    font-size: 11px;
+  }
+  
+  .comments-section {
+    padding: 12px 8px;
+  }
+  
+  .comment-item {
+    padding: 8px 10px;
+  }
+  
+  .comment-author-name {
+    font-size: 12px;
+  }
+  
+  .comment-text {
+    font-size: 11px;
+  }
+  
+  .add-comment-textarea {
+    min-height: 60px;
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+  
+  .add-comment-submit-btn {
+    height: 32px;
+    padding: 0 20px;
+  }
+  
+  .add-comment-submit-text {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .news-content-layout {
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  .sidebar-similar-articles {
+    width: 250px;
+    max-width: 30%;
+  }
+  
+  .similar-articles-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-height: 600px) {
+  .news-detail-container {
+    padding: 10px 15px;
+  }
+  
+  .back-button-container {
+    margin-bottom: 10px;
+  }
+  
+  .article-main-image {
+    height: 150px;
+  }
+}

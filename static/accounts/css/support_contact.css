@@ -363,3 +363,119 @@ body {
     gap: 25px;
   }
 }
+
+@media (max-width: 360px) {
+  .support-contact-container {
+    padding: 15px 10px;
+  }
+  
+  .back-link-container {
+    padding-top: 8px;
+  }
+  
+  .back-link {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  
+  .form-section {
+    padding: 20px 15px;
+  }
+  
+  .form-section h1 {
+    font-size: 20px;
+  }
+  
+  .form-group label {
+    font-size: 12px;
+  }
+  
+  .form-group input[type='text'],
+  .form-group input[type='email'],
+  .form-group textarea,
+  .select-wrapper {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+  
+  .btn-submit-support {
+    font-size: 14px;
+    height: 40px;
+  }
+  
+  .info-section {
+    gap: 20px;
+  }
+  
+  .info-section h2 {
+    font-size: 16px;
+  }
+  
+  .search-bar-support-contact {
+    padding: 6px 12px;
+  }
+  
+  .search-bar-support-contact input[type='text'] {
+    font-size: 12px;
+  }
+  
+  .info-image-small {
+    width: 180px;
+    height: 130px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .support-contact-main-content {
+    flex-direction: row;
+    gap: 30px;
+  }
+  
+  .form-section,
+  .info-section {
+    width: 50%;
+    max-width: none;
+  }
+  
+  .info-section {
+    align-items: flex-start;
+  }
+  
+  .info-image-small {
+    align-self: flex-start;
+  }
+}
+
+@media (max-height: 600px) {
+  .support-contact-container {
+    padding: 15px 15px;
+  }
+  
+  .form-section {
+    padding: 20px;
+  }
+  
+  .info-section {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .support-contact-container {
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 1200px) and (min-height: 800px) {
+  .support-contact-container {
+    max-width: 1000px;
+  }
+  
+  .form-section {
+    padding: 40px 30px;
+  }
+  
+  .info-section {
+    gap: 30px;
+  }
+}

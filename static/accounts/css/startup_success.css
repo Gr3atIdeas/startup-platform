@@ -79,3 +79,182 @@
   margin-right: auto;
   font-family: Inter, sans-serif; 
 }
+
+@media (max-width: 1400px) {
+  .success-content-overlay {
+    max-width: 500px;
+  }
+  
+  .title-congrats {
+    font-size: 48px;
+  }
+  
+  .title-moderation {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .success-content-overlay {
+    max-width: 450px;
+    padding: 25px;
+  }
+  
+  .title-congrats {
+    font-size: 44px;
+  }
+  
+  .title-moderation {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .success-page-container {
+    min-height: 60vh;
+    padding: 15px;
+  }
+  
+  .success-content-overlay {
+    max-width: 400px;
+    padding: 20px;
+  }
+  
+  .title-congrats {
+    font-size: 36px;
+  }
+  
+  .title-moderation {
+    font-size: 28px;
+    margin-bottom: 40px;
+  }
+  
+  .btn-main-page {
+    padding: 14px 32px;
+    font-size: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .info-text {
+    font-size: 14px;
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .success-page-container {
+    min-height: 50vh;
+    padding: 10px;
+  }
+  
+  .success-content-overlay {
+    max-width: 350px;
+    padding: 15px;
+  }
+  
+  .title-congrats {
+    font-size: 28px;
+  }
+  
+  .title-moderation {
+    font-size: 22px;
+    margin-bottom: 30px;
+  }
+  
+  .btn-main-page {
+    padding: 12px 28px;
+    font-size: 14px;
+    margin-bottom: 25px;
+  }
+  
+  .info-text {
+    font-size: 13px;
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 360px) {
+  .success-page-container {
+    min-height: 45vh;
+    padding: 8px;
+  }
+  
+  .success-content-overlay {
+    max-width: 300px;
+    padding: 12px;
+  }
+  
+  .title-congrats {
+    font-size: 24px;
+  }
+  
+  .title-moderation {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+  
+  .btn-main-page {
+    padding: 10px 24px;
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+  
+  .info-text {
+    font-size: 12px;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .success-page-container {
+    min-height: 40vh;
+  }
+  
+  .success-content-overlay {
+    max-width: 500px;
+  }
+  
+  .title-congrats {
+    font-size: 32px;
+  }
+  
+  .title-moderation {
+    font-size: 24px;
+  }
+}
+
+@media (max-height: 600px) {
+  .success-page-container {
+    min-height: 50vh;
+    padding: 10px;
+  }
+  
+  .title-congrats {
+    font-size: 32px;
+  }
+  
+  .title-moderation {
+    font-size: 24px;
+    margin-bottom: 25px;
+  }
+  
+  .btn-main-page {
+    padding: 12px 28px;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 1200px) and (min-height: 800px) {
+  .success-content-overlay {
+    max-width: 550px;
+    padding: 35px;
+  }
+  
+  .title-congrats {
+    font-size: 52px;
+  }
+  
+  .title-moderation {
+    font-size: 40px;
+  }
+}
