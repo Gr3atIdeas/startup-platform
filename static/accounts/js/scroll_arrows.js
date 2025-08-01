@@ -43,16 +43,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
+        const hasVerticalScroll = documentHeight > windowHeight;
         
-        if (scrollTop > 100) {
+        if (hasVerticalScroll) {
             scrollArrowUp.classList.add('show');
+            scrollArrowDown.classList.add('show');
+            
+            if (scrollTop <= 50) {
+                scrollArrowUp.classList.remove('show');
+            }
+            
+            if (scrollTop + windowHeight >= documentHeight - 50) {
+                scrollArrowDown.classList.remove('show');
+            }
         } else {
             scrollArrowUp.classList.remove('show');
-        }
-        
-        if (scrollTop + windowHeight < documentHeight - 100) {
-            scrollArrowDown.classList.add('show');
-        } else {
             scrollArrowDown.classList.remove('show');
         }
     }
