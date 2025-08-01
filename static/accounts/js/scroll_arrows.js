@@ -21,20 +21,21 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(scrollArrowDown);
 
     function smoothScrollTo(target) {
-        const targetElement = target === 'top' ? document.body : document.documentElement;
-        const targetPosition = target === 'top' ? 0 : targetElement.scrollHeight;
+        const targetPosition = target === 'top' ? 0 : document.documentElement.scrollHeight - window.innerHeight;
         
-        targetElement.scrollTo({
+        window.scrollTo({
             top: targetPosition,
             behavior: 'smooth'
         });
     }
 
-    scrollArrowUp.addEventListener('click', function() {
+    scrollArrowUp.addEventListener('click', function(e) {
+        e.preventDefault();
         smoothScrollTo('top');
     });
 
-    scrollArrowDown.addEventListener('click', function() {
+    scrollArrowDown.addEventListener('click', function(e) {
+        e.preventDefault();
         smoothScrollTo('bottom');
     });
 
