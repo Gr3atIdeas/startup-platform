@@ -419,6 +419,14 @@ body {
   border-color: #dee2e6;
 }
 
+.download-report-btn:disabled {
+  background-color: #ccc;
+  color: #666;
+  border-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 
 .my-startups-section {
   color: #fff;

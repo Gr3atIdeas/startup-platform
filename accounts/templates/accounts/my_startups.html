@@ -1005,7 +1005,7 @@
             <span class="chart-title-overlay">Собрано одобренными за год</span>
           </div>
 
-          <button class="download-report-btn" type="button">Скачать отчет</button>
+          <button class="download-report-btn" type="button" onclick="downloadReport()">Скачать отчет</button>
         </div>
       </div>
 
@@ -1272,6 +1272,47 @@
     {{ planetary_startups_json|json_script:"planetary-startups-data" }}
 
     <script>
+      // Функция для скачивания отчета
+      function downloadReport() {
+        // Показываем индикатор загрузки
+        const button = document.querySelector('.download-report-btn');
+        const originalText = button.textContent;
+        button.textContent = 'Генерация отчета...';
+        button.disabled = true;
+        
+        // Выполняем запрос на скачивание
+        fetch('{% url "download_startups_report" %}')
+          .then(response => {
+            if (response.ok) {
+              return response.blob();
+            }
+            throw new Error('Ошибка при генерации отчета');
+          })
+          .then(blob => {
+            // Создаем ссылку для скачивания
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `startups_report_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            // Восстанавливаем кнопку
+            button.textContent = originalText;
+            button.disabled = false;
+          })
+          .catch(error => {
+            console.error('Ошибка:', error);
+            alert('Произошла ошибка при скачивании отчета. Попробуйте еще раз.');
+            
+            // Восстанавливаем кнопку
+            button.textContent = originalText;
+            button.disabled = false;
+          });
+      }
+
       // ГЛОБАЛЬНЫЕ ФУНКЦИИ, КОНСТАНТЫ
       const categoryColors = {
           "Medicine": "#e74c3c", "Auto": "#3498db", "Delivery": "#f1c40f",

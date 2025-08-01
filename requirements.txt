@@ -12,6 +12,7 @@ gunicorn==22.0.0
 idna==3.10
 jmespath==1.0.1
 olefile==0.47
+openpyxl==3.1.2
 packaging==24.2
 pillow==11.1.0
 psycopg2-binary==2.9.10

@@ -68,6 +68,7 @@ urlpatterns = [
     path("search-suggestions/", views.search_suggestions, name="search_suggestions"),
     path("planetary-system/", views.planetary_system, name="planetary_system"),
     path("my_startups/", views.my_startups, name="my_startups"),
+    path("my_startups/download-report/", views.download_startups_report, name="download_startups_report"),
     path(
         "load_similar_startups/<int:startup_id>/",
         views.load_similar_startups,
