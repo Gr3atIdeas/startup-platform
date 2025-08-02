@@ -235,7 +235,23 @@ body {
 }
 
 
+.category-list::-webkit-scrollbar {
+  width: 5px;
+}
 
+.category-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+.category-list::-webkit-scrollbar-thumb {
+  background: rgb(0 0 0 / 20%); 
+  border-radius: 2px;
+}
+
+.category-list::-webkit-scrollbar-thumb:hover {
+  background: rgb(0 0 0 / 30%);
+}
 
 .microinvest-block {
   display: flex;

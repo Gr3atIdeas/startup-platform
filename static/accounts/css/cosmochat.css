@@ -1057,7 +1057,9 @@ body.cosmochat-body {
   user-select: none;
 }
 
-
+.search-dropdown-users::-webkit-scrollbar {
+  display: none; 
+}
 
 .search-dropdown-user {
   display: flex;
@@ -1415,7 +1417,24 @@ body.cosmochat-body {
 }
 
 
+.group-chat-modal-users::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
 
+.group-chat-modal-users::-webkit-scrollbar-track {
+  background: rgb(0 0 0 / 5%); 
+  border-radius: 3px;
+}
+
+.group-chat-modal-users::-webkit-scrollbar-thumb {
+  background: #004e9f;
+  border-radius: 3px;
+}
+
+.group-chat-modal-users::-webkit-scrollbar-thumb:hover {
+  background: #003b7a;
+}
 
 
 .selected-user-pills-container {

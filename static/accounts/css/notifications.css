@@ -283,7 +283,22 @@ body {
 }
 
 
+.notifications-list-items::-webkit-scrollbar {
+  width: 8px; 
+}
 
+.notifications-list-items::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+.notifications-list-items::-webkit-scrollbar-thumb {
+  background-color: rgb(
+    0 0 0 / 30%
+  ); 
+  border-radius: 6px; 
+  border: 2px solid transparent; 
+  background-clip: content-box;
+}
 
 .notification-item {
   
@@ -633,7 +648,20 @@ body {
 }
 
 
-
+.modal-notification-list::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-notification-list::-webkit-scrollbar-track {
+  background: rgb(255 255 255 / 5%);
+  border-radius: 3px;
+}
+.modal-notification-list::-webkit-scrollbar-thumb {
+  background-color: rgb(255 255 255 / 30%);
+  border-radius: 3px;
+}
+.modal-notification-list::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(255 255 255 / 40%);
+}
 
 
 .modal-notification-details .notification-item {

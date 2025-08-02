@@ -167,7 +167,31 @@ html {
 }
 
 
+.faq-left-panel::-webkit-scrollbar {
+  width: 5px; 
+}
 
+.faq-left-panel::-webkit-scrollbar-track {
+  background: transparent; 
+  border-radius: 4px;
+
+  
+
+  
+
+  
+
+  
+}
+
+.faq-left-panel::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 34%); 
+  border-radius: 4px;
+}
+
+.faq-left-panel::-webkit-scrollbar-thumb:hover {
+  background: rgb(255 255 255 / 50%); 
+}
 
 .faq-question-category,
 .faq-accordion-header,
@@ -343,7 +367,23 @@ html {
 }
 
 
+.faq-right-panel::-webkit-scrollbar {
+  width: 8px;
+}
 
+.faq-right-panel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.faq-right-panel::-webkit-scrollbar-thumb {
+  background: #818ce5;
+  border-radius: 10px;
+}
+
+.faq-right-panel::-webkit-scrollbar-thumb:hover {
+  background: #575fbf;
+}
 
 
 .faq-custom-scrollbar-visual {

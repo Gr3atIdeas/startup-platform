@@ -1032,7 +1032,9 @@
   
   padding-left: 8px; 
 }
-
+.ultra_new_planetary_categories_container::-webkit-scrollbar {
+  display: none;
+}
 
 .ultra_new_planetary_category_item.category-all {
   position: relative !important;

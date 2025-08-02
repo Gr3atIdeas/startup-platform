@@ -2,6 +2,25 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Global Styles for Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #061e38;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #004e9f;
+  border-radius: 5px;
+  border: 2px solid #061e38;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #c6bbfe;
+}
+
 :root {
   --primary-color: #7b61ff;
   --secondary-color: #818ce5;
@@ -117,35 +136,4 @@ a {
     max-width: 1100px;
     padding: 20px 0;
   }
-}
-
-/* Единый кастомный скролл для всего проекта */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #061e38;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #004e9f;
-  border-radius: 5px;
-  border: 2px solid #061e38;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #c6bbfe;
-}
-
-/* Для Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #004e9f #061e38;
-}
-
-/* Отключение выделения изображений */
-img {
-  user-select: none;
-  -webkit-user-drag: none;
 }
