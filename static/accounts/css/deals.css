@@ -413,27 +413,7 @@ body {
 }
 
 
-.chat-list::-webkit-scrollbar,
-.chat-messages-list::-webkit-scrollbar {
-  width: 6px;
-}
 
-.chat-list::-webkit-scrollbar-track,
-.chat-messages-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.chat-list::-webkit-scrollbar-thumb,
-.chat-messages-list::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-.chat-list::-webkit-scrollbar-thumb:hover,
-.chat-messages-list::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
 
 @media (max-width: 1400px) {
   .deals-main-wrapper {

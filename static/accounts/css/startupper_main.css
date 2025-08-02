@@ -62,8 +62,6 @@ html {
   padding: 0; 
   box-sizing: border-box;
   overflow: hidden auto; 
-  scrollbar-width: thin; 
-  scrollbar-color: #ffef2b transparent; 
   display: flex;
   flex-direction: column;
 
@@ -121,26 +119,7 @@ body {
 }
 
 
-html::-webkit-scrollbar {
-  width: 8px; 
-}
 
-html::-webkit-scrollbar-track {
-  background: transparent; 
-}
-
-html::-webkit-scrollbar-thumb {
-  background-color: #ffef2b; 
-  border-radius: 4px; 
-}
-
-html::-webkit-scrollbar-thumb:hover {
-  background-color: #e6d329; 
-}
-
-html::-webkit-scrollbar-button {
-  display: none; 
-}
 
 .div {
   
