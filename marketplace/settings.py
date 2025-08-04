@@ -149,6 +149,12 @@ STATICFILES_DIRS = [
     BASE_DIR / "static/dist",
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Настройки кеширования статических файлов
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+WHITENOISE_MAX_AGE = 31536000  # 1 год в секундах
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_AUTOREFRESH = True
 VITE_APP_DIR = BASE_DIR / "static/src"
 DJANGO_VITE = {
     "default": {
