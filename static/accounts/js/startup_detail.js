@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
   if (!startupId) {
     console.error('Startup ID не найден в data-атрибутах.')
-    return
+          return
   }
 
   function debounce(func, delay) {
@@ -94,9 +94,9 @@ document.addEventListener('DOMContentLoaded', function () {
             onSelect(user);
             if (modalId === 'changeOwnerModal') {
                 if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                    const currentModal = bootstrap.Modal.getInstance(searchModalElement);
-                    if (currentModal) {
-                        currentModal.hide();
+                const currentModal = bootstrap.Modal.getInstance(searchModalElement);
+                if (currentModal) {
+                    currentModal.hide();
                     }
                 } else {
                     console.error('Bootstrap Modal not available for hiding modal');
@@ -117,10 +117,10 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     
     if (searchModalElement) {
-      searchModalElement.addEventListener('hidden.bs.modal', function () {
+    searchModalElement.addEventListener('hidden.bs.modal', function () {
           if (searchInput) searchInput.value = '';
           if (searchResults) searchResults.innerHTML = '';
-      });
+    });
     }
   }
 
@@ -148,8 +148,8 @@ document.addEventListener('DOMContentLoaded', function () {
     newOwnerIdEl.value = user.id;
     console.log('Set new owner name:', user.name, 'id:', user.id);
     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-      const confirmModal = new bootstrap.Modal(confirmModalEl);
-      confirmModal.show();
+    const confirmModal = new bootstrap.Modal(confirmModalEl);
+    confirmModal.show();
     } else {
       console.error('Bootstrap Modal not available');
       alert('Ошибка: Bootstrap не загружен');
@@ -228,8 +228,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const investorSearchInput = document.getElementById('investorSearchInput');
       console.log('Investor search input found:', !!investorSearchInput);
       if (investorSearchInput) {
-        investorSearchInput.value = user.name;
-        investorSearchInput.disabled = true;
+      investorSearchInput.value = user.name;
+      investorSearchInput.disabled = true;
       }
       
       const searchResults = document.getElementById('investorSearchResults');
@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const addInvestmentButton = document.getElementById('addInvestmentButton');
     console.log('Add investment button found:', !!addInvestmentButton);
     if (addInvestmentButton) {
-      addInvestmentButton.addEventListener('click', function() {
+    addInvestmentButton.addEventListener('click', function() {
         console.log('Add investment button clicked');
         
         if (!selectedInvestor) {
@@ -318,15 +318,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
   
-  function resetAddInvestorForm() {
+    function resetAddInvestorForm() {
       console.log('Resetting add investor form');
-      selectedInvestor = null;
+        selectedInvestor = null;
       
-      const searchInput = document.getElementById('investorSearchInput');
+        const searchInput = document.getElementById('investorSearchInput');
       console.log('Search input found in reset:', !!searchInput);
       if (searchInput) {
-          searchInput.value = '';
-          searchInput.disabled = false;
+        searchInput.value = '';
+        searchInput.disabled = false;
       }
       
       const amountInput = document.getElementById('investmentAmount');
@@ -342,34 +342,34 @@ document.addEventListener('DOMContentLoaded', function () {
       }
   }
   
-  function loadCurrentInvestors() {
+    function loadCurrentInvestors() {
       console.log('Loading current investors for startup:', startupId);
-      fetch(`/get_investors/${startupId}/`)
-      .then(response => {
+        fetch(`/get_investors/${startupId}/`)
+        .then(response => {
           console.log('Get investors response status:', response.status);
-          if (!response.ok) {
-              return response.text().then(text => {
-                  throw new Error(`Ошибка сервера: ${response.status}. Ответ: ${text}`);
-              });
-          }
-          return response.json();
-      })
-      .then(data => {
+            if (!response.ok) {
+                return response.text().then(text => {
+                    throw new Error(`Ошибка сервера: ${response.status}. Ответ: ${text}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
           console.log('Investors data received:', data);
-          const investorsList = document.getElementById('currentInvestorsList');
+            const investorsList = document.getElementById('currentInvestorsList');
           console.log('Current investors list element found:', !!investorsList);
           if (investorsList) {
-              investorsList.innerHTML = data.html;
+            investorsList.innerHTML = data.html;
           } else {
               console.error('Current investors list element not found');
           }
-      })
-      .catch(error => {
+        })
+        .catch(error => {
           console.error('Ошибка загрузки инвесторов:', error);
-          const investorsList = document.getElementById('currentInvestorsList');
+            const investorsList = document.getElementById('currentInvestorsList');
           console.log('Investors list element found in error handler:', !!investorsList);
           if (investorsList) {
-              investorsList.innerHTML = '<p class="text-danger">Не удалось загрузить список инвесторов.</p>';
+            investorsList.innerHTML = '<p class="text-danger">Не удалось загрузить список инвесторов.</p>';
           }
       });
   }
@@ -431,46 +431,46 @@ document.addEventListener('DOMContentLoaded', function () {
     console.error('Current investors list element not found for event listener');
   }
 
-  function updateStartupFinancials(investorCount, amountRaised) {
-      console.log('Updating financials:', { investorCount, amountRaised });
+    function updateStartupFinancials(investorCount, amountRaised) {
+        console.log('Updating financials:', { investorCount, amountRaised });
       
-      const investorCountDisplay = document.getElementById('investor-count-display');
+        const investorCountDisplay = document.getElementById('investor-count-display');
       console.log('Investor count display found:', !!investorCountDisplay);
-      if (investorCountDisplay) {
-          investorCountDisplay.textContent = `(${investorCount})`;
-      } else {
-          console.error('Element with id "investor-count-display" not found.');
-      }
+        if (investorCountDisplay) {
+            investorCountDisplay.textContent = `(${investorCount})`;
+        } else {
+            console.error('Element with id "investor-count-display" not found.');
+        }
       
-      const amountRaisedCard = document.querySelector('.info-card-value-button.accent-blue-bg');
+        const amountRaisedCard = document.querySelector('.info-card-value-button.accent-blue-bg');
       console.log('Amount raised card found:', !!amountRaisedCard);
-      if (amountRaisedCard) {
-          amountRaisedCard.textContent = `${new Intl.NumberFormat('ru-RU').format(Math.floor(amountRaised))} ₽`;
+        if (amountRaisedCard) {
+            amountRaisedCard.textContent = `${new Intl.NumberFormat('ru-RU').format(Math.floor(amountRaised))} ₽`;
       } else {
           console.error('Amount raised card element not found.');
-      }
+        }
       
-      const fundingGoal = parseFloat(pageDataElement.dataset.fundingGoal) || 0;
-      const progressPercentage = fundingGoal > 0 ? (amountRaised / fundingGoal) * 100 : 0;
+        const fundingGoal = parseFloat(pageDataElement.dataset.fundingGoal) || 0;
+        const progressPercentage = fundingGoal > 0 ? (amountRaised / fundingGoal) * 100 : 0;
       
-      const progressBar = document.querySelector('.progress-animation-container');
-      const progressText = document.querySelector('.progress-percentage');
+        const progressBar = document.querySelector('.progress-animation-container');
+        const progressText = document.querySelector('.progress-percentage');
       
       console.log('Progress bar found:', !!progressBar);
       console.log('Progress text found:', !!progressText);
       
-      if (progressBar) {
-          progressBar.style.width = `${Math.min(progressPercentage, 100)}%`;
+        if (progressBar) {
+            progressBar.style.width = `${Math.min(progressPercentage, 100)}%`;
       } else {
           console.error('Progress bar element not found.');
-      }
+        }
       
-      if (progressText) {
-          progressText.textContent = `${Math.floor(progressPercentage)}%`;
+        if (progressText) {
+            progressText.textContent = `${Math.floor(progressPercentage)}%`;
       } else {
           console.error('Progress text element not found.');
-      }
-  }
+        }
+    }
   
   if (addInvestorModalEl) {
     addInvestorModalEl.addEventListener('show.bs.modal', function () {
@@ -522,31 +522,25 @@ document.addEventListener('DOMContentLoaded', function () {
     // Устанавливаем начальный рейтинг
     updateRatingDisplay(currentRating);
 
-    // Добавляем обработчики событий только если рейтинг интерактивный
-    if (ratingStars.dataset.interactive === 'true') {
-      ratingContainers.forEach((container, index) => {
-        const value = index + 1;
-        
-        container.addEventListener('mouseenter', () => {
-          console.log('Mouse enter on rating container:', value);
-          updateRatingDisplay(value);
-        });
-
-        container.addEventListener('mouseleave', () => {
-          console.log('Mouse leave on rating container');
-          updateRatingDisplay(currentRating);
-        });
-
-        container.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('Click on rating container:', value);
-          submitRating(value);
-        });
+    // Добавляем обработчики событий
+    ratingContainers.forEach((container, index) => {
+      const value = index + 1;
+      
+      container.addEventListener('mouseenter', () => {
+        console.log('Mouse enter on rating container:', value);
+        updateRatingDisplay(value);
       });
-    } else {
-      console.log('Rating is not interactive, skipping event listeners');
-    }
+
+      container.addEventListener('mouseleave', () => {
+        console.log('Mouse leave on rating container');
+        updateRatingDisplay(currentRating);
+      });
+
+      container.addEventListener('click', () => {
+        console.log('Click on rating container:', value);
+        submitRating(value);
+      });
+    });
   }
 
   function updateRatingDisplay(rating) {
@@ -560,19 +554,13 @@ document.addEventListener('DOMContentLoaded', function () {
       
       console.log(`Container ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
       
-      if (value <= Math.floor(rating)) {
-        // Полностью заполненные планеты
+      if (value <= rating) {
+        // Show filled icon with full width
         emptyIcon.style.display = 'none';
         filledIcon.style.display = 'block';
         filledIcon.style.width = '100%';
-      } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
-        // Частично заполненная планета для дробного рейтинга
-        emptyIcon.style.display = 'block';
-        filledIcon.style.display = 'block';
-        const partialWidth = (rating % 1) * 100;
-        filledIcon.style.width = `${partialWidth}%`;
       } else {
-        // Пустые планеты
+        // Show empty icon, hide filled icon
         emptyIcon.style.display = 'block';
         filledIcon.style.display = 'none';
         filledIcon.style.width = '0%';
@@ -585,14 +573,14 @@ document.addEventListener('DOMContentLoaded', function () {
     
     if (!csrfToken) {
       alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
-      return;
-    }
+            return;
+        }
 
     fetch(`/submit_rating/${startupId}/`, {
-      method: 'POST',
-      headers: {
+            method: 'POST',
+            headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': csrfToken,
+                'X-CSRFToken': csrfToken,
         'X-Requested-With': 'XMLHttpRequest'
       },
       body: JSON.stringify({ rating: rating })
@@ -607,9 +595,9 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       return response.json();
     })
-    .then(data => {
+        .then(data => {
       console.log('Rating submission response data:', data);
-      if (data.success) {
+            if (data.success) {
         // Обновляем отображение рейтинга
         const ratingStars = document.querySelector('.rating-stars');
         if (ratingStars) {
@@ -632,11 +620,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         
         alert('Спасибо за оценку!');
-      } else {
+            } else {
         alert(data.error || 'Ошибка при отправке оценки.');
-      }
-    })
-    .catch(error => {
+            }
+        })
+        .catch(error => {
       console.error('Ошибка при отправке оценки:', error);
       alert('Произошла ошибка при отправке оценки.');
     });
@@ -666,9 +654,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     tabButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+      button.addEventListener('click', () => {
         const targetId = button.dataset.target;
         console.log('Tab button clicked, target:', targetId);
         
@@ -682,7 +668,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (targetSection) {
           targetSection.classList.add('active');
           console.log('Activated section:', targetId);
-        } else {
+          } else {
           console.error('Target section not found:', targetId);
           // Try to find by partial match
           const partialMatch = Array.from(contentSections).find(section => 
@@ -711,15 +697,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (chatButton) {
       console.log('Chat button text:', chatButton.textContent.trim());
       console.log('Chat button classes:', chatButton.className);
-      console.log('Chat button HTML:', chatButton.outerHTML);
-      
-      // Remove any existing event listeners
-      const newChatButton = chatButton.cloneNode(true);
-      chatButton.parentNode.replaceChild(newChatButton, chatButton);
-      
-      newChatButton.addEventListener('click', (e) => {
+      chatButton.addEventListener('click', (e) => {
         e.preventDefault();
-        e.stopPropagation();
         console.log('Chat button clicked');
         // Здесь можно добавить логику для открытия чата
         alert('Функция чата в разработке');
@@ -734,15 +713,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (writeButton) {
       console.log('Write button text:', writeButton.textContent.trim());
       console.log('Write button classes:', writeButton.className);
-      console.log('Write button HTML:', writeButton.outerHTML);
-      
-      // Remove any existing event listeners
-      const newWriteButton = writeButton.cloneNode(true);
-      writeButton.parentNode.replaceChild(newWriteButton, writeButton);
-      
-      newWriteButton.addEventListener('click', (e) => {
+      writeButton.addEventListener('click', (e) => {
         e.preventDefault();
-        e.stopPropagation();
         console.log('Write button clicked');
         // Здесь можно добавить логику для отправки сообщения автору
         alert('Функция отправки сообщений в разработке');
