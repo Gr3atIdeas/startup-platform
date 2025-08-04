@@ -193,13 +193,14 @@
             
             <div class="about-section">
               <h2 class="section-title">Вводная</h2> 
-              <div class="section-content truncatable-text">
+              <div class="section-content text-truncate-container truncated-3-lines" id="intro-section">
                 <p>{{ startup.short_description|default:"Нет вводного описания." }}</p> 
+                <span class="text-truncate-toggle" onclick="toggleTextTruncation('intro-section', 3)">Показать полностью</span>
               </div>
             </div>
             <div class="about-section"> 
               <h2 class="section-title">О проекте</h2>
-              <div class="section-content truncatable-text">
+              <div class="section-content text-truncate-container truncated-5-lines" id="about-section">
                  
                 <p>{{ startup.description|linebreaksbr|default:"Нет подробного описания." }}</p>
                 {% if startup.additional_info %}
@@ -207,7 +208,7 @@
                   {{ startup.additional_info|linebreaksbr }}
                 {% endif %}
                  
-                 <a href="#" class="read-more-link" style="display: none;">Читать дальше</a>
+                <span class="text-truncate-toggle" onclick="toggleTextTruncation('about-section', 5)">Показать полностью</span>
               </div>
             </div>
 

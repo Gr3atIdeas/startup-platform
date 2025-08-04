@@ -734,14 +734,16 @@ document.addEventListener('DOMContentLoaded', function () {
       const ratingIcons = overallRating.querySelectorAll('.rating-icon-container');
       
       console.log('Overall rating:', rating);
+      console.log('Rating icons found:', ratingIcons.length);
       
       ratingIcons.forEach((iconContainer, iconIndex) => {
         const value = iconIndex + 1;
         const emptyIcon = iconContainer.querySelector('.icon-empty');
         const filledIcon = iconContainer.querySelector('.icon-filled');
         
+        console.log(`Icon ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
+        
         if (value <= Math.floor(rating)) {
-          // Полностью заполненная планета
           if (emptyIcon) {
             emptyIcon.style.display = 'none';
             emptyIcon.style.opacity = '0';
@@ -752,8 +754,8 @@ document.addEventListener('DOMContentLoaded', function () {
             filledIcon.style.clipPath = 'none';
           }
         } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
-          // Частично заполненная планета - обрезаем
           const partialValue = rating % 1;
+          console.log(`Partial rating for icon ${value}: ${partialValue}`);
           if (emptyIcon) {
             emptyIcon.style.display = 'block';
             emptyIcon.style.opacity = '1';
@@ -764,7 +766,6 @@ document.addEventListener('DOMContentLoaded', function () {
             filledIcon.style.clipPath = `inset(0 ${100 - (partialValue * 100)}% 0 0)`;
           }
         } else {
-          // Пустая планета
           if (emptyIcon) {
             emptyIcon.style.display = 'block';
             emptyIcon.style.opacity = '1';
@@ -776,6 +777,44 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         }
       });
+    } else {
+      console.log('Overall rating element not found');
+    }
+  }
+
+  function toggleTextTruncation(sectionId, maxLines) {
+    const container = document.getElementById(sectionId);
+    if (!container) return;
+    
+    const isTruncated = container.classList.contains(`truncated-${maxLines}-lines`);
+    
+    if (isTruncated) {
+      container.classList.remove(`truncated-${maxLines}-lines`);
+      container.querySelector('.text-truncate-toggle').textContent = 'Скрыть';
+    } else {
+      container.classList.add(`truncated-${maxLines}-lines`);
+      container.querySelector('.text-truncate-toggle').textContent = 'Показать полностью';
+    }
+  }
+
+  function setupTextTruncation() {
+    const introSection = document.getElementById('intro-section');
+    const aboutSection = document.getElementById('about-section');
+    
+    if (introSection) {
+      const introText = introSection.querySelector('p');
+      if (introText && introText.scrollHeight <= introText.clientHeight) {
+        introSection.querySelector('.text-truncate-toggle').style.display = 'none';
+        introSection.classList.remove('truncated-3-lines');
+      }
+    }
+    
+    if (aboutSection) {
+      const aboutText = aboutSection.querySelector('p');
+      if (aboutText && aboutText.scrollHeight <= aboutText.clientHeight) {
+        aboutSection.querySelector('.text-truncate-toggle').style.display = 'none';
+        aboutSection.classList.remove('truncated-5-lines');
+      }
     }
   }
 
@@ -793,6 +832,9 @@ document.addEventListener('DOMContentLoaded', function () {
   
   // Инициализация кнопки "показать еще" в похожих стартапах
   setupSimilarStartupsShowMore();
+  
+  // Инициализация обрезки текста
+  setupTextTruncation();
   
   // Инициализация рейтинга в похожих стартапах
   function setupSimilarStartupsRatings() {
