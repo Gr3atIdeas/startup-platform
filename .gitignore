@@ -24,6 +24,7 @@ dist/
 *.log
 db.sqlite3
 staticfiles/
+!staticfiles/staticfiles.json
 
 # OS specific
 .DS_Store
@@ -92,6 +93,7 @@ package-lock.json
 
 # --- Staticfiles (Django) ---
 staticfiles/
+!staticfiles/staticfiles.json
 
 # --- Build assets (Vite) ---
 /static/dist
