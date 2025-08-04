@@ -575,7 +575,7 @@ document.addEventListener('DOMContentLoaded', function () {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': getCookie('csrftoken'),
+          'X-CSRFToken': csrfToken,
         },
         body: `new_owner_id=${newOwnerId}`,
       })
@@ -620,7 +620,7 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
+                'X-CSRFToken': csrfToken,
             },
             body: JSON.stringify({
                 user_id: selectedInvestor.id,
@@ -678,7 +678,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (confirm(`Вы уверены, что хотите удалить этого инвестора?`)) {
                 fetch(`/delete_investment/${startupId}/${userId}/`, {
                     method: 'POST',
-                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                    headers: { 'X-CSRFToken': csrfToken },
                 })
                 .then(response => {
                     if (!response.ok) {
@@ -763,7 +763,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(`/cosmochat/start-chat/${ownerId}/`, {
             method: 'POST',
             headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
+                'X-CSRFToken': csrfToken,
                 'X-Requested-With': 'XMLHttpRequest',
             },
         })
@@ -838,7 +838,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await fetch(`/cosmochat/start-chat/${ownerId}/`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-CSRFToken': csrfToken,
                     'X-Requested-With': 'XMLHttpRequest',
                 },
             });
@@ -910,8 +910,7 @@ document.addEventListener('DOMContentLoaded', function () {
   setupChatButtons();
   setupTimelineSteps();
   if (pageDataElement) {
-    setupRatingStars();
-    setupSimilarStartups();
+    initializeSimilarRatings();
     setupTruncateText();
     setupChatButtons();
     setupTimelineSteps();

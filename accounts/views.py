@@ -432,7 +432,7 @@ def startups_list(request):
     page_number = request.GET.get("page", 1)
     startups_qs = startups_qs.annotate(
         total_voters_agg=Count("uservotes", distinct=True),
-        total_investors_agg=Count("investmenttransactions", distinct=True),
+        total_investors_agg=Count("investmenttransactions__investor", distinct=True),
         current_funding_sum_agg=Coalesce(
             Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
         ),
