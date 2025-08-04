@@ -510,10 +510,15 @@ document.addEventListener('DOMContentLoaded', function () {
       interactive: ratingStars.dataset.interactive
     });
 
-    // Log the initial state of each container
+    // Сначала скрываем все заполненные планеты
     ratingContainers.forEach((container, index) => {
       const emptyIcon = container.querySelector('.icon-empty');
       const filledIcon = container.querySelector('.icon-filled');
+      
+      // Принудительно показываем пустые планеты и скрываем заполненные
+      if (emptyIcon) emptyIcon.style.display = 'block';
+      if (filledIcon) filledIcon.style.display = 'none';
+      
       console.log(`Container ${index + 1} initial state:`, {
         emptyDisplay: emptyIcon ? emptyIcon.style.display : 'no element',
         filledDisplay: filledIcon ? filledIcon.style.display : 'no element',
@@ -706,7 +711,16 @@ document.addEventListener('DOMContentLoaded', function () {
       chatButton.addEventListener('click', (e) => {
         e.preventDefault();
         console.log('Chat button clicked');
-        alert('Функция чата в разработке');
+        
+        // Получаем ID владельца стартапа для чата
+        const ownerId = document.querySelector('.startup-detail-page').dataset.ownerId;
+        if (!ownerId) {
+          alert('Ошибка: не удалось определить автора стартапа');
+          return;
+        }
+        
+        // Переходим на страницу чата
+        window.location.href = `/cosmochat/`;
       });
     } else {
       console.error('Chat button not found');
@@ -721,7 +735,16 @@ document.addEventListener('DOMContentLoaded', function () {
       writeButton.addEventListener('click', (e) => {
         e.preventDefault();
         console.log('Write button clicked');
-        alert('Функция отправки сообщений в разработке');
+        
+        // Получаем ID владельца стартапа
+        const ownerId = document.querySelector('.startup-detail-page').dataset.ownerId;
+        if (!ownerId) {
+          alert('Ошибка: не удалось определить автора стартапа');
+          return;
+        }
+        
+        // Переходим на страницу чата
+        window.location.href = `/cosmochat/`;
       });
     } else {
       console.error('Write button not found');
