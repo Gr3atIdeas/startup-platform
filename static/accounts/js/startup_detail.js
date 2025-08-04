@@ -787,6 +787,64 @@ document.addEventListener('DOMContentLoaded', function () {
   
   // Инициализация общего рейтинга
   setupOverallRating();
+  
+  // Инициализация рейтинга в похожих стартапах
+  setupSimilarStartupsRatings();
+  
+  // Инициализация рейтинга в похожих стартапах
+  function setupSimilarStartupsRatings() {
+    console.log('Setting up similar startups ratings...');
+    const similarRatings = document.querySelectorAll('.similar-card-rating');
+    
+    similarRatings.forEach((ratingContainer, index) => {
+      const rating = parseFloat(ratingContainer.dataset.rating) || 0;
+      const ratingIcons = ratingContainer.querySelectorAll('.rating-icon-container');
+      
+      console.log(`Similar startup ${index + 1} rating:`, rating);
+      
+      ratingIcons.forEach((iconContainer, iconIndex) => {
+        const value = iconIndex + 1;
+        const emptyIcon = iconContainer.querySelector('.icon-empty');
+        const filledIcon = iconContainer.querySelector('.icon-filled');
+        
+        if (value <= Math.floor(rating)) {
+          // Полностью заполненная планета
+          if (emptyIcon) {
+            emptyIcon.style.display = 'none';
+            emptyIcon.style.opacity = '0';
+          }
+          if (filledIcon) {
+            filledIcon.style.display = 'block';
+            filledIcon.style.opacity = '1';
+            filledIcon.style.clipPath = 'none';
+          }
+        } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
+          // Частично заполненная планета - обрезаем
+          const partialValue = rating % 1;
+          if (emptyIcon) {
+            emptyIcon.style.display = 'block';
+            emptyIcon.style.opacity = '1';
+          }
+          if (filledIcon) {
+            filledIcon.style.display = 'block';
+            filledIcon.style.opacity = '1';
+            filledIcon.style.clipPath = `inset(0 ${100 - (partialValue * 100)}% 0 0)`;
+          }
+        } else {
+          // Пустая планета
+          if (emptyIcon) {
+            emptyIcon.style.display = 'block';
+            emptyIcon.style.opacity = '1';
+          }
+          if (filledIcon) {
+            filledIcon.style.display = 'none';
+            filledIcon.style.opacity = '0';
+            filledIcon.style.clipPath = 'none';
+          }
+        }
+      });
+    });
+  }
 
   // Обработка переключения вкладок
   function setupTabNavigation() {

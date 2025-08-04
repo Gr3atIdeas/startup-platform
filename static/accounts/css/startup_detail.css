@@ -54,41 +54,24 @@ a:hover {
 
 
 .main-content-grid {
-  
-
-  
-  max-width: 1303px;
+  max-width: 1400px;
   width: 100%;
-  margin: 0 auto; 
-
-  
-
-  
-  padding: 40px 0; 
+  margin: 0 auto;
+  padding: 40px 0;
   box-sizing: border-box;
-
-  
   display: flex;
-  gap: 30px; 
+  gap: 30px;
 }
 
 
 .back-link-container {
   margin-bottom: 30px;
-
-  
-
-  
-  width: 1303px;
+  width: 1400px;
   margin-left: auto;
   margin-right: auto;
-
-  
-
-  
   padding: 0 12px;
   box-sizing: border-box;
-  margin: 0 auto 30px; 
+  margin: 0 auto 30px;
 }
 
 .back-button {
@@ -3330,4 +3313,103 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
     width: 350px;
     height: 350px;
   }
+}
+
+.moderator-review-section.card,
+.moderator-comment-display.card {
+  display: flex;
+  width: 451px;
+  height: auto;
+  min-height: 200px;
+  padding: 20px 30px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: rgb(0 0 0 / 27%);
+  box-shadow: 6px 6px 10px 0 rgb(0 0 0 / 25%);
+  backdrop-filter: blur(10px);
+  box-sizing: border-box;
+  border: none;
+  color: var(--text-primary);
+}
+
+.moderator-review-section .card-header,
+.moderator-comment-display .card-header {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.moderator-review-section .card-header h4,
+.moderator-comment-display .card-header h5 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent-yellow);
+  margin: 0;
+}
+
+.moderator-review-section .card-body,
+.moderator-comment-display .card-body {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--text-primary);
+}
+
+.moderator-review-section .form-label {
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.moderator-review-section .moderator-comment-textarea {
+  background: rgb(255 255 255 / 10%);
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 8px;
+  color: var(--text-primary);
+  padding: 12px;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.moderator-review-section .moderator-comment-textarea:focus {
+  outline: none;
+  border-color: var(--accent-yellow);
+  background: rgb(255 255 255 / 15%);
+}
+
+.moderator-review-section .btn-success,
+.moderator-review-section .btn-danger {
+  background: transparent;
+  border: 1px solid var(--text-secondary);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.moderator-review-section .btn-success:hover {
+  background: rgb(0 255 0 / 20%);
+  border-color: #28a745;
+  color: #28a745;
+}
+
+.moderator-review-section .btn-danger:hover {
+  background: rgb(255 0 0 / 20%);
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.moderator-comment-display .card-text {
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
 }
