@@ -16,6 +16,9 @@ echo "--- END VITE MANIFEST CONTENT ---"
 echo "--- Applying database migrations ---"
 python manage.py migrate --noinput
 
+echo "--- Adding user_rating column to comments table ---"
+python manage.py add_user_rating_column
+
 echo "--- Checking for migration conflicts ---"
 python manage.py showmigrations accounts
 
