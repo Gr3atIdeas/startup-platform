@@ -444,8 +444,8 @@
                   <div class="comment-content-wrapper">
                     <div class="comment-author-name">
                       {{ comment.user_id.first_name|default:comment.user_id.username }}
-                      {% if comment.user_rating %}
-                        <span class="comment-author-rating-badge">оценил на {{ comment.user_rating }}</span>
+                      {% if comment.user_vote_rating %}
+                        <span class="comment-author-rating-badge">оценил на {{ comment.user_vote_rating }}</span>
                       {% endif %}
                     </div>
                     <div class="comment-body">
@@ -455,7 +455,7 @@
                 </div>
                 <div class="comment-right">
                   <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}</div>
-                  <div class="comment-rating" data-rating="{{ comment.user_rating|default:0 }}">
+                  <div class="comment-rating" data-rating="{{ comment.user_vote_rating|default:0 }}">
                     {% for star_i in "12345" %}
                       <span class="rating-icon-container comment-icon-container">
                         <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">

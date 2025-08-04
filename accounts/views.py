@@ -564,7 +564,7 @@ def startup_detail(request, startup_id):
     comments_with_rating = (
         Comments.objects.filter(startup_id=startup, parent_comment_id__isnull=True)
         .annotate(
-            user_rating=models.Subquery(
+            user_vote_rating=models.Subquery(
                 UserVotes.objects.filter(
                     startup=startup, user=models.OuterRef("user_id_id")
                 ).values("rating")[:1]
