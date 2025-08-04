@@ -498,7 +498,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const ratingContainers = ratingStars.querySelectorAll('.rating-icon-container');
-    const currentRating = parseFloat(ratingStars.dataset.rating) || 0;
+    const currentRatingStr = ratingStars.dataset.rating || '0';
+    // Парсим рейтинг, заменяя запятую на точку
+    const currentRating = parseFloat(currentRatingStr.replace(',', '.')) || 0;
     
     console.log('Found rating stars:', ratingStars);
     console.log('Rating containers count:', ratingContainers.length);
@@ -555,15 +557,13 @@ document.addEventListener('DOMContentLoaded', function () {
       console.log(`Container ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
       
       if (value <= rating) {
-        // Show filled icon with full width
-        emptyIcon.style.display = 'none';
-        filledIcon.style.display = 'block';
-        filledIcon.style.width = '100%';
+        // Показываем заполненную планету
+        if (emptyIcon) emptyIcon.style.display = 'none';
+        if (filledIcon) filledIcon.style.display = 'block';
       } else {
-        // Show empty icon, hide filled icon
-        emptyIcon.style.display = 'block';
-        filledIcon.style.display = 'none';
-        filledIcon.style.width = '0%';
+        // Показываем пустую планету
+        if (emptyIcon) emptyIcon.style.display = 'block';
+        if (filledIcon) filledIcon.style.display = 'none';
       }
     });
   }
@@ -700,8 +700,16 @@ document.addEventListener('DOMContentLoaded', function () {
       chatButton.addEventListener('click', (e) => {
         e.preventDefault();
         console.log('Chat button clicked');
-        // Здесь можно добавить логику для открытия чата
-        alert('Функция чата в разработке');
+        
+        // Получаем ID стартапа
+        const startupId = document.querySelector('.startup-detail-page').dataset.startupId;
+        if (!startupId) {
+          alert('Ошибка: не удалось определить стартап');
+          return;
+        }
+        
+        // Перенаправляем на страницу чата
+        window.location.href = `/cosmochat/start-chat/${startupId}/`;
       });
     } else {
       console.error('Chat button not found');
@@ -716,8 +724,16 @@ document.addEventListener('DOMContentLoaded', function () {
       writeButton.addEventListener('click', (e) => {
         e.preventDefault();
         console.log('Write button clicked');
-        // Здесь можно добавить логику для отправки сообщения автору
-        alert('Функция отправки сообщений в разработке');
+        
+        // Получаем ID владельца стартапа
+        const ownerId = document.querySelector('.startup-detail-page').dataset.ownerId;
+        if (!ownerId) {
+          alert('Ошибка: не удалось определить автора стартапа');
+          return;
+        }
+        
+        // Перенаправляем на страницу чата с автором
+        window.location.href = `/cosmochat/start-chat/${ownerId}/`;
       });
     } else {
       console.error('Write button not found');
