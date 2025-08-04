@@ -909,13 +909,8 @@ document.addEventListener('DOMContentLoaded', function () {
   setupTruncateText();
   setupChatButtons();
   setupTimelineSteps();
+  
   if (pageDataElement) {
     initializeSimilarRatings();
-    setupTruncateText();
-    setupChatButtons();
-    setupTimelineSteps();
-    const addInvestorModalEl = document.getElementById('addInvestorModal');
-    if (addInvestorModalEl) {
-    }
   }
 })
