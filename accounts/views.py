@@ -4107,6 +4107,20 @@ def download_startups_report(request):
         ws['A10'] = "Минимальный сбор:"
         ws['B10'] = f"{min_raised:,.0f} ₽"
         
+        # Статистика по инвесторам
+        total_investors_data = approved_startups_qs.aggregate(
+            total_investors=Count('investmenttransactions__investor', distinct=True)
+        )
+        total_investors = total_investors_data.get('total_investors', 0)
+        
+        ws['A11'] = "Общее количество инвесторов:"
+        ws['B11'] = total_investors
+        
+        # Среднее количество инвесторов на стартап
+        avg_investors = total_investors / approved_startups_count if approved_startups_count > 0 else 0
+        ws['A12'] = "Среднее количество инвесторов на стартап:"
+        ws['B12'] = f"{avg_investors:.1f}"
+        
         # Заголовки таблицы стартапов с данными об инвесторах
         headers = [
             "№", "Название стартапа", "Количество инвесторов", "Список инвесторов", 
@@ -4114,7 +4128,7 @@ def download_startups_report(request):
             "Категория", "Статус", "Цель (₽)"
         ]
         
-        row = 12
+        row = 14
         for col, header in enumerate(headers, 1):
             cell = ws.cell(row=row, column=col, value=header)
             cell.font = header_font
@@ -4123,9 +4137,12 @@ def download_startups_report(request):
             cell.border = thin_border
         
         # Данные стартапов с информацией об инвесторах
-        row = 13
+        row = 15
         for idx, startup in enumerate(approved_startups_qs, 1):
-            # Получаем данные об инвесторах
+            # Получаем данные об инвесторах - используем метод модели для подсчета
+            investors_count = startup.get_investors_count()
+            
+            # Получаем детальную информацию об инвесторах
             investors_data = (
                 InvestmentTransactions.objects.filter(
                     startup=startup,
@@ -4148,8 +4165,11 @@ def download_startups_report(request):
                 total_investment += amount
                 investors_list.append(f"{investor_name} ({amount:,.0f} ₽)")
             
-            investors_text = "; ".join(investors_list) if investors_list else "Нет инвесторов"
-            investors_count = len(investors_list)
+            # Ограничиваем длину списка инвесторов для Excel
+            if len(investors_list) > 5:
+                investors_text = "; ".join(investors_list[:5]) + f" и еще {len(investors_list) - 5} инвесторов"
+            else:
+                investors_text = "; ".join(investors_list) if investors_list else "Нет инвесторов"
             
             # Получаем рейтинг
             try:
@@ -4169,7 +4189,10 @@ def download_startups_report(request):
             ws.cell(row=row, column=1, value=idx).border = thin_border
             ws.cell(row=row, column=2, value=startup.title or "Без названия").border = thin_border
             ws.cell(row=row, column=3, value=investors_count).border = thin_border
-            ws.cell(row=row, column=4, value=investors_text).border = thin_border
+            # Устанавливаем значение и перенос строк для списка инвесторов
+            cell = ws.cell(row=row, column=4, value=investors_text)
+            cell.border = thin_border
+            cell.alignment = Alignment(wrap_text=True, vertical="top")
             ws.cell(row=row, column=5, value=f"{total_investment:,.0f} ₽").border = thin_border
             ws.cell(row=row, column=6, value=f"{average_rating:.1f}").border = thin_border
             ws.cell(row=row, column=7, value=created_date).border = thin_border
@@ -4181,7 +4204,11 @@ def download_startups_report(request):
             for col in range(1, 11):
                 cell = ws.cell(row=row, column=col)
                 cell.font = data_font
-                cell.alignment = data_alignment
+                if col != 4:  # Не изменяем выравнивание для списка инвесторов
+                    cell.alignment = data_alignment
+            
+            # Устанавливаем высоту строки для лучшего отображения списка инвесторов
+            ws.row_dimensions[row].height = 60
             
             row += 1
         
