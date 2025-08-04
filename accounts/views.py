@@ -3654,63 +3654,109 @@ def support_page_view(request):
     return render(request, "accounts/support.html", context)
 @login_required
 def change_owner(request, startup_id):
+    logger.info(f"Change owner request for startup {startup_id} by user {request.user.user_id}")
+    
     if request.method != "POST":
+        logger.warning(f"Invalid method {request.method} for change_owner")
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
+    
     if not getattr(request.user, "role", None) or (request.user.role.role_name or "").lower() != "moderator":
+        logger.warning(f"User {request.user.user_id} does not have moderator role")
         return JsonResponse(
             {"success": False, "error": "У вас нет прав для этого действия"}
         )
-    startup = get_object_or_404(Startups, startup_id=startup_id)
-    new_owner_id = request.POST.get("new_owner_id")
-    new_owner = get_object_or_404(Users, user_id=new_owner_id)
-    startup.owner = new_owner
-    startup.save()
-    return JsonResponse({"success": True})
+    
+    try:
+        startup = get_object_or_404(Startups, startup_id=startup_id)
+        new_owner_id = request.POST.get("new_owner_id")
+        
+        if not new_owner_id:
+            logger.error("No new_owner_id provided")
+            return JsonResponse({"success": False, "error": "Не указан новый владелец"})
+        
+        new_owner = get_object_or_404(Users, user_id=new_owner_id)
+        startup.owner = new_owner
+        startup.save()
+        
+        logger.info(f"Successfully changed owner of startup {startup_id} to user {new_owner_id}")
+        return JsonResponse({"success": True})
+        
+    except Exception as e:
+        logger.error(f"Error changing owner for startup {startup_id}: {str(e)}")
+        return JsonResponse({"success": False, "error": f"Ошибка при смене владельца: {str(e)}"})
 @login_required
 def get_investors(request, startup_id):
+    logger.info(f"Get investors request for startup {startup_id} by user {request.user.user_id}")
+    
     if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+        logger.warning(f"User {request.user.user_id} does not have moderator role for get_investors")
         return JsonResponse({"error": "Доступ запрещен"}, status=403)
-    startup = get_object_or_404(Startups, startup_id=startup_id)
-    investors = InvestmentTransactions.objects.filter(startup=startup).select_related(
-        "investor"
-    )
-    investor_list = []
-    for tx in investors:
-        if tx.investor:
-            investor_list.append(
-                {
-                    "user_id": tx.investor.user_id,
-                    "name": tx.investor.get_full_name() or tx.investor.email,
-                    "amount": float(tx.amount),
-                }
-            )
-    html = render_to_string(
-        "accounts/partials/_investors_list.html",
-        {"investors": investor_list, "startup": startup, "user": request.user},
-    )
-    return JsonResponse({"html": html})
+    
+    try:
+        startup = get_object_or_404(Startups, startup_id=startup_id)
+        investors = InvestmentTransactions.objects.filter(startup=startup).select_related(
+            "investor"
+        )
+        
+        logger.info(f"Found {investors.count()} investment transactions for startup {startup_id}")
+        
+        investor_list = []
+        for tx in investors:
+            if tx.investor:
+                investor_list.append(
+                    {
+                        "user_id": tx.investor.user_id,
+                        "name": tx.investor.get_full_name() or tx.investor.email,
+                        "amount": float(tx.amount),
+                    }
+                )
+        
+        html = render_to_string(
+            "accounts/partials/_investors_list.html",
+            {"investors": investor_list, "startup": startup, "user": request.user},
+        )
+        
+        logger.info(f"Generated HTML for {len(investor_list)} investors")
+        return JsonResponse({"html": html})
+        
+    except Exception as e:
+        logger.error(f"Error getting investors for startup {startup_id}: {str(e)}")
+        return JsonResponse({"error": f"Ошибка при получении списка инвесторов: {str(e)}"}, status=500)
 @login_required
 def add_investor(request, startup_id):
+    logger.info(f"Add investor request for startup {startup_id} by user {request.user.user_id}")
+    
     if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+        logger.warning(f"User {request.user.user_id} does not have moderator role for add_investor")
         return JsonResponse({"error": "Доступ запрещен"}, status=403)
+    
     if request.method == "POST":
         try:
             data = json.loads(request.body)
             user_id = data.get("user_id")
             amount = Decimal(data.get("amount"))
+            
+            logger.info(f"Adding investor {user_id} with amount {amount} to startup {startup_id}")
+            
             startup = get_object_or_404(Startups, startup_id=startup_id)
             user_to_invest = get_object_or_404(Users, user_id=user_id)
+            
             if amount <= 0:
+                logger.warning(f"Invalid amount {amount} for startup {startup_id}")
                 return JsonResponse(
                     {"success": False, "error": "Сумма должна быть положительной."}
                 )
+            
             existing_tx = InvestmentTransactions.objects.filter(
                 startup_id=startup_id, investor=user_to_invest
             ).first()
+            
             if existing_tx:
+                logger.info(f"Updating existing investment for user {user_id} in startup {startup_id}")
                 existing_tx.amount = amount
                 existing_tx.save()
             else:
+                logger.info(f"Creating new investment for user {user_id} in startup {startup_id}")
                 try:
                     investment_type_obj = TransactionTypes.objects.get(
                         type_name="investment"
@@ -3722,15 +3768,20 @@ def add_investor(request, startup_id):
                         transaction_type=investment_type_obj,
                     )
                 except TransactionTypes.DoesNotExist:
+                    logger.error("Transaction type 'investment' not found")
                     return JsonResponse(
                         {"error": "Тип транзакции 'investment' не найден в системе."},
                         status=500,
                     )
+            
             startup.amount_raised = startup.investmenttransactions_set.aggregate(
                 total=Sum("amount")
             )["total"] or Decimal("0")
             startup.save(update_fields=["amount_raised"])
             new_investor_count = startup.get_investors_count()
+            
+            logger.info(f"Successfully added investor to startup {startup_id}. New amount: {startup.amount_raised}, investors: {new_investor_count}")
+            
             return JsonResponse(
                 {
                     "success": True,
@@ -3739,9 +3790,17 @@ def add_investor(request, startup_id):
                 }
             )
         except (json.JSONDecodeError, TypeError, ValueError) as e:
+            logger.error(f"Data format error in add_investor: {str(e)}")
             return JsonResponse(
                 {"error": f"Неверный формат данных: {str(e)}"}, status=400
             )
+        except Exception as e:
+            logger.error(f"Unexpected error in add_investor: {str(e)}")
+            return JsonResponse(
+                {"error": f"Внутренняя ошибка сервера: {str(e)}"}, status=500
+            )
+    
+    logger.warning(f"Invalid method {request.method} for add_investor")
     return JsonResponse({"error": "Метод не поддерживается"}, status=405)
 @login_required
 def edit_investment(request, startup_id, user_id):
@@ -3773,8 +3832,12 @@ def edit_investment(request, startup_id, user_id):
     return JsonResponse({"success": True})
 @login_required
 def delete_investment(request, startup_id, user_id):
+    logger.info(f"Delete investment request for startup {startup_id}, user {user_id} by user {request.user.user_id}")
+    
     if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+        logger.warning(f"User {request.user.user_id} does not have moderator role for delete_investment")
         return JsonResponse({"error": "Доступ запрещен"}, status=403)
+    
     if request.method == "POST":
         with transaction.atomic():
             try:
@@ -3784,14 +3847,21 @@ def delete_investment(request, startup_id, user_id):
                     startup_id=startup_id,
                     investor=user_to_delete,
                 )
+                
+                logger.info(f"Found investment transaction {tx.id} for deletion")
+                
                 startup = tx.startup
                 tx.delete()
+                
                 new_total = startup.investmenttransactions_set.aggregate(
                     total=Sum("amount")
                 )["total"] or Decimal("0")
                 startup.amount_raised = new_total
                 startup.save(update_fields=["amount_raised"])
                 new_investor_count = startup.get_investors_count()
+                
+                logger.info(f"Successfully deleted investment. New total: {new_total}, investors: {new_investor_count}")
+                
                 return JsonResponse(
                     {
                         "success": True,
@@ -3800,10 +3870,13 @@ def delete_investment(request, startup_id, user_id):
                     }
                 )
             except InvestmentTransactions.DoesNotExist:
+                logger.warning(f"Investment transaction not found for startup {startup_id}, user {user_id}")
                 return JsonResponse({"error": "Инвестиция не найдена"}, status=404)
             except Exception as e:
                 logger.error(f"Ошибка при удалении инвестиции: {e}")
                 return JsonResponse({"error": "Внутренняя ошибка сервера"}, status=500)
+    
+    logger.warning(f"Invalid method {request.method} for delete_investment")
     return JsonResponse({"error": "Неверный метод запроса"}, status=405)
 @login_required
 def support_orders_view(request):

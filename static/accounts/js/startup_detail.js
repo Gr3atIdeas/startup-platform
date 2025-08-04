@@ -105,8 +105,13 @@ document.addEventListener('DOMContentLoaded', function () {
   const csrfToken = csrfTokenInput
     ? csrfTokenInput.value
     : getCookie('csrftoken')
+  
+  console.log('CSRF Token found:', !!csrfToken);
+  console.log('CSRF Token input found:', !!csrfTokenInput);
   if (!startupId) {
     console.error('Startup ID не найден в data-атрибутах.')
+  } else {
+    console.log('Startup ID found:', startupId);
   }
   function updateAnimatedProgressBars(containerElement) {
     if (!containerElement) return
@@ -510,21 +515,45 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   function setupUserSearch(modalId, searchInputId, resultsId, onSelect) {
     const searchModalElement = document.getElementById(modalId)
-    if (!searchModalElement) return;
+    if (!searchModalElement) {
+      console.error(`Modal element with id '${modalId}' not found`);
+      return;
+    }
     const searchInput = document.getElementById(searchInputId)
     const searchResults = document.getElementById(resultsId)
+    
+    if (!searchInput) {
+      console.error(`Search input with id '${searchInputId}' not found`);
+      return;
+    }
+    
+    if (!searchResults) {
+      console.error(`Search results with id '${resultsId}' not found`);
+      return;
+    }
+    
     const debouncedSearch = debounce(function (query) {
       if (query.length < 2) {
         searchResults.innerHTML = ''
         return
       }
+      
+      console.log('Searching for:', query);
+      
       fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`, {
-        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        headers: { 
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRFToken': csrfToken
+        },
       })
-      .then(response => response.json())
+      .then(response => {
+        console.log('Search response status:', response.status);
+        return response.json();
+      })
       .then(data => {
+        console.log('Search results:', data);
         searchResults.innerHTML = ''
-        if (data.suggestions.length === 0) {
+        if (!data.suggestions || data.suggestions.length === 0) {
           searchResults.innerHTML = '<li class="list-group-item">Пользователи не найдены</li>'
           return
         }
@@ -535,11 +564,16 @@ document.addEventListener('DOMContentLoaded', function () {
           li.textContent = user.name
           li.dataset.userId = user.id
           li.addEventListener('click', () => {
+            console.log('User selected:', user);
             onSelect(user);
             if (modalId === 'changeOwnerModal') {
-                const currentModal = bootstrap.Modal.getInstance(searchModalElement);
-                if (currentModal) {
-                    currentModal.hide();
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    const currentModal = bootstrap.Modal.getInstance(searchModalElement);
+                    if (currentModal) {
+                        currentModal.hide();
+                    }
+                } else {
+                    console.error('Bootstrap Modal not available for hiding modal');
                 }
             }
           });
@@ -551,26 +585,75 @@ document.addEventListener('DOMContentLoaded', function () {
         searchResults.innerHTML = '<li class="list-group-item">Ошибка поиска</li>'
       })
     }, 300)
+    
     searchInput.addEventListener('input', function () {
       debouncedSearch(this.value.trim())
     })
-    searchModalElement.addEventListener('hidden.bs.modal', function () {
-        searchInput.value = '';
-        searchResults.innerHTML = '';
-    });
+    
+    if (searchModalElement) {
+      searchModalElement.addEventListener('hidden.bs.modal', function () {
+          if (searchInput) searchInput.value = '';
+          if (searchResults) searchResults.innerHTML = '';
+      });
+    }
   }
+  console.log('Setting up change owner search...');
   setupUserSearch('changeOwnerModal', 'userSearchInput', 'userSearchResults', (user) => {
+    console.log('Setting up change owner for user:', user);
     const confirmModalEl = document.getElementById('confirmChangeOwnerModal')
-    if (!confirmModalEl) return;
-    document.getElementById('newOwnerName').textContent = user.name;
-    document.getElementById('newOwnerId').value = user.id;
-    const confirmModal = new bootstrap.Modal(confirmModalEl);
-    confirmModal.show();
+    if (!confirmModalEl) {
+      console.error('Confirm modal element not found');
+      return;
+    }
+          const newOwnerNameEl = document.getElementById('newOwnerName');
+      const newOwnerIdEl = document.getElementById('newOwnerId');
+      
+      console.log('newOwnerName element found:', !!newOwnerNameEl);
+      console.log('newOwnerId element found:', !!newOwnerIdEl);
+      
+      if (!newOwnerNameEl || !newOwnerIdEl) {
+        console.error('Required elements for change owner not found');
+        alert('Ошибка: элементы формы не найдены');
+        return;
+      }
+      
+      newOwnerNameEl.textContent = user.name;
+      newOwnerIdEl.value = user.id;
+      console.log('Set new owner name:', user.name, 'id:', user.id);
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      const confirmModal = new bootstrap.Modal(confirmModalEl);
+      confirmModal.show();
+    } else {
+      console.error('Bootstrap Modal not available');
+      alert('Ошибка: Bootstrap не загружен');
+    }
   });
+  
   const confirmChangeOwnerBtn = document.querySelector('.confirm-change-owner')
+  console.log('Confirm change owner button found:', !!confirmChangeOwnerBtn);
   if (confirmChangeOwnerBtn) {
     confirmChangeOwnerBtn.addEventListener('click', function () {
-      const newOwnerId = document.getElementById('newOwnerId').value
+      console.log('Confirm change owner button clicked');
+      const newOwnerIdEl = document.getElementById('newOwnerId');
+      if (!newOwnerIdEl) {
+        console.error('newOwnerId element not found');
+        alert('Ошибка: элемент формы не найден');
+        return;
+      }
+      const newOwnerId = newOwnerIdEl.value;
+      
+      if (!newOwnerId) {
+        alert('Не выбран новый владелец.');
+        return;
+      }
+      
+      if (!csrfToken) {
+        alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
+        return;
+      }
+      
+      console.log('Sending change owner request for startup:', startupId, 'new owner:', newOwnerId);
+      
       fetch(`/change_owner/${startupId}/`, {
         method: 'POST',
         headers: {
@@ -580,10 +663,15 @@ document.addEventListener('DOMContentLoaded', function () {
         body: `new_owner_id=${newOwnerId}`,
       })
       .then(async response => {
+        console.log('Change owner response status:', response.status);
         let data = null;
         try {
           data = await response.json();
-        } catch (e) {}
+          console.log('Change owner response data:', data);
+        } catch (e) {
+          console.error('Error parsing JSON response:', e);
+        }
+        
         if (response.ok && data && data.success) {
           alert('Владелец успешно изменён!');
           location.reload();
@@ -593,33 +681,74 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       })
       .catch(error => {
-        console.error('Ошибка:', error);
+        console.error('Ошибка при смене владельца:', error);
         alert('Сетевая ошибка при смене владельца.');
       });
     })
+  } else {
+    console.error('Confirm change owner button not found');
   }
   const addInvestorModalEl = document.getElementById('addInvestorModal');
+  console.log('Add investor modal element found:', !!addInvestorModalEl);
   if (addInvestorModalEl) {
+    console.log('Add investor modal found');
     let selectedInvestor = null;
+    
     setupUserSearch('addInvestorModal', 'investorSearchInput', 'investorSearchResults', (user) => {
+      console.log('Investor selected:', user);
       selectedInvestor = user;
       const investorSearchInput = document.getElementById('investorSearchInput');
-      investorSearchInput.value = user.name;
-      investorSearchInput.disabled = true;
-      document.getElementById('investorSearchResults').innerHTML = '';
-      document.getElementById('addInvestmentButton').disabled = false;
+      console.log('Investor search input found:', !!investorSearchInput);
+      if (investorSearchInput) {
+        investorSearchInput.value = user.name;
+        investorSearchInput.disabled = true;
+      }
+      
+      const searchResults = document.getElementById('investorSearchResults');
+      console.log('Investor search results found:', !!searchResults);
+      if (searchResults) {
+        searchResults.innerHTML = '';
+      }
+      
+      const addInvestmentButton = document.getElementById('addInvestmentButton');
+      console.log('Add investment button found in setup:', !!addInvestmentButton);
+      if (addInvestmentButton) {
+        addInvestmentButton.disabled = false;
+      }
     });
+    
     const addInvestmentButton = document.getElementById('addInvestmentButton');
-    addInvestmentButton.addEventListener('click', function() {
+    console.log('Add investment button found:', !!addInvestmentButton);
+    if (addInvestmentButton) {
+      addInvestmentButton.addEventListener('click', function() {
+        console.log('Add investment button clicked');
+        
         if (!selectedInvestor) {
             alert('Сначала выберите пользователя из списка.');
             return;
         }
-        const amount = document.getElementById('investmentAmount').value;
+        
+              const amountInput = document.getElementById('investmentAmount');
+      if (!amountInput) {
+        console.error('Investment amount input not found');
+        alert('Ошибка: поле суммы инвестиции не найдено');
+        return;
+      }
+      
+      const amount = amountInput.value;
+      console.log('Investment amount:', amount);
         if (!amount || parseFloat(amount) <= 0) {
             alert('Введите корректную сумму инвестиции.');
             return;
         }
+        
+        if (!csrfToken) {
+          alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
+          return;
+        }
+        
+        console.log('Adding investor:', selectedInvestor, 'amount:', amount);
+        
         fetch(`/add_investor/${startupId}/`, {
             method: 'POST',
             headers: {
@@ -632,10 +761,15 @@ document.addEventListener('DOMContentLoaded', function () {
             }),
         })
         .then(async response => {
+            console.log('Add investor response status:', response.status);
             let data = null;
             try {
                 data = await response.json();
-            } catch (e) {}
+                console.log('Add investor response data:', data);
+            } catch (e) {
+                console.error('Error parsing JSON response:', e);
+            }
+            
             if (response.ok && data && data.success) {
                 alert('Инвестор успешно добавлен!');
                 loadCurrentInvestors();
@@ -647,21 +781,42 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
         .catch(error => {
-            console.error('Ошибка:', error);
+            console.error('Ошибка при добавлении инвестора:', error);
             alert('Сетевая ошибка при добавлении инвестора.');
         });
     });
-    function resetAddInvestorForm() {
-        selectedInvestor = null;
-        const searchInput = document.getElementById('investorSearchInput');
-        searchInput.value = '';
-        searchInput.disabled = false;
-        document.getElementById('investmentAmount').value = '';
-        document.getElementById('addInvestmentButton').disabled = true;
+    } else {
+      console.error('Add investment button not found');
     }
+    function resetAddInvestorForm() {
+        console.log('Resetting add investor form');
+        selectedInvestor = null;
+        
+        const searchInput = document.getElementById('investorSearchInput');
+        console.log('Search input found in reset:', !!searchInput);
+        if (searchInput) {
+            searchInput.value = '';
+            searchInput.disabled = false;
+        }
+        
+        const amountInput = document.getElementById('investmentAmount');
+        console.log('Amount input found in reset:', !!amountInput);
+        if (amountInput) {
+            amountInput.value = '';
+        }
+        
+        const addButton = document.getElementById('addInvestmentButton');
+        console.log('Add button found in reset:', !!addButton);
+        if (addButton) {
+            addButton.disabled = true;
+        }
+    }
+    
     function loadCurrentInvestors() {
+        console.log('Loading current investors for startup:', startupId);
         fetch(`/get_investors/${startupId}/`)
         .then(response => {
+            console.log('Get investors response status:', response.status);
             if (!response.ok) {
                 return response.text().then(text => {
                     throw new Error(`Ошибка сервера: ${response.status}. Ответ: ${text}`);
@@ -670,75 +825,134 @@ document.addEventListener('DOMContentLoaded', function () {
             return response.json();
         })
         .then(data => {
+            console.log('Investors data received:', data);
             const investorsList = document.getElementById('currentInvestorsList');
-            investorsList.innerHTML = data.html;
+            console.log('Current investors list element found:', !!investorsList);
+            if (investorsList) {
+                investorsList.innerHTML = data.html;
+            } else {
+                console.error('Current investors list element not found');
+            }
         })
         .catch(error => {
+            console.error('Ошибка загрузки инвесторов:', error);
             const investorsList = document.getElementById('currentInvestorsList');
-            investorsList.innerHTML = '<p class="text-danger">Не удалось загрузить список инвесторов.</p>';
-            console.error('Ошибка загрузки инвесторов:', error)
+            console.log('Investors list element found in error handler:', !!investorsList);
+            if (investorsList) {
+                investorsList.innerHTML = '<p class="text-danger">Не удалось загрузить список инвесторов.</p>';
+            }
         });
     }
-    document.getElementById('currentInvestorsList').addEventListener('click', function(event) {
-        const deleteButton = event.target.closest('.delete-investment-btn');
-        if (deleteButton) {
-            const userId = deleteButton.dataset.userId;
-            if (confirm(`Вы уверены, что хотите удалить этого инвестора?`)) {
-                fetch(`/delete_investment/${startupId}/${userId}/`, {
-                    method: 'POST',
-                    headers: { 'X-CSRFToken': csrfToken },
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.text().then(text => { throw new Error(text) });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('Инвестиция удалена.');
-                        loadCurrentInvestors();
-                        updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
-                    } else {
-                        alert(data.error || 'Ошибка при удалении.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка при удалении инвестиции:', error);
-                    alert('Произошла ошибка при удалении.');
-                });
-            }
-        }
-    });
+    const currentInvestorsList = document.getElementById('currentInvestorsList');
+    console.log('Current investors list element found for event listener:', !!currentInvestorsList);
+    if (currentInvestorsList) {
+      currentInvestorsList.addEventListener('click', function(event) {
+          const deleteButton = event.target.closest('.delete-investment-btn');
+          if (deleteButton) {
+              console.log('Delete investment button clicked');
+              const userId = deleteButton.dataset.userId;
+              console.log('Deleting investment for user:', userId);
+              
+              if (!userId) {
+                  alert('Ошибка: не удалось определить пользователя.');
+                  return;
+              }
+              
+              if (!csrfToken) {
+                  alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
+                  return;
+              }
+              
+              if (confirm(`Вы уверены, что хотите удалить этого инвестора?`)) {
+                  console.log('Sending delete investment request');
+                  fetch(`/delete_investment/${startupId}/${userId}/`, {
+                      method: 'POST',
+                      headers: { 'X-CSRFToken': csrfToken },
+                  })
+                  .then(response => {
+                      console.log('Delete investment response status:', response.status);
+                      if (!response.ok) {
+                          return response.text().then(text => { 
+                              console.error('Delete investment error response:', text);
+                              throw new Error(text) 
+                          });
+                      }
+                      return response.json();
+                  })
+                  .then(data => {
+                      console.log('Delete investment response data:', data);
+                      if (data.success) {
+                          alert('Инвестиция удалена.');
+                          loadCurrentInvestors();
+                          updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
+                      } else {
+                          alert(data.error || 'Ошибка при удалении.');
+                      }
+                  })
+                          .catch(error => {
+            console.error('Ошибка при удалении инвестиции:', error);
+            alert('Произошла ошибка при удалении.');
+        });
+    } else {
+      console.error('Current investors list element not found for event listener');
+    }
+              }
+          }
+      });
+    } else {
+      console.error('Current investors list element not found');
+    }
     function updateStartupFinancials(investorCount, amountRaised) {
         console.log('Updating financials:', { investorCount, amountRaised });
+        
         const investorCountDisplay = document.getElementById('investor-count-display');
+        console.log('Investor count display found:', !!investorCountDisplay);
         if (investorCountDisplay) {
             investorCountDisplay.textContent = `(${investorCount})`;
         } else {
             console.error('Element with id "investor-count-display" not found.');
         }
+        
         const amountRaisedCard = document.querySelector('.info-card-value-button.accent-blue-bg');
+        console.log('Amount raised card found:', !!amountRaisedCard);
         if (amountRaisedCard) {
             amountRaisedCard.textContent = `${new Intl.NumberFormat('ru-RU').format(Math.floor(amountRaised))} ₽`;
+        } else {
+            console.error('Amount raised card element not found.');
         }
+        
         const fundingGoal = parseFloat(pageDataElement.dataset.fundingGoal) || 0;
         const progressPercentage = fundingGoal > 0 ? (amountRaised / fundingGoal) * 100 : 0;
+        
         const progressBar = document.querySelector('.progress-animation-container');
         const progressText = document.querySelector('.progress-percentage');
+        
+        console.log('Progress bar found:', !!progressBar);
+        console.log('Progress text found:', !!progressText);
+        
         if (progressBar) {
             progressBar.style.width = `${Math.min(progressPercentage, 100)}%`;
+        } else {
+            console.error('Progress bar element not found.');
         }
+        
         if (progressText) {
             progressText.textContent = `${Math.floor(progressPercentage)}%`;
+        } else {
+            console.error('Progress text element not found.');
         }
     }
     async function loadInvestors() {
+        console.log('Load investors function called');
     }
-    addInvestorModalEl.addEventListener('show.bs.modal', function () {
-        loadCurrentInvestors();
-        resetAddInvestorForm();
-    });
+    
+    if (addInvestorModalEl) {
+      addInvestorModalEl.addEventListener('show.bs.modal', function () {
+          console.log('Add investor modal shown');
+          loadCurrentInvestors();
+          resetAddInvestorForm();
+      });
+    }
   }
   const submitReportBtn = document.getElementById('submitReport');
   if(submitReportBtn) {

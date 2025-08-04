@@ -163,6 +163,7 @@
 
           
           {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+            <!-- Debug info: user={{ user.user_id }}, role={{ user.role.role_name }}, startup modes: both={{ startup.both_mode }}, buy={{ startup.only_buy }}, invest={{ startup.only_invest }} -->
             {% if startup.both_mode or startup.only_buy %}
               <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">
                 Сменить владельца
@@ -173,6 +174,8 @@
                 Добавить инвестора
               </button>
             {% endif %}
+          {% else %}
+            <!-- Debug info: user not authenticated or not moderator -->
           {% endif %}
         </div>
       </div> 
@@ -663,6 +666,7 @@
   </div>
 
   
+  <!-- Debug: Change Owner Modal -->
   <div class="modal fade" id="changeOwnerModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -682,6 +686,7 @@
   </div>
 
   
+  <!-- Debug: Confirm Change Owner Modal -->
   <div class="modal fade" id="confirmChangeOwnerModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -702,6 +707,7 @@
   </div>
 
   
+  <!-- Debug: Add Investor Modal -->
   <div class="modal fade" id="addInvestorModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
