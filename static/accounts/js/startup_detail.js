@@ -577,16 +577,20 @@ document.addEventListener('DOMContentLoaded', function () {
         if (filledIcon) {
           filledIcon.style.display = 'block';
           filledIcon.style.opacity = '1';
+          filledIcon.style.clipPath = 'none';
         }
       } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
-        // Частично заполненная планета (для дробных значений)
+        // Частично заполненная планета - обрезаем
+        const partialValue = rating % 1;
         if (emptyIcon) {
           emptyIcon.style.display = 'block';
           emptyIcon.style.opacity = '1';
         }
         if (filledIcon) {
           filledIcon.style.display = 'block';
-          filledIcon.style.opacity = String(rating % 1);
+          filledIcon.style.opacity = '1';
+          // Обрезаем планету по горизонтали
+          filledIcon.style.clipPath = `inset(0 ${100 - (partialValue * 100)}% 0 0)`;
         }
       } else {
         // Пустая планета
@@ -597,6 +601,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (filledIcon) {
           filledIcon.style.display = 'none';
           filledIcon.style.opacity = '0';
+          filledIcon.style.clipPath = 'none';
         }
       }
     });
@@ -680,8 +685,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const emptyIcon = iconContainer.querySelector('.icon-empty');
         const filledIcon = iconContainer.querySelector('.icon-filled');
         
-        if (value <= rating) {
-          // Заполненная планета
+        if (value <= Math.floor(rating)) {
+          // Полностью заполненная планета
           if (emptyIcon) {
             emptyIcon.style.display = 'none';
             emptyIcon.style.opacity = '0';
@@ -689,6 +694,19 @@ document.addEventListener('DOMContentLoaded', function () {
           if (filledIcon) {
             filledIcon.style.display = 'block';
             filledIcon.style.opacity = '1';
+            filledIcon.style.clipPath = 'none';
+          }
+        } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
+          // Частично заполненная планета - обрезаем
+          const partialValue = rating % 1;
+          if (emptyIcon) {
+            emptyIcon.style.display = 'block';
+            emptyIcon.style.opacity = '1';
+          }
+          if (filledIcon) {
+            filledIcon.style.display = 'block';
+            filledIcon.style.opacity = '1';
+            filledIcon.style.clipPath = `inset(0 ${100 - (partialValue * 100)}% 0 0)`;
           }
         } else {
           // Пустая планета
@@ -699,6 +717,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (filledIcon) {
             filledIcon.style.display = 'none';
             filledIcon.style.opacity = '0';
+            filledIcon.style.clipPath = 'none';
           }
         }
       });
@@ -730,16 +749,19 @@ document.addEventListener('DOMContentLoaded', function () {
           if (filledIcon) {
             filledIcon.style.display = 'block';
             filledIcon.style.opacity = '1';
+            filledIcon.style.clipPath = 'none';
           }
         } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
-          // Частично заполненная планета
+          // Частично заполненная планета - обрезаем
+          const partialValue = rating % 1;
           if (emptyIcon) {
             emptyIcon.style.display = 'block';
             emptyIcon.style.opacity = '1';
           }
           if (filledIcon) {
             filledIcon.style.display = 'block';
-            filledIcon.style.opacity = String(rating % 1);
+            filledIcon.style.opacity = '1';
+            filledIcon.style.clipPath = `inset(0 ${100 - (partialValue * 100)}% 0 0)`;
           }
         } else {
           // Пустая планета
@@ -750,6 +772,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (filledIcon) {
             filledIcon.style.display = 'none';
             filledIcon.style.opacity = '0';
+            filledIcon.style.clipPath = 'none';
           }
         }
       });
