@@ -6,26 +6,6 @@
       "hash": "c181924d4c04",
       "path": "accounts/js/startup_detail.c181924d4c04.js"
     },
-    "accounts/libs/jquery/js/jquery.min.js": {
-      "name": "accounts/libs/jquery/js/jquery.min.js",
-      "hash": "jquery",
-      "path": "accounts/libs/jquery/js/jquery.min.js"
-    },
-    "accounts/libs/bootstrap/js/bootstrap.bundle.min.js": {
-      "name": "accounts/libs/bootstrap/js/bootstrap.bundle.min.js",
-      "hash": "bootstrap",
-      "path": "accounts/libs/bootstrap/js/bootstrap.bundle.min.js"
-    },
-    "accounts/libs/plyr/js/plyr.polyfilled.js": {
-      "name": "accounts/libs/plyr/js/plyr.polyfilled.js",
-      "hash": "plyr",
-      "path": "accounts/libs/plyr/js/plyr.polyfilled.js"
-    },
-    "accounts/libs/glightbox/js/glightbox.min.js": {
-      "name": "accounts/libs/glightbox/js/glightbox.min.js",
-      "hash": "glightbox",
-      "path": "accounts/libs/glightbox/js/glightbox.min.js"
-    },
     "accounts/js/global_styles.js": {
       "name": "accounts/js/global_styles.js",
       "hash": "global",
@@ -50,21 +30,6 @@
       "name": "accounts/js/ui_enhancement.js",
       "hash": "ui",
       "path": "accounts/js/ui_enhancement.js"
-    },
-    "accounts/libs/bootstrap/css/bootstrap.min.css": {
-      "name": "accounts/libs/bootstrap/css/bootstrap.min.css",
-      "hash": "bootstrap-css",
-      "path": "accounts/libs/bootstrap/css/bootstrap.min.css"
-    },
-    "accounts/libs/fontawesome/css/all.min.css": {
-      "name": "accounts/libs/fontawesome/css/all.min.css",
-      "hash": "fontawesome",
-      "path": "accounts/libs/fontawesome/css/all.min.css"
-    },
-    "accounts/libs/glightbox/css/glightbox.min.css": {
-      "name": "accounts/libs/glightbox/css/glightbox.min.css",
-      "hash": "glightbox-css",
-      "path": "accounts/libs/glightbox/css/glightbox.min.css"
     },
     "accounts/css/startup_detail.css": {
       "name": "accounts/css/startup_detail.css",
