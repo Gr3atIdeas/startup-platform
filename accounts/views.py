@@ -4108,7 +4108,7 @@ def download_startups_report(request):
     
     headers = [
         "ID", "Название", "Владелец", "Статус", "Категория", "Стадия", 
-        "Цель финансирования", "Собрано", "Рейтинг", "Дата создания"
+        "Цель финансирования", "Собрано", "Рейтинг", "Количество инвесторов", "Список инвесторов", "Дата создания"
     ]
     
     for col, header in enumerate(headers, 1):
@@ -4131,7 +4131,23 @@ def download_startups_report(request):
         avg_rating = UserVotes.objects.filter(startup=startup).aggregate(Avg('rating'))['rating__avg']
         ws.cell(row=row, column=9, value=round(avg_rating, 2) if avg_rating else 0)
         
-        ws.cell(row=row, column=10, value=startup.created_at.strftime("%d.%m.%Y"))
+        investors_count = startup.get_investors_count()
+        ws.cell(row=row, column=10, value=investors_count)
+        
+        # Новый код: список инвесторов через перенос строки
+        investors = (
+            InvestmentTransactions.objects
+            .filter(startup=startup)
+            .select_related('investor')
+            .values_list('investor__first_name', 'investor__last_name')
+            .distinct()
+        )
+        investors_list = [
+            f"{first} {last}".strip() for first, last in investors if first or last
+        ]
+        ws.cell(row=row, column=11, value="\n".join(investors_list))
+
+        ws.cell(row=row, column=12, value=startup.created_at.strftime("%d.%m.%Y"))
     
     for column in ws.columns:
         max_length = 0
