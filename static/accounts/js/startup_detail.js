@@ -516,13 +516,18 @@ document.addEventListener('DOMContentLoaded', function () {
       const filledIcon = container.querySelector('.icon-filled');
       
       // Принудительно показываем пустые планеты и скрываем заполненные
-      if (emptyIcon) emptyIcon.style.display = 'block';
-      if (filledIcon) filledIcon.style.display = 'none';
+      if (emptyIcon) {
+        emptyIcon.style.display = 'block';
+        emptyIcon.style.opacity = '1';
+      }
+      if (filledIcon) {
+        filledIcon.style.display = 'none';
+        filledIcon.style.opacity = '0';
+      }
       
       console.log(`Container ${index + 1} initial state:`, {
         emptyDisplay: emptyIcon ? emptyIcon.style.display : 'no element',
-        filledDisplay: filledIcon ? filledIcon.style.display : 'no element',
-        filledWidth: filledIcon ? filledIcon.style.width : 'no element'
+        filledDisplay: filledIcon ? filledIcon.style.display : 'no element'
       });
     });
 
@@ -563,14 +568,36 @@ document.addEventListener('DOMContentLoaded', function () {
       
       console.log(`Container ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
       
-      if (value <= rating) {
-        // Показываем заполненную планету
-        if (emptyIcon) emptyIcon.style.display = 'none';
-        if (filledIcon) filledIcon.style.display = 'block';
+      if (value <= Math.floor(rating)) {
+        // Полностью заполненная планета
+        if (emptyIcon) {
+          emptyIcon.style.display = 'none';
+          emptyIcon.style.opacity = '0';
+        }
+        if (filledIcon) {
+          filledIcon.style.display = 'block';
+          filledIcon.style.opacity = '1';
+        }
+      } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
+        // Частично заполненная планета (для дробных значений)
+        if (emptyIcon) {
+          emptyIcon.style.display = 'block';
+          emptyIcon.style.opacity = '1';
+        }
+        if (filledIcon) {
+          filledIcon.style.display = 'block';
+          filledIcon.style.opacity = String(rating % 1);
+        }
       } else {
-        // Показываем пустую планету
-        if (emptyIcon) emptyIcon.style.display = 'block';
-        if (filledIcon) filledIcon.style.display = 'none';
+        // Пустая планета
+        if (emptyIcon) {
+          emptyIcon.style.display = 'block';
+          emptyIcon.style.opacity = '1';
+        }
+        if (filledIcon) {
+          filledIcon.style.display = 'none';
+          filledIcon.style.opacity = '0';
+        }
       }
     });
   }
@@ -637,8 +664,106 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Инициализация рейтинга в комментариях
+  function setupCommentRatings() {
+    console.log('Setting up comment ratings...');
+    const commentRatings = document.querySelectorAll('.comment-rating');
+    
+    commentRatings.forEach((ratingContainer, index) => {
+      const rating = parseFloat(ratingContainer.dataset.rating) || 0;
+      const ratingIcons = ratingContainer.querySelectorAll('.rating-icon-container');
+      
+      console.log(`Comment ${index + 1} rating:`, rating);
+      
+      ratingIcons.forEach((iconContainer, iconIndex) => {
+        const value = iconIndex + 1;
+        const emptyIcon = iconContainer.querySelector('.icon-empty');
+        const filledIcon = iconContainer.querySelector('.icon-filled');
+        
+        if (value <= rating) {
+          // Заполненная планета
+          if (emptyIcon) {
+            emptyIcon.style.display = 'none';
+            emptyIcon.style.opacity = '0';
+          }
+          if (filledIcon) {
+            filledIcon.style.display = 'block';
+            filledIcon.style.opacity = '1';
+          }
+        } else {
+          // Пустая планета
+          if (emptyIcon) {
+            emptyIcon.style.display = 'block';
+            emptyIcon.style.opacity = '1';
+          }
+          if (filledIcon) {
+            filledIcon.style.display = 'none';
+            filledIcon.style.opacity = '0';
+          }
+        }
+      });
+    });
+  }
+
+  // Инициализация общего рейтинга
+  function setupOverallRating() {
+    console.log('Setting up overall rating...');
+    const overallRating = document.querySelector('.overall-rating-stars');
+    
+    if (overallRating) {
+      const rating = parseFloat(overallRating.dataset.rating) || 0;
+      const ratingIcons = overallRating.querySelectorAll('.rating-icon-container');
+      
+      console.log('Overall rating:', rating);
+      
+      ratingIcons.forEach((iconContainer, iconIndex) => {
+        const value = iconIndex + 1;
+        const emptyIcon = iconContainer.querySelector('.icon-empty');
+        const filledIcon = iconContainer.querySelector('.icon-filled');
+        
+        if (value <= Math.floor(rating)) {
+          // Полностью заполненная планета
+          if (emptyIcon) {
+            emptyIcon.style.display = 'none';
+            emptyIcon.style.opacity = '0';
+          }
+          if (filledIcon) {
+            filledIcon.style.display = 'block';
+            filledIcon.style.opacity = '1';
+          }
+        } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
+          // Частично заполненная планета
+          if (emptyIcon) {
+            emptyIcon.style.display = 'block';
+            emptyIcon.style.opacity = '1';
+          }
+          if (filledIcon) {
+            filledIcon.style.display = 'block';
+            filledIcon.style.opacity = String(rating % 1);
+          }
+        } else {
+          // Пустая планета
+          if (emptyIcon) {
+            emptyIcon.style.display = 'block';
+            emptyIcon.style.opacity = '1';
+          }
+          if (filledIcon) {
+            filledIcon.style.display = 'none';
+            filledIcon.style.opacity = '0';
+          }
+        }
+      });
+    }
+  }
+
   // Инициализация рейтинга
   setupRatingStars();
+  
+  // Инициализация рейтинга в комментариях
+  setupCommentRatings();
+  
+  // Инициализация общего рейтинга
+  setupOverallRating();
 
   // Обработка переключения вкладок
   function setupTabNavigation() {
@@ -762,4 +887,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Инициализация кнопок действий
   setupActionButtons();
+
+  // Настройка этапов
+  function setupTimelineSteps() {
+    console.log('Setting up timeline steps...');
+    const timelineSteps = document.querySelectorAll('.timeline-step');
+    const descriptionItems = document.querySelectorAll('.timeline-description-item');
+    
+    if (timelineSteps.length === 0) {
+      console.log('No timeline steps found');
+      return;
+    }
+    
+    console.log('Found timeline steps:', timelineSteps.length);
+    console.log('Found description items:', descriptionItems.length);
+    
+    timelineSteps.forEach((step, index) => {
+      const stepNumber = step.dataset.step;
+      console.log(`Setting up step ${stepNumber} (index ${index})`);
+      
+      step.addEventListener('click', () => {
+        console.log(`Step ${stepNumber} clicked`);
+        
+        // Убираем активный класс со всех этапов
+        timelineSteps.forEach(s => s.classList.remove('active-step-display'));
+        descriptionItems.forEach(d => d.classList.remove('active'));
+        
+        // Добавляем активный класс к выбранному этапу
+        step.classList.add('active-step-display');
+        
+        // Показываем соответствующее описание
+        const targetDescription = document.querySelector(`.timeline-description-item:nth-child(${parseInt(stepNumber)})`);
+        if (targetDescription) {
+          targetDescription.classList.add('active');
+          console.log(`Activated description for step ${stepNumber}`);
+        } else {
+          console.error(`Description not found for step ${stepNumber}`);
+        }
+      });
+      
+      // Делаем этапы кликабельными
+      step.style.cursor = 'pointer';
+    });
+  }
+
+  // Инициализация этапов
+  setupTimelineSteps();
 }); 
