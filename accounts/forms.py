@@ -227,7 +227,7 @@ class StartupForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comments
-        fields = ["content"]
+        fields = ["content", "user_rating"]
         widgets = {
             "content": forms.Textarea(
                 attrs={
@@ -236,6 +236,7 @@ class CommentForm(forms.ModelForm):
                     "class": "form-control",
                 }
             ),
+            "user_rating": forms.HiddenInput(),
         }
 class MessageForm(forms.Form):
     message_text = forms.CharField(

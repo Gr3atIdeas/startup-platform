@@ -3490,3 +3490,48 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .text-truncate-toggle:hover {
   color: var(--text-primary);
 }
+
+.comment-rating-input {
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e6e8ec;
+}
+
+.rating-input-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #23262f;
+  margin-bottom: 8px;
+  font-family: Poppins, sans-serif;
+}
+
+.rating-input-stars {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.rating-input-icon {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.rating-input-icon:hover {
+  transform: scale(1.1);
+}
+
+.rating-input-icon .icon-empty {
+  display: block;
+  opacity: 1;
+}
+
+.rating-input-icon .icon-filled {
+  display: none;
+  opacity: 0;
+}
+
+.rating-input-hidden {
+  display: none;
+}

@@ -47,6 +47,7 @@ class Comments(models.Model):
     )
     user_id = models.ForeignKey("Users", on_delete=models.CASCADE, db_column="user_id")
     content = models.TextField()
+    user_rating = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     parent_comment_id = models.ForeignKey(

@@ -948,6 +948,132 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  function setupCommentsShowMore() {
+    const showMoreButton = document.querySelector('.show-more-comments');
+    const hideButton = document.querySelector('.hide-comments-button');
+    const hiddenComments = document.querySelectorAll('.comment-card.hidden');
+    
+    if (showMoreButton && hiddenComments.length > 0) {
+      showMoreButton.addEventListener('click', function() {
+        hiddenComments.forEach(comment => {
+          comment.classList.remove('hidden');
+        });
+        showMoreButton.style.display = 'none';
+        if (hideButton) {
+          hideButton.style.display = 'inline-flex';
+        }
+      });
+    }
+    
+    if (hideButton) {
+      hideButton.addEventListener('click', function() {
+        hiddenComments.forEach(comment => {
+          comment.classList.add('hidden');
+        });
+        hideButton.style.display = 'none';
+        if (showMoreButton) {
+          showMoreButton.style.display = 'inline-flex';
+        }
+      });
+    }
+  }
+
+  function setupCommentRatingInput() {
+    const commentForm = document.querySelector('.comment-form');
+    if (!commentForm) return;
+    
+    const textarea = commentForm.querySelector('.comment-textarea');
+    if (!textarea) return;
+    
+    const ratingContainer = document.createElement('div');
+    ratingContainer.className = 'comment-rating-input';
+    ratingContainer.innerHTML = `
+      <div class="rating-input-label">Оцените стартап:</div>
+      <div class="rating-input-stars" data-rating="0">
+        <span class="rating-icon-container rating-input-icon" data-value="1">
+          <img src="/static/accounts/images/planets/full_filled_planet.svg" alt="" class="icon-empty">
+          <img src="/static/accounts/images/planets/full_filled_planet.svg" alt="" class="icon-filled">
+        </span>
+        <span class="rating-icon-container rating-input-icon" data-value="2">
+          <img src="/static/accounts/images/planets/full_filled_planet.svg" alt="" class="icon-empty">
+          <img src="/static/accounts/images/planets/full_filled_planet.svg" alt="" class="icon-filled">
+        </span>
+        <span class="rating-icon-container rating-input-icon" data-value="3">
+          <img src="/static/accounts/images/planets/full_filled_planet.svg" alt="" class="icon-empty">
+          <img src="/static/accounts/images/planets/full_filled_planet.svg" alt="" class="icon-filled">
+        </span>
+        <span class="rating-icon-container rating-input-icon" data-value="4">
+          <img src="/static/accounts/images/planets/full_filled_planet.svg" alt="" class="icon-empty">
+          <img src="/static/accounts/images/planets/full_filled_planet.svg" alt="" class="icon-filled">
+        </span>
+        <span class="rating-icon-container rating-input-icon" data-value="5">
+          <img src="/static/accounts/images/planets/full_filled_planet.svg" alt="" class="icon-empty">
+          <img src="/static/accounts/images/planets/full_filled_planet.svg" alt="" class="icon-filled">
+        </span>
+      </div>
+      <input type="hidden" name="user_rating" value="0" class="rating-input-hidden">
+    `;
+    
+    commentForm.insertBefore(ratingContainer, textarea);
+    
+    const ratingStars = ratingContainer.querySelector('.rating-input-stars');
+    const ratingIcons = ratingStars.querySelectorAll('.rating-input-icon');
+    const hiddenInput = ratingContainer.querySelector('.rating-input-hidden');
+    
+    ratingIcons.forEach((icon, index) => {
+      const value = index + 1;
+      
+      icon.addEventListener('click', function() {
+        const currentRating = parseInt(ratingStars.dataset.rating);
+        const newRating = currentRating === value ? 0 : value;
+        
+        ratingStars.dataset.rating = newRating;
+        hiddenInput.value = newRating;
+        
+        updateCommentRatingDisplay(ratingIcons, newRating);
+      });
+      
+      icon.addEventListener('mouseenter', function() {
+        updateCommentRatingDisplay(ratingIcons, value);
+      });
+      
+      icon.addEventListener('mouseleave', function() {
+        const currentRating = parseInt(ratingStars.dataset.rating);
+        updateCommentRatingDisplay(ratingIcons, currentRating);
+      });
+    });
+  }
+
+  function updateCommentRatingDisplay(icons, rating) {
+    icons.forEach((icon, index) => {
+      const value = index + 1;
+      const emptyIcon = icon.querySelector('.icon-empty');
+      const filledIcon = icon.querySelector('.icon-filled');
+      
+      if (value <= rating) {
+        if (emptyIcon) {
+          emptyIcon.style.display = 'none';
+          emptyIcon.style.opacity = '0';
+        }
+        if (filledIcon) {
+          filledIcon.style.display = 'block';
+          filledIcon.style.opacity = '1';
+          filledIcon.style.clipPath = 'none';
+        }
+      } else {
+        if (emptyIcon) {
+          emptyIcon.style.display = 'block';
+          emptyIcon.style.opacity = '1';
+        }
+        if (filledIcon) {
+          filledIcon.style.display = 'none';
+          filledIcon.style.opacity = '0';
+          filledIcon.style.clipPath = 'none';
+        }
+      }
+    });
+  }
+
   // Обработка переключения вкладок
   function setupTabNavigation() {
     console.log('Setting up tab navigation...');
