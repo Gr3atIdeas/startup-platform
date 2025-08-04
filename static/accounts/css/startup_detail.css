@@ -2329,7 +2329,8 @@ a:hover {
   width: 100%;
   overflow: hidden;
   z-index: 2;
-  filter: none; 
+  filter: none;
+  display: none;
 }
 
 

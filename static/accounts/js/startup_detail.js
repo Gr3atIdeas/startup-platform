@@ -674,11 +674,6 @@ document.addEventListener('DOMContentLoaded', function () {
           targetSection.classList.add('active');
           console.log('Activated section:', targetId);
           console.log('Section classes after activation:', targetSection.className);
-          
-          // Принудительно обновляем стили
-          targetSection.style.display = 'block';
-          targetSection.style.opacity = '1';
-          targetSection.style.transform = 'translateY(0)';
         } else {
           console.error('Target section not found:', targetId);
           // Try to find by partial match
@@ -688,9 +683,6 @@ document.addEventListener('DOMContentLoaded', function () {
           );
           if (partialMatch) {
             partialMatch.classList.add('active');
-            partialMatch.style.display = 'block';
-            partialMatch.style.opacity = '1';
-            partialMatch.style.transform = 'translateY(0)';
             console.log('Found partial match, activated section:', partialMatch.id);
           }
         }
@@ -714,34 +706,7 @@ document.addEventListener('DOMContentLoaded', function () {
       chatButton.addEventListener('click', (e) => {
         e.preventDefault();
         console.log('Chat button clicked');
-        
-        // Получаем ID владельца стартапа для чата
-        const ownerId = document.querySelector('.startup-detail-page').dataset.ownerId;
-        if (!ownerId) {
-          alert('Ошибка: не удалось определить автора стартапа');
-          return;
-        }
-        
-        // Создаем чат с автором стартапа через POST запрос
-        fetch(`/cosmochat/start-chat/${ownerId}/`, {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': csrfToken,
-            'X-Requested-With': 'XMLHttpRequest'
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            window.location.href = `/cosmochat/${data.chat_id}/`;
-          } else {
-            alert(data.error || 'Ошибка при создании чата');
-          }
-        })
-        .catch(error => {
-          console.error('Ошибка при создании чата:', error);
-          alert('Произошла ошибка при создании чата');
-        });
+        alert('Функция чата в разработке');
       });
     } else {
       console.error('Chat button not found');
@@ -756,34 +721,7 @@ document.addEventListener('DOMContentLoaded', function () {
       writeButton.addEventListener('click', (e) => {
         e.preventDefault();
         console.log('Write button clicked');
-        
-        // Получаем ID владельца стартапа
-        const ownerId = document.querySelector('.startup-detail-page').dataset.ownerId;
-        if (!ownerId) {
-          alert('Ошибка: не удалось определить автора стартапа');
-          return;
-        }
-        
-        // Создаем чат с автором через POST запрос
-        fetch(`/cosmochat/start-chat/${ownerId}/`, {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': csrfToken,
-            'X-Requested-With': 'XMLHttpRequest'
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            window.location.href = `/cosmochat/${data.chat_id}/`;
-          } else {
-            alert(data.error || 'Ошибка при создании чата');
-          }
-        })
-        .catch(error => {
-          console.error('Ошибка при создании чата:', error);
-          alert('Произошла ошибка при создании чата');
-        });
+        alert('Функция отправки сообщений в разработке');
       });
     } else {
       console.error('Write button not found');
