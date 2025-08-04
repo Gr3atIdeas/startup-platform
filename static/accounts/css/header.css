@@ -480,7 +480,7 @@ nav.nav-menu
 /* Большие экраны (1400px и выше) */
 @media (min-width: 1400px) {
   .header-content-wrapper {
-    width: 1400px;
+    width: 1303px;
   }
   
   .header-search-bar {

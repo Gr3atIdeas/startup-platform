@@ -139,7 +139,7 @@
   gap: clamp(15px, 3vw, 30px);
   padding: clamp(10px, 2vw, 20px);
   width: 100%;
-  max-width: clamp(1200px, 95vw, 1400px);
+  max-width: clamp(1200px, 95vw, 1303px);
   margin: 0 auto;
 }
 
@@ -153,7 +153,7 @@
 .featured3,
 .featured4 {
   width: 100%;
-  max-width: clamp(1200px, 95vw, 1400px);
+  max-width: clamp(1200px, 95vw, 1303px);
   margin: 0 auto;
   padding: clamp(30px, 6vw, 60px) clamp(15px, 3vw, 30px);
 }
@@ -469,7 +469,7 @@
 /* Утилитарные классы для современного адаптива */
 .responsive-container {
   width: 100%;
-  max-width: clamp(1200px, 95vw, 1400px);
+  max-width: clamp(1200px, 95vw, 1303px);
   margin: 0 auto;
   padding: clamp(15px, 3vw, 30px);
 }
