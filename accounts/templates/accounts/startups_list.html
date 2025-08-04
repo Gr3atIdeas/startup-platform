@@ -9,8 +9,6 @@
   {{ block.super }}
   
   <link rel="stylesheet" href="{% static 'accounts/css/startups_list.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 {% endblock %}
 
 {% block content %}
@@ -224,26 +222,8 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    // Ждем загрузки библиотек и инициализируем слайдер
-    if (typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
-        initNoUiSlider();
-    } else {
-        // Если библиотеки еще не загружены, ждем их загрузки
-        var checkLibraries = setInterval(function() {
-            if (typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
-                clearInterval(checkLibraries);
-                initNoUiSlider();
-            }
-        }, 100);
-        
-        // Таймаут на случай, если библиотеки не загрузятся
-        setTimeout(function() {
-            clearInterval(checkLibraries);
-            if (typeof noUiSlider === 'undefined' || typeof wNumb === 'undefined') {
-                console.error('Библиотеки noUiSlider или wNumb не загрузились в течение 5 секунд');
-            }
-        }, 5000);
-    }
+    // Инициализируем слайдер после загрузки DOM
+    initNoUiSlider();
 
     // --- Логика поиска --- 
     var searchInput = document.querySelector('.catalog-search-input');
@@ -380,11 +360,4 @@
 </script>
 {% endblock %}
 
-{% endblock %}
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-{% block body_scripts %}
-  {{ block.super }} 
 {% endblock %}
