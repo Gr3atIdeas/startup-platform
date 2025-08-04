@@ -1,27 +1,130 @@
 {
-  "accounts/js/startup_detail.js": ["accounts/js/startup_detail.js"],
-  "accounts/libs/jquery/js/jquery.min.js": ["accounts/libs/jquery/js/jquery.min.js"],
-  "accounts/libs/bootstrap/js/bootstrap.bundle.min.js": ["accounts/libs/bootstrap/js/bootstrap.bundle.min.js"],
-  "accounts/libs/plyr/js/plyr.polyfilled.js": ["accounts/libs/plyr/js/plyr.polyfilled.js"],
-  "accounts/libs/glightbox/js/glightbox.min.js": ["accounts/libs/glightbox/js/glightbox.min.js"],
-  "accounts/js/global_styles.js": ["accounts/js/global_styles.js"],
-  "accounts/js/notifications.js": ["accounts/js/notifications.js"],
-  "accounts/js/scroll_arrows.js": ["accounts/js/scroll_arrows.js"],
-  "accounts/js/modern_responsive.js": ["accounts/js/modern_responsive.js"],
-  "accounts/js/ui_enhancement.js": ["accounts/js/ui_enhancement.js"],
-  "accounts/libs/bootstrap/css/bootstrap.min.css": ["accounts/libs/bootstrap/css/bootstrap.min.css"],
-  "accounts/libs/fontawesome/css/all.min.css": ["accounts/libs/fontawesome/css/all.min.css"],
-  "accounts/libs/glightbox/css/glightbox.min.css": ["accounts/libs/glightbox/css/glightbox.min.css"],
-  "accounts/css/startup_detail.css": ["accounts/css/startup_detail.css"],
-  "accounts/css/moderation_panel.css": ["accounts/css/moderation_panel.css"],
-  "accounts/css/fonts.css": ["accounts/css/fonts.css"],
-  "accounts/css/global.css": ["accounts/css/global.css"],
-  "accounts/css/improved_styles.css": ["accounts/css/improved_styles.css"],
-  "accounts/css/footer.css": ["accounts/css/footer.css"],
-  "accounts/css/header.css": ["accounts/css/header.css"],
-  "accounts/css/modal_overlay.css": ["accounts/css/modal_overlay.css"],
-  "accounts/css/scroll_arrows.css": ["accounts/css/scroll_arrows.css"],
-  "accounts/css/image_responsive.css": ["accounts/css/image_responsive.css"],
-  "accounts/css/layout_responsive.css": ["accounts/css/layout_responsive.css"],
-  "accounts/css/modern_responsive.css": ["accounts/css/modern_responsive.css"]
+  "version": "1.1",
+  "files": {
+    "accounts/js/startup_detail.js": {
+      "name": "accounts/js/startup_detail.js",
+      "hash": "c181924d4c04",
+      "path": "accounts/js/startup_detail.c181924d4c04.js"
+    },
+    "accounts/libs/jquery/js/jquery.min.js": {
+      "name": "accounts/libs/jquery/js/jquery.min.js",
+      "hash": "jquery",
+      "path": "accounts/libs/jquery/js/jquery.min.js"
+    },
+    "accounts/libs/bootstrap/js/bootstrap.bundle.min.js": {
+      "name": "accounts/libs/bootstrap/js/bootstrap.bundle.min.js",
+      "hash": "bootstrap",
+      "path": "accounts/libs/bootstrap/js/bootstrap.bundle.min.js"
+    },
+    "accounts/libs/plyr/js/plyr.polyfilled.js": {
+      "name": "accounts/libs/plyr/js/plyr.polyfilled.js",
+      "hash": "plyr",
+      "path": "accounts/libs/plyr/js/plyr.polyfilled.js"
+    },
+    "accounts/libs/glightbox/js/glightbox.min.js": {
+      "name": "accounts/libs/glightbox/js/glightbox.min.js",
+      "hash": "glightbox",
+      "path": "accounts/libs/glightbox/js/glightbox.min.js"
+    },
+    "accounts/js/global_styles.js": {
+      "name": "accounts/js/global_styles.js",
+      "hash": "global",
+      "path": "accounts/js/global_styles.js"
+    },
+    "accounts/js/notifications.js": {
+      "name": "accounts/js/notifications.js",
+      "hash": "notifications",
+      "path": "accounts/js/notifications.js"
+    },
+    "accounts/js/scroll_arrows.js": {
+      "name": "accounts/js/scroll_arrows.js",
+      "hash": "scroll",
+      "path": "accounts/js/scroll_arrows.js"
+    },
+    "accounts/js/modern_responsive.js": {
+      "name": "accounts/js/modern_responsive.js",
+      "hash": "modern",
+      "path": "accounts/js/modern_responsive.js"
+    },
+    "accounts/js/ui_enhancement.js": {
+      "name": "accounts/js/ui_enhancement.js",
+      "hash": "ui",
+      "path": "accounts/js/ui_enhancement.js"
+    },
+    "accounts/libs/bootstrap/css/bootstrap.min.css": {
+      "name": "accounts/libs/bootstrap/css/bootstrap.min.css",
+      "hash": "bootstrap-css",
+      "path": "accounts/libs/bootstrap/css/bootstrap.min.css"
+    },
+    "accounts/libs/fontawesome/css/all.min.css": {
+      "name": "accounts/libs/fontawesome/css/all.min.css",
+      "hash": "fontawesome",
+      "path": "accounts/libs/fontawesome/css/all.min.css"
+    },
+    "accounts/libs/glightbox/css/glightbox.min.css": {
+      "name": "accounts/libs/glightbox/css/glightbox.min.css",
+      "hash": "glightbox-css",
+      "path": "accounts/libs/glightbox/css/glightbox.min.css"
+    },
+    "accounts/css/startup_detail.css": {
+      "name": "accounts/css/startup_detail.css",
+      "hash": "startup-detail",
+      "path": "accounts/css/startup_detail.css"
+    },
+    "accounts/css/moderation_panel.css": {
+      "name": "accounts/css/moderation_panel.css",
+      "hash": "moderation",
+      "path": "accounts/css/moderation_panel.css"
+    },
+    "accounts/css/fonts.css": {
+      "name": "accounts/css/fonts.css",
+      "hash": "fonts",
+      "path": "accounts/css/fonts.css"
+    },
+    "accounts/css/global.css": {
+      "name": "accounts/css/global.css",
+      "hash": "global-css",
+      "path": "accounts/css/global.css"
+    },
+    "accounts/css/improved_styles.css": {
+      "name": "accounts/css/improved_styles.css",
+      "hash": "improved",
+      "path": "accounts/css/improved_styles.css"
+    },
+    "accounts/css/footer.css": {
+      "name": "accounts/css/footer.css",
+      "hash": "footer",
+      "path": "accounts/css/footer.css"
+    },
+    "accounts/css/header.css": {
+      "name": "accounts/css/header.css",
+      "hash": "header",
+      "path": "accounts/css/header.css"
+    },
+    "accounts/css/modal_overlay.css": {
+      "name": "accounts/css/modal_overlay.css",
+      "hash": "modal",
+      "path": "accounts/css/modal_overlay.css"
+    },
+    "accounts/css/scroll_arrows.css": {
+      "name": "accounts/css/scroll_arrows.css",
+      "hash": "scroll-css",
+      "path": "accounts/css/scroll_arrows.css"
+    },
+    "accounts/css/image_responsive.css": {
+      "name": "accounts/css/image_responsive.css",
+      "hash": "image",
+      "path": "accounts/css/image_responsive.css"
+    },
+    "accounts/css/layout_responsive.css": {
+      "name": "accounts/css/layout_responsive.css",
+      "hash": "layout",
+      "path": "accounts/css/layout_responsive.css"
+    },
+    "accounts/css/modern_responsive.css": {
+      "name": "accounts/css/modern_responsive.css",
+      "hash": "modern-css",
+      "path": "accounts/css/modern_responsive.css"
+    }
+  }
 } 
