@@ -479,4 +479,171 @@ document.addEventListener('DOMContentLoaded', function () {
         resetAddInvestorForm();
     });
   }
+
+  // Обработка рейтинга планет
+  function setupRatingStars() {
+    const ratingStars = document.querySelector('.rating-stars[data-interactive="true"]');
+    if (!ratingStars) {
+      console.log('Rating stars not found or not interactive');
+      return;
+    }
+
+    const ratingContainers = ratingStars.querySelectorAll('.rating-icon-container');
+    const currentRating = parseFloat(ratingStars.dataset.rating) || 0;
+
+    // Устанавливаем начальный рейтинг
+    updateRatingDisplay(currentRating);
+
+    // Добавляем обработчики событий
+    ratingContainers.forEach((container, index) => {
+      const value = index + 1;
+      
+      container.addEventListener('mouseenter', () => {
+        updateRatingDisplay(value);
+      });
+
+      container.addEventListener('mouseleave', () => {
+        updateRatingDisplay(currentRating);
+      });
+
+      container.addEventListener('click', () => {
+        submitRating(value);
+      });
+    });
+  }
+
+  function updateRatingDisplay(rating) {
+    const ratingContainers = document.querySelectorAll('.rating-stars .rating-icon-container');
+    
+    ratingContainers.forEach((container, index) => {
+      const value = index + 1;
+      const emptyIcon = container.querySelector('.icon-empty');
+      const filledIcon = container.querySelector('.icon-filled');
+      
+      if (value <= rating) {
+        emptyIcon.style.display = 'none';
+        filledIcon.style.display = 'block';
+      } else {
+        emptyIcon.style.display = 'block';
+        filledIcon.style.display = 'none';
+      }
+    });
+  }
+
+  function submitRating(rating) {
+    console.log('Submitting rating:', rating);
+    
+    if (!csrfToken) {
+      alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
+      return;
+    }
+
+    fetch(`/submit_rating/${startupId}/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken,
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: JSON.stringify({ rating: rating })
+    })
+    .then(response => {
+      console.log('Rating submission response status:', response.status);
+      if (!response.ok) {
+        return response.text().then(text => {
+          console.error('Rating submission error response:', text);
+          throw new Error(text);
+        });
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Rating submission response data:', data);
+      if (data.success) {
+        // Обновляем отображение рейтинга
+        const ratingStars = document.querySelector('.rating-stars');
+        if (ratingStars) {
+          ratingStars.dataset.rating = rating;
+          updateRatingDisplay(rating);
+        }
+        
+        // Обновляем общий рейтинг
+        const averageRatingElement = document.querySelector('.rating-label');
+        if (averageRatingElement && data.new_average_rating) {
+          averageRatingElement.textContent = `Рейтинг ${data.new_average_rating}/5`;
+        }
+        
+        // Отключаем интерактивность
+        ratingStars.removeAttribute('data-interactive');
+        ratingStars.querySelectorAll('.rating-icon-container').forEach(container => {
+          container.removeEventListener('mouseenter', () => {});
+          container.removeEventListener('mouseleave', () => {});
+          container.removeEventListener('click', () => {});
+        });
+        
+        alert('Спасибо за оценку!');
+      } else {
+        alert(data.error || 'Ошибка при отправке оценки.');
+      }
+    })
+    .catch(error => {
+      console.error('Ошибка при отправке оценки:', error);
+      alert('Произошла ошибка при отправке оценки.');
+    });
+  }
+
+  // Инициализация рейтинга
+  setupRatingStars();
+
+  // Обработка переключения вкладок
+  function setupTabNavigation() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const contentSections = document.querySelectorAll('.content-section');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetId = button.dataset.target;
+        
+        // Убираем активный класс со всех кнопок и секций
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        contentSections.forEach(section => section.classList.remove('active'));
+        
+        // Добавляем активный класс к выбранной кнопке и секции
+        button.classList.add('active');
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          targetSection.classList.add('active');
+        }
+      });
+    });
+  }
+
+  // Инициализация переключения вкладок
+  setupTabNavigation();
+
+  // Обработка кнопок "Чат" и "Написать"
+  function setupActionButtons() {
+    // Кнопка "Чат"
+    const chatButton = document.querySelector('.chat-button');
+    if (chatButton) {
+      chatButton.addEventListener('click', () => {
+        console.log('Chat button clicked');
+        // Здесь можно добавить логику для открытия чата
+        alert('Функция чата в разработке');
+      });
+    }
+
+    // Кнопка "Написать"
+    const writeButton = document.querySelector('.write-author-button');
+    if (writeButton) {
+      writeButton.addEventListener('click', () => {
+        console.log('Write button clicked');
+        // Здесь можно добавить логику для отправки сообщения автору
+        alert('Функция отправки сообщений в разработке');
+      });
+    }
+  }
+
+  // Инициализация кнопок действий
+  setupActionButtons();
 }); 
