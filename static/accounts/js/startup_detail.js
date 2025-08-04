@@ -524,25 +524,27 @@ document.addEventListener('DOMContentLoaded', function () {
     // Устанавливаем начальный рейтинг
     updateRatingDisplay(currentRating);
 
-    // Добавляем обработчики событий
-    ratingContainers.forEach((container, index) => {
-      const value = index + 1;
-      
-      container.addEventListener('mouseenter', () => {
-        console.log('Mouse enter on rating container:', value);
-        updateRatingDisplay(value);
-      });
+    // Добавляем обработчики событий только если рейтинг интерактивный
+    if (ratingStars.dataset.interactive === 'true') {
+      ratingContainers.forEach((container, index) => {
+        const value = index + 1;
+        
+        container.addEventListener('mouseenter', () => {
+          console.log('Mouse enter on rating container:', value);
+          updateRatingDisplay(value);
+        });
 
-      container.addEventListener('mouseleave', () => {
-        console.log('Mouse leave on rating container');
-        updateRatingDisplay(currentRating);
-      });
+        container.addEventListener('mouseleave', () => {
+          console.log('Mouse leave on rating container');
+          updateRatingDisplay(currentRating);
+        });
 
-      container.addEventListener('click', () => {
-        console.log('Click on rating container:', value);
-        submitRating(value);
+        container.addEventListener('click', () => {
+          console.log('Click on rating container:', value);
+          submitRating(value);
+        });
       });
-    });
+    }
   }
 
   function updateRatingDisplay(rating) {
@@ -672,6 +674,11 @@ document.addEventListener('DOMContentLoaded', function () {
           targetSection.classList.add('active');
           console.log('Activated section:', targetId);
           console.log('Section classes after activation:', targetSection.className);
+          
+          // Принудительно обновляем стили
+          targetSection.style.display = 'block';
+          targetSection.style.opacity = '1';
+          targetSection.style.transform = 'translateY(0)';
         } else {
           console.error('Target section not found:', targetId);
           // Try to find by partial match
@@ -681,6 +688,9 @@ document.addEventListener('DOMContentLoaded', function () {
           );
           if (partialMatch) {
             partialMatch.classList.add('active');
+            partialMatch.style.display = 'block';
+            partialMatch.style.opacity = '1';
+            partialMatch.style.transform = 'translateY(0)';
             console.log('Found partial match, activated section:', partialMatch.id);
           }
         }
@@ -705,15 +715,15 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         console.log('Chat button clicked');
         
-        // Получаем ID стартапа
-        const startupId = document.querySelector('.startup-detail-page').dataset.startupId;
-        if (!startupId) {
-          alert('Ошибка: не удалось определить стартап');
+        // Получаем ID владельца стартапа для чата
+        const ownerId = document.querySelector('.startup-detail-page').dataset.ownerId;
+        if (!ownerId) {
+          alert('Ошибка: не удалось определить автора стартапа');
           return;
         }
         
-        // Создаем чат со стартапом через POST запрос
-        fetch(`/cosmochat/start-chat/${startupId}/`, {
+        // Создаем чат с автором стартапа через POST запрос
+        fetch(`/cosmochat/start-chat/${ownerId}/`, {
           method: 'POST',
           headers: {
             'X-CSRFToken': csrfToken,
