@@ -4027,7 +4027,7 @@ def telegram_webhook(request, token):
 @login_required
 def download_startups_report(request):
     """
-    Генерирует и скачивает Excel отчет по стартапам пользователя
+    Генерирует и скачивает Excel отчет по стартапам пользователя с данными об инвесторах
     """
     if not hasattr(request.user, "role") or request.user.role.role_name != "startuper":
         messages.error(request, "Доступ к этой странице разрешен только стартаперам.")
@@ -4066,14 +4066,17 @@ def download_startups_report(request):
         )
         
         # Заголовок отчета
-        ws.merge_cells('A1:H1')
-        ws['A1'] = f"Отчет по стартапам пользователя {request.user.email}"
+        ws.merge_cells('A1:J1')
+        user_full_name = f"{request.user.first_name or ''} {request.user.last_name or ''}".strip()
+        if not user_full_name:
+            user_full_name = request.user.email
+        ws['A1'] = f"Отчет по стартапам пользователя {user_full_name}"
         ws['A1'].font = Font(bold=True, size=14)
         ws['A1'].alignment = Alignment(horizontal="center")
         
         # Информация о пользователе
         ws['A3'] = "Пользователь:"
-        ws['B3'] = request.user.email
+        ws['B3'] = user_full_name
         ws['A4'] = "Дата генерации:"
         ws['B4'] = timezone.now().strftime("%d.%m.%Y %H:%M")
         
@@ -4104,10 +4107,11 @@ def download_startups_report(request):
         ws['A10'] = "Минимальный сбор:"
         ws['B10'] = f"{min_raised:,.0f} ₽"
         
-        # Заголовки таблицы стартапов
+        # Заголовки таблицы стартапов с данными об инвесторах
         headers = [
-            "№", "Название", "Категория", "Статус", "Собрано (₽)", 
-            "Цель (₽)", "Прогресс (%)", "Инвесторов", "Рейтинг", "Комментарии"
+            "№", "Название стартапа", "Количество инвесторов", "Список инвесторов", 
+            "Сумма инвестиций", "Рейтинг стартапа", "Дата создания стартапа",
+            "Категория", "Статус", "Цель (₽)"
         ]
         
         row = 12
@@ -4118,44 +4122,60 @@ def download_startups_report(request):
             cell.alignment = header_alignment
             cell.border = thin_border
         
-        # Данные стартапов
+        # Данные стартапов с информацией об инвесторах
         row = 13
         for idx, startup in enumerate(approved_startups_qs, 1):
+            # Получаем данные об инвесторах
+            investors_data = (
+                InvestmentTransactions.objects.filter(
+                    startup=startup,
+                    transaction_status='completed'
+                )
+                .select_related('investor')
+                .values('investor__email', 'investor__first_name', 'investor__last_name', 'amount')
+                .order_by('-amount')
+            )
+            
+            # Формируем список инвесторов
+            investors_list = []
+            total_investment = Decimal('0')
+            for inv_data in investors_data:
+                investor_name = f"{inv_data['investor__first_name'] or ''} {inv_data['investor__last_name'] or ''}".strip()
+                if not investor_name:
+                    investor_name = inv_data['investor__email'] or 'Неизвестный инвестор'
+                
+                amount = inv_data['amount'] or Decimal('0')
+                total_investment += amount
+                investors_list.append(f"{investor_name} ({amount:,.0f} ₽)")
+            
+            investors_text = "; ".join(investors_list) if investors_list else "Нет инвесторов"
+            investors_count = len(investors_list)
+            
             # Получаем рейтинг
             try:
-                # Проверяем, есть ли атрибут average_rating
                 if hasattr(startup, 'average_rating'):
                     average_rating = startup.average_rating or 0
                 else:
-                    # Если атрибута нет, рассчитываем рейтинг
                     total_voters = getattr(startup, 'total_voters', 0) or 0
                     sum_votes = getattr(startup, 'sum_votes', 0) or 0
                     average_rating = (sum_votes / total_voters) if total_voters > 0 else 0
             except:
                 average_rating = 0
             
-            # Получаем количество комментариев
-            comment_count = startup.comments.count()
-            
-            # Получаем количество инвесторов
-            investors_count = startup.get_investors_count()
-            
-            # Рассчитываем прогресс
-            progress = 0
-            if startup.funding_goal and startup.funding_goal > 0:
-                progress = (startup.amount_raised or 0) / startup.funding_goal * 100
+            # Форматируем дату создания
+            created_date = startup.created_at.strftime("%d.%m.%Y") if startup.created_at else "Не указана"
             
             # Заполняем данные
             ws.cell(row=row, column=1, value=idx).border = thin_border
             ws.cell(row=row, column=2, value=startup.title or "Без названия").border = thin_border
-            ws.cell(row=row, column=3, value=startup.direction.direction_name if startup.direction else "Без категории").border = thin_border
-            ws.cell(row=row, column=4, value=startup.get_status_display()).border = thin_border
-            ws.cell(row=row, column=5, value=f"{startup.amount_raised or 0:,.0f}").border = thin_border
-            ws.cell(row=row, column=6, value=f"{startup.funding_goal or 0:,.0f}").border = thin_border
-            ws.cell(row=row, column=7, value=f"{progress:.1f}").border = thin_border
-            ws.cell(row=row, column=8, value=investors_count).border = thin_border
-            ws.cell(row=row, column=9, value=f"{average_rating:.1f}").border = thin_border
-            ws.cell(row=row, column=10, value=comment_count).border = thin_border
+            ws.cell(row=row, column=3, value=investors_count).border = thin_border
+            ws.cell(row=row, column=4, value=investors_text).border = thin_border
+            ws.cell(row=row, column=5, value=f"{total_investment:,.0f} ₽").border = thin_border
+            ws.cell(row=row, column=6, value=f"{average_rating:.1f}").border = thin_border
+            ws.cell(row=row, column=7, value=created_date).border = thin_border
+            ws.cell(row=row, column=8, value=startup.direction.direction_name if startup.direction else "Без категории").border = thin_border
+            ws.cell(row=row, column=9, value=startup.get_status_display()).border = thin_border
+            ws.cell(row=row, column=10, value=f"{startup.funding_goal or 0:,.0f} ₽").border = thin_border
             
             # Применяем стили к ячейкам
             for col in range(1, 11):
@@ -4166,12 +4186,76 @@ def download_startups_report(request):
             row += 1
         
         # Настройка ширины столбцов
-        column_widths = [5, 30, 20, 15, 15, 15, 12, 10, 10, 12]
+        column_widths = [5, 30, 15, 50, 20, 15, 20, 20, 15, 15]
         for col, width in enumerate(column_widths, 1):
             ws.column_dimensions[get_column_letter(col)].width = width
         
-        # Создаем второй лист с аналитикой по месяцам
-        ws2 = wb.create_sheet("Аналитика по месяцам")
+        # Создаем второй лист с детальной информацией об инвесторах
+        ws2 = wb.create_sheet("Детали по инвесторам")
+        
+        # Заголовок второго листа
+        ws2['A1'] = f"Детальная информация об инвесторах по стартапам"
+        ws2['A1'].font = Font(bold=True, size=14)
+        ws2['A1'].alignment = Alignment(horizontal="center")
+        ws2.merge_cells('A1:F1')
+        
+        # Заголовки таблицы инвесторов
+        investor_headers = [
+            "Стартап", "Инвестор", "Email инвестора", "Сумма инвестиции (₽)", 
+            "Дата инвестиции", "Тип транзакции"
+        ]
+        
+        for col, header in enumerate(investor_headers, 1):
+            cell = ws2.cell(row=3, column=col, value=header)
+            cell.font = header_font
+            cell.fill = header_fill
+            cell.alignment = header_alignment
+            cell.border = thin_border
+        
+        # Данные об инвесторах
+        row = 4
+        for startup in approved_startups_qs:
+            investors_data = (
+                InvestmentTransactions.objects.filter(
+                    startup=startup,
+                    transaction_status='completed'
+                )
+                .select_related('investor', 'transaction_type')
+                .order_by('-created_at')
+            )
+            
+            for inv_data in investors_data:
+                investor_name = f"{inv_data.investor.first_name or ''} {inv_data.investor.last_name or ''}".strip()
+                if not investor_name:
+                    investor_name = inv_data.investor.email or 'Неизвестный инвестор'
+                
+                transaction_date = inv_data.created_at.strftime("%d.%m.%Y %H:%M") if inv_data.created_at else "Не указана"
+                transaction_type = inv_data.transaction_type.type_name if inv_data.transaction_type else "Не указан"
+                
+                ws2.cell(row=row, column=1, value=startup.title or "Без названия").border = thin_border
+                ws2.cell(row=row, column=2, value=investor_name).border = thin_border
+                ws2.cell(row=row, column=3, value=inv_data.investor.email or "").border = thin_border
+                ws2.cell(row=row, column=4, value=f"{inv_data.amount:,.0f}").border = thin_border
+                ws2.cell(row=row, column=5, value=transaction_date).border = thin_border
+                ws2.cell(row=row, column=6, value=transaction_type).border = thin_border
+                
+                for col in range(1, 7):
+                    cell = ws2.cell(row=row, column=col)
+                    cell.font = data_font
+                    cell.alignment = data_alignment
+                
+                row += 1
+        
+        # Настройка ширины столбцов для второго листа
+        ws2.column_dimensions['A'].width = 30
+        ws2.column_dimensions['B'].width = 25
+        ws2.column_dimensions['C'].width = 30
+        ws2.column_dimensions['D'].width = 20
+        ws2.column_dimensions['E'].width = 20
+        ws2.column_dimensions['F'].width = 20
+        
+        # Создаем третий лист с аналитикой по месяцам
+        ws3 = wb.create_sheet("Аналитика по месяцам")
         
         current_year = timezone.now().year
         monthly_data = (
@@ -4189,19 +4273,19 @@ def download_startups_report(request):
             "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
         ]
         
-        # Заголовок второго листа
-        ws2['A1'] = f"Аналитика сборов по месяцам за {current_year} год"
-        ws2['A1'].font = Font(bold=True, size=14)
-        ws2['A1'].alignment = Alignment(horizontal="center")
-        ws2.merge_cells('A1:C1')
+        # Заголовок третьего листа
+        ws3['A1'] = f"Аналитика сборов по месяцам за {current_year} год"
+        ws3['A1'].font = Font(bold=True, size=14)
+        ws3['A1'].alignment = Alignment(horizontal="center")
+        ws3.merge_cells('A1:C1')
         
         # Заголовки таблицы
-        ws2['A3'] = "Месяц"
-        ws2['B3'] = "Собрано (₽)"
-        ws2['C3'] = "Количество стартапов"
+        ws3['A3'] = "Месяц"
+        ws3['B3'] = "Собрано (₽)"
+        ws3['C3'] = "Количество стартапов"
         
         for col in range(1, 4):
-            cell = ws2.cell(row=3, column=col)
+            cell = ws3.cell(row=3, column=col)
             cell.font = header_font
             cell.fill = header_fill
             cell.alignment = header_alignment
@@ -4224,65 +4308,11 @@ def download_startups_report(request):
         
         row = 4
         for i, (month_name, total, count) in enumerate(zip(month_labels, monthly_totals, monthly_counts)):
-            ws2.cell(row=row, column=1, value=month_name).border = thin_border
-            ws2.cell(row=row, column=2, value=f"{total:,.0f}").border = thin_border
-            ws2.cell(row=row, column=3, value=count).border = thin_border
+            ws3.cell(row=row, column=1, value=month_name).border = thin_border
+            ws3.cell(row=row, column=2, value=f"{total:,.0f}").border = thin_border
+            ws3.cell(row=row, column=3, value=count).border = thin_border
             
             for col in range(1, 4):
-                cell = ws2.cell(row=row, column=col)
-                cell.font = data_font
-                cell.alignment = data_alignment
-            
-            row += 1
-        
-        # Настройка ширины столбцов для второго листа
-        ws2.column_dimensions['A'].width = 15
-        ws2.column_dimensions['B'].width = 20
-        ws2.column_dimensions['C'].width = 20
-        
-        # Создаем третий лист с аналитикой по категориям
-        ws3 = wb.create_sheet("Аналитика по категориям")
-        
-        category_data = (
-            user_startups_qs.values("direction__direction_name")
-            .annotate(
-                category_count=Count("startup_id"),
-                total_raised=Sum("amount_raised"),
-                avg_rating=Avg("average_rating")
-            )
-            .order_by("-category_count")
-        )
-        
-        # Заголовок третьего листа
-        ws3['A1'] = "Аналитика по категориям"
-        ws3['A1'].font = Font(bold=True, size=14)
-        ws3['A1'].alignment = Alignment(horizontal="center")
-        ws3.merge_cells('A1:D1')
-        
-        # Заголовки таблицы
-        category_headers = ["Категория", "Количество стартапов", "Общая сумма сборов (₽)", "Средний рейтинг"]
-        
-        for col, header in enumerate(category_headers, 1):
-            cell = ws3.cell(row=3, column=col, value=header)
-            cell.font = header_font
-            cell.fill = header_fill
-            cell.alignment = header_alignment
-            cell.border = thin_border
-        
-        # Данные по категориям
-        row = 4
-        for cat_data in category_data:
-            category_name = cat_data.get("direction__direction_name") or "Без категории"
-            count = cat_data.get("category_count", 0)
-            total_raised = cat_data.get("total_raised") or 0
-            avg_rating = cat_data.get("avg_rating") or 0
-            
-            ws3.cell(row=row, column=1, value=category_name).border = thin_border
-            ws3.cell(row=row, column=2, value=count).border = thin_border
-            ws3.cell(row=row, column=3, value=f"{total_raised:,.0f}").border = thin_border
-            ws3.cell(row=row, column=4, value=f"{avg_rating:.1f}").border = thin_border
-            
-            for col in range(1, 5):
                 cell = ws3.cell(row=row, column=col)
                 cell.font = data_font
                 cell.alignment = data_alignment
@@ -4290,10 +4320,9 @@ def download_startups_report(request):
             row += 1
         
         # Настройка ширины столбцов для третьего листа
-        ws3.column_dimensions['A'].width = 25
+        ws3.column_dimensions['A'].width = 15
         ws3.column_dimensions['B'].width = 20
-        ws3.column_dimensions['C'].width = 25
-        ws3.column_dimensions['D'].width = 15
+        ws3.column_dimensions['C'].width = 20
         
         # Создаем четвертый лист с заявками на стартапы
         ws4 = wb.create_sheet("Заявки на стартапы")
