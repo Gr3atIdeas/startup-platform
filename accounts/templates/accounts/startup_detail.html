@@ -128,7 +128,7 @@
           <div class="rating-comments-container">
             <div class="rating-container">
               <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
-              <div class="rating-stars" data-rating="{{ average_rating|floatformat:"-2"|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
+              <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
                   {% for i in "12345" %}
                     <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
                       <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">

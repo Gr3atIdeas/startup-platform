@@ -657,6 +657,8 @@ document.addEventListener('DOMContentLoaded', function () {
       button.addEventListener('click', () => {
         const targetId = button.dataset.target;
         console.log('Tab button clicked, target:', targetId);
+        console.log('Button element:', button);
+        console.log('Button text:', button.textContent.trim());
         
         // Убираем активный класс со всех кнопок и секций
         tabButtons.forEach(btn => btn.classList.remove('active'));
@@ -665,10 +667,12 @@ document.addEventListener('DOMContentLoaded', function () {
         // Добавляем активный класс к выбранной кнопке и секции
         button.classList.add('active');
         const targetSection = document.getElementById(targetId);
+        console.log('Target section found:', !!targetSection);
         if (targetSection) {
           targetSection.classList.add('active');
           console.log('Activated section:', targetId);
-          } else {
+          console.log('Section classes after activation:', targetSection.className);
+        } else {
           console.error('Target section not found:', targetId);
           // Try to find by partial match
           const partialMatch = Array.from(contentSections).find(section => 
@@ -708,8 +712,26 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
         
-        // Перенаправляем на страницу чата
-        window.location.href = `/cosmochat/start-chat/${startupId}/`;
+        // Создаем чат со стартапом через POST запрос
+        fetch(`/cosmochat/start-chat/${startupId}/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.href = `/cosmochat/${data.chat_id}/`;
+          } else {
+            alert(data.error || 'Ошибка при создании чата');
+          }
+        })
+        .catch(error => {
+          console.error('Ошибка при создании чата:', error);
+          alert('Произошла ошибка при создании чата');
+        });
       });
     } else {
       console.error('Chat button not found');
@@ -732,8 +754,26 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
         
-        // Перенаправляем на страницу чата с автором
-        window.location.href = `/cosmochat/start-chat/${ownerId}/`;
+        // Создаем чат с автором через POST запрос
+        fetch(`/cosmochat/start-chat/${ownerId}/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.href = `/cosmochat/${data.chat_id}/`;
+          } else {
+            alert(data.error || 'Ошибка при создании чата');
+          }
+        })
+        .catch(error => {
+          console.error('Ошибка при создании чата:', error);
+          alert('Произошла ошибка при создании чата');
+        });
       });
     } else {
       console.error('Write button not found');
