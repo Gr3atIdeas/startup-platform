@@ -176,62 +176,74 @@
 
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // <<< Начинаем инициализацию noUiSlider >>>
+  // Функция инициализации noUiSlider
+  function initNoUiSlider() {
     var ratingSlider = document.getElementById('ratingSlider');
-    // var ratingRangeValues = document.getElementById('ratingRangeValues'); Заменяем ID
     var ratingValueDisplay = document.getElementById('ratingValueDisplay');
     var minRatingInput = document.getElementById('minRatingInput');
     var maxRatingInput = document.getElementById('maxRatingInput');
 
-    // Проверяем, что все элементы существуют и библиотеки подключены
-    // if (ratingSlider && ratingRangeValues && minRatingInput && maxRatingInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
     if (ratingSlider && ratingValueDisplay && minRatingInput && maxRatingInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
-        // Получаем начальные значения из скрытых полей
         var initialMin = parseFloat(minRatingInput.value) || 0;
         var initialMax = parseFloat(maxRatingInput.value) || 5;
 
         noUiSlider.create(ratingSlider, {
-            start: [initialMin, initialMax], // Начальные значения
-            connect: true,                 // Соединять ползунки
+            start: [initialMin, initialMax],
+            connect: true,
             range: {
                 'min': 0,
                 'max': 5
             },
-            step: 0.1,                     // Шаг
-            format: wNumb({                // Форматирование для отображения
+            step: 0.1,
+            format: wNumb({
                 decimals: 1,
-                thousand: '', // Убираем разделитель тысяч
-                suffix: ''    // Убираем суффикс
+                thousand: '',
+                suffix: ''
             }),
-            tooltips: false,                 // Отключаем встроенные тултипы
-            behaviour: 'tap-drag',         // Позволяет перетаскивать и кликать
-            pips: false                    // Отключаем точки на слайдере
+            tooltips: false,
+            behaviour: 'tap-drag',
+            pips: false
         });
 
-        // Обновляем span и скрытые поля при изменении слайдера
         ratingSlider.noUiSlider.on('update', function (values, handle) {
-            // values[0] - значение левого ползунка, values[1] - правого
             var minValue = values[0];
             var maxValue = values[1];
-
-            // ratingRangeValues.textContent = minValue + ' - ' + maxValue; Заменяем ID
             ratingValueDisplay.textContent = minValue + ' - ' + maxValue;
             minRatingInput.value = minValue;
             maxRatingInput.value = maxValue;
         });
     } else {
         console.error('Не удалось инициализировать noUiSlider. Элементы не найдены или библиотеки не подключены.');
-        // Выводим, чего не хватает
         if (!ratingSlider) console.error('Элемент #ratingSlider не найден');
-        // if (!ratingRangeValues) console.error('Элемент #ratingRangeValues не найден');
         if (!ratingValueDisplay) console.error('Элемент #ratingValueDisplay не найден');
         if (!minRatingInput) console.error('Элемент #minRatingInput не найден');
         if (!maxRatingInput) console.error('Элемент #maxRatingInput не найден');
         if (typeof noUiSlider === 'undefined') console.error('Библиотека noUiSlider не подключена');
         if (typeof wNumb === 'undefined') console.error('Библиотека wNumb не подключена');
     }
-    // <<< Конец инициализации noUiSlider >>>
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Ждем загрузки библиотек и инициализируем слайдер
+    if (typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
+        initNoUiSlider();
+    } else {
+        // Если библиотеки еще не загружены, ждем их загрузки
+        var checkLibraries = setInterval(function() {
+            if (typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
+                clearInterval(checkLibraries);
+                initNoUiSlider();
+            }
+        }, 100);
+        
+        // Таймаут на случай, если библиотеки не загрузятся
+        setTimeout(function() {
+            clearInterval(checkLibraries);
+            if (typeof noUiSlider === 'undefined' || typeof wNumb === 'undefined') {
+                console.error('Библиотеки noUiSlider или wNumb не загрузились в течение 5 секунд');
+            }
+        }, 5000);
+    }
 
     // --- Логика поиска --- 
     var searchInput = document.querySelector('.catalog-search-input');
@@ -368,9 +380,11 @@
 </script>
 {% endblock %}
 
+{% endblock %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 {% block body_scripts %}
   {{ block.super }} 
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {% endblock %}
