@@ -483,10 +483,18 @@ document.addEventListener('DOMContentLoaded', function () {
   // Обработка рейтинга планет
   function setupRatingStars() {
     console.log('Setting up rating stars...');
-    const ratingStars = document.querySelector('.rating-stars[data-interactive="true"]');
+    let ratingStars = document.querySelector('.rating-stars[data-interactive="true"]');
     if (!ratingStars) {
       console.log('Rating stars not found or not interactive');
-      return;
+      // Try to find any rating stars
+      const allRatingStars = document.querySelectorAll('.rating-stars');
+      console.log('All rating stars found:', allRatingStars.length);
+      if (allRatingStars.length > 0) {
+        ratingStars = allRatingStars[0];
+        console.log('Using first rating stars element');
+      } else {
+        return;
+      }
     }
 
     const ratingContainers = ratingStars.querySelectorAll('.rating-icon-container');
@@ -495,6 +503,21 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Found rating stars:', ratingStars);
     console.log('Rating containers count:', ratingContainers.length);
     console.log('Current rating:', currentRating);
+    console.log('Rating stars data attributes:', {
+      rating: ratingStars.dataset.rating,
+      interactive: ratingStars.dataset.interactive
+    });
+
+    // Log the initial state of each container
+    ratingContainers.forEach((container, index) => {
+      const emptyIcon = container.querySelector('.icon-empty');
+      const filledIcon = container.querySelector('.icon-filled');
+      console.log(`Container ${index + 1} initial state:`, {
+        emptyDisplay: emptyIcon ? emptyIcon.style.display : 'no element',
+        filledDisplay: filledIcon ? filledIcon.style.display : 'no element',
+        filledWidth: filledIcon ? filledIcon.style.width : 'no element'
+      });
+    });
 
     // Устанавливаем начальный рейтинг
     updateRatingDisplay(currentRating);
@@ -532,11 +555,15 @@ document.addEventListener('DOMContentLoaded', function () {
       console.log(`Container ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
       
       if (value <= rating) {
+        // Show filled icon with full width
         emptyIcon.style.display = 'none';
         filledIcon.style.display = 'block';
+        filledIcon.style.width = '100%';
       } else {
+        // Show empty icon, hide filled icon
         emptyIcon.style.display = 'block';
         filledIcon.style.display = 'none';
+        filledIcon.style.width = '0%';
       }
     });
   }
@@ -615,6 +642,17 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Found tab buttons:', tabButtons.length);
     console.log('Found content sections:', contentSections.length);
 
+    // Log all tab buttons and their targets
+    tabButtons.forEach((button, index) => {
+      const targetId = button.dataset.target;
+      console.log(`Tab button ${index}:`, button.textContent.trim(), 'target:', targetId);
+    });
+
+    // Log all content sections
+    contentSections.forEach((section, index) => {
+      console.log(`Content section ${index}:`, section.id);
+    });
+
     tabButtons.forEach(button => {
       button.addEventListener('click', () => {
         const targetId = button.dataset.target;
@@ -632,6 +670,15 @@ document.addEventListener('DOMContentLoaded', function () {
           console.log('Activated section:', targetId);
         } else {
           console.error('Target section not found:', targetId);
+          // Try to find by partial match
+          const partialMatch = Array.from(contentSections).find(section => 
+            section.id.includes(targetId.replace('-section', '')) || 
+            targetId.includes(section.id.replace('-section', ''))
+          );
+          if (partialMatch) {
+            partialMatch.classList.add('active');
+            console.log('Found partial match, activated section:', partialMatch.id);
+          }
         }
       });
     });
@@ -648,23 +695,42 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatButton = document.querySelector('.chat-button');
     console.log('Chat button found:', !!chatButton);
     if (chatButton) {
-      chatButton.addEventListener('click', () => {
+      console.log('Chat button text:', chatButton.textContent.trim());
+      console.log('Chat button classes:', chatButton.className);
+      chatButton.addEventListener('click', (e) => {
+        e.preventDefault();
         console.log('Chat button clicked');
         // Здесь можно добавить логику для открытия чата
         alert('Функция чата в разработке');
       });
+    } else {
+      console.error('Chat button not found');
     }
 
     // Кнопка "Написать"
     const writeButton = document.querySelector('.write-author-button');
     console.log('Write button found:', !!writeButton);
     if (writeButton) {
-      writeButton.addEventListener('click', () => {
+      console.log('Write button text:', writeButton.textContent.trim());
+      console.log('Write button classes:', writeButton.className);
+      writeButton.addEventListener('click', (e) => {
+        e.preventDefault();
         console.log('Write button clicked');
         // Здесь можно добавить логику для отправки сообщения автору
         alert('Функция отправки сообщений в разработке');
       });
+    } else {
+      console.error('Write button not found');
     }
+
+    // Additional debugging - log all buttons on the page
+    const allButtons = document.querySelectorAll('button');
+    console.log('Total buttons found on page:', allButtons.length);
+    allButtons.forEach((btn, index) => {
+      if (btn.textContent.includes('Чат') || btn.textContent.includes('Написать')) {
+        console.log(`Button ${index}:`, btn.textContent.trim(), 'classes:', btn.className);
+      }
+    });
   }
 
   // Инициализация кнопок действий
