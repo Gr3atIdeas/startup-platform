@@ -1807,10 +1807,20 @@ a:hover {
   border-radius: 20px; 
   overflow: hidden; 
   box-sizing: border-box;
+  position: relative;
+}
 
-  
-
-  
+.similar-startups-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgb(0 0 0 / 40%);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  z-index: 1;
 }
 
 .similar-startups-container {
@@ -1820,16 +1830,15 @@ a:hover {
   padding: 0 30px; 
   box-sizing: border-box;
   position: relative;
-
-  
-
-  
+  z-index: 2;
 }
 
 .similar-title {
   margin-bottom: 40px;
   padding: 0;
   color: var(--text-primary);
+  position: relative;
+  z-index: 2;
 }
 
 .similar-text,
@@ -1870,6 +1879,7 @@ a:hover {
   font-size: 14px;
   font-weight: 500;
   transition: all 0.3s ease;
+  z-index: 2;
 }
 
 .show-all-button i {
@@ -1887,6 +1897,8 @@ a:hover {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
+  position: relative;
+  z-index: 2;
 }
 
 .similar-card {
@@ -3333,6 +3345,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   box-sizing: border-box;
   border: none;
   color: var(--text-primary);
+  margin-top: 50px;
 }
 
 .moderator-review-section .card-header,

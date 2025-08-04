@@ -791,6 +791,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // Инициализация рейтинга в похожих стартапах
   setupSimilarStartupsRatings();
   
+  // Инициализация кнопки "показать еще" в похожих стартапах
+  setupSimilarStartupsShowMore();
+  
   // Инициализация рейтинга в похожих стартапах
   function setupSimilarStartupsRatings() {
     console.log('Setting up similar startups ratings...');
@@ -844,6 +847,63 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     });
+  }
+
+  // Инициализация кнопки "показать еще" в похожих стартапах
+  function setupSimilarStartupsShowMore() {
+    console.log('Setting up similar startups show more button...');
+    const showMoreButton = document.querySelector('.show-more-similar');
+    
+    if (showMoreButton) {
+      console.log('Show more button found');
+      showMoreButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Show more button clicked');
+        
+        const startupId = document.querySelector('.startup-detail-page').dataset.startupId;
+        const loadSimilarUrl = document.querySelector('.startup-detail-page').dataset.loadSimilarUrl;
+        
+        if (!loadSimilarUrl) {
+          console.error('Load similar URL not found');
+          return;
+        }
+        
+        // Показываем индикатор загрузки
+        showMoreButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Загрузка...';
+        showMoreButton.disabled = true;
+        
+        // Загружаем дополнительные похожие стартапы
+        fetch(loadSimilarUrl)
+          .then(response => response.text())
+          .then(html => {
+            // Заменяем содержимое сетки похожих стартапов
+            const similarGrid = document.querySelector('.similar-startups-grid');
+            if (similarGrid) {
+              // Удаляем кнопку "показать еще" перед добавлением новых карточек
+              const showMorePlaceholder = similarGrid.querySelector('.show-more-placeholder');
+              if (showMorePlaceholder) {
+                showMorePlaceholder.remove();
+              }
+              
+              // Добавляем новые карточки
+              similarGrid.insertAdjacentHTML('beforeend', html);
+              
+              // Обновляем рейтинги для новых карточек
+              setupSimilarStartupsRatings();
+              
+              console.log('Similar startups loaded successfully');
+            }
+          })
+          .catch(error => {
+            console.error('Error loading similar startups:', error);
+            // Восстанавливаем кнопку в случае ошибки
+            showMoreButton.innerHTML = '<i class="fas fa-redo"></i> Показать еще';
+            showMoreButton.disabled = false;
+          });
+      });
+    } else {
+      console.log('Show more button not found');
+    }
   }
 
   // Обработка переключения вкладок
