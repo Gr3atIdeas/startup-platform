@@ -522,25 +522,31 @@ document.addEventListener('DOMContentLoaded', function () {
     // Устанавливаем начальный рейтинг
     updateRatingDisplay(currentRating);
 
-    // Добавляем обработчики событий
-    ratingContainers.forEach((container, index) => {
-      const value = index + 1;
-      
-      container.addEventListener('mouseenter', () => {
-        console.log('Mouse enter on rating container:', value);
-        updateRatingDisplay(value);
-      });
+    // Добавляем обработчики событий только если рейтинг интерактивный
+    if (ratingStars.dataset.interactive === 'true') {
+      ratingContainers.forEach((container, index) => {
+        const value = index + 1;
+        
+        container.addEventListener('mouseenter', () => {
+          console.log('Mouse enter on rating container:', value);
+          updateRatingDisplay(value);
+        });
 
-      container.addEventListener('mouseleave', () => {
-        console.log('Mouse leave on rating container');
-        updateRatingDisplay(currentRating);
-      });
+        container.addEventListener('mouseleave', () => {
+          console.log('Mouse leave on rating container');
+          updateRatingDisplay(currentRating);
+        });
 
-      container.addEventListener('click', () => {
-        console.log('Click on rating container:', value);
-        submitRating(value);
+        container.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Click on rating container:', value);
+          submitRating(value);
+        });
       });
-    });
+    } else {
+      console.log('Rating is not interactive, skipping event listeners');
+    }
   }
 
   function updateRatingDisplay(rating) {
@@ -554,13 +560,19 @@ document.addEventListener('DOMContentLoaded', function () {
       
       console.log(`Container ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
       
-      if (value <= rating) {
-        // Show filled icon with full width
+      if (value <= Math.floor(rating)) {
+        // Полностью заполненные планеты
         emptyIcon.style.display = 'none';
         filledIcon.style.display = 'block';
         filledIcon.style.width = '100%';
+      } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
+        // Частично заполненная планета для дробного рейтинга
+        emptyIcon.style.display = 'block';
+        filledIcon.style.display = 'block';
+        const partialWidth = (rating % 1) * 100;
+        filledIcon.style.width = `${partialWidth}%`;
       } else {
-        // Show empty icon, hide filled icon
+        // Пустые планеты
         emptyIcon.style.display = 'block';
         filledIcon.style.display = 'none';
         filledIcon.style.width = '0%';
@@ -654,7 +666,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     tabButtons.forEach(button => {
-      button.addEventListener('click', () => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         const targetId = button.dataset.target;
         console.log('Tab button clicked, target:', targetId);
         
@@ -697,8 +711,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (chatButton) {
       console.log('Chat button text:', chatButton.textContent.trim());
       console.log('Chat button classes:', chatButton.className);
-      chatButton.addEventListener('click', (e) => {
+      console.log('Chat button HTML:', chatButton.outerHTML);
+      
+      // Remove any existing event listeners
+      const newChatButton = chatButton.cloneNode(true);
+      chatButton.parentNode.replaceChild(newChatButton, chatButton);
+      
+      newChatButton.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         console.log('Chat button clicked');
         // Здесь можно добавить логику для открытия чата
         alert('Функция чата в разработке');
@@ -713,8 +734,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (writeButton) {
       console.log('Write button text:', writeButton.textContent.trim());
       console.log('Write button classes:', writeButton.className);
-      writeButton.addEventListener('click', (e) => {
+      console.log('Write button HTML:', writeButton.outerHTML);
+      
+      // Remove any existing event listeners
+      const newWriteButton = writeButton.cloneNode(true);
+      writeButton.parentNode.replaceChild(newWriteButton, writeButton);
+      
+      newWriteButton.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         console.log('Write button clicked');
         // Здесь можно добавить логику для отправки сообщения автору
         alert('Функция отправки сообщений в разработке');
