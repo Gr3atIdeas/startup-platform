@@ -1401,7 +1401,7 @@ def start_deal(request, chat_id):
     )
 @login_required
 def deals_view(request):
-    if not hasattr(request.user, "role") or request.user.role.role_name != "moderator":
+    if not hasattr(request.user, "role") or (request.user.role.role_name or "").lower() != "moderator":
         messages.error(request, "Доступ к этой странице разрешен только модераторам.")
         logger.warning(
             f"Access denied for user {request.user.user_id} - not a moderator"
@@ -1542,7 +1542,7 @@ def send_message(request):
         return JsonResponse(
             {"success": False, "error": "У вас нет доступа к этому чату"}
         )
-    if not request.user.role or request.user.role.role_name != "moderator":
+    if not getattr(request.user, "role", None) or (request.user.role.role_name or "").lower() != "moderator":
         return JsonResponse(
             {
                 "success": False,
@@ -1580,7 +1580,7 @@ def approve_deal(request, chat_id):
         )
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
     if not chat.chatparticipants_set.filter(user=request.user).exists() or (
-        request.user.role and request.user.role.role_name != "moderator"
+        request.user.role and (request.user.role.role_name or "").lower() != "moderator"
     ):
         return JsonResponse(
             {"success": False, "error": "У вас нет прав для этого действия"}, status=403
@@ -1610,7 +1610,7 @@ def reject_deal(request, chat_id):
         )
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
     if not chat.chatparticipants_set.filter(user=request.user).exists() or (
-        request.user.role and request.user.role.role_name != "moderator"
+        request.user.role and (request.user.role.role_name or "").lower() != "moderator"
     ):
         return JsonResponse(
             {"success": False, "error": "У вас нет прав для этого действия"}, status=403
@@ -2203,7 +2203,7 @@ def main_page_moderator(request):
     """
     Отображает главную страницу для модератора.
     """
-    if not request.user.role or request.user.role.role_name != "moderator":
+    if not getattr(request.user, "role", None) or (request.user.role.role_name or "").lower() != "moderator":
         return redirect("home")
     return render(request, "accounts/moderator_main.html")
 @login_required
@@ -2592,7 +2592,7 @@ def moderator_dashboard(request):
     }
     return render(request, "accounts/moderator_dashboard.html", context)
 def approve_startup(request, startup_id):
-    if not request.user.is_authenticated or request.user.role.role_name != "moderator":
+    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
     startup = get_object_or_404(Startups, startup_id=startup_id)
@@ -2608,7 +2608,7 @@ def approve_startup(request, startup_id):
         messages.success(request, "Стартап одобрен.")
     return redirect("moderator_dashboard")
 def reject_startup(request, startup_id):
-    if not request.user.is_authenticated or request.user.role.role_name != "moderator":
+    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
     startup = get_object_or_404(Startups, startup_id=startup_id)
@@ -2707,7 +2707,7 @@ def news(request):
     if request.method == "POST":
         if (
             not request.user.is_authenticated
-            or request.user.role.role_name != "moderator"
+            or (request.user.role.role_name or "").lower() != "moderator"
         ):
             return JsonResponse(
                 {"success": False, "error": "У вас нет прав для этого действия."}
@@ -2768,7 +2768,7 @@ def news_detail(request, article_id):
     )
 @login_required
 def create_news(request):
-    if not request.user.is_authenticated or request.user.role.role_name != "moderator":
+    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("news")
     if request.method == "POST":
@@ -2797,7 +2797,7 @@ def create_news(request):
 def delete_news(request, article_id):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
-    if not request.user.is_authenticated or request.user.role.role_name != "moderator":
+    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         return JsonResponse(
             {"success": False, "error": "У вас нет прав для этого действия."}
         )
@@ -3656,7 +3656,7 @@ def support_page_view(request):
 def change_owner(request, startup_id):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
-    if not request.user.role or request.user.role.role_name != "moderator":
+    if not getattr(request.user, "role", None) or (request.user.role.role_name or "").lower() != "moderator":
         return JsonResponse(
             {"success": False, "error": "У вас нет прав для этого действия"}
         )
@@ -3668,7 +3668,7 @@ def change_owner(request, startup_id):
     return JsonResponse({"success": True})
 @login_required
 def get_investors(request, startup_id):
-    if not request.user.is_authenticated or request.user.role.role_name != "moderator":
+    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         return JsonResponse({"error": "Доступ запрещен"}, status=403)
     startup = get_object_or_404(Startups, startup_id=startup_id)
     investors = InvestmentTransactions.objects.filter(startup=startup).select_related(
@@ -3691,7 +3691,7 @@ def get_investors(request, startup_id):
     return JsonResponse({"html": html})
 @login_required
 def add_investor(request, startup_id):
-    if not request.user.is_authenticated or request.user.role.role_name != "moderator":
+    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         return JsonResponse({"error": "Доступ запрещен"}, status=403)
     if request.method == "POST":
         try:
@@ -3747,7 +3747,7 @@ def add_investor(request, startup_id):
 def edit_investment(request, startup_id, user_id):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
-    if not request.user.role or request.user.role.role_name != "moderator":
+    if not getattr(request.user, "role", None) or (request.user.role.role_name or "").lower() != "moderator":
         return JsonResponse(
             {"success": False, "error": "У вас нет прав для этого действия"}
         )
@@ -3773,7 +3773,7 @@ def edit_investment(request, startup_id, user_id):
     return JsonResponse({"success": True})
 @login_required
 def delete_investment(request, startup_id, user_id):
-    if not request.user.is_authenticated or request.user.role.role_name != "moderator":
+    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         return JsonResponse({"error": "Доступ запрещен"}, status=403)
     if request.method == "POST":
         with transaction.atomic():
