@@ -111,6 +111,7 @@ urlpatterns = [
         views.delete_investment,
         name="delete_investment",
     ),
+    path("submit_rating/<int:startup_id>/", views.submit_rating, name="submit_rating"),
     path(
         "chats/find_or_create/<int:recipient_id>/",
         views.find_or_create_chat,
