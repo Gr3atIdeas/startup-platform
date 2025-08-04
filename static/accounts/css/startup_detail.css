@@ -2326,10 +2326,7 @@ a:hover {
   top: 0;
   left: 0;
   height: 100%;
-
-  
-
-  
+  width: 100%;
   overflow: hidden;
   z-index: 2;
   filter: none; 
@@ -3067,7 +3064,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   top: 0;
   left: 0;
   height: 100%;
-  width: 0%;
+  width: 100%;
   overflow: hidden;
   z-index: 2;
   filter: none;

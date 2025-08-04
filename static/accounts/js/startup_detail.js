@@ -482,6 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Обработка рейтинга планет
   function setupRatingStars() {
+    console.log('Setting up rating stars...');
     const ratingStars = document.querySelector('.rating-stars[data-interactive="true"]');
     if (!ratingStars) {
       console.log('Rating stars not found or not interactive');
@@ -490,6 +491,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const ratingContainers = ratingStars.querySelectorAll('.rating-icon-container');
     const currentRating = parseFloat(ratingStars.dataset.rating) || 0;
+    
+    console.log('Found rating stars:', ratingStars);
+    console.log('Rating containers count:', ratingContainers.length);
+    console.log('Current rating:', currentRating);
 
     // Устанавливаем начальный рейтинг
     updateRatingDisplay(currentRating);
@@ -499,26 +504,32 @@ document.addEventListener('DOMContentLoaded', function () {
       const value = index + 1;
       
       container.addEventListener('mouseenter', () => {
+        console.log('Mouse enter on rating container:', value);
         updateRatingDisplay(value);
       });
 
       container.addEventListener('mouseleave', () => {
+        console.log('Mouse leave on rating container');
         updateRatingDisplay(currentRating);
       });
 
       container.addEventListener('click', () => {
+        console.log('Click on rating container:', value);
         submitRating(value);
       });
     });
   }
 
   function updateRatingDisplay(rating) {
+    console.log('Updating rating display to:', rating);
     const ratingContainers = document.querySelectorAll('.rating-stars .rating-icon-container');
     
     ratingContainers.forEach((container, index) => {
       const value = index + 1;
       const emptyIcon = container.querySelector('.icon-empty');
       const filledIcon = container.querySelector('.icon-filled');
+      
+      console.log(`Container ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
       
       if (value <= rating) {
         emptyIcon.style.display = 'none';
@@ -597,12 +608,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Обработка переключения вкладок
   function setupTabNavigation() {
+    console.log('Setting up tab navigation...');
     const tabButtons = document.querySelectorAll('.tab-button');
     const contentSections = document.querySelectorAll('.content-section');
+    
+    console.log('Found tab buttons:', tabButtons.length);
+    console.log('Found content sections:', contentSections.length);
 
     tabButtons.forEach(button => {
       button.addEventListener('click', () => {
         const targetId = button.dataset.target;
+        console.log('Tab button clicked, target:', targetId);
         
         // Убираем активный класс со всех кнопок и секций
         tabButtons.forEach(btn => btn.classList.remove('active'));
@@ -613,6 +629,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const targetSection = document.getElementById(targetId);
         if (targetSection) {
           targetSection.classList.add('active');
+          console.log('Activated section:', targetId);
+        } else {
+          console.error('Target section not found:', targetId);
         }
       });
     });
@@ -623,8 +642,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Обработка кнопок "Чат" и "Написать"
   function setupActionButtons() {
+    console.log('Setting up action buttons...');
+    
     // Кнопка "Чат"
     const chatButton = document.querySelector('.chat-button');
+    console.log('Chat button found:', !!chatButton);
     if (chatButton) {
       chatButton.addEventListener('click', () => {
         console.log('Chat button clicked');
@@ -635,6 +657,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Кнопка "Написать"
     const writeButton = document.querySelector('.write-author-button');
+    console.log('Write button found:', !!writeButton);
     if (writeButton) {
       writeButton.addEventListener('click', () => {
         console.log('Write button clicked');
