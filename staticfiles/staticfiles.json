@@ -90,6 +90,26 @@
       "name": "accounts/css/modern_responsive.css",
       "hash": "modern-css",
       "path": "accounts/css/modern_responsive.css"
+    },
+    "accounts/css/startups_list.css": {
+      "name": "accounts/css/startups_list.css",
+      "hash": "startups-list",
+      "path": "accounts/css/startups_list.css"
+    },
+    "accounts/css/news.css": {
+      "name": "accounts/css/news.css",
+      "hash": "news",
+      "path": "accounts/css/news.css"
+    },
+    "accounts/css/investments.css": {
+      "name": "accounts/css/investments.css",
+      "hash": "investments",
+      "path": "accounts/css/investments.css"
+    },
+    "accounts/css/cosmochat.css": {
+      "name": "accounts/css/cosmochat.css",
+      "hash": "cosmochat",
+      "path": "accounts/css/cosmochat.css"
     }
   }
 } 
