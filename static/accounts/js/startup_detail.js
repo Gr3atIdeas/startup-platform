@@ -579,19 +579,23 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         body: `new_owner_id=${newOwnerId}`,
       })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert('Владелец успешно изменён!')
-          location.reload()
+      .then(async response => {
+        let data = null;
+        try {
+          data = await response.json();
+        } catch (e) {}
+        if (response.ok && data && data.success) {
+          alert('Владелец успешно изменён!');
+          location.reload();
         } else {
-          alert(data.error || 'Ошибка при смене владельца.')
+          const errMsg = (data && data.error) || 'Ошибка при смене владельца.';
+          alert(errMsg);
         }
       })
       .catch(error => {
-        console.error('Ошибка:', error)
-        alert('Сетевая ошибка при смене владельца.')
-      })
+        console.error('Ошибка:', error);
+        alert('Сетевая ошибка при смене владельца.');
+      });
     })
   }
   const addInvestorModalEl = document.getElementById('addInvestorModal');
@@ -627,15 +631,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 amount: amount,
             }),
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
+        .then(async response => {
+            let data = null;
+            try {
+                data = await response.json();
+            } catch (e) {}
+            if (response.ok && data && data.success) {
                 alert('Инвестор успешно добавлен!');
                 loadCurrentInvestors();
                 resetAddInvestorForm();
                 updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
             } else {
-                alert(data.error || 'Ошибка при добавлении инвестора.');
+                const errMsg = (data && data.error) || 'Ошибка при добавлении инвестора.';
+                alert(errMsg);
             }
         })
         .catch(error => {
