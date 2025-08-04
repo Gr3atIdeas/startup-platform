@@ -573,17 +573,17 @@ document.addEventListener('DOMContentLoaded', function () {
     
     if (!csrfToken) {
       alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
-            return;
-        }
+      return;
+    }
 
-    fetch(`/submit_rating/${startupId}/`, {
-            method: 'POST',
-            headers: {
-        'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
+    fetch(`/vote-startup/${startupId}/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': csrfToken,
         'X-Requested-With': 'XMLHttpRequest'
       },
-      body: JSON.stringify({ rating: rating })
+      body: `rating=${rating}`
     })
     .then(response => {
       console.log('Rating submission response status:', response.status);
@@ -595,9 +595,9 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       return response.json();
     })
-        .then(data => {
+    .then(data => {
       console.log('Rating submission response data:', data);
-            if (data.success) {
+      if (data.success) {
         // Обновляем отображение рейтинга
         const ratingStars = document.querySelector('.rating-stars');
         if (ratingStars) {
@@ -607,8 +607,8 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // Обновляем общий рейтинг
         const averageRatingElement = document.querySelector('.rating-label');
-        if (averageRatingElement && data.new_average_rating) {
-          averageRatingElement.textContent = `Рейтинг ${data.new_average_rating}/5`;
+        if (averageRatingElement && data.average_rating) {
+          averageRatingElement.textContent = `Рейтинг ${data.average_rating.toFixed(1)}/5`;
         }
         
         // Отключаем интерактивность
@@ -620,11 +620,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         
         alert('Спасибо за оценку!');
-            } else {
+      } else {
         alert(data.error || 'Ошибка при отправке оценки.');
-            }
-        })
-        .catch(error => {
+      }
+    })
+    .catch(error => {
       console.error('Ошибка при отправке оценки:', error);
       alert('Произошла ошибка при отправке оценки.');
     });
