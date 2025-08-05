@@ -6,6 +6,7 @@ import os
 import uuid
 from decimal import Decimal
 from random import choice, shuffle
+from datetime import datetime
 import boto3
 import requests
 from boto3 import client
@@ -2924,7 +2925,6 @@ def get_chat_messages(request, chat_id):
     messages = chat.messages_set.all()
     if since:
         try:
-            from datetime import datetime
             since_dt = datetime.fromisoformat(since.replace("Z", "+00:00"))
             messages = messages.filter(created_at__gt=since_dt)
         except ValueError:
@@ -4133,6 +4133,7 @@ def download_startups_report(request):
                 except Exception:
                     startup_id = row - 1
                 ws.cell(row=row, column=1, value=startup_id)
+                
                 try:
                     title = startup.title or ""
                 except Exception:
@@ -4151,6 +4152,7 @@ def download_startups_report(request):
                 except Exception:
                     status_display = startup.status or "Неизвестен"
                 ws.cell(row=row, column=4, value=status_display)
+                
                 try:
                     direction_name = startup.direction.direction_name if startup.direction else "Не указана"
                 except Exception:
@@ -4162,6 +4164,7 @@ def download_startups_report(request):
                 except Exception:
                     stage_name = "Не указана"
                 ws.cell(row=row, column=6, value=stage_name)
+                
                 try:
                     funding_goal = startup.funding_goal or 0
                 except Exception:
