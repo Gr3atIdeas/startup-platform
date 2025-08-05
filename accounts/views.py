@@ -5,7 +5,8 @@ import os
 import uuid
 from decimal import Decimal
 from random import choice, shuffle
-from datetime import datetime
+import datetime
+from datetime import datetime as dt
 import boto3
 import requests
 from boto3 import client
@@ -2924,7 +2925,7 @@ def get_chat_messages(request, chat_id):
     messages = chat.messages_set.all()
     if since:
         try:
-            since_dt = datetime.fromisoformat(since.replace("Z", "+00:00"))
+            since_dt = dt.fromisoformat(since.replace("Z", "+00:00"))
             messages = messages.filter(created_at__gt=since_dt)
         except ValueError:
             return JsonResponse(
@@ -4234,7 +4235,7 @@ def download_startups_report(request):
         response = HttpResponse(
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
-        report_date = datetime.now().strftime('%Y-%m-%d')
+        report_date = dt.now().strftime('%Y-%m-%d')
         filename = f'Отчет по стартапам_{report_date}.xlsx'
         response['Content-Disposition'] = f'attachment; filename={filename}'
         wb.save(response)
