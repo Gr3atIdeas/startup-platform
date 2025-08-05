@@ -391,7 +391,7 @@
       display: none;
       justify-content: center;
       align-items: center;
-      z-index: 1000;
+      z-index: 9999;
     }
 
     .planetary-modal-backdrop {
@@ -412,7 +412,7 @@
       color: white;
       font-size: 30px;
       cursor: pointer;
-      z-index: 1002;
+      z-index: 10000;
     }
 
     .planetary-modal-close:hover {
@@ -427,7 +427,7 @@
       display: flex;
       align-items: center;
       gap: 132px;
-      z-index: 1001;
+      z-index: 10001;
     }
 
     .planetary-modal-planet {
@@ -2448,60 +2448,60 @@
               }
           })();
 
-          // Обработчик полноэкранного режима для планетарной системы
-          const fullscreenBtn = document.querySelector('.portfolio-image-fullscreen-btn');
-          const planetaryContainer = document.querySelector('.planetary-system-container');
-          
-          if (fullscreenBtn && planetaryContainer) {
-              console.log('Fullscreen button found:', fullscreenBtn);
-              console.log('Planetary container found:', planetaryContainer);
+              // Обработчик полноэкранного режима для планетарной системы
+              const fullscreenBtn = document.querySelector('.portfolio-image-fullscreen-btn');
+              const planetaryContainer = document.querySelector('.planetary-system-container');
               
-              fullscreenBtn.addEventListener('click', function(e) {
-                  console.log('Fullscreen button clicked!');
-                  e.preventDefault();
-                  e.stopPropagation();
+              if (fullscreenBtn && planetaryContainer) {
+                  console.log('Fullscreen button found:', fullscreenBtn);
+                  console.log('Planetary container found:', planetaryContainer);
                   
-                  if (!document.fullscreenElement) {
-                      console.log('Entering fullscreen mode...');
-                      // Входим в полноэкранный режим
-                      if (planetaryContainer.requestFullscreen) {
-                          planetaryContainer.requestFullscreen();
-                      } else if (planetaryContainer.webkitRequestFullscreen) {
-                          planetaryContainer.webkitRequestFullscreen();
-                      } else if (planetaryContainer.msRequestFullscreen) {
-                          planetaryContainer.msRequestFullscreen();
+                  fullscreenBtn.addEventListener('click', function(e) {
+                      console.log('Fullscreen button clicked!');
+                      e.preventDefault();
+                      e.stopPropagation();
+                      
+                      if (!document.fullscreenElement) {
+                          console.log('Entering fullscreen mode...');
+                          // Входим в полноэкранный режим
+                          if (planetaryContainer.requestFullscreen) {
+                              planetaryContainer.requestFullscreen();
+                          } else if (planetaryContainer.webkitRequestFullscreen) {
+                              planetaryContainer.webkitRequestFullscreen();
+                          } else if (planetaryContainer.msRequestFullscreen) {
+                              planetaryContainer.msRequestFullscreen();
+                          }
+                      } else {
+                          console.log('Exiting fullscreen mode...');
+                          // Выходим из полноэкранного режима
+                          if (document.exitFullscreen) {
+                              document.exitFullscreen();
+                          } else if (document.webkitExitFullscreen) {
+                              document.webkitExitFullscreen();
+                          } else if (document.msExitFullscreen) {
+                              document.msExitFullscreen();
+                          }
                       }
-                  } else {
-                      console.log('Exiting fullscreen mode...');
-                      // Выходим из полноэкранного режима
-                      if (document.exitFullscreen) {
-                          document.exitFullscreen();
-                      } else if (document.webkitExitFullscreen) {
-                          document.webkitExitFullscreen();
-                      } else if (document.msExitFullscreen) {
-                          document.msExitFullscreen();
+                  });
+
+                  // Обновляем иконку кнопки при изменении состояния полноэкранного режима
+                  document.addEventListener('fullscreenchange', updateFullscreenIcon);
+                  document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+                  document.addEventListener('msfullscreenchange', updateFullscreenIcon);
+
+                  function updateFullscreenIcon() {
+                      const icon = fullscreenBtn.querySelector('i');
+                      if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+                          icon.className = 'fas fa-compress';
+                          fullscreenBtn.setAttribute('aria-label', 'Свернуть полноэкранный режим');
+                      } else {
+                          icon.className = 'fas fa-expand';
+                          fullscreenBtn.setAttribute('aria-label', 'Развернуть на полный экран');
                       }
                   }
-              });
-
-              // Обновляем иконку кнопки при изменении состояния полноэкранного режима
-              document.addEventListener('fullscreenchange', updateFullscreenIcon);
-              document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
-              document.addEventListener('msfullscreenchange', updateFullscreenIcon);
-
-              function updateFullscreenIcon() {
-                  const icon = fullscreenBtn.querySelector('i');
-                  if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
-                      icon.className = 'fas fa-compress';
-                      fullscreenBtn.setAttribute('aria-label', 'Свернуть полноэкранный режим');
-                  } else {
-                      icon.className = 'fas fa-expand';
-                      fullscreenBtn.setAttribute('aria-label', 'Развернуть на полный экран');
-                  }
+              } else {
+                  console.log('Fullscreen button or planetary container not found');
               }
-          } else {
-              console.log('Fullscreen button or planetary container not found');
-          }
           })();
     </script>
 
