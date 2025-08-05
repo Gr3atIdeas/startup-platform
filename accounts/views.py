@@ -4109,7 +4109,6 @@ def download_startups_report(request):
         
         title_cell = ws.cell(row=1, column=1, value="Отчет по стартапам")
         title_cell.font = Font(bold=True, size=16)
-        ws.merge_cells('A1:L1')
         title_cell.alignment = Alignment(horizontal='center', vertical='center')
         
         headers = [
