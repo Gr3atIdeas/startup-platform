@@ -340,7 +340,7 @@ def home(request):
         if role_name == "investor":
             return redirect("investor_main")
         elif role_name == "startuper":
-            return redirect("startupper_main")
+            return redirect("startuper_main")
         elif role_name == "moderator":
             return redirect("main_page_moderator")
     return redirect("profile")
@@ -403,7 +403,7 @@ def user_login(request):
                     if role_name == "investor":
                         return redirect("investor_main")
                     elif role_name == "startuper":
-                        return redirect("startupper_main")
+                        return redirect("startuper_main")
                     elif role_name == "moderator":
                         return redirect("main_page_moderator")
                 return redirect("home")
@@ -2362,7 +2362,7 @@ def investor_main(request):
     }
     return render(request, "accounts/investor_main.html", context)
 @login_required
-def startupper_main(request):
+def startuper_main(request):
     """
     Отображает главную страницу стартаппера с планетарной системой стартапов.
     """
@@ -2556,7 +2556,7 @@ def startupper_main(request):
     for i, startup in enumerate(all_startups_data[:3]):
         print(f"🔍   {i+1}. {startup.get('name', 'Нет названия')} -> direction: {startup.get('direction', 'Нет направления')}")
     
-    return render(request, "accounts/startupper_main.html", context)
+    return render(request, "accounts/startuper_main.html", context)
 def moderator_dashboard(request):
     pending_startups_list = Startups.objects.filter(status="pending")
     all_categories = Directions.objects.all().order_by("direction_name")
