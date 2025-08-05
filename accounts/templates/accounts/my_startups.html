@@ -2453,8 +2453,16 @@
           const planetaryContainer = document.querySelector('.planetary-system-container');
           
           if (fullscreenBtn && planetaryContainer) {
-              fullscreenBtn.addEventListener('click', function() {
+              console.log('Fullscreen button found:', fullscreenBtn);
+              console.log('Planetary container found:', planetaryContainer);
+              
+              fullscreenBtn.addEventListener('click', function(e) {
+                  console.log('Fullscreen button clicked!');
+                  e.preventDefault();
+                  e.stopPropagation();
+                  
                   if (!document.fullscreenElement) {
+                      console.log('Entering fullscreen mode...');
                       // Входим в полноэкранный режим
                       if (planetaryContainer.requestFullscreen) {
                           planetaryContainer.requestFullscreen();
@@ -2464,6 +2472,7 @@
                           planetaryContainer.msRequestFullscreen();
                       }
                   } else {
+                      console.log('Exiting fullscreen mode...');
                       // Выходим из полноэкранного режима
                       if (document.exitFullscreen) {
                           document.exitFullscreen();
@@ -2490,6 +2499,8 @@
                       fullscreenBtn.setAttribute('aria-label', 'Развернуть на полный экран');
                   }
               }
+          } else {
+              console.log('Fullscreen button or planetary container not found');
           }
           })();
     </script>

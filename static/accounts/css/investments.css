@@ -156,6 +156,7 @@ body {
   justify-content: center;
   cursor: pointer;
   transition: background-color 0.3s linear;
+  z-index: 1000;
 }
 
 .portfolio-image-fullscreen-btn:hover {
