@@ -3448,8 +3448,6 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   position: absolute;
   bottom: 0;
   right: 0;
-  background: var(--primary-dark-blue);
-  padding-left: 4px;
   color: var(--text-primary);
   font-weight: bold;
 }
@@ -3459,8 +3457,6 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   position: absolute;
   bottom: 0;
   right: 0;
-  background: var(--primary-dark-blue);
-  padding-left: 4px;
   color: var(--text-primary);
   font-weight: bold;
 }
@@ -3489,7 +3485,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .rating-input-label {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #000;
   margin-bottom: 8px;
   font-family: Unbounded, sans-serif;
 }

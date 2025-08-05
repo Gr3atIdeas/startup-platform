@@ -13,6 +13,31 @@ function getCookie(name) {
   return cookieValue
 }
 
+function toggleTextTruncation(sectionId, maxLines) {
+  try {
+    const container = document.getElementById(sectionId);
+    if (!container) {
+      console.warn(`Container with id '${sectionId}' not found`);
+      return;
+    }
+    
+    const isTruncated = container.classList.contains(`truncated-${maxLines}-lines`);
+    const toggle = container.querySelector('.text-truncate-toggle');
+    
+    if (isTruncated) {
+      container.classList.remove(`truncated-${maxLines}-lines`);
+      if (toggle) toggle.textContent = 'Скрыть';
+    } else {
+      container.classList.add(`truncated-${maxLines}-lines`);
+      if (toggle) toggle.textContent = 'Показать полностью';
+    }
+  } catch (error) {
+    console.error('Error in toggleTextTruncation:', error);
+  }
+}
+
+window.toggleTextTruncation = toggleTextTruncation;
+
 document.addEventListener('DOMContentLoaded', function () {
   const pageDataElement = document.querySelector('.startup-detail-page')
   if (!pageDataElement) {
@@ -779,29 +804,6 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     } else {
       console.log('Overall rating element not found');
-    }
-  }
-
-  function toggleTextTruncation(sectionId, maxLines) {
-    try {
-      const container = document.getElementById(sectionId);
-      if (!container) {
-        console.warn(`Container with id '${sectionId}' not found`);
-        return;
-      }
-      
-      const isTruncated = container.classList.contains(`truncated-${maxLines}-lines`);
-      const toggle = container.querySelector('.text-truncate-toggle');
-      
-      if (isTruncated) {
-        container.classList.remove(`truncated-${maxLines}-lines`);
-        if (toggle) toggle.textContent = 'Скрыть';
-      } else {
-        container.classList.add(`truncated-${maxLines}-lines`);
-        if (toggle) toggle.textContent = 'Показать полностью';
-      }
-    } catch (error) {
-      console.error('Error in toggleTextTruncation:', error);
     }
   }
 
