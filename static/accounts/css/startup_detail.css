@@ -3431,52 +3431,39 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   overflow: hidden;
 }
 
-.text-truncate-container.truncated {
-  max-height: 4.5em;
-  line-height: 1.5;
+.text-content {
+  cursor: pointer;
+  position: relative;
 }
 
-.text-truncate-container.truncated-3-lines {
+.text-truncate-container.truncated-3-lines .text-content {
   max-height: 4.5em;
-  line-height: 1.5;
+  overflow: hidden;
 }
 
-.text-truncate-container.truncated-5-lines {
+.text-truncate-container.truncated-5-lines .text-content {
   max-height: 7.5em;
-  line-height: 1.5;
+  overflow: hidden;
 }
 
-.text-truncate-container.truncated::after {
-  content: '';
+.text-truncate-container.truncated-3-lines .text-content::after {
+  content: '...';
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 100%;
-  height: 1.5em;
-  background: linear-gradient(transparent, var(--primary-dark-blue));
-  pointer-events: none;
+  background: var(--primary-dark-blue);
+  padding-left: 4px;
+  color: var(--text-primary);
 }
 
-.text-truncate-container.truncated-3-lines::after {
-  content: '';
+.text-truncate-container.truncated-5-lines .text-content::after {
+  content: '...';
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 100%;
-  height: 1.5em;
-  background: linear-gradient(transparent, var(--primary-dark-blue));
-  pointer-events: none;
-}
-
-.text-truncate-container.truncated-5-lines::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  height: 1.5em;
-  background: linear-gradient(transparent, var(--primary-dark-blue));
-  pointer-events: none;
+  background: var(--primary-dark-blue);
+  padding-left: 4px;
+  color: var(--text-primary);
 }
 
 .text-truncate-toggle {

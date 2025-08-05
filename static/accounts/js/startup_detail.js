@@ -787,13 +787,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!container) return;
     
     const isTruncated = container.classList.contains(`truncated-${maxLines}-lines`);
+    const toggle = container.querySelector('.text-truncate-toggle');
     
     if (isTruncated) {
       container.classList.remove(`truncated-${maxLines}-lines`);
-      container.querySelector('.text-truncate-toggle').textContent = 'Скрыть';
+      if (toggle) toggle.textContent = 'Скрыть';
     } else {
       container.classList.add(`truncated-${maxLines}-lines`);
-      container.querySelector('.text-truncate-toggle').textContent = 'Показать полностью';
+      if (toggle) toggle.textContent = 'Показать полностью';
     }
   }
 
@@ -802,7 +803,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const aboutSection = document.getElementById('about-section');
     
     if (introSection) {
-      const introText = introSection.querySelector('p');
+      const introText = introSection.querySelector('.text-content');
       const introToggle = introSection.querySelector('.text-truncate-toggle');
       
       if (introText && introToggle) {
@@ -820,7 +821,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     if (aboutSection) {
-      const aboutText = aboutSection.querySelector('p');
+      const aboutText = aboutSection.querySelector('.text-content');
       const aboutToggle = aboutSection.querySelector('.text-truncate-toggle');
       
       if (aboutText && aboutToggle) {

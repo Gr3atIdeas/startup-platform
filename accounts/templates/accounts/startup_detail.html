@@ -193,22 +193,24 @@
             
             <div class="about-section">
               <h2 class="section-title">Вводная</h2> 
-              <div class="section-content text-truncate-container truncated-3-lines" id="intro-section">
-                <p>{{ startup.short_description|default:"Нет вводного описания." }}</p> 
-                <span class="text-truncate-toggle" onclick="toggleTextTruncation('intro-section', 3)">Показать полностью</span>
+              <div class="section-content text-truncate-container" id="intro-section">
+                <div class="text-content" onclick="toggleTextTruncation('intro-section', 3)">
+                  <p>{{ startup.short_description|default:"Нет вводного описания." }}</p> 
+                  <span class="text-truncate-toggle">Показать полностью</span>
+                </div>
               </div>
             </div>
             <div class="about-section"> 
               <h2 class="section-title">О проекте</h2>
-              <div class="section-content text-truncate-container truncated-5-lines" id="about-section">
-                 
-                <p>{{ startup.description|linebreaksbr|default:"Нет подробного описания." }}</p>
-                {% if startup.additional_info %}
-                  <p><strong>Основные функции:</strong></p>
-                  {{ startup.additional_info|linebreaksbr }}
-                {% endif %}
-                 
-                <span class="text-truncate-toggle" onclick="toggleTextTruncation('about-section', 5)">Показать полностью</span>
+              <div class="section-content text-truncate-container" id="about-section">
+                <div class="text-content" onclick="toggleTextTruncation('about-section', 5)">
+                  <p>{{ startup.description|linebreaksbr|default:"Нет подробного описания." }}</p>
+                  {% if startup.additional_info %}
+                    <p><strong>Основные функции:</strong></p>
+                    {{ startup.additional_info|linebreaksbr }}
+                  {% endif %}
+                  <span class="text-truncate-toggle">Показать полностью</span>
+                </div>
               </div>
             </div>
 
