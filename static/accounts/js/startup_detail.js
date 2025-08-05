@@ -803,17 +803,37 @@ document.addEventListener('DOMContentLoaded', function () {
     
     if (introSection) {
       const introText = introSection.querySelector('p');
-      if (introText && introText.scrollHeight <= introText.clientHeight) {
-        introSection.querySelector('.text-truncate-toggle').style.display = 'none';
-        introSection.classList.remove('truncated-3-lines');
+      const introToggle = introSection.querySelector('.text-truncate-toggle');
+      
+      if (introText && introToggle) {
+        const lineHeight = parseInt(window.getComputedStyle(introText).lineHeight);
+        const maxHeight = lineHeight * 3;
+        
+        if (introText.scrollHeight <= maxHeight) {
+          introToggle.style.display = 'none';
+          introSection.classList.remove('truncated-3-lines');
+        } else {
+          introSection.classList.add('truncated-3-lines');
+          introToggle.style.display = 'inline-block';
+        }
       }
     }
     
     if (aboutSection) {
       const aboutText = aboutSection.querySelector('p');
-      if (aboutText && aboutText.scrollHeight <= aboutText.clientHeight) {
-        aboutSection.querySelector('.text-truncate-toggle').style.display = 'none';
-        aboutSection.classList.remove('truncated-5-lines');
+      const aboutToggle = aboutSection.querySelector('.text-truncate-toggle');
+      
+      if (aboutText && aboutToggle) {
+        const lineHeight = parseInt(window.getComputedStyle(aboutText).lineHeight);
+        const maxHeight = lineHeight * 5;
+        
+        if (aboutText.scrollHeight <= maxHeight) {
+          aboutToggle.style.display = 'none';
+          aboutSection.classList.remove('truncated-5-lines');
+        } else {
+          aboutSection.classList.add('truncated-5-lines');
+          aboutToggle.style.display = 'inline-block';
+        }
       }
     }
   }
@@ -835,6 +855,9 @@ document.addEventListener('DOMContentLoaded', function () {
   
   // Инициализация кнопки "показать еще" в комментариях
   setupCommentsShowMore();
+  
+  // Инициализация рейтинга в поле ввода комментария
+  setupCommentRatingInput();
   
   // Инициализация обрезки текста
   setupTextTruncation();

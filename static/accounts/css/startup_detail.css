@@ -3330,8 +3330,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .moderator-review-section.card,
 .moderator-comment-display.card {
   display: flex;
-  width: 100%;
-  max-width: calc(100% - 349px - 57px);
+  width: 1303px;
+  max-width: 1303px;
   padding: 20px 30px;
   flex-direction: column;
   align-items: flex-start;
@@ -3344,7 +3344,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   box-sizing: border-box;
   border: none;
   color: var(--text-primary);
-  margin-top: 50px;
+  margin: 50px auto 0 auto;
 }
 
 .moderator-review-section .card-header,
