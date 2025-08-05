@@ -1547,4 +1547,51 @@
   }
 }
 
+.ultra_new_planetary_category_item.category-all {
+  background: linear-gradient(180deg, #7b61ff 0%, #4a3a99 100%);
+}
+
+@media (max-width: 768px) {
+  .ultra_new_planetary_category_item.category-all {
+    background: linear-gradient(180deg, #7b61ff 0%, #4a3a99 100%);
+  }
+}
+
+/* Fullscreen gradient background */
+.planetary-system-container:fullscreen {
+  background: linear-gradient(
+    to bottom,
+    #000 0%,
+    #01366d 50%,
+    #004e9f 100%
+  ) !important;
+}
+
+.planetary-system-container:-webkit-full-screen {
+  background: linear-gradient(
+    to bottom,
+    #000 0%,
+    #01366d 50%,
+    #004e9f 100%
+  ) !important;
+}
+
+.planetary-system-container:-moz-full-screen {
+  background: linear-gradient(
+    to bottom,
+    #000 0%,
+    #01366d 50%,
+    #004e9f 100%
+  ) !important;
+}
+
+.planetary-system-container:-ms-fullscreen {
+  background: linear-gradient(
+    to bottom,
+    #000 0%,
+    #01366d 50%,
+    #004e9f 100%
+  ) !important;
+}
+
 
