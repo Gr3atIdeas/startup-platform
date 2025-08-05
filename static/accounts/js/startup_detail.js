@@ -833,6 +833,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // Инициализация кнопки "показать еще" в похожих стартапах
   setupSimilarStartupsShowMore();
   
+  // Инициализация кнопки "показать еще" в комментариях
+  setupCommentsShowMore();
+  
   // Инициализация обрезки текста
   setupTextTruncation();
   
@@ -967,8 +970,11 @@ document.addEventListener('DOMContentLoaded', function () {
     
     if (hideButton) {
       hideButton.addEventListener('click', function() {
-        hiddenComments.forEach(comment => {
-          comment.classList.add('hidden');
+        const allComments = document.querySelectorAll('.comment-card');
+        allComments.forEach((comment, index) => {
+          if (index >= 5) {
+            comment.classList.add('hidden');
+          }
         });
         hideButton.style.display = 'none';
         if (showMoreButton) {
