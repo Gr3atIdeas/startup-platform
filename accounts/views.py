@@ -4225,9 +4225,7 @@ def download_startups_report(request):
         response = HttpResponse(
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
-        report_date = datetime.now().strftime('%Y-%m-%d')
-        filename = f'Отчет по стартапам_{report_date}.xlsx'
-        response['Content-Disposition'] = f'attachment; filename={filename}'
+        response['Content-Disposition'] = f'attachment; filename=my_startups_report_{request.user.id}.xlsx'
         wb.save(response)
         return response
     except Exception as e:
