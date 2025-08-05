@@ -66,8 +66,8 @@
     const currentPage = getCurrentPage();
     if (currentPage === 'home') {
       ultraNewPlanetaryGalaxyY = 0;
-      ultraNewPlanetaryGalaxyX = 200;
-      ultraNewPlanetaryGalaxyScale = 1.2;
+      ultraNewPlanetaryGalaxyX = 0;
+      ultraNewPlanetaryGalaxyScale = 1;
     } else if (currentPage === 'main') {
       ultraNewPlanetaryGalaxyY = -200;
       ultraNewPlanetaryGalaxyScale = 0.8;
