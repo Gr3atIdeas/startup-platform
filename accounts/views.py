@@ -4099,8 +4099,8 @@ def telegram_webhook(request, token):
 
 @login_required
 def download_startups_report(request):
-    if request.user.role.role_name != 'moderator':
-        return HttpResponseForbidden("Доступ запрещен")
+    if not hasattr(request.user, "role") or request.user.role.role_name != 'startuper':
+        return HttpResponseForbidden("Доступ запрещен. Функция доступна только для стартаперов.")
     
     wb = Workbook()
     ws = wb.active
@@ -4116,7 +4116,7 @@ def download_startups_report(request):
         cell.font = Font(bold=True)
         cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
     
-    startups = Startups.objects.select_related('owner', 'direction', 'stage').all()
+    startups = Startups.objects.select_related('owner', 'direction', 'stage').filter(owner=request.user)
     
     for row, startup in enumerate(startups, 2):
         ws.cell(row=row, column=1, value=startup.startup_id)
@@ -4134,7 +4134,6 @@ def download_startups_report(request):
         investors_count = startup.get_investors_count()
         ws.cell(row=row, column=10, value=investors_count)
         
-        # Новый код: список инвесторов через перенос строки
         investors = (
             InvestmentTransactions.objects
             .filter(startup=startup)
@@ -4164,7 +4163,7 @@ def download_startups_report(request):
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
-    response['Content-Disposition'] = 'attachment; filename=startups_report.xlsx'
+    response['Content-Disposition'] = f'attachment; filename=my_startups_report_{request.user.id}.xlsx'
     wb.save(response)
     return response
 
