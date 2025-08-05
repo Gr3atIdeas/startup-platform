@@ -34,26 +34,26 @@
         <div class="analytics-left">
           
           <div class="portfolio-image-container planetary-system-container" style="min-height: 451px;">
-            <button class="portfolio-image-fullscreen-btn" aria-label="Развернуть на полный экран">
-              <i class="fas fa-expand"></i>
-            </button>
-            <div class="planetary-system" id="solar-system">
-              <div class="space-background"></div>
-              <div class="stars"></div>
-              <div id="scene">
-                <div id="galaxy">
-                  <div id="logo">
-                    <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+            <div class="investments_planetary-system" id="investments_solar-system">
+              <div class="investments_space-background"></div>
+              <div class="investments_stars"></div>
+              <div id="investments_scene">
+                <div id="investments_galaxy">
+                  <div id="investments_logo" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block;">
+                    {% if planetary_investments|length == 0 %}
+                      <span style="margin-top: 12px; color: white; font-size: 18px; text-align: center;">Нет инвестиций для отображения</span>
+                    {% endif %}
                   </div>
                   {% if planetary_investments %}
                     {% for investment in planetary_investments %}
                       <div class="orbit" style="--orbit-size: {{ investment.orbit_size|default:200 }}px; --orbit-time: {{ investment.orbit_time|default:80 }}s;">
                         <div class="planet-orientation">
                           <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px;" data-id="{{ investment.startup_id }}">
-                            {% if startup.planet_image %}
-                              <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ investment.name|escape }}" class="planet-img" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png'">
+                            {% if investment.planet_image %}
+                              <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ investment.planet_image }}" alt="{{ investment.name|escape }}" class="planet-img" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png'">
                             {% else %}
-                              <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png" alt="Планета по умолчанию" class="planet-img">
+                              <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" class="planet-img">
                             {% endif %}
                             {% if investment.logo_urls and investment.logo_urls|length > 0 %}
                               {% with logo_file_id=investment.logo_urls.0 %}
@@ -66,8 +66,6 @@
                         </div>
                       </div>
                     {% endfor %}
-                  {% else %}
-                    <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white;">Нет инвестиций для отображения</p>
                   {% endif %}
                 </div>
               </div>
@@ -1039,21 +1037,21 @@
             }
             console.log('Startups object:', startups);
 
-            const planets = document.querySelectorAll('.planetary-system .planet');
-            const infoCard = document.querySelector('.planetary-system #info-card');
-            const planetImage = document.querySelector('.planetary-system #planet-image');
-            const startupName = document.querySelector('.planetary-system #startup-name');
-            const startupRating = document.querySelector('.planetary-system #startup-rating');
-            const startupProgress = document.querySelector('.planetary-system #startup-progress');
-            const startupFunding = document.querySelector('.planetary-system #startup-funding');
-            const startupInvestors = document.querySelector('.planetary-system #startup-investors');
-            const startupDescription = document.querySelector('.planetary-system #startup-description');
-            const closeCard = document.querySelector('.planetary-system #close-card');
-            const moreDetails = document.querySelector('.planetary-system #more-details');
-            const solarSystem = document.querySelector('.planetary-system#solar-system');
-            const scene = document.querySelector('.planetary-system #scene');
-            const galaxy = document.querySelector('.planetary-system #galaxy');
-            const logoElement = document.querySelector('.planetary-system #logo');
+            const planets = document.querySelectorAll('.investments_planetary-system .planet');
+            const infoCard = document.querySelector('.investments_planetary-system #info-card');
+            const planetImage = document.querySelector('.investments_planetary-system #planet-image');
+            const startupName = document.querySelector('.investments_planetary-system #startup-name');
+            const startupRating = document.querySelector('.investments_planetary-system #startup-rating');
+            const startupProgress = document.querySelector('.investments_planetary-system #startup-progress');
+            const startupFunding = document.querySelector('.investments_planetary-system #startup-funding');
+            const startupInvestors = document.querySelector('.investments_planetary-system #startup-investors');
+            const startupDescription = document.querySelector('.investments_planetary-system #startup-description');
+            const closeCard = document.querySelector('.investments_planetary-system #close-card');
+            const moreDetails = document.querySelector('.investments_planetary-system #more-details');
+            const solarSystem = document.querySelector('.investments_planetary-system#investments_solar-system');
+            const scene = document.querySelector('.investments_planetary-system #investments_scene');
+            const galaxy = document.querySelector('.investments_planetary-system #investments_galaxy');
+            const logoElement = document.querySelector('.investments_planetary-system #investments_logo');
 
             const galaxyTiltAngle = 45;
             const planetObjects = [];

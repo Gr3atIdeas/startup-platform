@@ -965,35 +965,7 @@
 }
 
 
-.ultra_new_planetary_fullscreen_btn {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  width: 50px;
-  height: 50px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(10px);
-}
 
-.ultra_new_planetary_fullscreen_btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: scale(1.1);
-}
-
-.ultra_new_planetary_fullscreen_btn img {
-  width: 24px;
-  height: 24px;
-  filter: invert(1);
-}
 
 
 #ultra_new_planetary_galaxy_selector {
@@ -1268,17 +1240,7 @@
     font-size: 12px;
   }
 
-  .ultra_new_planetary_fullscreen_btn {
-    bottom: 3px;
-    right: 3px;
-    width: 40px;
-    height: 40px;
-  }
 
-  .ultra_new_planetary_fullscreen_btn img {
-    width: 20px;
-    height: 20px;
-  }
 
   #ultra_new_planetary_galaxy_selector {
     width: 350px;
@@ -1374,17 +1336,7 @@
     font-size: 10px;
   }
 
-  .ultra_new_planetary_fullscreen_btn {
-    bottom: 2px;
-    right: 2px;
-    width: 35px;
-    height: 35px;
-  }
 
-  .ultra_new_planetary_fullscreen_btn img {
-    width: 18px;
-    height: 18px;
-  }
 
   #ultra_new_planetary_galaxy_selector {
     width: 280px;
@@ -1470,17 +1422,7 @@
     font-size: 9px;
   }
 
-  .ultra_new_planetary_fullscreen_btn {
-    bottom: 1px;
-    right: 1px;
-    width: 30px;
-    height: 30px;
-  }
 
-  .ultra_new_planetary_fullscreen_btn img {
-    width: 15px;
-    height: 15px;
-  }
 
   #ultra_new_planetary_galaxy_selector {
     width: 250px;
@@ -1557,41 +1499,6 @@
   }
 }
 
-/* Fullscreen gradient background */
-.planetary-system-container:fullscreen {
-  background: linear-gradient(
-    to bottom,
-    #000 0%,
-    #01366d 50%,
-    #004e9f 100%
-  ) !important;
-}
 
-.planetary-system-container:-webkit-full-screen {
-  background: linear-gradient(
-    to bottom,
-    #000 0%,
-    #01366d 50%,
-    #004e9f 100%
-  ) !important;
-}
-
-.planetary-system-container:-moz-full-screen {
-  background: linear-gradient(
-    to bottom,
-    #000 0%,
-    #01366d 50%,
-    #004e9f 100%
-  ) !important;
-}
-
-.planetary-system-container:-ms-fullscreen {
-  background: linear-gradient(
-    to bottom,
-    #000 0%,
-    #01366d 50%,
-    #004e9f 100%
-  ) !important;
-}
 
 

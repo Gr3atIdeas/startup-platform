@@ -187,10 +187,6 @@
     setInitialGalaxyPosition();
   }
   function setupUltraNewPlanetaryControls() {
-    const fullscreenBtn = document.getElementById('ultra_new_planetary_fullscreen_btn');
-    if (fullscreenBtn) {
-      fullscreenBtn.addEventListener('click', toggleUltraNewPlanetaryFullscreen);
-    }
     const allStartupsBtn = document.querySelector('.ultra_new_planetary_all_startups_button');
     if (allStartupsBtn) {
       allStartupsBtn.addEventListener('click', function() {
@@ -491,17 +487,7 @@
       document.body.style.overflow = 'auto';
     }
   }
-  function toggleUltraNewPlanetaryFullscreen() {
-    const container = document.querySelector('.ultra_new_planetary_system_wrapper');
-    if (!container) return;
-    if (!document.fullscreenElement) {
-      container.requestFullscreen().catch(function(err) {
-        console.warn('Fullscreen error:', err);
-      });
-    } else {
-      document.exitFullscreen();
-    }
-  }
+
   function startUltraNewPlanetaryAnimation() {
     function animate() {
       updateUltraNewPlanetaryPlanetsPosition();

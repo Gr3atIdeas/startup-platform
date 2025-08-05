@@ -844,9 +844,6 @@
       <div class="analytics-section">
         <div class="analytics-left">
           <div class="portfolio-image-container planetary-system-container">
-            <button class="portfolio-image-fullscreen-btn" aria-label="Развернуть на полный экран">
-              <i class="fas fa-expand"></i>
-            </button>
         <div class="my_startups_planetary-system" id="my_startups_solar-system">
                 <div class="my_startups_space-background"></div>
                 <div class="my_startups_stars"></div>
@@ -2448,60 +2445,7 @@
               }
           })();
 
-              // Обработчик полноэкранного режима для планетарной системы
-              const fullscreenBtn = document.querySelector('.portfolio-image-fullscreen-btn');
-              const planetaryContainer = document.querySelector('.planetary-system-container');
-              
-              if (fullscreenBtn && planetaryContainer) {
-                  console.log('Fullscreen button found:', fullscreenBtn);
-                  console.log('Planetary container found:', planetaryContainer);
-                  
-                  fullscreenBtn.addEventListener('click', function(e) {
-                      console.log('Fullscreen button clicked!');
-                      e.preventDefault();
-                      e.stopPropagation();
-                      
-                      if (!document.fullscreenElement) {
-                          console.log('Entering fullscreen mode...');
-                          // Входим в полноэкранный режим
-                          if (planetaryContainer.requestFullscreen) {
-                              planetaryContainer.requestFullscreen();
-                          } else if (planetaryContainer.webkitRequestFullscreen) {
-                              planetaryContainer.webkitRequestFullscreen();
-                          } else if (planetaryContainer.msRequestFullscreen) {
-                              planetaryContainer.msRequestFullscreen();
-                          }
-                      } else {
-                          console.log('Exiting fullscreen mode...');
-                          // Выходим из полноэкранного режима
-                          if (document.exitFullscreen) {
-                              document.exitFullscreen();
-                          } else if (document.webkitExitFullscreen) {
-                              document.webkitExitFullscreen();
-                          } else if (document.msExitFullscreen) {
-                              document.msExitFullscreen();
-                          }
-                      }
-                  });
 
-                  // Обновляем иконку кнопки при изменении состояния полноэкранного режима
-                  document.addEventListener('fullscreenchange', updateFullscreenIcon);
-                  document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
-                  document.addEventListener('msfullscreenchange', updateFullscreenIcon);
-
-                  function updateFullscreenIcon() {
-                      const icon = fullscreenBtn.querySelector('i');
-                      if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
-                          icon.className = 'fas fa-compress';
-                          fullscreenBtn.setAttribute('aria-label', 'Свернуть полноэкранный режим');
-                      } else {
-                          icon.className = 'fas fa-expand';
-                          fullscreenBtn.setAttribute('aria-label', 'Развернуть на полный экран');
-                      }
-                  }
-              } else {
-                  console.log('Fullscreen button or planetary container not found');
-              }
           })();
     </script>
 
