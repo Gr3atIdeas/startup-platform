@@ -3311,9 +3311,7 @@ def planetary_system(request):
     return render(request, "accounts/planetary_system.html", context)
 @login_required
 def my_startups(request):
-    print(f"🚀 DEBUG: my_startups called for user: {request.user.email}")
     try:
-        print(f"🚀 DEBUG: User role: {request.user.role.role_name if hasattr(request.user, 'role') and request.user.role else 'No role'}")
         if request.user.role and request.user.role.role_name == 'startuper':
             user_startups_qs = (
                 Startups.objects.filter(owner=request.user)
@@ -3527,7 +3525,6 @@ def my_startups(request):
         print(f"🚀 DEBUG: Total planetary_startups: {len(planetary_startups)}")
     except Exception as e:
         logger.error(f"Критическая ошибка в my_startups view: {e}", exc_info=True)
-        print(f"🚨 DEBUG: Error in my_startups: {e}")
         messages.error(
             request, "Произошла ошибка при загрузке страницы ваших стартапов."
         )
@@ -3549,13 +3546,9 @@ def my_startups(request):
         "chart_categories": sorted_categories,
         "startup_applications": user_startups_qs.order_by("-updated_at"),
     }
-    print(f"🚀 DEBUG: About to serialize JSON for {len(planetary_startups)} startups")
     context["planetary_startups_json"] = json.dumps(
         planetary_startups, cls=DjangoJSONEncoder, ensure_ascii=False
     )
-    print(f"🚀 DEBUG: planetary_startups_json length: {len(context['planetary_startups_json'])}")
-    print(f"🚀 DEBUG: First few characters of JSON: {context['planetary_startups_json'][:200]}...")
-    print(f"🚀 DEBUG: About to render template")
     return render(request, "accounts/my_startups.html", context)
 @login_required
 def notifications_view(request):
