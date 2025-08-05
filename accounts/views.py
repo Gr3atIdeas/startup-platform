@@ -3311,15 +3311,22 @@ def planetary_system(request):
     return render(request, "accounts/planetary_system.html", context)
 @login_required
 def my_startups(request):
-    if not hasattr(request.user, "role") or request.user.role.role_name != "startuper":
-        messages.error(request, "Доступ к этой странице разрешен только стартаперам.")
+    if not hasattr(request.user, "role") or request.user.role.role_name not in ["startuper", "moderator"]:
+        messages.error(request, "Доступ к этой странице разрешен только стартаперам и модераторам.")
         return redirect("profile")
     try:
-        user_startups_qs = (
-            Startups.objects.filter(owner=request.user)
-            .select_related("direction", "stage", "status_id")
-            .prefetch_related("comments")
-        )
+        if request.user.role.role_name == 'startuper':
+            user_startups_qs = (
+                Startups.objects.filter(owner=request.user)
+                .select_related("direction", "stage", "status_id")
+                .prefetch_related("comments")
+            )
+        else:
+            user_startups_qs = (
+                Startups.objects.all()
+                .select_related("direction", "stage", "status_id")
+                .prefetch_related("comments")
+            )
         total_user_startups_count = user_startups_qs.count()
         approved_startups_qs = user_startups_qs.filter(status="approved")
         financial_analytics_data = approved_startups_qs.aggregate(
