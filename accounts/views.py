@@ -4107,13 +4107,18 @@ def download_startups_report(request):
         ws = wb.active
         ws.title = "Стартапы"
         
+        title_cell = ws.cell(row=1, column=1, value="Отчет по стартапам")
+        title_cell.font = Font(bold=True, size=16)
+        ws.merge_cells('A1:L1')
+        title_cell.alignment = Alignment(horizontal='center', vertical='center')
+        
         headers = [
             "ID", "Название", "Владелец", "Статус", "Категория", "Стадия", 
             "Цель финансирования", "Собрано", "Рейтинг", "Количество инвесторов", "Список инвесторов", "Дата создания"
         ]
         
         for col, header in enumerate(headers, 1):
-            cell = ws.cell(row=1, column=col, value=header)
+            cell = ws.cell(row=4, column=col, value=header)
             cell.font = Font(bold=True)
             cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
         
@@ -4122,7 +4127,7 @@ def download_startups_report(request):
         else:
             startups = Startups.objects.select_related('owner', 'direction', 'stage').all()
         
-        for row, startup in enumerate(startups, 2):
+        for row, startup in enumerate(startups, 5):
             try:
                 try:
                     startup_id = startup.startup_id
