@@ -4117,7 +4117,10 @@ def download_startups_report(request):
             cell.font = Font(bold=True)
             cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
         
-        startups = Startups.objects.select_related('owner', 'direction', 'stage').all()
+        if request.user.role.role_name == 'startuper':
+            startups = Startups.objects.select_related('owner', 'direction', 'stage').filter(owner=request.user)
+        else:
+            startups = Startups.objects.select_related('owner', 'direction', 'stage').all()
         
         for row, startup in enumerate(startups, 2):
             try:
