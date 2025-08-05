@@ -901,6 +901,23 @@
 </script>
 {% endif %}
 
+<script id="planetary-system-data" type="application/json">
+{
+  "isAuthenticated": false,
+  "isStartuper": false,
+  "planetsData": {{ planets_data_json|safe }},
+  "directionsData": {{ directions_data_json|safe }},
+  "selectedGalaxy": "",
+  "logoImage": "",
+  "allStartupsData": {{ planets_data_json|safe }},
+  "urls": {
+        "createStartup": "{% url 'register' %}",
+        "register": "{% url 'register' %}",
+        "planetarySystemBase": "{% url 'home' %}"
+    }
+}
+</script>
+
 <script id="ultra_new_planetary_fallback_images" type="application/json">
 {
   "round": [

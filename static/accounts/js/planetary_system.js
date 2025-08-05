@@ -52,7 +52,9 @@
   
   function getCurrentPage() {
     const path = window.location.pathname;
-    if (path === '/investor/' || path === '/startupper/') {
+    if (path === '/') {
+      return 'home';
+    } else if (path === '/investor/' || path === '/startupper/') {
       return 'main';
     } else if (path === '/planetary-system/') {
       return 'planetary';
@@ -62,7 +64,11 @@
   
   function setInitialGalaxyPosition() {
     const currentPage = getCurrentPage();
-    if (currentPage === 'main') {
+    if (currentPage === 'home') {
+      ultraNewPlanetaryGalaxyY = 0;
+      ultraNewPlanetaryGalaxyX = 200;
+      ultraNewPlanetaryGalaxyScale = 1.2;
+    } else if (currentPage === 'main') {
       ultraNewPlanetaryGalaxyY = -200;
       ultraNewPlanetaryGalaxyScale = 0.8;
     } else {
