@@ -1727,9 +1727,6 @@ a:hover {
 }
 
 .comment-textarea {
-  
-
-  
   width: 100%;
   height: 104px; 
   background-color: #fff; 
@@ -1738,7 +1735,7 @@ a:hover {
   padding: 12px 16px;
   font-family: Poppins, sans-serif;
   font-size: 14px;
-  color: #23262f;
+  color: #000;
   resize: vertical;
   margin-bottom: 16px;
   box-sizing: border-box;
@@ -3454,6 +3451,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   background: var(--primary-dark-blue);
   padding-left: 4px;
   color: var(--text-primary);
+  font-weight: bold;
 }
 
 .text-truncate-container.truncated-5-lines .text-content::after {
@@ -3464,6 +3462,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   background: var(--primary-dark-blue);
   padding-left: 4px;
   color: var(--text-primary);
+  font-weight: bold;
 }
 
 .text-truncate-toggle {
@@ -3514,9 +3513,10 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .rating-input-icon .icon-empty {
   display: block;
-  opacity: 1;
+  opacity: 0.7;
   width: 100%;
   height: 100%;
+  filter: brightness(1.2);
 }
 
 .rating-input-icon .icon-filled {
