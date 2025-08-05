@@ -4099,73 +4099,130 @@ def telegram_webhook(request, token):
 
 @login_required
 def download_startups_report(request):
-    if request.user.role.role_name != 'moderator':
-        return HttpResponseForbidden("Доступ запрещен")
-    
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Стартапы"
-    
-    headers = [
-        "ID", "Название", "Владелец", "Статус", "Категория", "Стадия", 
-        "Цель финансирования", "Собрано", "Рейтинг", "Количество инвесторов", "Список инвесторов", "Дата создания"
-    ]
-    
-    for col, header in enumerate(headers, 1):
-        cell = ws.cell(row=1, column=col, value=header)
-        cell.font = Font(bold=True)
-        cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
-    
-    startups = Startups.objects.select_related('owner', 'direction', 'stage').all()
-    
-    for row, startup in enumerate(startups, 2):
-        ws.cell(row=row, column=1, value=startup.startup_id)
-        ws.cell(row=row, column=2, value=startup.title)
-        ws.cell(row=row, column=3, value=f"{startup.owner.first_name} {startup.owner.last_name}")
-        ws.cell(row=row, column=4, value=startup.get_status_display())
-        ws.cell(row=row, column=5, value=startup.direction.direction_name if startup.direction else "Не указана")
-        ws.cell(row=row, column=6, value=startup.stage.stage_name if startup.stage else "Не указана")
-        ws.cell(row=row, column=7, value=startup.funding_goal or 0)
-        ws.cell(row=row, column=8, value=startup.amount_raised or 0)
+    try:
+        if not request.user.role or request.user.role.role_name not in ['moderator', 'startuper']:
+            return HttpResponseForbidden("Доступ запрещен")
         
-        avg_rating = UserVotes.objects.filter(startup=startup).aggregate(Avg('rating'))['rating__avg']
-        ws.cell(row=row, column=9, value=round(avg_rating, 2) if avg_rating else 0)
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Стартапы"
         
-        investors_count = startup.get_investors_count()
-        ws.cell(row=row, column=10, value=investors_count)
-        
-        # Новый код: список инвесторов через перенос строки
-        investors = (
-            InvestmentTransactions.objects
-            .filter(startup=startup)
-            .select_related('investor')
-            .values_list('investor__first_name', 'investor__last_name')
-            .distinct()
-        )
-        investors_list = [
-            f"{first} {last}".strip() for first, last in investors if first or last
+        headers = [
+            "ID", "Название", "Владелец", "Статус", "Категория", "Стадия", 
+            "Цель финансирования", "Собрано", "Рейтинг", "Количество инвесторов", "Список инвесторов", "Дата создания"
         ]
-        ws.cell(row=row, column=11, value="\n".join(investors_list))
-
-        ws.cell(row=row, column=12, value=startup.created_at.strftime("%d.%m.%Y"))
-    
-    for column in ws.columns:
-        max_length = 0
-        column_letter = get_column_letter(column[0].column)
-        for cell in column:
+        
+        for col, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col, value=header)
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
+        
+        startups = Startups.objects.select_related('owner', 'direction', 'stage').all()
+        
+        for row, startup in enumerate(startups, 2):
             try:
-                if len(str(cell.value)) > max_length:
-                    max_length = len(str(cell.value))
-            except:
-                pass
-        adjusted_width = min(max_length + 2, 50)
-        ws.column_dimensions[column_letter].width = adjusted_width
-    
-    response = HttpResponse(
-        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    )
-    response['Content-Disposition'] = 'attachment; filename=startups_report.xlsx'
-    wb.save(response)
-    return response
+                try:
+                    startup_id = startup.startup_id
+                except Exception:
+                    startup_id = row - 1
+                ws.cell(row=row, column=1, value=startup_id)
+                try:
+                    title = startup.title or ""
+                except Exception:
+                    title = ""
+                ws.cell(row=row, column=2, value=title)
+                
+                owner_name = ""
+                if startup.owner:
+                    first_name = startup.owner.first_name or ""
+                    last_name = startup.owner.last_name or ""
+                    owner_name = f"{first_name} {last_name}".strip()
+                ws.cell(row=row, column=3, value=owner_name)
+                
+                try:
+                    status_display = startup.get_status_display()
+                except Exception:
+                    status_display = startup.status or "Неизвестен"
+                ws.cell(row=row, column=4, value=status_display)
+                try:
+                    direction_name = startup.direction.direction_name if startup.direction else "Не указана"
+                except Exception:
+                    direction_name = "Не указана"
+                ws.cell(row=row, column=5, value=direction_name)
+                
+                try:
+                    stage_name = startup.stage.stage_name if startup.stage else "Не указана"
+                except Exception:
+                    stage_name = "Не указана"
+                ws.cell(row=row, column=6, value=stage_name)
+                try:
+                    funding_goal = startup.funding_goal or 0
+                except Exception:
+                    funding_goal = 0
+                ws.cell(row=row, column=7, value=funding_goal)
+                
+                try:
+                    amount_raised = startup.amount_raised or 0
+                except Exception:
+                    amount_raised = 0
+                ws.cell(row=row, column=8, value=amount_raised)
+                
+                try:
+                    avg_rating = UserVotes.objects.filter(startup=startup).aggregate(Avg('rating'))['rating__avg']
+                    ws.cell(row=row, column=9, value=round(avg_rating, 2) if avg_rating else 0)
+                except Exception:
+                    ws.cell(row=row, column=9, value=0)
+                
+                try:
+                    investors_count = startup.get_investors_count()
+                except Exception:
+                    investors_count = 0
+                ws.cell(row=row, column=10, value=investors_count)
+                
+                try:
+                    investors = (
+                        InvestmentTransactions.objects
+                        .filter(startup=startup)
+                        .select_related('investor')
+                        .values_list('investor__first_name', 'investor__last_name')
+                        .distinct()
+                    )
+                    investors_list = [
+                        f"{first or ''} {last or ''}".strip() for first, last in investors if first or last
+                    ]
+                    ws.cell(row=row, column=11, value="\n".join(investors_list))
+                except Exception:
+                    ws.cell(row=row, column=11, value="")
+
+                try:
+                    created_date = startup.created_at.strftime("%d.%m.%Y") if startup.created_at else ""
+                except Exception:
+                    created_date = ""
+                ws.cell(row=row, column=12, value=created_date)
+            except Exception as e:
+                logger.error(f"Ошибка при обработке стартапа {startup.startup_id}: {e}")
+                continue
+        
+        for column in ws.columns:
+            max_length = 0
+            column_letter = get_column_letter(column[0].column)
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)
+            ws.column_dimensions[column_letter].width = adjusted_width
+        
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename=startups_report.xlsx'
+        wb.save(response)
+        return response
+    except Exception as e:
+        logger.error(f"Ошибка при генерации отчета: {e}", exc_info=True)
+        return HttpResponse("Ошибка при генерации отчета", status=500)
 
 

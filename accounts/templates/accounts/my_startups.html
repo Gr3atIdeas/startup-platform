@@ -1005,7 +1005,9 @@
             <span class="chart-title-overlay">Собрано одобренными за год</span>
           </div>
 
-          <button class="download-report-btn" type="button" onclick="downloadReport()">Скачать отчет</button>
+          {% if user.role.role_name == 'moderator' or user.role.role_name == 'startuper' %}
+            <button class="download-report-btn" type="button" onclick="downloadReport()">Скачать отчет</button>
+          {% endif %}
         </div>
       </div>
 

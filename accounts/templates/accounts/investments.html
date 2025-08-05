@@ -147,7 +147,9 @@
             <canvas id="monthlyInvestmentChart" aria-label="График инвестиций за год"></canvas>
             <span class="chart-title-overlay">Инвестиции за год</span>
           </div>
-          <button class="download-report-btn" type="button">Скачать отчет</button>
+          {% if user.role.role_name == 'moderator' or user.role.role_name == 'startuper' %}
+            <button class="download-report-btn" type="button">Скачать отчет</button>
+          {% endif %}
         </div>
       </div>
       
