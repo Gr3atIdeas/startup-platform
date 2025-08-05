@@ -3311,11 +3311,8 @@ def planetary_system(request):
     return render(request, "accounts/planetary_system.html", context)
 @login_required
 def my_startups(request):
-    if not hasattr(request.user, "role") or request.user.role.role_name not in ["startuper", "moderator"]:
-        messages.error(request, "Доступ к этой странице разрешен только стартаперам и модераторам.")
-        return redirect("profile")
     try:
-        if request.user.role.role_name == 'startuper':
+        if request.user.role and request.user.role.role_name == 'startuper':
             user_startups_qs = (
                 Startups.objects.filter(owner=request.user)
                 .select_related("direction", "stage", "status_id")
@@ -4107,8 +4104,6 @@ def telegram_webhook(request, token):
 @login_required
 def download_startups_report(request):
     try:
-        if not request.user.role or request.user.role.role_name not in ['moderator', 'startuper']:
-            return HttpResponseForbidden("Доступ запрещен")
         
         wb = Workbook()
         ws = wb.active
@@ -4128,7 +4123,7 @@ def download_startups_report(request):
             cell.font = Font(bold=True)
             cell.fill = PatternFill(start_color="CCCCCC", end_color="CCCCCC", fill_type="solid")
         
-        if request.user.role.role_name == 'startuper':
+        if request.user.role and request.user.role.role_name == 'startuper':
             startups = Startups.objects.select_related('owner', 'direction', 'stage').filter(owner=request.user)
         else:
             startups = Startups.objects.select_related('owner', 'direction', 'stage').all()
