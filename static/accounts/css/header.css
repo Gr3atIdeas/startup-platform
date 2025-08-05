@@ -267,9 +267,14 @@
 
 .profile-dropdown-item:hover {
   background-color: #f0f0f0;
+  color: #000 !important;
 }
 
 .profile-dropdown-notifications {
+  color: #004e9f !important;
+}
+
+.profile-dropdown-notifications:hover {
   color: #004e9f !important;
 }
 
@@ -301,6 +306,14 @@
 
 .profile-dropdown-logout i {
   color: #000;
+}
+
+.profile-dropdown-logout:hover {
+  color: #000 !important;
+}
+
+.profile-dropdown-logout:hover i {
+  color: #000 !important;
 }
 
 .header-logo-icon-img {
