@@ -1572,12 +1572,12 @@
 }
 
 .ultra_new_planetary_category_item.category-all {
-  background: linear-gradient(180deg, #7b61ff 0%, #4a3a99 100%);
+  background: none;
 }
 
 @media (max-width: 768px) {
   .ultra_new_planetary_category_item.category-all {
-    background: linear-gradient(180deg, #7b61ff 0%, #4a3a99 100%);
+    background: none;
   }
 }
 
