@@ -259,10 +259,14 @@
 
 .ultra_new_planetary_planet_orientation {
   position: absolute;
-  
   transform-style: preserve-3d;
   will-change: left, top;
   pointer-events: none;
+}
+
+/* Центрирование планет только для главной страницы */
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_planet_orientation {
+  transform: translate(-50%, -50%);
 }
 
 

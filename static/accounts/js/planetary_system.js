@@ -581,6 +581,7 @@
   }
   function updateUltraNewPlanetaryPlanetsPosition() {
     const now = Date.now();
+    const currentPage = getCurrentPage();
     ultraNewPlanetaryObjects.forEach((planetObj, index) => {
       if (!planetObj.orientation || !planetObj.element) return;
       const elapsedSeconds = (now - planetObj.startTime) / 1000;
@@ -591,8 +592,17 @@
       const radius = planetObj.orbitSize / 2;
       const x = Math.cos(angleRad) * radius;
       const y = Math.sin(angleRad) * radius;
-      planetObj.orientation.style.left = `${50 + (x / radius) * 50}%`;
-      planetObj.orientation.style.top = `${50 + (y / radius) * 50}%`;
+      
+      // Разные формулы позиционирования для разных страниц
+      if (currentPage === 'home') {
+        // Для главной страницы - точное позиционирование
+        planetObj.orientation.style.left = `calc(50% + ${x}px)`;
+        planetObj.orientation.style.top = `calc(50% + ${y}px)`;
+      } else {
+        // Для других страниц - старая формула
+        planetObj.orientation.style.left = `${50 + (x / radius) * 50}%`;
+        planetObj.orientation.style.top = `${50 + (y / radius) * 50}%`;
+      }
     });
   }
   function applyUltraNewPlanetaryFilter(categoryName) {
