@@ -67,7 +67,7 @@
     if (currentPage === 'home') {
       ultraNewPlanetaryGalaxyY = 0;
       ultraNewPlanetaryGalaxyX = 0;
-      ultraNewPlanetaryGalaxyScale = 1;
+      ultraNewPlanetaryGalaxyScale = 1.2;
     } else if (currentPage === 'main') {
       ultraNewPlanetaryGalaxyY = -200;
       ultraNewPlanetaryGalaxyScale = 0.8;
@@ -86,7 +86,10 @@
       loadUltraNewPlanetaryFallbackImages();
       setupUltraNewPlanetarySystem();
       setInitialGalaxyPosition();
-      startUltraNewPlanetaryAnimation();
+      setTimeout(() => {
+        initializeUltraNewPlanetaryObjects();
+        startUltraNewPlanetaryAnimation();
+      }, 100);
     } catch (error) {
       console.warn('Ultra New Planetary System initialization error:', error);
     }
@@ -588,8 +591,8 @@
       const radius = planetObj.orbitSize / 2;
       const x = Math.cos(angleRad) * radius;
       const y = Math.sin(angleRad) * radius;
-      planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-      planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+      planetObj.orientation.style.left = `${50 + (x / radius) * 50}%`;
+      planetObj.orientation.style.top = `${50 + (y / radius) * 50}%`;
     });
   }
   function applyUltraNewPlanetaryFilter(categoryName) {
