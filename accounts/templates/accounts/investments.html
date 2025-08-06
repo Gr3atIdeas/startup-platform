@@ -17,6 +17,11 @@
     .planetary-system .planet {
       transition: all 0.8s ease-out; /* Увеличено с 0.3s до 0.8s для сглаживания */
     }
+    
+    /* Установка ширины главного контейнера страницы investments */
+    .portfolio-container {
+      max-width: 1303px !important;
+    }
   </style>
 {% endblock %}
 
@@ -112,14 +117,6 @@
         <div class="analytics-content">
           <div class="analytics-header">
             <h1 class="analytics-title">Аналитика</h1>
-            <div class="analytics-controls">
-              <select class="month-select" aria-label="Выбор периода">
-                <option value="весь год">Весь год</option>
-              </select>
-              <button class="analytics-options-btn" aria-label="Дополнительные опции">
-                <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
-              </button>
-            </div>
           </div>
           <div class="stats-overview">
             <div class="stat-item">
