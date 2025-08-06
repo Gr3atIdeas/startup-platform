@@ -79,6 +79,7 @@ from .models import (
     EntityTypes,
     FileStorage,
     FileTypes,
+    Franchises,
     InvestmentTransactions,
     Messages,
     MessageStatuses,
@@ -421,6 +422,116 @@ def user_logout(request):
     logout(request)
     messages.success(request, "Вы успешно вышли из системы.")
     return redirect("home")
+
+def startups_list(request):
+    directions = Directions.objects.all()
+    
+    startups_qs = Startups.objects.filter(status="approved")
+    selected_categories = request.GET.getlist("category")
+    min_goal_str = request.GET.get("min_goal", "0")
+    max_goal_str = request.GET.get("max_goal", "10000000")
+    min_micro_str = request.GET.get("min_micro", "0")
+    max_micro_str = request.GET.get("max_micro", "1000000")
+    search_query = request.GET.get("search", "").strip()
+    min_rating_str = request.GET.get("min_rating", "0")
+    max_rating_str = request.GET.get("max_rating", "5")
+    sort_order = request.GET.get("sort_order", "newest")
+    page_number = request.GET.get("page", 1)
+    
+    startups_qs = startups_qs.annotate(
+        total_voters_agg=Count("uservotes", distinct=True),
+        rating_agg=ExpressionWrapper(
+            Coalesce(Avg("uservotes__rating"), 0.0), output_field=FloatField()
+        ),
+    )
+    
+    categories = list(
+        Directions.objects.annotate(id=F("direction_id"), name=F("direction_name"))
+        .values("id", "name")
+        .order_by("name")
+    )
+    
+    if selected_categories:
+        startups_qs = startups_qs.filter(
+            direction__direction_name__in=selected_categories
+        )
+    
+    if search_query:
+        startups_qs = startups_qs.filter(title__icontains=search_query)
+    
+    try:
+        min_goal = int(min_goal_str)
+        max_goal = int(max_goal_str)
+        if min_goal > 0:
+            startups_qs = startups_qs.filter(funding_goal__gte=min_goal)
+        if max_goal < 10000000:
+            startups_qs = startups_qs.filter(funding_goal__lte=max_goal)
+    except ValueError:
+        min_goal = 0
+        max_goal = 10000000
+    
+    try:
+        min_micro = int(min_micro_str)
+        max_micro = int(max_micro_str)
+        if min_micro > 0:
+            startups_qs = startups_qs.filter(percent_amount__gte=min_micro)
+        if max_micro < 1000000:
+            startups_qs = startups_qs.filter(percent_amount__lte=max_micro)
+    except ValueError:
+        min_micro = 0
+        max_micro = 1000000
+    
+    try:
+        min_rating = float(min_rating_str)
+        max_rating = float(max_rating_str)
+        if min_rating > 0:
+            startups_qs = startups_qs.filter(rating_agg__gte=min_rating)
+        if max_rating < 5:
+            startups_qs = startups_qs.filter(rating_agg__lte=max_rating)
+    except ValueError:
+        min_rating = 0
+        max_rating = 5
+    
+    if sort_order == "newest":
+        startups_qs = startups_qs.order_by("-created_at")
+    elif sort_order == "oldest":
+        startups_qs = startups_qs.order_by("created_at")
+    
+    paginator = Paginator(startups_qs, 6)
+    page_obj = paginator.get_page(page_number)
+    
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    if is_ajax:
+        html = render_to_string(
+            "accounts/partials/_startup_cards.html", {"page_obj": page_obj}
+        )
+        return JsonResponse(
+            {
+                "html": html,
+                "has_next": page_obj.has_next(),
+                "page_number": page_obj.number,
+                "num_pages": paginator.num_pages,
+                "count": paginator.count,
+            }
+        )
+    else:
+        context = {
+            "page_obj": page_obj,
+            "paginator": paginator,
+            "initial_has_next": page_obj.has_next(),
+            "selected_categories": selected_categories,
+            "search_query": search_query,
+            "min_rating": min_rating,
+            "max_rating": max_rating,
+            "min_goal": min_goal,
+            "max_goal": max_goal,
+            "min_micro": min_micro,
+            "max_micro": max_micro,
+            "sort_order": sort_order,
+            "directions": directions,
+        }
+        return render(request, "accounts/startups_list.html", context)
+
 def franchises_list(request):
     directions = Directions.objects.all()
     
