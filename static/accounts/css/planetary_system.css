@@ -8,18 +8,18 @@
   --ultra_new_planetary_galaxy_y: 0px;
 }
 
-.home-page-planetary {
+#ultra_new_planetary_solar_system.home-page-planetary {
   --ultra_new_planetary_galaxy_tilt: 0deg;
   --ultra_new_planetary_planet_compensation: 0deg;
   --ultra_new_planetary_sun_compensation: 0deg;
   --ultra_new_planetary_galaxy_scale: 1.2;
   --ultra_new_planetary_galaxy_x: 0px;
   --ultra_new_planetary_galaxy_y: 0px;
-  position: absolute;
-  top: 0%;
-  left: 65%;
-  width: 100%;
-  height: 100%;
+  position: absolute !important;
+  top: 0% !important;
+  left: 65% !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 
