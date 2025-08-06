@@ -533,7 +533,9 @@ def startups_list(request):
         return render(request, "accounts/startups_list.html", context)
 
 def franchises_list(request):
-    directions = Directions.objects.all()
+    franchise_directions = Directions.objects.filter(
+        direction_name__startswith='Франшизы'
+    ).order_by('direction_name')
     
     # Копируем стартапы в франшизы если их нет
     if not Franchises.objects.exists():
@@ -552,12 +554,15 @@ def franchises_list(request):
         startups = Startups.objects.filter(status="approved")
         for i, startup in enumerate(startups):
             franchise_name = franchise_names[i % len(franchise_names)]
+            # Выбираем случайную категорию франшиз
+            franchise_direction = franchise_directions[i % len(franchise_directions)] if franchise_directions.exists() else None
+            
             franchise = Franchises.objects.create(
                 title=franchise_name,
                 short_description=startup.short_description,
                 description=startup.description,
                 terms=startup.terms,
-                direction=startup.direction,
+                direction=franchise_direction,
                 stage=startup.stage,
                 investment_size=startup.funding_goal,
                 payback_period=12,
@@ -692,7 +697,7 @@ def franchises_list(request):
             "min_investment": min_investment,
             "max_investment": max_investment,
             "sort_order": sort_order,
-            "directions": directions,
+            "franchise_directions": franchise_directions,
         }
         return render(request, "accounts/franchises_list.html", context)
 def franchise_detail(request, franchise_id):
