@@ -537,10 +537,24 @@ def franchises_list(request):
     
     # Копируем стартапы в франшизы если их нет
     if not Franchises.objects.exists():
+        franchise_names = [
+            "Макдональдс", "Старбакс", "КФС", "Бургер Кинг", "Пицца Хат", "Доминос",
+            "Сабвей", "Вкусно и точка", "Теремок", "Шоколадница", "Кофемания",
+            "Додо Пицца", "Папа Джонс", "Синнабон", "Крошка Картошка", "Ростикс",
+            "Чайхона", "Якитория", "Суши Мастер", "Тануки", "Суши Вок",
+            "Прайм", "Мамонт", "Стройландия", "Лента", "Магнит", "Пятёрочка",
+            "Перекрёсток", "Ашан", "Метро", "Окей", "Спортмастер", "Декатлон",
+            "МедиаМаркт", "Эльдорадо", "М.Видео", "DNS", "Ситилинк", "Юлмарт",
+            "Лаборатория Касперского", "Яндекс", "Сбер", "Тинькофф", "Альфа-Банк",
+            "ВТБ", "Райффайзенбанк", "Росбанк", "Промсвязьбанк", "Открытие",
+            "Газпромбанк", "Россельхозбанк", "Уралсиб", "Ак Барс Банк"
+        ]
+        
         startups = Startups.objects.filter(status="approved")
-        for startup in startups:
+        for i, startup in enumerate(startups):
+            franchise_name = franchise_names[i % len(franchise_names)]
             franchise = Franchises.objects.create(
-                title=f"Франшиза {startup.title}",
+                title=franchise_name,
                 short_description=startup.short_description,
                 description=startup.description,
                 terms=startup.terms,
