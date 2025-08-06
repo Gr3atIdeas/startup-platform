@@ -584,13 +584,17 @@ def franchises_list(request):
     sort_order = request.GET.get("sort_order", "newest")
     page_number = request.GET.get("page", 1)
     
-    # Убираем аннотации для рейтинга, так как у Franchises нет связи с UserVotes
-    # franchises_qs = franchises_qs.annotate(
-    #     total_voters_agg=Count("uservotes", distinct=True),
-    #     rating_agg=ExpressionWrapper(
-    #         Coalesce(Avg("uservotes__rating"), 0.0), output_field=FloatField()
-    #     ),
-    # )
+    # Используем существующие поля для рейтинга
+    franchises_qs = franchises_qs.annotate(
+        rating_agg=ExpressionWrapper(
+            Case(
+                When(total_voters__gt=0, then=F('sum_votes') * 1.0 / F('total_voters')),
+                default=Value(0.0),
+                output_field=FloatField(),
+            ),
+            output_field=FloatField()
+        ),
+    )
     
     categories = list(
         Directions.objects.annotate(id=F("direction_id"), name=F("direction_name"))
@@ -628,19 +632,16 @@ def franchises_list(request):
         min_investment = 0
         max_investment = 10000000
     
-    # Временно отключаем фильтрацию по рейтингу
-    # try:
-    #     min_rating = float(min_rating_str)
-    #     max_rating = float(max_rating_str)
-    #     if min_rating > 0:
-    #         franchises_qs = franchises_qs.filter(rating_agg__gte=min_rating)
-    #     if max_rating < 5:
-    #         franchises_qs = franchises_qs.filter(rating_agg__lte=max_rating)
-    # except ValueError:
-    #     min_rating = 0
-    #     max_rating = 5
-    min_rating = 0
-    max_rating = 5
+    try:
+        min_rating = float(min_rating_str)
+        max_rating = float(max_rating_str)
+        if min_rating > 0:
+            franchises_qs = franchises_qs.filter(rating_agg__gte=min_rating)
+        if max_rating < 5:
+            franchises_qs = franchises_qs.filter(rating_agg__lte=max_rating)
+    except ValueError:
+        min_rating = 0
+        max_rating = 5
     
     if sort_order == "newest":
         franchises_qs = franchises_qs.order_by("-created_at")
