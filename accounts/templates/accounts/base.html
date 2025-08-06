@@ -232,13 +232,29 @@
                             Уведомления
                             
                         </a>
-                        <a href="{% url 'profile' %}" class="profile-dropdown-item">Профиль</a>
-                        <a href="{% url 'startups_list' %}" class="profile-dropdown-item">Стартапы</a> 
-                        <a href="{% url 'support' %}" class="profile-dropdown-item">Поддержка</a> 
-                        <a href="{% url 'contacts' %}" class="profile-dropdown-item">Контакты</a>
-                        <a href="{% url 'faq' %}" class="profile-dropdown-item">FAQ</a>
+                        <a href="{% url 'profile' %}" class="profile-dropdown-item">
+                            <img src="{% static 'accounts/images/icons/profile_menu.svg' %}" alt="Профиль" class="profile-dropdown-item-icon">
+                            Профиль
+                        </a>
+                        <a href="{% url 'startups_list' %}" class="profile-dropdown-item">
+                            <img src="{% static 'accounts/images/icons/startups_menu.svg' %}" alt="Стартапы" class="profile-dropdown-item-icon">
+                            Стартапы
+                        </a> 
+                        <a href="{% url 'support' %}" class="profile-dropdown-item">
+                            <img src="{% static 'accounts/images/icons/support_menu.svg' %}" alt="Поддержка" class="profile-dropdown-item-icon">
+                            Поддержка
+                        </a> 
+                        <a href="{% url 'contacts' %}" class="profile-dropdown-item">
+                            <img src="{% static 'accounts/images/icons/contacts_menu.svg' %}" alt="Контакты" class="profile-dropdown-item-icon">
+                            Контакты
+                        </a>
+                        <a href="{% url 'faq' %}" class="profile-dropdown-item">
+                            <img src="{% static 'accounts/images/icons/faq_menu.svg' %}" alt="FAQ" class="profile-dropdown-item-icon">
+                            FAQ
+                        </a>
                         <a href="{% url 'logout' %}" class="profile-dropdown-item profile-dropdown-logout">
-                            <i class="fas fa-sign-out-alt"></i> Выйти
+                            <img src="{% static 'accounts/images/icons/logout_menu.svg' %}" alt="Выйти" class="profile-dropdown-item-icon">
+                            Выйти
                         </a>
                     </div>
                 </div>

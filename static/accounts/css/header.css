@@ -259,6 +259,7 @@
   text-decoration: none;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 12px;
   font-family: Unbounded, sans-serif;
   font-size: 16px;
@@ -284,7 +285,7 @@
 .profile-dropdown-item-icon {
   width: 20px;
   height: 20px;
-  filter: brightness(0) invert(1);
+  color: #000;
 }
 
 .profile-dropdown-notifications .profile-dropdown-item-icon {
@@ -306,18 +307,14 @@
 }
 
 .notification-icon-background img.profile-dropdown-item-icon {
-  filter: brightness(0) invert(1);
+  color: #fff;
 }
 
-.profile-dropdown-logout i {
+.profile-dropdown-logout {
   color: #000;
 }
 
 .profile-dropdown-logout:hover {
-  color: #000 !important;
-}
-
-.profile-dropdown-logout:hover i {
   color: #000 !important;
 }
 
