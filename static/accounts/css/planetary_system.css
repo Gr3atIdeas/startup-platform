@@ -16,10 +16,11 @@
   --ultra_new_planetary_galaxy_x: 0px;
   --ultra_new_planetary_galaxy_y: 0px;
   position: absolute !important;
-  top: 0 !important;
+  top: 50% !important;
   right: -100px !important;
   width: 60% !important;
   height: 100% !important;
+  transform: translateY(-50%) !important;
   z-index: 1 !important;
 }
 
