@@ -269,6 +269,61 @@
   transform: translate(-50%, -50%);
 }
 
+/* CSS анимация орбит для главной страницы */
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(2) .ultra_new_planetary_planet_orientation {
+  animation: orbit-rotation-1 80s linear infinite;
+}
+
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(3) .ultra_new_planetary_planet_orientation {
+  animation: orbit-rotation-2 95s linear infinite;
+}
+
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(4) .ultra_new_planetary_planet_orientation {
+  animation: orbit-rotation-3 110s linear infinite;
+}
+
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(5) .ultra_new_planetary_planet_orientation {
+  animation: orbit-rotation-4 125s linear infinite;
+}
+
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(6) .ultra_new_planetary_planet_orientation {
+  animation: orbit-rotation-5 140s linear infinite;
+}
+
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(7) .ultra_new_planetary_planet_orientation {
+  animation: orbit-rotation-6 160s linear infinite;
+}
+
+@keyframes orbit-rotation-1 {
+  from { transform: translate(-50%, -50%) rotate(0deg) translateX(100px) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg) translateX(100px) rotate(-360deg); }
+}
+
+@keyframes orbit-rotation-2 {
+  from { transform: translate(-50%, -50%) rotate(0deg) translateX(150px) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg) translateX(150px) rotate(-360deg); }
+}
+
+@keyframes orbit-rotation-3 {
+  from { transform: translate(-50%, -50%) rotate(0deg) translateX(200px) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg) translateX(200px) rotate(-360deg); }
+}
+
+@keyframes orbit-rotation-4 {
+  from { transform: translate(-50%, -50%) rotate(0deg) translateX(250px) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg) translateX(250px) rotate(-360deg); }
+}
+
+@keyframes orbit-rotation-5 {
+  from { transform: translate(-50%, -50%) rotate(0deg) translateX(300px) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg) translateX(300px) rotate(-360deg); }
+}
+
+@keyframes orbit-rotation-6 {
+  from { transform: translate(-50%, -50%) rotate(0deg) translateX(350px) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg) translateX(350px) rotate(-360deg); }
+}
+
 
 
 
