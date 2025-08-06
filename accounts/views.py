@@ -535,42 +535,42 @@ def startups_list(request):
 def franchises_list(request):
     directions = Directions.objects.all()
     
-    # Временно отключено создание франшиз до применения миграции
-    # if not Franchises.objects.exists():
-    #     startups = Startups.objects.filter(status="approved")
-    #     for startup in startups:
-    #         franchise = Franchises.objects.create(
-    #             title=f"Франшиза {startup.title}",
-    #             short_description=startup.short_description,
-    #             description=startup.description,
-    #             terms=startup.terms,
-    #             direction=startup.direction,
-    #             stage=startup.stage,
-    #             investment_size=startup.funding_goal,
-    #             payback_period=12,
-    #             own_businesses=5,
-    #             franchise_businesses=15,
-    #             valuation=startup.valuation,
-    #             pitch_deck_url=startup.pitch_deck_url,
-    #             created_at=startup.created_at,
-    #             updated_at=startup.updated_at,
-    #             status="approved",
-    #             total_invested=startup.total_invested,
-    #             info_url=startup.info_url,
-    #             percent_amount=startup.percent_amount,
-    #             customization_data=startup.customization_data,
-    #             total_voters=startup.total_voters,
-    #             sum_votes=startup.sum_votes,
-    #             is_edited=startup.is_edited,
-    #             moderator_comment=startup.moderator_comment,
-    #             step_number=startup.step_number,
-    #             logo_urls=startup.logo_urls,
-    #             creatives_urls=startup.creatives_urls,
-    #             proofs_urls=startup.proofs_urls,
-    #             video_urls=startup.video_urls,
-    #             planet_image=startup.planet_image,
-    #             owner=startup.owner
-    #         )
+    # Копируем стартапы в франшизы если их нет
+    if not Franchises.objects.exists():
+        startups = Startups.objects.filter(status="approved")
+        for startup in startups:
+            franchise = Franchises.objects.create(
+                title=f"Франшиза {startup.title}",
+                short_description=startup.short_description,
+                description=startup.description,
+                terms=startup.terms,
+                direction=startup.direction,
+                stage=startup.stage,
+                investment_size=startup.funding_goal,
+                payback_period=12,
+                own_businesses=5,
+                franchise_businesses=15,
+                valuation=startup.valuation,
+                pitch_deck_url=startup.pitch_deck_url,
+                created_at=startup.created_at,
+                updated_at=startup.updated_at,
+                status="approved",
+                total_invested=startup.total_invested,
+                info_url=startup.info_url,
+                percent_amount=startup.percent_amount,
+                customization_data=startup.customization_data,
+                total_voters=startup.total_voters,
+                sum_votes=startup.sum_votes,
+                is_edited=startup.is_edited,
+                moderator_comment=startup.moderator_comment,
+                step_number=startup.step_number,
+                logo_urls=startup.logo_urls,
+                creatives_urls=startup.creatives_urls,
+                proofs_urls=startup.proofs_urls,
+                video_urls=startup.video_urls,
+                planet_image=startup.planet_image,
+                owner=startup.owner
+            )
     
     franchises_qs = Franchises.objects.filter(status="approved")
     selected_categories = request.GET.getlist("category")
