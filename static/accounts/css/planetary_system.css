@@ -12,15 +12,14 @@
   --ultra_new_planetary_galaxy_tilt: 0deg;
   --ultra_new_planetary_planet_compensation: 0deg;
   --ultra_new_planetary_sun_compensation: 0deg;
-  --ultra_new_planetary_galaxy_scale: 1.2;
+  --ultra_new_planetary_galaxy_scale: 1.4;
   --ultra_new_planetary_galaxy_x: 0px;
   --ultra_new_planetary_galaxy_y: 0px;
   position: absolute !important;
-  top: 50% !important;
-  right: -200px !important;
-  width: 700px !important;
-  height: 500px !important;
-  transform: translateY(-50%) !important;
+  top: 0 !important;
+  right: -100px !important;
+  width: 60% !important;
+  height: 100% !important;
   z-index: 1 !important;
 }
 
