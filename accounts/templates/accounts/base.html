@@ -77,18 +77,81 @@
             <div class="header-nav-links">
                 {% if not user.is_authenticated %}
                     <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
-                    <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
+                    <div class="catalog-dropdown-container">
+                        <button class="header-nav-link catalog-dropdown-button">Каталог</button>
+                        <div class="catalog-dropdown-menu">
+                            <a href="{% url 'startups_list' %}" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/planet.svg' %}" alt="Стартапы" class="catalog-dropdown-item-icon">
+                                Стартапы
+                            </a>
+                            <a href="#" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/rocket-sharp.svg' %}" alt="Франшизы" class="catalog-dropdown-item-icon">
+                                Франшизы
+                            </a>
+                            <a href="#" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/agency.svg' %}" alt="Агентства" class="catalog-dropdown-item-icon">
+                                Агентства
+                            </a>
+                            <a href="#" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/specialist.svg' %}" alt="Специалисты" class="catalog-dropdown-item-icon">
+                                Специалисты
+                            </a>
+                        </div>
+                    </div>
+                    <div class="catalog-dropdown-overlay"></div>
                     <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
                     <a href="{% url 'faq' %}" class="header-nav-link">FAQ</a>
                 {% elif user.role.role_name == 'investor' %}
                     <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
-                    <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
+                    <div class="catalog-dropdown-container">
+                        <button class="header-nav-link catalog-dropdown-button">Каталог</button>
+                        <div class="catalog-dropdown-menu">
+                            <a href="{% url 'startups_list' %}" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/planet.svg' %}" alt="Стартапы" class="catalog-dropdown-item-icon">
+                                Стартапы
+                            </a>
+                            <a href="#" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/rocket-sharp.svg' %}" alt="Франшизы" class="catalog-dropdown-item-icon">
+                                Франшизы
+                            </a>
+                            <a href="#" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/agency.svg' %}" alt="Агентства" class="catalog-dropdown-item-icon">
+                                Агентства
+                            </a>
+                            <a href="#" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/specialist.svg' %}" alt="Специалисты" class="catalog-dropdown-item-icon">
+                                Специалисты
+                            </a>
+                        </div>
+                    </div>
+                    <div class="catalog-dropdown-overlay"></div>
                     <a href="{% url 'investments' %}" class="header-nav-link">Портфель</a> 
                     <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
                     <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
                 {% elif user.role.role_name == 'startuper' %}
                     <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
-                    <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
+                    <div class="catalog-dropdown-container">
+                        <button class="header-nav-link catalog-dropdown-button">Каталог</button>
+                        <div class="catalog-dropdown-menu">
+                            <a href="{% url 'startups_list' %}" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/planet.svg' %}" alt="Стартапы" class="catalog-dropdown-item-icon">
+                                Стартапы
+                            </a>
+                            <a href="#" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/rocket-sharp.svg' %}" alt="Франшизы" class="catalog-dropdown-item-icon">
+                                Франшизы
+                            </a>
+                            <a href="#" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/agency.svg' %}" alt="Агентства" class="catalog-dropdown-item-icon">
+                                Агентства
+                            </a>
+                            <a href="#" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/specialist.svg' %}" alt="Специалисты" class="catalog-dropdown-item-icon">
+                                Специалисты
+                            </a>
+                        </div>
+                    </div>
+                    <div class="catalog-dropdown-overlay"></div>
                     <a href="{% url 'my_startups' %}" class="header-nav-link">Мои стартапы</a> 
                     <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
                     <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
@@ -105,8 +168,17 @@
                                 <img src="{% static 'accounts/images/icons/rocket-sharp.svg' %}" alt="Франшизы" class="catalog-dropdown-item-icon">
                                 Франшизы
                             </a>
+                            <a href="#" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/agency.svg' %}" alt="Агентства" class="catalog-dropdown-item-icon">
+                                Агентства
+                            </a>
+                            <a href="#" class="catalog-dropdown-item no-wave-effect">
+                                <img src="{% static 'accounts/images/icons/specialist.svg' %}" alt="Специалисты" class="catalog-dropdown-item-icon">
+                                Специалисты
+                            </a>
                         </div>
                     </div>
+                    <div class="catalog-dropdown-overlay"></div>
                     <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
                     <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
                     <a href="{% url 'moderator_dashboard' %}" class="header-nav-link">Заявки</a>

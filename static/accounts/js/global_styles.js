@@ -53,20 +53,85 @@ document.addEventListener('DOMContentLoaded', function () {
       button.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)'
     })
   })
-  const catalogDropdownButton = document.querySelector('.catalog-dropdown-button');
-  const catalogDropdownMenu = document.querySelector('.catalog-dropdown-menu');
-  const catalogDropdownContainer = document.querySelector('.catalog-dropdown-container');
-  if (catalogDropdownButton && catalogDropdownMenu && catalogDropdownContainer) {
-      catalogDropdownButton.addEventListener('click', function (event) {
-          event.stopPropagation();
-          catalogDropdownContainer.classList.toggle('open');
-      });
-      document.addEventListener('click', function (event) {
-          if (catalogDropdownContainer.classList.contains('open') &&
-              !catalogDropdownMenu.contains(event.target) &&
-              !catalogDropdownButton.contains(event.target)) {
-              catalogDropdownContainer.classList.remove('open');
+  const catalogDropdownButtons = document.querySelectorAll('.catalog-dropdown-button');
+  const catalogDropdownContainers = document.querySelectorAll('.catalog-dropdown-container');
+  
+  catalogDropdownButtons.forEach((button, index) => {
+      const container = catalogDropdownContainers[index];
+      const menu = container.querySelector('.catalog-dropdown-menu');
+      
+      if (button && menu && container) {
+          button.addEventListener('click', function (event) {
+              event.stopPropagation();
+              
+              catalogDropdownContainers.forEach(cont => {
+                  cont.classList.remove('open');
+                  const contOverlay = cont.nextElementSibling;
+                  if (contOverlay && contOverlay.classList.contains('catalog-dropdown-overlay')) {
+                      contOverlay.style.display = 'none';
+                      document.body.classList.remove('catalog-menu-open');
+                  }
+              });
+              container.classList.toggle('open');
+              
+              const overlay = container.nextElementSibling;
+              if (overlay && overlay.classList.contains('catalog-dropdown-overlay')) {
+                  if (container.classList.contains('open')) {
+                      overlay.style.display = 'block';
+                      document.body.classList.add('catalog-menu-open');
+                  } else {
+                      overlay.style.display = 'none';
+                      document.body.classList.remove('catalog-menu-open');
+                  }
+              }
+          });
+      }
+  });
+  
+  document.addEventListener('click', function (event) {
+      catalogDropdownContainers.forEach(container => {
+          if (container.classList.contains('open')) {
+              const menu = container.querySelector('.catalog-dropdown-menu');
+              const button = container.querySelector('.catalog-dropdown-button');
+              const overlay = container.nextElementSibling;
+              
+              if (!menu.contains(event.target) && !button.contains(event.target)) {
+                  container.classList.remove('open');
+                  const overlay = container.nextElementSibling;
+                  if (overlay && overlay.classList.contains('catalog-dropdown-overlay')) {
+                      overlay.style.display = 'none';
+                      document.body.classList.remove('catalog-menu-open');
+                  }
+              }
           }
       });
-  }
+  });
+  
+  const catalogDropdownOverlays = document.querySelectorAll('.catalog-dropdown-overlay');
+  catalogDropdownOverlays.forEach(overlay => {
+      overlay.addEventListener('click', function() {
+          catalogDropdownContainers.forEach(container => {
+              if (container.classList.contains('open')) {
+                  container.classList.remove('open');
+              }
+          });
+          overlay.style.display = 'none';
+          document.body.classList.remove('catalog-menu-open');
+      });
+  });
+  
+  document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+          catalogDropdownContainers.forEach(container => {
+              if (container.classList.contains('open')) {
+                  container.classList.remove('open');
+                  const overlay = container.nextElementSibling;
+                  if (overlay && overlay.classList.contains('catalog-dropdown-overlay')) {
+                      overlay.style.display = 'none';
+                      document.body.classList.remove('catalog-menu-open');
+                  }
+              }
+          });
+      }
+  });
 })
