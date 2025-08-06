@@ -93,8 +93,6 @@ from .models import (
     TransactionTypes,
     Users,
     UserVotes,
-    FranchiseCategories,
-    Franchises,
 )
 from .utils import send_telegram_support_message
 logger = logging.getLogger(__name__)
@@ -4242,119 +4240,5 @@ def download_startups_report(request):
     except Exception as e:
         logger.error(f"Ошибка при генерации отчета: {e}", exc_info=True)
         return HttpResponse("Ошибка при генерации отчета", status=500)
-
-def franchises_list(request):
-    categories = FranchiseCategories.objects.all()
-    franchises_qs = Franchises.objects.filter(status="approved")
-    selected_categories = request.GET.getlist("category")
-    search_query = request.GET.get("search", "").strip()
-    min_rating_str = request.GET.get("min_rating", "0")
-    max_rating_str = request.GET.get("max_rating", "5")
-    min_investment_str = request.GET.get("min_investment", "0")
-    max_investment_str = request.GET.get("max_investment", "1000000")
-    min_payback_str = request.GET.get("min_payback", "0")
-    max_payback_str = request.GET.get("max_payback", "60")
-    sort_order = request.GET.get("sort_order", "newest")
-    page_number = request.GET.get("page", 1)
-    
-    franchises_qs = franchises_qs.annotate(
-        total_voters_agg=F("total_voters"),
-        rating_agg=ExpressionWrapper(
-            Case(
-                When(total_voters__gt=0, then=F("sum_votes") * 1.0 / F("total_voters")),
-                default=Value(0.0)
-            ),
-            output_field=FloatField()
-        ),
-    )
-    
-    categories_list = list(
-        FranchiseCategories.objects.annotate(id=F("category_id"), name=F("category_name"))
-        .values("id", "name")
-        .order_by("name")
-    )
-    
-    if selected_categories:
-        franchises_qs = franchises_qs.filter(
-            category__category_name__in=selected_categories
-        )
-    
-    if search_query:
-        franchises_qs = franchises_qs.filter(title__icontains=search_query)
-    
-    try:
-        min_rating = float(min_rating_str)
-        max_rating = float(max_rating_str)
-        if min_rating > 0:
-            franchises_qs = franchises_qs.filter(rating_agg__gte=min_rating)
-        if max_rating < 5:
-            franchises_qs = franchises_qs.filter(rating_agg__lte=max_rating)
-    except ValueError:
-        min_rating = 0
-        max_rating = 5
-    
-    try:
-        min_investment = float(min_investment_str)
-        max_investment = float(max_investment_str)
-        if min_investment > 0:
-            franchises_qs = franchises_qs.filter(investment_amount__gte=min_investment)
-        if max_investment < 1000000:
-            franchises_qs = franchises_qs.filter(investment_amount__lte=max_investment)
-    except ValueError:
-        min_investment = 0
-        max_investment = 1000000
-    
-    try:
-        min_payback = int(min_payback_str)
-        max_payback = int(max_payback_str)
-        if min_payback > 0:
-            franchises_qs = franchises_qs.filter(payback_period__gte=min_payback)
-        if max_payback < 60:
-            franchises_qs = franchises_qs.filter(payback_period__lte=max_payback)
-    except ValueError:
-        min_payback = 0
-        max_payback = 60
-    
-    if sort_order == "newest":
-        franchises_qs = franchises_qs.order_by("-created_at")
-    elif sort_order == "oldest":
-        franchises_qs = franchises_qs.order_by("created_at")
-    
-    paginator = Paginator(franchises_qs, 6)
-    page_obj = paginator.get_page(page_number)
-    
-    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
-    if is_ajax:
-        html = render_to_string(
-            "accounts/partials/_franchise_cards.html", {"page_obj": page_obj}
-        )
-        return JsonResponse(
-            {
-                "html": html,
-                "has_next": page_obj.has_next(),
-                "page_number": page_obj.number,
-                "num_pages": paginator.num_pages,
-                "count": paginator.count,
-                "total_voters_agg": "total_voters_agg",
-                "rating_agg": "rating_agg",
-            }
-        )
-    else:
-        context = {
-            "page_obj": page_obj,
-            "paginator": paginator,
-            "initial_has_next": page_obj.has_next(),
-            "selected_categories": selected_categories,
-            "search_query": search_query,
-            "min_rating": min_rating,
-            "max_rating": max_rating,
-            "min_investment": min_investment,
-            "max_investment": max_investment,
-            "min_payback": min_payback,
-            "max_payback": max_payback,
-            "sort_order": sort_order,
-            "categories": categories,
-        }
-        return render(request, "accounts/franchises_list.html", context)
 
 
