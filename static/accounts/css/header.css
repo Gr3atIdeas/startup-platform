@@ -236,10 +236,13 @@
 .profile-dropdown-menu {
   display: none;
   position: absolute;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   min-width: 250px;
-  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   z-index: 100;
   right: 0;
   top: calc(100% + 10px);
@@ -266,7 +269,7 @@
 }
 
 .profile-dropdown-item:hover {
-  background-color: #f0f0f0;
+  background-color: rgba(0, 0, 0, 0.05);
   color: #000 !important;
 }
 
@@ -297,7 +300,9 @@
   align-items: center;
   flex-shrink: 0;
   border-radius: 50px;
-  background: #004e9f;
+  background: rgba(0, 78, 159, 0.8);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .notification-icon-background img.profile-dropdown-item-icon {
@@ -412,15 +417,17 @@ nav.nav-menu
 .catalog-dropdown-menu {
   display: none !important; 
   position: absolute;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   min-width: 220px;
-  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   z-index: 100;
   left: 0;
   top: calc(100% + 10px);
   padding: 10px 0;
-  border: 1px solid var(--border-light-gray);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   flex-direction: column; 
   align-items: stretch;
   transform: none;
@@ -515,7 +522,7 @@ nav.nav-menu
 .catalog-dropdown-item.no-wave-effect:hover {
   
   background: none !important;
-  background-color: transparent !important;
+  background-color: rgba(0, 0, 0, 0.05) !important;
   border: none !important;
   box-shadow: none !important;
 
@@ -658,9 +665,12 @@ nav.nav-menu
     transform: translate(-50%, -50%) scale(0.9);
     width: 90%;
     max-width: 300px;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     z-index: 1000;
     padding: 20px 0;
     opacity: 0;
@@ -675,7 +685,7 @@ nav.nav-menu
   .catalog-dropdown-item.no-wave-effect {
     padding: 15px 20px;
     font-size: 16px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
   
   .catalog-dropdown-item.no-wave-effect:last-child {
