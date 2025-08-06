@@ -182,19 +182,37 @@
                     <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
                     <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
                     <a href="{% url 'moderator_dashboard' %}" class="header-nav-link">Заявки</a>
-                    <a href="{% url 'deals_view' %}" class="header-nav-link">Сделки</a> 
-                    <a href="{% url 'support' %}" class="header-nav-link">Поддержка</a>
+                    <a href="{% url 'deals_view' %}" class="header-nav-link">Сделки</a>
                 {% endif %}
             </div>
 
             
             {% if user.is_authenticated %}
-                {% if user.role.role_name == 'startuper' %}
-                    <a href="{% url 'create_startup' %}" class="header-nav-link header-role-button create-startup-button">
+                <div class="create-dropdown-container">
+                    <button class="header-nav-link header-role-button create-startup-button create-dropdown-button">
                         Создать
-                        <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="Создать стартап" class="create-startup-icon">
-                    </a>
-                {% endif %}
+                        <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="Создать" class="create-startup-icon">
+                    </button>
+                    <div class="create-dropdown-menu">
+                        <a href="{% url 'create_startup' %}" class="create-dropdown-item no-wave-effect">
+                            <img src="{% static 'accounts/images/icons/planet.svg' %}" alt="Стартап" class="create-dropdown-item-icon">
+                            Стартап
+                        </a>
+                        <a href="#" class="create-dropdown-item no-wave-effect">
+                            <img src="{% static 'accounts/images/icons/franchise.svg' %}" alt="Франшиза" class="create-dropdown-item-icon">
+                            Франшиза
+                        </a>
+                        <a href="#" class="create-dropdown-item no-wave-effect">
+                            <img src="{% static 'accounts/images/icons/agency.svg' %}" alt="Агентство" class="create-dropdown-item-icon">
+                            Агентство
+                        </a>
+                        <a href="#" class="create-dropdown-item no-wave-effect">
+                            <img src="{% static 'accounts/images/icons/profile.svg' %}" alt="Профиль специалиста" class="create-dropdown-item-icon">
+                            Профиль специалиста
+                        </a>
+                    </div>
+                    <div class="create-dropdown-overlay"></div>
+                </div>
             {% endif %}
         </nav>
         <div class="header-auth-section">
