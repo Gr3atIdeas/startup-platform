@@ -67,7 +67,7 @@
     if (currentPage === 'home') {
       ultraNewPlanetaryGalaxyY = 0;
       ultraNewPlanetaryGalaxyX = 0;
-      ultraNewPlanetaryGalaxyScale = 2.8;
+      ultraNewPlanetaryGalaxyScale = 1.1;
     } else if (currentPage === 'main') {
       ultraNewPlanetaryGalaxyY = -200;
       ultraNewPlanetaryGalaxyScale = 0.8;
