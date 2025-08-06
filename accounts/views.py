@@ -4107,13 +4107,23 @@ def download_startups_report(request):
         ws = wb.active
         ws.title = "Стартапы"
         
-        ws.merge_cells('A1:L1')
+        ws.merge_cells('A1:K1')
         title_cell = ws.cell(row=1, column=1, value="Отчет по стартапам")
         title_cell.font = Font(bold=True, size=16)
         title_cell.alignment = Alignment(horizontal='center', vertical='center')
         
+        ws.cell(row=2, column=1, value="Владелец").font = Font(bold=True)
+        owner_name = ""
+        if request.user.role and request.user.role.role_name == 'startuper':
+            first_name = request.user.first_name or ""
+            last_name = request.user.last_name or ""
+            owner_name = f"{first_name} {last_name}".strip()
+        else:
+            owner_name = "Все стартапы"
+        ws.cell(row=2, column=2, value=owner_name)
+        
         headers = [
-            "ID", "Название", "Владелец", "Статус", "Категория", "Стадия", 
+            "ID", "Название", "Статус", "Категория", "Стадия", 
             "Цель финансирования", "Собрано", "Рейтинг", "Количество инвесторов", "Список инвесторов", "Дата создания"
         ]
         
@@ -4141,54 +4151,47 @@ def download_startups_report(request):
                     title = ""
                 ws.cell(row=row, column=2, value=title)
                 
-                owner_name = ""
-                if startup.owner:
-                    first_name = startup.owner.first_name or ""
-                    last_name = startup.owner.last_name or ""
-                    owner_name = f"{first_name} {last_name}".strip()
-                ws.cell(row=row, column=3, value=owner_name)
-                
                 try:
                     status_display = startup.get_status_display()
                 except Exception:
                     status_display = startup.status or "Неизвестен"
-                ws.cell(row=row, column=4, value=status_display)
+                ws.cell(row=row, column=3, value=status_display)
                 
                 try:
                     direction_name = startup.direction.direction_name if startup.direction else "Не указана"
                 except Exception:
                     direction_name = "Не указана"
-                ws.cell(row=row, column=5, value=direction_name)
+                ws.cell(row=row, column=4, value=direction_name)
                 
                 try:
                     stage_name = startup.stage.stage_name if startup.stage else "Не указана"
                 except Exception:
                     stage_name = "Не указана"
-                ws.cell(row=row, column=6, value=stage_name)
+                ws.cell(row=row, column=5, value=stage_name)
                 
                 try:
                     funding_goal = startup.funding_goal or 0
                 except Exception:
                     funding_goal = 0
-                ws.cell(row=row, column=7, value=funding_goal)
+                ws.cell(row=row, column=6, value=funding_goal)
                 
                 try:
                     amount_raised = startup.amount_raised or 0
                 except Exception:
                     amount_raised = 0
-                ws.cell(row=row, column=8, value=amount_raised)
+                ws.cell(row=row, column=7, value=amount_raised)
                 
                 try:
                     avg_rating = UserVotes.objects.filter(startup=startup).aggregate(Avg('rating'))['rating__avg']
-                    ws.cell(row=row, column=9, value=round(avg_rating, 2) if avg_rating else 0)
+                    ws.cell(row=row, column=8, value=round(avg_rating, 2) if avg_rating else 0)
                 except Exception:
-                    ws.cell(row=row, column=9, value=0)
+                    ws.cell(row=row, column=8, value=0)
                 
                 try:
                     investors_count = startup.get_investors_count()
                 except Exception:
                     investors_count = 0
-                ws.cell(row=row, column=10, value=investors_count)
+                ws.cell(row=row, column=9, value=investors_count)
                 
                 try:
                     investors = (
@@ -4201,15 +4204,15 @@ def download_startups_report(request):
                     investors_list = [
                         f"{first or ''} {last or ''}".strip() for first, last in investors if first or last
                     ]
-                    ws.cell(row=row, column=11, value="\n".join(investors_list))
+                    ws.cell(row=row, column=10, value="\n".join(investors_list))
                 except Exception:
-                    ws.cell(row=row, column=11, value="")
+                    ws.cell(row=row, column=10, value="")
 
                 try:
                     created_date = startup.created_at.strftime("%d.%m.%Y") if startup.created_at else ""
                 except Exception:
                     created_date = ""
-                ws.cell(row=row, column=12, value=created_date)
+                ws.cell(row=row, column=11, value=created_date)
             except Exception as e:
                 logger.error(f"Ошибка при обработке стартапа {startup.startup_id}: {e}")
                 continue
