@@ -421,74 +421,124 @@ def user_logout(request):
     logout(request)
     messages.success(request, "Вы успешно вышли из системы.")
     return redirect("home")
-def startups_list(request):
+def franchises_list(request):
     directions = Directions.objects.all()
-    startups_qs = Startups.objects.filter(status="approved")
+    
+    # Копируем стартапы в франшизы если их нет
+    if not Franchises.objects.exists():
+        startups = Startups.objects.filter(status="approved")
+        for startup in startups:
+            franchise = Franchises.objects.create(
+                title=f"Франшиза {startup.title}",
+                short_description=startup.short_description,
+                description=startup.description,
+                terms=startup.terms,
+                direction=startup.direction,
+                stage=startup.stage,
+                investment_size=startup.funding_goal,
+                payback_period=12,
+                own_businesses=5,
+                franchise_businesses=15,
+                valuation=startup.valuation,
+                pitch_deck_url=startup.pitch_deck_url,
+                created_at=startup.created_at,
+                updated_at=startup.updated_at,
+                status="approved",
+                total_invested=startup.total_invested,
+                info_url=startup.info_url,
+                percent_amount=startup.percent_amount,
+                customization_data=startup.customization_data,
+                total_voters=startup.total_voters,
+                sum_votes=startup.sum_votes,
+                is_edited=startup.is_edited,
+                moderator_comment=startup.moderator_comment,
+                step_number=startup.step_number,
+                logo_urls=startup.logo_urls,
+                creatives_urls=startup.creatives_urls,
+                proofs_urls=startup.proofs_urls,
+                video_urls=startup.video_urls,
+                planet_image=startup.planet_image,
+                owner=startup.owner
+            )
+    
+    franchises_qs = Franchises.objects.filter(status="approved")
     selected_categories = request.GET.getlist("category")
-    micro_investment = request.GET.get("micro_investment") == "1"
+    min_payback_str = request.GET.get("min_payback", "0")
+    max_payback_str = request.GET.get("max_payback", "60")
+    min_investment_str = request.GET.get("min_investment", "0")
+    max_investment_str = request.GET.get("max_investment", "10000000")
     search_query = request.GET.get("search", "").strip()
     min_rating_str = request.GET.get("min_rating", "0")
     max_rating_str = request.GET.get("max_rating", "5")
     sort_order = request.GET.get("sort_order", "newest")
     page_number = request.GET.get("page", 1)
-    startups_qs = startups_qs.annotate(
+    
+    franchises_qs = franchises_qs.annotate(
         total_voters_agg=Count("uservotes", distinct=True),
-        total_investors_agg=Count("investmenttransactions__investor", distinct=True),
-        current_funding_sum_agg=Coalesce(
-            Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
-        ),
         rating_agg=ExpressionWrapper(
             Coalesce(Avg("uservotes__rating"), 0.0), output_field=FloatField()
         ),
-    ).annotate(
-        progress_agg=ExpressionWrapper(
-            Coalesce(
-                Case(
-                    When(
-                        funding_goal__gt=0,
-                        then=F("current_funding_sum_agg") * 100.0 / F("funding_goal"),
-                    ),
-                    default=Value(0),
-                    output_field=FloatField(),
-                ),
-                0.0,
-            ),
-            output_field=FloatField(),
-        )
     )
+    
     categories = list(
         Directions.objects.annotate(id=F("direction_id"), name=F("direction_name"))
         .values("id", "name")
         .order_by("name")
     )
+    
     if selected_categories:
-        startups_qs = startups_qs.filter(
+        franchises_qs = franchises_qs.filter(
             direction__direction_name__in=selected_categories
         )
-    if micro_investment:
-        startups_qs = startups_qs.filter(micro_investment_available=True)
+    
     if search_query:
-        startups_qs = startups_qs.filter(title__icontains=search_query)
+        franchises_qs = franchises_qs.filter(title__icontains=search_query)
+    
+    try:
+        min_payback = int(min_payback_str)
+        max_payback = int(max_payback_str)
+        if min_payback > 0:
+            franchises_qs = franchises_qs.filter(payback_period__gte=min_payback)
+        if max_payback < 60:
+            franchises_qs = franchises_qs.filter(payback_period__lte=max_payback)
+    except ValueError:
+        min_payback = 0
+        max_payback = 60
+    
+    try:
+        min_investment = int(min_investment_str)
+        max_investment = int(max_investment_str)
+        if min_investment > 0:
+            franchises_qs = franchises_qs.filter(investment_size__gte=min_investment)
+        if max_investment < 10000000:
+            franchises_qs = franchises_qs.filter(investment_size__lte=max_investment)
+    except ValueError:
+        min_investment = 0
+        max_investment = 10000000
+    
     try:
         min_rating = float(min_rating_str)
         max_rating = float(max_rating_str)
         if min_rating > 0:
-            startups_qs = startups_qs.filter(rating_agg__gte=min_rating)
+            franchises_qs = franchises_qs.filter(rating_agg__gte=min_rating)
         if max_rating < 5:
-            startups_qs = startups_qs.filter(rating_agg__lte=max_rating)
+            franchises_qs = franchises_qs.filter(rating_agg__lte=max_rating)
     except ValueError:
         min_rating = 0
         max_rating = 5
+    
     if sort_order == "newest":
-        startups_qs = startups_qs.order_by("-created_at")
+        franchises_qs = franchises_qs.order_by("-created_at")
     elif sort_order == "oldest":
-        startups_qs = startups_qs.order_by("created_at")
-    paginator = Paginator(startups_qs, 6)
+        franchises_qs = franchises_qs.order_by("created_at")
+    
+    paginator = Paginator(franchises_qs, 6)
     page_obj = paginator.get_page(page_number)
+    
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
     if is_ajax:
         html = render_to_string(
-            "accounts/partials/_startup_cards.html", {"page_obj": page_obj}
+            "accounts/partials/_franchise_cards.html", {"page_obj": page_obj}
         )
         return JsonResponse(
             {
@@ -497,11 +547,6 @@ def startups_list(request):
                 "page_number": page_obj.number,
                 "num_pages": paginator.num_pages,
                 "count": paginator.count,
-                "total_voters_agg": "total_voters_agg",
-                "rating_agg": "rating_agg",
-                "progress_agg": "progress_agg",
-                "current_funding_sum_agg": "current_funding_sum_agg",
-                "total_investors_agg": "total_investors_agg",
             }
         )
     else:
@@ -510,14 +555,24 @@ def startups_list(request):
             "paginator": paginator,
             "initial_has_next": page_obj.has_next(),
             "selected_categories": selected_categories,
-            "micro_investment": micro_investment,
             "search_query": search_query,
             "min_rating": min_rating,
             "max_rating": max_rating,
+            "min_payback": min_payback,
+            "max_payback": max_payback,
+            "min_investment": min_investment,
+            "max_investment": max_investment,
             "sort_order": sort_order,
             "directions": directions,
         }
-        return render(request, "accounts/startups_list.html", context)
+        return render(request, "accounts/franchises_list.html", context)
+def franchise_detail(request, franchise_id):
+    try:
+        franchise = Franchises.objects.get(franchise_id=franchise_id)
+        return render(request, "accounts/franchise_detail.html", {"franchise": franchise})
+    except Franchises.DoesNotExist:
+        return render(request, "accounts/404.html", status=404)
+
 def search_suggestions(request):
     query = request.GET.get("q", "").strip()
     users = []

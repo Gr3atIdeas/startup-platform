@@ -1,0 +1,66 @@
+{% load file_tags %}
+{% load static %}
+{% load humanize %}
+{% load accounts_extras %}
+
+{% for franchise in page_obj %}
+  <div class="franchise-card" data-franchise-id="{{ franchise.franchise_id }}">
+    
+    <span class="franchise-tag">Франшиза</span>
+          <div class="franchise-image">
+        {% if franchise.planet_image %}
+          <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ franchise.planet_image }}" alt="Планета {{ franchise.title }}" class="planet-image">
+        {% else %}
+          <div class="franchise-image-placeholder">
+            {{ franchise.title|make_list|first|upper }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="franchise-card-inner">
+        
+        <div class="franchise-title-container">
+          {% if franchise.logo_urls %}
+            <div class="franchise-logo">
+              <img src="{% get_file_url_tag franchise.logo_urls.0 franchise.franchise_id 'logo' %}" alt="Логотип {{ franchise.title }}">
+            </div>
+          {% endif %}
+          <h3 class="franchise-title">{{ franchise.title }}</h3>
+        </div>
+        <div class="franchise-rating-comments">
+          <span class="rating-text">Рейтинг {{ franchise.get_average_rating|floatformat:1 }}/5 ({{ franchise.total_voters }})</span>
+          <span class="comments-count">
+            <svg class="comment-icon" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.222 0H1.778C0.796 0 0 .734 0 1.64v8.197c0 .906.796 1.64 1.778 1.64h9.778l3.556 3.28V11.477h.888c.982 0 1.778-.734 1.778-1.64V1.64C16 .734 15.204 0 14.222 0z" fill="currentColor"/>
+            </svg>
+            <span>{{ franchise.comments.count|default:0 }}</span>
+          </span>
+        </div>
+
+        <div class="franchise-category-row">
+          {% if franchise.direction and franchise.direction.direction_name %}
+            <span class="category-tag-figma">{{ franchise.direction.direction_name|translate_category }}</span>
+          {% else %}
+            <span class="category-tag-figma category-tag-placeholder">Категория не указана</span>
+          {% endif %}
+        </div>
+
+      
+             <div class="investment-size-container-figma">
+         <span class="investment-size-text-figma">Размер инвестиций: {{ franchise.investment_size|default:0|floatformat:0|intcomma }} ₽</span>
+       </div>
+
+       <div class="businesses-container-figma">
+         <i class="fas fa-store business-icon-figma"></i>
+         <span class="businesses-text-figma">Собственных предприятий ({{ franchise.own_businesses }})</span>
+       </div>
+
+       <div class="franchise-businesses-container-figma">
+         <i class="fas fa-building franchise-icon-figma"></i>
+         <span class="franchise-businesses-text-figma">Франшизных предприятий ({{ franchise.franchise_businesses }})</span>
+       </div>
+
+       <a href="{% url 'franchise_detail' franchise_id=franchise.franchise_id %}" class="detail-link" aria-label="Подробнее о {{ franchise.title }}"></a>
+    </div>
+  </div>
+{% endfor %}

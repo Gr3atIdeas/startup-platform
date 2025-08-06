@@ -623,3 +623,89 @@ class SupportTicket(models.Model):
         ordering = ['-created_at']
     def __str__(self):
         return f"Ticket #{self.ticket_id} by {self.user.username if self.user else 'Anonymous'}"
+
+
+class Franchises(models.Model):
+    franchise_id = models.AutoField(primary_key=True)
+    owner = models.ForeignKey(
+        "Users", models.DO_NOTHING, blank=True, null=True, db_column="owner_id"
+    )
+    title = models.CharField(max_length=255)
+    short_description = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    terms = models.TextField(blank=True, null=True)
+    direction = models.ForeignKey(
+        "Directions", models.DO_NOTHING, blank=True, null=True, db_column="direction_id"
+    )
+    stage = models.ForeignKey(
+        "StartupStages", models.DO_NOTHING, blank=True, null=True, db_column="stage_id"
+    )
+    investment_size = models.DecimalField(
+        max_digits=19, decimal_places=4, blank=True, null=True
+    )
+    payback_period = models.IntegerField(blank=True, null=True)
+    own_businesses = models.IntegerField(default=0)
+    franchise_businesses = models.IntegerField(default=0)
+    valuation = models.DecimalField(
+        max_digits=19, decimal_places=4, blank=True, null=True
+    )
+    pitch_deck_url = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=20, default="pending")
+    status_id = models.ForeignKey(
+        "ReviewStatuses",
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+        db_column="status_id",
+        default=3,
+    )
+    total_invested = models.DecimalField(
+        max_digits=19, decimal_places=4, blank=True, null=True, default=0
+    )
+    info_url = models.CharField(max_length=255, blank=True, null=True)
+    percent_amount = models.DecimalField(
+        max_digits=19, decimal_places=4, blank=True, null=True
+    )
+    customization_data = models.JSONField(blank=True, null=True)
+    total_voters = models.IntegerField(default=0)
+    sum_votes = models.IntegerField(default=0)
+    is_edited = models.BooleanField(default=False)
+    moderator_comment = models.TextField(blank=True, null=True)
+    step_number = models.IntegerField(default=1)
+    logo_urls = models.JSONField(default=list)
+    creatives_urls = models.JSONField(blank=True, null=True, default=list)
+    proofs_urls = models.JSONField(blank=True, null=True, default=list)
+    video_urls = models.JSONField(blank=True, null=True, default=list)
+    planet_image = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = "franchises"
+
+    def get_average_rating(self):
+        if self.total_voters > 0:
+            return self.sum_votes / self.total_voters
+        return 0
+
+    def get_logo_url(self):
+        if self.logo_urls and len(self.logo_urls) > 0:
+            return self.logo_urls[0]
+        return None
+
+    def get_investors_count(self):
+        return InvestmentTransactions.objects.filter(
+            franchise_id=self.franchise_id
+        ).values("investor").distinct().count()
+
+    def get_status_display(self):
+        status_map = {
+            "pending": "На рассмотрении",
+            "approved": "Одобрено",
+            "rejected": "Отклонено",
+        }
+        return status_map.get(self.status, self.status)
+
+    def __str__(self):
+        return self.title

@@ -1,0 +1,50 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load file_tags %}
+{% load humanize %}
+
+{% block title %}{{ franchise.title }}{% endblock %}
+
+{% block content %}
+<div class="franchise-detail-container">
+    <div class="franchise-header">
+        <h1>{{ franchise.title }}</h1>
+        <div class="franchise-rating">
+            <span>Рейтинг: {{ franchise.get_average_rating|floatformat:1 }}/5</span>
+        </div>
+    </div>
+    
+    <div class="franchise-info">
+        <div class="franchise-description">
+            <h2>Описание</h2>
+            <p>{{ franchise.description|default:"Описание не указано" }}</p>
+        </div>
+        
+        <div class="franchise-stats">
+            <div class="stat-item">
+                <span class="stat-label">Размер инвестиций:</span>
+                <span class="stat-value">{{ franchise.investment_size|default:0|floatformat:0|intcomma }} ₽</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Срок окупаемости:</span>
+                <span class="stat-value">{{ franchise.payback_period|default:0 }} мес</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Собственных предприятий:</span>
+                <span class="stat-value">{{ franchise.own_businesses }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Франшизных предприятий:</span>
+                <span class="stat-value">{{ franchise.franchise_businesses }}</span>
+            </div>
+        </div>
+        
+        {% if franchise.terms %}
+        <div class="franchise-terms">
+            <h2>Условия</h2>
+            <p>{{ franchise.terms }}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 
