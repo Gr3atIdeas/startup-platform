@@ -672,6 +672,7 @@ nav.nav-menu
 .create-dropdown-item-icon {
   width: 25px;
   height: 25px;
+  color: #000;
 }
 
 /* Адаптив для хедера */
@@ -881,6 +882,7 @@ nav.nav-menu
   .create-dropdown-item-icon {
     width: 20px;
     height: 20px;
+    color: #000;
   }
   
   .create-dropdown-container:hover .create-dropdown-menu {
