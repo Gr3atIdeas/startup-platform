@@ -4,32 +4,32 @@
 {% load accounts_extras %}
 
 {% for franchise in page_obj %}
-  <div class="franchise-card" data-franchise-id="{{ franchise.franchise_id }}">
+  <div class="franchise-startup-card" data-franchise-id="{{ franchise.franchise_id }}">
     
-    <span class="franchise-tag">Франшиза</span>
-    <div class="franchise-image">
+    <span class="franchise-startup-franchise-tag">Франшиза</span>
+    <div class="franchise-startup-image">
       {% if franchise.planet_image %}
         <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ franchise.planet_image }}" alt="Планета {{ franchise.title }}" class="planet-image">
       {% else %}
-        <div class="franchise-image-placeholder">
+        <div class="franchise-startup-image-placeholder">
           {{ franchise.title|make_list|first|upper }}
         </div>
       {% endif %}
     </div>
 
-    <div class="franchise-card-inner">
+    <div class="franchise-startup-card-inner">
       
-      <div class="franchise-title-container">
+      <div class="franchise-startup-title-container">
         {% if franchise.logo_urls %}
-          <div class="franchise-logo">
+          <div class="franchise-startup-logo">
             <img src="{% get_file_url_tag franchise.logo_urls.0 franchise.franchise_id 'logo' %}" alt="Логотип {{ franchise.title }}">
           </div>
         {% endif %}
-        <h3 class="franchise-title">{{ franchise.title }}</h3>
+        <h3 class="franchise-startup-title">{{ franchise.title }}</h3>
       </div>
-      <div class="franchise-rating-comments">
-        <span class="rating-text">Рейтинг {{ franchise.get_average_rating|floatformat:1 }}/5 ({{ franchise.total_voters }})</span>
-        <span class="comments-count">
+      <div class="franchise-startup-rating-comments">
+        <span class="franchise-rating-text">Рейтинг {{ franchise.get_average_rating|floatformat:1 }}/5 ({{ franchise.total_voters }})</span>
+        <span class="franchise-comments-count">
           <svg class="comment-icon" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14.222 0H1.778C0.796 0 0 .734 0 1.64v8.197c0 .906.796 1.64 1.778 1.64h9.778l3.556 3.28V11.477h.888c.982 0 1.778-.734 1.778-1.64V1.64C16 .734 15.204 0 14.222 0z" fill="currentColor"/>
           </svg>
@@ -37,37 +37,37 @@
         </span>
       </div>
 
-      <div class="franchise-category-row">
+      <div class="franchise-startup-category-row">
         {% if franchise.category %}
-          <span class="category-tag-figma">{{ franchise.category.category_name }}</span>
+          <span class="franchise-category-tag-figma">{{ franchise.category.category_name }}</span>
         {% else %}
-          <span class="category-tag-placeholder">Категория не указана</span>
+          <span class="franchise-category-tag-placeholder">Категория не указана</span>
         {% endif %}
       </div>
 
-      <div class="investment-amount-container-figma">
-        <div class="investment-amount-text-figma">
+      <div class="franchise-investment-amount-container-figma">
+        <div class="franchise-investment-amount-text-figma">
           Размер инвестиций: {{ franchise.investment_amount|floatformat:0|intcomma }} ₽
         </div>
       </div>
 
-      <div class="businesses-count-container-figma">
-        <div class="businesses-count-text-figma">
+      <div class="franchise-businesses-count-container-figma">
+        <div class="franchise-businesses-count-text-figma">
           Собственных предприятий: {{ franchise.own_businesses_count }}
         </div>
-        <div class="businesses-count-text-figma">
+        <div class="franchise-businesses-count-text-figma">
           Франшизных предприятий: {{ franchise.franchise_businesses_count }}
         </div>
       </div>
 
       {% if franchise.short_description %}
-        <div class="franchise-short-description">
+        <div class="franchise-startup-short-description">
           {{ franchise.short_description|truncatewords:15 }}
         </div>
       {% endif %}
 
-      <div class="detail-link-text-figma">
-        <a href="#" class="detail-link">Подробнее</a>
+      <div class="franchise-detail-link-text-figma">
+        <a href="#" class="franchise-detail-link">Подробнее</a>
       </div>
     </div>
   </div>
