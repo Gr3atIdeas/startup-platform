@@ -4258,9 +4258,13 @@ def franchises_list(request):
     page_number = request.GET.get("page", 1)
     
     franchises_qs = franchises_qs.annotate(
-        total_voters_agg=Count("uservotes", distinct=True),
+        total_voters_agg=F("total_voters"),
         rating_agg=ExpressionWrapper(
-            Coalesce(Avg("uservotes__rating"), 0.0), output_field=FloatField()
+            Case(
+                When(total_voters__gt=0, then=F("sum_votes") * 1.0 / F("total_voters")),
+                default=Value(0.0)
+            ),
+            output_field=FloatField()
         ),
     )
     
