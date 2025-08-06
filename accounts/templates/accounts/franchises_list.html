@@ -1,0 +1,294 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load file_tags %}
+{% load humanize %}
+
+{% block title %}Каталог франшиз{% endblock %}
+
+{% block head_extra %}
+  {{ block.super }}
+  
+  <link rel="stylesheet" href="{% static 'accounts/css/franchises_list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <div class="catalog-container">
+    
+    <aside class="sidebar"> 
+      <form method="get" id="filterForm">
+        
+        <div class="sort-dropdown">
+          <div class="sort-dropdown-title">Показать сначала</div> 
+          <select name="sort_order" id="sortOrder">
+            <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Новые</option>
+            <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Старые</option>
+          </select>
+        </div>
+
+        <div class="categories-section">
+          <div class="categories-title">Категории франшиз</div>
+          <div class="categories-list">
+            {% for category in categories %}
+              <div class="category-item">
+                <label class="category-label">
+                  <input type="checkbox" name="category" value="{{ category.category_name }}" 
+                         class="category-checkbox" 
+                         {% if category.category_name in selected_categories %}checked{% endif %}>
+                  <span class="category-name">{{ category.category_name }}</span>
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="rating-filter">
+          <div class="rating-label-container">
+            <div class="rating-label">Рейтинг</div>
+            <div class="rating-value-display">
+              <span id="minRatingDisplay">{{ min_rating }}</span> - <span id="maxRatingDisplay">{{ max_rating }}</span>
+            </div>
+          </div>
+          <div id="ratingSlider"></div>
+          <input type="hidden" name="min_rating" id="minRating" value="{{ min_rating }}">
+          <input type="hidden" name="max_rating" id="maxRating" value="{{ max_rating }}">
+        </div>
+
+        <div class="investment-filter">
+          <div class="investment-label-container">
+            <div class="investment-label">Размер инвестиций (₽)</div>
+            <div class="investment-value-display">
+              <span id="minInvestmentDisplay">{{ min_investment|floatformat:0 }}</span> - <span id="maxInvestmentDisplay">{{ max_investment|floatformat:0 }}</span>
+            </div>
+          </div>
+          <div id="investmentSlider"></div>
+          <input type="hidden" name="min_investment" id="minInvestment" value="{{ min_investment }}">
+          <input type="hidden" name="max_investment" id="maxInvestment" value="{{ max_investment }}">
+        </div>
+
+        <div class="payback-filter">
+          <div class="payback-label-container">
+            <div class="payback-label">Срок окупаемости (мес.)</div>
+            <div class="payback-value-display">
+              <span id="minPaybackDisplay">{{ min_payback }}</span> - <span id="maxPaybackDisplay">{{ max_payback }}</span>
+            </div>
+          </div>
+          <div id="paybackSlider"></div>
+          <input type="hidden" name="min_payback" id="minPayback" value="{{ min_payback }}">
+          <input type="hidden" name="max_payback" id="maxPayback" value="{{ max_payback }}">
+        </div>
+
+      </form>
+    </aside>
+    
+    <div class="franchises-content">
+      
+      <div class="catalog-search-wrapper">
+        <div class="catalog-search">
+          
+          <input type="text" class="catalog-search-input" placeholder="Поиск по каталогу" value="{{ search_query|default_if_none:'' }}">
+          
+          <button type="button" class="catalog-search-btn" title="Поиск"> 
+            <svg viewBox="0 0 28 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.417 21.375c4.836 0 8.75-3.914 8.75-8.75s-3.914-8.75-8.75-8.75-8.75 3.914-8.75 8.75 3.914 8.75 8.75 8.75zM22.923 23.274l-5.067-4.892" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> 
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      
+      <div class="franchises-grid" id="franchisesGrid">
+        {% if page_obj %} 
+          
+          {% include 'accounts/partials/_franchise_cards.html' with page_obj=page_obj %}
+        {% else %}
+          <div class="no-franchises">
+            <p>В настоящее время нет доступных франшиз. Загляните позже!</p>
+          </div>
+        {% endif %}
+      </div>
+
+      
+      <div class="pagination-controls">
+          
+          
+
+          
+          
+          {% if page_obj and paginator.num_pages > 1 %}
+            <div class="pagination-numbers">
+                
+                
+                {% if page_obj.has_previous %}
+                    
+                    <a href="?page={{ page_obj.previous_page_number }}">Назад</a> 
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num == page_obj.number %}
+                        <span class="current-page">{{ num }}</span>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Вперед</a>
+                {% endif %}
+            </div>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      const ratingSlider = document.getElementById('ratingSlider');
+      const minRatingInput = document.getElementById('minRating');
+      const maxRatingInput = document.getElementById('maxRating');
+      const minRatingDisplay = document.getElementById('minRatingDisplay');
+      const maxRatingDisplay = document.getElementById('maxRatingDisplay');
+
+      if (ratingSlider) {
+        noUiSlider.create(ratingSlider, {
+          start: [{{ min_rating }}, {{ max_rating }}],
+          connect: true,
+          range: {
+            'min': 0,
+            'max': 5
+          },
+          format: wNumb({
+            decimals: 1
+          })
+        });
+
+        ratingSlider.noUiSlider.on('update', function (values, handle) {
+          const value = values[handle];
+          if (handle === 0) {
+            minRatingInput.value = value;
+            minRatingDisplay.textContent = value;
+          } else {
+            maxRatingInput.value = value;
+            maxRatingDisplay.textContent = value;
+          }
+        });
+
+        ratingSlider.noUiSlider.on('change', function () {
+          document.getElementById('filterForm').submit();
+        });
+      }
+
+      
+      const investmentSlider = document.getElementById('investmentSlider');
+      const minInvestmentInput = document.getElementById('minInvestment');
+      const maxInvestmentInput = document.getElementById('maxInvestment');
+      const minInvestmentDisplay = document.getElementById('minInvestmentDisplay');
+      const maxInvestmentDisplay = document.getElementById('maxInvestmentDisplay');
+
+      if (investmentSlider) {
+        noUiSlider.create(investmentSlider, {
+          start: [{{ min_investment }}, {{ max_investment }}],
+          connect: true,
+          range: {
+            'min': 0,
+            'max': 1000000
+          },
+          format: wNumb({
+            decimals: 0
+          })
+        });
+
+        investmentSlider.noUiSlider.on('update', function (values, handle) {
+          const value = values[handle];
+          if (handle === 0) {
+            minInvestmentInput.value = value;
+            minInvestmentDisplay.textContent = parseInt(value).toLocaleString();
+          } else {
+            maxInvestmentInput.value = value;
+            maxInvestmentDisplay.textContent = parseInt(value).toLocaleString();
+          }
+        });
+
+        investmentSlider.noUiSlider.on('change', function () {
+          document.getElementById('filterForm').submit();
+        });
+      }
+
+      
+      const paybackSlider = document.getElementById('paybackSlider');
+      const minPaybackInput = document.getElementById('minPayback');
+      const maxPaybackInput = document.getElementById('maxPayback');
+      const minPaybackDisplay = document.getElementById('minPaybackDisplay');
+      const maxPaybackDisplay = document.getElementById('maxPaybackDisplay');
+
+      if (paybackSlider) {
+        noUiSlider.create(paybackSlider, {
+          start: [{{ min_payback }}, {{ max_payback }}],
+          connect: true,
+          range: {
+            'min': 0,
+            'max': 60
+          },
+          format: wNumb({
+            decimals: 0
+          })
+        });
+
+        paybackSlider.noUiSlider.on('update', function (values, handle) {
+          const value = values[handle];
+          if (handle === 0) {
+            minPaybackInput.value = value;
+            minPaybackDisplay.textContent = value;
+          } else {
+            maxPaybackInput.value = value;
+            maxPaybackDisplay.textContent = value;
+          }
+        });
+
+        paybackSlider.noUiSlider.on('change', function () {
+          document.getElementById('filterForm').submit();
+        });
+      }
+
+      
+      const searchInput = document.querySelector('.catalog-search-input');
+      const searchBtn = document.querySelector('.catalog-search-btn');
+      
+      if (searchInput && searchBtn) {
+        searchBtn.addEventListener('click', function() {
+          const searchQuery = searchInput.value.trim();
+          const currentUrl = new URL(window.location);
+          currentUrl.searchParams.set('search', searchQuery);
+          currentUrl.searchParams.delete('page');
+          window.location.href = currentUrl.toString();
+        });
+
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            searchBtn.click();
+          }
+        });
+      }
+
+      
+      const checkboxes = document.querySelectorAll('.category-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+          document.getElementById('filterForm').submit();
+        });
+      });
+
+      
+      const sortSelect = document.getElementById('sortOrder');
+      if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+          document.getElementById('filterForm').submit();
+        });
+      }
+    });
+  </script>
+
+{% endblock %} 
