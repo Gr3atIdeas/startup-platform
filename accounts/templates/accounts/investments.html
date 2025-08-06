@@ -17,17 +17,12 @@
     .planetary-system .planet {
       transition: all 0.8s ease-out; /* Увеличено с 0.3s до 0.8s для сглаживания */
     }
-    
-    /* Установка ширины главного контейнера страницы investments */
-    .portfolio-container {
-      max-width: 1303px !important;
-    }
   </style>
 {% endblock %}
 
 {% block content %}
   {% if user.is_authenticated and user.role.role_name == 'investor' %}
-    <div class="portfolio-container">
+    <div class="investments-container">
       
       <div style="background: #fff; color: #000; padding: 10px; margin-bottom: 20px; display: none;">
         <p>Отладка: Количество инвестиций: {{ user_investments|length }}</p>
