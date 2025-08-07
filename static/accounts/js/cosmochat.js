@@ -505,13 +505,10 @@ function startPolling() {
             if (data.success) {
                 const chatListContainer = document.getElementById('chatListContainer');
                 if (chatListContainer) {
-                    chatListContainer.innerHTML = '';
-                    data.chats.forEach((chat) => {
-                        if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && requestUserRole === 'moderator'))) {
-                            const chatItem = createChatItemElement(chat);
-                            chatListContainer.appendChild(chatItem);
-                        }
-                    });
+                    // Обновляем только изменившиеся чаты, а не пересоздаем весь список
+                    updateChatList(data.chats, chatListContainer);
+                    
+                    // Обновляем заголовок текущего чата если он открыт
                     const currentChatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
                     if (currentChatItem && chatWindowTitle) {
                         chatWindowTitle.textContent = currentChatItem.dataset.chatName;
@@ -522,6 +519,7 @@ function startPolling() {
             }
         })
         .catch(error => console.error('Ошибка при опросе списка чатов:', error));
+        
         if (currentChatId) {
             const url = lastMessageTimestamp
                 ? `/cosmochat/${currentChatId}/?since=${encodeURIComponent(lastMessageTimestamp)}`
@@ -543,29 +541,6 @@ function startPolling() {
                             if (chatMessagesArea) chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
                             updateChatListItem(newMessages[newMessages.length - 1]);
                         }
-                        fetch('/cosmochat/chat-list/', {
-                            headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                const chatListContainer = document.getElementById('chatListContainer');
-                                if (chatListContainer) {
-                                    chatListContainer.innerHTML = '';
-                                    data.chats.forEach((chat) => {
-                                        if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && requestUserRole === 'moderator'))) {
-                                            const chatItem = createChatItemElement(chat);
-                                            chatListContainer.appendChild(chatItem);
-                                        }
-                                    });
-                                    const currentChatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
-                                    if (currentChatItem && chatWindowTitle) {
-                                        chatWindowTitle.textContent = currentChatItem.dataset.chatName;
-                                    }
-                                }
-                            }
-                        })
-                        .catch(error => console.error('Ошибка обновления списка чатов:', error));
                     } else {
                         console.error('Ошибка опроса:', data.error);
                     }
@@ -575,6 +550,125 @@ function startPolling() {
                 });
         }
     }, 5000);
+}
+
+// Новая функция для обновления списка чатов без полного пересоздания
+function updateChatList(newChats, container) {
+    const existingChats = new Map();
+    const existingChatElements = container.querySelectorAll('.chat-item-new');
+    
+    // Создаем карту существующих чатов
+    existingChatElements.forEach(element => {
+        const chatId = element.dataset.chatId;
+        if (chatId) {
+            existingChats.set(chatId, element);
+        }
+    });
+    
+    // Обрабатываем новые чаты
+    newChats.forEach(chat => {
+        if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && requestUserRole === 'moderator'))) {
+            const existingElement = existingChats.get(chat.conversation_id);
+            
+            if (existingElement) {
+                // Обновляем существующий элемент
+                updateExistingChatElement(existingElement, chat);
+                existingChats.delete(chat.conversation_id);
+            } else {
+                // Создаем новый элемент
+                const newChatElement = createChatItemElement(chat);
+                container.appendChild(newChatElement);
+            }
+        }
+    });
+    
+    // Удаляем чаты, которых больше нет в списке
+    existingChats.forEach(element => {
+        element.remove();
+    });
+}
+
+// Функция для обновления существующего элемента чата
+function updateExistingChatElement(element, chat) {
+    // Обновляем только если данные изменились
+    const currentName = element.dataset.chatName;
+    const newName = chat.name || `Чат ${chat.conversation_id}`;
+    
+    if (currentName !== newName) {
+        element.dataset.chatName = newName;
+        const nameElement = element.querySelector('h4');
+        if (nameElement) {
+            nameElement.innerHTML = `
+                ${newName.substring(0, 25)}${newName.length > 25 ? '...' : ''}
+                ${chat.is_deal ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : ''}
+            `;
+        }
+    }
+    
+    // Обновляем статус сделки
+    const isDeal = chat.is_deal ? 'true' : 'false';
+    if (element.dataset.isDeal !== isDeal) {
+        element.dataset.isDeal = isDeal;
+    }
+    
+    // Обновляем тип чата
+    const chatType = chat.is_group_chat ? 'group' : 'personal';
+    if (element.dataset.chatType !== chatType) {
+        element.dataset.chatType = chatType;
+    }
+    
+    // Обновляем аватар если изменился
+    const avatarElement = element.querySelector('.chat-avatar-img');
+    if (avatarElement) {
+        const defaultAvatarSrc = '/static/accounts/images/cosmochat/group_avatar.svg';
+        let avatarUrl = defaultAvatarSrc;
+        let avatarAlt = newName;
+        
+        if (chatType === 'personal' && chat.participant && chat.participant.profile_picture_url) {
+            avatarUrl = chat.participant.profile_picture_url;
+            avatarAlt = `${chat.participant.first_name || 'Чат'} ${chat.participant.last_name || ''}`.trim();
+        }
+        
+        if (avatarElement.src !== avatarUrl) {
+            avatarElement.src = avatarUrl;
+            avatarElement.alt = avatarAlt;
+        }
+    }
+    
+    // Обновляем последнее сообщение если есть
+    if (chat.last_message) {
+        const lastMessagePreview = element.querySelector('.last-message-preview');
+        const timestampChat = element.querySelector('.timestamp-chat');
+        const dateChatPreview = element.querySelector('.date-chat-preview');
+        const unreadBadge = element.querySelector('.unread-badge-chat');
+        
+        if (lastMessagePreview) {
+            let previewText = '';
+            if (chat.last_message.sender_id == window.REQUEST_USER_ID) {
+                previewText = 'Вы: ';
+            }
+            previewText += chat.last_message.message_text;
+            lastMessagePreview.textContent = previewText.substring(0, 30) + (previewText.length > 30 ? '...' : '');
+        }
+        
+        if (timestampChat && chat.last_message.created_at_time) {
+            timestampChat.textContent = chat.last_message.created_at_time;
+        }
+        
+        if (dateChatPreview && chat.last_message.created_at_date) {
+            dateChatPreview.textContent = chat.last_message.created_at_date;
+        }
+        
+        // Обновляем счетчик непрочитанных сообщений
+        if (unreadBadge) {
+            if (chat.unread_count > 0 && chat.last_message.sender_id != window.REQUEST_USER_ID && !chat.last_message.is_read) {
+                unreadBadge.textContent = chat.unread_count;
+                unreadBadge.style.display = 'inline';
+            } else {
+                unreadBadge.style.display = 'none';
+            }
+        }
+    }
 }
 document.addEventListener('DOMContentLoaded', function () {
     const requestUserRoleElement = document.getElementById('request_user_role_data');
