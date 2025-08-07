@@ -4444,4 +4444,250 @@ def download_startups_report(request):
         logger.error(f"Ошибка при генерации отчета: {e}", exc_info=True)
         return HttpResponse("Ошибка при генерации отчета", status=500)
 
+def approve_franchise(request, franchise_id):
+    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+        messages.error(request, "У вас нет прав для этого действия.")
+        return redirect("home")
+    franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
+    if request.method == "POST":
+        moderator_comment = request.POST.get("moderator_comment", "")
+        franchise.moderator_comment = moderator_comment
+        franchise.status = "approved"
+        try:
+            franchise.status_id = ReviewStatuses.objects.get(status_name="Approved")
+        except ReviewStatuses.DoesNotExist:
+            raise ValueError("Статус 'Approved' не найден в базе данных.")
+        franchise.save()
+        messages.success(request, "Франшиза одобрена.")
+    return redirect("moderator_dashboard")
+
+
+def reject_franchise(request, franchise_id):
+    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+        messages.error(request, "У вас нет прав для этого действия.")
+        return redirect("home")
+    franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
+    if request.method == "POST":
+        moderator_comment = request.POST.get("moderator_comment", "")
+        franchise.moderator_comment = moderator_comment
+        franchise.status = "rejected"
+        try:
+            franchise.status_id = ReviewStatuses.objects.get(status_name="Rejected")
+        except ReviewStatuses.DoesNotExist:
+            raise ValueError("Статус 'Rejected' не найден в базе данных.")
+        franchise.save()
+        messages.success(request, "Франшиза отклонена.")
+    return redirect("moderator_dashboard")
+
+
+@login_required
+def vote_franchise(request, franchise_id):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"})
+    franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
+    rating = int(request.POST.get("rating", 0))
+    if not 1 <= rating <= 5:
+        return JsonResponse(
+            {"success": False, "error": "Недопустимое значение рейтинга"}
+        )
+    if UserVotes.objects.filter(user=request.user, franchise=franchise).exists():
+        return JsonResponse(
+            {"success": False, "error": "Вы уже голосовали за эту франшизу"}
+        )
+    UserVotes.objects.create(
+        user=request.user, franchise=franchise, rating=rating, created_at=timezone.now()
+    )
+    franchise.total_voters += 1
+    franchise.sum_votes += rating
+    franchise.save()
+    average_rating = (
+        franchise.sum_votes / franchise.total_voters if franchise.total_voters > 0 else 0
+    )
+    return JsonResponse({"success": True, "average_rating": average_rating})
+
+
+def load_similar_franchises(request, franchise_id: int):
+    try:
+        franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
+        similar_franchises = Franchises.objects.filter(
+            category=franchise.category
+        ).exclude(franchise_id=franchise_id)[:4]
+        
+        context = {
+            'similar_franchises': similar_franchises,
+        }
+        return render(request, 'accounts/partials/_similar_franchise_cards.html', context)
+    except Exception as e:
+        logger.error(f"Ошибка при загрузке похожих франшиз: {e}")
+        return JsonResponse({'error': 'Ошибка при загрузке похожих франшиз'}, status=500)
+
+
+@login_required
+def edit_franchise(request, franchise_id):
+    franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
+    if request.user != franchise.owner and request.user.role.role_name != 'moderator':
+        messages.error(request, "У вас нет прав для редактирования этой франшизы.")
+        return redirect("franchise_detail", franchise_id=franchise_id)
+    
+    if request.method == "POST":
+        franchise.title = request.POST.get("title", franchise.title)
+        franchise.description = request.POST.get("description", franchise.description)
+        franchise.short_description = request.POST.get("short_description", franchise.short_description)
+        franchise.investment_size = request.POST.get("investment_size", franchise.investment_size)
+        franchise.franchise_cost = request.POST.get("franchise_cost", franchise.franchise_cost)
+        franchise.profit_calculation = request.POST.get("profit_calculation", franchise.profit_calculation)
+        franchise.terms = request.POST.get("terms", franchise.terms)
+        franchise.additional_info = request.POST.get("additional_info", franchise.additional_info)
+        franchise.own_businesses_count = request.POST.get("own_businesses_count", franchise.own_businesses_count)
+        franchise.franchise_businesses_count = request.POST.get("franchise_businesses_count", franchise.franchise_businesses_count)
+        
+        if 'logo' in request.FILES:
+            franchise.logo = request.FILES['logo']
+        
+        franchise.save()
+        messages.success(request, "Франшиза успешно обновлена.")
+        return redirect("franchise_detail", franchise_id=franchise_id)
+    
+    context = {
+        'franchise': franchise,
+    }
+    return render(request, 'accounts/edit_franchise.html', context)
+
+
+@login_required
+def change_owner_franchise(request, franchise_id):
+    if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
+        return JsonResponse({'success': False, 'error': 'Недостаточно прав'})
+    
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+    
+    try:
+        franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
+        new_owner_id = request.POST.get('new_owner_id')
+        
+        if not new_owner_id:
+            return JsonResponse({'success': False, 'error': 'ID нового владельца не указан'})
+        
+        new_owner = get_object_or_404(Users, user_id=new_owner_id)
+        franchise.owner = new_owner
+        franchise.save()
+        
+        return JsonResponse({'success': True, 'message': 'Владелец франшизы изменен'})
+    except Exception as e:
+        logger.error(f"Ошибка при смене владельца франшизы: {e}")
+        return JsonResponse({'success': False, 'error': 'Ошибка при смене владельца'})
+
+
+@login_required
+def get_investors_franchise(request, franchise_id):
+    if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
+        return JsonResponse({'success': False, 'error': 'Недостаточно прав'})
+    
+    try:
+        franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
+        investors = InvestmentTransactions.objects.filter(franchise=franchise).select_related('investor')
+        
+        investors_data = []
+        for transaction in investors:
+            investors_data.append({
+                'user_id': transaction.investor.user_id,
+                'name': f"{transaction.investor.first_name or ''} {transaction.investor.last_name or ''}".strip(),
+                'amount': float(transaction.amount),
+                'date': transaction.created_at.strftime('%d.%m.%Y')
+            })
+        
+        return JsonResponse({'success': True, 'investors': investors_data})
+    except Exception as e:
+        logger.error(f"Ошибка при получении инвесторов франшизы: {e}")
+        return JsonResponse({'success': False, 'error': 'Ошибка при получении данных'})
+
+
+@login_required
+def add_investor_franchise(request, franchise_id):
+    if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
+        return JsonResponse({'success': False, 'error': 'Недостаточно прав'})
+    
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+    
+    try:
+        franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
+        investor_id = request.POST.get('investor_id')
+        amount = request.POST.get('amount')
+        
+        if not investor_id or not amount:
+            return JsonResponse({'success': False, 'error': 'Не указаны ID инвестора или сумма'})
+        
+        investor = get_object_or_404(Users, user_id=investor_id)
+        amount_decimal = Decimal(amount)
+        
+        transaction = InvestmentTransactions(
+            franchise=franchise,
+            investor=investor,
+            amount=amount_decimal,
+            transaction_type=TransactionTypes.objects.get(type_name="investment"),
+            transaction_status="completed",
+            payment_method=PaymentMethods.objects.get(method_name="default"),
+            created_at=timezone.now(),
+            updated_at=timezone.now(),
+        )
+        transaction.save()
+        
+        return JsonResponse({'success': True, 'message': 'Инвестор добавлен'})
+    except Exception as e:
+        logger.error(f"Ошибка при добавлении инвестора франшизы: {e}")
+        return JsonResponse({'success': False, 'error': 'Ошибка при добавлении инвестора'})
+
+
+@login_required
+def edit_investment_franchise(request, franchise_id, user_id):
+    if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
+        return JsonResponse({'success': False, 'error': 'Недостаточно прав'})
+    
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+    
+    try:
+        franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
+        investor = get_object_or_404(Users, user_id=user_id)
+        new_amount = request.POST.get('amount')
+        
+        if not new_amount:
+            return JsonResponse({'success': False, 'error': 'Не указана сумма'})
+        
+        transaction = InvestmentTransactions.objects.get(franchise=franchise, investor=investor)
+        transaction.amount = Decimal(new_amount)
+        transaction.save()
+        
+        return JsonResponse({'success': True, 'message': 'Инвестиция обновлена'})
+    except InvestmentTransactions.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Инвестиция не найдена'})
+    except Exception as e:
+        logger.error(f"Ошибка при редактировании инвестиции франшизы: {e}")
+        return JsonResponse({'success': False, 'error': 'Ошибка при обновлении'})
+
+
+@login_required
+def delete_investment_franchise(request, franchise_id, user_id):
+    if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
+        return JsonResponse({'success': False, 'error': 'Недостаточно прав'})
+    
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+    
+    try:
+        franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
+        investor = get_object_or_404(Users, user_id=user_id)
+        
+        transaction = InvestmentTransactions.objects.get(franchise=franchise, investor=investor)
+        transaction.delete()
+        
+        return JsonResponse({'success': True, 'message': 'Инвестиция удалена'})
+    except InvestmentTransactions.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Инвестиция не найдена'})
+    except Exception as e:
+        logger.error(f"Ошибка при удалении инвестиции франшизы: {e}")
+        return JsonResponse({'success': False, 'error': 'Ошибка при удалении'})
+
 

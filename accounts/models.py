@@ -106,6 +106,7 @@ class FileTypes(models.Model):
 class InvestmentTransactions(models.Model):
     transaction_id = models.AutoField(primary_key=True)
     startup = models.ForeignKey("Startups", models.DO_NOTHING, blank=True, null=True)
+    franchise = models.ForeignKey("Franchises", models.DO_NOTHING, blank=True, null=True)
     investor = models.ForeignKey("Users", models.DO_NOTHING, blank=True, null=True)
     amount = models.DecimalField(max_digits=19, decimal_places=4)
     is_micro = models.BooleanField(blank=True, null=True)
@@ -217,7 +218,10 @@ class UserVotes(models.Model):
     vote_id = models.AutoField(primary_key=True)
     user = models.ForeignKey("Users", on_delete=models.CASCADE, db_column="user_id")
     startup = models.ForeignKey(
-        "Startups", on_delete=models.CASCADE, db_column="startup_id"
+        "Startups", on_delete=models.CASCADE, db_column="startup_id", blank=True, null=True
+    )
+    franchise = models.ForeignKey(
+        "Franchises", on_delete=models.CASCADE, db_column="franchise_id", blank=True, null=True
     )
     rating = models.IntegerField(db_column="vote_value")
     created_at = models.DateTimeField(blank=True, null=True)
@@ -646,6 +650,8 @@ class Franchises(models.Model):
     payback_period = models.IntegerField(blank=True, null=True)
     own_businesses = models.IntegerField(default=0)
     franchise_businesses = models.IntegerField(default=0)
+    own_businesses_count = models.IntegerField(default=0)
+    franchise_businesses_count = models.IntegerField(default=0)
     valuation = models.DecimalField(
         max_digits=19, decimal_places=4, blank=True, null=True
     )
@@ -679,6 +685,9 @@ class Franchises(models.Model):
     proofs_urls = models.JSONField(blank=True, null=True, default=list)
     video_urls = models.JSONField(blank=True, null=True, default=list)
     planet_image = models.CharField(max_length=50, blank=True, null=True)
+    franchise_cost = models.DecimalField(max_digits=19, decimal_places=4, blank=True, null=True)
+    profit_calculation = models.TextField(blank=True, null=True)
+    category = models.ForeignKey("FranchiseCategories", models.DO_NOTHING, blank=True, null=True, db_column="category_id")
 
     class Meta:
         managed = True
@@ -709,3 +718,15 @@ class Franchises(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class FranchiseCategories(models.Model):
+    category_id = models.AutoField(primary_key=True)
+    category_name = models.CharField(max_length=255, blank=True, null=True)
+    
+    class Meta:
+        managed = True
+        db_table = "franchise_categories"
+    
+    def __str__(self):
+        return self.category_name or "Без названия"

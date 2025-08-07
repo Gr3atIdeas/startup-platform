@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function () {
       
       console.log('Sending change owner request for franchise:', franchiseId, 'new owner:', newOwnerId);
       
-      fetch(`/change_owner/${franchiseId}/`, {
+              fetch(`/change_owner_franchise/${franchiseId}/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         console.log('Adding investor:', selectedInvestor, 'amount:', amount);
         
-        fetch(`/add_investor/${franchiseId}/`, {
+        fetch(`/add_investor_franchise/${franchiseId}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -369,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
     function loadCurrentInvestors() {
       console.log('Loading current investors for franchise:', franchiseId);
-        fetch(`/get_investors/${franchiseId}/`)
+        fetch(`/get_investors_franchise/${franchiseId}/`)
         .then(response => {
           console.log('Get investors response status:', response.status);
             if (!response.ok) {
@@ -421,7 +421,7 @@ document.addEventListener('DOMContentLoaded', function () {
             
             if (confirm(`Вы уверены, что хотите удалить этого инвестора?`)) {
                 console.log('Sending delete investment request');
-                fetch(`/delete_investment/${franchiseId}/${userId}/`, {
+                fetch(`/delete_investment_franchise/${franchiseId}/${userId}/`, {
                     method: 'POST',
                     headers: { 'X-CSRFToken': csrfToken },
                 })
