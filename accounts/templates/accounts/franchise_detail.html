@@ -94,61 +94,57 @@
     <div class="right-column">
       
       <div class="startup-header-actions-wrapper"> 
-                 <div class="franchise-header">
-           <div class="franchise-title-wrapper">
-             <div class="logo-display-container">
-               {% if franchise.logo_urls %}
-                 {% with logo_file_id=franchise.logo_urls.0 %}
-                   <img src="{% get_file_url_tag logo_file_id franchise.franchise_id 'logo' %}" alt="Логотип {{ franchise.title }}" class="logo-image">
-                 {% endwith %}
-               {% else %}
-                 <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
-               {% endif %}
-             </div>
-             <h1 class="franchise-name" title="{{ franchise.title }}">{{ franchise.title }}</h1>
-           </div>
-           
-           <div class="franchise-controls">
-             <div class="franchise-info-badge">
-               Франшиза
-             </div>
-             {% if request.user == franchise.owner or request.user.role.role_name == 'moderator' %}
-               <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}" class="action-button edit-button">
-                 Редактировать
-               </a>
-             {% endif %}
-           </div>
-          <div class="header-meta">
-            
-            <span class="category-value">{{ franchise.direction.direction_name|default:"Без категории" }}</span>
-            
-            <div class="franchise-stats-info">
-              <div class="franchise-stats-item">
-                <span class="franchise-stats-label">Собственных предприятий:</span>
-                <span class="franchise-stats-value">{{ franchise.own_businesses_count|default:0 }}</span>
+        <div class="franchise-header">
+          <div class="franchise-header-left">
+            <div class="franchise-title-wrapper">
+              <div class="logo-display-container">
+                {% if franchise.logo_urls %}
+                  {% with logo_file_id=franchise.logo_urls.0 %}
+                    <img src="{% get_file_url_tag logo_file_id franchise.franchise_id 'logo' %}" alt="Логотип {{ franchise.title }}" class="logo-image">
+                  {% endwith %}
+                {% else %}
+                  <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
+                {% endif %}
               </div>
-              <div class="franchise-stats-item">
-                <span class="franchise-stats-label">Франшизных предприятий:</span>
-                <span class="franchise-stats-value">{{ franchise.franchise_businesses_count|default:0 }}</span>
+              <h1 class="franchise-name" title="{{ franchise.title }}">{{ franchise.title }}</h1>
+            </div>
+
+            <div class="header-meta">
+              <span class="category-value">{{ franchise.direction.direction_name|default:"Без категории" }}</span>
+              <div class="franchise-stats-info">
+                <div class="franchise-stats-item">
+                  <span class="franchise-stats-label">Собственных предприятий:</span>
+                  <span class="franchise-stats-value">{{ franchise.own_businesses_count|default:0 }}</span>
+                </div>
+                <div class="franchise-stats-item">
+                  <span class="franchise-stats-label">Франшизных предприятий:</span>
+                  <span class="franchise-stats-value">{{ franchise.franchise_businesses_count|default:0 }}</span>
+                </div>
               </div>
             </div>
-          </div>
-          
-          <div class="rating-comments-container">
-            <div class="rating-container">
-              <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
-              <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
+
+            <div class="rating-comments-container">
+              <div class="rating-container">
+                <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
+                <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
                   {% for i in "12345" %}
                     <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
                       <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
                       <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
                     </span>
                   {% endfor %}
+                </div>
               </div>
+              <a href="#comments-section" class="comments-link">Комментарии</a>
             </div>
-            <a href="#comments-section" class="comments-link">Комментарии</a>
           </div>
-          
+
+          <div class="franchise-controls">
+            <div class="franchise-info-badge">Франшиза</div>
+            {% if request.user == franchise.owner or request.user.role.role_name == 'moderator' %}
+              <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}" class="action-button edit-button">Редактировать</a>
+            {% endif %}
+          </div>
         </div>
 
                  <div class="actions-top-right">

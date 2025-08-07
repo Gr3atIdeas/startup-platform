@@ -726,6 +726,14 @@ a:hover {
   min-width: 0; 
 }
 
+.franchise-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .franchise-controls {
   display: flex;
   flex-direction: column;
@@ -738,6 +746,14 @@ a:hover {
 .franchise-controls .edit-button {
   width: 100%;
   text-align: center;
+}
+
+/* Гарантируем, что блоки под заголовком начинаются строго от левого края (ориентир — начало лого) */
+.franchise-header-left .header-meta,
+.franchise-header-left .rating-comments-container {
+  margin-left: 0;
+  padding-left: 0;
+  align-items: flex-start;
 }
 
 .franchise-name {
