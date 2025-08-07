@@ -424,7 +424,16 @@ def user_logout(request):
     return redirect("home")
 
 def startups_list(request):
-    directions = Directions.objects.all()
+    # Используем только категории стартапов, исключая франшизы
+    startup_directions = Directions.objects.filter(
+        direction_name__in=[
+            'Technology', 'Healthcare', 'Finance', 'Education', 'Entertainment', 
+            'Fashion', 'Food', 'Gaming', 'Real Estate', 'Travel', 'Agriculture', 
+            'Energy', 'Environment', 'Social', 'Medicine', 'Auto', 'Delivery', 
+            'Cafe', 'Fastfood', 'Health', 'Beauty', 'Transport', 'Sport', 
+            'Psychology', 'AI', 'IT', 'Retail'
+        ]
+    ).order_by('direction_name')
     
     startups_qs = Startups.objects.filter(status="approved")
     selected_categories = request.GET.getlist("category")
@@ -528,7 +537,7 @@ def startups_list(request):
             "min_micro": min_micro,
             "max_micro": max_micro,
             "sort_order": sort_order,
-            "directions": directions,
+            "directions": startup_directions,
         }
         return render(request, "accounts/startups_list.html", context)
 

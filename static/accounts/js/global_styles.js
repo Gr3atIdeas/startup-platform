@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
       
       if (button && menu && container) {
           button.addEventListener('click', function (event) {
-              event.stopPropagation();
+          event.stopPropagation();
               
               catalogDropdownContainers.forEach(cont => {
                   cont.classList.remove('open');
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
   });
   
-  document.addEventListener('click', function (event) {
+      document.addEventListener('click', function (event) {
       createDropdownContainers.forEach(container => {
           if (container.classList.contains('open')) {
               const menu = container.querySelector('.create-dropdown-menu');
