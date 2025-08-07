@@ -21,9 +21,9 @@
     </div>
     <span class="rating-value">{{ similar.average_rating|default:0|floatformat:"1" }}</span>
   </div>
-  <div class="similar-card-category">
-    <div class="category-badge">{{ similar.category.category_name|default:"Категория" }}</div>
-  </div>
+      <div class="similar-card-category">
+      <div class="category-badge">{{ similar.direction.direction_name|default:"Категория" }}</div>
+    </div>
 </a>
 {% endfor %}
 

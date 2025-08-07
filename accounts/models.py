@@ -687,7 +687,6 @@ class Franchises(models.Model):
     planet_image = models.CharField(max_length=50, blank=True, null=True)
     franchise_cost = models.DecimalField(max_digits=19, decimal_places=4, blank=True, null=True)
     profit_calculation = models.TextField(blank=True, null=True)
-    category = models.ForeignKey("FranchiseCategories", models.DO_NOTHING, blank=True, null=True, db_column="category_id")
 
     class Meta:
         managed = True

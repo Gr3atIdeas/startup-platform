@@ -4510,7 +4510,7 @@ def load_similar_franchises(request, franchise_id: int):
     try:
         franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
         similar_franchises = Franchises.objects.filter(
-            category=franchise.category
+            direction=franchise.direction
         ).exclude(franchise_id=franchise_id)[:4]
         
         context = {

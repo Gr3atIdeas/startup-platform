@@ -109,7 +109,7 @@
           </div>
           <div class="header-meta">
             
-            <span class="category-value">{{ franchise.category.category_name|default:"Без категории" }}</span>
+            <span class="category-value">{{ franchise.direction.direction_name|default:"Без категории" }}</span>
             
             <div class="franchise-stats-info">
               <div class="franchise-stats-item">
@@ -241,10 +241,10 @@
                 <div class="info-card-icon-container">
                   <img src="{% static 'accounts/images/startups/boxes.svg' %}" alt="Категория" class="info-card-icon">
                 </div>
-                <span class="info-card-title">Категория</span>
-                <div class="info-card-value-button accent-white-bg">
-                  {{ franchise.category.category_name|default:"Не указана" }}
-                </div>
+                          <span class="info-card-title">Категория</span>
+          <div class="info-card-value-button accent-white-bg">
+            {{ franchise.direction.direction_name|default:"Не указана" }}
+          </div>
               </div>
             </div>
           </div>
