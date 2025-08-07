@@ -1,5 +1,6 @@
 {% load static %}
 {% load accounts_extras %}
+{% load file_tags %}
 
 {% for similar in similar_franchises %}
 <a href="{% url 'franchise_detail' similar.franchise_id %}" class="similar-card">
