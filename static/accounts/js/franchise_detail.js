@@ -954,8 +954,8 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(loadSimilarUrl)
           .then(response => response.text())
           .then(html => {
-            // Заменяем содержимое сетки похожих стартапов
-            const similarGrid = document.querySelector('.similar-startups-grid');
+            // Заменяем содержимое сетки похожих франшиз
+            const similarGrid = document.querySelector('.similar-franchises-grid');
             if (similarGrid) {
               // Удаляем кнопку "показать еще" перед добавлением новых карточек
               const showMorePlaceholder = similarGrid.querySelector('.show-more-placeholder');

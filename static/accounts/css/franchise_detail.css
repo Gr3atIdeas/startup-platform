@@ -490,20 +490,20 @@ a:hover {
 
 
 .investment-info-container {
-  width: 100%;
-  height: 80px;
-  flex-shrink: 0;
-  border-radius: 10px;
-  background-color: rgb(11 26 63 / 80%);
-  border: 1px solid rgb(43 237 255 / 50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  box-sizing: border-box;
-  position: relative;
-  gap: 8px;
+    width: 100%;
+    height: 120px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background-color: rgb(11 26 63 / 80%);
+    border: 1px solid rgb(43 237 255 / 50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-sizing: border-box;
+    position: relative;
+    gap: 8px;
 }
 
 .investment-size-info {
@@ -719,10 +719,25 @@ a:hover {
 
 .franchise-header {
   display: flex;
-  flex-direction: column;
-   
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
   flex-grow: 1;
   min-width: 0; 
+}
+
+.franchise-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 150px;
+  flex-shrink: 0;
+}
+
+.franchise-controls .franchise-info-badge,
+.franchise-controls .edit-button {
+  width: 100%;
+  text-align: center;
 }
 
 .franchise-name {

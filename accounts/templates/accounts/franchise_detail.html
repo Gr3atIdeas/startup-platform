@@ -94,19 +94,30 @@
     <div class="right-column">
       
       <div class="startup-header-actions-wrapper"> 
-        <div class="franchise-header">
-          <div class="franchise-title-wrapper">
-            <div class="logo-display-container">
-              {% if franchise.logo_urls %}
-                {% with logo_file_id=franchise.logo_urls.0 %}
-                  <img src="{% get_file_url_tag logo_file_id franchise.franchise_id 'logo' %}" alt="Логотип {{ franchise.title }}" class="logo-image">
-                {% endwith %}
-              {% else %}
-                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
-              {% endif %}
-            </div>
-            <h1 class="franchise-name" title="{{ franchise.title }}">{{ franchise.title }}</h1>
-          </div>
+                 <div class="franchise-header">
+           <div class="franchise-title-wrapper">
+             <div class="logo-display-container">
+               {% if franchise.logo_urls %}
+                 {% with logo_file_id=franchise.logo_urls.0 %}
+                   <img src="{% get_file_url_tag logo_file_id franchise.franchise_id 'logo' %}" alt="Логотип {{ franchise.title }}" class="logo-image">
+                 {% endwith %}
+               {% else %}
+                 <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
+               {% endif %}
+             </div>
+             <h1 class="franchise-name" title="{{ franchise.title }}">{{ franchise.title }}</h1>
+           </div>
+           
+           <div class="franchise-controls">
+             <div class="franchise-info-badge">
+               Франшиза
+             </div>
+             {% if request.user == franchise.owner or request.user.role.role_name == 'moderator' %}
+               <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}" class="action-button edit-button">
+                 Редактировать
+               </a>
+             {% endif %}
+           </div>
           <div class="header-meta">
             
             <span class="category-value">{{ franchise.direction.direction_name|default:"Без категории" }}</span>
@@ -140,28 +151,16 @@
           
         </div>
 
-        <div class="actions-top-right">
-          
-          <div class="franchise-info-badge">
-            Франшиза
-          </div>
-
-          {% if request.user == franchise.owner or request.user.role.role_name == 'moderator' %}
-            <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}" class="action-button edit-button">
-              Редактировать
-            </a>
-          {% endif %}
-
-          
-          {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-            <!-- Debug info: user={{ user.user_id }}, role={{ user.role.role_name }}, franchise owner={{ franchise.owner.user_id }} -->
-            <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">
-              Сменить владельца
-            </button>
-          {% else %}
-            <!-- Debug info: user not authenticated or not moderator -->
-          {% endif %}
-        </div>
+                 <div class="actions-top-right">
+           {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+             <!-- Debug info: user={{ user.user_id }}, role={{ user.role.role_name }}, franchise owner={{ franchise.owner.user_id }} -->
+             <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">
+               Сменить владельца
+             </button>
+           {% else %}
+             <!-- Debug info: user not authenticated or not moderator -->
+           {% endif %}
+         </div>
       </div> 
 
       <div class="tabbed-content-wrapper">
@@ -551,10 +550,10 @@
               </span>
             {% endfor %}
           </div>
-          <div class="similar-card-category">
-            
-            <div class="category-badge">{{ similar.category.category_name|default:"Категория" }}</div>
-          </div>
+                     <div class="similar-card-category">
+             
+             <div class="category-badge">{{ similar.direction.direction_name|default:"Категория" }}</div>
+           </div>
         </a>
         {% empty %}
           
