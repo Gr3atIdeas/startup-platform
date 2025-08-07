@@ -162,13 +162,14 @@ body {
 .sidebar {
   background: #fff;
   width: 254px;
-  height: 750px;
+  height: auto;
+  min-height: 900px;
   padding: 53px 28px;
   border-radius: 10px;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
-  overflow-y: auto;
+  overflow-y: visible;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
@@ -1367,6 +1368,70 @@ body {
   width: 100%;
   text-align: left;
   margin-top: 15px;
+}
+
+/* Стили для ползунка срока окупаемости */
+.payback-period-filter .noUi-target {
+  background: #ebebeb;
+  height: 4px;
+  margin-bottom: 5px;
+  box-shadow: none;
+  border: none;
+  border-radius: 9999px;
+}
+
+.payback-period-filter .noUi-connect {
+  background: #004e9f;
+  box-shadow: none;
+  border-radius: 9999px;
+}
+
+.payback-period-filter .noUi-handle {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #004e9f;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+  top: -6px;
+  right: -8px;
+}
+
+.payback-period-filter .noUi-handle:focus {
+  outline: none;
+}
+
+/* Стили для ползунка размера инвестиций */
+.investment-size-filter .noUi-target {
+  background: #ebebeb;
+  height: 4px;
+  margin-bottom: 5px;
+  box-shadow: none;
+  border: none;
+  border-radius: 9999px;
+}
+
+.investment-size-filter .noUi-connect {
+  background: #004e9f;
+  box-shadow: none;
+  border-radius: 9999px;
+}
+
+.investment-size-filter .noUi-handle {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #004e9f;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+  top: -6px;
+  right: -8px;
+}
+
+.investment-size-filter .noUi-handle:focus {
+  outline: none;
 }
 
 
