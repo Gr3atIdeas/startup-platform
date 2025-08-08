@@ -452,6 +452,7 @@ def startups_list(request):
         rating_agg=ExpressionWrapper(
             Coalesce(Avg("uservotes__rating"), 0.0), output_field=FloatField()
         ),
+        total_investors_agg=Count("investmenttransactions__investor", distinct=True),
     )
     
     categories = list(
