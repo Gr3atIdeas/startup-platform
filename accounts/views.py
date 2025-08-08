@@ -717,18 +717,19 @@ def franchises_list(request):
 def franchise_detail(request, franchise_id):
     try:
         franchise = Franchises.objects.get(franchise_id=franchise_id)
-        similar_franchises = (
-            Franchises.objects.filter(
-                direction=franchise.direction,
-                status="approved",
-            )
-            .exclude(franchise_id=franchise_id)
-            .order_by("-created_at")[:4]
-        )
+        candidates_qs = Franchises.objects.filter(
+            direction=franchise.direction,
+            status="approved",
+        ).exclude(franchise_id=franchise_id)
+        similar_franchises = candidates_qs.order_by("-created_at")[:4]
         return render(
             request,
             "accounts/franchise_detail.html",
-            {"franchise": franchise, "similar_franchises": similar_franchises},
+            {
+                "franchise": franchise,
+                "similar_franchises": similar_franchises,
+                "has_similar": candidates_qs.exists(),
+            },
         )
     except Franchises.DoesNotExist:
         return render(request, "accounts/404.html", status=404)
@@ -4533,9 +4534,10 @@ def load_similar_franchises(request, franchise_id: int):
         context = {
             "similar_franchises": similar_franchises,
         }
-        return render(
-            request, "accounts/partials/_similar_franchise_cards.html", context
-        )
+        # Если меньше 4 (или пусто) — ничего не возвращаем (пусть фронт скрывает кнопку/секцию)
+        if similar_franchises.count() < 4:
+            return HttpResponse("")
+        return render(request, "accounts/partials/_similar_franchise_cards.html", context)
     except Exception as e:
         logger.error(f"Ошибка при загрузке похожих франшиз: {e}")
         return JsonResponse({"error": "Ошибка при загрузке похожих франшиз"}, status=500)

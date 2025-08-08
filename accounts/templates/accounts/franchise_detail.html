@@ -521,6 +521,7 @@
         <span>Показать все</span> <i class="fas fa-arrow-right"></i>
       </a>
       
+      {% if has_similar and similar_franchises %}
       <div class="similar-franchises-grid">
         
         {% for similar in similar_franchises|slice:":4" %}
@@ -551,19 +552,6 @@
              <div class="category-badge">{{ similar.direction.direction_name|default:"Категория" }}</div>
            </div>
         </a>
-        {% empty %}
-          
-          {% for i in "1234" %}
-          <a href="#" class="similar-card placeholder">
-            <div class="similar-card-image"><div class="planet"></div></div>
-            <div class="similar-card-name">Название франшизы</div>
-            
-            <div class="similar-card-rating">
-              <i class="fas fa-star active"></i><i class="fas fa-star active"></i><i class="fas fa-star active"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-            </div>
-            <div class="similar-card-category"><div class="category-badge">Категория</div></div>
-          </a>
-          {% endfor %}
         {% endfor %}
 
         
@@ -573,6 +561,7 @@
            </button>
         </div>
       </div> 
+      {% endif %}
     </div>
   </div>
 

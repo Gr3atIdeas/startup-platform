@@ -961,6 +961,12 @@ document.addEventListener('DOMContentLoaded', function () {
           .then(html => {
             const similarGrid = document.querySelector('.similar-franchises-grid');
             if (similarGrid) {
+              // Если пришла пустая строка (меньше 4 элементов) — скрываем секцию
+              if (!html || html.trim() === '') {
+                const section = document.querySelector('.similar-franchises-section');
+                if (section) section.style.display = 'none';
+                return;
+              }
               // Полностью заменяем текущие карточки на новые
               // Сохраняем узел placeholder кнопки и возвращаем его в конец
               const placeholder = document.createElement('div');
