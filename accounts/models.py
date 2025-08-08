@@ -490,9 +490,15 @@ class Users(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_staff
     def get_profile_picture_url(self):
-        if self.profile_picture_url and is_uuid(self.profile_picture_url):
-            return get_file_url(self.profile_picture_url, self.user_id, "avatar")
-        return self.profile_picture_url
+        url_value = (self.profile_picture_url or "").strip()
+        if not url_value:
+            return None
+        if is_uuid(url_value):
+            return get_file_url(url_value, self.user_id, "avatar")
+        lowered = url_value.lower()
+        if lowered.startswith("http://") or lowered.startswith("https://"):
+            return url_value
+        return None
     def is_telegram_authenticated(self):
         return bool(self.telegram_id)
     def update_last_login(self):
