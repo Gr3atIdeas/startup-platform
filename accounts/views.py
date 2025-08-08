@@ -717,7 +717,19 @@ def franchises_list(request):
 def franchise_detail(request, franchise_id):
     try:
         franchise = Franchises.objects.get(franchise_id=franchise_id)
-        return render(request, "accounts/franchise_detail.html", {"franchise": franchise})
+        similar_franchises = (
+            Franchises.objects.filter(
+                direction=franchise.direction,
+                status="approved",
+            )
+            .exclude(franchise_id=franchise_id)
+            .order_by("-created_at")[:4]
+        )
+        return render(
+            request,
+            "accounts/franchise_detail.html",
+            {"franchise": franchise, "similar_franchises": similar_franchises},
+        )
     except Franchises.DoesNotExist:
         return render(request, "accounts/404.html", status=404)
 
@@ -4509,17 +4521,24 @@ def vote_franchise(request, franchise_id):
 def load_similar_franchises(request, franchise_id: int):
     try:
         franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
-        similar_franchises = Franchises.objects.filter(
-            direction=franchise.direction
-        ).exclude(franchise_id=franchise_id)[:4]
-        
+        similar_franchises = (
+            Franchises.objects.filter(
+                direction=franchise.direction,
+                status="approved",
+            )
+            .exclude(franchise_id=franchise_id)
+            .order_by("?")[:4]
+        )
+
         context = {
-            'similar_franchises': similar_franchises,
+            "similar_franchises": similar_franchises,
         }
-        return render(request, 'accounts/partials/_similar_franchise_cards.html', context)
+        return render(
+            request, "accounts/partials/_similar_franchise_cards.html", context
+        )
     except Exception as e:
         logger.error(f"Ошибка при загрузке похожих франшиз: {e}")
-        return JsonResponse({'error': 'Ошибка при загрузке похожих франшиз'}, status=500)
+        return JsonResponse({"error": "Ошибка при загрузке похожих франшиз"}, status=500)
 
 
 @login_required

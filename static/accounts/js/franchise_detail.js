@@ -952,24 +952,31 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // Загружаем дополнительные похожие стартапы
         fetch(loadSimilarUrl)
-          .then(response => response.text())
+          .then(response => {
+            if (!response.ok) {
+              return response.text().then(text => { throw new Error(text) });
+            }
+            return response.text();
+          })
           .then(html => {
-            // Заменяем содержимое сетки похожих франшиз
             const similarGrid = document.querySelector('.similar-franchises-grid');
             if (similarGrid) {
-              // Удаляем кнопку "показать еще" перед добавлением новых карточек
-              const showMorePlaceholder = similarGrid.querySelector('.show-more-placeholder');
-              if (showMorePlaceholder) {
-                showMorePlaceholder.remove();
-              }
-              
-              // Добавляем новые карточки
-              similarGrid.insertAdjacentHTML('beforeend', html);
-              
-              // Обновляем рейтинги для новых карточек
+              // Полностью заменяем текущие карточки на новые
+              // Сохраняем узел placeholder кнопки и возвращаем его в конец
+              const placeholder = document.createElement('div');
+              placeholder.className = 'similar-card show-more-placeholder';
+              placeholder.innerHTML = '<button class="action-button show-more-similar"><i class="fas fa-redo"></i> Показать еще</button>';
+
+              // Очищаем сетку и вставляем новые карточки
+              similarGrid.innerHTML = '';
+              similarGrid.insertAdjacentHTML('afterbegin', html);
+              similarGrid.appendChild(placeholder);
+
+              // Переинициализируем рейтинги и обработчик кнопки
               setupSimilarStartupsRatings();
-              
-              console.log('Similar startups loaded successfully');
+              setupSimilarStartupsShowMore();
+
+              console.log('Similar franchises replaced successfully');
             }
           })
           .catch(error => {
@@ -1185,8 +1192,8 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         console.log('Chat button clicked');
         
-        // Получаем ID владельца стартапа для чата
-        const ownerId = document.querySelector('.startup-detail-page').dataset.ownerId;
+        // Получаем ID владельца франшизы для чата
+        const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
         if (!ownerId) {
           alert('Ошибка: не удалось определить автора стартапа');
           return;
@@ -1209,8 +1216,8 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         console.log('Write button clicked');
         
-        // Получаем ID владельца стартапа
-        const ownerId = document.querySelector('.startup-detail-page').dataset.ownerId;
+        // Получаем ID владельца франшизы
+        const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
         if (!ownerId) {
           alert('Ошибка: не удалось определить автора стартапа');
           return;
