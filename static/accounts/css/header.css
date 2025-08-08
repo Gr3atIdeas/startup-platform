@@ -552,6 +552,12 @@ nav.nav-menu
   height: 25px;
 }
 
+/* Черно-белая иконка для пункта "Франшизы" в дропдауне каталога */
+.catalog-dropdown-menu .catalog-dropdown-item-icon[src*="rocket-sharp.svg"],
+.catalog-dropdown-menu .catalog-dropdown-item-icon[alt="Франшизы"] {
+  filter: grayscale(100%);
+}
+
 .create-dropdown-container {
   position: relative;
   display: inline-block;
