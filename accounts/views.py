@@ -1079,11 +1079,11 @@ def agencies_list(request):
                     data["agency_display_title"] = display_title
                 if not data.get("agency_category"):
                     data["agency_category"] = random.choice(agency_categories)
-                item.customization_data = data
-                try:
+                    item.customization_data = data
+                    try:
                     item.save(update_fields=["customization_data"])  # сохраняем только поле с витринными данными
-                except Exception:
-                    pass
+                    except Exception:
+                        pass
             except Exception:
                 pass
 

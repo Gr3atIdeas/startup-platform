@@ -19,7 +19,7 @@
 }
 
 
-.agency-detail-page, body  {
+.franchise-detail-page, body  {
   font-family: Unbounded, sans-serif; 
 }
 
@@ -672,7 +672,7 @@ a:hover {
 }
 
 
-.agency-title-wrapper {
+.franchise-title-wrapper {
   display: flex;
   align-items: center;
   gap: 20px;
@@ -710,7 +710,7 @@ a:hover {
 }
 
 
-.agency-header-actions-wrapper {
+.franchise-header-actions-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -720,7 +720,7 @@ a:hover {
 }
 
 
-.agency-header {
+.franchise-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -729,7 +729,7 @@ a:hover {
   min-width: 0; 
 }
 
-.agency-header-left {
+.franchise-header-left {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -752,8 +752,8 @@ a:hover {
 }
 
 /* Гарантируем, что блоки под заголовком начинаются строго от левого края (ориентир — начало лого) */
-.agency-header-left .header-meta,
-.agency-header-left .rating-comments-container {
+.franchise-header-left .header-meta,
+.franchise-header-left .rating-comments-container {
   margin-left: 0;
   padding-left: 0;
   align-items: flex-start;
@@ -890,7 +890,7 @@ a:hover {
   min-width: 180px;
 }
 
-.agency-info-badge {
+.franchise-info-badge {
   background-color: rgb(0 8 25 / 60%); 
   backdrop-filter: blur(5px); 
   color: var(--text-primary);

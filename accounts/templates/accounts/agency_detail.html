@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="agency-detail-page" 
+<div class="franchise-detail-page" 
      data-franchise-id="{{ franchise.franchise_id }}" 
      data-franchise-title="{{ franchise.title|escapejs }}"
      data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
@@ -89,10 +89,10 @@
     
     <div class="right-column">
       
-      <div class="agency-header-actions-wrapper"> 
-        <div class="agency-header">
-            <div class="agency-header-left">
-            <div class="agency-title-wrapper">
+      <div class="franchise-header-actions-wrapper"> 
+        <div class="franchise-header">
+            <div class="franchise-header-left">
+            <div class="franchise-title-wrapper">
               <div class="logo-display-container">
                 {% if franchise.owner and franchise.owner.get_profile_picture_url %}
                   <img src="{{ franchise.owner.get_profile_picture_url }}" alt="Аватар автора {{ franchise.owner.username }}" class="logo-image">
@@ -104,14 +104,14 @@
                   <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
                 {% endif %}
               </div>
-              <h1 class="agency-name" title="{{ franchise.customization_data.agency_display_title|default:franchise.title }}">{{ franchise.customization_data.agency_display_title|default:franchise.title }}</h1>
+              <h1 class="franchise-name" title="{{ franchise.customization_data.agency_display_title|default:franchise.title }}">{{ franchise.customization_data.agency_display_title|default:franchise.title }}</h1>
             </div>
 
             <div class="header-meta">
               {% with agency_category=franchise.customization_data.agency_category %}
                 <span class="category-value">{{ agency_category|default:"Без категории" }}</span>
               {% endwith %}
-          <div class="agency-stats-info"></div>
+          <div class="franchise-stats-info"></div>
             </div>
 
             <div class="rating-comments-container">
@@ -134,7 +134,7 @@
         </div>
 
                  <div class="actions-top-right">
-           <div class="agency-info-badge">Агентство</div>
+           <div class="franchise-info-badge">Агентство</div>
            {% if user.is_authenticated and user.role.role_name == 'moderator' %}
              <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}" class="action-button edit-button">Редактировать</a>
              <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
