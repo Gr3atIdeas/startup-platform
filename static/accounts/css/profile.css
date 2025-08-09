@@ -31,12 +31,10 @@ body {
   height: 395px;
   object-fit: cover;
   width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  transform: none;
+  max-width: none;
+  display: block;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
 
   
 
