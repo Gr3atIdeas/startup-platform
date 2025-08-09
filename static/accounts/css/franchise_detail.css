@@ -887,7 +887,7 @@ a:hover {
   gap: 15px;
   padding: 0;
   flex-shrink: 0;
-  width: 280px;
+  min-width: 180px;
 }
 
 .franchise-info-badge {
