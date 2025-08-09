@@ -228,6 +228,12 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comments
         fields = ["content", "user_rating"]
+
+class FranchiseCommentForm(forms.ModelForm):
+    class Meta:
+        from .models import FranchiseComments
+        model = FranchiseComments
+        fields = ["content", "user_rating"]
         widgets = {
             "content": forms.Textarea(
                 attrs={

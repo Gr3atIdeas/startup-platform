@@ -729,6 +729,34 @@ class Franchises(models.Model):
         return self.title
 
 
+class FranchiseComments(models.Model):
+    comment_id = models.AutoField(primary_key=True)
+    franchise = models.ForeignKey(
+        "Franchises",
+        on_delete=models.CASCADE,
+        db_column="franchise_id",
+        related_name="comments",
+    )
+    user = models.ForeignKey("Users", on_delete=models.CASCADE, db_column="user_id")
+    content = models.TextField()
+    user_rating = models.IntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    parent_comment = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        db_column="parent_comment_id",
+    )
+
+    class Meta:
+        managed = True
+        db_table = "franchise_comments"
+
+    def __str__(self) -> str:
+        return f"FranchiseComment {self.comment_id} by {self.user}"
+
 class FranchiseCategories(models.Model):
     category_id = models.AutoField(primary_key=True)
     category_name = models.CharField(max_length=255, blank=True, null=True)

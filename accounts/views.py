@@ -62,6 +62,7 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 from .forms import (
     CommentForm,
+    FranchiseCommentForm,
     LoginForm,
     MessageForm,
     ModeratorTicketForm,
@@ -718,22 +719,78 @@ def franchises_list(request):
 def franchise_detail(request, franchise_id):
     try:
         franchise = Franchises.objects.get(franchise_id=franchise_id)
-        candidates_qs = Franchises.objects.filter(
-            direction=franchise.direction,
-            status="approved",
-        ).exclude(franchise_id=franchise_id)
-        similar_franchises = candidates_qs.order_by("-created_at")[:4]
-        return render(
-            request,
-            "accounts/franchise_detail.html",
-            {
-                "franchise": franchise,
-                "similar_franchises": similar_franchises,
-                "has_similar": candidates_qs.exists(),
-            },
-        )
     except Franchises.DoesNotExist:
         return render(request, "accounts/404.html", status=404)
+
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect("login")
+        form = FranchiseCommentForm(request.POST)
+        if form.is_valid():
+            from .models import FranchiseComments
+            comment = form.save(commit=False)
+            comment.franchise = franchise
+            comment.user = request.user
+            user_vote = UserVotes.objects.filter(
+                user=request.user, franchise=franchise
+            ).first()
+            if user_vote:
+                comment.user_rating = user_vote.rating
+            comment.save()
+            messages.success(request, "Ваш комментарий был добавлен.")
+            return redirect("franchise_detail", franchise_id=franchise.franchise_id)
+        else:
+            messages.error(request, "Ошибка при добавлении комментария.")
+    else:
+        form = FranchiseCommentForm()
+
+    candidates_qs = Franchises.objects.filter(
+        direction=franchise.direction,
+        status="approved",
+    ).exclude(franchise_id=franchise_id)
+    similar_franchises = candidates_qs.order_by("-created_at")[:4]
+
+    from .models import FranchiseComments
+    comments_with_rating = (
+        FranchiseComments.objects.filter(franchise=franchise, parent_comment__isnull=True)
+        .annotate(
+            user_vote_rating=models.Subquery(
+                UserVotes.objects.filter(
+                    franchise=franchise, user=models.OuterRef("user_id_id")
+                ).values("rating")[:1]
+            )
+        )
+        .order_by("-created_at")
+    )
+    average_rating = franchise.get_average_rating()
+    total_votes = franchise.total_voters
+    user_has_voted = False
+    if request.user.is_authenticated:
+        user_has_voted = UserVotes.objects.filter(
+            user=request.user, franchise=franchise
+        ).exists()
+    rating_distribution_query = (
+        UserVotes.objects.filter(franchise=franchise)
+        .values("rating")
+        .annotate(count=Count("rating"))
+        .order_by("-rating")
+    )
+    rating_distribution = {item["rating"]: item["count"] for item in rating_distribution_query}
+    for i in range(1, 6):
+        rating_distribution.setdefault(i, 0)
+
+    context = {
+        "franchise": franchise,
+        "similar_franchises": similar_franchises,
+        "has_similar": candidates_qs.exists(),
+        "comments": comments_with_rating,
+        "form": form,
+        "average_rating": average_rating,
+        "total_votes_count": total_votes,
+        "user_has_voted": user_has_voted,
+        "rating_distribution": rating_distribution,
+    }
+    return render(request, "accounts/franchise_detail.html", context)
 
 def search_suggestions(request):
     query = request.GET.get("q", "").strip()
