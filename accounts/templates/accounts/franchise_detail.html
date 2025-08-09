@@ -95,15 +95,17 @@
       
       <div class="startup-header-actions-wrapper"> 
         <div class="franchise-header">
-          <div class="franchise-header-left">
+            <div class="franchise-header-left">
             <div class="franchise-title-wrapper">
               <div class="logo-display-container">
-                {% if franchise.logo_urls %}
+                {% if franchise.owner and franchise.owner.get_profile_picture_url %}
+                  <img src="{{ franchise.owner.get_profile_picture_url }}" alt="Аватар автора {{ franchise.owner.username }}" class="logo-image">
+                {% elif franchise.logo_urls %}
                   {% with logo_file_id=franchise.logo_urls.0 %}
                     <img src="{% get_file_url_tag logo_file_id franchise.franchise_id 'logo' %}" alt="Логотип {{ franchise.title }}" class="logo-image">
                   {% endwith %}
                 {% else %}
-                  <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
+                  <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
                 {% endif %}
               </div>
               <h1 class="franchise-name" title="{{ franchise.title }}">{{ franchise.title }}</h1>
