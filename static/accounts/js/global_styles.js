@@ -11,9 +11,27 @@ document.addEventListener('DOMContentLoaded', function () {
     '.profile-dropdown-container'
   )
   const dropdownButton = document.querySelector('.profile-dropdown-button')
+  function closeAllHeaderMenus() {
+    const catalogContainers = document.querySelectorAll('.catalog-dropdown-container')
+    catalogContainers.forEach((cont) => {
+      cont.classList.remove('open')
+      const ov = cont.nextElementSibling
+      if (ov && ov.classList.contains('catalog-dropdown-overlay')) ov.style.display = 'none'
+    })
+    document.body.classList.remove('catalog-menu-open')
+    const createContainers = document.querySelectorAll('.create-dropdown-container')
+    createContainers.forEach((cont) => {
+      cont.classList.remove('open')
+      const ov = cont.nextElementSibling
+      if (ov && ov.classList.contains('create-dropdown-overlay')) ov.style.display = 'none'
+    })
+    document.body.classList.remove('create-menu-open')
+    if (dropdownContainer) dropdownContainer.classList.remove('open')
+  }
   if (dropdownButton) {
     dropdownButton.addEventListener('click', function (event) {
       event.stopPropagation()
+      closeAllHeaderMenus()
       dropdownContainer.classList.toggle('open')
     })
   }
@@ -64,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
           button.addEventListener('click', function (event) {
           event.stopPropagation();
               
+              closeAllHeaderMenus();
               catalogDropdownContainers.forEach(cont => {
                   cont.classList.remove('open');
                   const contOverlay = cont.nextElementSibling;
@@ -157,6 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
           button.addEventListener('click', function (event) {
               event.stopPropagation();
               
+              closeAllHeaderMenus();
               createDropdownContainers.forEach(cont => {
                   cont.classList.remove('open');
                   const contOverlay = cont.nextElementSibling;
