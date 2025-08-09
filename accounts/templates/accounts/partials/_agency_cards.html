@@ -45,11 +45,13 @@
         </div>
 
         <div class="franchise-category-row">
-          {% if franchise.direction and franchise.direction.direction_name %}
-            <span class="category-tag-figma">{{ franchise.direction.direction_name|translate_category }}</span>
-          {% else %}
-            <span class="category-tag-figma category-tag-placeholder">Категория не указана</span>
-          {% endif %}
+          {% with agency_category=franchise.customization_data.agency_category %}
+            {% if agency_category %}
+              <span class="category-tag-figma">{{ agency_category }}</span>
+            {% else %}
+              <span class="category-tag-figma category-tag-placeholder">Категория не указана</span>
+            {% endif %}
+          {% endwith %}
         </div>
 
         <div class="investment-size-container-figma">

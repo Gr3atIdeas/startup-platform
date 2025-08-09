@@ -108,7 +108,9 @@
             </div>
 
             <div class="header-meta">
-              <span class="category-value">{{ franchise.direction.direction_name|translate_category|default:"Без категории" }}</span>
+              {% with agency_category=franchise.customization_data.agency_category %}
+                <span class="category-value">{{ agency_category|default:"Без категории" }}</span>
+              {% endwith %}
           <div class="franchise-stats-info"></div>
             </div>
 

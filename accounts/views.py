@@ -917,18 +917,7 @@ def franchises_list(request):
         }
         return render(request, "accounts/franchises_list.html", context)
 def agencies_list(request):
-    # Копия franchises_list, но с другими фильтрами и шаблоном для агентств
-    startup_category_names = (
-        Startups.objects
-        .filter(direction__isnull=False)
-        .values_list('direction__direction_name', flat=True)
-        .distinct()
-    )
-    franchise_directions = (
-        FranchiseDirections.objects
-        .filter(direction_name__in=startup_category_names)
-        .order_by('direction_name')
-    )
+    # Копия franchises_list, но с отдельным словарём категорий агентств и без смешивания с направлениями франшиз/стартапов
 
     franchises_qs = Franchises.objects.filter(status="approved")
     agency_categories = [
@@ -961,8 +950,7 @@ def agencies_list(request):
 
     if selected_categories:
         franchises_qs = franchises_qs.filter(
-            Q(direction__direction_name__in=selected_categories) |
-            Q(direction__franchisedirections__direction_name__in=selected_categories)
+            Q(customization_data__agency_category__in=selected_categories)
         )
 
     if search_query:
@@ -1011,7 +999,6 @@ def agencies_list(request):
             "min_rating": min_rating,
             "max_rating": max_rating,
             "sort_order": sort_order,
-            "franchise_directions": franchise_directions,
             "agency_categories": agency_categories,
         }
         return render(request, "accounts/agencies_list.html", context)
@@ -1044,10 +1031,21 @@ def agency_detail(request, franchise_id):
     else:
         form = FranchiseCommentForm()
 
-    candidates_qs = Franchises.objects.filter(
-        direction=franchise.direction,
-        status="approved",
-    ).exclude(franchise_id=franchise_id)
+    agency_category = None
+    try:
+        agency_category = (franchise.customization_data or {}).get("agency_category")
+    except Exception:
+        agency_category = None
+
+    if agency_category:
+        candidates_qs = Franchises.objects.filter(
+            customization_data__agency_category=agency_category,
+            status="approved",
+        ).exclude(franchise_id=franchise_id)
+    else:
+        candidates_qs = Franchises.objects.filter(
+            status="approved",
+        ).exclude(franchise_id=franchise_id)
     similar_franchises = candidates_qs.order_by("-created_at")[:4]
 
     from .models import FranchiseComments
