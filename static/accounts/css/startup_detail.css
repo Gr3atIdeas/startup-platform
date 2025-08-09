@@ -307,7 +307,8 @@ a:hover {
 }
 
 .planet-container {
-  width: 451px;
+  width: 100%;
+  max-width: 451px;
   height: 510px;
   flex-shrink: 0;
   border-radius: 10px;

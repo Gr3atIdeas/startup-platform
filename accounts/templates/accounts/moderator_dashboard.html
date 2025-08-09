@@ -306,27 +306,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <div class="detail-group">
                                     <span class="detail-label">Категория</span>
                                     <div class="category-tag">
-                                        <span class="category-tag-text">
-                                            {% with original_name=startup.direction.direction_name|default:""|lower %}
-                                                {% if original_name == "medicine" %}Медицина
-                                                {% elif original_name == "auto" %}Автомобили
-                                                {% elif original_name == "delivery" %}Доставка
-                                                {% elif original_name == "cafe" or original_name == "кафе/рестораны" %}Кафе/рестораны
-                                                {% elif original_name == "fastfood" %}Фастфуд
-                                                {% elif original_name == "health" %}Здоровье
-                                                {% elif original_name == "beauty" %}Красота
-                                                {% elif original_name == "transport" %}Транспорт
-                                                {% elif original_name == "sport" %}Спорт
-                                                {% elif original_name == "psychology" %}Психология
-                                                {% elif original_name == "ai" or original_name == "ии" %}ИИ
-                                                {% elif original_name == "finance" %}Финансы
-                                                {% elif original_name == "healthcare" %}Здравоохранение
-                                                {% elif original_name == "technology" %}Технологии
-                                                
-                                                {% else %}{{ startup.direction.direction_name|default:"Не указана" }}
-                                                {% endif %}
-                                            {% endwith %}
-                                        </span>
+                                        <span class="category-tag-text">{{ startup.direction.direction_name|translate_category|default:"Не указана" }}</span>
                                     </div>
                                 </div>
 

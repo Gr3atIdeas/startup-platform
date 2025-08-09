@@ -203,7 +203,7 @@
                                                 {% if startup.direction.direction_name == "Fastfood" %}Фастфуд
                                                 {% elif startup.direction.direction_name == "Technology" %}Технологии
                                                 {% elif startup.direction.direction_name == "Finance" %}Финансы
-                                                {% else %}{{ startup.direction.direction_name|default:"Без категории" }}
+                                                {% else %}{{ startup.direction.direction_name|translate_category|default:"Без категории" }}
                                                 {% endif %}
                                             </div>
                                             <div class="progress-bar-and-text-container">
