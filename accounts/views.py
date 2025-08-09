@@ -103,10 +103,10 @@ logger = logging.getLogger(__name__)
 
 # === Auth rate limiting and captcha helpers ===
 RATE_WINDOW_SECONDS = 60
-RATE_MAX_ATTEMPTS = 10
+RATE_MAX_ATTEMPTS = 15
 BLOCK_SECONDS = 30
 CAPTCHA_FAILS_THRESHOLD = 3
-FREQUENT_ATTEMPTS_THRESHOLD = 5
+FREQUENT_ATTEMPTS_THRESHOLD = 3
 
 def _session_key(prefix: str, suffix: str) -> str:
     return f"{prefix}_{suffix}"
@@ -437,8 +437,12 @@ def register(request):
         # If captcha is required, verify
         if _should_require_captcha(request.session, prefix):
             expected = request.session.get(_session_key(prefix, "captcha_expected"))
-            answer = (form.data.get("captcha_answer") or "").strip()
-            if not expected or answer != expected:
+            answer_raw = (form.data.get("captcha_answer") or "").strip()
+            try:
+                answer_normalized = str(int(answer_raw))
+            except ValueError:
+                answer_normalized = ""
+            if not expected or answer_normalized != expected:
                 messages.error(request, "Неверный ответ на капчу.")
                 _record_attempt(request.session, prefix)
                 # do not increment fail_count if honeypot triggered via form.is_valid; keep uniform
@@ -447,6 +451,9 @@ def register(request):
                 _generate_captcha(request.session, prefix)
                 captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
                 return render(request, "accounts/register.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
+            else:
+                # Captcha solved, clear requirement for this flow
+                _clear_captcha(request.session, prefix)
 
         if form.is_valid():
             user = form.save(commit=False)
@@ -493,8 +500,12 @@ def user_login(request):
         # If captcha is required, verify before authentication
         if _should_require_captcha(request.session, prefix):
             expected = request.session.get(_session_key(prefix, "captcha_expected"))
-            answer = (form.data.get("captcha_answer") or "").strip()
-            if not expected or answer != expected:
+            answer_raw = (form.data.get("captcha_answer") or "").strip()
+            try:
+                answer_normalized = str(int(answer_raw))
+            except ValueError:
+                answer_normalized = ""
+            if not expected or answer_normalized != expected:
                 messages.error(request, "Неверный ответ на капчу.")
                 _record_attempt(request.session, prefix)
                 fails = request.session.get(_session_key(prefix, "fail_count"), 0)
@@ -502,6 +513,9 @@ def user_login(request):
                 _generate_captcha(request.session, prefix)
                 captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
                 return render(request, "accounts/login.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
+            else:
+                # Captcha solved, clear requirement for this flow
+                _clear_captcha(request.session, prefix)
 
         if form.is_valid():
             logger.debug(f"Form is valid. Email: {form.cleaned_data['email']}")
