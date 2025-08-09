@@ -58,6 +58,7 @@ from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.contrib.messages import get_messages
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
@@ -107,6 +108,7 @@ RATE_MAX_ATTEMPTS = 15
 BLOCK_SECONDS = 30
 CAPTCHA_FAILS_THRESHOLD = 3
 FREQUENT_ATTEMPTS_THRESHOLD = 3
+CAPTCHA_INVALID_MESSAGE = "Неверный ответ на капчу."
 
 def _session_key(prefix: str, suffix: str) -> str:
     return f"{prefix}_{suffix}"
@@ -142,10 +144,13 @@ def _is_blocked(session, prefix: str) -> int:
 
 def _should_require_captcha(session, prefix: str) -> bool:
     if session.get(_session_key(prefix, "captcha_required")):
+        logger.debug(f"[{prefix}] Captcha required flag set in session")
         return True
-    fail_count = session.get(_session_key(prefix, "fail_count"), 0)
+    fail_count = _get_fail_count(session, prefix)
     attempts = _get_attempts_in_window(session, prefix)
-    return fail_count >= CAPTCHA_FAILS_THRESHOLD or attempts >= FREQUENT_ATTEMPTS_THRESHOLD
+    require = fail_count >= CAPTCHA_FAILS_THRESHOLD or attempts >= FREQUENT_ATTEMPTS_THRESHOLD
+    logger.debug(f"[{prefix}] should_require_captcha? fail_count={fail_count}, attempts_in_window={attempts} => {require}")
+    return require
 
 def _generate_captcha(session, prefix: str) -> None:
     import random
@@ -154,17 +159,53 @@ def _generate_captcha(session, prefix: str) -> None:
     session[_session_key(prefix, "captcha_question")] = f"Сколько будет {a} + {b}?"
     session[_session_key(prefix, "captcha_expected")] = str(a + b)
     session[_session_key(prefix, "captcha_required")] = True
+    session[_session_key(prefix, "captcha_set_at")] = _now_ts()
+    logger.debug(f"[{prefix}] Generated captcha: question={session.get(_session_key(prefix, 'captcha_question'))}, expected={session.get(_session_key(prefix, 'captcha_expected'))}")
 
 def _clear_captcha(session, prefix: str) -> None:
     session.pop(_session_key(prefix, "captcha_question"), None)
     session.pop(_session_key(prefix, "captcha_expected"), None)
     session.pop(_session_key(prefix, "captcha_required"), None)
+    session.pop(_session_key(prefix, "captcha_set_at"), None)
+    logger.debug(f"[{prefix}] Cleared captcha requirement")
 
 def _reset_limits(session, prefix: str) -> None:
     session.pop(_session_key(prefix, "attempt_times"), None)
     session.pop(_session_key(prefix, "fail_count"), None)
+    session.pop(_session_key(prefix, "fail_last_ts"), None)
     session.pop(_session_key(prefix, "block_until"), None)
     _clear_captcha(session, prefix)
+    logger.debug(f"[{prefix}] Reset limits")
+
+def _get_fail_count(session, prefix: str) -> int:
+    last_ts = session.get(_session_key(prefix, "fail_last_ts"))
+    if last_ts and (_now_ts() - last_ts) > RATE_WINDOW_SECONDS:
+        session[_session_key(prefix, "fail_count")] = 0
+        session.pop(_session_key(prefix, "fail_last_ts"), None)
+        logger.debug(f"[{prefix}] Fail count expired window -> reset to 0")
+    return session.get(_session_key(prefix, "fail_count"), 0)
+
+def _inc_fail_count(session, prefix: str) -> int:
+    count = _get_fail_count(session, prefix) + 1
+    session[_session_key(prefix, "fail_count")] = count
+    session[_session_key(prefix, "fail_last_ts")] = _now_ts()
+    logger.debug(f"[{prefix}] Increased fail_count -> {count}")
+    return count
+
+def _expire_captcha_if_old(session, prefix: str) -> None:
+    set_at = session.get(_session_key(prefix, "captcha_set_at"))
+    if set_at and (_now_ts() - set_at) > RATE_WINDOW_SECONDS:
+        logger.debug(f"[{prefix}] Captcha expired by time window")
+        _clear_captcha(session, prefix)
+
+def _clear_captcha_messages(request):
+    storage = get_messages(request)
+    kept = []
+    for m in storage:
+        if str(m) != CAPTCHA_INVALID_MESSAGE:
+            kept.append((m.level, str(m)))
+    for level, msg in kept:
+        messages.add_message(request, level, msg)
 def safe_create_file_storage(entity_type, entity_id, file_type, file_url, uploaded_at, startup, original_file_name):
     """
     Безопасно создает объект FileStorage, учитывая наличие/отсутствие поля original_file_name
@@ -421,10 +462,13 @@ def register(request):
     next_url = request.GET.get("next") or request.POST.get("next")
     prefix = "register"
     block_left = _is_blocked(request.session, prefix)
+    _expire_captcha_if_old(request.session, prefix)
     # Do NOT pre-generate captcha on GET; only generate during POST when needed
+    captcha_q = None
 
     if request.method == "POST":
         if block_left:
+            _clear_captcha_messages(request)
             messages.error(request, f"Слишком много попыток. Попробуйте через {block_left} сек.")
             form = RegisterForm(request.POST)
             return render(request, "accounts/register.html", {"form": form, "next": next_url})
@@ -432,6 +476,7 @@ def register(request):
         form = RegisterForm(request.POST)
         # If captcha is required, verify
         if _should_require_captcha(request.session, prefix):
+            _expire_captcha_if_old(request.session, prefix)
             expected = request.session.get(_session_key(prefix, "captcha_expected"))
             answer_raw = (form.data.get("captcha_answer") or "").strip()
             try:
@@ -439,16 +484,17 @@ def register(request):
             except ValueError:
                 answer_normalized = ""
             if not expected or answer_normalized != expected:
-                messages.error(request, "Неверный ответ на капчу.")
+                _clear_captcha_messages(request)
+                messages.error(request, CAPTCHA_INVALID_MESSAGE)
                 _record_attempt(request.session, prefix)
-                # do not increment fail_count if honeypot triggered via form.is_valid; keep uniform
-                fails = request.session.get(_session_key(prefix, "fail_count"), 0)
-                request.session[_session_key(prefix, "fail_count")] = fails + 1
+                _inc_fail_count(request.session, prefix)
                 _generate_captcha(request.session, prefix)
                 captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+                logger.debug(f"[register] captcha invalid: provided={answer_normalized!r}, expected={expected!r}")
                 return render(request, "accounts/register.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
             else:
                 # Captcha solved, clear requirement for this flow
+                logger.debug("[register] captcha ok, clearing requirement")
                 _clear_captcha(request.session, prefix)
 
         if form.is_valid():
@@ -465,8 +511,7 @@ def register(request):
             return redirect("login")
         else:
             _record_attempt(request.session, prefix)
-            fails = request.session.get(_session_key(prefix, "fail_count"), 0)
-            request.session[_session_key(prefix, "fail_count")] = fails + 1
+            _inc_fail_count(request.session, prefix)
             if _should_require_captcha(request.session, prefix):
                 _generate_captcha(request.session, prefix)
                 captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
@@ -475,17 +520,21 @@ def register(request):
     else:
         form = RegisterForm()
     # On GET, do NOT pass captcha_question, even if session has it
+    _clear_captcha_messages(request)
     return render(request, "accounts/register.html", {"form": form, "next": next_url})
 def user_login(request):
     logger.debug("Entering user_login view")
     next_url = request.GET.get("next") or request.POST.get("next")
     prefix = "login"
     block_left = _is_blocked(request.session, prefix)
+    _expire_captcha_if_old(request.session, prefix)
     # Do NOT pre-generate captcha on GET; only generate during POST when needed
+    captcha_q = None
 
     if request.method == "POST":
         logger.debug("Processing POST request in user_login")
         if block_left:
+            _clear_captcha_messages(request)
             messages.error(request, f"Слишком много попыток. Попробуйте через {block_left} сек.")
             form = LoginForm(request.POST)
             return render(request, "accounts/login.html", {"form": form, "next": next_url})
@@ -493,6 +542,7 @@ def user_login(request):
         form = LoginForm(request.POST)
         # If captcha is required, verify before authentication
         if _should_require_captcha(request.session, prefix):
+            _expire_captcha_if_old(request.session, prefix)
             expected = request.session.get(_session_key(prefix, "captcha_expected"))
             answer_raw = (form.data.get("captcha_answer") or "").strip()
             try:
@@ -500,15 +550,17 @@ def user_login(request):
             except ValueError:
                 answer_normalized = ""
             if not expected or answer_normalized != expected:
-                messages.error(request, "Неверный ответ на капчу.")
+                _clear_captcha_messages(request)
+                messages.error(request, CAPTCHA_INVALID_MESSAGE)
                 _record_attempt(request.session, prefix)
-                fails = request.session.get(_session_key(prefix, "fail_count"), 0)
-                request.session[_session_key(prefix, "fail_count")] = fails + 1
+                _inc_fail_count(request.session, prefix)
                 _generate_captcha(request.session, prefix)
                 captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+                logger.debug(f"[login] captcha invalid: provided={answer_normalized!r}, expected={expected!r}")
                 return render(request, "accounts/login.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
             else:
                 # Captcha solved, clear requirement for this flow
+                logger.debug("[login] captcha ok, clearing requirement")
                 _clear_captcha(request.session, prefix)
 
         if form.is_valid():
@@ -549,16 +601,14 @@ def user_login(request):
                 logger.warning("Authentication failed for email")
                 messages.error(request, "Неверный email или пароль.")
                 _record_attempt(request.session, prefix)
-                fails = request.session.get(_session_key(prefix, "fail_count"), 0)
-                request.session[_session_key(prefix, "fail_count")] = fails + 1
+                _inc_fail_count(request.session, prefix)
                 if _should_require_captcha(request.session, prefix):
                     _generate_captcha(request.session, prefix)
                     captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
         else:
             logger.warning(f"Form invalid: {form.errors}")
             _record_attempt(request.session, prefix)
-            fails = request.session.get(_session_key(prefix, "fail_count"), 0)
-            request.session[_session_key(prefix, "fail_count")] = fails + 1
+            _inc_fail_count(request.session, prefix)
             if _should_require_captcha(request.session, prefix):
                 _generate_captcha(request.session, prefix)
                 captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
@@ -567,6 +617,7 @@ def user_login(request):
         logger.debug("Rendering login form")
         form = LoginForm()
     # On GET, do NOT pass captcha_question, even if session has it
+    _clear_captcha_messages(request)
     return render(request, "accounts/login.html", {"form": form, "next": next_url})
 def user_logout(request):
     logout(request)
