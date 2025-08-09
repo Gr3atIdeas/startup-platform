@@ -1,28 +1,20 @@
 .scroll-arrow {
   position: fixed;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #FFEF2B 0%, #F9F7D6 100%);
-  border: 2px solid #FFEF2B;
-  color: #000;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 1000;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 239, 43, 0.3);
+  transition: transform 0.2s ease;
   opacity: 0;
   visibility: hidden;
-  transform: scale(0.8);
 }
 
-.scroll-arrow:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(255, 239, 43, 0.4);
-  background: linear-gradient(135deg, #F9F7D6 0%, #FFEF2B 100%);
-}
+.scroll-arrow:hover { transform: scale(1.05); }
 
 .scroll-arrow:active {
   transform: scale(0.95);
@@ -35,9 +27,9 @@
 }
 
 .scroll-arrow svg {
-  width: 18px;
-  height: 18px;
-  fill: #000;
+  width: 36px;
+  height: 36px;
+  fill: #fff;
 }
 
 .scroll-arrow-up {
@@ -51,15 +43,8 @@
 }
 
 @media (max-width: 768px) {
-  .scroll-arrow {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .scroll-arrow svg {
-    width: 16px;
-    height: 16px;
-  }
+  .scroll-arrow { width: 28px; height: 28px; }
+  .scroll-arrow svg { width: 32px; height: 32px; }
   
   .scroll-arrow-up {
     top: 15px;
@@ -73,15 +58,8 @@
 }
 
 @media (max-width: 480px) {
-  .scroll-arrow {
-    width: 35px;
-    height: 35px;
-  }
-  
-  .scroll-arrow svg {
-    width: 14px;
-    height: 14px;
-  }
+  .scroll-arrow { width: 24px; height: 24px; }
+  .scroll-arrow svg { width: 28px; height: 28px; }
   
   .scroll-arrow-up {
     top: 10px;
@@ -95,15 +73,8 @@
 }
 
 @media (max-width: 360px) {
-  .scroll-arrow {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .scroll-arrow svg {
-    width: 12px;
-    height: 12px;
-  }
+  .scroll-arrow { width: 22px; height: 22px; }
+  .scroll-arrow svg { width: 26px; height: 26px; }
   
   .scroll-arrow-up {
     top: 8px;
@@ -117,15 +88,8 @@
 }
 
 @media (max-width: 768px) and (orientation: landscape) {
-  .scroll-arrow {
-    width: 38px;
-    height: 38px;
-  }
-  
-  .scroll-arrow svg {
-    width: 15px;
-    height: 15px;
-  }
+  .scroll-arrow { width: 26px; height: 26px; }
+  .scroll-arrow svg { width: 30px; height: 30px; }
   
   .scroll-arrow-up {
     top: 12px;
@@ -161,27 +125,13 @@
 }
 
 @media (max-width: 1400px) {
-  .scroll-arrow {
-    width: 42px;
-    height: 42px;
-  }
-  
-  .scroll-arrow svg {
-    width: 17px;
-    height: 17px;
-  }
+  .scroll-arrow { width: 30px; height: 30px; }
+  .scroll-arrow svg { width: 34px; height: 34px; }
 }
 
 @media (max-width: 1200px) and (min-height: 800px) {
-  .scroll-arrow {
-    width: 48px;
-    height: 48px;
-  }
-  
-  .scroll-arrow svg {
-    width: 19px;
-    height: 19px;
-  }
+  .scroll-arrow { width: 34px; height: 34px; }
+  .scroll-arrow svg { width: 38px; height: 38px; }
   
   .scroll-arrow-up {
     top: 25px;
