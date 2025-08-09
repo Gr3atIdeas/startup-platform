@@ -52,6 +52,11 @@
   {% endblock %}
 </head>
 <body>
+  <script>
+    try {
+      document.documentElement.style.scrollBehavior = 'smooth';
+    } catch (e) {}
+  </script>
 
   {% if messages %}
     <div class="messages-container">
