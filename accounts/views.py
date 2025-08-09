@@ -990,8 +990,26 @@ def agencies_list(request):
             }
         )
     else:
+        # Генерация альтернативных названий для карточек (только отображение)
+        fancy_names = [
+            "Orbit Digital",
+            "NovaLab Studio",
+            "Cometix",
+            "PixelFoundry",
+            "NeuroCraft",
+            "Skyline Media",
+            "Quantum Works",
+            "AstroBrand",
+            "DeepWave",
+            "Hyperlink",
+        ]
+        renamed_page = []
+        for idx, item in enumerate(page_obj):
+            item.display_title = fancy_names[idx % len(fancy_names)]
+            renamed_page.append(item)
+
         context = {
-            "page_obj": page_obj,
+            "page_obj": renamed_page,
             "paginator": paginator,
             "initial_has_next": page_obj.has_next(),
             "selected_categories": selected_categories,

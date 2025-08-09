@@ -32,7 +32,7 @@
               <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар франшизы" class="franchise-default-avatar">
             </div>
           {% endif %}
-          <h3 class="franchise-title">{{ franchise.title }}</h3>
+          <h3 class="franchise-title">{{ franchise.display_title|default:franchise.title }}</h3>
         </div>
         <div class="franchise-rating-comments">
           <span class="rating-text">Рейтинг {{ franchise.get_average_rating|floatformat:1 }}/5 ({{ franchise.total_voters }})</span>

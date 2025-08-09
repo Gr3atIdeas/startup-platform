@@ -154,6 +154,9 @@ body {
   word-wrap: break-word;
   text-align: center;
 }
+.sidebar #filterForm .show-button {
+  margin-top: 8px;
+}
 
 .show-button:hover {
   background: linear-gradient(0deg, #003d7a 0%, #005ab4 100%);
@@ -163,7 +166,7 @@ body {
   background: #fff;
   width: 254px;
   height: auto;
-  min-height: 900px;
+  min-height: auto;
   padding: 53px 28px;
   border-radius: 10px;
   box-sizing: border-box;
@@ -181,7 +184,7 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 36px;
+  gap: 16px;
   width: 197px;
   max-width: 100%;
 }
@@ -289,6 +292,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  margin-bottom: 8px;
 }
 
 .rating-label-container {
