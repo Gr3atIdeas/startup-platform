@@ -565,19 +565,23 @@ function updateChatList(newChats, container) {
         }
     });
     
-    // Обрабатываем новые чаты
+    // Создаем временный фрагмент для нового порядка
+    const fragment = document.createDocumentFragment();
+    
+    // Обрабатываем новые чаты в правильном порядке
     newChats.forEach(chat => {
         if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && requestUserRole === 'moderator'))) {
             const existingElement = existingChats.get(chat.conversation_id);
             
             if (existingElement) {
-                // Обновляем существующий элемент
+                // Обновляем существующий элемент и добавляем в правильное место
                 updateExistingChatElement(existingElement, chat);
+                fragment.appendChild(existingElement);
                 existingChats.delete(chat.conversation_id);
             } else {
-                // Создаем новый элемент
+                // Создаем новый элемент и добавляем в правильное место
                 const newChatElement = createChatItemElement(chat);
-                container.appendChild(newChatElement);
+                fragment.appendChild(newChatElement);
             }
         }
     });
@@ -586,6 +590,10 @@ function updateChatList(newChats, container) {
     existingChats.forEach(element => {
         element.remove();
     });
+    
+    // Очищаем контейнер и добавляем все элементы в правильном порядке
+    container.innerHTML = '';
+    container.appendChild(fragment);
 }
 
 // Функция для обновления существующего элемента чата
@@ -635,13 +643,13 @@ function updateExistingChatElement(element, chat) {
         }
     }
     
-    // Обновляем последнее сообщение если есть
+    // Обновляем последнее сообщение и метаданные
+    const lastMessagePreview = element.querySelector('.last-message-preview');
+    const timestampChat = element.querySelector('.timestamp-chat');
+    const dateChatPreview = element.querySelector('.date-chat-preview');
+    const unreadBadge = element.querySelector('.unread-badge-chat');
+    
     if (chat.last_message) {
-        const lastMessagePreview = element.querySelector('.last-message-preview');
-        const timestampChat = element.querySelector('.timestamp-chat');
-        const dateChatPreview = element.querySelector('.date-chat-preview');
-        const unreadBadge = element.querySelector('.unread-badge-chat');
-        
         if (lastMessagePreview) {
             let previewText = '';
             if (chat.last_message.sender_id == window.REQUEST_USER_ID) {
@@ -651,22 +659,33 @@ function updateExistingChatElement(element, chat) {
             lastMessagePreview.textContent = previewText.substring(0, 30) + (previewText.length > 30 ? '...' : '');
         }
         
-        if (timestampChat && chat.last_message.created_at_time) {
-            timestampChat.textContent = chat.last_message.created_at_time;
+        if (timestampChat) {
+            timestampChat.textContent = chat.last_message.created_at_time || '';
         }
         
-        if (dateChatPreview && chat.last_message.created_at_date) {
-            dateChatPreview.textContent = chat.last_message.created_at_date;
+        if (dateChatPreview) {
+            dateChatPreview.textContent = chat.last_message.created_at_date || '';
         }
-        
-        // Обновляем счетчик непрочитанных сообщений
-        if (unreadBadge) {
-            if (chat.unread_count > 0 && chat.last_message.sender_id != window.REQUEST_USER_ID && !chat.last_message.is_read) {
-                unreadBadge.textContent = chat.unread_count;
-                unreadBadge.style.display = 'inline';
-            } else {
-                unreadBadge.style.display = 'none';
-            }
+    } else {
+        // Если нет последнего сообщения
+        if (lastMessagePreview) {
+            lastMessagePreview.textContent = 'Нет сообщений';
+        }
+        if (timestampChat) {
+            timestampChat.textContent = '';
+        }
+        if (dateChatPreview) {
+            dateChatPreview.textContent = '';
+        }
+    }
+    
+    // Обновляем счетчик непрочитанных сообщений (независимо от наличия последнего сообщения)
+    if (unreadBadge) {
+        if (chat.unread_count > 0) {
+            unreadBadge.textContent = chat.unread_count;
+            unreadBadge.style.display = 'inline';
+        } else {
+            unreadBadge.style.display = 'none';
         }
     }
 }
@@ -898,12 +917,13 @@ function updateChatListItem(lastMessage) {
         lastMessage.sender_id == window.REQUEST_USER_ID ||
         lastMessage.is_read
       ) {
+        unreadBadge.style.display = 'none';
       } else {
+        // Для нового сообщения от другого пользователя - оставляем логику на сервер
+        // Сервер должен обновить unread_count и это отобразится при следующем polling
       }
     }
-    if (chatListContainer && chatItem.parentElement === chatListContainer) {
-      chatListContainer.prepend(chatItem)
-    }
+    // Убираем перемещение чата в начало списка - порядок теперь контролируется сервером
   }
 }
 function openProfileModal(userId) {
@@ -2061,6 +2081,31 @@ function createChatItemElement(chat) {
     chatItem.dataset.chatName = chat.name || `Чат ${chat.conversation_id}`;
     chatItem.dataset.chatType = chatType;
     chatItem.dataset.isDeal = chat.is_deal ? 'true' : 'false';
+    
+    // Формируем информацию о последнем сообщении
+    let lastMessageText = 'Нет сообщений';
+    let timestampText = '';
+    let dateText = '';
+    let unreadBadgeHtml = '';
+    
+    if (chat.last_message) {
+        let previewText = '';
+        if (chat.last_message.sender_id == window.REQUEST_USER_ID) {
+            previewText = 'Вы: ';
+        }
+        previewText += chat.last_message.message_text;
+        lastMessageText = previewText.substring(0, 30) + (previewText.length > 30 ? '...' : '');
+        timestampText = chat.last_message.created_at_time || '';
+        dateText = chat.last_message.created_at_date || '';
+    }
+    
+    // Добавляем счетчик непрочитанных сообщений (всегда создаем элемент, но показываем только при наличии)
+    if (chat.unread_count > 0) {
+        unreadBadgeHtml = `<span class="unread-badge-chat">${chat.unread_count}</span>`;
+    } else {
+        unreadBadgeHtml = `<span class="unread-badge-chat" style="display: none;"></span>`;
+    }
+    
     chatItem.innerHTML = `
         <img src="${avatarUrl}" alt="${avatarAlt}" class="chat-avatar-img">
         <div class="chat-item-info-new">
@@ -2068,11 +2113,12 @@ function createChatItemElement(chat) {
                 ${(chat.name || `Чат ${chat.conversation_id}`).substring(0, 25)}${(chat.name || `Чат ${chat.conversation_id}`).length > 25 ? '...' : ''}
                 ${chat.is_deal ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : ''}
             </h4>
-            <p class="last-message-preview">Нет сообщений</p>
+            <p class="last-message-preview">${lastMessageText}</p>
         </div>
         <div class="chat-item-meta-new">
-            <span class="timestamp-chat"></span>
-            <span class="date-chat-preview"></span>
+            <span class="timestamp-chat">${timestampText}</span>
+            ${unreadBadgeHtml}
+            <span class="date-chat-preview">${dateText}</span>
         </div>
     `;
     chatItem.addEventListener('click', function () {
@@ -2119,3 +2165,4 @@ function waitForChatInDOM(chatId, maxWaitMs = 3000) {
     check();
   });
 }
+
