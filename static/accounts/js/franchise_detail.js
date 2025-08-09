@@ -961,10 +961,16 @@ document.addEventListener('DOMContentLoaded', function () {
           .then(html => {
             const similarGrid = document.querySelector('.similar-franchises-grid');
             if (similarGrid) {
-              // Если пришла пустая строка (меньше 4 элементов) — скрываем секцию
+              // Если пришла пустая строка (меньше 4 элементов) — показываем сообщение, не скрывая секцию
               if (!html || html.trim() === '') {
-                const section = document.querySelector('.similar-franchises-section');
-                if (section) section.style.display = 'none';
+                const emptyMsg = document.createElement('p');
+                emptyMsg.textContent = 'Больше похожих франшиз пока нет.';
+                emptyMsg.style.marginTop = '10px';
+                emptyMsg.style.opacity = '0.8';
+                similarGrid.appendChild(emptyMsg);
+                // Возвращаем кнопку в исходное состояние
+                showMoreButton.innerHTML = '<i class="fas fa-redo"></i> Показать еще';
+                showMoreButton.disabled = false;
                 return;
               }
               // Полностью заменяем текущие карточки на новые
@@ -973,9 +979,15 @@ document.addEventListener('DOMContentLoaded', function () {
               placeholder.className = 'similar-card show-more-placeholder';
               placeholder.innerHTML = '<button class="action-button show-more-similar"><i class="fas fa-redo"></i> Показать еще</button>';
 
-              // Очищаем сетку и вставляем новые карточки
-              similarGrid.innerHTML = '';
-              similarGrid.insertAdjacentHTML('afterbegin', html);
+              // Добавляем новые карточки в конец, не очищая уже показанные
+              const temp = document.createElement('div');
+              temp.innerHTML = html;
+              // Удаляем старый плейсхолдер с кнопкой
+              const oldPlaceholder = similarGrid.querySelector('.similar-card.show-more-placeholder');
+              if (oldPlaceholder) oldPlaceholder.remove();
+              // Вставляем новые карточки
+              Array.from(temp.children).forEach(node => similarGrid.appendChild(node));
+              // Возвращаем плейсхолдер с кнопкой в конец
               similarGrid.appendChild(placeholder);
 
               // Переинициализируем рейтинги и обработчик кнопки
