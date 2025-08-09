@@ -882,7 +882,7 @@ def franchises_list(request):
     elif sort_order == "oldest":
         franchises_qs = franchises_qs.order_by("created_at")
     
-    paginator = Paginator(franchises_qs, 6)
+    paginator = Paginator(franchises_qs, 18)
     page_obj = paginator.get_page(page_number)
     
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -1003,10 +1003,26 @@ def agencies_list(request):
             "DeepWave",
             "Hyperlink",
         ]
+        # Генерация витринных названий и присвоение категории агентств (если отсутствует)
+        # Также дописываем в customization_data.agency_category и сохраняем, чтобы фильтрация работала
+        import random
         renamed_page = []
         for idx, item in enumerate(page_obj):
-            item.display_title = fancy_names[idx % len(fancy_names)]
-            renamed_page.append(item)
+            try:
+                item.display_title = fancy_names[idx % len(fancy_names)]
+                data = item.customization_data or {}
+                if not isinstance(data, dict):
+                    data = {}
+                if not data.get("agency_category"):
+                    data["agency_category"] = random.choice(agency_categories)
+                    item.customization_data = data
+                    try:
+                        item.save(update_fields=["customization_data"])  # сохраняем только поле с категориями
+                    except Exception:
+                        pass
+                renamed_page.append(item)
+            except Exception:
+                renamed_page.append(item)
 
         context = {
             "page_obj": renamed_page,
