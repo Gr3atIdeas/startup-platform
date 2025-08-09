@@ -6,7 +6,7 @@
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/news.css' %}">
   
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" integrity="sha512-6lplKd1qQnB+VD6vGN6mSnu0dN6ZfJLxqQmCpJjUOo4laE9wfgJjDz2qkElf0/TKZc3ni7X1V3P5V3F4XOWg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" referrerpolicy="no-referrer" />
 {% endblock %}
 
 {% block content %}
@@ -113,7 +113,7 @@
               {% if article.get_image_url %}
                 <img src="{{ article.get_image_url }}" alt="{{ article.title }}" class="news-image">
               {% else %}
-                <img src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="{{ article.title|default:"Заголовок новости" }}" class="news-image">
+                <img src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="{{ article.title|default:'Заголовок новости' }}" class="news-image">
               {% endif %}
             </a>
             
@@ -212,8 +212,8 @@
 </div> 
 
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js" integrity="sha512-zn7mNp/R1c4j2a6f5pJfzOLz0qQN1ZctiR6P9V20rfb1znXOd2T8bSJ49oFQcyDfXvNbrkXm1TzJ2qFZJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js" integrity="sha512-igJR1xYGup0Gdk3i6e8/Tj2z6lVsz9WRDeltaGuk3X9/4m1U9R13s1pYDA0txmmcDpjK2p9vYDkr0BxSi4cQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js" referrerpolicy="no-referrer"></script>
 <script>
   function openPopup() {
     document.getElementById('newsPopup').style.display = 'flex';

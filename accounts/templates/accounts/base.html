@@ -45,7 +45,7 @@
   <link rel="stylesheet" href="{% static 'accounts/css/layout_responsive.css' %}?v={% now 'U' %}">
   <link rel="stylesheet" href="{% static 'accounts/css/modern_responsive.css' %}?v={% now 'U' %}">
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" referrerpolicy="no-referrer" />
   
   {% block head_extra %}
     {{ block.super }}
@@ -348,8 +348,8 @@
   <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js" defer></script>
   <script src="{% static 'accounts/js/ui_enhancement.js' %}" defer></script>
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js" referrerpolicy="no-referrer" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js" referrerpolicy="no-referrer" defer></script>
   
   {% block scripts %}
     
