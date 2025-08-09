@@ -1008,7 +1008,8 @@ function startChat() {
             if (noChatsMessage) {
               noChatsMessage.remove()
             }
-            chatListContainer.prepend(newChatItem)
+            // Не добавляем сразу через prepend, позволяем polling обновить список
+            // chatListContainer.prepend(newChatItem)
             startPolling()
             waitForChatInDOM(chatId, 3000)
               .then(() => {
@@ -1466,7 +1467,8 @@ function startChatWithUser(userId) {
             if (noChatsMessage) {
               noChatsMessage.remove()
             }
-            chatListContainer.prepend(newChatItem);
+            // Не добавляем сразу через prepend, позволяем polling обновить список
+            // chatListContainer.prepend(newChatItem);
             startPolling();
             waitForChatInDOM(data.chat.conversation_id, 3000)
               .then(() => {
