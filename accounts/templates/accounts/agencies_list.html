@@ -191,7 +191,7 @@
   document.addEventListener('DOMContentLoaded', function() {
     // Инициализируем слайдеры после загрузки DOM
     initNoUiSlider();
-    initFranchiseSliders();
+    // Для агентств используем только слайдер рейтинга (без окупаемости/инвестиций)
 
     // --- Логика поиска --- 
     var searchInput = document.querySelector('.catalog-search-input');
@@ -311,79 +311,6 @@
 
   }); // Конец DOMContentLoaded
 
-  // Функция инициализации noUiSlider для франшиз
-  function initFranchiseSliders() {
-    var paybackSlider = document.getElementById('paybackSlider');
-    var paybackValueDisplay = document.getElementById('paybackValueDisplay');
-    var minPaybackInput = document.getElementById('minPaybackInput');
-    var maxPaybackInput = document.getElementById('maxPaybackInput');
-
-    if (paybackSlider && paybackValueDisplay && minPaybackInput && maxPaybackInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
-        var initialMin = parseFloat(minPaybackInput.value) || 0;
-        var initialMax = parseFloat(maxPaybackInput.value) || 60;
-
-        noUiSlider.create(paybackSlider, {
-            start: [initialMin, initialMax],
-            connect: true,
-            range: {
-                'min': 0,
-                'max': 60
-            },
-            step: 1,
-            format: wNumb({
-                decimals: 0,
-                thousand: '',
-                suffix: ''
-            }),
-            tooltips: false,
-            behaviour: 'tap-drag',
-            pips: false
-        });
-
-        paybackSlider.noUiSlider.on('update', function (values, handle) {
-            var minValue = values[0];
-            var maxValue = values[1];
-            paybackValueDisplay.textContent = minValue + ' - ' + maxValue + ' мес';
-            minPaybackInput.value = minValue;
-            maxPaybackInput.value = maxValue;
-        });
-    }
-
-    var investmentSlider = document.getElementById('investmentSlider');
-    var investmentValueDisplay = document.getElementById('investmentValueDisplay');
-    var minInvestmentInput = document.getElementById('minInvestmentInput');
-    var maxInvestmentInput = document.getElementById('maxInvestmentInput');
-
-    if (investmentSlider && investmentValueDisplay && minInvestmentInput && maxInvestmentInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
-        var initialMin = parseFloat(minInvestmentInput.value) || 0;
-        var initialMax = parseFloat(maxInvestmentInput.value) || 10000000;
-
-        noUiSlider.create(investmentSlider, {
-            start: [initialMin, initialMax],
-            connect: true,
-            range: {
-                'min': 0,
-                'max': 10000000
-            },
-            step: 100000,
-            format: wNumb({
-                decimals: 0,
-                thousand: '',
-                suffix: ''
-            }),
-            tooltips: false,
-            behaviour: 'tap-drag',
-            pips: false
-        });
-
-        investmentSlider.noUiSlider.on('update', function (values, handle) {
-            var minValue = values[0];
-            var maxValue = values[1];
-            investmentValueDisplay.textContent = minValue + ' - ' + maxValue + ' ₽';
-            minInvestmentInput.value = minValue;
-            maxInvestmentInput.value = maxValue;
-        });
-    }
-  }
+  // Удалены инициализации слайдеров окупаемости/инвестиций для агентств
 </script>
 {% endblock %}

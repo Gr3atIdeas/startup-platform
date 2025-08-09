@@ -109,7 +109,7 @@
 
             <div class="header-meta">
               <span class="category-value">{{ franchise.direction.direction_name|translate_category|default:"Без категории" }}</span>
-            <div class="franchise-stats-info"></div>
+          <div class="franchise-stats-info"></div>
             </div>
 
             <div class="rating-comments-container">
@@ -252,7 +252,7 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>Документы по франшизе пока не загружены.</p>
+                <p>Документы по агентству пока не загружены.</p>
             {% endif %}
           </div>
 
@@ -269,7 +269,7 @@
   {% if user.is_authenticated and user.role.role_name == 'moderator' and franchise.status == 'pending' %}
       <div class="moderator-review-section card my-4">
           <div class="card-header">
-              <h4>Модерация франшизы</h4>
+              <h4>Модерация агентства</h4>
           </div>
           <div class="card-body">
               <form method="post" action="{% url 'approve_franchise' franchise_id=franchise.franchise_id %}">
@@ -501,7 +501,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="reportModalLabel">Пожаловаться на стартап</h5>
+          <h5 class="modal-title" id="reportModalLabel">Пожаловаться на агентство</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
