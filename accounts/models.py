@@ -498,6 +498,10 @@ class Users(AbstractBaseUser):
         lowered = url_value.lower()
         if lowered.startswith("http://") or lowered.startswith("https://"):
             return url_value
+        # Разрешаем относительные URL к загруженным медиа
+        if lowered.startswith("/media/") or lowered.startswith("media/"):
+            # Гарантируем ведущий слэш
+            return url_value if url_value.startswith("/") else f"/{url_value}"
         return None
     def is_telegram_authenticated(self):
         return bool(self.telegram_id)

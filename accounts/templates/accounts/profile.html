@@ -1,71 +1,13 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
 {% load file_tags %}
+{% load accounts_extras %}
 
 {% block title %}Профиль пользователя{% endblock %}
 
 {% block head_extra %}
   {{ block.super }}
   <link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}?v={% now 'U' %}" />
-  <style>
-    .modal {
-      display: {% if show_role_selection %}block{% else %}none{% endif %};
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-    }
-    .modal-content {
-      background-color: #fff;
-      margin: 15% auto;
-      padding: 20px;
-      border-radius: 8px;
-      width: 80%;
-      max-width: 500px;
-      text-align: center;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .modal-content h2 {
-      margin-top: 0;
-      color: #333;
-      font-size: 24px;
-    }
-    .modal-content p {
-      color: #666;
-      margin-bottom: 20px;
-      font-size: 16px;
-    }
-    .role-select {
-      padding: 10px;
-      margin: 10px 0;
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 16px;
-    }
-    .modal-buttons {
-      margin-top: 20px;
-    }
-    .modal-buttons button {
-      padding: 10px 20px;
-      margin: 0 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    .modal-buttons .confirm {
-      background-color: #4CAF50;
-      color: white;
-    }
-    .modal-buttons .cancel {
-      background-color: #f44336;
-      color: white;
-    }
-  </style>
 {% endblock %}
 
 {% block content %}
@@ -208,7 +150,7 @@
                                             </div>
                                             <div class="progress-bar-and-text-container">
                                                 <div class="profile-main-startup-progress-bar-bg">
-                                                    <div class="profile-main-startup-progress-bar-fg" style="width: {{ startup.get_progress_percentage }}%;"></div>
+                                                    <div class="profile-main-startup-progress-bar-fg" style="width: {{ startup.get_progress_percentage }}%"></div>
                                                 </div>
                                                 <span class="profile-main-startup-progress-text">{{ startup.get_progress_percentage }}%</span>
                                             </div>
@@ -364,24 +306,23 @@
 </div>
 
 {% if show_role_selection %}
-<div class="modal">
-    <div class="modal-content">
-        <h2>Выберите вашу роль</h2>
-        <p>Для продолжения работы на платформе выберите вашу роль. Это необходимо для определения ваших прав и возможностей на сайте. После выбора роли вы сможете продолжить пользоваться всеми функциями профиля.</p>
-        <form method="POST" action="">
-            {% csrf_token %}
-            <select name="role_id" class="role-select" required>
-                <option value="">Выберите роль</option>
-                <option value="1">Стартапер</option>
-                <option value="2">Инвестор</option>
-                
-            </select>
-            <div class="modal-buttons">
-                <button type="submit" name="select_role" class="confirm">Подтвердить</button>
-                <button type="button" class="cancel" onclick="window.location.href='/logout/'">Отмена</button>
-            </div>
-        </form>
-    </div>
+<div class="modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,.5);z-index:1000;display:block;">
+  <div class="modal-content" style="background:#fff;margin:15% auto;padding:20px;border-radius:8px;width:80%;max-width:500px;text-align:center;box-shadow:0 4px 8px rgba(0,0,0,.2);">
+    <h2 style="margin-top:0;color:#333;font-size:24px;">Выберите вашу роль</h2>
+    <p style="color:#666;margin-bottom:20px;font-size:16px;">Для продолжения работы на платформе выберите вашу роль. Это необходимо для определения ваших прав и возможностей на сайте. После выбора роли вы сможете продолжить пользоваться всеми функциями профиля.</p>
+    <form method="POST" action="">
+      {% csrf_token %}
+      <select name="role_id" class="role-select" required style="padding:10px;margin:10px 0;width:100%;border:1px solid #ccc;border-radius:4px;font-size:16px;">
+        <option value="">Выберите роль</option>
+        <option value="1">Стартапер</option>
+        <option value="2">Инвестор</option>
+      </select>
+      <div class="modal-buttons" style="margin-top:20px;">
+        <button type="submit" name="select_role" class="confirm" style="padding:10px 20px;margin:0 10px;border:none;border-radius:4px;cursor:pointer;font-size:16px;background-color:#4CAF50;color:#fff;">Подтвердить</button>
+        <button type="button" class="cancel" onclick="window.location.href='/logout/'" style="padding:10px 20px;margin:0 10px;border:none;border-radius:4px;cursor:pointer;font-size:16px;background-color:#f44336;color:#fff;">Отмена</button>
+      </div>
+    </form>
+  </div>
 </div>
 {% endif %}
 
