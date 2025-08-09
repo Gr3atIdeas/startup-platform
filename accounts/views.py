@@ -948,6 +948,7 @@ def investments(request):
         user_investments_qs = (
             base_tx_qs.filter(amount__gt=0)
             .select_related("startup", "startup__direction", "startup__owner")
+            .defer("franchise")
         )
         logger.info(
             f"[investments] tx count for {request.user.email}: {user_investments_qs.count()} (base={base_tx_qs.count()})"
@@ -1085,7 +1086,7 @@ def investments(request):
             logger.error(f"[investments] S3 client init failed: {s3_init_err}")
             s3_client = None
         invested_startups_qs = (
-            user_investments_qs.select_related("startup")
+            user_investments_qs.select_related("startup").defer("franchise")
             .annotate(
                 average_rating=Avg(
                     ExpressionWrapper(
