@@ -931,6 +931,15 @@ def agencies_list(request):
     )
 
     franchises_qs = Franchises.objects.filter(status="approved")
+    agency_categories = [
+        "Веб-разработка",
+        "Мобильная разработка",
+        "Дизайн",
+        "Маркетинг",
+        "ИИ",
+        "Брендинг",
+        "Видео и мультимедиа",
+    ]
 
     selected_categories = request.GET.getlist("category")
     search_query = request.GET.get("search", "").strip()
@@ -1003,6 +1012,7 @@ def agencies_list(request):
             "max_rating": max_rating,
             "sort_order": sort_order,
             "franchise_directions": franchise_directions,
+            "agency_categories": agency_categories,
         }
         return render(request, "accounts/agencies_list.html", context)
 def agency_detail(request, franchise_id):
