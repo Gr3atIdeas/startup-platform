@@ -745,7 +745,17 @@ def startups_list(request):
         return render(request, "accounts/startups_list.html", context)
 
 def franchises_list(request):
-    franchise_directions = FranchiseDirections.objects.all().order_by('direction_name')
+    startup_category_names = (
+        Startups.objects
+        .filter(direction__isnull=False)
+        .values_list('direction__direction_name', flat=True)
+        .distinct()
+    )
+    franchise_directions = (
+        FranchiseDirections.objects
+        .filter(direction_name__in=startup_category_names)
+        .order_by('direction_name')
+    )
     
     # Копируем стартапы в франшизы если их нет
     if not Franchises.objects.exists():
