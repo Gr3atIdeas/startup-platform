@@ -975,18 +975,15 @@ a:hover {
 .tabbed-content-wrapper .tab-navigation .tab-button:not(.active) {
   background-color: transparent;
   color: var(--text-secondary);
-  border: none;
+  border: 1px solid transparent;
 }
 
 
-.startup-detail-page
-  .tabbed-content-wrapper
-  .tab-navigation
-  .tab-button.active {
-  background-color: #e6e8ec; 
-  color: #23262f; 
-  font-weight: 300;
-  border: none;
+.tabbed-content-wrapper .tab-navigation .tab-button.active {
+  background-color: #ffffff;
+  color: #23262f;
+  font-weight: 500;
+  border: 1px solid #ffffff;
 }
 
 
