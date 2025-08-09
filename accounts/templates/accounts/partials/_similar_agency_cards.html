@@ -11,7 +11,7 @@
       <div class="planet"></div>
     {% endif %}
   </div>
-  <div class="similar-card-name">{{ similar.title|default:"Агентство" }}</div>
+  <div class="similar-card-name">{{ similar.customization_data.agency_display_title|default:similar.title|default:"Агентство" }}</div>
   <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2' }}">
     {% for star_i in "12345" %}
       <span class="rating-icon-container">

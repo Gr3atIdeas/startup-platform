@@ -1071,15 +1071,17 @@ def agencies_list(request):
         import random
         for idx, item in enumerate(page_obj.object_list):
             try:
-                item.display_title = fancy_names[idx % len(fancy_names)]
+                display_title = fancy_names[idx % len(fancy_names)]
                 data = item.customization_data or {}
                 if not isinstance(data, dict):
                     data = {}
+                if data.get("agency_display_title") != display_title:
+                    data["agency_display_title"] = display_title
                 if not data.get("agency_category"):
                     data["agency_category"] = random.choice(agency_categories)
                     item.customization_data = data
                     try:
-                        item.save(update_fields=["customization_data"])  # сохраняем только поле с категориями
+                    item.save(update_fields=["customization_data"])  # сохраняем только поле с витринными данными
                     except Exception:
                         pass
             except Exception:

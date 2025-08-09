@@ -104,7 +104,7 @@
                   <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
                 {% endif %}
               </div>
-              <h1 class="franchise-name" title="{{ franchise.title }}">{{ franchise.title }}</h1>
+              <h1 class="franchise-name" title="{{ franchise.customization_data.agency_display_title|default:franchise.title }}">{{ franchise.customization_data.agency_display_title|default:franchise.title }}</h1>
             </div>
 
             <div class="header-meta">
