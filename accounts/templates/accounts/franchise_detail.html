@@ -522,47 +522,43 @@
       </a>
       
       {% if has_similar and similar_franchises %}
-      <div class="similar-franchises-grid">
-        
-        {% for similar in similar_franchises|slice:":4" %}
-        <a href="{% url 'franchise_detail' similar.franchise_id %}" class="similar-card">
-          <div class="similar-card-image">
-            {% if similar.logo_urls %}
-              <img src="{% get_file_url_tag similar.logo_urls.0 similar.franchise_id 'logo' %}" alt="Логотип">
-            {% else %}
-              <div class="planet">
-                <div class="planet-segment segment-top" style="background-color: {{ similar.planet_top_color|default:'#7B61FF' }};"></div>
-                <div class="planet-segment segment-middle" style="background-color: {{ similar.planet_middle_color|default:'#6B51DF' }};"></div>
-                <div class="planet-segment segment-bottom" style="background-color: {{ similar.planet_bottom_color|default:'#5B41BF' }};"></div>
-        </div> 
+        <div class="similar-franchises-grid">
+          {% for similar in similar_franchises|slice:":4" %}
+          <a href="{% url 'franchise_detail' similar.franchise_id %}" class="similar-card">
+            <div class="similar-card-image">
+              {% if similar.logo_urls %}
+                <img src="{% get_file_url_tag similar.logo_urls.0 similar.franchise_id 'logo' %}" alt="Логотип">
+              {% else %}
+                <div class="planet">
+                  <div class="planet-segment segment-top" style="background-color: {{ similar.planet_top_color|default:'#7B61FF' }};"></div>
+                  <div class="planet-segment segment-middle" style="background-color: {{ similar.planet_middle_color|default:'#6B51DF' }};"></div>
+                  <div class="planet-segment segment-bottom" style="background-color: {{ similar.planet_bottom_color|default:'#5B41BF' }};"></div>
+                </div>
+              {% endif %}
+            </div>
+            <div class="similar-card-name">{{ similar.title|default:"Франшиза" }}</div>
+            <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2' }}">
+              {% for star_i in "12345" %}
+                <span class="rating-icon-container">
+                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+                </span>
+              {% endfor %}
+            </div>
+            <div class="similar-card-category">
+              <div class="category-badge">{{ similar.direction.direction_name|translate_category|default:"Категория" }}</div>
+            </div>
+          </a>
+          {% endfor %}
+
+          <div class="similar-card show-more-placeholder">
+            <button class="action-button show-more-similar">
+              <i class="fas fa-redo"></i> Показать еще
+            </button>
+          </div>
+        </div>
       {% else %}
         <p style="margin-top: 10px; color: rgba(0,0,0,0.6);">Похожих франшиз пока нет. Мы подберём рекомендации, как только появятся новые франшизы в этой категории.</p>
-      {% endif %}
-          </div>
-          <div class="similar-card-name">{{ similar.title|default:"Франшиза" }}</div>
-          <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2' }}">
-            
-            {% for star_i in "12345" %}
-              <span class="rating-icon-container">
-                <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
-                <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
-              </span>
-            {% endfor %}
-          </div>
-                     <div class="similar-card-category">
-             
-             <div class="category-badge">{{ similar.direction.direction_name|translate_category|default:"Категория" }}</div>
-           </div>
-        </a>
-        {% endfor %}
-
-        
-        <div class="similar-card show-more-placeholder">
-           <button class="action-button show-more-similar">
-             <i class="fas fa-redo"></i> Показать еще
-           </button>
-        </div>
-      </div> 
       {% endif %}
     </div>
   </div>
