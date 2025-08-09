@@ -1,0 +1,389 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load file_tags %}
+{% load humanize %}
+{% load accounts_extras %}
+
+{% block title %}Каталог агентств{% endblock %}
+
+{% block head_extra %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'accounts/css/agencies_list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+  <div class="catalog-container">
+    
+    <aside class="sidebar"> 
+      <form method="get" id="filterForm">
+        
+        <div class="sort-dropdown">
+          <div class="sort-dropdown-title">Показать сначала</div> 
+          <select name="sort_order" id="sortOrder">
+            <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Новые</option>
+            <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Старые</option>
+          </select>
+        </div>
+
+        
+        <h2 class="categories-title">Категории</h2>
+        <ul class="categories-list">
+          {% for c in ['Веб-разработка','Мобильная разработка','Дизайн','Маркетинг','ИИ','Брендинг','Видео и мультимедиа'] %}
+            <li class="category-item">
+              <label class="category-label">
+                <input type="checkbox" name="category" value="{{ c }}" class="category-checkbox" {% if c in selected_categories %}checked{% endif %}>
+                <span class="category-name">{{ c }}</span>
+              </label>
+            </li>
+          {% endfor %}
+        </ul>
+
+        
+        
+
+        
+        <div class="rating-filter">
+          <div class="rating-label-container"> 
+            <label class="rating-label">Рейтинг</label>
+            
+            <span id="ratingValueDisplay" class="rating-value-display">{{ min_rating|default:0|floatformat:1 }} - {{ max_rating|default:5|floatformat:1 }}</span>
+          </div>
+          <div id="ratingSlider"></div> 
+          
+          <input type="hidden" name="min_rating" id="minRatingInput" value="{{ min_rating|default:0|floatformat:1 }}">
+          <input type="hidden" name="max_rating" id="maxRatingInput" value="{{ max_rating|default:5|floatformat:1 }}">
+          <div class="rating-range-label">Диапозон</div> 
+        </div>
+
+        
+        <input type="hidden" name="search" value="{{ search_query|default_if_none:'' }}">
+
+        
+        
+        <button type="submit" class="show-button" data-has-icon-end="false" data-has-icon-start="false" data-size="Medium" data-state="Default" data-variant="Primary">Показать</button>
+      </form>
+    </aside>
+
+    
+    <div class="franchises-content">
+      
+      <div class="catalog-search-wrapper">
+        <div class="catalog-search">
+          
+          <input type="text" class="catalog-search-input" placeholder="Поиск по каталогу" value="{{ search_query|default_if_none:'' }}">
+          
+          <button type="button" class="catalog-search-btn" title="Поиск"> 
+            <svg viewBox="0 0 28 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.417 21.375c4.836 0 8.75-3.914 8.75-8.75s-3.914-8.75-8.75-8.75-8.75 3.914-8.75 8.75 3.914 8.75 8.75 8.75zM22.923 23.274l-5.067-4.892" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> 
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      
+      <div class="franchises-grid" id="franchisesGrid">
+        {% if page_obj %} 
+          
+          {% include 'accounts/partials/_agency_cards.html' with page_obj=page_obj %}
+        {% else %}
+          <div class="no-franchises">
+            <p>В настоящее время нет доступных агентств. Загляните позже!</p>
+          </div>
+        {% endif %}
+      </div>
+
+      
+      <div class="pagination-controls">
+          
+          
+
+          
+          
+          {% if page_obj and paginator.num_pages > 1 %}
+            <div class="pagination-numbers">
+                
+                
+                {% if page_obj.has_previous %}
+                    
+                    <a href="?page={{ page_obj.previous_page_number }}">Назад</a> 
+                {% endif %}
+
+                
+                {% for num in paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <span class="current-page">{{ num }}</span>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}">{{ num }}</a>
+                    {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+                        <span class="dots">...</span>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Вперед</a> 
+                    
+                    <a href="?page={{ paginator.num_pages }}">Последняя &raquo;</a> 
+                {% endif %}
+            </div>
+           {% elif page_obj %} 
+                
+           {% endif %}
+          
+      </div>
+      
+
+    </div> 
+  </div> 
+
+
+
+
+
+<script>
+  // Функция инициализации noUiSlider
+  function initNoUiSlider() {
+    var ratingSlider = document.getElementById('ratingSlider');
+    var ratingValueDisplay = document.getElementById('ratingValueDisplay');
+    var minRatingInput = document.getElementById('minRatingInput');
+    var maxRatingInput = document.getElementById('maxRatingInput');
+
+    if (ratingSlider && ratingValueDisplay && minRatingInput && maxRatingInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
+        var initialMin = parseFloat(minRatingInput.value) || 0;
+        var initialMax = parseFloat(maxRatingInput.value) || 5;
+
+        noUiSlider.create(ratingSlider, {
+            start: [initialMin, initialMax],
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 5
+            },
+            step: 0.1,
+            format: wNumb({
+                decimals: 1,
+                thousand: '',
+                suffix: ''
+            }),
+            tooltips: false,
+            behaviour: 'tap-drag',
+            pips: false
+        });
+
+        ratingSlider.noUiSlider.on('update', function (values, handle) {
+            var minValue = values[0];
+            var maxValue = values[1];
+            ratingValueDisplay.textContent = minValue + ' - ' + maxValue;
+            minRatingInput.value = minValue;
+            maxRatingInput.value = maxValue;
+        });
+    } else {
+        console.error('Не удалось инициализировать noUiSlider. Элементы не найдены или библиотеки не подключены.');
+        if (!ratingSlider) console.error('Элемент #ratingSlider не найден');
+        if (!ratingValueDisplay) console.error('Элемент #ratingValueDisplay не найден');
+        if (!minRatingInput) console.error('Элемент #minRatingInput не найден');
+        if (!maxRatingInput) console.error('Элемент #maxRatingInput не найден');
+        if (typeof noUiSlider === 'undefined') console.error('Библиотека noUiSlider не подключена');
+        if (typeof wNumb === 'undefined') console.error('Библиотека wNumb не подключена');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Инициализируем слайдеры после загрузки DOM
+    initNoUiSlider();
+    initFranchiseSliders();
+
+    // --- Логика поиска --- 
+    var searchInput = document.querySelector('.catalog-search-input');
+    var searchBtn = document.querySelector('.catalog-search-btn');
+    var filterForm = document.getElementById('filterForm'); 
+    var searchInputHidden = filterForm.querySelector('input[name="search"]');
+
+    function performSearch() {
+        if (searchInputHidden && searchInput && filterForm) {
+            searchInputHidden.value = searchInput.value;
+            filterForm.submit();
+        }
+    }
+
+    if (searchBtn) {
+        searchBtn.addEventListener('click', performSearch);
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    }
+    // --- Конец логики поиска ---
+
+    // <<< Удаляем код для старого hover-эффекта (position-aware) >>>
+    /*
+    var interactiveElements = document.querySelectorAll('.show-button, .franchise-card'); 
+    interactiveElements.forEach(function(element) {
+      element.addEventListener('mouseenter', function(e) {
+        // ... (весь код добавления position-aware-effect)
+      });
+       element.addEventListener('mouseleave', function(e) {
+            // ... (весь код удаления position-aware-effect)
+       });
+    });
+    */
+    // <<< Конец удаления старого hover-эффекта >>>
+
+    // <<< Начало: Логика "Показать еще" и "Скрыть" - ЗАМЕНЕНА >>>
+    // ... (код для пагинации остается без изменений)
+
+    // --- Инициализация прогресс-баров для карточек --- 
+    // <<< Корректируем функцию для работы со структурой progress-bar-visual / animation-container >>>
+    function updateAnimatedProgressBars(containerElement) {
+      if (!containerElement) return;
+      // Ищем обертки .progress-bar-visual
+      const visualContainers = containerElement.querySelectorAll('.progress-bar-visual');
+      
+      visualContainers.forEach(container => {
+        // Находим анимируемый контейнер и текст
+        const animationContainer = container.querySelector('.progress-animation-container');
+        const percentageSpan = container.querySelector('.progress-percentage');
+        
+        if (animationContainer && percentageSpan) {
+          // Получаем процент из текста (например, "75%")
+          const textContent = percentageSpan.textContent || '0%';
+          const progressPercentValue = parseInt(textContent, 10) || 0;
+          
+          // Устанавливаем ширину элемента animation-container
+          setTimeout(() => {
+            animationContainer.style.width = progressPercentValue + '%';
+          }, 100); // Небольшая задержка для срабатывания transition
+
+        } else {
+          if (!animationContainer) console.error('Animation container (.progress-animation-container) not found in:', container);
+          if (!percentageSpan) console.error('Progress text span (.progress-percentage) not found in:', container);
+        }
+      });
+    }
+
+    // Инициализируем прогресс-бары при загрузке для текущей сетки
+    const initialGrid = document.getElementById('franchisesGrid');
+    updateAnimatedProgressBars(initialGrid); // Вызываем обновленную функцию
+    // --- Конец инициализации прогресс-баров --- 
+
+    // --- Обработка отправки формы фильтров --- 
+    // Обновляем URL при отправке формы, чтобы пагинация работала с фильтрами
+    if (filterForm) {
+        filterForm.addEventListener('submit', function(e) {
+            // Не предотвращаем стандартную отправку, просто модифицируем action
+            const formData = new FormData(filterForm);
+            const params = new URLSearchParams();
+            // Добавляем все параметры формы, кроме пустых и 'page'
+            formData.forEach((value, key) => {
+                if (value && key !== 'page') { 
+                    params.append(key, value);
+                }
+            });
+            // Устанавливаем action формы с новыми параметрами
+            // filterForm.action = `?${params.toString()}`; 
+            // Отправка GET запросом и так передаст параметры
+        });
+
+        // Обновляем ссылки пагинации, чтобы они включали текущие фильтры
+        const paginationLinks = document.querySelectorAll('.pagination-numbers a');
+        const currentParams = new URLSearchParams(window.location.search);
+        const filterParams = new URLSearchParams();
+        
+        // Собираем только параметры фильтрации
+        currentParams.forEach((value, key) => {
+            if (key !== 'page') { // Исключаем параметр страницы
+                filterParams.append(key, value);
+            }
+        });
+        const filterQueryString = filterParams.toString();
+
+        paginationLinks.forEach(link => {
+            const url = new URL(link.href);
+            const pageNum = url.searchParams.get('page');
+            link.href = `?${filterQueryString}${filterQueryString ? '&' : ''}page=${pageNum}`;
+        });
+    }
+    // --- Конец обработки формы фильтров --- 
+
+  }); // Конец DOMContentLoaded
+
+  // Функция инициализации noUiSlider для франшиз
+  function initFranchiseSliders() {
+    var paybackSlider = document.getElementById('paybackSlider');
+    var paybackValueDisplay = document.getElementById('paybackValueDisplay');
+    var minPaybackInput = document.getElementById('minPaybackInput');
+    var maxPaybackInput = document.getElementById('maxPaybackInput');
+
+    if (paybackSlider && paybackValueDisplay && minPaybackInput && maxPaybackInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
+        var initialMin = parseFloat(minPaybackInput.value) || 0;
+        var initialMax = parseFloat(maxPaybackInput.value) || 60;
+
+        noUiSlider.create(paybackSlider, {
+            start: [initialMin, initialMax],
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 60
+            },
+            step: 1,
+            format: wNumb({
+                decimals: 0,
+                thousand: '',
+                suffix: ''
+            }),
+            tooltips: false,
+            behaviour: 'tap-drag',
+            pips: false
+        });
+
+        paybackSlider.noUiSlider.on('update', function (values, handle) {
+            var minValue = values[0];
+            var maxValue = values[1];
+            paybackValueDisplay.textContent = minValue + ' - ' + maxValue + ' мес';
+            minPaybackInput.value = minValue;
+            maxPaybackInput.value = maxValue;
+        });
+    }
+
+    var investmentSlider = document.getElementById('investmentSlider');
+    var investmentValueDisplay = document.getElementById('investmentValueDisplay');
+    var minInvestmentInput = document.getElementById('minInvestmentInput');
+    var maxInvestmentInput = document.getElementById('maxInvestmentInput');
+
+    if (investmentSlider && investmentValueDisplay && minInvestmentInput && maxInvestmentInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
+        var initialMin = parseFloat(minInvestmentInput.value) || 0;
+        var initialMax = parseFloat(maxInvestmentInput.value) || 10000000;
+
+        noUiSlider.create(investmentSlider, {
+            start: [initialMin, initialMax],
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 10000000
+            },
+            step: 100000,
+            format: wNumb({
+                decimals: 0,
+                thousand: '',
+                suffix: ''
+            }),
+            tooltips: false,
+            behaviour: 'tap-drag',
+            pips: false
+        });
+
+        investmentSlider.noUiSlider.on('update', function (values, handle) {
+            var minValue = values[0];
+            var maxValue = values[1];
+            investmentValueDisplay.textContent = minValue + ' - ' + maxValue + ' ₽';
+            minInvestmentInput.value = minValue;
+            maxInvestmentInput.value = maxValue;
+        });
+    }
+  }
+</script>
+{% endblock %}

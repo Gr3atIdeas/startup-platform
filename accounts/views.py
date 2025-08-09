@@ -918,6 +918,171 @@ def franchises_list(request):
             "franchise_directions": franchise_directions,
         }
         return render(request, "accounts/franchises_list.html", context)
+def agencies_list(request):
+    # Копия franchises_list, но с другими фильтрами и шаблоном для агентств
+    startup_category_names = (
+        Startups.objects
+        .filter(direction__isnull=False)
+        .values_list('direction__direction_name', flat=True)
+        .distinct()
+    )
+    franchise_directions = (
+        FranchiseDirections.objects
+        .filter(direction_name__in=startup_category_names)
+        .order_by('direction_name')
+    )
+
+    franchises_qs = Franchises.objects.filter(status="approved")
+
+    selected_categories = request.GET.getlist("category")
+    search_query = request.GET.get("search", "").strip()
+    min_rating_str = request.GET.get("min_rating", "0")
+    max_rating_str = request.GET.get("max_rating", "5")
+    sort_order = request.GET.get("sort_order", "newest")
+    page_number = request.GET.get("page", 1)
+
+    franchises_qs = franchises_qs.annotate(
+        rating_agg=ExpressionWrapper(
+            Case(
+                When(total_voters__gt=0, then=F('sum_votes') * 1.0 / F('total_voters')),
+                default=Value(0.0),
+                output_field=FloatField(),
+            ),
+            output_field=FloatField()
+        ),
+    )
+
+    if selected_categories:
+        franchises_qs = franchises_qs.filter(
+            Q(direction__direction_name__in=selected_categories) |
+            Q(direction__franchisedirections__direction_name__in=selected_categories)
+        )
+
+    if search_query:
+        franchises_qs = franchises_qs.filter(title__icontains=search_query)
+
+    try:
+        min_rating = float(min_rating_str)
+        max_rating = float(max_rating_str)
+        if min_rating > 0:
+            franchises_qs = franchises_qs.filter(rating_agg__gte=min_rating)
+        if max_rating < 5:
+            franchises_qs = franchises_qs.filter(rating_agg__lte=max_rating)
+    except ValueError:
+        min_rating = 0
+        max_rating = 5
+
+    if sort_order == "newest":
+        franchises_qs = franchises_qs.order_by("-created_at")
+    elif sort_order == "oldest":
+        franchises_qs = franchises_qs.order_by("created_at")
+
+    paginator = Paginator(franchises_qs, 6)
+    page_obj = paginator.get_page(page_number)
+
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    if is_ajax:
+        html = render_to_string(
+            "accounts/partials/_agency_cards.html", {"page_obj": page_obj}
+        )
+        return JsonResponse(
+            {
+                "html": html,
+                "has_next": page_obj.has_next(),
+                "page_number": page_obj.number,
+                "num_pages": paginator.num_pages,
+                "count": paginator.count,
+            }
+        )
+    else:
+        context = {
+            "page_obj": page_obj,
+            "paginator": paginator,
+            "initial_has_next": page_obj.has_next(),
+            "selected_categories": selected_categories,
+            "search_query": search_query,
+            "min_rating": min_rating,
+            "max_rating": max_rating,
+            "sort_order": sort_order,
+            "franchise_directions": franchise_directions,
+        }
+        return render(request, "accounts/agencies_list.html", context)
+def agency_detail(request, franchise_id):
+    # Копия franchise_detail, но другой шаблон и упрощенные блоки
+    try:
+        franchise = Franchises.objects.get(franchise_id=franchise_id)
+    except Franchises.DoesNotExist:
+        return render(request, "accounts/404.html", status=404)
+
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect("login")
+        form = FranchiseCommentForm(request.POST)
+        if form.is_valid():
+            from .models import FranchiseComments
+            comment = form.save(commit=False)
+            comment.franchise = franchise
+            comment.user = request.user
+            user_vote = FranchiseVotes.objects.filter(
+                user=request.user, franchise=franchise
+            ).first()
+            if user_vote:
+                comment.user_rating = user_vote.rating
+            comment.save()
+            messages.success(request, "Ваш комментарий был добавлен.")
+            return redirect("agency_detail", franchise_id=franchise.franchise_id)
+        else:
+            messages.error(request, "Ошибка при добавлении комментария.")
+    else:
+        form = FranchiseCommentForm()
+
+    candidates_qs = Franchises.objects.filter(
+        direction=franchise.direction,
+        status="approved",
+    ).exclude(franchise_id=franchise_id)
+    similar_franchises = candidates_qs.order_by("-created_at")[:4]
+
+    from .models import FranchiseComments
+    comments_with_rating = (
+        FranchiseComments.objects.filter(franchise=franchise, parent_comment__isnull=True)
+        .annotate(
+            user_vote_rating=models.Subquery(
+                FranchiseVotes.objects.filter(
+                    franchise=franchise, user=models.OuterRef("user_id")
+                ).values("rating")[:1]
+            )
+        )
+        .order_by("-created_at")
+    )
+    average_rating = franchise.get_average_rating()
+    total_votes = franchise.total_voters
+    user_has_voted = False
+    if request.user.is_authenticated:
+        user_has_voted = FranchiseVotes.objects.filter(
+            user=request.user, franchise=franchise
+        ).exists()
+    rating_distribution_query = (
+        FranchiseVotes.objects.filter(franchise=franchise)
+        .values("rating")
+        .annotate(count=Count("rating"))
+        .order_by("-rating")
+    )
+    rating_distribution = {item["rating"]: item["count"] for item in rating_distribution_query}
+    for i in range(1, 6):
+        rating_distribution.setdefault(i, 0)
+
+    context = {
+        "franchise": franchise,
+        "similar_franchises": similar_franchises,
+        "has_similar": candidates_qs.exists(),
+        "comments": comments_with_rating,
+        "form": form,
+        "average_rating": average_rating,
+        "total_votes_count": total_votes,
+        "user_has_voted": user_has_voted,
+        "rating_distribution": rating_distribution,
+    }
+    return render(request, "accounts/agency_detail.html", context)
 def franchise_detail(request, franchise_id):
     try:
         franchise = Franchises.objects.get(franchise_id=franchise_id)

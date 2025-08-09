@@ -1,0 +1,661 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load file_tags %}
+{% load timeline_filters %}
+{% load humanize %}
+{% load accounts_extras %}
+
+{% block title %}{{ franchise.title|default:"Детали агентства" }}{% endblock %}
+
+{% block head_extra %}
+  <link rel="stylesheet" href="{% static 'accounts/css/agency_detail.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/css/glightbox.min.css" />
+  <link rel="stylesheet" href="{% static 'accounts/css/moderation_panel.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="franchise-detail-page" 
+     data-franchise-id="{{ franchise.franchise_id }}" 
+     data-franchise-title="{{ franchise.title|escapejs }}"
+     data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+     data-user-has-voted="{{ user_has_voted|yesno:'true,false' }}"
+     data-load-similar-url="{% url 'load_similar_franchises' franchise_id=franchise.franchise_id %}"
+     data-owner-id="{{ franchise.owner.user_id }}"
+     data-investment-size="{{ franchise.investment_size|default:0 }}">
+  <div class="back-link-container">
+    <a href="{% url 'agencies_list' %}" class="back-button">
+      <i class="fas fa-arrow-left"></i> Назад
+    </a>
+  </div>
+
+  <div class="top-section">
+    <div class="left-column">
+      <div class="planet-container">
+        <div class="stars"></div>
+        {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+          <form method="post" class="status-form">
+            {% csrf_token %}
+            <select name="status" class="status-select" onchange="this.form.submit()">
+              <option value="approved" {% if franchise.status == 'approved' %}selected{% endif %}>Approved</option>
+              <option value="blocked" {% if franchise.status == 'blocked' %}selected{% endif %}>Blocked</option>
+              <option value="closed" {% if franchise.status == 'closed' %}selected{% endif %}>Closed</option>
+              <option value="pending" {% if franchise.status == 'pending' %}selected{% endif %}>Pending</option>
+              <option value="rejected" {% if franchise.status == 'rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+          </form>
+        {% else %}
+          <div class="status-badge status-{{ franchise.status|default:'unknown' }}">
+             {{ franchise.get_status_display|default:franchise.status|capfirst }}
+          </div>
+        {% endif %}
+        
+        <div class="planet-display-container">
+          <div class="space-background"></div>
+          {% if franchise.planet_image %}
+            <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ franchise.planet_image }}" alt="Планета {{ franchise.title }}" class="planet-image">
+          {% else %}
+            <img src="{% static 'accounts/images/icons/planet_placeholder.svg' %}" alt="Планета не выбрана" class="planet-placeholder">
+          {% endif %}
+        </div>
+        
+        <button class="action-button chat-button">Чат</button>
+      </div>
+      
+      <div class="investment-info-container">
+        <div class="investment-size-info">
+          <div class="investment-size-label">Успешных проектов</div>
+          <div class="investment-size-value">{{ franchise.successful_projects|default:12 }}</div>
+        </div>
+      </div>
+      
+      <div class="author-info-left">
+        <div class="author-header">Автор</div>
+        <div class="author-details">
+          <div class="author-avatar">
+            <img src="{% if franchise.owner.get_profile_picture_url %}{{ franchise.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ franchise.owner.username }}" class="author-avatar-img">
+          </div>
+          <div class="author-meta">
+            <div class="author-name">{{ franchise.owner.first_name|default:"Автор" }} {{ franchise.owner.last_name }}</div>
+            <div class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</div>
+          </div>
+          <button class="action-button write-author-button">Написать</button>
+        </div>
+        <div class="creation-date">Создан {{ franchise.created_at|date:"d/m/Y" }}</div>
+        <a href="https://greatideas.ru/support/orders/" class="report-button">Пожаловаться</a>
+      </div>
+    </div>
+    
+    <div class="right-column">
+      
+      <div class="franchise-header-actions-wrapper"> 
+        <div class="franchise-header">
+            <div class="franchise-header-left">
+            <div class="franchise-title-wrapper">
+              <div class="logo-display-container">
+                {% if franchise.owner and franchise.owner.get_profile_picture_url %}
+                  <img src="{{ franchise.owner.get_profile_picture_url }}" alt="Аватар автора {{ franchise.owner.username }}" class="logo-image">
+                {% elif franchise.logo_urls %}
+                  {% with logo_file_id=franchise.logo_urls.0 %}
+                    <img src="{% get_file_url_tag logo_file_id franchise.franchise_id 'logo' %}" alt="Логотип {{ franchise.title }}" class="logo-image">
+                  {% endwith %}
+                {% else %}
+                  <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
+                {% endif %}
+              </div>
+              <h1 class="franchise-name" title="{{ franchise.title }}">{{ franchise.title }}</h1>
+            </div>
+
+            <div class="header-meta">
+              <span class="category-value">{{ franchise.direction.direction_name|translate_category|default:"Без категории" }}</span>
+            <div class="franchise-stats-info"></div>
+            </div>
+
+            <div class="rating-comments-container">
+              <div class="rating-container">
+                <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
+                <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
+                  {% for i in "12345" %}
+                    <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
+                      <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                      <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+                    </span>
+                  {% endfor %}
+                </div>
+              </div>
+              <a href="#comments-section" class="comments-link">Комментарии</a>
+            </div>
+          </div>
+
+          
+        </div>
+
+                 <div class="actions-top-right">
+           <div class="franchise-info-badge">Агентство</div>
+           {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+             <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}" class="action-button edit-button">Редактировать</a>
+             <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
+           {% endif %}
+         </div>
+      </div> 
+
+      <div class="tabbed-content-wrapper">
+        <div class="tab-navigation">
+          <button class="tab-button active" data-target="info-section"><span>Информация</span></button>
+          <button class="tab-button" data-target="gallery-section"><span>Услуги</span></button>
+          <button class="tab-button" data-target="profit-calculation-section"><span>Кейсы</span></button>
+          <button class="tab-button" data-target="conditions-section"><span>Этапы работ</span></button>
+          <button class="tab-button" data-target="documents-section"><span>Документы</span></button>
+        </div>
+
+        <div class="tab-content-container">
+          <div id="info-section" class="content-section active">
+            
+            <div class="about-section">
+              <h2 class="section-title">Вводная</h2> 
+              <div class="section-content text-truncate-container" id="intro-section">
+                <div class="text-content" onclick="toggleTextTruncation('intro-section', 3)">
+                  <p>{{ franchise.short_description|default:"Нет вводного описания." }}</p> 
+                  <span class="text-truncate-toggle">Показать полностью</span>
+                </div>
+              </div>
+            </div>
+            <div class="about-section"> 
+              <h2 class="section-title">О франшизе</h2>
+              <div class="section-content text-truncate-container" id="about-section">
+                <div class="text-content" onclick="toggleTextTruncation('about-section', 5)">
+                  <p>{{ franchise.description|linebreaksbr|default:"Нет подробного описания." }}</p>
+                  {% if franchise.additional_info %}
+                    <p><strong>Основные функции:</strong></p>
+                    {{ franchise.additional_info|linebreaksbr }}
+                  {% endif %}
+                  <span class="text-truncate-toggle">Показать полностью</span>
+                </div>
+              </div>
+            </div>
+
+            
+            <div class="info-card-grid">
+              
+              <div class="info-card">
+                <div class="info-card-icon-container">
+                  <img src="{% static 'accounts/images/startups/image.svg' %}" alt="Презентация" class="info-card-icon">
+                </div>
+                <span class="info-card-title">Презентация</span>
+                {% if franchise.pitch_deck_url %}
+                  <a href="{{ franchise.pitch_deck_url }}" target="_blank" class="action-button info-card-button view-button">Смотреть</a>
+                {% else %}
+                  <button class="action-button info-card-button view-button" disabled>Смотреть</button>
+                {% endif %}
+              </div>
+
+              
+              <div class="info-card">
+                <div class="info-card-icon-container">
+                  <img src="{% static 'accounts/images/startups/award.svg' %}" alt="Оценка" class="info-card-icon">
+                </div>
+                <span class="info-card-title">Оценка</span>
+                <div class="info-card-value-button accent-yellow-bg">
+                  {{ average_rating|default:0|floatformat:"1" }}
+                </div>
+              </div>
+
+              
+              
+
+              
+              <div class="info-card">
+                <div class="info-card-icon-container">
+                  <img src="{% static 'accounts/images/startups/boxes.svg' %}" alt="Категория" class="info-card-icon">
+                </div>
+                          <span class="info-card-title">Категория</span>
+          <div class="info-card-value-button accent-white-bg">
+            {{ franchise.direction.direction_name|translate_category|default:"Не указана" }}
+          </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="gallery-section" class="content-section">
+            <h2 class="section-title">Услуги</h2>
+            <div class="profit-calculation-wrapper">
+              <div class="profit-calculation-content">
+                {{ franchise.additional_info|default:"Описание услуг пока не добавлено."|linebreaksbr }}
+              </div>
+            </div>
+          </div>
+
+          
+          <div id="profit-calculation-section" class="content-section">
+            <h2 class="section-title">Кейсы</h2>
+            <div class="profit-calculation-wrapper">
+                <div class="profit-calculation-content">
+                    {{ franchise.additional_info|default:"Кейсы пока не добавлены."|linebreaksbr }}
+                </div>
+            </div>
+          </div>
+
+          
+          <div id="documents-section" class="content-section">
+            <h2 class="section-title">Документы</h2>
+            {% if franchise_documents %}
+                <ul class="document-list">
+                    {% for doc in franchise_documents %}
+                        <li class="document-item">
+                            <a href="{% get_file_url_tag doc.file_url franchise.franchise_id 'proof' %}" target="_blank" class="document-link">
+                                <i class="fas fa-file-alt document-icon"></i>
+                                <span class="document-name">{% get_file_original_name doc.file_url franchise.franchise_id 'proof' %}</span>
+                            </a>
+                            
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Документы по франшизе пока не загружены.</p>
+            {% endif %}
+          </div>
+
+          
+          <div id="conditions-section" class="content-section">
+            <h2 class="section-title">Этапы работ</h2>
+            <p>{{ franchise.terms|linebreaksbr|default:"Этапы работ не указаны." }}</p>
+          </div>
+        </div> 
+      </div> 
+    </div> 
+  </div> 
+
+  {% if user.is_authenticated and user.role.role_name == 'moderator' and franchise.status == 'pending' %}
+      <div class="moderator-review-section card my-4">
+          <div class="card-header">
+              <h4>Модерация франшизы</h4>
+          </div>
+          <div class="card-body">
+              <form method="post" action="{% url 'approve_franchise' franchise_id=franchise.franchise_id %}">
+                  {% csrf_token %}
+                  <div class="mb-3">
+                      <label for="moderator_comment_area" class="form-label">Комментарий модератора:</label>
+                      <textarea class="form-control moderator-comment-textarea" id="moderator_comment_area" name="moderator_comment" rows="3">{{ franchise.moderator_comment|default:'' }}</textarea>
+                  </div>
+                  <button type="submit" name="action" value="approve" class="btn btn-success me-2">Одобрить</button>
+                  <button type="submit" formaction="{% url 'reject_franchise' franchise_id=franchise.franchise_id %}" name="action" value="reject" class="btn btn-danger">Отклонить</button>
+              </form>
+          </div>
+      </div>
+  {% elif show_moderator_comment and franchise.moderator_comment %}
+      <div class="moderator-comment-display card my-4">
+          <div class="card-header">
+              <h5>Комментарий модератора:</h5>
+          </div>
+          <div class="card-body">
+              <p class="card-text">{{ franchise.moderator_comment }}</p>
+          </div>
+      </div>
+  {% endif %}
+
+  <div id="comments-section">
+    
+    <div class="comments-header">
+      <h2 class="section-title">
+        Комментарии 
+        <i class="fas fa-comment-dots comment-title-icon"></i> 
+        <span class="comments-count">{{ comments|length }}</span> 
+      </h2>
+      
+    </div>
+
+    
+    <div class="comments-main-content">
+      
+      
+      <div class="comments-list-wrapper">
+        
+        
+        {% if comments %}
+          <div class="comments-list">
+            {% for comment in comments %}
+              <div class="comment-card {% if forloop.counter > 5 %}hidden{% endif %}"> 
+                <div class="comment-left">
+                  <div class="comment-author-avatar">
+                    
+                    <img src="{% if comment.user_id.get_profile_picture_url %}{{ comment.user_id.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ comment.user_id.username }}" class="comment-avatar-img">
+                  </div>
+                  <div class="comment-content-wrapper">
+                    <div class="comment-author-name">
+                      {{ comment.user_id.first_name|default:comment.user_id.username }}
+                      {% if comment.user_vote_rating %}
+                        <span class="comment-author-rating-badge">оценил на {{ comment.user_vote_rating }}</span>
+                      {% endif %}
+                    </div>
+                    <div class="comment-body">
+                      <p>{{ comment.content }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="comment-right">
+                  <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}</div>
+                  <div class="comment-rating" data-rating="{{ comment.user_vote_rating|default:0 }}">
+                    {% for star_i in "12345" %}
+                      <span class="rating-icon-container comment-icon-container">
+                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+                      </span>
+                    {% endfor %}
+                  </div>
+                  <div class="comment-footer">
+                    {% if comment.user_id|has_invested:startup %}
+                      <span class="badge badge-invested">Инвестировал</span>
+                    {% endif %}
+                    {% if comment.user_id|is_buyout_investor:startup %}
+                      <span class="badge badge-buyout">Выкуп</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div> 
+        {% else %}
+          <div class="comments-list empty">
+            <p>Пока нет комментариев. Будьте первым!</p>
+          </div>
+        {% endif %}
+
+        
+        {% if comments|length > 5 %}
+          <button class="show-more-comments">
+            Показать еще <i class="fas fa-chevron-down"></i>
+          </button>
+          <button class="hide-comments-button" style="display: none;">
+            Скрыть <i class="fas fa-chevron-up"></i>
+          </button>
+        {% endif %}
+
+        
+        {% if user.is_authenticated %}
+          <form method="post" class="comment-form">
+            {% csrf_token %}
+            
+            {{ form.content|add_class:"comment-textarea"|attr:"placeholder:Написать комментарий" }}
+            <button type="submit" class="action-button comment-submit">Оставить комментарий</button>
+          </form>
+        {% else %}
+          <div class="comment-form disabled-form">
+            <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставить комментарий.</p>
+          </div>
+        {% endif %}
+
+      </div> 
+
+      
+      <div class="comments-rating-summary-wrapper">
+        
+        <div class="rating-summary-content">
+          
+          <div class="overall-rating-line">
+            <div class="overall-rating-stars" data-rating="{{ average_rating|floatformat:'-2'|default:0 }}">
+                {% for i in "12345" %}
+                  <span class="rating-icon-container overall-rating-icon-container">
+                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+                  </span>
+                {% endfor %}
+            </div>
+            <span class="average-rating-value">{{ average_rating|default:0|floatformat:"1" }}</span>
+          </div> 
+
+          
+          <div class="rating-distribution" data-ratings='{{ rating_distribution|to_json }}'>
+            {% for i_str in "54321" %}
+              {% with i=i_str|add:"0" %} 
+              
+              {% with current_count=rating_distribution|get_item:i %}
+              <div class="rating-bar-container">
+                
+                <span class="star-label">
+                  {% for _ in ""|rjust:i %}
+                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="rating-dist-icon">
+                  {% endfor %}
+                </span>
+                <div class="rating-bar">
+                  
+                  {% with total_votes=total_votes_count %}
+                    {% if total_votes > 0 %}
+                      {% widthratio current_count total_votes 100 as bar_width %}
+                      <div class="rating-bar-fill" style="width: {{ bar_width }}%;"></div>
+                    {% else %}
+                       
+                      <div class="rating-bar-fill" style="width: 0%;"></div> 
+                    {% endif %}
+                  {% endwith %}
+                </div>
+                
+                <span class="rating-count">{{ current_count }}</span> 
+              </div>
+              {% endwith %} 
+              {% endwith %} 
+            {% endfor %}
+          </div> 
+        </div> 
+      </div> 
+
+    </div> 
+  </div> 
+
+  <div class="similar-franchises-section">
+    <div class="similar-franchises-container">
+      <h2 class="similar-title">
+        <span class="similar-text">похожие</span>
+        <span class="franchises-text">АГЕНТСТВА</span>
+      </h2>
+      
+      <a href="{% url 'agencies_list' %}" class="show-all-button">
+        <span>Показать все</span> <i class="fas fa-arrow-right"></i>
+      </a>
+      
+      {% if has_similar and similar_franchises %}
+        <div class="similar-franchises-grid">
+          {% for similar in similar_franchises|slice:":4" %}
+          <a href="{% url 'agency_detail' similar.franchise_id %}" class="similar-card">
+            <div class="similar-card-image">
+              {% if similar.logo_urls %}
+                <img src="{% get_file_url_tag similar.logo_urls.0 similar.franchise_id 'logo' %}" alt="Логотип">
+              {% else %}
+                <div class="planet">
+                  <div class="planet-segment segment-top" style="background-color: {{ similar.planet_top_color|default:'#7B61FF' }};"></div>
+                  <div class="planet-segment segment-middle" style="background-color: {{ similar.planet_middle_color|default:'#6B51DF' }};"></div>
+                  <div class="planet-segment segment-bottom" style="background-color: {{ similar.planet_bottom_color|default:'#5B41BF' }};"></div>
+                </div>
+              {% endif %}
+            </div>
+            <div class="similar-card-name">{{ similar.title|default:"Агентство" }}</div>
+            <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2' }}">
+              {% for star_i in "12345" %}
+                <span class="rating-icon-container">
+                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+                </span>
+              {% endfor %}
+            </div>
+            <div class="similar-card-category">
+              <div class="category-badge">{{ similar.direction.direction_name|translate_category|default:"Категория" }}</div>
+            </div>
+          </a>
+          {% endfor %}
+
+          <div class="similar-card show-more-placeholder">
+            <button class="action-button show-more-similar">
+              <i class="fas fa-redo"></i> Показать еще
+            </button>
+          </div>
+        </div>
+      {% else %}
+        <p style="margin-top: 10px; color: #fff; opacity: .8;">Похожих франшиз пока нет. Мы подберём рекомендации, как только появятся новые франшизы в этой категории.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  
+  
+  <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reportModalLabel">Пожаловаться на стартап</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="reportForm">
+            <div class="mb-3">
+              <label for="reportReason" class="form-label">Причина жалобы:</label>
+              <select class="form-select" id="reportReason" name="reason">
+                <option selected>Выберите причину...</option>
+                <option value="spam">Спам</option>
+                <option value="fraud">Мошенничество</option>
+                <option value="offensive">Оскорбительный контент</option>
+                <option value="other">Другое</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="reportComment" class="form-label">Комментарий:</label>
+              <textarea class="form-control" id="reportComment" name="comment" rows="4" placeholder="Опишите вашу жалобу"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
+          <button type="button" class="action-button action-button-danger" id="submitReport">Отправить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- Debug: Change Owner Modal -->
+  <div class="modal fade" id="changeOwnerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Сменить владельца</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="userSearchInput" class="form-control mb-3" placeholder="Поиск пользователей...">
+          <ul id="userSearchResults" class="list-group"></ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-button" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- Debug: Confirm Change Owner Modal -->
+  <div class="modal fade" id="confirmChangeOwnerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Подтверждение действия</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Вы уверены, что хотите сменить владельца стартапа на <strong id="newOwnerName"></strong>?</p>
+          <input type="hidden" id="newOwnerId">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
+          <button type="button" class="action-button confirm-change-owner">Подтвердить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- Debug: Add Investor Modal -->
+  <div class="modal fade" id="addInvestorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Добавить инвестора</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h6>Поиск пользователей</h6>
+          <input type="text" id="investorSearchInput" class="form-control mb-3" placeholder="Поиск пользователей...">
+          <ul id="investorSearchResults" class="list-group mb-4"></ul>
+
+          <h6>Новая инвестиция</h6>
+          <div class="mb-3">
+            <label for="investmentAmount" class="form-label">Сумма инвестиции (₽)</label>
+            <input type="number" id="investmentAmount" class="form-control" placeholder="Введите сумму">
+          </div>
+          
+          <h6>Текущие инвесторы</h6>
+          <div id="currentInvestorsList"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="addInvestmentButton" class="action-button" disabled>Добавить</button>
+          <button type="button" class="action-button" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="modal fade" id="confirmEditInvestmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Подтверждение редактирования</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Вы уверены, что хотите изменить сумму инвестиции пользователя <strong id="editInvestorName"></strong> на <span id="editInvestmentAmount"></span> ₽?</p>
+          <input type="hidden" id="editInvestorId">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
+          <button type="button" class="action-button confirm-edit-investment">Подтвердить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="modal fade" id="confirmDeleteInvestmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Подтверждение удаления</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Вы уверены, что хотите удалить инвестицию пользователя <strong id="deleteInvestorName"></strong> на сумму <span id="deleteInvestmentAmount"></span> ₽?</p>
+          <input type="hidden" id="deleteInvestorId">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
+          <button type="button" class="action-button confirm-delete-investment">Подтвердить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <script src="{% static 'accounts/js/franchise_detail.js' %}" defer></script>
+</div> 
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var lightbox = GLightbox({
+      selector: '.glightbox'
+    });
+  });
+</script>
+{% endblock %}

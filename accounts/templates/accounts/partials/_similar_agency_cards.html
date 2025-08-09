@@ -1,0 +1,49 @@
+{% load static %}
+{% load accounts_extras %}
+{% load file_tags %}
+
+{% for similar in similar_franchises %}
+<a href="{% url 'agency_detail' similar.franchise_id %}" class="similar-card">
+  <div class="similar-card-image">
+    {% if similar.logo_urls %}
+      <img src="{% get_file_url_tag similar.logo_urls.0 similar.franchise_id 'logo' %}" alt="Логотип">
+    {% else %}
+      <div class="planet"></div>
+    {% endif %}
+  </div>
+  <div class="similar-card-name">{{ similar.title|default:"Агентство" }}</div>
+  <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2' }}">
+    {% for star_i in "12345" %}
+      <span class="rating-icon-container">
+        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+      </span>
+    {% endfor %}
+  </div>
+  <div class="similar-card-category">
+    <div class="category-badge">{{ similar.direction.direction_name|translate_category|default:"Категория" }}</div>
+  </div>
+</a>
+{% endfor %}
+
+{% if similar_franchises|length < 4 %}
+  {% for i in "1234" %}
+    {% if forloop.counter > similar_franchises|length %}
+      <a href="#" class="similar-card placeholder">
+        <div class="similar-card-image"><div class="planet"></div></div>
+        <div class="similar-card-name">Название франшизы</div>
+        <div class="similar-card-rating" data-rating="0">
+          {% for star_i in "12345" %}
+            <span class="rating-icon-container">
+              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+            </span>
+          {% endfor %}
+        </div>
+        <div class="similar-card-category">
+          <div class="category-badge">Категория</div>
+        </div>
+      </a>
+    {% endif %}
+  {% endfor %}
+{% endif %}
