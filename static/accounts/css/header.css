@@ -236,13 +236,11 @@
 .profile-dropdown-menu {
   display: none;
   position: absolute;
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  background: var(--dark-card-bg, #0b1730);
   min-width: 250px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid #353945;
   z-index: 100;
   right: 0;
   top: calc(100% + 10px);
@@ -260,7 +258,7 @@
 }
 
 .profile-dropdown-item {
-  color: #000;
+  color: #fff;
   padding: 12px 20px;
   text-decoration: none;
   display: flex;
@@ -276,8 +274,8 @@
 }
 
 .profile-dropdown-item:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: #000 !important;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #fff !important;
 }
 
 .profile-dropdown-notifications {
@@ -291,7 +289,7 @@
 .profile-dropdown-item-icon {
   width: 20px;
   height: 20px;
-  color: #000;
+  filter: none;
 }
 
 .profile-dropdown-notifications .profile-dropdown-item-icon {
@@ -299,17 +297,7 @@
 }
 
 .notification-icon-background {
-  display: flex;
-  width: 35px;
-  height: 35px;
-  padding: 5px;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  border-radius: 50px;
-  background: rgba(0, 78, 159, 0.8);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  display: none;
 }
 
 .notification-icon-background img.profile-dropdown-item-icon {

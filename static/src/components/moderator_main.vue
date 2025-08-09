@@ -279,6 +279,7 @@ export default {
     top: -8px;
     right: -8px;
     border: 2px solid #0f0f2d;
+    color: #fff;
   }
 }
 
