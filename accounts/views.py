@@ -79,6 +79,7 @@ from .models import (
     ChatParticipants,
     Comments,
     Directions,
+    FranchiseDirections,
     EntityTypes,
     FileStorage,
     FileTypes,
@@ -744,14 +745,7 @@ def startups_list(request):
         return render(request, "accounts/startups_list.html", context)
 
 def franchises_list(request):
-    franchise_directions = Directions.objects.filter(
-        direction_name__in=[
-            'Рестораны и кафе', 'Салоны красоты', 'Фитнес-клубы', 'Образовательные центры',
-            'Автосервисы', 'Магазины розничной торговли', 'Медицинские центры', 'Детские сады и клубы',
-            'Туристические агентства', 'Строительные компании', 'Юридические услуги', 'Страховые компании',
-            'Банковские услуги', 'Недвижимость и агентства', 'Логистические услуги'
-        ]
-    ).order_by('direction_name')
+    franchise_directions = FranchiseDirections.objects.all().order_by('direction_name')
     
     # Копируем стартапы в франшизы если их нет
     if not Franchises.objects.exists():
@@ -830,15 +824,13 @@ def franchises_list(request):
         ),
     )
     
-    categories = list(
-        Directions.objects.annotate(id=F("direction_id"), name=F("direction_name"))
-        .values("id", "name")
-        .order_by("name")
-    )
+    # список категорий для UI может использоваться из franchise_directions
     
     if selected_categories:
+        # Фильтруем по новому словарю направлений франшиз (на переходный период оставим старое поле, если оно заполнено)
         franchises_qs = franchises_qs.filter(
-            direction__direction_name__in=selected_categories
+            Q(direction__direction_name__in=selected_categories) |
+            Q(direction__franchisedirections__direction_name__in=selected_categories)
         )
     
     if search_query:

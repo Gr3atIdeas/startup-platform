@@ -785,3 +785,15 @@ class FranchiseCategories(models.Model):
     
     def __str__(self):
         return self.category_name or "Без названия"
+
+
+class FranchiseDirections(models.Model):
+    direction_id = models.AutoField(primary_key=True)
+    direction_name = models.CharField(max_length=255, blank=True, null=True, unique=True)
+
+    class Meta:
+        managed = True
+        db_table = "franchise_directions"
+
+    def __str__(self):
+        return self.direction_name or "Без категории"
