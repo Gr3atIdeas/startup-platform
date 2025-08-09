@@ -908,6 +908,39 @@ def investments(request):
     if not hasattr(request.user, "role") or request.user.role.role_name != "investor":
         messages.error(request, "Доступ к этой странице разрешен только инвесторам.")
         return redirect("profile")
+    # Безопасные значения по умолчанию, чтобы страница открывалась даже при ошибках данных/интеграций
+    default_month_labels = [
+        "Янв",
+        "Фев",
+        "Мар",
+        "Апр",
+        "Май",
+        "Июн",
+        "Июл",
+        "Авг",
+        "Сен",
+        "Окт",
+        "Ноя",
+        "Дек",
+    ]
+    safe_context = {
+        "startups_count": 0,
+        "total_investment": Decimal("0"),
+        "max_investment": Decimal("0"),
+        "min_investment": Decimal("0"),
+        "investment_categories": [],
+        "month_labels": default_month_labels,
+        "chart_monthly_category_data": [],
+        "chart_categories": [],
+        "all_directions": [],
+        "invested_category_data": {},
+        "user_investments": [],
+        "user_owned_startups": [],
+        "current_sort": "newest",
+        "planetary_investments": [],
+        "planetary_investments_json": [],
+        "investor_logo_url": request.user.get_profile_picture_url() or "https://via.placeholder.com/60",
+    }
     try:
         user_investments_qs = InvestmentTransactions.objects.filter(
             investor=request.user, transaction_type__type_name="investment"
@@ -1039,13 +1072,17 @@ def investments(request):
         logger.info(
             f"[investments] Final structured chart data list: {chart_data_list}"
         )
-        s3_client = client(
-            "s3",
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            endpoint_url=settings.AWS_S3_ENDPOINT_URL,
-            region_name=settings.AWS_S3_REGION_NAME,
-        )
+        try:
+            s3_client = client(
+                "s3",
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+                region_name=settings.AWS_S3_REGION_NAME,
+            )
+        except Exception as s3_init_err:
+            logger.error(f"[investments] S3 client init failed: {s3_init_err}")
+            s3_client = None
         invested_startups_qs = (
             user_investments_qs.select_related("startup")
             .annotate(
@@ -1112,26 +1149,29 @@ def investments(request):
                 )
                 logo_url = "https://via.placeholder.com/150"
             else:
-                try:
-                    prefix = f"startups/{startup_obj.startup_id}/logos/"
-                    response = s3_client.list_objects_v2(
-                        Bucket=settings.AWS_STORAGE_BUCKET_NAME, Prefix=prefix
-                    )
-                    if "Contents" in response and len(response["Contents"]) > 0:
-                        file_key = response["Contents"][0]["Key"]
-                        logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
-                        logger.info(
-                            f"Сгенерирован URL для логотипа стартапа {startup_obj.startup_id}: {logo_url}"
+                if s3_client is not None:
+                    try:
+                        prefix = f"startups/{startup_obj.startup_id}/logos/"
+                        response = s3_client.list_objects_v2(
+                            Bucket=settings.AWS_STORAGE_BUCKET_NAME, Prefix=prefix
                         )
-                    else:
-                        logger.warning(
-                            f"Файл для логотипа стартапа {startup_obj.startup_id} не найден в бакете по префиксу {prefix}"
+                        if "Contents" in response and len(response["Contents"]) > 0:
+                            file_key = response["Contents"][0]["Key"]
+                            logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
+                            logger.info(
+                                f"Сгенерирован URL для логотипа стартапа {startup_obj.startup_id}: {logo_url}"
+                            )
+                        else:
+                            logger.warning(
+                                f"Файл для логотипа стартапа {startup_obj.startup_id} не найден в бакете по префиксу {prefix}"
+                            )
+                            logo_url = "https://via.placeholder.com/150"
+                    except Exception as e:
+                        logger.error(
+                            f"Ошибка при генерации URL для логотипа стартапа {startup_obj.startup_id}: {str(e)}"
                         )
                         logo_url = "https://via.placeholder.com/150"
-                except Exception as e:
-                    logger.error(
-                        f"Ошибка при генерации URL для логотипа стартапа {startup_obj.startup_id}: {str(e)}"
-                    )
+                else:
                     logo_url = "https://via.placeholder.com/150"
             orbit_size = (idx * 100) + 100
             orbit_time = (idx * 20) + 60
@@ -1223,17 +1263,15 @@ def investments(request):
             "user_owned_startups": user_owned_startups,
             "current_sort": "newest",
             "planetary_investments": planetary_investments,
+            "planetary_investments_json": planetary_investments,
             "investor_logo_url": request.user.get_profile_picture_url()
             or "https://via.placeholder.com/60",
         }
         return render(request, "accounts/investments.html", context)
     except Exception as e:
         logger.error(f"Произошла ошибка в investments: {str(e)}", exc_info=True)
-        messages.error(
-            request,
-            "Произошла ошибка при загрузке страницы. Пожалуйста, попробуйте снова.",
-        )
-        return redirect("profile")
+        # Рендерим страницу с безопасным контекстом вместо редиректа, чтобы не показывать алерт
+        return render(request, "accounts/investments.html", safe_context)
 def legal(request):
     return render(request, "accounts/legal.html")
 @login_required
