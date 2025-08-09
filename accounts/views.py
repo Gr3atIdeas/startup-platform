@@ -942,11 +942,15 @@ def investments(request):
         "investor_logo_url": request.user.get_profile_picture_url() or "https://via.placeholder.com/60",
     }
     try:
-        user_investments_qs = InvestmentTransactions.objects.filter(
-            investor=request.user, transaction_type__type_name__iexact="investment"
-        ).select_related("startup", "startup__direction", "startup__owner")
+        base_tx_qs = InvestmentTransactions.objects.filter(
+            investor=request.user
+        )
+        user_investments_qs = (
+            base_tx_qs.filter(amount__gt=0)
+            .select_related("startup", "startup__direction", "startup__owner")
+        )
         logger.info(
-            f"[investments] tx count for {request.user.email}: {user_investments_qs.count()}"
+            f"[investments] tx count for {request.user.email}: {user_investments_qs.count()} (base={base_tx_qs.count()})"
         )
         total_investment_data = user_investments_qs.aggregate(
             total_investment=Sum("amount"),
@@ -1003,7 +1007,7 @@ def investments(request):
             f"[investments] Preparing chart data for user {request.user.email}, range: {start_dt.date()}..{end_dt.date()}"
         )
         monthly_data_direct = (
-            user_investments_qs.filter(created_at__date__gte=start_dt.date(), created_at__date__lte=end_dt.date(), amount__gt=0)
+            user_investments_qs.filter(created_at__date__gte=start_dt.date(), created_at__date__lte=end_dt.date())
             .annotate(month=TruncMonth("created_at"))
             .values("month")
             .annotate(monthly_total=Sum(Coalesce("amount", Decimal(0))))
@@ -1031,7 +1035,6 @@ def investments(request):
             user_investments_qs.filter(
                 created_at__date__gte=start_dt.date(),
                 created_at__date__lte=end_dt.date(),
-                amount__gt=0,
                 startup__direction__isnull=False,
             )
             .annotate(month=TruncMonth("created_at"))
