@@ -1268,8 +1268,86 @@ def investments(request):
         return render(request, "accounts/investments.html", context)
     except Exception as e:
         logger.error(f"Произошла ошибка в investments: {str(e)}", exc_info=True)
-        # Рендерим страницу с безопасным контекстом вместо редиректа, чтобы не показывать алерт
-        return render(request, "accounts/investments.html", safe_context)
+        # Fallback: пробуем собрать упрощенный контекст без внешних интеграций/S3
+        try:
+            user_investments_qs = InvestmentTransactions.objects.filter(
+                investor=request.user, transaction_type__type_name__iexact="investment"
+            ).select_related("startup", "startup__direction")
+            total_investment_data = user_investments_qs.aggregate(
+                total_investment=Sum("amount"),
+                max_investment=Max("amount"),
+                startups_count=Count("startup", distinct=True),
+            )
+            total_investment = total_investment_data.get("total_investment") or Decimal("0")
+            max_investment = total_investment_data.get("max_investment") or Decimal("0")
+            investments_with_amount = user_investments_qs.filter(amount__gt=0)
+            min_investment = investments_with_amount.aggregate(m=Min("amount")).get("m") or Decimal("0")
+            category_data_raw = (
+                user_investments_qs.values("startup__direction__direction_name").annotate(category_total=Sum("amount")).order_by("-category_total")
+            )
+            investment_categories = []
+            invested_category_data_dict = {}
+            denom = total_investment if total_investment > 0 else Decimal("1")
+            for c in category_data_raw:
+                name = c.get("startup__direction__direction_name") or "Без категории"
+                s = c.get("category_total") or Decimal("0")
+                pct = int(round((Decimal(s) / denom) * 100)) if s else 0
+                pct = max(0, min(pct, 100))
+                investment_categories.append({"name": name, "percentage": pct})
+                invested_category_data_dict[name] = pct
+            end_dt = timezone.now()
+            start_dt = (end_dt - relativedelta(months=11)).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            month_labels = []
+            month_cursor = start_dt
+            for _ in range(12):
+                month_labels.append(month_cursor.strftime("%b"))
+                month_cursor = month_cursor + relativedelta(months=1)
+            monthly_category_data_raw = (
+                user_investments_qs.filter(created_at__date__gte=start_dt.date(), created_at__date__lte=end_dt.date(), amount__gt=0, startup__direction__isnull=False)
+                .annotate(month=TruncMonth("created_at"))
+                .values("month", "startup__direction__direction_name")
+                .annotate(monthly_category_total=Sum(Coalesce("amount", Decimal(0))))
+                .order_by("month", "startup__direction__direction_name")
+            )
+            structured = collections.defaultdict(lambda: collections.defaultdict(float))
+            cats = set()
+            for row in monthly_category_data_raw:
+                mkey = row["month"].strftime("%Y-%m-01") if row.get("month") else None
+                if not mkey:
+                    continue
+                cname = row["startup__direction__direction_name"]
+                val = float(row.get("monthly_category_total") or 0)
+                structured[mkey][cname] += val
+                cats.add(cname)
+            chart_data_list = []
+            rolling_start = start_dt.date()
+            for i in range(12):
+                k = (rolling_start + relativedelta(months=i)).strftime("%Y-%m-01")
+                chart_data_list.append({"month_key": k, "category_data": dict(structured[k])})
+            sorted_categories = sorted(list(cats))
+            context = {
+                "startups_count": total_investment_data.get("startups_count", 0),
+                "total_investment": total_investment,
+                "max_investment": max_investment,
+                "min_investment": min_investment,
+                "investment_categories": investment_categories[:7],
+                "month_labels": month_labels,
+                "chart_monthly_category_data": chart_data_list,
+                "chart_categories": sorted_categories,
+                "all_directions": list(Directions.objects.values("pk", "direction_name")),
+                "invested_category_data": invested_category_data_dict,
+                "user_investments": user_investments_qs.order_by("-created_at")[:12],
+                "user_owned_startups": Startups.objects.filter(owner_id=request.user.user_id)[:12],
+                "current_sort": "newest",
+                "planetary_investments": [],
+                "planetary_investments_json": [],
+                "investor_logo_url": request.user.get_profile_picture_url() or "https://via.placeholder.com/60",
+            }
+            return render(request, "accounts/investments.html", context)
+        except Exception as e2:
+            logger.error(f"[investments] Fallback building failed: {e2}", exc_info=True)
+            # Рендерим страницу с безопасным контекстом вместо редиректа, чтобы не показывать алерт
+            return render(request, "accounts/investments.html", safe_context)
 def legal(request):
     return render(request, "accounts/legal.html")
 @login_required
