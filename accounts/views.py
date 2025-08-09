@@ -756,7 +756,7 @@ def franchise_detail(request, franchise_id):
         .annotate(
             user_vote_rating=models.Subquery(
                 UserVotes.objects.filter(
-                    franchise=franchise, user=models.OuterRef("user_id_id")
+                    franchise=franchise, user=models.OuterRef("user_id")
                 ).values("rating")[:1]
             )
         )
