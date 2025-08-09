@@ -124,7 +124,7 @@ export default {
   max-width: 1303px;
   margin: 45px auto;
 
-  .card {
+    .card {
     position: relative;
     border-radius: 10px;
     overflow: visible; // Allow badge to overflow
@@ -144,6 +144,7 @@ export default {
       font-weight: 400;
       line-height: 18px;
       margin: 0;
+      color: #fff;
     }
   }
   .card-bg,
@@ -187,7 +188,7 @@ export default {
     );
     z-index: 2;
   }
-  .card-content {
+    .card-content {
     position: relative;
     z-index: 3;
     padding: 20px;
@@ -198,6 +199,7 @@ export default {
     justify-content: flex-end;
     align-items: center;
     text-align: center;
+      color: #fff;
     &.left-align {
       align-items: flex-start;
       justify-content: center;
