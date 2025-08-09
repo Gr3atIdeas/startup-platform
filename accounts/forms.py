@@ -21,6 +21,13 @@ class MultipleFileField(forms.FileField):
                 cleaned_files.append(super().clean(file, initial))
         return cleaned_files
 class RegisterForm(forms.ModelForm):
+    # Honeypot field (should stay empty). Rendered hidden in template
+    hp_field = forms.CharField(required=False, label="", widget=forms.TextInput(attrs={
+        "autocomplete": "off",
+        "tabindex": "-1",
+    }))
+    # Optional captcha answer, required only when view asks for it
+    captcha_answer = forms.CharField(required=False, label="Ответ на капчу")
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
     confirm_password = forms.CharField(
         widget=forms.PasswordInput, label="Подтвердите пароль"
@@ -40,14 +47,33 @@ class RegisterForm(forms.ModelForm):
         return email
     def clean(self):
         cleaned_data = super().clean()
+        # Honeypot validation
+        hp_value = cleaned_data.get("hp_field")
+        if hp_value:
+            raise forms.ValidationError("Обнаружена подозрительная активность.")
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
         if password != confirm_password:
             raise forms.ValidationError("Пароли не совпадают")
         return cleaned_data
 class LoginForm(forms.Form):
+    # Honeypot field (should stay empty). Rendered hidden in template
+    hp_field = forms.CharField(required=False, label="", widget=forms.TextInput(attrs={
+        "autocomplete": "off",
+        "tabindex": "-1",
+    }))
+    # Optional captcha answer, required only when view asks for it
+    captcha_answer = forms.CharField(required=False, label="Ответ на капчу")
     email = forms.EmailField(label="Email")
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
+
+    def clean(self):
+        cleaned_data = super().clean()
+        # Honeypot validation
+        hp_value = cleaned_data.get("hp_field")
+        if hp_value:
+            raise forms.ValidationError("Обнаружена подозрительная активность.")
+        return cleaned_data
 class StartupForm(forms.ModelForm):
     logo = forms.ImageField(
         label="Логотип *",

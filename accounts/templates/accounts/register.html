@@ -15,8 +15,15 @@
 <div class="auth-container">
     <div class="auth-box">
         <h1>Регистрация</h1>
-        <form method="post">
+        <form method="post" autocomplete="off">
             {% csrf_token %}
+
+            <input type="hidden" name="next" value="{{ next|default:'' }}" />
+            <!-- Honeypot field (hidden from users) -->
+            <div style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">
+                <label for="id_hp_field">Не заполняйте это поле</label>
+                <input type="text" name="hp_field" id="id_hp_field" tabindex="-1" autocomplete="off" />
+            </div>
 
             {% if form.non_field_errors %}
                 <div class.errors>
@@ -61,6 +68,12 @@
                 {{ form.confirm_password }}
                 {% if form.confirm_password.errors %}<div class="errors">{{ form.confirm_password.errors }}</div>{% endif %}
             </div>
+            {% if captcha_question %}
+            <div class="form-group">
+                <label for="id_captcha_answer">{{ captcha_question }}</label>
+                <input type="text" name="captcha_answer" id="id_captcha_answer" />
+            </div>
+            {% endif %}
             
             <button type="submit">Зарегистрироваться</button>
         </form>

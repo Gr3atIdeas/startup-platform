@@ -5,6 +5,7 @@ import os
 import uuid
 from decimal import Decimal
 from random import choice, shuffle
+import time
 import datetime
 from datetime import datetime as dt
 import boto3
@@ -99,6 +100,71 @@ from .models import (
 )
 from .utils import send_telegram_support_message
 logger = logging.getLogger(__name__)
+
+# === Auth rate limiting and captcha helpers ===
+RATE_WINDOW_SECONDS = 60
+RATE_MAX_ATTEMPTS = 10
+BLOCK_SECONDS = 30
+CAPTCHA_FAILS_THRESHOLD = 3
+FREQUENT_ATTEMPTS_THRESHOLD = 5
+
+def _session_key(prefix: str, suffix: str) -> str:
+    return f"{prefix}_{suffix}"
+
+def _now_ts() -> int:
+    return int(time.time())
+
+def _get_attempts_in_window(session, prefix: str) -> int:
+    key = _session_key(prefix, "attempt_times")
+    times = session.get(key, [])
+    now_ts = _now_ts()
+    recent = [t for t in times if now_ts - t <= RATE_WINDOW_SECONDS]
+    session[key] = recent
+    return len(recent)
+
+def _record_attempt(session, prefix: str) -> None:
+    key = _session_key(prefix, "attempt_times")
+    times = session.get(key, [])
+    times.append(_now_ts())
+    session[key] = times
+    if _get_attempts_in_window(session, prefix) > RATE_MAX_ATTEMPTS:
+        session[_session_key(prefix, "block_until")] = _now_ts() + BLOCK_SECONDS
+
+def _is_blocked(session, prefix: str) -> int:
+    block_until = session.get(_session_key(prefix, "block_until"))
+    if not block_until:
+        return 0
+    remaining = block_until - _now_ts()
+    if remaining <= 0:
+        session.pop(_session_key(prefix, "block_until"), None)
+        return 0
+    return remaining
+
+def _should_require_captcha(session, prefix: str) -> bool:
+    if session.get(_session_key(prefix, "captcha_required")):
+        return True
+    fail_count = session.get(_session_key(prefix, "fail_count"), 0)
+    attempts = _get_attempts_in_window(session, prefix)
+    return fail_count >= CAPTCHA_FAILS_THRESHOLD or attempts >= FREQUENT_ATTEMPTS_THRESHOLD
+
+def _generate_captcha(session, prefix: str) -> None:
+    import random
+    a = random.randint(1, 9)
+    b = random.randint(1, 9)
+    session[_session_key(prefix, "captcha_question")] = f"Сколько будет {a} + {b}?"
+    session[_session_key(prefix, "captcha_expected")] = str(a + b)
+    session[_session_key(prefix, "captcha_required")] = True
+
+def _clear_captcha(session, prefix: str) -> None:
+    session.pop(_session_key(prefix, "captcha_question"), None)
+    session.pop(_session_key(prefix, "captcha_expected"), None)
+    session.pop(_session_key(prefix, "captcha_required"), None)
+
+def _reset_limits(session, prefix: str) -> None:
+    session.pop(_session_key(prefix, "attempt_times"), None)
+    session.pop(_session_key(prefix, "fail_count"), None)
+    session.pop(_session_key(prefix, "block_until"), None)
+    _clear_captcha(session, prefix)
 def safe_create_file_storage(entity_type, entity_id, file_type, file_url, uploaded_at, startup, original_file_name):
     """
     Безопасно создает объект FileStorage, учитывая наличие/отсутствие поля original_file_name
@@ -353,12 +419,40 @@ def contacts_page_view(request):
     return render(request, "accounts/contacts.html", {})
 def register(request):
     next_url = request.GET.get("next") or request.POST.get("next")
+    prefix = "register"
+    block_left = _is_blocked(request.session, prefix)
+    captcha_required = _should_require_captcha(request.session, prefix)
+    captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+    if captcha_required and not captcha_q:
+        _generate_captcha(request.session, prefix)
+        captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+
     if request.method == "POST":
+        if block_left:
+            messages.error(request, f"Слишком много попыток. Попробуйте через {block_left} сек.")
+            form = RegisterForm(request.POST)
+            return render(request, "accounts/register.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
+
         form = RegisterForm(request.POST)
+        # If captcha is required, verify
+        if _should_require_captcha(request.session, prefix):
+            expected = request.session.get(_session_key(prefix, "captcha_expected"))
+            answer = (form.data.get("captcha_answer") or "").strip()
+            if not expected or answer != expected:
+                messages.error(request, "Неверный ответ на капчу.")
+                _record_attempt(request.session, prefix)
+                # do not increment fail_count if honeypot triggered via form.is_valid; keep uniform
+                fails = request.session.get(_session_key(prefix, "fail_count"), 0)
+                request.session[_session_key(prefix, "fail_count")] = fails + 1
+                _generate_captcha(request.session, prefix)
+                captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+                return render(request, "accounts/register.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
+
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data["password"])
             user.save()
+            _reset_limits(request.session, prefix)
             messages.success(
                 request, "Регистрация прошла успешно! Теперь вы можете войти."
             )
@@ -367,16 +461,48 @@ def register(request):
                 return redirect(login_url)
             return redirect("login")
         else:
-            return render(request, "accounts/register.html", {"form": form, "next": next_url})
+            _record_attempt(request.session, prefix)
+            fails = request.session.get(_session_key(prefix, "fail_count"), 0)
+            request.session[_session_key(prefix, "fail_count")] = fails + 1
+            if _should_require_captcha(request.session, prefix):
+                _generate_captcha(request.session, prefix)
+                captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+            return render(request, "accounts/register.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
     else:
         form = RegisterForm()
-    return render(request, "accounts/register.html", {"form": form, "next": next_url})
+    return render(request, "accounts/register.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
 def user_login(request):
     logger.debug("Entering user_login view")
     next_url = request.GET.get("next") or request.POST.get("next")
+    prefix = "login"
+    block_left = _is_blocked(request.session, prefix)
+    captcha_required = _should_require_captcha(request.session, prefix)
+    captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+    if captcha_required and not captcha_q:
+        _generate_captcha(request.session, prefix)
+        captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+
     if request.method == "POST":
         logger.debug("Processing POST request in user_login")
+        if block_left:
+            messages.error(request, f"Слишком много попыток. Попробуйте через {block_left} сек.")
+            form = LoginForm(request.POST)
+            return render(request, "accounts/login.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
+
         form = LoginForm(request.POST)
+        # If captcha is required, verify before authentication
+        if _should_require_captcha(request.session, prefix):
+            expected = request.session.get(_session_key(prefix, "captcha_expected"))
+            answer = (form.data.get("captcha_answer") or "").strip()
+            if not expected or answer != expected:
+                messages.error(request, "Неверный ответ на капчу.")
+                _record_attempt(request.session, prefix)
+                fails = request.session.get(_session_key(prefix, "fail_count"), 0)
+                request.session[_session_key(prefix, "fail_count")] = fails + 1
+                _generate_captcha(request.session, prefix)
+                captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+                return render(request, "accounts/login.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
+
         if form.is_valid():
             logger.debug(f"Form is valid. Email: {form.cleaned_data['email']}")
             user = authenticate(
@@ -386,6 +512,7 @@ def user_login(request):
             )
             if user is not None:
                 logger.info(f"User authenticated: {user.email}")
+                _reset_limits(request.session, prefix)
                 login(request, user)
                 messages.success(
                     request, f"Добро пожаловать, {user.first_name or user.email}!"
@@ -413,13 +540,25 @@ def user_login(request):
             else:
                 logger.warning("Authentication failed for email")
                 messages.error(request, "Неверный email или пароль.")
+                _record_attempt(request.session, prefix)
+                fails = request.session.get(_session_key(prefix, "fail_count"), 0)
+                request.session[_session_key(prefix, "fail_count")] = fails + 1
+                if _should_require_captcha(request.session, prefix):
+                    _generate_captcha(request.session, prefix)
+                    captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
         else:
             logger.warning(f"Form invalid: {form.errors}")
-        return render(request, "accounts/login.html", {"form": form, "next": next_url})
+            _record_attempt(request.session, prefix)
+            fails = request.session.get(_session_key(prefix, "fail_count"), 0)
+            request.session[_session_key(prefix, "fail_count")] = fails + 1
+            if _should_require_captcha(request.session, prefix):
+                _generate_captcha(request.session, prefix)
+                captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+        return render(request, "accounts/login.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
     else:
         logger.debug("Rendering login form")
         form = LoginForm()
-    return render(request, "accounts/login.html", {"form": form, "next": next_url})
+    return render(request, "accounts/login.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
 def user_logout(request):
     logout(request)
     messages.success(request, "Вы успешно вышли из системы.")
