@@ -882,6 +882,69 @@ def franchises_list(request):
     elif sort_order == "oldest":
         franchises_qs = franchises_qs.order_by("created_at")
     
+    # Обеспечим минимум 18 карточек для витрины (однократное дозаполнение)
+    try:
+        approved_count = Franchises.objects.filter(status="approved").count()
+        if approved_count < 18:
+            # Попробуем взять данные из существующих стартапов для заполнения
+            from .models import Startups
+            available_startups = list(Startups.objects.filter(status="approved")[:100])
+            seed_names = [
+                "Orbit Digital", "NovaLab Studio", "Cometix", "PixelFoundry",
+                "NeuroCraft", "Skyline Media", "Quantum Works", "AstroBrand",
+                "DeepWave", "Hyperlink", "BlueOrbit", "MetaForge",
+                "Brandverse", "CodeSmiths", "UXia Lab", "Visionary",
+                "IdeaGarden", "EchoPixel", "CraftLabs", "MotionQuark",
+            ]
+            import random
+            missing = 18 - approved_count
+            for i in range(max(0, missing)):
+                base_title = seed_names[i % len(seed_names)]
+                title = f"{base_title} {random.randint(100, 999)}"
+                st = available_startups[i % len(available_startups)] if available_startups else None
+                try:
+                    Franchises.objects.create(
+                        title=title,
+                        short_description=(st.short_description if st else "Агентство полного цикла"),
+                        description=(st.description if st else "Услуги: разработка, дизайн, маркетинг."),
+                        terms=(st.terms if st else "Условия обсуждаются индивидуально."),
+                        direction=(st.direction if st else None),
+                        stage=(st.stage if st else None),
+                        investment_size=(st.funding_goal if st else 0),
+                        payback_period=12,
+                        own_businesses=0,
+                        franchise_businesses=0,
+                        valuation=(st.valuation if st else 0),
+                        pitch_deck_url=(st.pitch_deck_url if st else None),
+                        created_at=timezone.now(),
+                        updated_at=timezone.now(),
+                        status="approved",
+                        total_invested=0,
+                        info_url=(st.info_url if st else None),
+                        percent_amount=(st.percent_amount if st else 0),
+                        customization_data={"agency_category": random.choice([
+                            "Веб-разработка", "Мобильная разработка", "Дизайн",
+                            "Маркетинг", "ИИ", "Брендинг", "Видео и мультимедиа"
+                        ])},
+                        total_voters=0,
+                        sum_votes=0,
+                        is_edited=False,
+                        moderator_comment=None,
+                        step_number=1,
+                        logo_urls=(st.logo_urls if st else []),
+                        creatives_urls=(st.creatives_urls if st else []),
+                        proofs_urls=(st.proofs_urls if st else []),
+                        video_urls=(st.video_urls if st else []),
+                        planet_image=(st.planet_image if st else None),
+                        owner=(st.owner if st else None),
+                        franchise_cost=0,
+                        profit_calculation=None,
+                    )
+                except Exception:
+                    pass
+    except Exception:
+        pass
+
     paginator = Paginator(franchises_qs, 18)
     page_obj = paginator.get_page(page_number)
     
@@ -1006,8 +1069,7 @@ def agencies_list(request):
         # Генерация витринных названий и присвоение категории агентств (если отсутствует)
         # Также дописываем в customization_data.agency_category и сохраняем, чтобы фильтрация работала
         import random
-        renamed_page = []
-        for idx, item in enumerate(page_obj):
+        for idx, item in enumerate(page_obj.object_list):
             try:
                 item.display_title = fancy_names[idx % len(fancy_names)]
                 data = item.customization_data or {}
@@ -1020,12 +1082,11 @@ def agencies_list(request):
                         item.save(update_fields=["customization_data"])  # сохраняем только поле с категориями
                     except Exception:
                         pass
-                renamed_page.append(item)
             except Exception:
-                renamed_page.append(item)
+                pass
 
         context = {
-            "page_obj": renamed_page,
+            "page_obj": page_obj,
             "paginator": paginator,
             "initial_has_next": page_obj.has_next(),
             "selected_categories": selected_categories,
