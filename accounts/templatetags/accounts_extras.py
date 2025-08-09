@@ -6,8 +6,12 @@ from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 register = template.Library()
 @register.filter(name="translate_category")
 def translate_category(name):
-    """Переводит английское название категории на русский."""
-    translations = {
+    """Переводит английское/транслитерированное название категории на русский (без учета регистра)."""
+    if not name:
+        return "Без категории"
+    original = str(name).strip()
+    # Базовые соответствия
+    translations_exact = {
         "Medicine": "Медицина",
         "Auto": "Автомобили",
         "Delivery": "Доставка",
@@ -22,10 +26,53 @@ def translate_category(name):
         "Finance": "Финансы",
         "Healthcare": "Здравоохранение",
         "Technology": "Технологии",
+        "IT": "ИТ",
+        "Retail": "Ритейл",
+        "Education": "Образование",
+        "EdTech": "Образование",
+        "Fitness": "Фитнес",
+        "Food": "Еда",
+        "Restaurant": "Рестораны",
+        "Restaurants": "Рестораны",
+        "Catering": "Общественное питание",
+        "Logistics": "Логистика",
+        "E-commerce": "E-commerce",
+        "Marketplace": "Маркетплейсы",
+        "Services": "Услуги",
+        "Real Estate": "Недвижимость",
+        "Construction": "Строительство",
+        "Travel": "Путешествия",
+        "Tourism": "Туризм",
+        "Entertainment": "Развлечения",
+        "Media": "Медиа",
+        "Marketing": "Маркетинг",
+        "Advertising": "Реклама",
+        "Gaming": "Игры",
+        "Agro": "Агро",
+        "Agriculture": "Сельское хозяйство",
+        "Energy": "Энергетика",
+        "GreenTech": "Зеленые технологии",
+        "FinTech": "Финансы",
+        "MedTech": "Медицина",
+        "BioTech": "Биотех",
+        "HR": "HR",
+        "Recruiting": "Рекрутинг",
+        "Security": "Безопасность",
+        "Cybersecurity": "Кибербезопасность",
+        "Telecom": "Телеком",
+        "Hardware": "Железо",
+        "Software": "ПО",
+        "SaaS": "SaaS",
+        "B2B": "B2B",
+        "B2C": "B2C",
     }
-    return translations.get(
-        name, name if name else "Без категории"
-    )
+    # Прямое совпадение (учитываем, что в БД уже может быть русский)
+    if original in translations_exact:
+        return translations_exact[original]
+    # Поиск без учета регистра
+    lowered_map = {k.lower(): v for k, v in translations_exact.items()}
+    translated = lowered_map.get(original.lower())
+    return translated or original
 
 
 @register.simple_tag

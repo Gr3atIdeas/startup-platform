@@ -943,8 +943,11 @@ def investments(request):
     }
     try:
         user_investments_qs = InvestmentTransactions.objects.filter(
-            investor=request.user, transaction_type__type_name="investment"
+            investor=request.user, transaction_type__type_name__iexact="investment"
         ).select_related("startup", "startup__direction", "startup__owner")
+        logger.info(
+            f"[investments] tx count for {request.user.email}: {user_investments_qs.count()}"
+        )
         total_investment_data = user_investments_qs.aggregate(
             total_investment=Sum("amount"),
             max_investment=Max("amount"),
@@ -993,45 +996,41 @@ def investments(request):
                 {"name": category_name, "percentage": percentage}
             )
             invested_category_data_dict[category_name] = percentage
-        current_year = timezone.now().year
+        # Диапазон за последние 12 месяцев
+        end_dt = timezone.now()
+        start_dt = (end_dt - relativedelta(months=11)).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
         logger.info(
-            f"[investments] Preparing chart data for user {request.user.email}, year: {current_year}"
+            f"[investments] Preparing chart data for user {request.user.email}, range: {start_dt.date()}..{end_dt.date()}"
         )
         monthly_data_direct = (
-            user_investments_qs.filter(created_at__year=current_year, amount__gt=0)
+            user_investments_qs.filter(created_at__date__gte=start_dt.date(), created_at__date__lte=end_dt.date(), amount__gt=0)
             .annotate(month=TruncMonth("created_at"))
             .values("month")
             .annotate(monthly_total=Sum(Coalesce("amount", Decimal(0))))
             .order_by("month")
         )
-        month_labels = [
-            "Янв",
-            "Фев",
-            "Мар",
-            "Апр",
-            "Май",
-            "Июн",
-            "Июл",
-            "Авг",
-            "Сен",
-            "Окт",
-            "Ноя",
-            "Дек",
-        ]
+        # Метки месяцев за последние 12 месяцев
+        month_labels = []
+        month_cursor = start_dt
+        for _ in range(12):
+            month_labels.append(month_cursor.strftime("%b"))
+            month_cursor = month_cursor + relativedelta(months=1)
         monthly_totals = [0] * 12
+        month_to_index = {}
+        month_cursor = start_dt
+        for idx in range(12):
+            month_to_index[month_cursor.strftime("%Y-%m")] = idx
+            month_cursor = month_cursor + relativedelta(months=1)
         for data in monthly_data_direct:
-            month_index = data["month"].month - 1
-            if 0 <= month_index < 12:
-                monthly_total_decimal = data.get(
-                    "monthly_total", Decimal(0)
-                ) or Decimal(0)
-                monthly_totals[month_index] = float(monthly_total_decimal)
-        logger.info(
-            f"[investments] Preparing chart data for user {request.user.email}, year: {current_year}"
-        )
+            month_key = data["month"].strftime("%Y-%m")
+            idx = month_to_index.get(month_key)
+            if idx is not None:
+                monthly_total_decimal = data.get("monthly_total", Decimal(0)) or Decimal(0)
+                monthly_totals[idx] = float(monthly_total_decimal)
         monthly_category_data_raw = (
             user_investments_qs.filter(
-                created_at__year=current_year,
+                created_at__date__gte=start_dt.date(),
+                created_at__date__lte=end_dt.date(),
                 amount__gt=0,
                 startup__direction__isnull=False,
             )
@@ -1059,14 +1058,13 @@ def investments(request):
             f"[investments] Unique categories found for chart: {sorted_categories}"
         )
         chart_data_list = []
-        start_date = datetime.date(current_year, 1, 1)
+        # Синхронизация с диапазоном последних 12 месяцев
+        rolling_start = start_dt.date()
         for i in range(12):
-            current_month_key = (start_date + relativedelta(months=i)).strftime(
-                "%Y-%m-01"
-            )
+            month_key = (rolling_start + relativedelta(months=i)).strftime("%Y-%m-01")
             month_data = {
-                "month_key": current_month_key,
-                "category_data": dict(structured_monthly_data[current_month_key]),
+                "month_key": month_key,
+                "category_data": dict(structured_monthly_data[month_key]),
             }
             chart_data_list.append(month_data)
         logger.info(
