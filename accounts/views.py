@@ -421,17 +421,13 @@ def register(request):
     next_url = request.GET.get("next") or request.POST.get("next")
     prefix = "register"
     block_left = _is_blocked(request.session, prefix)
-    captcha_required = _should_require_captcha(request.session, prefix)
-    captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
-    if captcha_required and not captcha_q:
-        _generate_captcha(request.session, prefix)
-        captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+    # Do NOT pre-generate captcha on GET; only generate during POST when needed
 
     if request.method == "POST":
         if block_left:
             messages.error(request, f"Слишком много попыток. Попробуйте через {block_left} сек.")
             form = RegisterForm(request.POST)
-            return render(request, "accounts/register.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
+            return render(request, "accounts/register.html", {"form": form, "next": next_url})
 
         form = RegisterForm(request.POST)
         # If captcha is required, verify
@@ -474,27 +470,25 @@ def register(request):
             if _should_require_captcha(request.session, prefix):
                 _generate_captcha(request.session, prefix)
                 captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
-            return render(request, "accounts/register.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
+                return render(request, "accounts/register.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
+            return render(request, "accounts/register.html", {"form": form, "next": next_url})
     else:
         form = RegisterForm()
-    return render(request, "accounts/register.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
+    # On GET, do NOT pass captcha_question, even if session has it
+    return render(request, "accounts/register.html", {"form": form, "next": next_url})
 def user_login(request):
     logger.debug("Entering user_login view")
     next_url = request.GET.get("next") or request.POST.get("next")
     prefix = "login"
     block_left = _is_blocked(request.session, prefix)
-    captcha_required = _should_require_captcha(request.session, prefix)
-    captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
-    if captcha_required and not captcha_q:
-        _generate_captcha(request.session, prefix)
-        captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+    # Do NOT pre-generate captcha on GET; only generate during POST when needed
 
     if request.method == "POST":
         logger.debug("Processing POST request in user_login")
         if block_left:
             messages.error(request, f"Слишком много попыток. Попробуйте через {block_left} сек.")
             form = LoginForm(request.POST)
-            return render(request, "accounts/login.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
+            return render(request, "accounts/login.html", {"form": form, "next": next_url})
 
         form = LoginForm(request.POST)
         # If captcha is required, verify before authentication
@@ -521,7 +515,7 @@ def user_login(request):
             logger.debug(f"Form is valid. Email: {form.cleaned_data['email']}")
             user = authenticate(
                 request,
-                email=form.cleaned_data["email"],
+                username=form.cleaned_data["email"],
                 password=form.cleaned_data["password"],
             )
             if user is not None:
@@ -572,7 +566,8 @@ def user_login(request):
     else:
         logger.debug("Rendering login form")
         form = LoginForm()
-    return render(request, "accounts/login.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
+    # On GET, do NOT pass captcha_question, even if session has it
+    return render(request, "accounts/login.html", {"form": form, "next": next_url})
 def user_logout(request):
     logout(request)
     messages.success(request, "Вы успешно вышли из системы.")
