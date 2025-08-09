@@ -745,17 +745,15 @@ def startups_list(request):
         return render(request, "accounts/startups_list.html", context)
 
 def franchises_list(request):
-    startup_category_names = (
-        Startups.objects
-        .filter(direction__isnull=False)
-        .values_list('direction__direction_name', flat=True)
-        .distinct()
-    )
-    franchise_directions = (
-        FranchiseDirections.objects
-        .filter(direction_name__in=startup_category_names)
-        .order_by('direction_name')
-    )
+    franchise_directions = Directions.objects.filter(
+        direction_name__in=[
+            'Technology', 'Healthcare', 'Finance', 'Education', 'Entertainment',
+            'Fashion', 'Food', 'Gaming', 'Real Estate', 'Travel', 'Agriculture',
+            'Energy', 'Environment', 'Social', 'Medicine', 'Auto', 'Delivery',
+            'Cafe', 'Fastfood', 'Health', 'Beauty', 'Transport', 'Sport',
+            'Psychology', 'AI', 'IT', 'Retail'
+        ]
+    ).order_by('direction_name')
     
     # Копируем стартапы в франшизы если их нет
     if not Franchises.objects.exists():
