@@ -95,6 +95,7 @@ from .models import (
     TransactionTypes,
     Users,
     UserVotes,
+    FranchiseVotes,
 )
 from .utils import send_telegram_support_message
 logger = logging.getLogger(__name__)
@@ -731,7 +732,7 @@ def franchise_detail(request, franchise_id):
             comment = form.save(commit=False)
             comment.franchise = franchise
             comment.user = request.user
-            user_vote = UserVotes.objects.filter(
+            user_vote = FranchiseVotes.objects.filter(
                 user=request.user, franchise=franchise
             ).first()
             if user_vote:
@@ -755,7 +756,7 @@ def franchise_detail(request, franchise_id):
         FranchiseComments.objects.filter(franchise=franchise, parent_comment__isnull=True)
         .annotate(
             user_vote_rating=models.Subquery(
-                UserVotes.objects.filter(
+                FranchiseVotes.objects.filter(
                     franchise=franchise, user=models.OuterRef("user_id")
                 ).values("rating")[:1]
             )
@@ -766,11 +767,11 @@ def franchise_detail(request, franchise_id):
     total_votes = franchise.total_voters
     user_has_voted = False
     if request.user.is_authenticated:
-        user_has_voted = UserVotes.objects.filter(
+        user_has_voted = FranchiseVotes.objects.filter(
             user=request.user, franchise=franchise
         ).exists()
     rating_distribution_query = (
-        UserVotes.objects.filter(franchise=franchise)
+        FranchiseVotes.objects.filter(franchise=franchise)
         .values("rating")
         .annotate(count=Count("rating"))
         .order_by("-rating")

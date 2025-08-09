@@ -231,6 +231,24 @@ class UserVotes(models.Model):
         managed = False
     def __str__(self):
         return f"{self.user.email} - {self.startup.title}: {self.rating}"
+
+
+class FranchiseVotes(models.Model):
+    vote_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey("Users", on_delete=models.CASCADE, db_column="user_id")
+    franchise = models.ForeignKey(
+        "Franchises", on_delete=models.CASCADE, db_column="franchise_id", blank=True, null=True
+    )
+    rating = models.IntegerField(db_column="vote_value")
+    created_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        db_table = "franchise_votes"
+        unique_together = ("user", "franchise")
+        managed = True
+
+    def __str__(self):
+        return f"{self.user.email} - {getattr(self.franchise, 'title', '')}: {self.rating}"
 class Subscriptions(models.Model):
     subscription_id = models.AutoField(primary_key=True)
     user = models.ForeignKey("Users", models.DO_NOTHING, blank=True, null=True)
