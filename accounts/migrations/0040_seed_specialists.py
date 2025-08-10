@@ -1,5 +1,6 @@
 from django.db import migrations, connection
 from django.utils import timezone
+import json
 
 
 def seed_specialists(apps, schema_editor):
@@ -60,7 +61,7 @@ def seed_specialists(apps, schema_editor):
                     now,
                     now,
                     "approved",
-                    migrations.serializer.json.dumps(customization),
+                    json.dumps(customization),
                     0,
                     0,
                     "[]",
