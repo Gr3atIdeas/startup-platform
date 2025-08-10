@@ -11,6 +11,28 @@ class Migration(migrations.Migration):
             sql=r"""
             DO $$
             BEGIN
+                -- Ensure missing columns exist before adding FKs
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name='specialist_votes' AND column_name='specialist_id'
+                ) THEN
+                    EXECUTE 'ALTER TABLE specialist_votes ADD COLUMN specialist_id INTEGER NULL';
+                END IF;
+
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name='specialist_comments' AND column_name='specialist_id'
+                ) THEN
+                    EXECUTE 'ALTER TABLE specialist_comments ADD COLUMN specialist_id INTEGER NOT NULL';
+                END IF;
+
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name='specialist_comments' AND column_name='parent_comment_id'
+                ) THEN
+                    EXECUTE 'ALTER TABLE specialist_comments ADD COLUMN parent_comment_id INTEGER NULL';
+                END IF;
+
                 IF EXISTS (
                     SELECT 1 FROM information_schema.columns 
                     WHERE table_name='specialist_votes' AND column_name='user_id'
@@ -27,6 +49,9 @@ class Migration(migrations.Migration):
                 IF EXISTS (
                     SELECT 1 FROM information_schema.columns 
                     WHERE table_name='specialist_votes' AND column_name='specialist_id'
+                ) AND EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name='specialists' AND column_name='specialist_id'
                 ) THEN
                     BEGIN
                         ALTER TABLE specialist_votes
@@ -40,6 +65,9 @@ class Migration(migrations.Migration):
                 IF EXISTS (
                     SELECT 1 FROM information_schema.columns 
                     WHERE table_name='specialist_comments' AND column_name='specialist_id'
+                ) AND EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name='specialists' AND column_name='specialist_id'
                 ) THEN
                     BEGIN
                         ALTER TABLE specialist_comments
