@@ -213,7 +213,7 @@
                 </div>
                           <span class="info-card-title">Категория</span>
           <div class="info-card-value-button accent-white-bg">
-            {{ franchise.direction.direction_name|translate_category|default:"Не указана" }}
+            {{ franchise.customization_data.agency_category|default:"Не указана" }}
           </div>
               </div>
             </div>
@@ -225,7 +225,7 @@
               <div class="profit-calculation-content">
                 {{ franchise.additional_info|default:"Описание услуг пока не добавлено."|linebreaksbr }}
               </div>
-            </div>
+              </div>
           </div>
 
           
@@ -470,7 +470,7 @@
                 </div>
               {% endif %}
             </div>
-            <div class="similar-card-name">{{ similar.title|default:"Агентство" }}</div>
+            <div class="similar-card-name">{{ similar.customization_data.agency_display_title|default:similar.title|default:"Агентство" }}</div>
             <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2' }}">
               {% for star_i in "12345" %}
                 <span class="rating-icon-container">
@@ -480,7 +480,7 @@
               {% endfor %}
             </div>
             <div class="similar-card-category">
-              <div class="category-badge">{{ similar.direction.direction_name|translate_category|default:"Категория" }}</div>
+              <div class="category-badge">{{ similar.customization_data.agency_category|default:"Категория" }}</div>
             </div>
           </a>
           {% endfor %}
