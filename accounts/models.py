@@ -797,3 +797,50 @@ class FranchiseDirections(models.Model):
 
     def __str__(self):
         return self.direction_name or "Без категории"
+
+
+# Новая сущность: Агентства
+class Agencies(models.Model):
+    agency_id = models.AutoField(primary_key=True)
+    owner = models.ForeignKey(
+        "Users", models.DO_NOTHING, blank=True, null=True, db_column="owner_id"
+    )
+    title = models.CharField(max_length=255)
+    short_description = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    terms = models.TextField(blank=True, null=True)
+    direction = models.ForeignKey(
+        "Directions", models.DO_NOTHING, blank=True, null=True, db_column="direction_id"
+    )
+    stage = models.ForeignKey(
+        "StartupStages", models.DO_NOTHING, blank=True, null=True, db_column="stage_id"
+    )
+    pitch_deck_url = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=20, default="pending")
+    customization_data = models.JSONField(blank=True, null=True, default=dict)
+    total_voters = models.IntegerField(default=0)
+    sum_votes = models.IntegerField(default=0)
+    logo_urls = models.JSONField(default=list)
+    creatives_urls = models.JSONField(blank=True, null=True, default=list)
+    proofs_urls = models.JSONField(blank=True, null=True, default=list)
+    video_urls = models.JSONField(blank=True, null=True, default=list)
+    planet_image = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = "agencies"
+
+    # Совместимость с существующими шаблонами (ожидают franchise_id)
+    @property
+    def franchise_id(self):
+        return self.agency_id
+
+    def get_average_rating(self):
+        if self.total_voters > 0:
+            return self.sum_votes / self.total_voters
+        return 0
+
+    def __str__(self):
+        return self.title
