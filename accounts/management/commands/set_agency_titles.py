@@ -52,6 +52,11 @@ class Command(BaseCommand):
             default=True,
             help="Обновлять только одобренные (status=approved)",
         )
+        parser.add_argument(
+            "--force",
+            action="store_true",
+            help="Перезаписывать существующие витринные названия",
+        )
         parser.add_argument("--dry-run", action="store_true", help="Показать изменения без записи")
 
     def handle(self, *args, **options):
@@ -59,6 +64,7 @@ class Command(BaseCommand):
         use_defaults = options.get("use_defaults")
         limit = options.get("limit")
         only_approved = options.get("only_approved")
+        force = options.get("force")
         dry_run = options.get("dry_run")
 
         if raw_names:
@@ -79,12 +85,12 @@ class Command(BaseCommand):
         if only_approved:
             qs = qs.filter(status="approved")
 
-        # Отберём только те, у кого нет витринного названия
+        # Отберём только те, у кого нет витринного названия (или все при --force)
         candidates = []
         for ag in qs.order_by("created_at"):
             data = ag.customization_data or {}
-            display = (data.get("agency_display_title") or ag.title or "").strip()
-            if not display:
+            display_title = (data.get("agency_display_title") or "").strip()
+            if force or not display_title:
                 candidates.append(ag)
             if len(candidates) >= limit:
                 break
