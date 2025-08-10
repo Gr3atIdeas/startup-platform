@@ -2,16 +2,16 @@
 {% load accounts_extras %}
 {% load file_tags %}
 
-{% for similar in similar_franchises %}
-<a href="{% url 'agency_detail' similar.franchise_id %}" class="similar-card">
+{% for similar in similar_specialists %}
+<a href="{% url 'specialist_detail' similar.specialist_id %}" class="similar-card">
   <div class="similar-card-image">
     {% if similar.logo_urls %}
-      <img src="{% get_file_url_tag similar.logo_urls.0 similar.franchise_id 'logo' %}" alt="Логотип">
+      <img src="{% get_file_url_tag similar.logo_urls.0 similar.specialist_id 'logo' %}" alt="Логотип">
     {% else %}
       <div class="planet"></div>
     {% endif %}
   </div>
-  <div class="similar-card-name">{{ similar.customization_data.agency_display_title|default:similar.title|default:"Агентство" }}</div>
+  <div class="similar-card-name">{{ similar.customization_data.specialist_display_title|default:similar.title|default:"Специалист" }}</div>
   <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2' }}">
     {% for star_i in "12345" %}
       <span class="rating-icon-container">
@@ -21,17 +21,17 @@
     {% endfor %}
   </div>
   <div class="similar-card-category">
-    <div class="category-badge">{{ similar.customization_data.agency_category|default:"Категория" }}</div>
+    <div class="category-badge">{{ similar.customization_data.specialist_category|default:"Категория" }}</div>
   </div>
 </a>
 {% endfor %}
 
-{% if similar_franchises|length < 4 %}
+{% if similar_specialists|length < 4 %}
   {% for i in "1234" %}
-    {% if forloop.counter > similar_franchises|length %}
+    {% if forloop.counter > similar_specialists|length %}
       <a href="#" class="similar-card placeholder">
         <div class="similar-card-image"><div class="planet"></div></div>
-        <div class="similar-card-name">Название агентства</div>
+        <div class="similar-card-name">Название специалиста</div>
         <div class="similar-card-rating" data-rating="0">
           {% for star_i in "12345" %}
             <span class="rating-icon-container">

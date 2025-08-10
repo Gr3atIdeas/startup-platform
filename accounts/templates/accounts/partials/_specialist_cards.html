@@ -3,15 +3,15 @@
 {% load humanize %}
 {% load accounts_extras %}
 
-{% for franchise in page_obj %}
-  <div class="franchise-card" data-franchise-id="{{ franchise.franchise_id }}">
-    <span class="franchise-tag">Агентство</span>
+{% for specialist in page_obj %}
+  <div class="franchise-card" data-franchise-id="{{ specialist.specialist_id }}">
+    <span class="franchise-tag">Специалист</span>
           <div class="franchise-image">
-        {% if franchise.planet_image %}
-          <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ franchise.planet_image }}" alt="Планета {{ franchise.title }}" class="planet-image">
+        {% if specialist.planet_image %}
+          <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ specialist.planet_image }}" alt="Планета {{ specialist.title }}" class="planet-image">
         {% else %}
           <div class="franchise-image-placeholder">
-            {{ franchise.title|make_list|first|upper }}
+            {{ specialist.title|make_list|first|upper }}
           </div>
         {% endif %}
       </div>
@@ -19,35 +19,35 @@
       <div class="franchise-card-inner">
         
         <div class="franchise-title-container">
-          {% if franchise.owner and franchise.owner.get_profile_picture_url %}
+          {% if specialist.owner and specialist.owner.get_profile_picture_url %}
             <div class="franchise-logo">
-              <img src="{{ franchise.owner.get_profile_picture_url }}" alt="Аватар автора {{ franchise.owner.username }}" class="franchise-default-avatar">
+              <img src="{{ specialist.owner.get_profile_picture_url }}" alt="Аватар автора {{ specialist.owner.username }}" class="franchise-default-avatar">
             </div>
-          {% elif franchise.logo_urls %}
+          {% elif specialist.logo_urls %}
             <div class="franchise-logo">
-              <img src="{% get_file_url_tag franchise.logo_urls.0 franchise.franchise_id 'logo' %}" alt="Логотип {{ franchise.title }}">
+              <img src="{% get_file_url_tag specialist.logo_urls.0 specialist.specialist_id 'logo' %}" alt="Логотип {{ specialist.title }}">
             </div>
           {% else %}
             <div class="franchise-logo">
               <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар франшизы" class="franchise-default-avatar">
             </div>
           {% endif %}
-          <h3 class="franchise-title">{{ franchise.customization_data.agency_display_title|default:franchise.title }}</h3>
+          <h3 class="franchise-title">{{ specialist.customization_data.specialist_display_title|default:specialist.title }}</h3>
         </div>
         <div class="franchise-rating-comments">
-          <span class="rating-text">Рейтинг {{ franchise.get_average_rating|floatformat:1 }}/5 ({{ franchise.total_voters }})</span>
+          <span class="rating-text">Рейтинг {{ specialist.get_average_rating|floatformat:1 }}/5 ({{ specialist.total_voters }})</span>
           <span class="comments-count">
             <svg class="comment-icon" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M14.222 0H1.778C0.796 0 0 .734 0 1.64v8.197c0 .906.796 1.64 1.778 1.64h9.778l3.556 3.28V11.477h.888c.982 0 1.778-.734 1.778-1.64V1.64C16 .734 15.204 0 14.222 0z" fill="currentColor"/>
             </svg>
-            <span>{{ franchise.comments.count|default:0 }}</span>
+            <span>{{ specialist.comments.count|default:0 }}</span>
           </span>
         </div>
 
         <div class="franchise-category-row">
-          {% with agency_category=franchise.customization_data.agency_category %}
-            {% if agency_category %}
-              <span class="category-tag-figma">{{ agency_category }}</span>
+          {% with category=specialist.customization_data.specialist_category %}
+            {% if category %}
+              <span class="category-tag-figma">{{ category }}</span>
             {% else %}
               <span class="category-tag-figma category-tag-placeholder">Категория не указана</span>
             {% endif %}
@@ -55,12 +55,12 @@
         </div>
 
         <div class="investment-size-container-figma">
-          <span class="investment-size-text-figma">Успешных проектов: {{ franchise.successful_projects|default:12 }}</span>
+          <span class="investment-size-text-figma">Успешных проектов: {{ specialist.customization_data.successful_projects|default:12 }}</span>
         </div>
 
-        <div class="franchise-short-description">{{ franchise.short_description|default:"Нет описания"|truncatechars:140 }}</div>
+        <div class="franchise-short-description">{{ specialist.short_description|default:"Нет описания"|truncatechars:140 }}</div>
 
-        <a href="{% url 'agency_detail' franchise_id=franchise.franchise_id %}" class="detail-link" aria-label="Подробнее об агентстве {{ franchise.title }}"></a>
+        <a href="{% url 'specialist_detail' specialist_id=specialist.specialist_id %}" class="detail-link" aria-label="Подробнее о специалисте {{ specialist.title }}"></a>
     </div>
   </div>
 {% endfor %}

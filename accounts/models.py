@@ -842,6 +842,89 @@ class Agencies(models.Model):
         return self.title
 
 
+class Specialists(models.Model):
+    specialist_id = models.AutoField(primary_key=True)
+    owner = models.ForeignKey("Users", models.DO_NOTHING, blank=True, null=True, db_column="owner_id")
+    title = models.CharField(max_length=255)
+    short_description = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    terms = models.TextField(blank=True, null=True)
+    direction = models.ForeignKey("Directions", models.DO_NOTHING, blank=True, null=True, db_column="direction_id")
+    stage = models.ForeignKey("StartupStages", models.DO_NOTHING, blank=True, null=True, db_column="stage_id")
+    pitch_deck_url = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=20, default="pending")
+    customization_data = models.JSONField(blank=True, null=True, default=dict)
+    total_voters = models.IntegerField(default=0)
+    sum_votes = models.IntegerField(default=0)
+    logo_urls = models.JSONField(default=list)
+    creatives_urls = models.JSONField(blank=True, null=True, default=list)
+    proofs_urls = models.JSONField(blank=True, null=True, default=list)
+    video_urls = models.JSONField(blank=True, null=True, default=list)
+    planet_image = models.CharField(max_length=50, blank=True, null=True)
+    additional_info = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = "specialists"
+
+    def get_average_rating(self):
+        if self.total_voters > 0:
+            return self.sum_votes / self.total_voters
+        return 0
+
+    def __str__(self):
+        return self.title
+
+
+class SpecialistVotes(models.Model):
+    vote_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey("Users", on_delete=models.CASCADE, db_column="user_id")
+    specialist = models.ForeignKey(
+        "Specialists", on_delete=models.CASCADE, db_column="specialist_id", blank=True, null=True, db_constraint=False
+    )
+    rating = models.IntegerField(db_column="vote_value")
+    created_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        db_table = "specialist_votes"
+        unique_together = ("user", "specialist")
+        managed = True
+
+    def __str__(self):
+        return f"{self.user.email} - {getattr(self.specialist, 'title', '')}: {self.rating}"
+
+
+class SpecialistComments(models.Model):
+    comment_id = models.AutoField(primary_key=True)
+    specialist = models.ForeignKey(
+        "Specialists",
+        on_delete=models.CASCADE,
+        db_column="specialist_id",
+        related_name="comments",
+        db_constraint=False,
+    )
+    user = models.ForeignKey("Users", on_delete=models.CASCADE, db_column="user_id")
+    content = models.TextField()
+    user_rating = models.IntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    parent_comment = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        db_column="parent_comment_id",
+    )
+
+    class Meta:
+        managed = True
+        db_table = "specialist_comments"
+
+    def __str__(self) -> str:
+        return f"SpecialistComment {self.comment_id} by {self.user}"
+
 class AgencyVotes(models.Model):
     vote_id = models.AutoField(primary_key=True)
     user = models.ForeignKey("Users", on_delete=models.CASCADE, db_column="user_id")

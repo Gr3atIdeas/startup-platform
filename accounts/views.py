@@ -66,6 +66,7 @@ from .forms import (
     CommentForm,
     FranchiseCommentForm,
     AgencyCommentForm,
+    SpecialistCommentForm,
     LoginForm,
     MessageForm,
     ModeratorTicketForm,
@@ -103,6 +104,9 @@ from .models import (
     Agencies,
     AgencyComments,
     AgencyVotes,
+    Specialists,
+    SpecialistComments,
+    SpecialistVotes,
 )
 from .utils import send_telegram_support_message
 logger = logging.getLogger(__name__)
@@ -1051,6 +1055,91 @@ def agencies_list(request):
             "agency_categories": agency_categories,
         }
         return render(request, "accounts/agencies_list.html", context)
+
+def specialists_list(request):
+    specialists_qs = Specialists.objects.filter(status="approved")
+    specialist_categories = [
+        "Разработка",
+        "Дизайн",
+        "Маркетинг",
+        "Продажи",
+        "Аналитика",
+        "Финансы",
+        "Юристы",
+    ]
+
+    selected_categories = request.GET.getlist("category")
+    search_query = request.GET.get("search", "").strip()
+    min_rating_str = request.GET.get("min_rating", "0")
+    max_rating_str = request.GET.get("max_rating", "5")
+    sort_order = request.GET.get("sort_order", "newest")
+    page_number = request.GET.get("page", 1)
+
+    specialists_qs = specialists_qs.annotate(
+        rating_agg=ExpressionWrapper(
+            Case(
+                When(total_voters__gt=0, then=F('sum_votes') * 1.0 / F('total_voters')),
+                default=Value(0.0),
+                output_field=FloatField(),
+            ),
+            output_field=FloatField()
+        ),
+    )
+
+    if selected_categories:
+        specialists_qs = specialists_qs.filter(
+            Q(customization_data__specialist_category__in=selected_categories)
+        )
+
+    if search_query:
+        specialists_qs = specialists_qs.filter(title__icontains=search_query)
+
+    try:
+        min_rating = float(min_rating_str)
+        max_rating = float(max_rating_str)
+        if min_rating > 0:
+            specialists_qs = specialists_qs.filter(rating_agg__gte=min_rating)
+        if max_rating < 5:
+            specialists_qs = specialists_qs.filter(rating_agg__lte=max_rating)
+    except ValueError:
+        min_rating = 0
+        max_rating = 5
+
+    if sort_order == "newest":
+        specialists_qs = specialists_qs.order_by("-created_at")
+    elif sort_order == "oldest":
+        specialists_qs = specialists_qs.order_by("created_at")
+
+    paginator = Paginator(specialists_qs, 6)
+    page_obj = paginator.get_page(page_number)
+
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    if is_ajax:
+        html = render_to_string(
+            "accounts/partials/_specialist_cards.html", {"page_obj": page_obj}
+        )
+        return JsonResponse(
+            {
+                "html": html,
+                "has_next": page_obj.has_next(),
+                "page_number": page_obj.number,
+                "num_pages": paginator.num_pages,
+                "count": paginator.count,
+            }
+        )
+    else:
+        context = {
+            "page_obj": page_obj,
+            "paginator": paginator,
+            "initial_has_next": page_obj.has_next(),
+            "selected_categories": selected_categories,
+            "search_query": search_query,
+            "min_rating": min_rating,
+            "max_rating": max_rating,
+            "sort_order": sort_order,
+            "specialist_categories": specialist_categories,
+        }
+        return render(request, "accounts/specialists_list.html", context)
 def agency_detail(request, franchise_id):
     try:
         franchise = Agencies.objects.get(agency_id=franchise_id)
@@ -1130,6 +1219,86 @@ def agency_detail(request, franchise_id):
         "rating_distribution": rating_distribution,
     }
     return render(request, "accounts/agency_detail.html", context)
+
+def specialist_detail(request, specialist_id):
+    try:
+        specialist = Specialists.objects.get(specialist_id=specialist_id)
+    except Specialists.DoesNotExist:
+        return render(request, "accounts/404.html", status=404)
+
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect("login")
+        form = SpecialistCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.specialist = specialist
+            comment.user = request.user
+            comment.save()
+            messages.success(request, "Ваш комментарий был добавлен.")
+            return redirect("specialist_detail", specialist_id=specialist.specialist_id)
+        else:
+            messages.error(request, "Ошибка при добавлении комментария.")
+    else:
+        form = SpecialistCommentForm()
+
+    specialist_category = None
+    try:
+        specialist_category = (specialist.customization_data or {}).get("specialist_category")
+    except Exception:
+        specialist_category = None
+
+    if specialist_category:
+        candidates_qs = Specialists.objects.filter(
+            customization_data__specialist_category=specialist_category,
+            status="approved",
+        ).exclude(specialist_id=specialist_id)
+    else:
+        candidates_qs = Specialists.objects.filter(
+            status="approved",
+        ).exclude(specialist_id=specialist_id)
+    similar_specialists = candidates_qs.order_by("-created_at")[:4]
+
+    comments_with_rating = (
+        SpecialistComments.objects.filter(specialist=specialist, parent_comment__isnull=True)
+        .annotate(
+            user_vote_rating=models.Subquery(
+                SpecialistVotes.objects.filter(
+                    specialist=specialist, user=models.OuterRef("user_id")
+                ).values("rating")[:1]
+            )
+        )
+        .order_by("-created_at")
+    )
+    average_rating = specialist.get_average_rating()
+    total_votes = specialist.total_voters
+    user_has_voted = False
+    if request.user.is_authenticated:
+        user_has_voted = SpecialistVotes.objects.filter(
+            user=request.user, specialist=specialist
+        ).exists()
+    rating_distribution_query = (
+        SpecialistVotes.objects.filter(specialist=specialist)
+        .values("rating")
+        .annotate(count=Count("rating"))
+        .order_by("-rating")
+    )
+    rating_distribution = {item["rating"]: item["count"] for item in rating_distribution_query}
+    for i in range(1, 6):
+        rating_distribution.setdefault(i, 0)
+
+    context = {
+        "specialist": specialist,
+        "similar_specialists": similar_specialists,
+        "has_similar": candidates_qs.exists(),
+        "comments": comments_with_rating,
+        "form": form,
+        "average_rating": average_rating,
+        "total_votes_count": total_votes,
+        "user_has_voted": user_has_voted,
+        "rating_distribution": rating_distribution,
+    }
+    return render(request, "accounts/specialist_detail.html", context)
 def franchise_detail(request, franchise_id):
     try:
         franchise = Franchises.objects.get(franchise_id=franchise_id)
@@ -5121,6 +5290,23 @@ def vote_agency(request, franchise_id):
     agency.sum_votes += rating
     agency.save()
     average_rating = agency.sum_votes / agency.total_voters if agency.total_voters > 0 else 0
+    return JsonResponse({"success": True, "average_rating": average_rating})
+
+@login_required
+def vote_specialist(request, specialist_id):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"})
+    specialist = get_object_or_404(Specialists, specialist_id=specialist_id)
+    rating = int(request.POST.get("rating", 0))
+    if not 1 <= rating <= 5:
+        return JsonResponse({"success": False, "error": "Недопустимое значение рейтинга"})
+    if SpecialistVotes.objects.filter(user=request.user, specialist=specialist).exists():
+        return JsonResponse({"success": False, "error": "Вы уже голосовали за этого специалиста"})
+    SpecialistVotes.objects.create(user=request.user, specialist=specialist, rating=rating, created_at=timezone.now())
+    specialist.total_voters += 1
+    specialist.sum_votes += rating
+    specialist.save()
+    average_rating = specialist.sum_votes / specialist.total_voters if specialist.total_voters > 0 else 0
     return JsonResponse({"success": True, "average_rating": average_rating})
 
 def load_similar_franchises(request, franchise_id: int):

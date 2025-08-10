@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
       alert('Ошибка безопасности. Перезагрузите страницу.');
       return;
     }
-    fetch(`/vote-agency/${franchiseId}/`, {
+    fetch(`/vote-specialist/${franchiseId}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

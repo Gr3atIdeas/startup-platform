@@ -4,11 +4,11 @@
 {% load humanize %}
 {% load accounts_extras %}
 
-{% block title %}Каталог агентств{% endblock %}
+{% block title %}Каталог специалистов{% endblock %}
 
 {% block head_extra %}
   {{ block.super }}
-  <link rel="stylesheet" href="{% static 'accounts/css/agencies_list.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/specialists_list.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -85,10 +85,10 @@
       <div class="franchises-grid" id="franchisesGrid">
         {% if page_obj %} 
           
-          {% include 'accounts/partials/_agency_cards.html' with page_obj=page_obj %}
+          {% include 'accounts/partials/_specialist_cards.html' with page_obj=page_obj %}
         {% else %}
           <div class="no-franchises">
-            <p>В настоящее время нет доступных агентств. Загляните позже!</p>
+            <p>В настоящее время нет доступных специалистов. Загляните позже!</p>
           </div>
         {% endif %}
       </div>

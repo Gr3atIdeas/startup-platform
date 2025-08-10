@@ -6,10 +6,10 @@
 {% load humanize %}
 {% load accounts_extras %}
 
-{% block title %}{{ franchise.customization_data.agency_display_title|default:franchise.title|default:"Детали агентства" }}{% endblock %}
+{% block title %}{{ specialist.customization_data.specialist_display_title|default:specialist.title|default:"Детали специалиста" }}{% endblock %}
 
 {% block head_extra %}
-  <link rel="stylesheet" href="{% static 'accounts/css/agency_detail.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/specialist_detail.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/css/glightbox.min.css" />
   <link rel="stylesheet" href="{% static 'accounts/css/moderation_panel.css' %}">
@@ -17,15 +17,13 @@
 
 {% block content %}
 <div class="franchise-detail-page" 
-     data-franchise-id="{{ franchise.franchise_id }}" 
-     data-franchise-title="{{ franchise.title|escapejs }}"
+     data-franchise-id="{{ specialist.specialist_id }}" 
+     data-franchise-title="{{ specialist.title|escapejs }}"
      data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
      data-user-has-voted="{{ user_has_voted|yesno:'true,false' }}"
-     data-load-similar-url="{% url 'load_similar_franchises' franchise_id=franchise.franchise_id %}"
-     data-owner-id="{{ franchise.owner.user_id }}"
-     data-investment-size="{{ franchise.investment_size|default:0 }}">
+     data-owner-id="{{ specialist.owner.user_id }}">
   <div class="back-link-container">
-    <a href="{% url 'agencies_list' %}" class="back-button">
+    <a href="{% url 'specialists_list' %}" class="back-button">
       <i class="fas fa-arrow-left"></i> Назад
     </a>
   </div>
@@ -53,8 +51,8 @@
         
         <div class="planet-display-container">
           <div class="space-background"></div>
-          {% if franchise.planet_image %}
-            <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ franchise.planet_image }}" alt="Планета {{ franchise.title }}" class="planet-image">
+           {% if specialist.planet_image %}
+            <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ specialist.planet_image }}" alt="Планета {{ specialist.title }}" class="planet-image">
           {% else %}
             <img src="{% static 'accounts/images/icons/planet_placeholder.svg' %}" alt="Планета не выбрана" class="planet-placeholder">
           {% endif %}
@@ -74,10 +72,10 @@
         <div class="author-header">Автор</div>
         <div class="author-details">
           <div class="author-avatar">
-            <img src="{% if franchise.owner.get_profile_picture_url %}{{ franchise.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ franchise.owner.username }}" class="author-avatar-img">
+            <img src="{% if specialist.owner.get_profile_picture_url %}{{ specialist.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ specialist.owner.username }}" class="author_avatar-img">
           </div>
           <div class="author-meta">
-            <div class="author-name">{{ franchise.owner.first_name|default:"Автор" }} {{ franchise.owner.last_name }}</div>
+            <div class="author-name">{{ specialist.owner.first_name|default:"Автор" }} {{ specialist.owner.last_name }}</div>
             <div class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</div>
           </div>
           <button class="action-button write-author-button">Написать</button>
@@ -94,22 +92,22 @@
             <div class="franchise-header-left">
             <div class="franchise-title-wrapper">
               <div class="logo-display-container">
-                {% if franchise.owner and franchise.owner.get_profile_picture_url %}
-                  <img src="{{ franchise.owner.get_profile_picture_url }}" alt="Аватар автора {{ franchise.owner.username }}" class="logo-image">
-                {% elif franchise.logo_urls %}
-                  {% with logo_file_id=franchise.logo_urls.0 %}
-                    <img src="{% get_file_url_tag logo_file_id franchise.franchise_id 'logo' %}" alt="Логотип {{ franchise.title }}" class="logo-image">
+                 {% if specialist.owner and specialist.owner.get_profile_picture_url %}
+                  <img src="{{ specialist.owner.get_profile_picture_url }}" alt="Аватар автора {{ specialist.owner.username }}" class="logo-image">
+                {% elif specialist.logo_urls %}
+                  {% with logo_file_id=specialist.logo_urls.0 %}
+                    <img src="{% get_file_url_tag logo_file_id specialist.specialist_id 'logo' %}" alt="Логотип {{ specialist.title }}" class="logo-image">
                   {% endwith %}
                 {% else %}
                   <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
                 {% endif %}
               </div>
-              <h1 class="franchise-name" title="{{ franchise.customization_data.agency_display_title|default:franchise.title }}">{{ franchise.customization_data.agency_display_title|default:franchise.title }}</h1>
+              <h1 class="franchise-name" title="{{ specialist.customization_data.specialist_display_title|default:specialist.title }}">{{ specialist.customization_data.specialist_display_title|default:specialist.title }}</h1>
             </div>
 
             <div class="header-meta">
-              {% with agency_category=franchise.customization_data.agency_category %}
-                <span class="category-value">{{ agency_category|default:"Без категории" }}</span>
+              {% with category=specialist.customization_data.specialist_category %}
+                <span class="category-value">{{ category|default:"Без категории" }}</span>
               {% endwith %}
           <div class="franchise-stats-info"></div>
             </div>
@@ -134,7 +132,7 @@
         </div>
 
                  <div class="actions-top-right">
-           <div class="franchise-info-badge">Агентство</div>
+           <div class="franchise-info-badge">Специалист</div>
            {% if user.is_authenticated and user.role.role_name == 'moderator' %}
              <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}" class="action-button edit-button">Редактировать</a>
              <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
@@ -164,13 +162,13 @@
               </div>
             </div>
             <div class="about-section"> 
-              <h2 class="section-title">Об агентстве</h2>
+              <h2 class="section-title">О специалисте</h2>
               <div class="section-content text-truncate-container" id="about-section">
                 <div class="text-content" onclick="toggleTextTruncation('about-section', 5)">
-                  <p>{{ franchise.description|linebreaksbr|default:"Нет подробного описания." }}</p>
-                  {% if franchise.additional_info %}
+                  <p>{{ specialist.description|linebreaksbr|default:"Нет подробного описания." }}</p>
+                  {% if specialist.additional_info %}
                     <p><strong>Основные функции:</strong></p>
-                    {{ franchise.additional_info|linebreaksbr }}
+                    {{ specialist.additional_info|linebreaksbr }}
                   {% endif %}
                   <span class="text-truncate-toggle">Показать полностью</span>
                 </div>
@@ -185,8 +183,8 @@
                   <img src="{% static 'accounts/images/startups/image.svg' %}" alt="Презентация" class="info-card-icon">
                 </div>
                 <span class="info-card-title">Презентация</span>
-                {% if franchise.pitch_deck_url %}
-                  <a href="{{ franchise.pitch_deck_url }}" target="_blank" class="action-button info-card-button view-button">Смотреть</a>
+                {% if specialist.pitch_deck_url %}
+                  <a href="{{ specialist.pitch_deck_url }}" target="_blank" class="action-button info-card-button view-button">Смотреть</a>
                 {% else %}
                   <button class="action-button info-card-button view-button" disabled>Смотреть</button>
                 {% endif %}
@@ -213,7 +211,7 @@
                 </div>
                           <span class="info-card-title">Категория</span>
           <div class="info-card-value-button accent-white-bg">
-            {{ franchise.customization_data.agency_category|default:"Не указана" }}
+            {{ specialist.customization_data.specialist_category|default:"Не указана" }}
           </div>
               </div>
             </div>
@@ -223,7 +221,7 @@
             <h2 class="section-title">Услуги</h2>
             <div class="profit-calculation-wrapper">
               <div class="profit-calculation-content">
-                {{ franchise.additional_info|default:"Описание услуг пока не добавлено."|linebreaksbr }}
+                {{ specialist.additional_info|default:"Описание услуг пока не добавлено."|linebreaksbr }}
               </div>
               </div>
           </div>
@@ -233,7 +231,7 @@
             <h2 class="section-title">Кейсы</h2>
             <div class="profit-calculation-wrapper">
                 <div class="profit-calculation-content">
-                    {{ franchise.additional_info|default:"Кейсы пока не добавлены."|linebreaksbr }}
+                    {{ specialist.additional_info|default:"Кейсы пока не добавлены."|linebreaksbr }}
                 </div>
             </div>
           </div>
@@ -241,57 +239,57 @@
           
           <div id="documents-section" class="content-section">
             <h2 class="section-title">Документы</h2>
-            {% if franchise_documents %}
+            {% if specialist_documents %}
                 <ul class="document-list">
-                    {% for doc in franchise_documents %}
+                    {% for doc in specialist_documents %}
                         <li class="document-item">
-                            <a href="{% get_file_url_tag doc.file_url franchise.franchise_id 'proof' %}" target="_blank" class="document-link">
+                            <a href="{% get_file_url_tag doc.file_url specialist.specialist_id 'proof' %}" target="_blank" class="document-link">
                                 <i class="fas fa-file-alt document-icon"></i>
-                                <span class="document-name">{% get_file_original_name doc.file_url franchise.franchise_id 'proof' %}</span>
+                                <span class="document-name">{% get_file_original_name doc.file_url specialist.specialist_id 'proof' %}</span>
                             </a>
                             
                         </li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>Документы по агентству пока не загружены.</p>
+                <p>Документы по специалисту пока не загружены.</p>
             {% endif %}
           </div>
 
           
           <div id="conditions-section" class="content-section">
             <h2 class="section-title">Этапы работ</h2>
-            <p>{{ franchise.terms|linebreaksbr|default:"Этапы работ не указаны." }}</p>
+            <p>{{ specialist.terms|linebreaksbr|default:"Этапы работ не указаны." }}</p>
           </div>
         </div> 
       </div> 
     </div> 
   </div> 
 
-  {% if user.is_authenticated and user.role.role_name == 'moderator' and franchise.status == 'pending' %}
+  {% if user.is_authenticated and user.role.role_name == 'moderator' and specialist.status == 'pending' %}
       <div class="moderator-review-section card my-4">
           <div class="card-header">
               <h4>Модерация агентства</h4>
           </div>
           <div class="card-body">
-              <form method="post" action="{% url 'approve_franchise' franchise_id=franchise.franchise_id %}">
+              <form method="post">
                   {% csrf_token %}
                   <div class="mb-3">
                       <label for="moderator_comment_area" class="form-label">Комментарий модератора:</label>
-                      <textarea class="form-control moderator-comment-textarea" id="moderator_comment_area" name="moderator_comment" rows="3">{{ franchise.moderator_comment|default:'' }}</textarea>
+                       <textarea class="form-control moderator-comment-textarea" id="moderator_comment_area" name="moderator_comment" rows="3">{{ specialist.moderator_comment|default:'' }}</textarea>
                   </div>
                   <button type="submit" name="action" value="approve" class="btn btn-success me-2">Одобрить</button>
                   <button type="submit" formaction="{% url 'reject_franchise' franchise_id=franchise.franchise_id %}" name="action" value="reject" class="btn btn-danger">Отклонить</button>
               </form>
           </div>
       </div>
-  {% elif show_moderator_comment and franchise.moderator_comment %}
+  {% elif show_moderator_comment and specialist.moderator_comment %}
       <div class="moderator-comment-display card my-4">
           <div class="card-header">
               <h5>Комментарий модератора:</h5>
           </div>
           <div class="card-body">
-              <p class="card-text">{{ franchise.moderator_comment }}</p>
+               <p class="card-text">{{ specialist.moderator_comment }}</p>
           </div>
       </div>
   {% endif %}
@@ -448,20 +446,20 @@
     <div class="similar-franchises-container">
       <h2 class="similar-title">
         <span class="similar-text">похожие</span>
-        <span class="franchises-text">АГЕНТСТВА</span>
+        <span class="franchises-text">СПЕЦИАЛИСТЫ</span>
       </h2>
       
-      <a href="{% url 'agencies_list' %}" class="show-all-button">
+      <a href="{% url 'specialists_list' %}" class="show-all_button">
         <span>Показать все</span> <i class="fas fa-arrow-right"></i>
       </a>
       
-      {% if has_similar and similar_franchises %}
+      {% if has_similar and similar_specialists %}
         <div class="similar-franchises-grid">
-          {% for similar in similar_franchises|slice:":4" %}
-          <a href="{% url 'agency_detail' similar.franchise_id %}" class="similar-card">
+          {% for similar in similar_specialists|slice:":4" %}
+          <a href="{% url 'specialist_detail' similar.specialist_id %}" class="similar-card">
             <div class="similar-card-image">
               {% if similar.logo_urls %}
-                <img src="{% get_file_url_tag similar.logo_urls.0 similar.franchise_id 'logo' %}" alt="Логотип">
+                <img src="{% get_file_url_tag similar.logo_urls.0 similar.specialist_id 'logo' %}" alt="Логотип">
               {% else %}
                 <div class="planet">
                   <div class="planet-segment segment-top" style="background-color: {{ similar.planet_top_color|default:'#7B61FF' }};"></div>
@@ -470,7 +468,7 @@
                 </div>
               {% endif %}
             </div>
-            <div class="similar-card-name">{{ similar.customization_data.agency_display_title|default:similar.title|default:"Агентство" }}</div>
+            <div class="similar-card-name">{{ similar.customization_data.specialist_display_title|default:similar.title|default:"Специалист" }}</div>
             <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2' }}">
               {% for star_i in "12345" %}
                 <span class="rating-icon-container">
@@ -480,7 +478,7 @@
               {% endfor %}
             </div>
             <div class="similar-card-category">
-              <div class="category-badge">{{ similar.customization_data.agency_category|default:"Категория" }}</div>
+              <div class="category-badge">{{ similar.customization_data.specialist_category|default:"Категория" }}</div>
             </div>
           </a>
           {% endfor %}
@@ -492,7 +490,7 @@
           </div>
         </div>
       {% else %}
-        <p style="margin-top: 10px; color: #fff; opacity: .8;">Похожих агентств пока нет. Мы подберём рекомендации, как только появятся новые агентства в этой категории.</p>
+        <p style="margin-top: 10px; color: #fff; opacity: .8;">Похожих специалистов пока нет. Мы подберём рекомендации, как только появятся новые специалисты в этой категории.</p>
       {% endif %}
     </div>
   </div>
@@ -642,7 +640,7 @@
   </div>
 
   
-  <script src="{% static 'accounts/js/agency_detail.js' %}" defer></script>
+  <script src="{% static 'accounts/js/specialist_detail.js' %}" defer></script>
 </div> 
 
 
