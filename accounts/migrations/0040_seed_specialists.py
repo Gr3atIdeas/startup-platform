@@ -1,10 +1,10 @@
 from django.db import migrations
-import datetime
+from django.utils import timezone
 
 
 def seed_specialists(apps, schema_editor):
     Specialists = apps.get_model("accounts", "Specialists")
-    now = datetime.datetime.utcnow()
+    now = timezone.now()
     entries = [
         ("Иван Петров", "Разработка"),
         ("Мария Смирнова", "Дизайн"),
@@ -69,7 +69,7 @@ def unseed_specialists(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("accounts", "0039_add_fk_to_specialist_tables"),
+        ("accounts", "0040_add_specialists_additional_info"),
     ]
 
     operations = [
