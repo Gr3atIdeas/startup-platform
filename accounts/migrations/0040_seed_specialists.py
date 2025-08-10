@@ -26,34 +26,52 @@ def seed_specialists(apps, schema_editor):
         row = cursor.fetchone()
         next_id = (row[0] or 0) + 1
 
-    for title, category in entries:
-        if Specialists.objects.filter(title=title).exists():
-            continue
-        Specialists.objects.create(
-            specialist_id=next_id,
-            title=title,
-            short_description=f"Профессионал направления: {category}",
-            description=f"{title} оказывает услуги в области '{category}'. Опыт более 3 лет.",
-            terms="Условия сотрудничества оговариваются индивидуально.",
-            pitch_deck_url=None,
-            created_at=now,
-            updated_at=now,
-            status="approved",
-            customization_data={
+        for title, category in entries:
+            # если уже есть с таким title — пропускаем
+            cursor.execute("SELECT 1 FROM specialists WHERE title=%s LIMIT 1;", [title])
+            if cursor.fetchone():
+                continue
+
+            customization = {
                 "specialist_display_title": title,
                 "specialist_category": category,
                 "successful_projects": 12,
-            },
-            total_voters=0,
-            sum_votes=0,
-            logo_urls=[],
-            creatives_urls=[],
-            proofs_urls=[],
-            video_urls=[],
-            planet_image=None,
-            additional_info=f"Кейсы и услуги по направлению '{category}'.",
-        )
-        next_id += 1
+            }
+            cursor.execute(
+                """
+                INSERT INTO specialists (
+                    startup_id, title, short_description, description, terms,
+                    created_at, updated_at, status, customization_data,
+                    total_voters, sum_votes, logo_urls, creatives_urls, proofs_urls, video_urls,
+                    planet_image, additional_info
+                ) VALUES (
+                    %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s::jsonb,
+                    %s, %s, %s::jsonb, %s::jsonb, %s::jsonb, %s::jsonb,
+                    %s, %s
+                );
+                """,
+                [
+                    next_id,
+                    title,
+                    f"Профессионал направления: {category}",
+                    f"{title} оказывает услуги в области '{category}'. Опыт более 3 лет.",
+                    "Условия сотрудничества оговариваются индивидуально.",
+                    now,
+                    now,
+                    "approved",
+                    migrations.serializer.json.dumps(customization),
+                    0,
+                    0,
+                    "[]",
+                    "[]",
+                    "[]",
+                    "[]",
+                    None,
+                    f"Кейсы и услуги по направлению '{category}'.",
+                ],
+            )
+            next_id += 1
 
 
 def unseed_specialists(apps, schema_editor):
