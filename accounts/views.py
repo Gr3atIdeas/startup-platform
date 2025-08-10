@@ -1035,7 +1035,7 @@ def agencies_list(request):
     elif sort_order == "oldest":
         franchises_qs = franchises_qs.order_by("created_at")
 
-    paginator = Paginator(franchises_qs, 18)
+    paginator = Paginator(franchises_qs, 6)
     page_obj = paginator.get_page(page_number)
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
