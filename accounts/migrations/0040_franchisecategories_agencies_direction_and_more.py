@@ -12,16 +12,31 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='FranchiseCategories',
-            fields=[
-                ('category_id', models.AutoField(primary_key=True, serialize=False)),
-                ('category_name', models.CharField(blank=True, max_length=255, null=True)),
+        migrations.SeparateDatabaseAndState(
+            database_operations=[
+                migrations.RunSQL(
+                    sql=r"""
+                    CREATE TABLE IF NOT EXISTS franchise_categories (
+                        category_id SERIAL PRIMARY KEY,
+                        category_name VARCHAR(255) NULL
+                    );
+                    """,
+                    reverse_sql="",
+                ),
             ],
-            options={
-                'db_table': 'franchise_categories',
-                'managed': True,
-            },
+            state_operations=[
+                migrations.CreateModel(
+                    name='FranchiseCategories',
+                    fields=[
+                        ('category_id', models.AutoField(primary_key=True, serialize=False)),
+                        ('category_name', models.CharField(blank=True, max_length=255, null=True)),
+                    ],
+                    options={
+                        'db_table': 'franchise_categories',
+                        'managed': True,
+                    },
+                ),
+            ],
         ),
         migrations.AddField(
             model_name='agencies',
