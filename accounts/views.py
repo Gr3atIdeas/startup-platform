@@ -65,6 +65,7 @@ from openpyxl.utils import get_column_letter
 from .forms import (
     CommentForm,
     FranchiseCommentForm,
+    AgencyCommentForm,
     LoginForm,
     MessageForm,
     ModeratorTicketForm,
@@ -100,6 +101,8 @@ from .models import (
     UserVotes,
     FranchiseVotes,
     Agencies,
+    AgencyComments,
+    AgencyVotes,
 )
 from .utils import send_telegram_support_message
 logger = logging.getLogger(__name__)
@@ -945,7 +948,7 @@ def franchises_list(request):
                     pass
     except Exception:
         pass
-
+    
     paginator = Paginator(franchises_qs, 6)
     page_obj = paginator.get_page(page_number)
     
@@ -1134,9 +1137,18 @@ def agency_detail(request, franchise_id):
     if request.method == "POST":
         if not request.user.is_authenticated:
             return redirect("login")
-        messages.info(request, "Комментарии для агентств временно недоступны.")
-        return redirect("agency_detail", franchise_id=franchise.franchise_id)
-    form = FranchiseCommentForm()
+        form = AgencyCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.agency = franchise
+            comment.user = request.user
+            comment.save()
+            messages.success(request, "Ваш комментарий был добавлен.")
+            return redirect("agency_detail", franchise_id=franchise.franchise_id)
+        else:
+            messages.error(request, "Ошибка при добавлении комментария.")
+    else:
+        form = AgencyCommentForm()
 
     agency_category = None
     try:
@@ -1155,12 +1167,31 @@ def agency_detail(request, franchise_id):
         ).exclude(agency_id=franchise_id)
     similar_franchises = candidates_qs.order_by("-created_at")[:4]
 
-    from .models import FranchiseComments
-    comments_with_rating = []
+    comments_with_rating = (
+        AgencyComments.objects.filter(agency=franchise, parent_comment__isnull=True)
+        .annotate(
+            user_vote_rating=models.Subquery(
+                AgencyVotes.objects.filter(
+                    agency=franchise, user=models.OuterRef("user_id")
+                ).values("rating")[:1]
+            )
+        )
+        .order_by("-created_at")
+    )
     average_rating = franchise.get_average_rating()
     total_votes = franchise.total_voters
     user_has_voted = False
-    rating_distribution = {}
+    if request.user.is_authenticated:
+        user_has_voted = AgencyVotes.objects.filter(
+            user=request.user, agency=franchise
+        ).exists()
+    rating_distribution_query = (
+        AgencyVotes.objects.filter(agency=franchise)
+        .values("rating")
+        .annotate(count=Count("rating"))
+        .order_by("-rating")
+    )
+    rating_distribution = {item["rating"]: item["count"] for item in rating_distribution_query}
     for i in range(1, 6):
         rating_distribution.setdefault(i, 0)
 
@@ -5151,6 +5182,23 @@ def vote_franchise(request, franchise_id):
     )
     return JsonResponse({"success": True, "average_rating": average_rating})
 
+
+@login_required
+def vote_agency(request, franchise_id):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"})
+    agency = get_object_or_404(Agencies, agency_id=franchise_id)
+    rating = int(request.POST.get("rating", 0))
+    if not 1 <= rating <= 5:
+        return JsonResponse({"success": False, "error": "Недопустимое значение рейтинга"})
+    if AgencyVotes.objects.filter(user=request.user, agency=agency).exists():
+        return JsonResponse({"success": False, "error": "Вы уже голосовали за это агентство"})
+    AgencyVotes.objects.create(user=request.user, agency=agency, rating=rating, created_at=timezone.now())
+    agency.total_voters += 1
+    agency.sum_votes += rating
+    agency.save()
+    average_rating = agency.sum_votes / agency.total_voters if agency.total_voters > 0 else 0
+    return JsonResponse({"success": True, "average_rating": average_rating})
 
 def load_similar_franchises(request, franchise_id: int):
     try:

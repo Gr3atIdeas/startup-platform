@@ -270,6 +270,22 @@ class FranchiseCommentForm(forms.ModelForm):
             ),
             "user_rating": forms.HiddenInput(),
         }
+
+class AgencyCommentForm(forms.ModelForm):
+    class Meta:
+        from .models import AgencyComments
+        model = AgencyComments
+        fields = ["content", "user_rating"]
+        widgets = {
+            "content": forms.Textarea(
+                attrs={
+                    "rows": 4,
+                    "placeholder": "Напишите ваш комментарий...",
+                    "class": "form-control",
+                }
+            ),
+            "user_rating": forms.HiddenInput(),
+        }
 class MessageForm(forms.Form):
     message_text = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 2, "placeholder": "Введите сообщение..."}),

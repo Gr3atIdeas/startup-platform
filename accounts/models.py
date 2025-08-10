@@ -844,3 +844,50 @@ class Agencies(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class AgencyVotes(models.Model):
+    vote_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey("Users", on_delete=models.CASCADE, db_column="user_id")
+    agency = models.ForeignKey(
+        "Agencies", on_delete=models.CASCADE, db_column="agency_id", blank=True, null=True
+    )
+    rating = models.IntegerField(db_column="vote_value")
+    created_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        db_table = "agency_votes"
+        unique_together = ("user", "agency")
+        managed = True
+
+    def __str__(self):
+        return f"{self.user.email} - {getattr(self.agency, 'title', '')}: {self.rating}"
+
+
+class AgencyComments(models.Model):
+    comment_id = models.AutoField(primary_key=True)
+    agency = models.ForeignKey(
+        "Agencies",
+        on_delete=models.CASCADE,
+        db_column="agency_id",
+        related_name="comments",
+    )
+    user = models.ForeignKey("Users", on_delete=models.CASCADE, db_column="user_id")
+    content = models.TextField()
+    user_rating = models.IntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    parent_comment = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        db_column="parent_comment_id",
+    )
+
+    class Meta:
+        managed = True
+        db_table = "agency_comments"
+
+    def __str__(self) -> str:
+        return f"AgencyComment {self.comment_id} by {self.user}"

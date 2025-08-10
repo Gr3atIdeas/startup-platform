@@ -12,6 +12,7 @@ urlpatterns = [
     path("franchises/<str:franchise_id>/", views.franchise_detail, name="franchise_detail"),
     path("agencies/", views.agencies_list, name="agencies_list"),
     path("agencies/<str:franchise_id>/", views.agency_detail, name="agency_detail"),
+    path("vote-agency/<int:franchise_id>/", views.vote_agency, name="vote_agency"),
     path("edit-franchise/<int:franchise_id>/", views.edit_franchise, name="edit_franchise"),
     path("approve-franchise/<int:franchise_id>/", views.approve_franchise, name="approve_franchise"),
     path("reject-franchise/<int:franchise_id>/", views.reject_franchise, name="reject_franchise"),
