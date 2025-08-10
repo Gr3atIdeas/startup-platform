@@ -95,7 +95,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function setupRatingStars() {
     let ratingStars = document.querySelector('.rating-stars[data-interactive="true"]');
-    if (!ratingStars) return
+    if (!ratingStars) {
+      const allRatingStars = document.querySelectorAll('.rating-stars');
+      if (allRatingStars.length === 0) return;
+      ratingStars = allRatingStars[0];
+    }
     const ratingContainers = ratingStars.querySelectorAll('.rating-icon-container');
     const currentRating = parseFloat((ratingStars.dataset.rating || '0').replace(',', '.')) || 0;
     updateRatingDisplay(currentRating)
@@ -103,7 +107,9 @@ document.addEventListener('DOMContentLoaded', function () {
       const value = index + 1;
       container.addEventListener('mouseenter', () => updateRatingDisplay(value));
       container.addEventListener('mouseleave', () => updateRatingDisplay(currentRating));
-      container.addEventListener('click', () => submitRating(value));
+      if (ratingStars.dataset.interactive === 'true') {
+        container.addEventListener('click', () => submitRating(value));
+      }
     });
   }
 
@@ -129,6 +135,88 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     });
+  }
+
+  function setupOverallRating() {
+    const overall = document.querySelector('.overall-rating-stars');
+    if (!overall) return;
+    const rating = parseFloat((overall.dataset.rating || '0').replace(',', '.')) || 0;
+    const ratingIcons = overall.querySelectorAll('.rating-icon-container');
+    ratingIcons.forEach((iconContainer, iconIndex) => {
+      const value = iconIndex + 1;
+      const emptyIcon = iconContainer.querySelector('.icon-empty');
+      const filledIcon = iconContainer.querySelector('.icon-filled');
+      if (value <= Math.floor(rating)) {
+        if (emptyIcon) { emptyIcon.style.display = 'none'; emptyIcon.style.opacity = '0'; }
+        if (filledIcon) { filledIcon.style.display = 'block'; filledIcon.style.opacity = '1'; filledIcon.style.clipPath = 'none'; }
+      } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
+        const partialValue = rating % 1;
+        if (emptyIcon) { emptyIcon.style.display = 'block'; emptyIcon.style.opacity = '1'; }
+        if (filledIcon) { filledIcon.style.display = 'block'; filledIcon.style.opacity = '1'; filledIcon.style.clipPath = `inset(0 ${100 - (partialValue * 100)}% 0 0)`; }
+      } else {
+        if (emptyIcon) { emptyIcon.style.display = 'block'; emptyIcon.style.opacity = '1'; }
+        if (filledIcon) { filledIcon.style.display = 'none'; filledIcon.style.opacity = '0'; filledIcon.style.clipPath = 'none'; }
+      }
+    });
+  }
+
+  function setupSimilarAgencyRatings() {
+    const similarRatings = document.querySelectorAll('.similar-card-rating');
+    similarRatings.forEach((ratingContainer) => {
+      const rating = parseFloat((ratingContainer.dataset.rating || '0').replace(',', '.')) || 0;
+      const ratingIcons = ratingContainer.querySelectorAll('.rating-icon-container');
+      ratingIcons.forEach((iconContainer, iconIndex) => {
+        const value = iconIndex + 1;
+        const emptyIcon = iconContainer.querySelector('.icon-empty');
+        const filledIcon = iconContainer.querySelector('.icon-filled');
+        if (value <= Math.floor(rating)) {
+          if (emptyIcon) { emptyIcon.style.display = 'none'; emptyIcon.style.opacity = '0'; }
+          if (filledIcon) { filledIcon.style.display = 'block'; filledIcon.style.opacity = '1'; filledIcon.style.clipPath = 'none'; }
+        } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
+          const partialValue = rating % 1;
+          if (emptyIcon) { emptyIcon.style.display = 'block'; emptyIcon.style.opacity = '1'; }
+          if (filledIcon) { filledIcon.style.display = 'block'; filledIcon.style.opacity = '1'; filledIcon.style.clipPath = `inset(0 ${100 - (partialValue * 100)}% 0 0)`; }
+        } else {
+          if (emptyIcon) { emptyIcon.style.display = 'block'; emptyIcon.style.opacity = '1'; }
+          if (filledIcon) { filledIcon.style.display = 'none'; filledIcon.style.opacity = '0'; filledIcon.style.clipPath = 'none'; }
+        }
+      });
+    });
+  }
+
+  function setupTextTruncation() {
+    const introSection = document.getElementById('intro-section');
+    const aboutSection = document.getElementById('about-section');
+    if (introSection) {
+      const introText = introSection.querySelector('.text-content');
+      const introToggle = introSection.querySelector('.text-truncate-toggle');
+      if (introText && introToggle) {
+        const lineHeight = parseInt(window.getComputedStyle(introText).lineHeight);
+        const maxHeight = lineHeight * 3;
+        if (introText.scrollHeight > maxHeight) {
+          introSection.classList.add('truncated-3-lines');
+          introToggle.style.display = 'inline-block';
+        } else {
+          introToggle.style.display = 'none';
+          introSection.classList.remove('truncated-3-lines');
+        }
+      }
+    }
+    if (aboutSection) {
+      const aboutText = aboutSection.querySelector('.text-content');
+      const aboutToggle = aboutSection.querySelector('.text-truncate-toggle');
+      if (aboutText && aboutToggle) {
+        const lineHeight = parseInt(window.getComputedStyle(aboutText).lineHeight);
+        const maxHeight = lineHeight * 5;
+        if (aboutText.scrollHeight > maxHeight) {
+          aboutSection.classList.add('truncated-5-lines');
+          aboutToggle.style.display = 'inline-block';
+        } else {
+          aboutToggle.style.display = 'none';
+          aboutSection.classList.remove('truncated-5-lines');
+        }
+      }
+    }
   }
 
   function setupCommentRatingInput() {
@@ -187,6 +275,9 @@ document.addEventListener('DOMContentLoaded', function () {
   setupRatingStars();
   setupCommentRatings();
   setupCommentRatingInput();
+  setupOverallRating();
+  setupSimilarAgencyRatings();
+  setupTextTruncation();
 });
 
 
