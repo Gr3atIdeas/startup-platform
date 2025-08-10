@@ -850,7 +850,7 @@ class AgencyVotes(models.Model):
     vote_id = models.AutoField(primary_key=True)
     user = models.ForeignKey("Users", on_delete=models.CASCADE, db_column="user_id")
     agency = models.ForeignKey(
-        "Agencies", on_delete=models.CASCADE, db_column="agency_id", blank=True, null=True
+        "Agencies", on_delete=models.CASCADE, db_column="agency_id", blank=True, null=True, db_constraint=False
     )
     rating = models.IntegerField(db_column="vote_value")
     created_at = models.DateTimeField(blank=True, null=True)
@@ -871,6 +871,7 @@ class AgencyComments(models.Model):
         on_delete=models.CASCADE,
         db_column="agency_id",
         related_name="comments",
+        db_constraint=False,
     )
     user = models.ForeignKey("Users", on_delete=models.CASCADE, db_column="user_id")
     content = models.TextField()

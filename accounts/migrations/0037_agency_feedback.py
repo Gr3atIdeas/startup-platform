@@ -31,6 +31,7 @@ class Migration(migrations.Migration):
                         blank=True,
                         null=True,
                         to="accounts.agencies",
+                        db_constraint=False,
                     ),
                 ),
             ],
@@ -55,6 +56,7 @@ class Migration(migrations.Migration):
                         related_name="comments",
                         db_column="agency_id",
                         to="accounts.agencies",
+                        db_constraint=False,
                     ),
                 ),
                 (
