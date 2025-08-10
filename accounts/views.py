@@ -1059,13 +1059,13 @@ def agencies_list(request):
 def specialists_list(request):
     specialists_qs = Specialists.objects.filter(status="approved")
     specialist_categories = [
-        "Разработка",
+        "Веб-разработка",
+        "Мобильная разработка",
         "Дизайн",
         "Маркетинг",
-        "Продажи",
-        "Аналитика",
-        "Финансы",
-        "Юристы",
+        "ИИ",
+        "Брендинг",
+        "Видео и мультимедиа",
     ]
 
     selected_categories = request.GET.getlist("category")
