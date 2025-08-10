@@ -6,7 +6,7 @@
 {% load humanize %}
 {% load accounts_extras %}
 
-{% block title %}{{ franchise.title|default:"Детали агентства" }}{% endblock %}
+{% block title %}{{ franchise.customization_data.agency_display_title|default:franchise.title|default:"Детали агентства" }}{% endblock %}
 
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/agency_detail.css' %}">
