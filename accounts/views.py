@@ -945,7 +945,7 @@ def franchises_list(request):
     except Exception:
         pass
 
-    paginator = Paginator(franchises_qs, 18)
+    paginator = Paginator(franchises_qs, 6)
     page_obj = paginator.get_page(page_number)
     
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
