@@ -1035,7 +1035,7 @@ def agencies_list(request):
     elif sort_order == "oldest":
         franchises_qs = franchises_qs.order_by("created_at")
 
-    paginator = Paginator(franchises_qs, 6)
+    paginator = Paginator(franchises_qs, 18)
     page_obj = paginator.get_page(page_number)
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -1053,30 +1053,54 @@ def agencies_list(request):
             }
         )
     else:
-        # Генерация альтернативных названий для карточек (только отображение)
-        fancy_names = [
-            "Orbit Digital",
-            "NovaLab Studio",
-            "Cometix",
-            "PixelFoundry",
-            "NeuroCraft",
-            "Skyline Media",
-            "Quantum Works",
-            "AstroBrand",
-            "DeepWave",
-            "Hyperlink",
-        ]
-        # Генерация витринных названий и присвоение категории агентств (если отсутствует)
-        # Также дописываем в customization_data.agency_category и сохраняем, чтобы фильтрация работала
+        # Генерация уникальных витринных названий и присвоение категории агентств (если отсутствует)
         import random
-        for idx, item in enumerate(page_obj.object_list):
+        random.seed()
+        adjectives = [
+            "Orbit", "Nova", "Comet", "Pixel", "Neuro", "Skyline", "Quantum",
+            "Astro", "Deep", "Hyper", "Blue", "Meta", "Brand", "Code",
+            "Vision", "Echo", "Craft", "Motion", "Prime", "Fusion", "Rocket",
+            "Bright", "Next", "Alpha", "Beta", "Gamma", "Delta", "Nimbus",
+        ]
+        nouns = [
+            "Digital", "Lab", "Studio", "Works", "Foundry", "Media", "Brand",
+            "Forge", "Garden", "Pixel", "Quark", "Wave", "Link", "Smiths",
+            "UX", "Vision", "Craft", "Factory", "Agency", "Minds", "Core",
+        ]
+        def unique_name(existing_set):
+            for _ in range(200):
+                name = f"{random.choice(adjectives)} {random.choice(nouns)}"
+                if name.lower() not in existing_set:
+                    return name
+            for n in range(1, 1000):
+                name = f"{random.choice(adjectives)} {random.choice(nouns)} {n}"
+                if name.lower() not in existing_set:
+                    return name
+            return f"Agency {random.randint(10000, 99999)}"
+
+        existing = set()
+        # учтем уже выставленные названия на странице
+        for it in page_obj.object_list:
+            data = it.customization_data or {}
+            if isinstance(data, dict):
+                t = (data.get("agency_display_title") or it.title or "").strip().lower()
+            else:
+                t = (it.title or "").strip().lower()
+            if t:
+                existing.add(t)
+
+        for item in page_obj.object_list:
             try:
-                display_title = fancy_names[idx % len(fancy_names)]
                 data = item.customization_data or {}
                 if not isinstance(data, dict):
                     data = {}
-                if data.get("agency_display_title") != display_title:
-                    data["agency_display_title"] = display_title
+                cur = (data.get("agency_display_title") or item.title or "").strip()
+                if not cur or cur.lower() in existing:
+                    new_title = unique_name(existing)
+                    data["agency_display_title"] = new_title
+                    existing.add(new_title.lower())
+                else:
+                    existing.add(cur.lower())
                 if not data.get("agency_category"):
                     data["agency_category"] = random.choice(agency_categories)
                 item.customization_data = data
