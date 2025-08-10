@@ -986,7 +986,7 @@ def franchises_list(request):
 def agencies_list(request):
     # Копия franchises_list, но с отдельным словарём категорий агентств и без смешивания с направлениями франшиз/стартапов
 
-    franchises_qs = Franchises.objects.filter(status="approved")
+    agencies_qs = Agencies.objects.filter(status="approved")
     agency_categories = [
         "Веб-разработка",
         "Мобильная разработка",
@@ -1004,7 +1004,7 @@ def agencies_list(request):
     sort_order = request.GET.get("sort_order", "newest")
     page_number = request.GET.get("page", 1)
 
-    franchises_qs = franchises_qs.annotate(
+    agencies_qs = agencies_qs.annotate(
         rating_agg=ExpressionWrapper(
             Case(
                 When(total_voters__gt=0, then=F('sum_votes') * 1.0 / F('total_voters')),
@@ -1016,30 +1016,30 @@ def agencies_list(request):
     )
 
     if selected_categories:
-        franchises_qs = franchises_qs.filter(
+        agencies_qs = agencies_qs.filter(
             Q(customization_data__agency_category__in=selected_categories)
         )
 
     if search_query:
-        franchises_qs = franchises_qs.filter(title__icontains=search_query)
+        agencies_qs = agencies_qs.filter(title__icontains=search_query)
 
     try:
         min_rating = float(min_rating_str)
         max_rating = float(max_rating_str)
         if min_rating > 0:
-            franchises_qs = franchises_qs.filter(rating_agg__gte=min_rating)
+            agencies_qs = agencies_qs.filter(rating_agg__gte=min_rating)
         if max_rating < 5:
-            franchises_qs = franchises_qs.filter(rating_agg__lte=max_rating)
+            agencies_qs = agencies_qs.filter(rating_agg__lte=max_rating)
     except ValueError:
         min_rating = 0
         max_rating = 5
 
     if sort_order == "newest":
-        franchises_qs = franchises_qs.order_by("-created_at")
+        agencies_qs = agencies_qs.order_by("-created_at")
     elif sort_order == "oldest":
-        franchises_qs = franchises_qs.order_by("created_at")
+        agencies_qs = agencies_qs.order_by("created_at")
 
-    paginator = Paginator(franchises_qs, 6)
+    paginator = Paginator(agencies_qs, 6)
     page_obj = paginator.get_page(page_number)
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -1057,19 +1057,18 @@ def agencies_list(request):
             }
         )
     else:
-        # Генерация уникальных витринных названий и присвоение категории агентств (если отсутствует)
+        # Генерация уникальных витринных названий (на русском) и присвоение категории агентств (если отсутствует)
         import random
         random.seed()
         adjectives = [
-            "Orbit", "Nova", "Comet", "Pixel", "Neuro", "Skyline", "Quantum",
-            "Astro", "Deep", "Hyper", "Blue", "Meta", "Brand", "Code",
-            "Vision", "Echo", "Craft", "Motion", "Prime", "Fusion", "Rocket",
-            "Bright", "Next", "Alpha", "Beta", "Gamma", "Delta", "Nimbus",
+            "Синие", "Северные", "Квантовые", "Неоновые", "Лунные", "Солнечные", "Тихие",
+            "Быстрые", "Умные", "Глубокие", "Яркие", "Магнитные", "Звёздные", "Точные",
+            "Гибкие", "Прямые", "Чёткие", "Новые", "Смелые", "Мощные", "Космические",
         ]
         nouns = [
-            "Digital", "Lab", "Studio", "Works", "Foundry", "Media", "Brand",
-            "Forge", "Garden", "Pixel", "Quark", "Wave", "Link", "Smiths",
-            "UX", "Vision", "Craft", "Factory", "Agency", "Minds", "Core",
+            "пиксели", "кодеры", "дизайнеры", "маркетологи", "брендмейкеры", "разработчики",
+            "мастера", "инженеры", "студия", "артели", "мinds", "решения", "сервисы",
+            "квант", "поток", "связи", "медиа", "идеи", "агентство", "фабрика",
         ]
         def unique_name(existing_set):
             for _ in range(200):
@@ -1080,7 +1079,7 @@ def agencies_list(request):
                 name = f"{random.choice(adjectives)} {random.choice(nouns)} {n}"
                 if name.lower() not in existing_set:
                     return name
-            return f"Agency {random.randint(10000, 99999)}"
+            return f"Агентство {random.randint(10000, 99999)}"
 
         existing = set()
         # учтем уже выставленные названия на странице
