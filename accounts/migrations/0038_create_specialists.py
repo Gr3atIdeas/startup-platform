@@ -50,8 +50,6 @@ class Migration(migrations.Migration):
                         specialist_id INTEGER NULL,
                         vote_value INTEGER NOT NULL,
                         created_at TIMESTAMP NULL,
-                        CONSTRAINT specialist_votes_user_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
-                        CONSTRAINT specialist_votes_specialist_fk FOREIGN KEY (specialist_id) REFERENCES specialists (specialist_id) ON DELETE CASCADE,
                         CONSTRAINT specialist_votes_unique UNIQUE (user_id, specialist_id)
                     );
                     """,
@@ -67,10 +65,7 @@ class Migration(migrations.Migration):
                         user_rating INTEGER NULL,
                         created_at TIMESTAMP NULL,
                         updated_at TIMESTAMP NULL,
-                        parent_comment_id INTEGER NULL,
-                        CONSTRAINT specialist_comments_specialist_fk FOREIGN KEY (specialist_id) REFERENCES specialists (specialist_id) ON DELETE CASCADE,
-                        CONSTRAINT specialist_comments_user_fk FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
-                        CONSTRAINT specialist_comments_parent_fk FOREIGN KEY (parent_comment_id) REFERENCES specialist_comments (comment_id) ON DELETE CASCADE
+                        parent_comment_id INTEGER NULL
                     );
                     """,
                     reverse_sql="",
