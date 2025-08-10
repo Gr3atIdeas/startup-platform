@@ -809,7 +809,7 @@ def franchises_list(request):
                 owner=startup.owner
             )
     
-    franchises_qs = Agencies.objects.filter(status="approved")
+    franchises_qs = Franchises.objects.filter(status="approved")
     selected_categories = request.GET.getlist("category")
     min_payback_str = request.GET.get("min_payback", "0")
     max_payback_str = request.GET.get("max_payback", "60")
