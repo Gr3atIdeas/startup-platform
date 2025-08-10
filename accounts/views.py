@@ -1231,6 +1231,30 @@ def startup_detail(request, startup_id):
     except Startups.DoesNotExist:
         return get_object_or_404(Startups, startup_id=startup_id)
     if request.method == "POST":
+        if "status" in request.POST:
+            if not request.user.is_authenticated or not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
+                messages.error(request, "У вас нет прав для этого действия.")
+                return redirect("startup_detail", startup_id=startup.startup_id)
+            new_status = (request.POST.get("status", "") or "").strip().lower()
+            allowed_statuses = {"approved", "blocked", "closed", "pending", "rejected"}
+            if new_status in allowed_statuses:
+                startup.status = new_status
+                try:
+                    status_map = {
+                        "approved": "Approved",
+                        "blocked": "Blocked",
+                        "closed": "Closed",
+                        "pending": "Pending",
+                        "rejected": "Rejected",
+                    }
+                    startup.status_id = ReviewStatuses.objects.get(status_name=status_map[new_status])
+                except ReviewStatuses.DoesNotExist:
+                    pass
+                startup.save(update_fields=["status", "status_id"])
+                messages.success(request, "Статус стартапа обновлён.")
+            else:
+                messages.error(request, "Недопустимый статус.")
+            return redirect("startup_detail", startup_id=startup.startup_id)
         if not request.user.is_authenticated:
             return redirect("login")
         form = CommentForm(request.POST)
