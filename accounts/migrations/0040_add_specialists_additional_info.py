@@ -8,7 +8,28 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL(
-            sql="ALTER TABLE IF EXISTS specialists ADD COLUMN IF NOT EXISTS additional_info TEXT NULL;",
+            sql=r"""
+            DO $$
+            BEGIN
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns
+                    WHERE table_name='specialists' AND column_name='specialist_id'
+                ) THEN
+                    ALTER TABLE specialists ADD COLUMN specialist_id integer;
+                    CREATE SEQUENCE IF NOT EXISTS specialists_specialist_id_seq;
+                    ALTER SEQUENCE specialists_specialist_id_seq OWNED BY specialists.specialist_id;
+                    ALTER TABLE specialists ALTER COLUMN specialist_id SET DEFAULT nextval('specialists_specialist_id_seq');
+                    UPDATE specialists SET specialist_id = nextval('specialists_specialist_id_seq') WHERE specialist_id IS NULL;
+                END IF;
+
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns
+                    WHERE table_name='specialists' AND column_name='additional_info'
+                ) THEN
+                    ALTER TABLE specialists ADD COLUMN additional_info TEXT NULL;
+                END IF;
+            END$$;
+            """,
             reverse_sql="",
         )
     ]
