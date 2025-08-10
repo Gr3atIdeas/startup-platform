@@ -53,6 +53,7 @@ class Command(BaseCommand):
                     data["agency_category"] = random.choice(agency_categories)
 
                 ag = Agencies(
+                    agency_id=fr.franchise_id,
                     owner=fr.owner,
                     title=title,
                     short_description=fr.short_description,
@@ -74,7 +75,11 @@ class Command(BaseCommand):
                     planet_image=fr.planet_image,
                 )
                 if not dry_run:
-                    ag.save()
+                    try:
+                        ag.save()
+                    except Exception:
+                        skipped += 1
+                        continue
                 migrated += 1
 
         self.stdout.write(self.style.SUCCESS(f"Migrated: {migrated}, skipped: {skipped}"))
