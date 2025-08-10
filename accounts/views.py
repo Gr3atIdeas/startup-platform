@@ -1134,24 +1134,9 @@ def agency_detail(request, franchise_id):
     if request.method == "POST":
         if not request.user.is_authenticated:
             return redirect("login")
-        form = FranchiseCommentForm(request.POST)
-        if form.is_valid():
-            from .models import FranchiseComments
-            comment = form.save(commit=False)
-            comment.franchise = franchise
-            comment.user = request.user
-            user_vote = FranchiseVotes.objects.filter(
-                user=request.user, franchise=franchise
-            ).first()
-            if user_vote:
-                comment.user_rating = user_vote.rating
-            comment.save()
-            messages.success(request, "Ваш комментарий был добавлен.")
-            return redirect("agency_detail", franchise_id=franchise.franchise_id)
-        else:
-            messages.error(request, "Ошибка при добавлении комментария.")
-    else:
-        form = FranchiseCommentForm()
+        messages.info(request, "Комментарии для агентств временно недоступны.")
+        return redirect("agency_detail", franchise_id=franchise.franchise_id)
+    form = FranchiseCommentForm()
 
     agency_category = None
     try:
@@ -1171,31 +1156,11 @@ def agency_detail(request, franchise_id):
     similar_franchises = candidates_qs.order_by("-created_at")[:4]
 
     from .models import FranchiseComments
-    comments_with_rating = (
-        FranchiseComments.objects.filter(franchise=franchise, parent_comment__isnull=True)
-        .annotate(
-            user_vote_rating=models.Subquery(
-                FranchiseVotes.objects.filter(
-                    franchise=franchise, user=models.OuterRef("user_id")
-                ).values("rating")[:1]
-            )
-        )
-        .order_by("-created_at")
-    )
+    comments_with_rating = []
     average_rating = franchise.get_average_rating()
     total_votes = franchise.total_voters
     user_has_voted = False
-    if request.user.is_authenticated:
-        user_has_voted = FranchiseVotes.objects.filter(
-            user=request.user, franchise=franchise
-        ).exists()
-    rating_distribution_query = (
-        FranchiseVotes.objects.filter(franchise=franchise)
-        .values("rating")
-        .annotate(count=Count("rating"))
-        .order_by("-rating")
-    )
-    rating_distribution = {item["rating"]: item["count"] for item in rating_distribution_query}
+    rating_distribution = {}
     for i in range(1, 6):
         rating_distribution.setdefault(i, 0)
 
