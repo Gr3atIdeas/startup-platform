@@ -1,4 +1,4 @@
-from django.db import migrations
+from django.db import migrations, connection
 from django.utils import timezone
 
 
@@ -20,10 +20,17 @@ def seed_specialists(apps, schema_editor):
         ("Юлия Павлова", "Финансы"),
     ]
 
+    # Определяем стартовое значение PK (startup_id)
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COALESCE(MAX(startup_id), 0) FROM specialists;")
+        row = cursor.fetchone()
+        next_id = (row[0] or 0) + 1
+
     for title, category in entries:
         if Specialists.objects.filter(title=title).exists():
             continue
         Specialists.objects.create(
+            specialist_id=next_id,
             title=title,
             short_description=f"Профессионал направления: {category}",
             description=f"{title} оказывает услуги в области '{category}'. Опыт более 3 лет.",
@@ -46,6 +53,7 @@ def seed_specialists(apps, schema_editor):
             planet_image=None,
             additional_info=f"Кейсы и услуги по направлению '{category}'.",
         )
+        next_id += 1
 
 
 def unseed_specialists(apps, schema_editor):
