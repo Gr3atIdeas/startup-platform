@@ -21,7 +21,7 @@
     {% endfor %}
   </div>
   <div class="similar-card-category">
-    <div class="category-badge">{{ similar.direction.direction_name|translate_category|default:"Категория" }}</div>
+    <div class="category-badge">{{ similar.customization_data.agency_category|default:"Категория" }}</div>
   </div>
 </a>
 {% endfor %}
@@ -31,7 +31,7 @@
     {% if forloop.counter > similar_franchises|length %}
       <a href="#" class="similar-card placeholder">
         <div class="similar-card-image"><div class="planet"></div></div>
-        <div class="similar-card-name">Название франшизы</div>
+        <div class="similar-card-name">Название агентства</div>
         <div class="similar-card-rating" data-rating="0">
           {% for star_i in "12345" %}
             <span class="rating-icon-container">
