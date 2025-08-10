@@ -1057,64 +1057,6 @@ def agencies_list(request):
             }
         )
     else:
-        # Генерация уникальных витринных названий (одно слово на русском) и присвоение категории агентств (если отсутствует)
-        import random
-        random.seed()
-        brand_words = [
-            "Орбита", "Контур", "Формула", "Импульс", "Фокус", "Сфера", "Пиксель", "Вектор",
-            "Графит", "Маяк", "Квант", "Неон", "Синергия", "Ракета", "Комета", "Апекс",
-            "Аурора", "Зенит", "Эталон", "Точка", "Поток", "Модуль", "Код", "Логос",
-            "Акцент", "Ядро", "Прайм", "Вершина", "Кузница", "Лига", "Авангард", "Ритм",
-            "Сигма", "Курс", "Формат", "Пульс", "Статус", "Профиль", "Смысл", "Уровень",
-            "Кластер", "Артель", "Облик", "Свет", "Старт", "Меридиан", "Пик", "Восход",
-            "Горизонт", "Ключ", "Кедр", "Кристалл", "Периметр", "Практика", "Потенциал",
-            "Эффект", "Резонанс"
-        ]
-        def unique_name(existing_set):
-            for _ in range(300):
-                name = random.choice(brand_words)
-                if name.lower() not in existing_set:
-                    return name
-            for n in range(1, 1000):
-                base = random.choice(brand_words)
-                name = f"{base}{n}"
-                if name.lower() not in existing_set:
-                    return name
-            return f"Агентство{random.randint(10000, 99999)}"
-
-        existing = set()
-        # учтем уже выставленные названия на странице
-        for it in page_obj.object_list:
-            data = it.customization_data or {}
-            if isinstance(data, dict):
-                t = (data.get("agency_display_title") or it.title or "").strip().lower()
-            else:
-                t = (it.title or "").strip().lower()
-            if t:
-                existing.add(t)
-
-        for item in page_obj.object_list:
-            try:
-                data = item.customization_data or {}
-                if not isinstance(data, dict):
-                    data = {}
-                cur = (data.get("agency_display_title") or item.title or "").strip()
-                if not cur or cur.lower() in existing:
-                    new_title = unique_name(existing)
-                    data["agency_display_title"] = new_title
-                    existing.add(new_title.lower())
-                else:
-                    existing.add(cur.lower())
-                if not data.get("agency_category"):
-                    data["agency_category"] = random.choice(agency_categories)
-                item.customization_data = data
-                try:
-                    item.save(update_fields=["customization_data"])  # сохраняем только поле с витринными данными
-                except Exception:
-                    pass
-            except Exception:
-                pass
-
         context = {
             "page_obj": page_obj,
             "paginator": paginator,
