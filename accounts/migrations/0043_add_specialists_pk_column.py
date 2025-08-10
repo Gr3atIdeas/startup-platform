@@ -13,13 +13,13 @@ class Migration(migrations.Migration):
             BEGIN
                 IF NOT EXISTS (
                     SELECT 1 FROM information_schema.columns
-                    WHERE table_name='specialists' AND column_name='specialist_id'
+                    WHERE table_name='specialists' AND column_name='startup_id'
                 ) THEN
-                    ALTER TABLE specialists ADD COLUMN specialist_id integer;
-                    CREATE SEQUENCE IF NOT EXISTS specialists_specialist_id_seq;
-                    ALTER SEQUENCE specialists_specialist_id_seq OWNED BY specialists.specialist_id;
-                    ALTER TABLE specialists ALTER COLUMN specialist_id SET DEFAULT nextval('specialists_specialist_id_seq');
-                    UPDATE specialists SET specialist_id = nextval('specialists_specialist_id_seq') WHERE specialist_id IS NULL;
+                    ALTER TABLE specialists ADD COLUMN startup_id integer;
+                    CREATE SEQUENCE IF NOT EXISTS specialists_startup_id_seq;
+                    ALTER SEQUENCE specialists_startup_id_seq OWNED BY specialists.startup_id;
+                    ALTER TABLE specialists ALTER COLUMN startup_id SET DEFAULT nextval('specialists_startup_id_seq');
+                    UPDATE specialists SET startup_id = nextval('specialists_startup_id_seq') WHERE startup_id IS NULL;
                 END IF;
             END$$;
             """,

@@ -843,7 +843,7 @@ class Agencies(models.Model):
 
 
 class Specialists(models.Model):
-    specialist_id = models.AutoField(primary_key=True)
+    specialist_id = models.AutoField(primary_key=True, db_column="startup_id")
     owner = models.ForeignKey("Users", models.DO_NOTHING, blank=True, null=True, db_column="owner_id")
     title = models.CharField(max_length=255)
     short_description = models.TextField(blank=True, null=True)
