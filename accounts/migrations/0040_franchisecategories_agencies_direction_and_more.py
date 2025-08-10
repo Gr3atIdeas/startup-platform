@@ -38,19 +38,46 @@ class Migration(migrations.Migration):
                 ),
             ],
         ),
-        migrations.AddField(
-            model_name='agencies',
-            name='direction',
-            field=models.ForeignKey(blank=True, db_column='direction_id', null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='accounts.directions'),
-        ),
-        migrations.AddField(
-            model_name='agencies',
-            name='owner',
-            field=models.ForeignKey(blank=True, db_column='owner_id', null=True, on_delete=django.db.models.deletion.DO_NOTHING, to=settings.AUTH_USER_MODEL),
-        ),
-        migrations.AddField(
-            model_name='agencies',
-            name='stage',
-            field=models.ForeignKey(blank=True, db_column='stage_id', null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='accounts.startupstages'),
+        migrations.SeparateDatabaseAndState(
+            database_operations=[
+                migrations.RunSQL(
+                    sql=r"""
+                    ALTER TABLE agencies
+                    ADD COLUMN IF NOT EXISTS direction_id INTEGER NULL;
+                    """,
+                    reverse_sql="",
+                ),
+                migrations.RunSQL(
+                    sql=r"""
+                    ALTER TABLE agencies
+                    ADD COLUMN IF NOT EXISTS owner_id INTEGER NULL;
+                    """,
+                    reverse_sql="",
+                ),
+                migrations.RunSQL(
+                    sql=r"""
+                    ALTER TABLE agencies
+                    ADD COLUMN IF NOT EXISTS stage_id INTEGER NULL;
+                    """,
+                    reverse_sql="",
+                ),
+            ],
+            state_operations=[
+                migrations.AddField(
+                    model_name='agencies',
+                    name='direction',
+                    field=models.ForeignKey(blank=True, db_column='direction_id', null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='accounts.directions'),
+                ),
+                migrations.AddField(
+                    model_name='agencies',
+                    name='owner',
+                    field=models.ForeignKey(blank=True, db_column='owner_id', null=True, on_delete=django.db.models.deletion.DO_NOTHING, to=settings.AUTH_USER_MODEL),
+                ),
+                migrations.AddField(
+                    model_name='agencies',
+                    name='stage',
+                    field=models.ForeignKey(blank=True, db_column='stage_id', null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='accounts.startupstages'),
+                ),
+            ],
         ),
     ]
