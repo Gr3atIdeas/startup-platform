@@ -35,17 +35,13 @@
         {% if user.is_authenticated and user.role.role_name == 'moderator' %}
           <form method="post" class="status-form">
             {% csrf_token %}
-            <select name="status" class="status-select" onchange="this.form.submit()">
-              <option value="approved" {% if franchise.status == 'approved' %}selected{% endif %}>Approved</option>
-              <option value="blocked" {% if franchise.status == 'blocked' %}selected{% endif %}>Blocked</option>
-              <option value="closed" {% if franchise.status == 'closed' %}selected{% endif %}>Closed</option>
-              <option value="pending" {% if franchise.status == 'pending' %}selected{% endif %}>Pending</option>
-              <option value="rejected" {% if franchise.status == 'rejected' %}selected{% endif %}>Rejected</option>
+            <select name="status" class="status-select" disabled>
+              <option>Недоступно</option>
             </select>
           </form>
         {% else %}
-          <div class="status-badge status-{{ franchise.status|default:'unknown' }}">
-             {{ franchise.get_status_display|default:franchise.status|capfirst }}
+          <div class="status-badge status-{{ specialist.status|default:'unknown' }}">
+             {{ specialist.status|default:'unknown'|capfirst }}
           </div>
         {% endif %}
         
@@ -64,7 +60,7 @@
       <div class="investment-info-container">
         <div class="investment-size-info">
           <div class="investment-size-label">Успешных проектов</div>
-          <div class="investment-size-value">{{ franchise.successful_projects|default:12 }}</div>
+          <div class="investment_size-value">{{ specialist.customization_data.successful_projects|default:12 }}</div>
         </div>
       </div>
       
@@ -80,7 +76,7 @@
           </div>
           <button class="action-button write-author-button">Написать</button>
         </div>
-        <div class="creation-date">Создан {{ franchise.created_at|date:"d/m/Y" }}</div>
+        <div class="creation-date">Создан {{ specialist.created_at|date:"d/m/Y" }}</div>
         <a href="https://greatideas.ru/support/orders/" class="report-button">Пожаловаться</a>
       </div>
     </div>
@@ -134,7 +130,7 @@
                  <div class="actions-top-right">
            <div class="franchise-info-badge">Специалист</div>
            {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-             <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}" class="action-button edit-button">Редактировать</a>
+             <a href="#" class="action-button edit-button" style="display:none;">Редактировать</a>
              <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
            {% endif %}
          </div>
@@ -156,7 +152,7 @@
               <h2 class="section-title">Вводная</h2> 
               <div class="section-content text-truncate-container" id="intro-section">
                 <div class="text-content" onclick="toggleTextTruncation('intro-section', 3)">
-                  <p>{{ franchise.short_description|default:"Нет вводного описания." }}</p> 
+                  <p>{{ specialist.short_description|default:"Нет вводного описания." }}</p>
                   <span class="text-truncate-toggle">Показать полностью</span>
                 </div>
               </div>
@@ -279,7 +275,7 @@
                        <textarea class="form-control moderator-comment-textarea" id="moderator_comment_area" name="moderator_comment" rows="3">{{ specialist.moderator_comment|default:'' }}</textarea>
                   </div>
                   <button type="submit" name="action" value="approve" class="btn btn-success me-2">Одобрить</button>
-                  <button type="submit" formaction="{% url 'reject_franchise' franchise_id=franchise.franchise_id %}" name="action" value="reject" class="btn btn-danger">Отклонить</button>
+                  <button type="submit" name="action" value="reject" class="btn btn-danger" disabled>Отклонить</button>
               </form>
           </div>
       </div>
