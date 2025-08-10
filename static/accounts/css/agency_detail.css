@@ -751,7 +751,6 @@ a:hover {
   text-align: center;
 }
 
-/* Гарантируем, что блоки под заголовком начинаются строго от левого края (ориентир — начало лого) */
 .franchise-header-left .header-meta,
 .franchise-header-left .rating-comments-container {
   margin-left: 0;

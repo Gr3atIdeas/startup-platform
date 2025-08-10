@@ -516,9 +516,7 @@ class Users(AbstractBaseUser):
         lowered = url_value.lower()
         if lowered.startswith("http://") or lowered.startswith("https://"):
             return url_value
-        # Разрешаем относительные URL к загруженным медиа
         if lowered.startswith("/media/") or lowered.startswith("media/"):
-            # Гарантируем ведущий слэш
             return url_value if url_value.startswith("/") else f"/{url_value}"
         return None
     def is_telegram_authenticated(self):
@@ -799,7 +797,6 @@ class FranchiseDirections(models.Model):
         return self.direction_name or "Без категории"
 
 
-# Новая сущность: Агентства
 class Agencies(models.Model):
     agency_id = models.AutoField(primary_key=True, db_column="startup_id")
     owner = models.ForeignKey(
@@ -832,7 +829,6 @@ class Agencies(models.Model):
         managed = True
         db_table = "agencies"
 
-    # Совместимость с существующими шаблонами (ожидают franchise_id)
     @property
     def franchise_id(self):
         return self.agency_id

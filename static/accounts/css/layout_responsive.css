@@ -1,6 +1,4 @@
-/* Комплексный адаптив для макетов и контейнеров */
 
-/* Базовые контейнеры */
 .container-fluid {
   width: 100%;
   padding-right: 15px;
@@ -18,7 +16,6 @@
   max-width: 1200px;
 }
 
-/* Адаптивные сетки */
 .grid-container {
   display: grid;
   gap: 20px;
@@ -31,7 +28,6 @@
   gap: 20px;
 }
 
-/* Карточки */
 .card {
   background: #fff;
   border-radius: 12px;
@@ -59,7 +55,6 @@
   border-top: 1px solid #eee;
 }
 
-/* Секции */
 .section {
   padding: 40px 0;
 }
@@ -72,7 +67,6 @@
   padding: 60px 0;
 }
 
-/* Панели */
 .panel {
   background: #fff;
   border-radius: 8px;
@@ -81,7 +75,6 @@
   margin-bottom: 20px;
 }
 
-/* Медиа-запросы для адаптива */
 
 @media (max-width: 1400px) {
   .container {
@@ -350,7 +343,6 @@
   }
 }
 
-/* Специальные адаптивы для iPhone 13 и подобных устройств */
 @media (max-width: 390px) and (min-height: 844px) {
   .container {
     padding-right: 10px;
@@ -378,7 +370,6 @@
   }
 }
 
-/* Ландшафтная ориентация на мобильных */
 @media (max-width: 768px) and (orientation: landscape) {
   .grid-container {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -399,7 +390,6 @@
   }
 }
 
-/* Низкие экраны */
 @media (max-height: 600px) {
   .section {
     padding: 15px 0;
@@ -418,7 +408,6 @@
   }
 }
 
-/* Высокие экраны */
 @media (min-height: 800px) and (max-width: 1200px) {
   .section {
     padding: 50px 0;
@@ -437,7 +426,6 @@
   }
 }
 
-/* Адаптивные утилиты для макетов */
 @media (max-width: 768px) {
   .d-none-mobile {
     display: none !important;
@@ -500,7 +488,6 @@
   }
 }
 
-/* Адаптивные отступы */
 @media (max-width: 768px) {
   .p-mobile-0 { padding: 0 !important; }
   .p-mobile-1 { padding: 0.25rem !important; }
@@ -545,7 +532,6 @@
   .pr-mobile-5 { padding-right: 3rem !important; }
 }
 
-/* Адаптивные размеры */
 @media (max-width: 768px) {
   .fs-mobile-1 { font-size: 0.75rem !important; }
   .fs-mobile-2 { font-size: 0.875rem !important; }
@@ -561,7 +547,6 @@
   .fw-mobile-bold { font-weight: 700 !important; }
 }
 
-/* Адаптивные позиционирования */
 @media (max-width: 768px) {
   .position-mobile-static { position: static !important; }
   .position-mobile-relative { position: relative !important; }
@@ -570,7 +555,6 @@
   .position-mobile-sticky { position: sticky !important; }
 }
 
-/* Адаптивные overflow */
 @media (max-width: 768px) {
   .overflow-mobile-auto { overflow: auto !important; }
   .overflow-mobile-hidden { overflow: hidden !important; }
@@ -578,7 +562,6 @@
   .overflow-mobile-visible { overflow: visible !important; }
 }
 
-/* Адаптивные border-radius */
 @media (max-width: 768px) {
   .rounded-mobile-0 { border-radius: 0 !important; }
   .rounded-mobile-1 { border-radius: 0.25rem !important; }
@@ -587,7 +570,6 @@
   .rounded-mobile-circle { border-radius: 50% !important; }
 }
 
-/* Адаптивные тени */
 @media (max-width: 768px) {
   .shadow-mobile-none { box-shadow: none !important; }
   .shadow-mobile-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.12) !important; }

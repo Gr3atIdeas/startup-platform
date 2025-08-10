@@ -1,7 +1,3 @@
-/**
- * Эффект Position Aware для кнопок - анимация с эффектом волны от положения курсора
- * Применяется ко всем кнопкам и элементам навигации на сайте
- */
 document.addEventListener('DOMContentLoaded', function () {
   initPositionAware()
   initNavButtons()

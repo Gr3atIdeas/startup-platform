@@ -550,7 +550,6 @@ nav.nav-menu
   height: 25px;
 }
 
-/* Черно-белая иконка для пункта "Франшизы" в дропдауне каталога */
 .catalog-dropdown-menu .catalog-dropdown-item-icon[src*="rocket-sharp.svg"],
 .catalog-dropdown-menu .catalog-dropdown-item-icon[alt="Франшизы"] {
   filter: grayscale(100%);
@@ -679,9 +678,7 @@ nav.nav-menu
   color: #000;
 }
 
-/* Адаптив для хедера */
 
-/* Большие экраны (1400px и выше) */
 @media (min-width: 1400px) {
   .header-content-wrapper {
     width: 1303px;
@@ -692,7 +689,6 @@ nav.nav-menu
   }
 }
 
-/* Средние экраны (1200px - 1399px) */
 @media (max-width: 1399px) {
   .header-content-wrapper {
     width: 1200px;
@@ -703,7 +699,6 @@ nav.nav-menu
   }
 }
 
-/* Планшеты (992px - 1199px) */
 @media (max-width: 1199px) {
   .header-content-wrapper {
     width: 100%;
@@ -726,7 +721,6 @@ nav.nav-menu
   }
 }
 
-/* Планшеты в портретной ориентации (768px - 991px) */
 @media (max-width: 991px) {
   .header-content-wrapper {
     flex-wrap: wrap;
@@ -759,7 +753,6 @@ nav.nav-menu
   }
 }
 
-/* Мобильные устройства (480px - 767px) */
 @media (max-width: 767px) {
   #main-header {
     padding-top: 15px;
@@ -914,7 +907,6 @@ nav.nav-menu
   }
 }
 
-/* Маленькие мобильные устройства (до 480px) */
 @media (max-width: 480px) {
   .header-content-wrapper {
     gap: 15px;
@@ -947,7 +939,6 @@ nav.nav-menu
   }
 }
 
-/* Очень маленькие экраны (до 360px) */
 @media (max-width: 360px) {
   .header-nav-links {
     flex-direction: column;
@@ -990,7 +981,6 @@ nav.nav-menu
   }
 }
 
-/* Ландшафтная ориентация на мобильных */
 @media (max-width: 767px) and (orientation: landscape) {
   .header-content-wrapper {
     flex-direction: row;
@@ -1009,7 +999,6 @@ nav.nav-menu
   }
 }
 
-/* Высокие экраны (высота больше 800px) */
 @media (min-height: 800px) and (max-width: 767px) {
   #main-header {
     padding-top: 25px;
@@ -1017,7 +1006,6 @@ nav.nav-menu
   }
 }
 
-/* Низкие экраны (высота меньше 600px) */
 @media (max-height: 600px) {
   #main-header {
     padding-top: 10px;

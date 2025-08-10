@@ -1374,7 +1374,6 @@ body {
   margin-top: 15px;
 }
 
-/* Стили для ползунка срока окупаемости */
 .payback-period-filter .noUi-target {
   background: #ebebeb;
   height: 4px;
@@ -1406,7 +1405,6 @@ body {
   outline: none;
 }
 
-/* Стили для ползунка размера инвестиций */
 .investment-size-filter .noUi-target {
   background: #ebebeb;
   height: 4px;
@@ -1465,7 +1463,6 @@ body {
   object-fit: cover;
 }
 
-/* Временный дефолтный аватар для франшиз, если нет загруженного лого */
 .franchise-default-avatar {
   width: 100%;
   height: 100%;

@@ -505,10 +505,8 @@ function startPolling() {
             if (data.success) {
                 const chatListContainer = document.getElementById('chatListContainer');
                 if (chatListContainer) {
-                    // Обновляем только изменившиеся чаты, а не пересоздаем весь список
                     updateChatList(data.chats, chatListContainer);
                     
-                    // Обновляем заголовок текущего чата если он открыт
                     const currentChatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
                     if (currentChatItem && chatWindowTitle) {
                         chatWindowTitle.textContent = currentChatItem.dataset.chatName;
@@ -552,12 +550,10 @@ function startPolling() {
     }, 5000);
 }
 
-// Новая функция для обновления списка чатов без полного пересоздания
 function updateChatList(newChats, container) {
     const existingChats = new Map();
     const existingChatElements = container.querySelectorAll('.chat-item-new');
     
-    // Создаем карту существующих чатов
     existingChatElements.forEach(element => {
         const chatId = element.dataset.chatId;
         if (chatId) {
@@ -565,40 +561,32 @@ function updateChatList(newChats, container) {
         }
     });
     
-    // Создаем временный фрагмент для нового порядка
     const fragment = document.createDocumentFragment();
     
-    // Обрабатываем новые чаты в правильном порядке
     newChats.forEach(chat => {
         if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && requestUserRole === 'moderator'))) {
             const existingElement = existingChats.get(chat.conversation_id);
             
             if (existingElement) {
-                // Обновляем существующий элемент и добавляем в правильное место
                 updateExistingChatElement(existingElement, chat);
                 fragment.appendChild(existingElement);
                 existingChats.delete(chat.conversation_id);
             } else {
-                // Создаем новый элемент и добавляем в правильное место
                 const newChatElement = createChatItemElement(chat);
                 fragment.appendChild(newChatElement);
             }
         }
     });
     
-    // Удаляем чаты, которых больше нет в списке
     existingChats.forEach(element => {
         element.remove();
     });
     
-    // Очищаем контейнер и добавляем все элементы в правильном порядке
     container.innerHTML = '';
     container.appendChild(fragment);
 }
 
-// Функция для обновления существующего элемента чата
 function updateExistingChatElement(element, chat) {
-    // Обновляем только если данные изменились
     const currentName = element.dataset.chatName;
     const newName = chat.name || `Чат ${chat.conversation_id}`;
     
@@ -613,19 +601,16 @@ function updateExistingChatElement(element, chat) {
         }
     }
     
-    // Обновляем статус сделки
     const isDeal = chat.is_deal ? 'true' : 'false';
     if (element.dataset.isDeal !== isDeal) {
         element.dataset.isDeal = isDeal;
     }
     
-    // Обновляем тип чата
     const chatType = chat.is_group_chat ? 'group' : 'personal';
     if (element.dataset.chatType !== chatType) {
         element.dataset.chatType = chatType;
     }
     
-    // Обновляем аватар если изменился
     const avatarElement = element.querySelector('.chat-avatar-img');
     if (avatarElement) {
         const defaultAvatarSrc = '/static/accounts/images/cosmochat/group_avatar.svg';
@@ -643,7 +628,6 @@ function updateExistingChatElement(element, chat) {
         }
     }
     
-    // Обновляем последнее сообщение и метаданные
     const lastMessagePreview = element.querySelector('.last-message-preview');
     const timestampChat = element.querySelector('.timestamp-chat');
     const dateChatPreview = element.querySelector('.date-chat-preview');
@@ -667,7 +651,6 @@ function updateExistingChatElement(element, chat) {
             dateChatPreview.textContent = chat.last_message.created_at_date || '';
         }
     } else {
-        // Если нет последнего сообщения
         if (lastMessagePreview) {
             lastMessagePreview.textContent = 'Нет сообщений';
         }
@@ -679,7 +662,6 @@ function updateExistingChatElement(element, chat) {
         }
     }
     
-    // Обновляем счетчик непрочитанных сообщений (независимо от наличия последнего сообщения)
     if (unreadBadge) {
         if (chat.unread_count > 0) {
             unreadBadge.textContent = chat.unread_count;
@@ -919,11 +901,8 @@ function updateChatListItem(lastMessage) {
       ) {
         unreadBadge.style.display = 'none';
       } else {
-        // Для нового сообщения от другого пользователя - оставляем логику на сервер
-        // Сервер должен обновить unread_count и это отобразится при следующем polling
       }
     }
-    // Убираем перемещение чата в начало списка - порядок теперь контролируется сервером
   }
 }
 function openProfileModal(userId) {
@@ -1008,8 +987,6 @@ function startChat() {
             if (noChatsMessage) {
               noChatsMessage.remove()
             }
-            // Не добавляем сразу через prepend, позволяем polling обновить список
-            // chatListContainer.prepend(newChatItem)
             startPolling()
             waitForChatInDOM(chatId, 3000)
               .then(() => {
@@ -1467,8 +1444,6 @@ function startChatWithUser(userId) {
             if (noChatsMessage) {
               noChatsMessage.remove()
             }
-            // Не добавляем сразу через prepend, позволяем polling обновить список
-            // chatListContainer.prepend(newChatItem);
             startPolling();
             waitForChatInDOM(data.chat.conversation_id, 3000)
               .then(() => {
@@ -2084,7 +2059,6 @@ function createChatItemElement(chat) {
     chatItem.dataset.chatType = chatType;
     chatItem.dataset.isDeal = chat.is_deal ? 'true' : 'false';
     
-    // Формируем информацию о последнем сообщении
     let lastMessageText = 'Нет сообщений';
     let timestampText = '';
     let dateText = '';
@@ -2101,7 +2075,6 @@ function createChatItemElement(chat) {
         dateText = chat.last_message.created_at_date || '';
     }
     
-    // Добавляем счетчик непрочитанных сообщений (всегда создаем элемент, но показываем только при наличии)
     if (chat.unread_count > 0) {
         unreadBadgeHtml = `<span class="unread-badge-chat">${chat.unread_count}</span>`;
     } else {

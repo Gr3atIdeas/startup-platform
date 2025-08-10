@@ -10,7 +10,6 @@ def translate_category(name):
     if not name:
         return "Без категории"
     original = str(name).strip()
-    # Базовые соответствия
     translations_exact = {
         "Medicine": "Медицина",
         "Auto": "Автомобили",
@@ -66,10 +65,8 @@ def translate_category(name):
         "B2B": "B2B",
         "B2C": "B2C",
     }
-    # Прямое совпадение (учитываем, что в БД уже может быть русский)
     if original in translations_exact:
         return translations_exact[original]
-    # Поиск без учета регистра
     lowered_map = {k.lower(): v for k, v in translations_exact.items()}
     translated = lowered_map.get(original.lower())
     return translated or original

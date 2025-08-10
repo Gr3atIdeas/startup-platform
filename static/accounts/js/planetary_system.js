@@ -583,7 +583,6 @@
     const now = Date.now();
     const currentPage = getCurrentPage();
     
-    // Для главной страницы используем CSS анимацию, не трогаем позиции
     if (currentPage === 'home') {
       return;
     }
@@ -599,7 +598,6 @@
       const x = Math.cos(angleRad) * radius;
       const y = Math.sin(angleRad) * radius;
       
-      // Для других страниц - старая формула
       planetObj.orientation.style.left = `${50 + (x / radius) * 50}%`;
       planetObj.orientation.style.top = `${50 + (y / radius) * 50}%`;
     });

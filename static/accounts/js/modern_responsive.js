@@ -1,4 +1,3 @@
-// Современные JavaScript-утилиты для адаптивного дизайна
 
 document.addEventListener('DOMContentLoaded', function() {
     initContainerQueriesFallback();

@@ -8,7 +8,6 @@
   --ultra_new_planetary_galaxy_y: 0px;
 }
 
-/* Убираем overflow: hidden для блока с планетаркой на главной странице */
 .featured .group:has(#ultra_new_planetary_solar_system.home-page-planetary) {
   overflow: visible !important;
 }
@@ -264,14 +263,12 @@
   pointer-events: none;
 }
 
-/* Центрирование планет только для главной страницы */
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_planet_orientation {
   left: 50% !important;
   top: 50% !important;
   transform: translate(-50%, -50%);
 }
 
-/* CSS анимация орбит для главной страницы */
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(2) .ultra_new_planetary_planet_orientation {
   animation: orbit-rotation-1 80s linear infinite;
 }

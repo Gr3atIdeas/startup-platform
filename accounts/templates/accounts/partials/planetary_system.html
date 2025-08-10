@@ -181,7 +181,6 @@
 
         
         {% for direction in directions %}
-          <!-- DEBUG: direction.original_name={{ direction.original_name }}, direction.direction_name={{ direction.direction_name }} -->
           <div class="ultra_new_planetary_category_item {% if direction.direction_name == selected_galaxy or direction.original_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.original_name }}">
             <div class="ultra_new_planetary_category_bg"></div>
             <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="{{ direction.direction_name }}">

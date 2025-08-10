@@ -505,13 +505,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Обработка рейтинга планет
   function setupRatingStars() {
     console.log('Setting up rating stars...');
     let ratingStars = document.querySelector('.rating-stars[data-interactive="true"]');
     if (!ratingStars) {
       console.log('Rating stars not found or not interactive');
-      // Try to find any rating stars
       const allRatingStars = document.querySelectorAll('.rating-stars');
       console.log('All rating stars found:', allRatingStars.length);
       if (allRatingStars.length > 0) {
@@ -524,7 +522,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const ratingContainers = ratingStars.querySelectorAll('.rating-icon-container');
     const currentRatingStr = ratingStars.dataset.rating || '0';
-    // Парсим рейтинг, заменяя запятую на точку
     const currentRating = parseFloat(currentRatingStr.replace(',', '.')) || 0;
     
     console.log('Found rating stars:', ratingStars);
@@ -535,12 +532,10 @@ document.addEventListener('DOMContentLoaded', function () {
       interactive: ratingStars.dataset.interactive
     });
 
-    // Сначала скрываем все заполненные планеты
     ratingContainers.forEach((container, index) => {
       const emptyIcon = container.querySelector('.icon-empty');
       const filledIcon = container.querySelector('.icon-filled');
       
-      // Принудительно показываем пустые планеты и скрываем заполненные
       if (emptyIcon) {
         emptyIcon.style.display = 'block';
         emptyIcon.style.opacity = '1';
@@ -556,10 +551,8 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
 
-    // Устанавливаем начальный рейтинг
     updateRatingDisplay(currentRating);
 
-    // Добавляем обработчики событий только если рейтинг интерактивный
     if (ratingStars.dataset.interactive === 'true') {
       ratingContainers.forEach((container, index) => {
         const value = index + 1;
@@ -594,7 +587,6 @@ document.addEventListener('DOMContentLoaded', function () {
       console.log(`Container ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
       
       if (value <= Math.floor(rating)) {
-        // Полностью заполненная планета
         if (emptyIcon) {
           emptyIcon.style.display = 'none';
           emptyIcon.style.opacity = '0';
@@ -605,7 +597,6 @@ document.addEventListener('DOMContentLoaded', function () {
           filledIcon.style.clipPath = 'none';
         }
       } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
-        // Частично заполненная планета - обрезаем
         const partialValue = rating % 1;
         if (emptyIcon) {
           emptyIcon.style.display = 'block';
@@ -614,11 +605,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (filledIcon) {
           filledIcon.style.display = 'block';
           filledIcon.style.opacity = '1';
-          // Обрезаем планету по горизонтали
           filledIcon.style.clipPath = `inset(0 ${100 - (partialValue * 100)}% 0 0)`;
         }
       } else {
-        // Пустая планета
         if (emptyIcon) {
           emptyIcon.style.display = 'block';
           emptyIcon.style.opacity = '1';
@@ -662,20 +651,17 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(data => {
       console.log('Rating submission response data:', data);
       if (data.success) {
-        // Обновляем отображение рейтинга
         const ratingStars = document.querySelector('.rating-stars');
         if (ratingStars) {
           ratingStars.dataset.rating = rating;
           updateRatingDisplay(rating);
         }
         
-        // Обновляем общий рейтинг
         const averageRatingElement = document.querySelector('.rating-label');
         if (averageRatingElement && data.average_rating) {
           averageRatingElement.textContent = `Рейтинг ${data.average_rating.toFixed(1)}/5`;
         }
         
-        // Отключаем интерактивность
         ratingStars.removeAttribute('data-interactive');
         ratingStars.querySelectorAll('.rating-icon-container').forEach(container => {
           container.removeEventListener('mouseenter', () => {});
@@ -694,7 +680,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Инициализация рейтинга в комментариях
   function setupCommentRatings() {
     console.log('Setting up comment ratings...');
     const commentRatings = document.querySelectorAll('.comment-rating');
@@ -711,7 +696,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const filledIcon = iconContainer.querySelector('.icon-filled');
         
         if (value <= Math.floor(rating)) {
-          // Полностью заполненная планета
           if (emptyIcon) {
             emptyIcon.style.display = 'none';
             emptyIcon.style.opacity = '0';
@@ -722,7 +706,6 @@ document.addEventListener('DOMContentLoaded', function () {
             filledIcon.style.clipPath = 'none';
           }
         } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
-          // Частично заполненная планета - обрезаем
           const partialValue = rating % 1;
           if (emptyIcon) {
             emptyIcon.style.display = 'block';
@@ -734,7 +717,6 @@ document.addEventListener('DOMContentLoaded', function () {
             filledIcon.style.clipPath = `inset(0 ${100 - (partialValue * 100)}% 0 0)`;
           }
         } else {
-          // Пустая планета
           if (emptyIcon) {
             emptyIcon.style.display = 'block';
             emptyIcon.style.opacity = '1';
@@ -749,7 +731,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Инициализация общего рейтинга
   function setupOverallRating() {
     console.log('Setting up overall rating...');
     const overallRating = document.querySelector('.overall-rating-stars');
@@ -848,31 +829,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Инициализация рейтинга
   setupRatingStars();
   
-  // Инициализация рейтинга в комментариях
   setupCommentRatings();
   
-  // Инициализация общего рейтинга
   setupOverallRating();
   
-  // Инициализация рейтинга в похожих стартапах
   setupSimilarStartupsRatings();
   
-  // Инициализация кнопки "показать еще" в похожих стартапах
   setupSimilarStartupsShowMore();
   
-  // Инициализация кнопки "показать еще" в комментариях
   setupCommentsShowMore();
   
-  // Инициализация рейтинга в поле ввода комментария
   setupCommentRatingInput();
   
-  // Инициализация обрезки текста
   setupTextTruncation();
   
-  // Инициализация рейтинга в похожих стартапах
   function setupSimilarStartupsRatings() {
     console.log('Setting up similar startups ratings...');
     const similarRatings = document.querySelectorAll('.similar-card-rating');
@@ -889,7 +861,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const filledIcon = iconContainer.querySelector('.icon-filled');
         
         if (value <= Math.floor(rating)) {
-          // Полностью заполненная планета
           if (emptyIcon) {
             emptyIcon.style.display = 'none';
             emptyIcon.style.opacity = '0';
@@ -900,7 +871,6 @@ document.addEventListener('DOMContentLoaded', function () {
             filledIcon.style.clipPath = 'none';
           }
         } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
-          // Частично заполненная планета - обрезаем
           const partialValue = rating % 1;
           if (emptyIcon) {
             emptyIcon.style.display = 'block';
@@ -912,7 +882,6 @@ document.addEventListener('DOMContentLoaded', function () {
             filledIcon.style.clipPath = `inset(0 ${100 - (partialValue * 100)}% 0 0)`;
           }
         } else {
-          // Пустая планета
           if (emptyIcon) {
             emptyIcon.style.display = 'block';
             emptyIcon.style.opacity = '1';
@@ -927,7 +896,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Инициализация кнопки "показать еще" в похожих стартапах
   function setupSimilarStartupsShowMore() {
     console.log('Setting up similar startups show more button...');
     const showMoreButton = document.querySelector('.show-more-similar');
@@ -946,11 +914,9 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
         
-        // Показываем индикатор загрузки
         showMoreButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Загрузка...';
         showMoreButton.disabled = true;
         
-        // Загружаем дополнительные похожие стартапы
         fetch(loadSimilarUrl)
           .then(response => {
             if (!response.ok) {
@@ -961,36 +927,27 @@ document.addEventListener('DOMContentLoaded', function () {
           .then(html => {
             const similarGrid = document.querySelector('.similar-franchises-grid');
             if (similarGrid) {
-              // Если пришла пустая строка (меньше 4 элементов) — показываем сообщение, не скрывая секцию
               if (!html || html.trim() === '') {
                 const emptyMsg = document.createElement('p');
                 emptyMsg.textContent = 'Больше похожих франшиз пока нет.';
                 emptyMsg.style.marginTop = '10px';
                 emptyMsg.style.opacity = '0.8';
                 similarGrid.appendChild(emptyMsg);
-                // Возвращаем кнопку в исходное состояние
                 showMoreButton.innerHTML = '<i class="fas fa-redo"></i> Показать еще';
                 showMoreButton.disabled = false;
                 return;
               }
-              // Полностью заменяем текущие карточки на новые
-              // Сохраняем узел placeholder кнопки и возвращаем его в конец
               const placeholder = document.createElement('div');
               placeholder.className = 'similar-card show-more-placeholder';
               placeholder.innerHTML = '<button class="action-button show-more-similar"><i class="fas fa-redo"></i> Показать еще</button>';
 
-              // Добавляем новые карточки в конец, не очищая уже показанные
               const temp = document.createElement('div');
               temp.innerHTML = html;
-              // Удаляем старый плейсхолдер с кнопкой
               const oldPlaceholder = similarGrid.querySelector('.similar-card.show-more-placeholder');
               if (oldPlaceholder) oldPlaceholder.remove();
-              // Вставляем новые карточки
               Array.from(temp.children).forEach(node => similarGrid.appendChild(node));
-              // Возвращаем плейсхолдер с кнопкой в конец
               similarGrid.appendChild(placeholder);
 
-              // Переинициализируем рейтинги и обработчик кнопки
               setupSimilarStartupsRatings();
               setupSimilarStartupsShowMore();
 
@@ -999,7 +956,6 @@ document.addEventListener('DOMContentLoaded', function () {
           })
           .catch(error => {
             console.error('Error loading similar startups:', error);
-            // Восстанавливаем кнопку в случае ошибки
             showMoreButton.innerHTML = '<i class="fas fa-redo"></i> Показать еще';
             showMoreButton.disabled = false;
           });
@@ -1138,7 +1094,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Обработка переключения вкладок
   function setupTabNavigation() {
     console.log('Setting up tab navigation...');
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -1147,13 +1102,11 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Found tab buttons:', tabButtons.length);
     console.log('Found content sections:', contentSections.length);
 
-    // Log all tab buttons and their targets
     tabButtons.forEach((button, index) => {
       const targetId = button.dataset.target;
       console.log(`Tab button ${index}:`, button.textContent.trim(), 'target:', targetId);
     });
 
-    // Log all content sections
     contentSections.forEach((section, index) => {
       console.log(`Content section ${index}:`, section.id);
     });
@@ -1165,11 +1118,9 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('Button element:', button);
         console.log('Button text:', button.textContent.trim());
         
-        // Убираем активный класс со всех кнопок и секций
         tabButtons.forEach(btn => btn.classList.remove('active'));
         contentSections.forEach(section => section.classList.remove('active'));
         
-        // Добавляем активный класс к выбранной кнопке и секции
         button.classList.add('active');
         const targetSection = document.getElementById(targetId);
         console.log('Target section found:', !!targetSection);
@@ -1179,7 +1130,6 @@ document.addEventListener('DOMContentLoaded', function () {
           console.log('Section classes after activation:', targetSection.className);
         } else {
           console.error('Target section not found:', targetId);
-          // Try to find by partial match
           const partialMatch = Array.from(contentSections).find(section => 
             section.id.includes(targetId.replace('-section', '')) || 
             targetId.includes(section.id.replace('-section', ''))
@@ -1193,14 +1143,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Инициализация переключения вкладок
   setupTabNavigation();
 
-  // Обработка кнопок "Чат" и "Написать"
   function setupActionButtons() {
     console.log('Setting up action buttons...');
     
-    // Кнопка "Чат"
     const chatButton = document.querySelector('.chat-button');
     console.log('Chat button found:', !!chatButton);
     if (chatButton) {
@@ -1210,21 +1157,18 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         console.log('Chat button clicked');
         
-        // Получаем ID владельца франшизы для чата
         const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
         if (!ownerId) {
           alert('Ошибка: не удалось определить автора стартапа');
           return;
         }
         
-        // Переходим на страницу чата
         window.location.href = `/cosmochat/`;
       });
     } else {
       console.error('Chat button not found');
     }
 
-    // Кнопка "Написать"
     const writeButton = document.querySelector('.write-author-button');
     console.log('Write button found:', !!writeButton);
     if (writeButton) {
@@ -1234,21 +1178,18 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         console.log('Write button clicked');
         
-        // Получаем ID владельца франшизы
         const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
         if (!ownerId) {
           alert('Ошибка: не удалось определить автора стартапа');
           return;
         }
         
-        // Переходим на страницу чата
         window.location.href = `/cosmochat/`;
       });
     } else {
       console.error('Write button not found');
     }
 
-    // Additional debugging - log all buttons on the page
     const allButtons = document.querySelectorAll('button');
     console.log('Total buttons found on page:', allButtons.length);
     allButtons.forEach((btn, index) => {
@@ -1258,10 +1199,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Инициализация кнопок действий
   setupActionButtons();
 
-  // Настройка этапов
   function setupTimelineSteps() {
     console.log('Setting up timeline steps...');
     const timelineSteps = document.querySelectorAll('.timeline-step');
@@ -1282,14 +1221,11 @@ document.addEventListener('DOMContentLoaded', function () {
       step.addEventListener('click', () => {
         console.log(`Step ${stepNumber} clicked`);
         
-        // Убираем активный класс со всех этапов
         timelineSteps.forEach(s => s.classList.remove('active-step-display'));
         descriptionItems.forEach(d => d.classList.remove('active'));
         
-        // Добавляем активный класс к выбранному этапу
         step.classList.add('active-step-display');
         
-        // Показываем соответствующее описание
         const targetDescription = document.querySelector(`.timeline-description-item:nth-child(${parseInt(stepNumber)})`);
         if (targetDescription) {
           targetDescription.classList.add('active');
@@ -1299,11 +1235,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
       
-      // Делаем этапы кликабельными
       step.style.cursor = 'pointer';
     });
   }
 
-  // Инициализация этапов
   setupTimelineSteps();
 }); 

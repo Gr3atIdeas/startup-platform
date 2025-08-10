@@ -2,7 +2,6 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Global Styles for Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
 }

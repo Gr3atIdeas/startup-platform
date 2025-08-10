@@ -18,8 +18,6 @@ urlpatterns = [
     path("reject-franchise/<int:franchise_id>/", views.reject_franchise, name="reject_franchise"),
     path("vote-franchise/<int:franchise_id>/", views.vote_franchise, name="vote_franchise"),
     path("load_similar_franchises/<int:franchise_id>/", views.load_similar_franchises, name="load_similar_franchises"),
-    # agencies similar endpoint (optional, if needed by front)
-    # path("load_similar_agencies/<int:franchise_id>/", views.load_similar_agencies, name="load_similar_agencies"),
     path("change_owner/<int:startup_id>/", views.change_owner, name="change_owner"),
     path("get_investors/<int:startup_id>/", views.get_investors, name="get_investors"),
     path("add_investor/<int:startup_id>/", views.add_investor, name="add_investor"),

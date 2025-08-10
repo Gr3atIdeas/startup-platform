@@ -1,4 +1,3 @@
-# Generated manually for adding original_file_name field
 
 from django.db import migrations, models
 

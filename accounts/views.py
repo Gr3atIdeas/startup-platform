@@ -107,7 +107,6 @@ from .models import (
 from .utils import send_telegram_support_message
 logger = logging.getLogger(__name__)
 
-# === Auth rate limiting and captcha helpers ===
 RATE_WINDOW_SECONDS = 60
 RATE_MAX_ATTEMPTS = 15
 BLOCK_SECONDS = 30
@@ -468,7 +467,6 @@ def register(request):
     prefix = "register"
     block_left = _is_blocked(request.session, prefix)
     _expire_captcha_if_old(request.session, prefix)
-    # Do NOT pre-generate captcha on GET; only generate during POST when needed
     captcha_q = None
 
     if request.method == "POST":
@@ -479,7 +477,6 @@ def register(request):
             return render(request, "accounts/register.html", {"form": form, "next": next_url})
 
         form = RegisterForm(request.POST)
-        # If captcha is required, verify
         if _should_require_captcha(request.session, prefix):
             _expire_captcha_if_old(request.session, prefix)
             expected = request.session.get(_session_key(prefix, "captcha_expected"))
@@ -498,7 +495,6 @@ def register(request):
                 logger.debug(f"[register] captcha invalid: provided={answer_normalized!r}, expected={expected!r}")
                 return render(request, "accounts/register.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
             else:
-                # Captcha solved, clear requirement for this flow
                 logger.debug("[register] captcha ok, clearing requirement")
                 _clear_captcha(request.session, prefix)
 
@@ -524,7 +520,6 @@ def register(request):
             return render(request, "accounts/register.html", {"form": form, "next": next_url})
     else:
         form = RegisterForm()
-    # On GET, do NOT pass captcha_question, even if session has it
     _clear_captcha_messages(request)
     return render(request, "accounts/register.html", {"form": form, "next": next_url})
 def user_login(request):
@@ -533,7 +528,6 @@ def user_login(request):
     prefix = "login"
     block_left = _is_blocked(request.session, prefix)
     _expire_captcha_if_old(request.session, prefix)
-    # Do NOT pre-generate captcha on GET; only generate during POST when needed
     captcha_q = None
 
     if request.method == "POST":
@@ -545,7 +539,6 @@ def user_login(request):
             return render(request, "accounts/login.html", {"form": form, "next": next_url})
 
         form = LoginForm(request.POST)
-        # If captcha is required, verify before authentication
         if _should_require_captcha(request.session, prefix):
             _expire_captcha_if_old(request.session, prefix)
             expected = request.session.get(_session_key(prefix, "captcha_expected"))
@@ -564,7 +557,6 @@ def user_login(request):
                 logger.debug(f"[login] captcha invalid: provided={answer_normalized!r}, expected={expected!r}")
                 return render(request, "accounts/login.html", {"form": form, "next": next_url, "captcha_question": captcha_q})
             else:
-                # Captcha solved, clear requirement for this flow
                 logger.debug("[login] captcha ok, clearing requirement")
                 _clear_captcha(request.session, prefix)
 
@@ -621,7 +613,6 @@ def user_login(request):
     else:
         logger.debug("Rendering login form")
         form = LoginForm()
-    # On GET, do NOT pass captcha_question, even if session has it
     _clear_captcha_messages(request)
     return render(request, "accounts/login.html", {"form": form, "next": next_url})
 def user_logout(request):
@@ -630,7 +621,6 @@ def user_logout(request):
     return redirect("home")
 
 def startups_list(request):
-    # Используем только категории стартапов, исключая франшизы
     startup_directions = Directions.objects.filter(
         direction_name__in=[
             'Technology', 'Healthcare', 'Finance', 'Education', 'Entertainment', 
@@ -759,7 +749,6 @@ def franchises_list(request):
         ]
     ).order_by('direction_name')
     
-    # Копируем стартапы в франшизы если их нет
     if not Franchises.objects.exists():
         franchise_names = [
             "БургерХаус", "КофеМир", "ПиццаПлюс", "СушиБар", "ШаурмаСтар", "КебабКинг",
@@ -776,7 +765,6 @@ def franchises_list(request):
         startups = Startups.objects.filter(status="approved")
         for i, startup in enumerate(startups):
             franchise_name = franchise_names[i % len(franchise_names)]
-            # Выбираем случайную категорию франшиз
             franchise_direction = franchise_directions[i % len(franchise_directions)] if franchise_directions.exists() else None
             
             franchise = Franchises.objects.create(
@@ -824,7 +812,6 @@ def franchises_list(request):
     sort_order = request.GET.get("sort_order", "newest")
     page_number = request.GET.get("page", 1)
     
-    # Используем существующие поля для рейтинга
     franchises_qs = franchises_qs.annotate(
         rating_agg=ExpressionWrapper(
             Case(
@@ -836,10 +823,8 @@ def franchises_list(request):
         ),
     )
     
-    # список категорий для UI может использоваться из franchise_directions
     
     if selected_categories:
-        # Фильтруем по новому словарю направлений франшиз (на переходный период оставим старое поле, если оно заполнено)
         franchises_qs = franchises_qs.filter(
             Q(direction__direction_name__in=selected_categories) |
             Q(direction__franchisedirections__direction_name__in=selected_categories)
@@ -886,11 +871,9 @@ def franchises_list(request):
     elif sort_order == "oldest":
         franchises_qs = franchises_qs.order_by("created_at")
     
-    # Обеспечим минимум 18 карточек для витрины (однократное дозаполнение)
     try:
         approved_count = Franchises.objects.filter(status="approved").count()
         if approved_count < 18:
-            # Попробуем взять данные из существующих стартапов для заполнения
             from .models import Startups
             available_startups = list(Startups.objects.filter(status="approved")[:100])
             seed_names = [
@@ -984,7 +967,6 @@ def franchises_list(request):
         }
         return render(request, "accounts/franchises_list.html", context)
 def agencies_list(request):
-    # Копия franchises_list, но с отдельным словарём категорий агентств и без смешивания с направлениями франшиз/стартапов
 
     agencies_qs = Agencies.objects.filter(status="approved")
     agency_categories = [
@@ -1070,7 +1052,6 @@ def agencies_list(request):
         }
         return render(request, "accounts/agencies_list.html", context)
 def agency_detail(request, franchise_id):
-    # Копия franchise_detail, но другой шаблон и упрощенные блоки
     try:
         franchise = Agencies.objects.get(agency_id=franchise_id)
     except Agencies.DoesNotExist:
@@ -1398,7 +1379,6 @@ def investments(request):
     if not hasattr(request.user, "role") or request.user.role.role_name != "investor":
         messages.error(request, "Доступ к этой странице разрешен только инвесторам.")
         return redirect("profile")
-    # Безопасные значения по умолчанию, чтобы страница открывалась даже при ошибках данных/интеграций
     default_month_labels = [
         "Янв",
         "Фев",
@@ -1491,7 +1471,6 @@ def investments(request):
                 {"name": category_name, "percentage": percentage}
             )
             invested_category_data_dict[category_name] = percentage
-        # Диапазон за последние 12 месяцев
         end_dt = timezone.now()
         start_dt = (end_dt - relativedelta(months=11)).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
         logger.info(
@@ -1504,7 +1483,6 @@ def investments(request):
             .annotate(monthly_total=Sum(Coalesce("amount", Decimal(0))))
             .order_by("month")
         )
-        # Метки месяцев за последние 12 месяцев
         month_labels = []
         month_cursor = start_dt
         for _ in range(12):
@@ -1552,7 +1530,6 @@ def investments(request):
             f"[investments] Unique categories found for chart: {sorted_categories}"
         )
         chart_data_list = []
-        # Синхронизация с диапазоном последних 12 месяцев
         rolling_start = start_dt.date()
         for i in range(12):
             month_key = (rolling_start + relativedelta(months=i)).strftime("%Y-%m-01")
@@ -1762,7 +1739,6 @@ def investments(request):
         return render(request, "accounts/investments.html", context)
     except Exception as e:
         logger.error(f"Произошла ошибка в investments: {str(e)}", exc_info=True)
-        # Fallback: пробуем собрать упрощенный контекст без внешних интеграций/S3
         try:
             user_investments_qs = InvestmentTransactions.objects.filter(
                 investor=request.user, transaction_type__type_name__iexact="investment"
@@ -1840,7 +1816,6 @@ def investments(request):
             return render(request, "accounts/investments.html", context)
         except Exception as e2:
             logger.error(f"[investments] Fallback building failed: {e2}", exc_info=True)
-            # Рендерим страницу с безопасным контекстом вместо редиректа, чтобы не показывать алерт
             return render(request, "accounts/investments.html", safe_context)
 def legal(request):
     return render(request, "accounts/legal.html")
@@ -2036,7 +2011,6 @@ def delete_avatar(request):
 @login_required
 def chat_list(request):
     user = request.user
-    # Используем ту же логику, что и в cosmochat view
     chats = (
         ChatConversations.objects.filter(chatparticipants__user=request.user)
         .prefetch_related("chatparticipants_set__user")
@@ -2046,7 +2020,6 @@ def chat_list(request):
     chat_data = []
     def build_chat_data(chat):
         """Создает данные о чате аналогично cosmochat view"""
-        # Определяем отображаемое имя и аватар
         if chat.is_group_chat:
             display_name = chat.name
             display_avatar = None
@@ -2064,7 +2037,6 @@ def chat_list(request):
                 display_name = "Удаленный чат"
                 display_avatar = None
         
-        # Получаем информацию о последнем сообщении
         last_message = chat.get_last_message()
         last_message_data = None
         if last_message:
@@ -2077,12 +2049,10 @@ def chat_list(request):
                 "is_read": last_message.is_read(),
             }
         
-        # Подсчитываем непрочитанные сообщения
         unread_count = chat.messages_set.filter(
             status__status_name="sent"
         ).exclude(sender=user).count()
 
-        # Для совместимости с клиентским кодом добавляем participant
         participant_info = None
         if not chat.is_group_chat:
             other_participant = None
@@ -3046,7 +3016,6 @@ def investor_main(request):
         comment_count=Count("comments", distinct=True),
     )
     if selected_direction_name != "All" and selected_direction_name != "Все":
-        # Ищем направление по original_name или direction_name
         from django.db.models import Q
         direction_filter = Q()
         for category in FIXED_CATEGORIES:
@@ -3067,7 +3036,6 @@ def investor_main(request):
     planet_sizes = [60, 70, 56, 64, 50, 60]
     import random
     for idx, startup in enumerate(startups_filtered):
-        # Выбираем случайно между planets_round и planets_ring
         folder_choice = random.choice(['planets_round', 'planets_ring'])
         if folder_choice == 'planets_round':
             random_planet_num = random.randint(1, 15)
@@ -3139,7 +3107,6 @@ def investor_main(request):
             if startup.both_mode
             else "Не указано"
         )
-        # Выбираем случайно между planets_round и planets_ring
         folder_choice = random.choice(['planets_round', 'planets_ring'])
         if folder_choice == 'planets_round':
             random_planet_num = random.randint(1, 15)
@@ -3148,7 +3115,6 @@ def investor_main(request):
             random_planet_num = random.randint(1, 6)
             planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
-        # Находим original_name для направления для правильной фильтрации
         original_direction = None
         for category in FIXED_CATEGORIES:
             if category['direction_name'] == direction_name:
@@ -3202,7 +3168,6 @@ def startuper_main(request):
     )
     print(f"🔍 STARTUPPER_MAIN: Всего одобренных стартапов: {startups_query.count()}")
     
-    # Проверим, какие направления есть в базе данных
     from accounts.models import Directions
     all_directions = Directions.objects.all()
     print(f"🔍 STARTUPPER_MAIN: Все направления в БД:")
@@ -3210,7 +3175,6 @@ def startuper_main(request):
         print(f"🔍   - {direction.direction_name}")
     
     if selected_direction_name != "All" and selected_direction_name != "Все":
-        # Ищем направление по original_name или direction_name
         from django.db.models import Q
         direction_filter = Q()
         print(f"🔍 STARTUPPER_MAIN: Ищем направление '{selected_direction_name}'")
@@ -3224,7 +3188,6 @@ def startuper_main(request):
         else:
             print(f"🔍 STARTUPPER_MAIN: Фильтр не найден для '{selected_direction_name}'")
     
-    # Проверим, какие стартапы есть и с какими направлениями
     all_startups = Startups.objects.filter(status="approved").select_related("direction")
     print(f"🔍 STARTUPPER_MAIN: Все одобренные стартапы:")
     for startup in all_startups[:5]:  # Показываем первые 5
@@ -3244,7 +3207,6 @@ def startuper_main(request):
     planet_sizes = [60, 70, 56, 64, 50, 60]
     import random
     for idx, startup in enumerate(startups_filtered):
-        # Выбираем случайно между planets_round и planets_ring
         folder_choice = random.choice(['planets_round', 'planets_ring'])
         if folder_choice == 'planets_round':
             random_planet_num = random.randint(1, 15)
@@ -3272,7 +3234,6 @@ def startuper_main(request):
             if startup.both_mode
             else "Не указано"
         )
-        # Выбираем случайно между planets_round и planets_ring
         folder_choice = random.choice(['planets_round', 'planets_ring'])
         if folder_choice == 'planets_round':
             random_planet_num = random.randint(1, 15)
@@ -3322,7 +3283,6 @@ def startuper_main(request):
             if startup.both_mode
             else "Не указано"
         )
-        # Выбираем случайно между planets_round и planets_ring
         folder_choice = random.choice(['planets_round', 'planets_ring'])
         if folder_choice == 'planets_round':
             random_planet_num = random.randint(1, 15)
@@ -3332,7 +3292,6 @@ def startuper_main(request):
             planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
         russian_direction = DIRECTION_TRANSLATIONS.get(direction_name, direction_name)
-        # Находим original_name для направления для правильной фильтрации
         original_direction = None
         for category in FIXED_CATEGORIES:
             if category['direction_name'] == direction_name:
@@ -3373,7 +3332,6 @@ def startuper_main(request):
     print(f"🔍   - planets_data_json: {len(planets_data_json)} элементов")
     print(f"🔍   - all_startups_data_json: {len(all_startups_data)} элементов")
     
-    # Проверим первые несколько стартапов из all_startups_data
     print(f"🔍 STARTUPPER_MAIN: Первые 3 стартапа из all_startups_data:")
     for i, startup in enumerate(all_startups_data[:3]):
         print(f"🔍   {i+1}. {startup.get('name', 'Нет названия')} -> direction: {startup.get('direction', 'Нет направления')}")
@@ -4011,7 +3969,6 @@ def planetary_system(request):
         status="approved"
     ).select_related("direction", "owner").order_by("-created_at")
     if selected_direction_name != "All" and selected_direction_name != "Все":
-        # Ищем направление по original_name или direction_name
         from django.db.models import Q
         direction_filter = Q()
         for category in FIXED_CATEGORIES:
@@ -5157,7 +5114,6 @@ def load_similar_franchises(request, franchise_id: int):
         context = {
             "similar_franchises": similar_franchises,
         }
-        # Если меньше 4 (или пусто) — ничего не возвращаем (пусть фронт скрывает кнопку/секцию)
         if similar_franchises.count() < 4:
             return HttpResponse("")
         return render(request, "accounts/partials/_similar_franchise_cards.html", context)

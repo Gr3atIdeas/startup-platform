@@ -1,6 +1,4 @@
-/* Современные CSS-техники для адаптивного дизайна */
 
-/* Container Queries для компонентов */
 .feature-card {
   container-type: inline-size;
   background: rgba(255, 255, 255, 0.1);
@@ -70,7 +68,6 @@
   }
 }
 
-/* Адаптивные изображения */
 .feature-card img.rectangle-icon {
   width: 100%;
   height: clamp(120px, 25vw, 200px);
@@ -132,7 +129,6 @@
   transform: scale(1.1);
 }
 
-/* Адаптивные контейнеры */
 .features-carousel {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
@@ -149,7 +145,6 @@
   padding: clamp(20px, 4vw, 40px) 0;
 }
 
-/* Адаптивные секции */
 .featured3,
 .featured4 {
   width: 100%;
@@ -177,7 +172,6 @@
   transform: scale(1.1);
 }
 
-/* Адаптивная типографика */
 .div8 {
   font-size: clamp(18px, 4.5vw, 24px);
   font-weight: 600;
@@ -210,7 +204,6 @@
   margin-bottom: clamp(8px, 2vw, 12px);
 }
 
-/* Адаптивные кнопки */
 .btn--yellow-gradient {
   background: linear-gradient(135deg, #ffd700, #ffed4e);
   border: none;
@@ -260,7 +253,6 @@
   transform: translateX(3px);
 }
 
-/* Адаптивные группы */
 .group-parent {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
@@ -301,7 +293,6 @@
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
 }
 
-/* Адаптивные элементы */
 .div24,
 .div25,
 .div26 {
@@ -368,7 +359,6 @@
   transform: translateX(2px);
 }
 
-/* Адаптивные медиа-запросы для экстремальных случаев */
 @media (max-width: 480px) {
   .features-carousel {
     grid-template-columns: 1fr;
@@ -424,7 +414,6 @@
   }
 }
 
-/* Специальные адаптивы для iPhone 13 */
 @media (max-width: 390px) and (min-height: 844px) {
   .feature-card {
     padding: clamp(12px, 2.5vw, 20px);
@@ -447,7 +436,6 @@
   }
 }
 
-/* Ландшафтная ориентация */
 @media (max-width: 768px) and (orientation: landscape) {
   .features-carousel {
     grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
@@ -466,7 +454,6 @@
   }
 }
 
-/* Утилитарные классы для современного адаптива */
 .responsive-container {
   width: 100%;
   max-width: clamp(1200px, 95vw, 1303px);
@@ -537,7 +524,6 @@
   gap: clamp(10px, 2vw, 20px);
 }
 
-/* Адаптивные размеры */
 .responsive-fs-sm { font-size: clamp(12px, 3vw, 14px) !important; }
 .responsive-fs-md { font-size: clamp(14px, 3.5vw, 16px) !important; }
 .responsive-fs-lg { font-size: clamp(16px, 4vw, 18px) !important; }
@@ -551,7 +537,6 @@
 .responsive-h-md { height: clamp(150px, 35vw, 250px) !important; }
 .responsive-h-lg { height: clamp(250px, 50vw, 400px) !important; }
 
-/* Анимации */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -585,7 +570,6 @@
   }
 }
 
-/* Применение анимаций */
 .feature-card {
   animation: fadeInUp 0.6s ease-out;
 }
@@ -602,7 +586,6 @@
   animation: fadeInUp 0.6s ease-out 0.3s both;
 }
 
-/* Доступность */
 @media (prefers-reduced-motion: reduce) {
   .feature-card,
   .group-div,
@@ -614,7 +597,6 @@
   }
 }
 
-/* Фокус состояния */
 .btn--yellow-gradient:focus,
 .feature-card:focus,
 .group-div:focus,
@@ -632,7 +614,6 @@
   transition: color 0.3s ease;
 }
 
-/* Темная тема */
 @media (prefers-color-scheme: dark) {
   .feature-card,
   .group-div,

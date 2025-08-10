@@ -1,6 +1,4 @@
-/* Комплексный адаптив для изображений и контейнеров */
 
-/* Базовые правила для всех изображений */
 img {
   max-width: 100%;
   height: auto;
@@ -8,7 +6,6 @@ img {
   object-fit: cover;
 }
 
-/* Адаптивные контейнеры изображений */
 .image-container {
   position: relative;
   overflow: hidden;
@@ -26,9 +23,7 @@ img {
   transform: scale(1.05);
 }
 
-/* Адаптивные размеры для разных типов изображений */
 
-/* Логотипы */
 .logo-container {
   max-width: 200px;
   height: auto;
@@ -40,7 +35,6 @@ img {
   object-fit: contain;
 }
 
-/* Аватары */
 .avatar-container {
   width: 60px;
   height: 60px;
@@ -54,7 +48,6 @@ img {
   object-fit: cover;
 }
 
-/* Карточки стартапов */
 .startup-card-image {
   width: 100%;
   height: 200px;
@@ -68,7 +61,6 @@ img {
   object-fit: cover;
 }
 
-/* Галерея изображений */
 .gallery-image {
   width: 100%;
   height: 250px;
@@ -82,7 +74,6 @@ img {
   object-fit: cover;
 }
 
-/* Планеты и космические элементы */
 .planet-container {
   width: 100%;
   max-width: 400px;
@@ -96,7 +87,6 @@ img {
   object-fit: contain;
 }
 
-/* Медиа-запросы для адаптива */
 
 @media (max-width: 1400px) {
   .startup-card-image {
@@ -222,7 +212,6 @@ img {
   }
 }
 
-/* Специальные адаптивы для iPhone 13 и подобных устройств */
 @media (max-width: 390px) and (min-height: 844px) {
   .startup-card-image {
     height: 110px;
@@ -246,7 +235,6 @@ img {
   }
 }
 
-/* Ландшафтная ориентация на мобильных */
 @media (max-width: 768px) and (orientation: landscape) {
   .startup-card-image {
     height: 100px;
@@ -270,7 +258,6 @@ img {
   }
 }
 
-/* Низкие экраны */
 @media (max-height: 600px) {
   .startup-card-image {
     height: 80px;
@@ -290,7 +277,6 @@ img {
   }
 }
 
-/* Высокие экраны */
 @media (min-height: 800px) and (max-width: 1200px) {
   .startup-card-image {
     height: 200px;
@@ -314,7 +300,6 @@ img {
   }
 }
 
-/* Адаптивные сетки изображений */
 .image-grid {
   display: grid;
   gap: 20px;
@@ -335,7 +320,6 @@ img {
   }
 }
 
-/* Адаптивные карусели */
 .carousel-container {
   width: 100%;
   overflow: hidden;
@@ -360,7 +344,6 @@ img {
   }
 }
 
-/* Адаптивные модальные окна с изображениями */
 .modal-image {
   max-width: 100%;
   max-height: 80vh;
@@ -379,7 +362,6 @@ img {
   }
 }
 
-/* Адаптивные фоновые изображения */
 .background-image {
   width: 100%;
   height: 100%;
@@ -390,7 +372,6 @@ img {
   z-index: -1;
 }
 
-/* Адаптивные иконки */
 .icon-container {
   width: 24px;
   height: 24px;
@@ -419,7 +400,6 @@ img {
   }
 }
 
-/* Адаптивные баннеры */
 .banner-image {
   width: 100%;
   height: 400px;
@@ -438,7 +418,6 @@ img {
   }
 }
 
-/* Адаптивные превью */
 .preview-image {
   width: 100%;
   height: 150px;
@@ -458,7 +437,6 @@ img {
   }
 }
 
-/* Адаптивные миниатюры */
 .thumbnail-image {
   width: 80px;
   height: 80px;
@@ -480,7 +458,6 @@ img {
   }
 }
 
-/* Адаптивные загрузчики изображений */
 .image-loader {
   width: 100%;
   height: 200px;
@@ -499,7 +476,6 @@ img {
   }
 }
 
-/* Адаптивные ошибки загрузки */
 .image-error {
   width: 100%;
   height: 200px;

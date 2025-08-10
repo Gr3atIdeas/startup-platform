@@ -1,4 +1,3 @@
-# Generated manually to ensure migration applies
 
 from django.db import migrations, models
 from django.db import connection

@@ -1,7 +1,3 @@
-/**
- * Apple-style Notifications Manager
- * Автоматическое управление уведомлениями с анимациями
- */
 document.addEventListener('DOMContentLoaded', function() {
     function autoHideNotifications() {
         const notifications = document.querySelectorAll('.alert-message');
