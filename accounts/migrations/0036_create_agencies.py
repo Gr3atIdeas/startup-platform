@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Agencies",
             fields=[
-                ("agency_id", models.AutoField(primary_key=True, serialize=False, db_column="id")),
+                ("agency_id", models.AutoField(primary_key=True, serialize=False)),
                 ("title", models.CharField(max_length=255)),
                 ("short_description", models.TextField(blank=True, null=True)),
                 ("description", models.TextField(blank=True, null=True)),

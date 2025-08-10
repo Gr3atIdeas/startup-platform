@@ -801,7 +801,7 @@ class FranchiseDirections(models.Model):
 
 # Новая сущность: Агентства
 class Agencies(models.Model):
-    agency_id = models.AutoField(primary_key=True, db_column="id")
+    agency_id = models.AutoField(primary_key=True)
     owner = models.ForeignKey(
         "Users", models.DO_NOTHING, blank=True, null=True, db_column="owner_id"
     )
