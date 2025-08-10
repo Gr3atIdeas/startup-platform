@@ -99,6 +99,7 @@ from .models import (
     Users,
     UserVotes,
     FranchiseVotes,
+    Agencies,
 )
 from .utils import send_telegram_support_message
 logger = logging.getLogger(__name__)
@@ -808,7 +809,7 @@ def franchises_list(request):
                 owner=startup.owner
             )
     
-    franchises_qs = Franchises.objects.filter(status="approved")
+    franchises_qs = Agencies.objects.filter(status="approved")
     selected_categories = request.GET.getlist("category")
     min_payback_str = request.GET.get("min_payback", "0")
     max_payback_str = request.GET.get("max_payback", "60")
@@ -1126,8 +1127,8 @@ def agencies_list(request):
 def agency_detail(request, franchise_id):
     # Копия franchise_detail, но другой шаблон и упрощенные блоки
     try:
-        franchise = Franchises.objects.get(franchise_id=franchise_id)
-    except Franchises.DoesNotExist:
+        franchise = Agencies.objects.get(agency_id=franchise_id)
+    except Agencies.DoesNotExist:
         return render(request, "accounts/404.html", status=404)
 
     if request.method == "POST":
@@ -1159,14 +1160,14 @@ def agency_detail(request, franchise_id):
         agency_category = None
 
     if agency_category:
-        candidates_qs = Franchises.objects.filter(
+        candidates_qs = Agencies.objects.filter(
             customization_data__agency_category=agency_category,
             status="approved",
-        ).exclude(franchise_id=franchise_id)
+        ).exclude(agency_id=franchise_id)
     else:
-        candidates_qs = Franchises.objects.filter(
+        candidates_qs = Agencies.objects.filter(
             status="approved",
-        ).exclude(franchise_id=franchise_id)
+        ).exclude(agency_id=franchise_id)
     similar_franchises = candidates_qs.order_by("-created_at")[:4]
 
     from .models import FranchiseComments
