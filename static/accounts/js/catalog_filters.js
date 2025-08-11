@@ -127,6 +127,20 @@
     clearButtonElement.style.display = active ? 'block' : 'none';
   }
 
+  function normalizeDefaultInputs() {
+    if (!filterFormElement) return;
+    var minInv = filterFormElement.querySelector('#minInvestmentInput');
+    var maxInv = filterFormElement.querySelector('#maxInvestmentInput');
+    if (minInv && maxInv) {
+      var imin = parseInt(minInv.value || '0', 10);
+      var imax = parseInt(maxInv.value || '0', 10);
+      if (isNaN(imin) || imin < 0) imin = 0;
+      if (isNaN(imax) || imax <= 0 || imax < imin) imax = 10000000;
+      minInv.value = String(imin);
+      maxInv.value = String(imax);
+    }
+  }
+
   function applyUrlParamsToForm(urlSearchParams, form) {
     if (!form) return;
     var elements = form.elements;
@@ -449,7 +463,9 @@
     attachSliderListenersWithRetry(20, 200);
     clearButtonElement = document.getElementById('clearFiltersBtn');
     bindClearButton();
+    normalizeDefaultInputs();
     setTimeout(function () { updateClearButtonVisibility(); }, 0);
+    setTimeout(function () { updateClearButtonVisibility(); }, 300);
 
     window.addEventListener('popstate', function () {
       var url = window.location.href;

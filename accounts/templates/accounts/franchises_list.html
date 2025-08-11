@@ -418,6 +418,9 @@
             pips: false
         });
 
+        // Принудительно выставляем корректный дефолт после инициализации, если инпуты были пустые/некорректные
+        try { investmentSlider.noUiSlider.set([initialMin, initialMax]); } catch (e) {}
+
         investmentSlider.noUiSlider.on('update', function (values, handle) {
             var minValue = values[0];
             var maxValue = values[1];
