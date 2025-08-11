@@ -297,6 +297,32 @@ document.addEventListener('DOMContentLoaded', function () {
   setupSimilarAgencyRatings();
   setupTextTruncation();
   setupTabNavigation();
+  setupModeratorDelete();
 });
+
+function setupModeratorDelete() {
+  const container = document.querySelector('.comments-list');
+  if (!container) return;
+  const csrf = getCookie('csrftoken');
+  container.addEventListener('click', function (e) {
+    const btn = e.target.closest('.comment-delete-btn');
+    if (!btn) return;
+    const card = btn.closest('.comment-card');
+    if (!card) return;
+    const commentId = card.getAttribute('data-comment-id');
+    if (!commentId) return;
+    if (!csrf) { alert('Ошибка безопасности. Перезагрузите страницу.'); return; }
+    fetch(`/delete-comment/specialist/${commentId}/`, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': csrf, 'X-Requested-With': 'XMLHttpRequest' }
+    }).then(r => r.json()).then(data => {
+      if (data && data.success) {
+        card.remove();
+      } else {
+        alert((data && data.error) || 'Не удалось удалить комментарий');
+      }
+    }).catch(() => alert('Сетевая ошибка при удалении'));
+  });
+}
 
 

@@ -377,7 +377,7 @@
         {% if comments %}
           <div class="comments-list">
             {% for comment in comments %}
-              <div class="comment-card {% if forloop.counter > 5 %}hidden{% endif %}"> 
+              <div class="comment-card {% if forloop.counter > 5 %}hidden{% endif %}" data-comment-id="{{ comment.comment_id }}"> 
                 <div class="comment-left">
                   <div class="comment-author-avatar">
                     
@@ -396,7 +396,11 @@
                   </div>
                 </div>
                 <div class="comment-right">
-                  <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}</div>
+                  <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}
+                    {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+                      <button type="button" class="comment-delete-btn" title="Удалить" aria-label="Удалить">✕</button>
+                    {% endif %}
+                  </div>
                   <div class="comment-rating" data-rating="{{ comment.user_vote_rating|default:0 }}">
                     {% for star_i in "12345" %}
                       <span class="rating-icon-container comment-icon-container">

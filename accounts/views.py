@@ -5505,6 +5505,95 @@ def load_similar_franchises(request, franchise_id: int):
         logger.error(f"Ошибка при загрузке похожих франшиз: {e}")
         return JsonResponse({"error": "Ошибка при загрузке похожих франшиз"}, status=500)
 
+@login_required
+def load_similar_agencies(request, franchise_id: int):
+    try:
+        agency = get_object_or_404(Agencies, agency_id=franchise_id)
+        if agency.customization_data and "agency_category" in agency.customization_data:
+            similar_qs = (
+                Agencies.objects.filter(
+                    customization_data__agency_category=agency.customization_data.get("agency_category"),
+                    status="approved",
+                )
+                .exclude(agency_id=agency.agency_id)
+                .order_by("?")[:4]
+            )
+        else:
+            similar_qs = Agencies.objects.filter(status="approved").exclude(agency_id=agency.agency_id).order_by("?")[:4]
+        html = render_to_string(
+            "accounts/partials/_similar_agency_cards.html",
+            {"similar_franchises": similar_qs, "request": request},
+        )
+        return HttpResponse(html)
+    except Exception as e:
+        logger.error(f"Ошибка при загрузке похожих агентств: {e}")
+        return JsonResponse({"error": "Ошибка при загрузке похожих агентств"}, status=500)
+
+@login_required
+def load_similar_specialists(request, specialist_id: int):
+    try:
+        specialist = get_object_or_404(Specialists, specialist_id=specialist_id)
+        if specialist.customization_data and "specialist_category" in specialist.customization_data:
+            similar_qs = (
+                Specialists.objects.filter(
+                    customization_data__specialist_category=specialist.customization_data.get("specialist_category"),
+                    status="approved",
+                )
+                .exclude(specialist_id=specialist.specialist_id)
+                .order_by("?")[:4]
+            )
+        else:
+            similar_qs = Specialists.objects.filter(status="approved").exclude(specialist_id=specialist.specialist_id).order_by("?")[:4]
+        html = render_to_string(
+            "accounts/partials/_similar_specialist_cards.html",
+            {"similar_specialists": similar_qs, "request": request},
+        )
+        return HttpResponse(html)
+    except Exception as e:
+        logger.error(f"Ошибка при загрузке похожих специалистов: {e}")
+        return JsonResponse({"error": "Ошибка при загрузке похожих специалистов"}, status=500)
+
+@login_required
+def delete_startup_comment(request, comment_id: int):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Недопустимый метод"}, status=405)
+    if not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
+        return JsonResponse({"success": False, "error": "Нет прав"}, status=403)
+    comment = get_object_or_404(Comments, pk=comment_id)
+    comment.delete()
+    return JsonResponse({"success": True})
+
+@login_required
+def delete_franchise_comment(request, comment_id: int):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Недопустимый метод"}, status=405)
+    if not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
+        return JsonResponse({"success": False, "error": "Нет прав"}, status=403)
+    from .models import FranchiseComments
+    comment = get_object_or_404(FranchiseComments, pk=comment_id)
+    comment.delete()
+    return JsonResponse({"success": True})
+
+@login_required
+def delete_agency_comment(request, comment_id: int):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Недопустимый метод"}, status=405)
+    if not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
+        return JsonResponse({"success": False, "error": "Нет прав"}, status=403)
+    comment = get_object_or_404(AgencyComments, pk=comment_id)
+    comment.delete()
+    return JsonResponse({"success": True})
+
+@login_required
+def delete_specialist_comment(request, comment_id: int):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Недопустимый метод"}, status=405)
+    if not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
+        return JsonResponse({"success": False, "error": "Нет прав"}, status=403)
+    comment = get_object_or_404(SpecialistComments, pk=comment_id)
+    comment.delete()
+    return JsonResponse({"success": True})
+
 
 @login_required
 def edit_franchise(request, franchise_id):

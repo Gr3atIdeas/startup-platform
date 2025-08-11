@@ -21,6 +21,8 @@ urlpatterns = [
     path("reject-franchise/<int:franchise_id>/", views.reject_franchise, name="reject_franchise"),
     path("vote-franchise/<int:franchise_id>/", views.vote_franchise, name="vote_franchise"),
     path("load_similar_franchises/<int:franchise_id>/", views.load_similar_franchises, name="load_similar_franchises"),
+    path("load_similar_agencies/<int:franchise_id>/", views.load_similar_agencies, name="load_similar_agencies"),
+    path("load_similar_specialists/<int:specialist_id>/", views.load_similar_specialists, name="load_similar_specialists"),
     path("change_owner/<int:startup_id>/", views.change_owner, name="change_owner"),
     path("get_investors/<int:startup_id>/", views.get_investors, name="get_investors"),
     path("add_investor/<int:startup_id>/", views.add_investor, name="add_investor"),
@@ -137,6 +139,10 @@ urlpatterns = [
     path(
         "delete-message/<int:message_id>/", views.delete_message, name="delete_message"
     ),
+    path("delete-comment/startup/<int:comment_id>/", views.delete_startup_comment, name="delete_startup_comment"),
+    path("delete-comment/franchise/<int:comment_id>/", views.delete_franchise_comment, name="delete_franchise_comment"),
+    path("delete-comment/agency/<int:comment_id>/", views.delete_agency_comment, name="delete_agency_comment"),
+    path("delete-comment/specialist/<int:comment_id>/", views.delete_specialist_comment, name="delete_specialist_comment"),
     path(
         "remove-participant/<int:chat_id>/",
         views.remove_participant,
