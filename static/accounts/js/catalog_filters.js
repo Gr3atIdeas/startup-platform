@@ -12,6 +12,7 @@
   var gridElement;
   var paginationContainerElement;
   var currentFetchController;
+  var clearButtonElement;
 
   function findGridElement(documentRoot) {
     return (
@@ -31,6 +32,15 @@
     var seenKeys = new Set();
     formData.forEach(function (value, key) {
       if (value !== null && value !== undefined && String(value).length > 0) {
+        if (key === 'page') {
+          return;
+        }
+        if (key === 'sort_order' && String(value) === 'newest') {
+          return;
+        }
+        if (key === 'micro_investment' && String(value) === '0') {
+          return;
+        }
         if (key === 'category') {
           params.append(key, String(value));
         } else {
@@ -87,6 +97,28 @@
     } catch (_) {}
 
     return params;
+  }
+
+  function hasActiveFilters(form) {
+    var params = serializeFormToParams(form);
+    var keysToCheck = [
+      'category', 'micro_investment',
+      'min_rating', 'max_rating',
+      'min_payback', 'max_payback',
+      'min_investment', 'max_investment',
+      'min_goal', 'max_goal',
+      'min_micro', 'max_micro'
+    ];
+    for (var i = 0; i < keysToCheck.length; i += 1) {
+      if (params.has(keysToCheck[i])) return true;
+    }
+    return false;
+  }
+
+  function updateClearButtonVisibility() {
+    if (!clearButtonElement || !filterFormElement) return;
+    var active = hasActiveFilters(filterFormElement);
+    clearButtonElement.style.display = active ? 'block' : 'none';
   }
 
   function applyUrlParamsToForm(urlSearchParams, form) {
@@ -163,6 +195,9 @@
     bindPaginationHandlers();
     bindFormHandlers();
     attachSliderListenersWithRetry(20, 200);
+    clearButtonElement = document.getElementById('clearFiltersBtn');
+    bindClearButton();
+    updateClearButtonVisibility();
   }
 
   function fetchAndUpdate(url, options) {
@@ -213,6 +248,7 @@
     if (!filterFormElement) return;
     var params = serializeFormToParams(filterFormElement);
     var url = buildUrlWithParams(params, false);
+    updateClearButtonVisibility();
     fetchAndUpdate(url);
   }
 
@@ -307,6 +343,65 @@
     }
   }
 
+  function bindClearButton() {
+    if (!filterFormElement) return;
+    clearButtonElement = document.getElementById('clearFiltersBtn');
+    if (!clearButtonElement) return;
+    clearButtonElement.addEventListener('click', function () {
+      var checkboxes = filterFormElement.querySelectorAll('input[type="checkbox"][name="category"]');
+      checkboxes.forEach(function (cb) { cb.checked = false; });
+
+      var microInput = document.getElementById('microInvestmentInput');
+      var microToggle = document.getElementById('microToggle');
+      if (microInput) microInput.value = '0';
+      if (microToggle) microToggle.classList.remove('active');
+
+      var minRatingInput = document.getElementById('minRatingInput');
+      var maxRatingInput = document.getElementById('maxRatingInput');
+      if (minRatingInput) minRatingInput.value = '0.0';
+      if (maxRatingInput) maxRatingInput.value = '5.0';
+      var ratingSlider = document.getElementById('ratingSlider');
+      if (ratingSlider && ratingSlider.noUiSlider) {
+        try { ratingSlider.noUiSlider.set([0, 5]); } catch (_) {}
+      }
+
+      var minPaybackInput = document.getElementById('minPaybackInput');
+      var maxPaybackInput = document.getElementById('maxPaybackInput');
+      if (minPaybackInput) minPaybackInput.value = '0';
+      if (maxPaybackInput) maxPaybackInput.value = '60';
+      var paybackSlider = document.getElementById('paybackSlider');
+      if (paybackSlider && paybackSlider.noUiSlider) {
+        try { paybackSlider.noUiSlider.set([0, 60]); } catch (_) {}
+      }
+
+      var minInvestmentInput = document.getElementById('minInvestmentInput');
+      var maxInvestmentInput = document.getElementById('maxInvestmentInput');
+      if (minInvestmentInput) minInvestmentInput.value = '0';
+      if (maxInvestmentInput) maxInvestmentInput.value = '10000000';
+      var investmentSlider = document.getElementById('investmentSlider');
+      if (investmentSlider && investmentSlider.noUiSlider) {
+        try { investmentSlider.noUiSlider.set([0, 10000000]); } catch (_) {}
+      }
+
+      var minGoalInput = filterFormElement.querySelector('input[name="min_goal"]');
+      var maxGoalInput = filterFormElement.querySelector('input[name="max_goal"]');
+      if (minGoalInput) minGoalInput.value = '0';
+      if (maxGoalInput) maxGoalInput.value = '10000000';
+
+      var minMicroInput = filterFormElement.querySelector('input[name="min_micro"]');
+      var maxMicroInput = filterFormElement.querySelector('input[name="max_micro"]');
+      if (minMicroInput) minMicroInput.value = '0';
+      if (maxMicroInput) maxMicroInput.value = '1000000';
+
+      var sortSelect = document.getElementById('sortOrder');
+      if (sortSelect) sortSelect.value = 'newest';
+
+      var params = serializeFormToParams(filterFormElement);
+      var url = buildUrlWithParams(params, false);
+      fetchAndUpdate(url).then(function () { updateClearButtonVisibility(); });
+    });
+  }
+
   function bindPaginationHandlers() {
     var container = document.querySelector('.pagination-numbers');
     if (!container) return;
@@ -346,6 +441,9 @@
     bindFormHandlers();
     bindPaginationHandlers();
     attachSliderListenersWithRetry(20, 200);
+    clearButtonElement = document.getElementById('clearFiltersBtn');
+    bindClearButton();
+    updateClearButtonVisibility();
 
     window.addEventListener('popstate', function () {
       var url = window.location.href;
