@@ -100,17 +100,23 @@
   }
 
   function hasActiveFilters(form) {
-    var params = serializeFormToParams(form);
-    var keysToCheck = [
-      'category', 'micro_investment',
-      'min_rating', 'max_rating',
-      'min_payback', 'max_payback',
-      'min_investment', 'max_investment',
-      'min_goal', 'max_goal',
-      'min_micro', 'max_micro'
-    ];
-    for (var i = 0; i < keysToCheck.length; i += 1) {
-      if (params.has(keysToCheck[i])) return true;
+    // Проверяем по значениям элементов формы относительно дефолтов
+    var elements = form.elements;
+    for (var i = 0; i < elements.length; i += 1) {
+      var el = elements[i];
+      if (!el || !el.name) continue;
+      if (el.type === 'checkbox' && el.name === 'category' && el.checked) return true;
+      if (el.name === 'micro_investment' && String(el.value) === '1') return true;
+      if (el.name === 'min_rating' && parseFloat(el.value) > 0) return true;
+      if (el.name === 'max_rating' && parseFloat(el.value) < 5) return true;
+      if (el.name === 'min_payback' && parseInt(el.value, 10) > 0) return true;
+      if (el.name === 'max_payback' && parseInt(el.value, 10) < 60) return true;
+      if (el.name === 'min_investment' && parseInt(el.value, 10) > 0) return true;
+      if (el.name === 'max_investment' && parseInt(el.value, 10) < 10000000) return true;
+      if (el.name === 'min_goal' && parseInt(el.value, 10) > 0) return true;
+      if (el.name === 'max_goal' && parseInt(el.value, 10) < 10000000) return true;
+      if (el.name === 'min_micro' && parseInt(el.value, 10) > 0) return true;
+      if (el.name === 'max_micro' && parseInt(el.value, 10) < 1000000) return true;
     }
     return false;
   }

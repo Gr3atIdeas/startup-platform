@@ -387,8 +387,10 @@
     var maxInvestmentInput = document.getElementById('maxInvestmentInput');
 
     if (investmentSlider && investmentValueDisplay && minInvestmentInput && maxInvestmentInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
-        var initialMin = (minInvestmentInput.value !== '' ? parseFloat(minInvestmentInput.value) : 0);
-        var initialMax = (maxInvestmentInput.value !== '' ? parseFloat(maxInvestmentInput.value) : 10000000);
+        var parsedMin = parseFloat(minInvestmentInput.value);
+        var parsedMax = parseFloat(maxInvestmentInput.value);
+        var initialMin = (!isNaN(parsedMin) && parsedMin >= 0) ? parsedMin : 0;
+        var initialMax = (!isNaN(parsedMax) && parsedMax > 0 && parsedMax >= initialMin) ? parsedMax : 10000000;
 
         // Устанавливаем стартовые значения в скрытые инпуты и отображение
         minInvestmentInput.value = initialMin;
