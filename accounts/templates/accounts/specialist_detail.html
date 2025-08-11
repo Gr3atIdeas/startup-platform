@@ -132,7 +132,6 @@
            <div class="franchise-info-badge">Специалист</div>
            {% if user.is_authenticated and user.role.role_name == 'moderator' %}
              <a href="#" class="action-button edit-button" style="display:none;">Редактировать</a>
-             <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
            {% endif %}
          </div>
       </div> 
@@ -532,43 +531,7 @@
   </div>
 
   
-  <div class="modal fade" id="changeOwnerModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Сменить владельца</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <input type="text" id="userSearchInput" class="form-control mb-3" placeholder="Поиск пользователей...">
-          <ul id="userSearchResults" class="list-group"></ul>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="action-button" data-bs-dismiss="modal">Закрыть</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   
-  <div class="modal fade" id="confirmChangeOwnerModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Подтверждение действия</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p>Вы уверены, что хотите сменить владельца стартапа на <strong id="newOwnerName"></strong>?</p>
-          <input type="hidden" id="newOwnerId">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
-          <button type="button" class="action-button confirm-change-owner">Подтвердить</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   
   <div class="modal fade" id="addInvestorModal" tabindex="-1" aria-hidden="true">
