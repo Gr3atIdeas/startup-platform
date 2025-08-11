@@ -47,6 +47,7 @@ from django.db.models import (
 from django.db.models.functions import (
     Coalesce,
     TruncMonth,
+    Floor,
 )
 from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -653,6 +654,7 @@ def startups_list(request):
             Coalesce(Avg("uservotes__rating"), 0.0), output_field=FloatField()
         ),
         total_investors_agg=Count("investmenttransactions__investor", distinct=True),
+        rating_bucket=Floor(Coalesce(Avg("uservotes__rating"), 0.0)),
     )
     
     categories = list(
@@ -709,7 +711,9 @@ def startups_list(request):
         (min_micro > 0) or (max_micro < 1000000) or
         (min_rating > 0) or (max_rating < 5)
     )
-    if filters_active:
+    if filters_active and (min_rating > 0 or max_rating < 5):
+        startups_qs = startups_qs.order_by("rating_bucket", "rating_agg", "-created_at")
+    elif filters_active:
         startups_qs = startups_qs.order_by("-rating_agg", "-created_at")
     else:
         if sort_order == "newest":
@@ -833,6 +837,13 @@ def franchises_list(request):
             ),
             output_field=FloatField()
         ),
+        rating_bucket=Floor(
+            Case(
+                When(total_voters__gt=0, then=F('sum_votes') * 1.0 / F('total_voters')),
+                default=Value(0.0),
+                output_field=FloatField(),
+            )
+        ),
     )
     
     
@@ -891,7 +902,9 @@ def franchises_list(request):
         (min_investment > 0) or (max_investment < 10000000) or
         (min_rating > 0) or (max_rating < 5)
     )
-    if filters_active:
+    if filters_active and (min_rating > 0 or max_rating < 5):
+        franchises_qs = franchises_qs.order_by("rating_bucket", "rating_agg", "-created_at")
+    elif filters_active:
         franchises_qs = franchises_qs.order_by("-rating_agg", "-created_at")
     else:
         if sort_order == "newest":
@@ -1023,6 +1036,13 @@ def agencies_list(request):
             ),
             output_field=FloatField()
         ),
+        rating_bucket=Floor(
+            Case(
+                When(total_voters__gt=0, then=F('sum_votes') * 1.0 / F('total_voters')),
+                default=Value(0.0),
+                output_field=FloatField(),
+            )
+        ),
     )
 
     if selected_categories:
@@ -1049,7 +1069,9 @@ def agencies_list(request):
         (search_query != "") or
         (min_rating > 0) or (max_rating < 5)
     )
-    if filters_active:
+    if filters_active and (min_rating > 0 or max_rating < 5):
+        agencies_qs = agencies_qs.order_by("rating_bucket", "rating_agg", "-created_at")
+    elif filters_active:
         agencies_qs = agencies_qs.order_by("-rating_agg", "-created_at")
     else:
         if sort_order == "newest":
@@ -1116,6 +1138,13 @@ def specialists_list(request):
             ),
             output_field=FloatField()
         ),
+        rating_bucket=Floor(
+            Case(
+                When(total_voters__gt=0, then=F('sum_votes') * 1.0 / F('total_voters')),
+                default=Value(0.0),
+                output_field=FloatField(),
+            )
+        ),
     )
 
     if selected_categories:
@@ -1142,7 +1171,9 @@ def specialists_list(request):
         (search_query != "") or
         (min_rating > 0) or (max_rating < 5)
     )
-    if filters_active:
+    if filters_active and (min_rating > 0 or max_rating < 5):
+        specialists_qs = specialists_qs.order_by("rating_bucket", "rating_agg", "-created_at")
+    elif filters_active:
         specialists_qs = specialists_qs.order_by("-rating_agg", "-created_at")
     else:
         if sort_order == "newest":
