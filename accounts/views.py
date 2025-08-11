@@ -743,15 +743,13 @@ def startups_list(request):
         return render(request, "accounts/startups_list.html", context)
 
 def franchises_list(request):
-    franchise_directions = Directions.objects.filter(
-        direction_name__in=[
-            'Technology', 'Healthcare', 'Finance', 'Education', 'Entertainment',
-            'Fashion', 'Food', 'Gaming', 'Real Estate', 'Travel', 'Agriculture',
-            'Energy', 'Environment', 'Social', 'Medicine', 'Auto', 'Delivery',
-            'Cafe', 'Fastfood', 'Health', 'Beauty', 'Transport', 'Sport',
-            'Psychology', 'AI', 'IT', 'Retail'
-        ]
-    ).order_by('direction_name')
+    # Динамически формируем список доступных категорий по реально существующим направлениям у франшиз
+    existing_dir_ids = (
+        Franchises.objects.filter(status="approved", direction__isnull=False)
+        .values_list("direction_id", flat=True)
+        .distinct()
+    )
+    franchise_directions = Directions.objects.filter(direction_id__in=existing_dir_ids).order_by("direction_name")
     
     if not Franchises.objects.exists():
         franchise_names = [
