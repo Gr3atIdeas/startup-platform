@@ -28,9 +28,19 @@
   function serializeFormToParams(form) {
     var formData = new FormData(form);
     var params = new URLSearchParams();
+    var seenKeys = new Set();
     formData.forEach(function (value, key) {
       if (value !== null && value !== undefined && String(value).length > 0) {
-        params.append(key, value);
+        if (key === 'category') {
+          params.append(key, String(value));
+        } else {
+          if (seenKeys.has(key)) {
+            params.set(key, String(value));
+          } else {
+            params.append(key, String(value));
+            seenKeys.add(key);
+          }
+        }
       }
     });
     return params;

@@ -35,7 +35,7 @@
           {% for dir in franchise_directions %}
             <li class="category-item">
               <label class="category-label">
-                <input type="checkbox" name="category" value="{{ dir.direction_name }}" class="category-checkbox" {% if dir.direction_name in selected_categories %}checked{% endif %}>
+                <input type="checkbox" name="category" value="{{ dir.direction_id }}" class="category-checkbox" {% if dir.direction_id|stringformat:"s" in selected_categories %}checked{% endif %}>
                 <span class="category-name">{{ dir.direction_name|translate_category|default:"Без категории" }}</span>
               </label>
             </li>

@@ -827,9 +827,12 @@ def franchises_list(request):
     
     
     if selected_categories:
-        franchises_qs = franchises_qs.filter(
-            Q(direction__direction_name__in=selected_categories)
-        )
+        try:
+            selected_ids = [int(cid) for cid in selected_categories]
+        except Exception:
+            selected_ids = []
+        if selected_ids:
+            franchises_qs = franchises_qs.filter(direction_id__in=selected_ids)
     
     if search_query:
         franchises_qs = franchises_qs.filter(title__icontains=search_query)
