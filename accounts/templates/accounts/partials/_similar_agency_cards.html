@@ -26,24 +26,3 @@
 </a>
 {% endfor %}
 
-{% if similar_franchises|length < 4 %}
-  {% for i in "1234" %}
-    {% if forloop.counter > similar_franchises|length %}
-      <a href="#" class="similar-card placeholder">
-        <div class="similar-card-image"><div class="planet"></div></div>
-        <div class="similar-card-name">Название агентства</div>
-        <div class="similar-card-rating" data-rating="0">
-          {% for star_i in "12345" %}
-            <span class="rating-icon-container">
-              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
-              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
-            </span>
-          {% endfor %}
-        </div>
-        <div class="similar-card-category">
-          <div class="category-badge">Категория</div>
-        </div>
-      </a>
-    {% endif %}
-  {% endfor %}
-{% endif %}
