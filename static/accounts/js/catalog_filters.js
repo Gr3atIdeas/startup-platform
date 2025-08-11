@@ -43,6 +43,49 @@
         }
       }
     });
+
+    // Сбрасываем параметры рейтинга, если на дефолтах
+    try {
+      var minRatingInput = form.querySelector('#minRatingInput');
+      var maxRatingInput = form.querySelector('#maxRatingInput');
+      if (minRatingInput && maxRatingInput) {
+        var rmin = parseFloat(minRatingInput.value);
+        var rmax = parseFloat(maxRatingInput.value);
+        if (!isNaN(rmin) && !isNaN(rmax) && rmin === 0 && rmax === 5) {
+          params.delete('min_rating');
+          params.delete('max_rating');
+        }
+      }
+    } catch (_) {}
+
+    // Сбрасываем параметры окупаемости, если на дефолтах
+    try {
+      var minPaybackInput = form.querySelector('#minPaybackInput');
+      var maxPaybackInput = form.querySelector('#maxPaybackInput');
+      if (minPaybackInput && maxPaybackInput) {
+        var pmin = parseInt(minPaybackInput.value, 10);
+        var pmax = parseInt(maxPaybackInput.value, 10);
+        if (!isNaN(pmin) && !isNaN(pmax) && pmin === 0 && pmax === 60) {
+          params.delete('min_payback');
+          params.delete('max_payback');
+        }
+      }
+    } catch (_) {}
+
+    // Сбрасываем параметры инвестиций, если на дефолтах
+    try {
+      var minInvestmentInput = form.querySelector('#minInvestmentInput');
+      var maxInvestmentInput = form.querySelector('#maxInvestmentInput');
+      if (minInvestmentInput && maxInvestmentInput) {
+        var imin = parseInt(minInvestmentInput.value, 10);
+        var imax = parseInt(maxInvestmentInput.value, 10);
+        if (!isNaN(imin) && !isNaN(imax) && imin === 0 && imax === 10000000) {
+          params.delete('min_investment');
+          params.delete('max_investment');
+        }
+      }
+    } catch (_) {}
+
     return params;
   }
 
@@ -214,17 +257,17 @@
 
     var ratingSlider = document.getElementById('ratingSlider');
     if (ratingSlider && ratingSlider.noUiSlider) {
-      ratingSlider.noUiSlider.on('change', function () { debouncedFormChange(); });
+      ratingSlider.noUiSlider.on('update', function () { debouncedFormChange(); });
     }
 
     var paybackSlider = document.getElementById('paybackSlider');
     if (paybackSlider && paybackSlider.noUiSlider) {
-      paybackSlider.noUiSlider.on('change', function () { debouncedFormChange(); });
+      paybackSlider.noUiSlider.on('update', function () { debouncedFormChange(); });
     }
 
     var investmentSlider = document.getElementById('investmentSlider');
     if (investmentSlider && investmentSlider.noUiSlider) {
-      investmentSlider.noUiSlider.on('change', function () { debouncedFormChange(); });
+      investmentSlider.noUiSlider.on('update', function () { debouncedFormChange(); });
     }
   }
 
