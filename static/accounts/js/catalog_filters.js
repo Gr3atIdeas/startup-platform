@@ -161,6 +161,8 @@
 
     // После замены DOM перевешиваем обработчики
     bindPaginationHandlers();
+    bindFormHandlers();
+    attachSliderListenersWithRetry(20, 200);
   }
 
   function fetchAndUpdate(url, options) {
@@ -227,6 +229,37 @@
   var debouncedFormChange = debounce(onFormChangeDebounced, 250);
   var debouncedSearchChange = debounce(onFormChangeDebounced, 400);
 
+  function attachSliderListenersWithRetry(maxAttempts, intervalMs) {
+    var attempts = 0;
+    function tryAttach() {
+      attempts += 1;
+      var ratingSlider = document.getElementById('ratingSlider');
+      if (ratingSlider && ratingSlider.noUiSlider && !ratingSlider.__ajaxBound) {
+        ratingSlider.noUiSlider.on('change', function () { debouncedFormChange(); });
+        ratingSlider.__ajaxBound = true;
+      }
+      var paybackSlider = document.getElementById('paybackSlider');
+      if (paybackSlider && paybackSlider.noUiSlider && !paybackSlider.__ajaxBound) {
+        paybackSlider.noUiSlider.on('change', function () { debouncedFormChange(); });
+        paybackSlider.__ajaxBound = true;
+      }
+      var investmentSlider = document.getElementById('investmentSlider');
+      if (investmentSlider && investmentSlider.noUiSlider && !investmentSlider.__ajaxBound) {
+        investmentSlider.noUiSlider.on('change', function () { debouncedFormChange(); });
+        investmentSlider.__ajaxBound = true;
+      }
+      var done = (
+        (ratingSlider ? !!ratingSlider.__ajaxBound : true) &&
+        (paybackSlider ? !!paybackSlider.__ajaxBound : true) &&
+        (investmentSlider ? !!investmentSlider.__ajaxBound : true)
+      );
+      if (!done && attempts < maxAttempts) {
+        setTimeout(tryAttach, intervalMs);
+      }
+    }
+    tryAttach();
+  }
+
   function bindFormHandlers() {
     if (!filterFormElement) return;
 
@@ -257,17 +290,20 @@
 
     var ratingSlider = document.getElementById('ratingSlider');
     if (ratingSlider && ratingSlider.noUiSlider) {
-      ratingSlider.noUiSlider.on('update', function () { debouncedFormChange(); });
+      ratingSlider.noUiSlider.on('change', function () { debouncedFormChange(); });
+      ratingSlider.__ajaxBound = true;
     }
 
     var paybackSlider = document.getElementById('paybackSlider');
     if (paybackSlider && paybackSlider.noUiSlider) {
-      paybackSlider.noUiSlider.on('update', function () { debouncedFormChange(); });
+      paybackSlider.noUiSlider.on('change', function () { debouncedFormChange(); });
+      paybackSlider.__ajaxBound = true;
     }
 
     var investmentSlider = document.getElementById('investmentSlider');
     if (investmentSlider && investmentSlider.noUiSlider) {
-      investmentSlider.noUiSlider.on('update', function () { debouncedFormChange(); });
+      investmentSlider.noUiSlider.on('change', function () { debouncedFormChange(); });
+      investmentSlider.__ajaxBound = true;
     }
   }
 
@@ -309,6 +345,7 @@
 
     bindFormHandlers();
     bindPaginationHandlers();
+    attachSliderListenersWithRetry(20, 200);
 
     window.addEventListener('popstate', function () {
       var url = window.location.href;

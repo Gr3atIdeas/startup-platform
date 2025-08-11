@@ -702,10 +702,20 @@ def startups_list(request):
         min_rating = 0
         max_rating = 5
     
-    if sort_order == "newest":
-        startups_qs = startups_qs.order_by("-created_at")
-    elif sort_order == "oldest":
-        startups_qs = startups_qs.order_by("created_at")
+    filters_active = (
+        bool(selected_categories) or
+        (search_query != "") or
+        (min_goal > 0) or (max_goal < 10000000) or
+        (min_micro > 0) or (max_micro < 1000000) or
+        (min_rating > 0) or (max_rating < 5)
+    )
+    if filters_active:
+        startups_qs = startups_qs.order_by("-rating_agg", "-created_at")
+    else:
+        if sort_order == "newest":
+            startups_qs = startups_qs.order_by("-created_at")
+        elif sort_order == "oldest":
+            startups_qs = startups_qs.order_by("created_at")
     
     paginator = Paginator(startups_qs, 6)
     page_obj = paginator.get_page(page_number)
@@ -874,10 +884,20 @@ def franchises_list(request):
         min_rating = 0
         max_rating = 5
     
-    if sort_order == "newest":
-        franchises_qs = franchises_qs.order_by("-created_at")
-    elif sort_order == "oldest":
-        franchises_qs = franchises_qs.order_by("created_at")
+    filters_active = (
+        bool(selected_categories) or
+        (search_query != "") or
+        (min_payback > 0) or (max_payback < 60) or
+        (min_investment > 0) or (max_investment < 10000000) or
+        (min_rating > 0) or (max_rating < 5)
+    )
+    if filters_active:
+        franchises_qs = franchises_qs.order_by("-rating_agg", "-created_at")
+    else:
+        if sort_order == "newest":
+            franchises_qs = franchises_qs.order_by("-created_at")
+        elif sort_order == "oldest":
+            franchises_qs = franchises_qs.order_by("created_at")
     
     try:
         approved_count = Franchises.objects.filter(status="approved").count()
@@ -1024,10 +1044,18 @@ def agencies_list(request):
         min_rating = 0
         max_rating = 5
 
-    if sort_order == "newest":
-        agencies_qs = agencies_qs.order_by("-created_at")
-    elif sort_order == "oldest":
-        agencies_qs = agencies_qs.order_by("created_at")
+    filters_active = (
+        bool(selected_categories) or
+        (search_query != "") or
+        (min_rating > 0) or (max_rating < 5)
+    )
+    if filters_active:
+        agencies_qs = agencies_qs.order_by("-rating_agg", "-created_at")
+    else:
+        if sort_order == "newest":
+            agencies_qs = agencies_qs.order_by("-created_at")
+        elif sort_order == "oldest":
+            agencies_qs = agencies_qs.order_by("created_at")
 
     paginator = Paginator(agencies_qs, 6)
     page_obj = paginator.get_page(page_number)
@@ -1109,10 +1137,18 @@ def specialists_list(request):
         min_rating = 0
         max_rating = 5
 
-    if sort_order == "newest":
-        specialists_qs = specialists_qs.order_by("-created_at")
-    elif sort_order == "oldest":
-        specialists_qs = specialists_qs.order_by("created_at")
+    filters_active = (
+        bool(selected_categories) or
+        (search_query != "") or
+        (min_rating > 0) or (max_rating < 5)
+    )
+    if filters_active:
+        specialists_qs = specialists_qs.order_by("-rating_agg", "-created_at")
+    else:
+        if sort_order == "newest":
+            specialists_qs = specialists_qs.order_by("-created_at")
+        elif sort_order == "oldest":
+            specialists_qs = specialists_qs.order_by("created_at")
 
     paginator = Paginator(specialists_qs, 6)
     page_obj = paginator.get_page(page_number)
