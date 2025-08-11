@@ -315,11 +315,11 @@
                 <div class="comment-left">
                   <div class="comment-author-avatar">
                     
-                    <img src="{% if comment.user_id.get_profile_picture_url %}{{ comment.user_id.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ comment.user_id.username }}" class="comment-avatar-img">
+                    <img src="{% if comment.user.get_profile_picture_url %}{{ comment.user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ comment.user.username }}" class="comment-avatar-img">
                   </div>
                   <div class="comment-content-wrapper">
                     <div class="comment-author-name">
-                      {{ comment.user_id.first_name|default:comment.user_id.username }}
+                      {{ comment.user.first_name|default:comment.user.username }}
                       {% if comment.user_vote_rating %}
                         <span class="comment-author-rating-badge">оценил на {{ comment.user_vote_rating }}</span>
                       {% endif %}
@@ -340,10 +340,10 @@
                     {% endfor %}
                   </div>
                   <div class="comment-footer">
-                    {% if comment.user_id|has_invested:startup %}
+                    {% if comment.user|has_invested:startup %}
                       <span class="badge badge-invested">Инвестировал</span>
                     {% endif %}
-                    {% if comment.user_id|is_buyout_investor:startup %}
+                    {% if comment.user|is_buyout_investor:startup %}
                       <span class="badge badge-buyout">Выкуп</span>
                     {% endif %}
                   </div>
