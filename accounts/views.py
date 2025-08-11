@@ -1248,6 +1248,29 @@ def agency_detail(request, franchise_id):
             comment = form.save(commit=False)
             comment.agency = franchise
             comment.user = request.user
+
+            try:
+                new_rating = int(form.cleaned_data.get("user_rating") or 0)
+            except (TypeError, ValueError):
+                new_rating = 0
+            user_vote = AgencyVotes.objects.filter(user=request.user, agency=franchise).first()
+            if 1 <= new_rating <= 5:
+                comment.user_rating = new_rating
+                if user_vote:
+                    if user_vote.rating != new_rating:
+                        franchise.sum_votes = (franchise.sum_votes or 0) + (new_rating - int(user_vote.rating or 0))
+                        user_vote.rating = new_rating
+                        user_vote.save(update_fields=["rating"])
+                        franchise.save(update_fields=["sum_votes"])
+                else:
+                    AgencyVotes.objects.create(user=request.user, agency=franchise, rating=new_rating)
+                    franchise.total_voters = (franchise.total_voters or 0) + 1
+                    franchise.sum_votes = (franchise.sum_votes or 0) + new_rating
+                    franchise.save(update_fields=["total_voters", "sum_votes"])
+            else:
+                if user_vote:
+                    comment.user_rating = user_vote.rating
+
             comment.save()
             messages.success(request, "Ваш комментарий был добавлен.")
             return redirect("agency_detail", franchise_id=franchise.franchise_id)
@@ -1328,6 +1351,29 @@ def specialist_detail(request, specialist_id):
             comment = form.save(commit=False)
             comment.specialist = specialist
             comment.user = request.user
+
+            try:
+                new_rating = int(form.cleaned_data.get("user_rating") or 0)
+            except (TypeError, ValueError):
+                new_rating = 0
+            user_vote = SpecialistVotes.objects.filter(user=request.user, specialist=specialist).first()
+            if 1 <= new_rating <= 5:
+                comment.user_rating = new_rating
+                if user_vote:
+                    if user_vote.rating != new_rating:
+                        specialist.sum_votes = (specialist.sum_votes or 0) + (new_rating - int(user_vote.rating or 0))
+                        user_vote.rating = new_rating
+                        user_vote.save(update_fields=["rating"])
+                        specialist.save(update_fields=["sum_votes"])
+                else:
+                    SpecialistVotes.objects.create(user=request.user, specialist=specialist, rating=new_rating)
+                    specialist.total_voters = (specialist.total_voters or 0) + 1
+                    specialist.sum_votes = (specialist.sum_votes or 0) + new_rating
+                    specialist.save(update_fields=["total_voters", "sum_votes"])
+            else:
+                if user_vote:
+                    comment.user_rating = user_vote.rating
+
             comment.save()
             messages.success(request, "Ваш комментарий был добавлен.")
             return redirect("specialist_detail", specialist_id=specialist.specialist_id)
@@ -1408,11 +1454,27 @@ def franchise_detail(request, franchise_id):
             comment = form.save(commit=False)
             comment.franchise = franchise
             comment.user = request.user
-            user_vote = FranchiseVotes.objects.filter(
-                user=request.user, franchise=franchise
-            ).first()
-            if user_vote:
-                comment.user_rating = user_vote.rating
+            try:
+                new_rating = int(form.cleaned_data.get("user_rating") or 0)
+            except (TypeError, ValueError):
+                new_rating = 0
+            user_vote = FranchiseVotes.objects.filter(user=request.user, franchise=franchise).first()
+            if 1 <= new_rating <= 5:
+                comment.user_rating = new_rating
+                if user_vote:
+                    if user_vote.rating != new_rating:
+                        franchise.sum_votes = (franchise.sum_votes or 0) + (new_rating - int(user_vote.rating or 0))
+                        user_vote.rating = new_rating
+                        user_vote.save(update_fields=["rating"])
+                        franchise.save(update_fields=["sum_votes"])
+                else:
+                    FranchiseVotes.objects.create(user=request.user, franchise=franchise, rating=new_rating)
+                    franchise.total_voters = (franchise.total_voters or 0) + 1
+                    franchise.sum_votes = (franchise.sum_votes or 0) + new_rating
+                    franchise.save(update_fields=["total_voters", "sum_votes"])
+            else:
+                if user_vote:
+                    comment.user_rating = user_vote.rating
             comment.save()
             messages.success(request, "Ваш комментарий был добавлен.")
             return redirect("franchise_detail", franchise_id=franchise.franchise_id)
@@ -1525,11 +1587,29 @@ def startup_detail(request, startup_id):
             comment = form.save(commit=False)
             comment.startup_id = startup
             comment.user_id = request.user
-            user_vote = UserVotes.objects.filter(
-                user=request.user, startup=startup
-            ).first()
-            if user_vote:
-                comment.user_rating = user_vote.rating
+
+            try:
+                new_rating = int(form.cleaned_data.get("user_rating") or 0)
+            except (TypeError, ValueError):
+                new_rating = 0
+            user_vote = UserVotes.objects.filter(user=request.user, startup=startup).first()
+            if 1 <= new_rating <= 5:
+                comment.user_rating = new_rating
+                if user_vote:
+                    if user_vote.rating != new_rating:
+                        startup.sum_votes = (startup.sum_votes or 0) + (new_rating - int(user_vote.rating or 0))
+                        user_vote.rating = new_rating
+                        user_vote.save(update_fields=["rating"])
+                        startup.save(update_fields=["sum_votes"])
+                else:
+                    UserVotes.objects.create(user=request.user, startup=startup, rating=new_rating)
+                    startup.total_voters = (startup.total_voters or 0) + 1
+                    startup.sum_votes = (startup.sum_votes or 0) + new_rating
+                    startup.save(update_fields=["total_voters", "sum_votes"])
+            else:
+                if user_vote:
+                    comment.user_rating = user_vote.rating
+
             comment.save()
             messages.success(request, "Ваш комментарий был добавлен.")
             return redirect("startup_detail", startup_id=startup.startup_id)
