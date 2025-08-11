@@ -435,7 +435,7 @@
       return; // не страница каталога
     }
 
-    // Синхронизируем форму с текущим URL при старте
+    // Синхронизируем форму с текущим URL при старте и дождемся инициализации слайдеров страницы
     applyUrlParamsToForm(new URLSearchParams(window.location.search), filterFormElement);
 
     bindFormHandlers();
@@ -443,7 +443,7 @@
     attachSliderListenersWithRetry(20, 200);
     clearButtonElement = document.getElementById('clearFiltersBtn');
     bindClearButton();
-    updateClearButtonVisibility();
+    setTimeout(function () { updateClearButtonVisibility(); }, 0);
 
     window.addEventListener('popstate', function () {
       var url = window.location.href;
