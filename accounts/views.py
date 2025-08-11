@@ -638,6 +638,7 @@ def startups_list(request):
     
     startups_qs = Startups.objects.filter(status="approved")
     selected_categories = request.GET.getlist("category")
+    micro_investment_str = request.GET.get("micro_investment", "0")
     min_goal_str = request.GET.get("min_goal", "0")
     max_goal_str = request.GET.get("max_goal", "10000000")
     min_micro_str = request.GET.get("min_micro", "0")
@@ -668,6 +669,10 @@ def startups_list(request):
             direction__direction_name__in=selected_categories
         )
     
+    micro_investment = micro_investment_str == "1"
+    if micro_investment:
+        startups_qs = startups_qs.filter(micro_investment_available=True)
+
     if search_query:
         startups_qs = startups_qs.filter(title__icontains=search_query)
     
@@ -709,7 +714,8 @@ def startups_list(request):
         (search_query != "") or
         (min_goal > 0) or (max_goal < 10000000) or
         (min_micro > 0) or (max_micro < 1000000) or
-        (min_rating > 0) or (max_rating < 5)
+        (min_rating > 0) or (max_rating < 5) or
+        micro_investment
     )
     rating_active = (min_rating > 0 or max_rating < 5)
     goal_active = (min_goal > 0 or max_goal < 10000000)
@@ -758,6 +764,7 @@ def startups_list(request):
             "max_goal": max_goal,
             "min_micro": min_micro,
             "max_micro": max_micro,
+            "micro_investment": micro_investment,
             "sort_order": sort_order,
             "directions": startup_directions,
         }
