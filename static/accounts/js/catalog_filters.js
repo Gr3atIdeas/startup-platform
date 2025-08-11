@@ -143,7 +143,19 @@
     // Сбрасываем page, если не указано оставить
     if (!keepPageParam) merged.delete('page');
 
-    // Удаляем все ключи формы, чтобы избежать дубликатов
+    // Полный сброс параметров, контролируемых формой, чтобы удалить снятые чекбоксы и прочие ключи
+    try {
+      if (filterFormElement && filterFormElement.elements) {
+        var elements = filterFormElement.elements;
+        for (var i = 0; i < elements.length; i += 1) {
+          var el = elements[i];
+          if (!el || !el.name) continue;
+          merged.delete(el.name);
+        }
+      }
+    } catch (_) {}
+
+    // На всякий случай также удаляем ключи, присланные в текущих params
     params.forEach(function (_, key) { merged.delete(key); });
     // Добавляем актуальные значения формы
     params.forEach(function (value, key) { merged.append(key, value); });
