@@ -711,10 +711,17 @@ def startups_list(request):
         (min_micro > 0) or (max_micro < 1000000) or
         (min_rating > 0) or (max_rating < 5)
     )
-    if filters_active and (min_rating > 0 or max_rating < 5):
+    rating_active = (min_rating > 0 or max_rating < 5)
+    goal_active = (min_goal > 0 or max_goal < 10000000)
+    micro_active = (min_micro > 0 or max_micro < 1000000)
+    if goal_active:
+        startups_qs = startups_qs.order_by("funding_goal", "rating_bucket", "rating_agg", "-created_at")
+    elif micro_active:
+        startups_qs = startups_qs.order_by("percent_amount", "rating_bucket", "rating_agg", "-created_at")
+    elif rating_active:
         startups_qs = startups_qs.order_by("rating_bucket", "rating_agg", "-created_at")
     elif filters_active:
-        startups_qs = startups_qs.order_by("-rating_agg", "-created_at")
+        startups_qs = startups_qs.order_by("-created_at")
     else:
         if sort_order == "newest":
             startups_qs = startups_qs.order_by("-created_at")
@@ -902,10 +909,17 @@ def franchises_list(request):
         (min_investment > 0) or (max_investment < 10000000) or
         (min_rating > 0) or (max_rating < 5)
     )
-    if filters_active and (min_rating > 0 or max_rating < 5):
+    rating_active = (min_rating > 0 or max_rating < 5)
+    payback_active = (min_payback > 0 or max_payback < 60)
+    investment_active = (min_investment > 0 or max_investment < 10000000)
+    if payback_active:
+        franchises_qs = franchises_qs.order_by("payback_period", "investment_size", "rating_bucket", "rating_agg", "-created_at")
+    elif investment_active:
+        franchises_qs = franchises_qs.order_by("investment_size", "rating_bucket", "rating_agg", "-created_at")
+    elif rating_active:
         franchises_qs = franchises_qs.order_by("rating_bucket", "rating_agg", "-created_at")
     elif filters_active:
-        franchises_qs = franchises_qs.order_by("-rating_agg", "-created_at")
+        franchises_qs = franchises_qs.order_by("-created_at")
     else:
         if sort_order == "newest":
             franchises_qs = franchises_qs.order_by("-created_at")
@@ -1069,10 +1083,11 @@ def agencies_list(request):
         (search_query != "") or
         (min_rating > 0) or (max_rating < 5)
     )
-    if filters_active and (min_rating > 0 or max_rating < 5):
+    rating_active = (min_rating > 0 or max_rating < 5)
+    if rating_active:
         agencies_qs = agencies_qs.order_by("rating_bucket", "rating_agg", "-created_at")
     elif filters_active:
-        agencies_qs = agencies_qs.order_by("-rating_agg", "-created_at")
+        agencies_qs = agencies_qs.order_by("-created_at")
     else:
         if sort_order == "newest":
             agencies_qs = agencies_qs.order_by("-created_at")
@@ -1171,10 +1186,11 @@ def specialists_list(request):
         (search_query != "") or
         (min_rating > 0) or (max_rating < 5)
     )
-    if filters_active and (min_rating > 0 or max_rating < 5):
+    rating_active = (min_rating > 0 or max_rating < 5)
+    if rating_active:
         specialists_qs = specialists_qs.order_by("rating_bucket", "rating_agg", "-created_at")
     elif filters_active:
-        specialists_qs = specialists_qs.order_by("-rating_agg", "-created_at")
+        specialists_qs = specialists_qs.order_by("-created_at")
     else:
         if sort_order == "newest":
             specialists_qs = specialists_qs.order_by("-created_at")
