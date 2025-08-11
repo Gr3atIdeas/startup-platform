@@ -455,8 +455,10 @@
       return; // не страница каталога
     }
 
-    // Синхронизируем форму с текущим URL при старте и дождемся инициализации слайдеров страницы
-    applyUrlParamsToForm(new URLSearchParams(window.location.search), filterFormElement);
+    // Синхронизируем форму с текущим URL после короткой задержки, чтобы слайдеры успели инициализироваться
+    setTimeout(function(){
+      applyUrlParamsToForm(new URLSearchParams(window.location.search), filterFormElement);
+    }, 0);
 
     bindFormHandlers();
     bindPaginationHandlers();
@@ -465,7 +467,8 @@
     bindClearButton();
     normalizeDefaultInputs();
     setTimeout(function () { updateClearButtonVisibility(); }, 0);
-    setTimeout(function () { updateClearButtonVisibility(); }, 300);
+    setTimeout(function () { updateClearButtonVisibility(); }, 150);
+    setTimeout(function () { updateClearButtonVisibility(); }, 400);
 
     window.addEventListener('popstate', function () {
       var url = window.location.href;
