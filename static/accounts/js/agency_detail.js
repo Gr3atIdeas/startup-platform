@@ -184,6 +184,39 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function setupSimilarAgenciesShowMore() {
+    const showMoreButton = document.querySelector('.show-more-similar');
+    if (!showMoreButton) return;
+    showMoreButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      const loadSimilarUrl = document.querySelector('.franchise-detail-page').dataset.loadSimilarUrl;
+      if (!loadSimilarUrl) return;
+      showMoreButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Загрузка...';
+      showMoreButton.disabled = true;
+      fetch(loadSimilarUrl)
+        .then(r => r.text())
+        .then(html => {
+          const grid = document.querySelector('.similar-franchises-grid');
+          if (!grid) return;
+          if (!html || html.trim() === '') {
+            grid.innerHTML = '<p style="margin-top:10px;color:#fff;opacity:.8;">Похожих агентств пока нет.</p>';
+            return;
+          }
+          const placeholder = document.createElement('div');
+          placeholder.className = 'similar-card show-more-placeholder';
+          placeholder.innerHTML = '<button class="action-button show-more-similar"><i class="fas fa-redo"></i> Показать еще</button>';
+          grid.innerHTML = html;
+          grid.appendChild(placeholder);
+          setupSimilarAgencyRatings();
+          setupSimilarAgenciesShowMore();
+        })
+        .catch(() => {
+          showMoreButton.innerHTML = '<i class="fas fa-redo"></i> Показать еще';
+          showMoreButton.disabled = false;
+        });
+    });
+  }
+
   function setupTextTruncation() {
     const introSection = document.getElementById('intro-section');
     const aboutSection = document.getElementById('about-section');
@@ -323,6 +356,7 @@ document.addEventListener('DOMContentLoaded', function () {
   setupTextTruncation();
   setupTabNavigation();
   setupModeratorDelete();
+  setupSimilarAgenciesShowMore();
 });
 
 

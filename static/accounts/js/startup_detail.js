@@ -922,18 +922,20 @@ document.addEventListener('DOMContentLoaded', function () {
           .then(response => response.text())
           .then(html => {
             const similarGrid = document.querySelector('.similar-startups-grid');
-            if (similarGrid) {
-              const showMorePlaceholder = similarGrid.querySelector('.show-more-placeholder');
-              if (showMorePlaceholder) {
-                showMorePlaceholder.remove();
-              }
-              
-              similarGrid.insertAdjacentHTML('beforeend', html);
-              
-              setupSimilarStartupsRatings();
-              
-              console.log('Similar startups loaded successfully');
+            if (!similarGrid) return;
+            if (!html || html.trim() === '') {
+              similarGrid.innerHTML = '<p style="margin-top:10px;color:#fff;opacity:.8;">Похожих стартапов пока нет.</p>';
+              return;
             }
+            // Заменяем текущие 4 карточки на новые 4
+            const placeholder = document.createElement('div');
+            placeholder.className = 'similar-card show-more-placeholder';
+            placeholder.innerHTML = '<button class="action-button show-more-similar"><i class="fas fa-redo"></i> Показать еще</button>';
+            similarGrid.innerHTML = html;
+            similarGrid.appendChild(placeholder);
+            setupSimilarStartupsRatings();
+            // Перепривязываем обработчик для новой кнопки
+            setupSimilarStartupsShowMore();
           })
           .catch(error => {
             console.error('Error loading similar startups:', error);

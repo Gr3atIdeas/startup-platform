@@ -927,33 +927,18 @@ document.addEventListener('DOMContentLoaded', function () {
           })
           .then(html => {
             const similarGrid = document.querySelector('.similar-franchises-grid');
-            if (similarGrid) {
-              if (!html || html.trim() === '') {
-                const emptyMsg = document.createElement('p');
-                emptyMsg.textContent = 'Больше похожих франшиз пока нет.';
-                emptyMsg.style.marginTop = '10px';
-                emptyMsg.style.opacity = '0.8';
-                similarGrid.appendChild(emptyMsg);
-                showMoreButton.innerHTML = '<i class="fas fa-redo"></i> Показать еще';
-                showMoreButton.disabled = false;
-                return;
-              }
-              const placeholder = document.createElement('div');
-              placeholder.className = 'similar-card show-more-placeholder';
-              placeholder.innerHTML = '<button class="action-button show-more-similar"><i class="fas fa-redo"></i> Показать еще</button>';
-
-              const temp = document.createElement('div');
-              temp.innerHTML = html;
-              const oldPlaceholder = similarGrid.querySelector('.similar-card.show-more-placeholder');
-              if (oldPlaceholder) oldPlaceholder.remove();
-              Array.from(temp.children).forEach(node => similarGrid.appendChild(node));
-              similarGrid.appendChild(placeholder);
-
-              setupSimilarStartupsRatings();
-              setupSimilarStartupsShowMore();
-
-              console.log('Similar franchises replaced successfully');
+            if (!similarGrid) return;
+            if (!html || html.trim() === '') {
+              similarGrid.innerHTML = '<p style="margin-top:10px;color:#fff;opacity:.8;">Похожих франшиз пока нет.</p>';
+              return;
             }
+            const placeholder = document.createElement('div');
+            placeholder.className = 'similar-card show-more-placeholder';
+            placeholder.innerHTML = '<button class="action-button show-more-similar"><i class="fas fa-redo"></i> Показать еще</button>';
+            similarGrid.innerHTML = html;
+            similarGrid.appendChild(placeholder);
+            setupSimilarStartupsRatings();
+            setupSimilarStartupsShowMore();
           })
           .catch(error => {
             console.error('Error loading similar startups:', error);
