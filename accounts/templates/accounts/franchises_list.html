@@ -393,7 +393,10 @@
         // Устанавливаем стартовые значения в скрытые инпуты и отображение
         minInvestmentInput.value = initialMin;
         maxInvestmentInput.value = initialMax;
-        investmentValueDisplay.textContent = initialMin + ' - ' + initialMax + ' ₽';
+        var investMaxBoundary = 10000000;
+        if (investmentValueDisplay) {
+          investmentValueDisplay.textContent = initialMin + ' - ' + (initialMax >= investMaxBoundary ? '∞' : initialMax + ' ₽');
+        }
 
         noUiSlider.create(investmentSlider, {
             start: [initialMin, initialMax],
@@ -416,7 +419,10 @@
         investmentSlider.noUiSlider.on('update', function (values, handle) {
             var minValue = values[0];
             var maxValue = values[1];
-            investmentValueDisplay.textContent = minValue + ' - ' + maxValue + ' ₽';
+            var investMaxBoundary = 10000000;
+            if (investmentValueDisplay) {
+              investmentValueDisplay.textContent = minValue + ' - ' + (parseFloat(maxValue) >= investMaxBoundary ? '∞' : (maxValue + ' ₽'));
+            }
             minInvestmentInput.value = minValue;
             maxInvestmentInput.value = maxValue;
         });

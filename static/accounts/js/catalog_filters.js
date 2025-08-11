@@ -82,14 +82,14 @@
       }
     } catch (_) {}
 
-    // Сбрасываем параметры инвестиций, если на дефолтах
+    // Сбрасываем параметры инвестиций, если на дефолтах (0-∞)
     try {
       var minInvestmentInput = form.querySelector('#minInvestmentInput');
       var maxInvestmentInput = form.querySelector('#maxInvestmentInput');
       if (minInvestmentInput && maxInvestmentInput) {
         var imin = parseInt(minInvestmentInput.value, 10);
         var imax = parseInt(maxInvestmentInput.value, 10);
-        if (!isNaN(imin) && !isNaN(imax) && imin === 0 && imax === 10000000) {
+        if (!isNaN(imin) && (isNaN(imax) || imax === 10000000) && imin === 0) {
           params.delete('min_investment');
           params.delete('max_investment');
         }
