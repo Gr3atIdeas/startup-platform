@@ -235,7 +235,7 @@
     gridElement = findGridElement(document);
     paginationContainerElement = findPaginationContainer(document);
 
-    if (!filterFormElement || !gridElement || !paginationContainerElement) {
+    if (!filterFormElement || !gridElement) {
       return; // не страница каталога
     }
 

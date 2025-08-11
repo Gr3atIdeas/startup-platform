@@ -830,8 +830,7 @@ def franchises_list(request):
     
     if selected_categories:
         franchises_qs = franchises_qs.filter(
-            Q(direction__direction_name__in=selected_categories) |
-            Q(direction__franchisedirections__direction_name__in=selected_categories)
+            Q(direction__direction_name__in=selected_categories)
         )
     
     if search_query:
