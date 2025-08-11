@@ -351,6 +351,11 @@
         var initialMin = parseFloat(minPaybackInput.value) || 0;
         var initialMax = parseFloat(maxPaybackInput.value) || 60;
 
+        // Устанавливаем стартовые значения в скрытые инпуты и отображение
+        minPaybackInput.value = initialMin;
+        maxPaybackInput.value = initialMax;
+        paybackValueDisplay.textContent = initialMin + ' - ' + initialMax + ' мес';
+
         noUiSlider.create(paybackSlider, {
             start: [initialMin, initialMax],
             connect: true,
@@ -386,6 +391,11 @@
     if (investmentSlider && investmentValueDisplay && minInvestmentInput && maxInvestmentInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
         var initialMin = parseFloat(minInvestmentInput.value) || 0;
         var initialMax = parseFloat(maxInvestmentInput.value) || 10000000;
+
+        // Устанавливаем стартовые значения в скрытые инпуты и отображение
+        minInvestmentInput.value = initialMin;
+        maxInvestmentInput.value = initialMax;
+        investmentValueDisplay.textContent = initialMin + ' - ' + initialMax + ' ₽';
 
         noUiSlider.create(investmentSlider, {
             start: [initialMin, initialMax],

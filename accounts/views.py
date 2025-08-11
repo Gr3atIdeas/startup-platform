@@ -851,6 +851,10 @@ def franchises_list(request):
     try:
         min_investment = int(min_investment_str)
         max_investment = int(max_investment_str)
+        if max_investment <= 0 or max_investment < min_investment:
+            max_investment = 10000000
+        if min_investment < 0:
+            min_investment = 0
         if min_investment > 0:
             franchises_qs = franchises_qs.filter(investment_size__gte=min_investment)
         if max_investment < 10000000:
