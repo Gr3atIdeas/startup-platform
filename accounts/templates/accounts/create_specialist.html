@@ -2,18 +2,18 @@
 {% load static %}
 {% load widget_tweaks %}
 
-{% block title %}Создание стартапа{% endblock %}
+{% block title %}Создание профиля специалиста{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'accounts/css/specialist_form.css' %}">
 
-<div class="startup-form-container">
+<div class="specialist-form-container">
     <div class="form-navigation-header">
-        <a href="{% url 'startups_list' %}" class="back-button">← Назад</a>
-        <h2 class="form-main-title">Создание стартапа</h2>
+        <a href="{% url 'specialists_list' %}" class="back-button">← Назад</a>
+        <h2 class="form-main-title">Создание профиля специалиста</h2>
     </div>
 
-    <form method="post" enctype="multipart/form-data" id="startupForm" novalidate>
+    <form method="post" enctype="multipart/form-data" id="specialistForm" novalidate>
         {% csrf_token %}
 
         
