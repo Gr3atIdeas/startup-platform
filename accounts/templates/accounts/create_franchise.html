@@ -86,24 +86,27 @@
                 </div>
                 <div class="form-top-right">
                     <div class="investment-type-card">
-                        <div class="form-group checkbox-group micro-investment-group">
-                            {{ form.micro_investment_available|attr:"id:id_micro_investment_available"|add_class:"form-check-input-hidden" }}
-                            <label for="id_micro_investment_available" class="micro-investment-label-new">
-                                <span class="micro-checkbox-visual">
-                                    <span class="micro-checkbox-unchecked"></span>
-                                    <img src="{% static 'accounts/images/creat_startup/checkmark-circle-blue.svg' %}" alt="checked" class="micro-checkbox-checked" style="display:none;">
-                                </span>
-                                <span class="checkbox-text-span">Микроинвестиции доступны</span>
-                            </label>
-                            {% if form.micro_investment_available.errors %}<span class="error-message">{{ form.micro_investment_available.errors|first }}</span>{% endif %}
-                        </div>
-                        <div class="form-group investment-type-group">
-                            <label for="{{ form.investment_type.id_for_label }}" class="investment-type-label">Тип инвестирования</label>
-                            <div class="input-wrapper select-wrapper">
-                                {{ form.investment_type|add_class:"form-control" }}
-                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
+                        <div class="form-group">
+                            <label for="{{ form.investment_size.id_for_label }}">{{ form.investment_size.label }}</label>
+                            <div class="input-wrapper">
+                                {{ form.investment_size|add_class:"form-control"|attr:"placeholder:Размер инвестиций ₽"|attr:"type:number"|attr:"min:0" }}
                             </div>
-                            {% if form.investment_type.errors %}<span class="error-message">{{ form.investment_type.errors|first }}</span>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.franchise_cost.id_for_label }}">{{ form.franchise_cost.label }}</label>
+                            <div class="input-wrapper">
+                                {{ form.franchise_cost|add_class:"form-control"|attr:"placeholder:Стоимость франшизы ₽"|attr:"type:number"|attr:"min:0" }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.valuation.id_for_label }}">{{ form.valuation.label }}</label>
+                            <div class="input-wrapper valuation-input">
+                                {{ form.valuation|add_class:"form-control"|attr:"placeholder:Оценка"|attr:"type:number"|attr:"min:0" }}
+                                <div class="valuation-spin-buttons">
+                                    <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="increase value" class="spin-up">
+                                    <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="decrease value" class="spin-down">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -162,7 +165,7 @@
                         <div class="form-group">
                             <label for="{{ form.valuation.id_for_label }}">{{ form.valuation.label }}</label>
                             <div class="input-wrapper valuation-input">
-                                {{ form.valuation|add_class:"form-control"|attr:"placeholder:1"|attr:"type:number"|attr:"min:1" }}
+                                {{ form.valuation|add_class:"form-control"|attr:"placeholder:Оценка"|attr:"type:number"|attr:"min:0" }}
                                 <div class="valuation-spin-buttons">
                                     <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="increase value" class="spin-up">
                                     <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="decrease value" class="spin-down">
