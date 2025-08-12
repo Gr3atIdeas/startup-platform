@@ -3059,7 +3059,7 @@ def create_franchise(request):
                 ext = os.path.splitext(logo.name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
-                file_path = f"startups/{franchise.franchise_id}/logos/{logo_id}_{safe_name}"
+                file_path = f"franchises/{franchise.franchise_id}/logos/{logo_id}_{safe_name}"
                 logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 try:
@@ -3089,7 +3089,7 @@ def create_franchise(request):
                     ext = os.path.splitext(creative_file.name)[1]
                     safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                     safe_name = slugify(safe_base_name) + ext
-                    file_path = f"startups/{franchise.franchise_id}/creatives/{creative_id}_{safe_name}"
+                    file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{safe_name}"
                     try:
                         default_storage.save(file_path, creative_file)
                         creatives_ids.append(creative_id)
@@ -3117,7 +3117,7 @@ def create_franchise(request):
                     ext = os.path.splitext(proof_file.name)[1]
                     safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                     safe_name = slugify(safe_base_name) + ext
-                    file_path = f"startups/{franchise.franchise_id}/proofs/{proof_id}_{safe_name}"
+                    file_path = f"franchises/{franchise.franchise_id}/proofs/{proof_id}_{safe_name}"
                     try:
                         default_storage.save(file_path, proof_file)
                         proofs_ids.append(proof_id)
@@ -3142,7 +3142,7 @@ def create_franchise(request):
                 ext = os.path.splitext(video.name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
-                file_path = f"startups/{franchise.franchise_id}/videos/{video_id}_{safe_name}"
+                file_path = f"franchises/{franchise.franchise_id}/videos/{video_id}_{safe_name}"
                 try:
                     default_storage.save(file_path, video)
                     video_ids.append(video_id)
@@ -3202,7 +3202,7 @@ def create_agency(request):
                     ext = os.path.splitext(f.name)[1]
                     safe_base = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                     safe_name = slugify(safe_base) + ext
-                    file_path = f"startups/{agency.agency_id}/{subdir}/{file_id}_{safe_name}"
+                    file_path = f"agencies/{agency.agency_id}/{subdir}/{file_id}_{safe_name}"
                     try:
                         default_storage.save(file_path, f)
                         ids_collector.append(file_id)
@@ -3270,7 +3270,7 @@ def create_specialist(request):
                     ext = os.path.splitext(f.name)[1]
                     safe_base = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                     safe_name = slugify(safe_base) + ext
-                    file_path = f"startups/{spec.specialist_id}/{subdir}/{file_id}_{safe_name}"
+                    file_path = f"specialists/{spec.specialist_id}/{subdir}/{file_id}_{safe_name}"
                     try:
                         default_storage.save(file_path, f)
                         ids_collector.append(file_id)

@@ -3,7 +3,7 @@ from accounts.utils import get_file_url, get_file_info, is_uuid
 from accounts.models import FileStorage, FileTypes
 register = template.Library()
 @register.simple_tag
-def get_file_url_tag(file_id, startup_id, file_type):
+def get_file_url_tag(file_id, startup_id, file_type, entity_type: str = "startup"):
     """
     Генерирует URL для файла. Если file_id — это полный URL (для старых записей), возвращает его.
     Если file_id — это UUID, генерирует URL на основе ID.
@@ -12,9 +12,9 @@ def get_file_url_tag(file_id, startup_id, file_type):
         return ""
     if not is_uuid(file_id):
         return file_id
-    return get_file_url(file_id, startup_id, file_type) or ""
+    return get_file_url(file_id, startup_id, file_type, entity_type=entity_type) or ""
 @register.simple_tag
-def get_file_original_name(file_id, startup_id, file_type):
+def get_file_original_name(file_id, startup_id, file_type, entity_type: str = "startup"):
     """
     Получает оригинальное имя файла из базы данных или S3.
     """
@@ -36,5 +36,5 @@ def get_file_original_name(file_id, startup_id, file_type):
             pass
         except Exception:
             pass
-    file_info = get_file_info(file_id, startup_id, file_type)
+    file_info = get_file_info(file_id, startup_id, file_type, entity_type=entity_type)
     return file_info['original_name'] if file_info else f"{file_type}_{file_id[:8]}"
