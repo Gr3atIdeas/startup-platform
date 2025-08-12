@@ -7,7 +7,7 @@ body {
   padding: 20px;
 }
 
-.startup-form-container {
+.franchise-form-container {
   max-width: 1303px; 
   margin: 0 auto;
   padding: 20px; 
@@ -1364,7 +1364,7 @@ h3.section-title {
 
 
 body,
-.startup-form-container {
+.franchise-form-container {
   
   
 }
@@ -1465,7 +1465,7 @@ body,
 }
 
 @media (max-width: 1200px) {
-  .startup-form-container {
+  .franchise-form-container {
     max-width: 1000px;
   }
   
@@ -1480,7 +1480,7 @@ body,
 }
 
 @media (max-width: 992px) {
-  .startup-form-container {
+  .franchise-form-container {
     max-width: 900px;
   }
   
@@ -1515,7 +1515,7 @@ body,
 }
 
 @media (max-width: 768px) {
-  .startup-form-container {
+  .franchise-form-container {
     padding: 20px 15px;
   }
   
@@ -1558,7 +1558,7 @@ body,
 }
 
 @media (max-width: 480px) {
-  .startup-form-container {
+  .franchise-form-container {
     padding: 15px 10px;
   }
   
@@ -1615,7 +1615,7 @@ body,
 }
 
 @media (max-width: 360px) {
-  .startup-form-container {
+  .franchise-form-container {
     padding: 10px 8px;
   }
   
@@ -1688,7 +1688,7 @@ body,
 }
 
 @media (max-height: 600px) {
-  .startup-form-container {
+  .franchise-form-container {
     padding: 10px 15px;
   }
   
