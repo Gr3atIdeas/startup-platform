@@ -245,11 +245,40 @@ class StartupForm(forms.ModelForm):
             cleaned_data["proofs"] = proofs if proofs else []
         return cleaned_data
 
+class DirectionModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        translations = {
+            "Beauty": "Красота",
+            "Cafe": "Кафе/рестораны",
+            "Delivery": "Доставка",
+            "Fastfood": "Фастфуд",
+            "Finance": "Финансы",
+            "Healthcare": "Здравоохранение",
+            "Sport": "Спорт",
+            "Technology": "Технологии",
+        }
+        return translations.get(getattr(obj, "direction_name", str(obj)), getattr(obj, "direction_name", str(obj)))
+
 class FranchiseForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
     proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
-    direction = forms.ModelChoiceField(queryset=Directions.objects.all().order_by("direction_name"), label="Категория *", required=True)
+    direction = DirectionModelChoiceField(
+        queryset=Directions.objects.filter(
+            direction_name__in=[
+                "Beauty",
+                "Cafe",
+                "Delivery",
+                "Fastfood",
+                "Finance",
+                "Healthcare",
+                "Sport",
+                "Technology",
+            ]
+        ).order_by("direction_name"),
+        label="Категория *",
+        required=True,
+    )
     # Стадий для новых сущностей не используем
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
