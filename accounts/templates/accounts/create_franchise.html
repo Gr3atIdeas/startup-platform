@@ -13,7 +13,7 @@
         <h2 class="form-main-title">Создание франшизы</h2>
     </div>
 
-    <form method="post" enctype="multipart/form-data" id="startupForm" novalidate>
+    <form method="post" enctype="multipart/form-data" id="franchiseForm" novalidate>
         {% csrf_token %}
 
         
@@ -449,8 +449,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Обработка отправки формы ---
-    const startupForm = document.getElementById('startupForm');
-    if (startupForm) {
+    const franchiseFormEl = document.getElementById('franchiseForm');
+    if (franchiseFormEl) {
         function displayValidationMessage(element, message, fieldType = 'input') {
             const parentGroup = element.closest('.form-group, .upload-box, .logo-upload-group');
             let existingErrorMsg = null;
@@ -481,7 +481,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return errorMsg;
         }
 
-        startupForm.addEventListener('submit', function(e) {
+        franchiseFormEl.addEventListener('submit', function(e) {
             let firstInvalidElementOrGroup = null;
             let validationPassed = true;
 
@@ -541,7 +541,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            const timelineTextareas = startupForm.querySelectorAll('textarea.timeline-description-textarea');
+            const timelineTextareas = franchiseFormEl.querySelectorAll('textarea.timeline-description-textarea');
             let timelineErrorDisplayed = false;
             let firstTimelineErrorTextarea = null;
 
