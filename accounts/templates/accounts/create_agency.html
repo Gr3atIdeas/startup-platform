@@ -824,34 +824,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        const microCheckboxInput = document.getElementById('id_micro_investment_available');
-        const microLabel = document.querySelector('label[for="id_micro_investment_available"].micro-investment-label-new');
-
-        if (microCheckboxInput && microLabel) {
-            const visualUnchecked = microLabel.querySelector('.micro-checkbox-unchecked');
-            const visualChecked = microLabel.querySelector('.micro-checkbox-checked');
-
-            if (visualUnchecked && visualChecked) {
-                const updateMicroCheckboxVisual = () => {
-                    if (microCheckboxInput.checked) {
-                        visualUnchecked.style.display = 'none';
-                        visualChecked.style.display = 'inline-block';
-                    } else {
-                        visualUnchecked.style.display = 'inline-block';
-                        visualChecked.style.display = 'none';
-                    }
-                };
-                updateMicroCheckboxVisual();
-                microLabel.addEventListener('click', function(e) {
-                    setTimeout(updateMicroCheckboxVisual, 0);
-                });
-                microCheckboxInput.addEventListener('change', updateMicroCheckboxVisual);
-            } else {
-                console.error('Visual elements for micro-investment checkbox not found inside label.');
-            }
-        } else {
-            console.error('Micro-investment checkbox input or its new label not found.');
-        }
+        // Микроинвестиции не используются в новых сущностях
     }
     setupCustomCheckboxes();
 

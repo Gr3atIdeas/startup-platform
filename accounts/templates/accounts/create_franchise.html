@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const requiredFields = [
                 { id: '{{ form.title.id_for_label }}', name: 'Название стартапа', type: 'text' },
-                { id: '{{ form.funding_goal.id_for_label }}', name: 'Цель финансирования', type: 'text' },
+                        
                 { id: '{{ form.short_description.id_for_label }}', name: 'Вводная', type: 'textarea' },
                 { id: '{{ form.description.id_for_label }}', name: 'Описание', type: 'textarea' },
                 { id: '{{ form.terms.id_for_label }}', name: 'Условия', type: 'textarea' },
@@ -537,48 +537,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            const timelineTextareas = franchiseFormEl.querySelectorAll('textarea.timeline-description-textarea');
-            let timelineErrorDisplayed = false;
-            let firstTimelineErrorTextarea = null;
-
-            for (let i = 0; i < timelineTextareas.length; i++) {
-                const textarea = timelineTextareas[i];
-                const stepNumber = textarea.name.split('_').pop();
-                const correspondingStepVisual = document.querySelector(`.timeline-step[data-step="${stepNumber}"] .step-number-wrapper`);
-
-                if (textarea.hasAttribute('required') && !textarea.value.trim()) {
-                    validationPassed = false;
-                    textarea.classList.add('input-error');
-                    if (correspondingStepVisual) {
-                        correspondingStepVisual.classList.add('error-step');
-                    }
-                    if (!firstTimelineErrorTextarea) firstTimelineErrorTextarea = textarea;
-                    
-                    if (!timelineErrorDisplayed) {
-                        const timelineSection = document.getElementById('timeline');
-                        const timelineWrapper = timelineSection?.closest('.timeline-section-wrapper');
-                        if (timelineWrapper && !timelineWrapper.querySelector('.custom-validation-error.timeline-general-error')) {
-                            const errorMsg = document.createElement('p');
-                            errorMsg.className = 'error-message custom-validation-error timeline-general-error';
-                            errorMsg.textContent = 'Пожалуйста, заполните описания для всех пяти этапов таймлайна.';
-                            const titleElement = timelineWrapper.querySelector('h3.section-title');
-                            if (titleElement) {
-                                titleElement.parentNode.insertBefore(errorMsg, titleElement.nextSibling);
-                            } else {
-                                timelineWrapper.insertBefore(errorMsg, timelineWrapper.firstChild);
-                            }
-                            timelineErrorDisplayed = true;
-                            if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = timelineWrapper;
-                        }
-                    }
-                }
-            }
-            
-            if (firstTimelineErrorTextarea) {
-                const stepNumberToShow = firstTimelineErrorTextarea.closest('.timeline-description-container').dataset.stepContent;
-                selectStepDescription(stepNumberToShow);
-                if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = firstTimelineErrorTextarea;
-            }
+            // Таймлайн не используется в новых сущностях
 
             const proofsInput = document.getElementById('id_proofs_input');
             const proofsLabelText = document.querySelector('label[for="id_proofs_input"]')?.textContent || '';
@@ -909,69 +868,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        const microCheckboxInput = document.getElementById('id_micro_investment_available');
-        const microLabel = document.querySelector('label[for="id_micro_investment_available"].micro-investment-label-new');
-
-        if (microCheckboxInput && microLabel) {
-            const visualUnchecked = microLabel.querySelector('.micro-checkbox-unchecked');
-            const visualChecked = microLabel.querySelector('.micro-checkbox-checked');
-
-            if (visualUnchecked && visualChecked) {
-                const updateMicroCheckboxVisual = () => {
-                    if (microCheckboxInput.checked) {
-                        visualUnchecked.style.display = 'none';
-                        visualChecked.style.display = 'inline-block';
-                    } else {
-                        visualUnchecked.style.display = 'inline-block';
-                        visualChecked.style.display = 'none';
-                    }
-                };
-                updateMicroCheckboxVisual();
-                microLabel.addEventListener('click', function(e) {
-                    setTimeout(updateMicroCheckboxVisual, 0);
-                });
-                microCheckboxInput.addEventListener('change', updateMicroCheckboxVisual);
-            } else {
-                console.error('Visual elements for micro-investment checkbox not found inside label.');
-            }
-        } else {
-            console.error('Micro-investment checkbox input or its new label not found.');
-        }
+        // Микроинвестиции не используются в новых сущностях — ничего не делаем
     }
     setupCustomCheckboxes();
 
-    function translateDirectionOptions() {
-        const directionSelect = document.getElementById('{{ form.direction.id_for_label }}');
-        if (!directionSelect) {
-            console.error('Direction select field not found for translation.');
-            return;
-        }
-
-        const translations = {
-            "Medicine": "Медицина",
-            "Auto": "Автомобили",
-            "Delivery": "Доставка",
-            "Cafe": "Кафе/рестораны",
-            "Fastfood": "Фастфуд",
-            "Health": "Здоровье",
-            "Beauty": "Красота",
-            "Transport": "Транспорт",
-            "Sport": "Спорт",
-            "Psychology": "Психология",
-            "AI": "ИИ",
-            "Finance": "Финансы",
-            "Healthcare": "Здравоохранение",
-            "Technology": "Технологии"
-        };
-
-        Array.from(directionSelect.options).forEach(option => {
-            const originalValue = option.textContent.trim();
-            if (translations[originalValue]) {
-                option.textContent = translations[originalValue];
-            }
-        });
-    }
-    translateDirectionOptions();
+    // Не переводим опции категорий во фронте, используем как есть
 
     const valuationInput = document.querySelector('.valuation-input input[type="number"]');
     const spinUp = document.querySelector('.valuation-spin-buttons .spin-up');
