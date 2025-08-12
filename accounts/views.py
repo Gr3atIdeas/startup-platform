@@ -74,6 +74,9 @@ from .forms import (
     ProfileEditForm,
     RegisterForm,
     StartupForm,
+    FranchiseForm,
+    AgencyForm,
+    SpecialistForm,
     SupportTicketForm,
     UserSearchForm,
 )
@@ -3025,6 +3028,285 @@ def create_startup(request):
     else:
         form = StartupForm()
     return render(request, "accounts/create_startup.html", {"form": form})
+
+@login_required
+def create_franchise(request):
+    allowed_roles = ["startuper", "moderator"]
+    if not hasattr(request.user, "role") or request.user.role.role_name.lower() not in allowed_roles:
+        messages.error(request, "Доступ к созданию франшизы разрешён только пользователям с ролью 'Стартаппер' или 'Модератор'.")
+        return redirect("home")
+    if request.method == "POST":
+        form = FranchiseForm(request.POST, request.FILES)
+        if form.is_valid():
+            franchise = form.save(commit=False)
+            franchise.owner = request.user
+            franchise.created_at = timezone.now()
+            franchise.updated_at = timezone.now()
+            franchise.status = "pending"
+            try:
+                franchise.status_id = ReviewStatuses.objects.get(status_name="Pending")
+            except ReviewStatuses.DoesNotExist:
+                messages.error(request, "Статус 'Pending' не найден в базе данных.")
+                return render(request, "accounts/create_franchise.html", {"form": form})
+            franchise.planet_image = form.cleaned_data.get("planet_image")
+            franchise.save()
+
+            logo_ids, creatives_ids, proofs_ids, video_ids = [], [], [], []
+            logo = form.cleaned_data.get("logo")
+            if logo:
+                logo_id = str(uuid.uuid4())
+                base_name = os.path.splitext(logo.name)[0]
+                ext = os.path.splitext(logo.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"startups/{franchise.franchise_id}/logos/{logo_id}_{safe_name}"
+                logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
+                try:
+                    default_storage.save(file_path, logo)
+                    logo_ids.append(logo_id)
+                    safe_create_file_storage(
+                        entity_type=entity_type,
+                        entity_id=franchise.franchise_id,
+                        file_type=logo_type,
+                        file_url=logo_id,
+                        uploaded_at=timezone.now(),
+                        startup=None,
+                        original_file_name=os.path.basename(file_path),
+                    )
+                except Exception:
+                    messages.warning(request, "Не удалось сохранить логотип, но франшиза создана.")
+
+            creatives = form.cleaned_data.get("creatives", [])
+            if creatives:
+                creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
+                for creative_file in creatives:
+                    if not hasattr(creative_file, "name"):
+                        continue
+                    creative_id = str(uuid.uuid4())
+                    base_name = os.path.splitext(creative_file.name)[0]
+                    ext = os.path.splitext(creative_file.name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"startups/{franchise.franchise_id}/creatives/{creative_id}_{safe_name}"
+                    try:
+                        default_storage.save(file_path, creative_file)
+                        creatives_ids.append(creative_id)
+                        safe_create_file_storage(
+                            entity_type=entity_type,
+                            entity_id=franchise.franchise_id,
+                            file_type=creative_type,
+                            file_url=creative_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=os.path.basename(file_path),
+                        )
+                    except Exception:
+                        messages.warning(request, "Не удалось сохранить один из креативов, но франшиза создана.")
+
+            proofs = form.cleaned_data.get("proofs", [])
+            if proofs:
+                proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
+                for proof_file in proofs:
+                    if not hasattr(proof_file, "name"):
+                        continue
+                    proof_id = str(uuid.uuid4())
+                    base_name = os.path.splitext(proof_file.name)[0]
+                    ext = os.path.splitext(proof_file.name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"startups/{franchise.franchise_id}/proofs/{proof_id}_{safe_name}"
+                    try:
+                        default_storage.save(file_path, proof_file)
+                        proofs_ids.append(proof_id)
+                        safe_create_file_storage(
+                            entity_type=entity_type,
+                            entity_id=franchise.franchise_id,
+                            file_type=proof_type,
+                            file_url=proof_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=os.path.basename(file_path),
+                        )
+                    except Exception:
+                        messages.warning(request, "Не удалось сохранить один из документов, но франшиза создана.")
+
+            video = form.cleaned_data.get("video")
+            if video:
+                video_type, _ = FileTypes.objects.get_or_create(type_name="video")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
+                video_id = str(uuid.uuid4())
+                base_name = os.path.splitext(video.name)[0]
+                ext = os.path.splitext(video.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"startups/{franchise.franchise_id}/videos/{video_id}_{safe_name}"
+                try:
+                    default_storage.save(file_path, video)
+                    video_ids.append(video_id)
+                    safe_create_file_storage(
+                        entity_type=entity_type,
+                        entity_id=franchise.franchise_id,
+                        file_type=video_type,
+                        file_url=video_id,
+                        uploaded_at=timezone.now(),
+                        startup=None,
+                        original_file_name=os.path.basename(file_path),
+                    )
+                except Exception:
+                    messages.warning(request, "Не удалось сохранить видео, но франшиза создана.")
+
+            franchise.logo_urls = logo_ids
+            franchise.creatives_urls = creatives_ids
+            franchise.proofs_urls = proofs_ids
+            franchise.video_urls = video_ids
+            franchise.save()
+            messages.success(request, f'Франшиза "{franchise.title}" успешно создана и отправлена на модерацию!')
+            return redirect("franchises_list")
+        else:
+            messages.error(request, "Форма содержит ошибки.")
+            return render(request, "accounts/create_franchise.html", {"form": form})
+    else:
+        form = FranchiseForm()
+    return render(request, "accounts/create_franchise.html", {"form": form})
+
+@login_required
+def create_agency(request):
+    allowed_roles = ["startuper", "moderator"]
+    if not hasattr(request.user, "role") or request.user.role.role_name.lower() not in allowed_roles:
+        messages.error(request, "Доступ к созданию агентства разрешён только пользователям с ролью 'Стартаппер' или 'Модератор'.")
+        return redirect("home")
+    if request.method == "POST":
+        form = AgencyForm(request.POST, request.FILES)
+        if form.is_valid():
+            agency = form.save(commit=False)
+            agency.owner = request.user
+            agency.created_at = timezone.now()
+            agency.updated_at = timezone.now()
+            agency.status = "pending"
+            agency.planet_image = form.cleaned_data.get("planet_image")
+            agency.save()
+
+            logo_ids, creatives_ids, proofs_ids, video_ids = [], [], [], []
+            # Повторное использование логики сохранения файлов
+            def save_file_set(files, type_name, subdir, ids_collector):
+                file_type, _ = FileTypes.objects.get_or_create(type_name=type_name)
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
+                for f in files:
+                    if not hasattr(f, "name"):
+                        continue
+                    file_id = str(uuid.uuid4())
+                    base_name = os.path.splitext(f.name)[0]
+                    ext = os.path.splitext(f.name)[1]
+                    safe_base = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base) + ext
+                    file_path = f"startups/{agency.agency_id}/{subdir}/{file_id}_{safe_name}"
+                    try:
+                        default_storage.save(file_path, f)
+                        ids_collector.append(file_id)
+                        safe_create_file_storage(
+                            entity_type=entity_type,
+                            entity_id=agency.agency_id,
+                            file_type=file_type,
+                            file_url=file_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=os.path.basename(file_path),
+                        )
+                    except Exception:
+                        pass
+
+            logo = form.cleaned_data.get("logo")
+            if logo:
+                save_file_set([logo], "logo", "logos", logo_ids)
+            save_file_set(form.cleaned_data.get("creatives", []), "creative", "creatives", creatives_ids)
+            save_file_set(form.cleaned_data.get("proofs", []), "proof", "proofs", proofs_ids)
+            video = form.cleaned_data.get("video")
+            if video:
+                save_file_set([video], "video", "videos", video_ids)
+
+            agency.logo_urls = logo_ids
+            agency.creatives_urls = creatives_ids
+            agency.proofs_urls = proofs_ids
+            agency.video_urls = video_ids
+            agency.save()
+            messages.success(request, f'Агентство "{agency.title}" успешно создано и отправлено на модерацию!')
+            return redirect("agencies_list")
+        else:
+            messages.error(request, "Форма содержит ошибки.")
+            return render(request, "accounts/create_agency.html", {"form": form})
+    else:
+        form = AgencyForm()
+    return render(request, "accounts/create_agency.html", {"form": form})
+
+@login_required
+def create_specialist(request):
+    allowed_roles = ["startuper", "moderator"]
+    if not hasattr(request.user, "role") or request.user.role.role_name.lower() not in allowed_roles:
+        messages.error(request, "Доступ к созданию профиля специалиста разрешён только пользователям с ролью 'Стартаппер' или 'Модератор'.")
+        return redirect("home")
+    if request.method == "POST":
+        form = SpecialistForm(request.POST, request.FILES)
+        if form.is_valid():
+            spec = form.save(commit=False)
+            spec.owner = request.user
+            spec.created_at = timezone.now()
+            spec.updated_at = timezone.now()
+            spec.status = "pending"
+            spec.planet_image = form.cleaned_data.get("planet_image")
+            spec.save()
+
+            logo_ids, creatives_ids, proofs_ids, video_ids = [], [], [], []
+            def save_file_set(files, type_name, subdir, ids_collector):
+                file_type, _ = FileTypes.objects.get_or_create(type_name=type_name)
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
+                for f in files:
+                    if not hasattr(f, "name"):
+                        continue
+                    file_id = str(uuid.uuid4())
+                    base_name = os.path.splitext(f.name)[0]
+                    ext = os.path.splitext(f.name)[1]
+                    safe_base = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base) + ext
+                    file_path = f"startups/{spec.specialist_id}/{subdir}/{file_id}_{safe_name}"
+                    try:
+                        default_storage.save(file_path, f)
+                        ids_collector.append(file_id)
+                        safe_create_file_storage(
+                            entity_type=entity_type,
+                            entity_id=spec.specialist_id,
+                            file_type=file_type,
+                            file_url=file_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=os.path.basename(file_path),
+                        )
+                    except Exception:
+                        pass
+            logo = form.cleaned_data.get("logo")
+            if logo:
+                save_file_set([logo], "logo", "logos", logo_ids)
+            save_file_set(form.cleaned_data.get("creatives", []), "creative", "creatives", creatives_ids)
+            save_file_set(form.cleaned_data.get("proofs", []), "proof", "proofs", proofs_ids)
+            video = form.cleaned_data.get("video")
+            if video:
+                save_file_set([video], "video", "videos", video_ids)
+
+            spec.logo_urls = logo_ids
+            spec.creatives_urls = creatives_ids
+            spec.proofs_urls = proofs_ids
+            spec.video_urls = video_ids
+            spec.save()
+            messages.success(request, f'Профиль специалиста "{spec.title}" успешно создан и отправлен на модерацию!')
+            return redirect("specialists_list")
+        else:
+            messages.error(request, "Форма содержит ошибки.")
+            return render(request, "accounts/create_specialist.html", {"form": form})
+    else:
+        form = SpecialistForm()
+    return render(request, "accounts/create_specialist.html", {"form": form})
 @login_required
 def startup_creation_success(request):
     return render(request, "accounts/startup_creation_success.html")

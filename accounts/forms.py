@@ -1,5 +1,5 @@
 from django import forms
-from .models import Comments, Directions, Roles, Startups, StartupStages, Users, ChatConversations, TransactionTypes, UserVotes, SupportTicket
+from .models import Comments, Directions, Roles, Startups, StartupStages, Users, ChatConversations, TransactionTypes, UserVotes, SupportTicket, Franchises, Agencies, Specialists
 from .utils import get_planet_urls
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -232,6 +232,280 @@ class StartupForm(forms.ModelForm):
             cleaned_data["creatives"] = [
                 file for sublist in creatives for file in sublist
             ]
+        elif creatives and not isinstance(creatives, list):
+            cleaned_data["creatives"] = [creatives]
+        else:
+            cleaned_data["creatives"] = creatives if creatives else []
+        proofs = cleaned_data.get("proofs", [])
+        if isinstance(proofs, list) and all(isinstance(item, list) for item in proofs):
+            cleaned_data["proofs"] = [file for sublist in proofs for file in sublist]
+        elif proofs and not isinstance(proofs, list):
+            cleaned_data["proofs"] = [proofs]
+        else:
+            cleaned_data["proofs"] = proofs if proofs else []
+        return cleaned_data
+
+class FranchiseForm(forms.ModelForm):
+    logo = forms.ImageField(label="Логотип *", required=True)
+    creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
+    proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
+    direction = forms.ModelChoiceField(queryset=Directions.objects.all(), label="Категория *", required=True)
+    stage = forms.ModelChoiceField(queryset=StartupStages.objects.all(), label="Стадия *", required=True)
+    agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
+    agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
+    video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
+    short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
+    terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Условия *", required=True)
+    planet_image = forms.ChoiceField(choices=[], label="Выберите планету *", required=True, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
+        except Exception as e:
+            print(f"Error fetching planet URLs: {e}")
+            self.fields["planet_image"].choices = []
+
+    class Meta:
+        model = Franchises
+        fields = [
+            "title",
+            "short_description",
+            "description",
+            "terms",
+            "investment_size",
+            "franchise_cost",
+            "payback_period",
+            "own_businesses_count",
+            "franchise_businesses_count",
+            "valuation",
+            "pitch_deck_url",
+            "logo",
+            "direction",
+            "stage",
+            "agree_rules",
+            "agree_data_processing",
+            "creatives",
+            "proofs",
+            "video",
+            "planet_image",
+            "profit_calculation",
+        ]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Название франшизы"}),
+            "short_description": forms.Textarea(attrs={"class": "form-control", "rows": 3, "placeholder": "Краткое описание франшизы"}),
+            "description": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Подробное описание франшизы"}),
+            "terms": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Условия сотрудничества"}),
+            "investment_size": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Введите сумму ₽"}),
+            "franchise_cost": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Стоимость франшизы ₽"}),
+            "payback_period": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Срок окупаемости (мес)"}),
+            "own_businesses_count": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Собственных предприятий"}),
+            "franchise_businesses_count": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Франшизных предприятий"}),
+            "valuation": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Оценка"}),
+            "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
+            "direction": forms.Select(attrs={"class": "form-control"}),
+            "stage": forms.Select(attrs={"class": "form-control"}),
+            "logo": forms.FileInput(attrs={"class": "form-control-file"}),
+            "profit_calculation": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Описание расчета прибыли"}),
+        }
+        labels = {
+            "title": "Название франшизы *",
+            "short_description": "Вводная *",
+            "description": "Описание *",
+            "terms": "Условия *",
+            "investment_size": "Размер инвестиций (₽)",
+            "franchise_cost": "Стоимость франшизы (₽)",
+            "payback_period": "Срок окупаемости (мес)",
+            "own_businesses_count": "Собственных предприятий",
+            "franchise_businesses_count": "Франшизных предприятий",
+            "valuation": "Оценка (₽)",
+            "pitch_deck_url": "URL презентации",
+            "direction": "Категория *",
+            "stage": "Стадия *",
+            "logo": "Логотип *",
+            "creatives": "Изображения *",
+            "video": "Видео *",
+            "proofs": "Документы *",
+            "agree_rules": "Согласен с правилами *",
+            "agree_data_processing": "Согласен с обработкой данных *",
+            "profit_calculation": "Стоимость и расчет прибыли",
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        creatives = cleaned_data.get("creatives", [])
+        if isinstance(creatives, list) and all(isinstance(item, list) for item in creatives):
+            cleaned_data["creatives"] = [file for sublist in creatives for file in sublist]
+        elif creatives and not isinstance(creatives, list):
+            cleaned_data["creatives"] = [creatives]
+        else:
+            cleaned_data["creatives"] = creatives if creatives else []
+        proofs = cleaned_data.get("proofs", [])
+        if isinstance(proofs, list) and all(isinstance(item, list) for item in proofs):
+            cleaned_data["proofs"] = [file for sublist in proofs for file in sublist]
+        elif proofs and not isinstance(proofs, list):
+            cleaned_data["proofs"] = [proofs]
+        else:
+            cleaned_data["proofs"] = proofs if proofs else []
+        return cleaned_data
+
+class AgencyForm(forms.ModelForm):
+    logo = forms.ImageField(label="Логотип *", required=True)
+    creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
+    proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
+    direction = forms.ModelChoiceField(queryset=Directions.objects.all(), label="Категория *", required=True)
+    stage = forms.ModelChoiceField(queryset=StartupStages.objects.all(), label="Стадия *", required=True)
+    agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
+    agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
+    video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
+    short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
+    terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ *", required=True)
+    planet_image = forms.ChoiceField(choices=[], label="Выберите планету *", required=True, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
+        except Exception as e:
+            print(f"Error fetching planet URLs: {e}")
+            self.fields["planet_image"].choices = []
+
+    class Meta:
+        model = Agencies
+        fields = [
+            "title",
+            "short_description",
+            "description",
+            "terms",
+            "pitch_deck_url",
+            "logo",
+            "direction",
+            "stage",
+            "agree_rules",
+            "agree_data_processing",
+            "creatives",
+            "proofs",
+            "video",
+            "planet_image",
+        ]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Название агентства"}),
+            "short_description": forms.Textarea(attrs={"class": "form-control", "rows": 3, "placeholder": "Краткое описание агентства"}),
+            "description": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Подробное описание агентства"}),
+            "terms": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Этапы работ"}),
+            "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
+            "direction": forms.Select(attrs={"class": "form-control"}),
+            "stage": forms.Select(attrs={"class": "form-control"}),
+            "logo": forms.FileInput(attrs={"class": "form-control-file"}),
+        }
+        labels = {
+            "title": "Название агентства *",
+            "short_description": "Вводная *",
+            "description": "Описание *",
+            "terms": "Этапы работ *",
+            "pitch_deck_url": "URL презентации",
+            "direction": "Категория *",
+            "stage": "Стадия *",
+            "logo": "Логотип *",
+            "creatives": "Изображения *",
+            "video": "Видео *",
+            "proofs": "Документы *",
+            "agree_rules": "Согласен с правилами *",
+            "agree_data_processing": "Согласен с обработкой данных *",
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        creatives = cleaned_data.get("creatives", [])
+        if isinstance(creatives, list) and all(isinstance(item, list) for item in creatives):
+            cleaned_data["creatives"] = [file for sublist in creatives for file in sublist]
+        elif creatives and not isinstance(creatives, list):
+            cleaned_data["creatives"] = [creatives]
+        else:
+            cleaned_data["creatives"] = creatives if creatives else []
+        proofs = cleaned_data.get("proofs", [])
+        if isinstance(proofs, list) and all(isinstance(item, list) for item in proofs):
+            cleaned_data["proofs"] = [file for sublist in proofs for file in sublist]
+        elif proofs and not isinstance(proofs, list):
+            cleaned_data["proofs"] = [proofs]
+        else:
+            cleaned_data["proofs"] = proofs if proofs else []
+        return cleaned_data
+
+class SpecialistForm(forms.ModelForm):
+    logo = forms.ImageField(label="Логотип *", required=True)
+    creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
+    proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
+    direction = forms.ModelChoiceField(queryset=Directions.objects.all(), label="Категория *", required=True)
+    stage = forms.ModelChoiceField(queryset=StartupStages.objects.all(), label="Стадия *", required=True)
+    agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
+    agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
+    video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
+    short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
+    terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ *", required=True)
+    additional_info = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Услуги и кейсы", required=False)
+    planet_image = forms.ChoiceField(choices=[], label="Выберите планету *", required=True, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
+        except Exception as e:
+            print(f"Error fetching planet URLs: {e}")
+            self.fields["planet_image"].choices = []
+
+    class Meta:
+        model = Specialists
+        fields = [
+            "title",
+            "short_description",
+            "description",
+            "terms",
+            "additional_info",
+            "pitch_deck_url",
+            "logo",
+            "direction",
+            "stage",
+            "agree_rules",
+            "agree_data_processing",
+            "creatives",
+            "proofs",
+            "video",
+            "planet_image",
+        ]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Имя/бренд специалиста"}),
+            "short_description": forms.Textarea(attrs={"class": "form-control", "rows": 3, "placeholder": "Краткое описание"}),
+            "description": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Подробное описание"}),
+            "terms": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Этапы работ"}),
+            "additional_info": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Услуги и кейсы"}),
+            "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
+            "direction": forms.Select(attrs={"class": "form-control"}),
+            "stage": forms.Select(attrs={"class": "form-control"}),
+            "logo": forms.FileInput(attrs={"class": "form-control-file"}),
+        }
+        labels = {
+            "title": "Профиль специалиста *",
+            "short_description": "Вводная *",
+            "description": "Описание *",
+            "terms": "Этапы работ *",
+            "additional_info": "Услуги и кейсы",
+            "pitch_deck_url": "URL презентации",
+            "direction": "Категория *",
+            "stage": "Стадия *",
+            "logo": "Логотип *",
+            "creatives": "Изображения *",
+            "video": "Видео *",
+            "proofs": "Документы *",
+            "agree_rules": "Согласен с правилами *",
+            "agree_data_processing": "Согласен с обработкой данных *",
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        creatives = cleaned_data.get("creatives", [])
+        if isinstance(creatives, list) and all(isinstance(item, list) for item in creatives):
+            cleaned_data["creatives"] = [file for sublist in creatives for file in sublist]
         elif creatives and not isinstance(creatives, list):
             cleaned_data["creatives"] = [creatives]
         else:

@@ -78,6 +78,9 @@ urlpatterns = [
     path("profile/delete-avatar/", views.delete_avatar, name="delete_avatar"),
     path("profile/<int:user_id>/", views.profile, name="user_profile"),
     path("create-startup/", views.create_startup, name="create_startup"),
+    path("create-franchise/", views.create_franchise, name="create_franchise"),
+    path("create-agency/", views.create_agency, name="create_agency"),
+    path("create-specialist/", views.create_specialist, name="create_specialist"),
     path(
         "create-startup/success/",
         views.startup_creation_success,

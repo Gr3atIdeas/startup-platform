@@ -1,0 +1,191 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Создание профиля специалиста{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'accounts/css/startup_form.css' %}">
+
+<div class="startup-form-container">
+    <div class="form-navigation-header">
+        <a href="{% url 'specialists_list' %}" class="back-button">← Назад</a>
+        <h2 class="form-main-title">Создание профиля специалиста</h2>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" id="specialistForm" novalidate>
+        {% csrf_token %}
+        <div class="form-section-top">
+            <div class="form-top-grid">
+                <div class="form-top-left">
+                    <div class="form-group planet-upload-group">
+                        <label class="planet-upload-label">Выберите планету *</label>
+                        <div class="planet-selector">
+                            <button type="button" class="planet-nav-button prev-planet" aria-label="Предыдущая планета">
+                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous">
+                            </button>
+                            <div class="planet-display">
+                                <img src="" alt="Планета" class="planet-preview" id="planetPreview">
+                            </div>
+                            <button type="button" class="planet-nav-button next-planet" aria-label="Следующая планета">
+                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next">
+                            </button>
+                        </div>
+                        {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image" }}
+                    </div>
+                    <div class="form-group logo-upload-group">
+                        <label for="{{ form.logo.id_for_label }}" class="logo-upload-label">
+                            <div class="logo-placeholder" id="logoPlaceholder">
+                                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon">
+                                <span>*Загрузить логотип</span>
+                            </div>
+                            <img src="" alt="Логотип" class="logo-preview" id="logoPreview" style="display:none;">
+                        </label>
+                        {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
+                    </div>
+                    <div class="form-fields-left">
+                        <div class="form-group">
+                            <label for="{{ form.title.id_for_label }}">*{{ form.title.label }}</label>
+                            <div class="input-wrapper">
+                                {{ form.title|add_class:"form-control"|attr:"placeholder:Имя/бренд" }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.direction.id_for_label }}">*{{ form.direction.label }}</label>
+                            <div class="input-wrapper select-wrapper">
+                                {{ form.direction|add_class:"form-control" }}
+                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.stage.id_for_label }}">*{{ form.stage.label }}</label>
+                            <div class="input-wrapper select-wrapper">
+                                {{ form.stage|add_class:"form-control" }}
+                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-main-content-wrapper">
+            <div class="form-content-section">
+                <div class="form-group full-width">
+                    <label for="{{ form.short_description.id_for_label }}">*{{ form.short_description.label }}</label>
+                    {{ form.short_description|add_class:"form-control"|attr:"placeholder:Краткое описание" }}
+                </div>
+                <div class="form-group full-width">
+                    <label for="{{ form.description.id_for_label }}">*{{ form.description.label }}</label>
+                    {{ form.description|add_class:"form-control"|attr:"placeholder:Подробное описание" }}
+                </div>
+            </div>
+            <div class="form-content-section">
+                <div class="upload-section-grid media-and-finance-grid">
+                    <div class="form-group upload-box" id="creativesDropArea">
+                        <label for="id_creatives_input">*Изображения</label>
+                        {{ form.creatives|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_creatives_input" }}
+                        <div class="custom-file-upload-button" onclick="document.getElementById('id_creatives_input').click()">Выбрать файл</div>
+                        <div class="small-text">Допустимый формат PNG, JPEG (до 3 файлов)</div>
+                        <div id="creativesPreview" class="file-preview-area"></div>
+                    </div>
+                    <div class="form-group upload-box" id="videoDropArea">
+                        <label for="id_video_input">*Видео</label>
+                        {{ form.video|attr:"style:display:none"|attr:"id:id_video_input" }}
+                        <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файл</div>
+                        <div class="small-text">Допустимый формат MOV, MP4 (1 файл)</div>
+                        <div id="videoPreview" class="file-preview-area"></div>
+                    </div>
+                    <div class="presentation-finance-group">
+                        <div class="form-group">
+                            <label for="{{ form.pitch_deck_url.id_for_label }}">{{ form.pitch_deck_url.label }}</label>
+                            <div class="input-wrapper">
+                                {{ form.pitch_deck_url|add_class:"form-control"|attr:"placeholder:URL" }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.additional_info.id_for_label }}">{{ form.additional_info.label }}</label>
+                            {{ form.additional_info|add_class:"form-control"|attr:"placeholder:Услуги и кейсы" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-content-section">
+                <div class="form-group full-width">
+                    <label for="{{ form.terms.id_for_label }}">*{{ form.terms.label }}</label>
+                    {{ form.terms|add_class:"form-control"|attr:"placeholder:Этапы работ..." }}
+                </div>
+            </div>
+            <div class="form-content-section">
+                <div class="form-group upload-box full-width" id="proofsDropArea">
+                    <label for="id_proofs_input">*Документы</label>
+                    {{ form.proofs|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_proofs_input" }}
+                    <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файл</div>
+                    <div class="small-text">Допустимый формат Doc, Excel, PDF (до 3 файлов)</div>
+                    <div id="proofsPreview" class="file-preview-area"></div>
+                </div>
+            </div>
+            <div class="form-content-section agreement-section-outer-wrapper">
+                <div class="agreement-section">
+                    <h3 class="section-title">Согласие</h3>
+                    <div class="form-group checkbox-group">
+                        {{ form.agree_rules|attr:"id:id_agree_rules"|add_class:"form-check-input-hidden" }}
+                        <label for="id_agree_rules" class="custom-checkbox-label">
+                            <span class="custom-checkbox-visual">
+                                <span class="custom-checkbox-unchecked"></span>
+                                <span class="custom-checkbox-checked"></span>
+                            </span>
+                            <span class="checkbox-text">{{ form.agree_rules.label }}</span>
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        {{ form.agree_data_processing|attr:"id:id_agree_data_processing"|add_class:"form-check-input-hidden" }}
+                        <label for="id_agree_data_processing" class="custom-checkbox-label">
+                            <span class="custom-checkbox-visual">
+                                <span class="custom-checkbox-unchecked"></span>
+                                <span class="custom-checkbox-checked"></span>
+                            </span>
+                            <span class="checkbox-text">{{ form.agree_data_processing.label }}</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="submit-button-container">
+            <button type="submit" class="submit-button">Отправить на модерацию</button>
+        </div>
+    </form>
+</div>
+
+<script>
+const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
+const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
+const planetBaseUrl = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/";
+document.addEventListener('DOMContentLoaded', function() {
+    const planetInput = document.getElementById('id_planet_image');
+    const planetPreview = document.getElementById('planetPreview');
+    const prevButton = document.querySelector('.planet-nav-button.prev-planet');
+    const nextButton = document.querySelector('.planet-nav-button.next-planet');
+    let currentPlanetIndex = 0;
+    function updatePlanetDisplay(direction) { const newPlanet = planetChoices[currentPlanetIndex]; planetPreview.src = planetBaseUrl + newPlanet; planetInput.value = newPlanet; }
+    prevButton.addEventListener('click', () => { if (!planetChoices.length) return; currentPlanetIndex = (currentPlanetIndex - 1 + planetChoices.length) % planetChoices.length; updatePlanetDisplay('prev'); });
+    nextButton.addEventListener('click', () => { if (!planetChoices.length) return; currentPlanetIndex = (currentPlanetIndex + 1) % planetChoices.length; updatePlanetDisplay('next'); });
+    if (planetChoices.length > 0) { planetPreview.src = planetBaseUrl + planetChoices[0]; planetInput.value = planetChoices[0]; }
+    const logoInput = document.getElementById('id_logo_input');
+    const logoPlaceholder = document.getElementById('logoPlaceholder');
+    const logoPreviewImg = document.getElementById('logoPreview');
+    if (logoInput && logoPlaceholder && logoPreviewImg) {
+        logoPlaceholder.addEventListener('click', () => logoInput.click());
+        logoPreviewImg.addEventListener('click', () => logoInput.click());
+        logoInput.addEventListener('change', function() { const file = this.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(e) { logoPreviewImg.src = e.target.result; logoPreviewImg.style.display = 'block'; logoPlaceholder.style.display = 'none'; }; reader.readAsDataURL(file); } });
+    }
+    function setupDragAndDrop(inputId, dropAreaId, previewAreaId, allowedTypesDetails, isMultiple = false, maxFiles = 1) { const dropArea = document.getElementById(dropAreaId); const fileInput = document.getElementById(inputId); const previewArea = document.getElementById(previewAreaId); if (!dropArea || !fileInput || !previewArea) return; const customButton = dropArea.querySelector('.custom-file-upload-button'); if (customButton) { customButton.addEventListener('click', () => { fileInput.value = null; }); } dropArea.addEventListener('click', (e) => { if (e.target.closest('.delete-file-btn') || e.target.closest('.edit-file-btn')) return; if (!e.target.closest('.custom-file-upload-button')) { fileInput.value = null; fileInput.click(); } }); fileInput.addEventListener('change', (event) => { if (event.target.files && event.target.files.length > 0) { handleFiles(event.target.files, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles); } }); dropArea.addEventListener('dragover', (event) => { event.preventDefault(); dropArea.classList.add('dragover'); }); dropArea.addEventListener('dragleave', () => { dropArea.classList.remove('dragover'); }); dropArea.addEventListener('drop', (event) => { event.preventDefault(); dropArea.classList.remove('dragover'); const files = event.dataTransfer.files; if (files.length) { const dataTransfer = new DataTransfer(); Array.from(files).forEach(file => dataTransfer.items.add(file)); fileInput.files = dataTransfer.files; handleFiles(files, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles); } }); updateFileActionButtonsState(previewAreaId); }
+    function handleFiles(files, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles) { const fileInput = document.getElementById(inputId); const previewArea = document.getElementById(previewAreaId); if (!isMultiple) previewArea.innerHTML = ''; let filesToProcess = Array.from(files); if (isMultiple && (previewArea.children.length + filesToProcess.length > maxFiles)) { filesToProcess = filesToProcess.slice(0, maxFiles - previewArea.children.length); } else if (!isMultiple && filesToProcess.length > maxFiles) { filesToProcess = filesToProcess.slice(0, maxFiles); } if (filesToProcess.length < Array.from(files).length) { const dt = new DataTransfer(); filesToProcess.forEach(file => dt.items.add(file)); if (fileInput) fileInput.files = dt.files; } filesToProcess.forEach(file => { const fileType = file.type; const fileName = file.name; const fileExtension = fileName.split('.').pop().toLowerCase(); let isAllowed = false; if (allowedTypesDetails.mimes.some(mime => fileType.startsWith(mime)) && fileType !== '') { isAllowed = true; } else if (allowedTypesDetails.extensions.includes(fileExtension)) { isAllowed = true; } if (!isAllowed) return; const reader = new FileReader(); reader.onload = function(e) { const isImage = file.type.startsWith('image/'); const previewSrc = isImage && e.target.result ? e.target.result : creatStartupStaticUrl + 'docimage.png'; const imageClass = isImage ? 'preview-image' : 'file-icon'; const previewItemHTML = `\n                    <div class=\"file-preview-item\" draggable=\"true\" data-filename=\"${CSS.escape(file.name)}\">\n                        <div class=\"drag-handle-mock\"><span></span><span></span><span></span><span></span><span></span><span></span></div>\n                        <div class=\"file-info\">\n                            <img src=\"${previewSrc}\" alt=\"${isImage ? 'Предпросмотр' : 'Иконка файла'}\" class=\"${imageClass}\">\n                            <div class=\"file-text-details\">\n                                <p class=\"file-name-display\">${file.name}</p>\n                                <p class=\"file-type-display\">${fileExtension.toUpperCase()}</p>\n                            </div>\n                        </div>\n                        <div class=\"file-actions\">\n                            <button type=\"button\" class=\"edit-file-btn\" aria-label=\"Редактировать\">\n                                <img src=\"${creatStartupStaticUrl}edit_icon.svg\" alt=\"Редактировать\">\n                            </button>\n                            <button type=\"button\" class=\"delete-file-btn\" aria-label=\"Удалить\">\n                                <img src=\"${creatStartupStaticUrl}delete_icon.svg\" alt=\"Удалить\">\n                            </button>\n                        </div>\n                    </div>`; if (!isMultiple) { previewArea.innerHTML = previewItemHTML; } else if (previewArea.children.length < maxFiles) { previewArea.insertAdjacentHTML('beforeend', previewItemHTML); } updateFileActionButtonsState(previewAreaId); }; if (file.type.startsWith('image/')) reader.readAsDataURL(file); else reader.onload({ target: { result: null } }); }); if (fileInput) fileInput.dataset.hadFile = previewArea.children.length > 0 ? 'true' : 'false'; updateFileActionButtonsState(previewAreaId); }
+    document.addEventListener('click', function(event) { const deleteButton = event.target.closest('.delete-file-btn'); if (deleteButton) { const previewItem = deleteButton.closest('.file-preview-item'); if (!previewItem) return; const fileNameToRemove = previewItem.dataset.filename; const previewArea = previewItem.parentElement; const inputId = previewArea.id.replace('Preview', '_input'); const fileInput = document.getElementById(inputId); if (fileInput) { const dt = new DataTransfer(); const files = Array.from(fileInput.files); files.forEach(file => { if (CSS.escape(file.name) !== fileNameToRemove) dt.items.add(file); }); fileInput.files = dt.files; } previewItem.remove(); updateFileActionButtonsState(previewArea.id); } });
+    setupDragAndDrop('id_creatives_input', 'creativesDropArea', 'creativesPreview', { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] }, true, 3);
+    setupDragAndDrop('id_video_input', 'videoDropArea', 'videoPreview', { mimes: ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska'], extensions: ['mp4', 'mov', 'avi', 'mkv'] }, false, 1);
+    setupDragAndDrop('id_proofs_input', 'proofsDropArea', 'proofsPreview', { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] }, true, 3);
+    function updateFileActionButtonsState(previewAreaId) { const previewArea = document.getElementById(previewAreaId); if (!previewArea) return; const items = previewArea.querySelectorAll('.file-preview-item'); items.forEach(item => { const editBtn = item.querySelector('.edit-file-btn'); if (editBtn) editBtn.style.display = 'none'; }); }
+});
+</script>
+{% endblock %}
+
