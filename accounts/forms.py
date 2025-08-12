@@ -452,7 +452,21 @@ class SpecialistForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
     proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
-    direction = forms.ModelChoiceField(queryset=Directions.objects.all(), label="Категория *", required=True)
+    direction = forms.ModelChoiceField(
+        queryset=Directions.objects.filter(
+            direction_name__in=[
+                "Веб-разработка",
+                "Мобильная разработка",
+                "Дизайн",
+                "Маркетинг",
+                "ИИ",
+                "Брендинг",
+                "Видео и мультимедиа",
+            ]
+        ),
+        label="Категория *",
+        required=True,
+    )
     # Стадий для новых сущностей не используем
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
@@ -460,7 +474,7 @@ class SpecialistForm(forms.ModelForm):
     short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ *", required=True)
     additional_info = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Услуги и кейсы", required=False)
-    planet_image = forms.ChoiceField(choices=[], label="Выберите планету *", required=True, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
+    planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
