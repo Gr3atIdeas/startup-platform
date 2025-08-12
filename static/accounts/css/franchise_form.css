@@ -1,3 +1,23 @@
+/* Ошибки валидации */
+.form-control.input-error,
+.select-wrapper .form-control.input-error {
+  border: 1px solid #FF3B30;
+  box-shadow: 0 0 0 2px rgba(255,59,48,0.15);
+}
+.upload-box.input-error,
+.logo-upload-group .input-error,
+.upload-box .custom-file-upload-button.input-error,
+.logo-upload-group .logo-placeholder.input-error {
+  outline: 2px solid #FF3B30;
+}
+.agreement-section .checkbox-group.input-error .custom-checkbox-label,
+.agreement-section .custom-checkbox-label.input-error {
+  outline: 2px solid #FF3B30;
+  border-radius: 8px;
+}
+.error-message.custom-validation-error {
+  color: #FF3B30;
+}
 
 body {
   font-family: Unbounded, sans-serif; 
