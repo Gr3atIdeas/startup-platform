@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Обработка отправки формы ---
-    const startupForm = document.getElementById('startupForm');
+    const startupForm = document.getElementById('specialistForm');
     if (startupForm) {
         function displayValidationMessage(element, message, fieldType = 'input') {
             const parentGroup = element.closest('.form-group, .upload-box, .logo-upload-group');
@@ -396,23 +396,22 @@ document.addEventListener('DOMContentLoaded', function() {
         startupForm.addEventListener('submit', function(e) {
             let firstInvalidElementOrGroup = null;
             let validationPassed = true;
+            let firstErrorText = null;
 
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
             document.querySelectorAll('.custom-validation-error').forEach(el => el.remove());
             document.querySelectorAll('.timeline-step .step-number-wrapper').forEach(el => el.classList.remove('error-step'));
 
             const requiredFields = [
-                { id: '{{ form.title.id_for_label }}', name: 'Название стартапа', type: 'text' },
-                { id: '{{ form.funding_goal.id_for_label }}', name: 'Цель финансирования', type: 'text' },
+                { id: '{{ form.title.id_for_label }}', name: 'Имя/бренд специалиста', type: 'text' },
                 { id: '{{ form.short_description.id_for_label }}', name: 'Вводная', type: 'textarea' },
                 { id: '{{ form.description.id_for_label }}', name: 'Описание', type: 'textarea' },
-                { id: '{{ form.terms.id_for_label }}', name: 'Условия', type: 'textarea' },
-                { id: '{{ form.direction.id_for_label }}', name: 'Направление', type: 'select' },
+                { id: '{{ form.terms.id_for_label }}', name: 'Этапы работ', type: 'textarea' },
+                { id: '{{ form.direction.id_for_label }}', name: 'Категория', type: 'select' },
                 
                 { id: 'id_logo_input', name: 'Логотип', type: 'file', required: true },
                 { id: 'id_creatives_input', name: 'Изображения', type: 'file', required: true },
-                { id: 'id_video_input', name: 'Видео', type: 'file', required: true },
-                { id: 'id_planet_image', name: 'Планета', type: 'hidden' }
+                { id: 'id_video_input', name: 'Видео', type: 'file', required: true }
             ];
 
             for (const field of requiredFields) {
@@ -438,6 +437,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const errorElement = displayValidationMessage(element, `Пожалуйста, заполните поле "${field.name}".`);
                         if (!firstInvalidElementOrGroup) {
                             firstInvalidElementOrGroup = errorElement.closest('.form-group, .upload-box, .logo-upload-group') || errorElement;
+                            if (!firstErrorText) firstErrorText = errorElement.textContent || `Пожалуйста, заполните поле "${field.name}".`;
                         }
                         if (field.type === 'file') {
                             const parentBox = element.closest('.upload-box, .logo-upload-group');
@@ -453,48 +453,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            const timelineTextareas = startupForm.querySelectorAll('textarea.timeline-description-textarea');
-            let timelineErrorDisplayed = false;
-            let firstTimelineErrorTextarea = null;
-
-            for (let i = 0; i < timelineTextareas.length; i++) {
-                const textarea = timelineTextareas[i];
-                const stepNumber = textarea.name.split('_').pop();
-                const correspondingStepVisual = document.querySelector(`.timeline-step[data-step="${stepNumber}"] .step-number-wrapper`);
-
-                if (textarea.hasAttribute('required') && !textarea.value.trim()) {
-                    validationPassed = false;
-                    textarea.classList.add('input-error');
-                    if (correspondingStepVisual) {
-                        correspondingStepVisual.classList.add('error-step');
-                    }
-                    if (!firstTimelineErrorTextarea) firstTimelineErrorTextarea = textarea;
-                    
-                    if (!timelineErrorDisplayed) {
-                        const timelineSection = document.getElementById('timeline');
-                        const timelineWrapper = timelineSection?.closest('.timeline-section-wrapper');
-                        if (timelineWrapper && !timelineWrapper.querySelector('.custom-validation-error.timeline-general-error')) {
-                            const errorMsg = document.createElement('p');
-                            errorMsg.className = 'error-message custom-validation-error timeline-general-error';
-                            errorMsg.textContent = 'Пожалуйста, заполните описания для всех пяти этапов таймлайна.';
-                            const titleElement = timelineWrapper.querySelector('h3.section-title');
-                            if (titleElement) {
-                                titleElement.parentNode.insertBefore(errorMsg, titleElement.nextSibling);
-                            } else {
-                                timelineWrapper.insertBefore(errorMsg, timelineWrapper.firstChild);
-                            }
-                            timelineErrorDisplayed = true;
-                            if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = timelineWrapper;
-                        }
-                    }
-                }
-            }
-            
-            if (firstTimelineErrorTextarea) {
-                const stepNumberToShow = firstTimelineErrorTextarea.closest('.timeline-description-container').dataset.stepContent;
-                selectStepDescription(stepNumberToShow);
-                if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = firstTimelineErrorTextarea;
-            }
+            // Таймлайн не используется
 
             const proofsInput = document.getElementById('id_proofs_input');
             const proofsLabelText = document.querySelector('label[for="id_proofs_input"]')?.textContent || '';
@@ -535,6 +494,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Отправить на модерацию';
+                }
+                if (firstErrorText && typeof window.showNotification === 'function') {
+                    window.showNotification(firstErrorText, 'error', 5000);
                 }
                 if (firstInvalidElementOrGroup) {
                     if (firstInvalidElementOrGroup.classList && firstInvalidElementOrGroup.classList.contains('timeline-description-textarea')) {
