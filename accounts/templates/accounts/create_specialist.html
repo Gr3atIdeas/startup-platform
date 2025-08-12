@@ -68,14 +68,7 @@
                             {% if form.direction.errors %}<span class="error-message">{{ form.direction.errors|first }}</span>{% endif %}
                         </div>
                         
-                        <div class="form-group">
-                            <label for="{{ form.stage.id_for_label }}">*{{ form.stage.label }}</label>
-                            <div class="input-wrapper select-wrapper">
-                                {{ form.stage|add_class:"form-control" }}
-                                 <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
-                            </div>
-                            {% if form.stage.errors %}<span class="error-message">{{ form.stage.errors|first }}</span>{% endif %}
-                        </div>
+                        
                     </div>
                 </div>
                 
@@ -415,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 { id: '{{ form.description.id_for_label }}', name: 'Описание', type: 'textarea' },
                 { id: '{{ form.terms.id_for_label }}', name: 'Условия', type: 'textarea' },
                 { id: '{{ form.direction.id_for_label }}', name: 'Направление', type: 'select' },
-                { id: '{{ form.stage.id_for_label }}', name: 'Стадия', type: 'select' },
+                
                 { id: 'id_logo_input', name: 'Логотип', type: 'file', required: true },
                 { id: 'id_creatives_input', name: 'Изображения', type: 'file', required: true },
                 { id: 'id_video_input', name: 'Видео', type: 'file', required: true },

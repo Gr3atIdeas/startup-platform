@@ -249,8 +249,8 @@ class FranchiseForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
     proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
-    direction = forms.ModelChoiceField(queryset=Directions.objects.all(), label="Категория *", required=True)
-    stage = forms.ModelChoiceField(queryset=StartupStages.objects.all(), label="Стадия *", required=True)
+    direction = forms.ChoiceField(choices=[], label="Категория *", required=True)
+    # Стадий для новых сущностей не используем
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
     video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
@@ -265,6 +265,18 @@ class FranchiseForm(forms.ModelForm):
         except Exception as e:
             print(f"Error fetching planet URLs: {e}")
             self.fields["planet_image"].choices = []
+        # категории должны совпадать с каталогом агентств
+        self.fields["direction"].choices = [
+            (c, c) for c in [
+                "Веб-разработка",
+                "Мобильная разработка",
+                "Дизайн",
+                "Маркетинг",
+                "ИИ",
+                "Брендинг",
+                "Видео и мультимедиа",
+            ]
+        ]
 
     class Meta:
         model = Franchises
@@ -282,7 +294,7 @@ class FranchiseForm(forms.ModelForm):
             "pitch_deck_url",
             "logo",
             "direction",
-            "stage",
+            # stage removed for new entity creation
             "agree_rules",
             "agree_data_processing",
             "creatives",
@@ -304,7 +316,6 @@ class FranchiseForm(forms.ModelForm):
             "valuation": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Оценка"}),
             "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
             "direction": forms.Select(attrs={"class": "form-control"}),
-            "stage": forms.Select(attrs={"class": "form-control"}),
             "logo": forms.FileInput(attrs={"class": "form-control-file"}),
             "profit_calculation": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Описание расчета прибыли"}),
         }
@@ -353,8 +364,8 @@ class AgencyForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
     proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
-    direction = forms.ModelChoiceField(queryset=Directions.objects.all(), label="Категория *", required=True)
-    stage = forms.ModelChoiceField(queryset=StartupStages.objects.all(), label="Стадия *", required=True)
+    direction = forms.ChoiceField(choices=[], label="Категория *", required=True)
+    # Стадий для новых сущностей не используем
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
     video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
@@ -369,6 +380,18 @@ class AgencyForm(forms.ModelForm):
         except Exception as e:
             print(f"Error fetching planet URLs: {e}")
             self.fields["planet_image"].choices = []
+        # категории должны совпадать с каталогом специалистов
+        self.fields["direction"].choices = [
+            (c, c) for c in [
+                "Веб-разработка",
+                "Мобильная разработка",
+                "Дизайн",
+                "Маркетинг",
+                "ИИ",
+                "Брендинг",
+                "Видео и мультимедиа",
+            ]
+        ]
 
     class Meta:
         model = Agencies
@@ -380,7 +403,7 @@ class AgencyForm(forms.ModelForm):
             "pitch_deck_url",
             "logo",
             "direction",
-            "stage",
+            # stage removed for new entity creation
             "agree_rules",
             "agree_data_processing",
             "creatives",
@@ -395,7 +418,6 @@ class AgencyForm(forms.ModelForm):
             "terms": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Этапы работ"}),
             "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
             "direction": forms.Select(attrs={"class": "form-control"}),
-            "stage": forms.Select(attrs={"class": "form-control"}),
             "logo": forms.FileInput(attrs={"class": "form-control-file"}),
         }
         labels = {
@@ -437,7 +459,7 @@ class SpecialistForm(forms.ModelForm):
     creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
     proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
     direction = forms.ModelChoiceField(queryset=Directions.objects.all(), label="Категория *", required=True)
-    stage = forms.ModelChoiceField(queryset=StartupStages.objects.all(), label="Стадия *", required=True)
+    # Стадий для новых сущностей не используем
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
     video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
@@ -465,7 +487,7 @@ class SpecialistForm(forms.ModelForm):
             "pitch_deck_url",
             "logo",
             "direction",
-            "stage",
+            # stage removed for new entity creation
             "agree_rules",
             "agree_data_processing",
             "creatives",
@@ -481,7 +503,6 @@ class SpecialistForm(forms.ModelForm):
             "additional_info": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Услуги и кейсы"}),
             "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
             "direction": forms.Select(attrs={"class": "form-control"}),
-            "stage": forms.Select(attrs={"class": "form-control"}),
             "logo": forms.FileInput(attrs={"class": "form-control-file"}),
         }
         labels = {
