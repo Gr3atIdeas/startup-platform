@@ -3188,6 +3188,12 @@ def create_agency(request):
             agency.status = "pending"
             agency.planet_image = form.cleaned_data.get("planet_image")
             agency.save()
+            cat = form.cleaned_data.get("direction")
+            if cat:
+                data = agency.customization_data or {}
+                data["agency_category"] = cat
+                agency.customization_data = data
+                agency.save(update_fields=["customization_data"])
 
             logo_ids, creatives_ids, proofs_ids, video_ids = [], [], [], []
             # Повторное использование логики сохранения файлов
@@ -3257,6 +3263,12 @@ def create_specialist(request):
             spec.status = "pending"
             spec.planet_image = form.cleaned_data.get("planet_image")
             spec.save()
+            cat = form.cleaned_data.get("direction")
+            if cat:
+                data = spec.customization_data or {}
+                data["specialist_category"] = cat
+                spec.customization_data = data
+                spec.save(update_fields=["customization_data"])
 
             logo_ids, creatives_ids, proofs_ids, video_ids = [], [], [], []
             def save_file_set(files, type_name, subdir, ids_collector):

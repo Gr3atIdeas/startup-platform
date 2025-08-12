@@ -249,15 +249,7 @@ class FranchiseForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
     proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
-    direction = forms.ModelChoiceField(queryset=Directions.objects.filter(direction_name__in=[
-        "Веб-разработка",
-        "Мобильная разработка",
-        "Дизайн",
-        "Маркетинг",
-        "ИИ",
-        "Брендинг",
-        "Видео и мультимедиа",
-    ]), label="Категория *", required=True)
+    direction = forms.ModelChoiceField(queryset=Directions.objects.all().order_by("direction_name"), label="Категория *", required=True)
     # Стадий для новых сущностей не используем
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
@@ -361,15 +353,15 @@ class AgencyForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
     proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
-    direction = forms.ModelChoiceField(queryset=Directions.objects.filter(direction_name__in=[
-        "Веб-разработка",
-        "Мобильная разработка",
-        "Дизайн",
-        "Маркетинг",
-        "ИИ",
-        "Брендинг",
-        "Видео и мультимедиа",
-    ]), label="Категория *", required=True)
+    direction = forms.ChoiceField(choices=[
+        ("Веб-разработка", "Веб-разработка"),
+        ("Мобильная разработка", "Мобильная разработка"),
+        ("Дизайн", "Дизайн"),
+        ("Маркетинг", "Маркетинг"),
+        ("ИИ", "ИИ"),
+        ("Брендинг", "Брендинг"),
+        ("Видео и мультимедиа", "Видео и мультимедиа"),
+    ], label="Категория *", required=True)
     # Стадий для новых сущностей не используем
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
@@ -396,7 +388,6 @@ class AgencyForm(forms.ModelForm):
             "terms",
             "pitch_deck_url",
             "logo",
-            "direction",
             # stage removed for new entity creation
             "agree_rules",
             "agree_data_processing",
@@ -452,21 +443,15 @@ class SpecialistForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
     proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
-    direction = forms.ModelChoiceField(
-        queryset=Directions.objects.filter(
-            direction_name__in=[
-                "Веб-разработка",
-                "Мобильная разработка",
-                "Дизайн",
-                "Маркетинг",
-                "ИИ",
-                "Брендинг",
-                "Видео и мультимедиа",
-            ]
-        ),
-        label="Категория *",
-        required=True,
-    )
+    direction = forms.ChoiceField(choices=[
+        ("Веб-разработка", "Веб-разработка"),
+        ("Мобильная разработка", "Мобильная разработка"),
+        ("Дизайн", "Дизайн"),
+        ("Маркетинг", "Маркетинг"),
+        ("ИИ", "ИИ"),
+        ("Брендинг", "Брендинг"),
+        ("Видео и мультимедиа", "Видео и мультимедиа"),
+    ], label="Категория *", required=True)
     # Стадий для новых сущностей не используем
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
@@ -494,7 +479,6 @@ class SpecialistForm(forms.ModelForm):
             "additional_info",
             "pitch_deck_url",
             "logo",
-            "direction",
             # stage removed for new entity creation
             "agree_rules",
             "agree_data_processing",
