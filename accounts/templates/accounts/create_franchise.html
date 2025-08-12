@@ -67,13 +67,7 @@
                             </div>
                             {% if form.direction.errors %}<span class="error-message">{{ form.direction.errors|first }}</span>{% endif %}
                         </div>
-                        <div class="form-group">
-                            <label for="{{ form.funding_goal.id_for_label }}">*{{ form.funding_goal.label }}</label>
-                            <div class="input-wrapper">
-                                {{ form.funding_goal|add_class:"form-control"|attr:"placeholder:Введите сумму ₽" }}
-                            </div>
-                            {% if form.funding_goal.errors %}<span class="error-message">{{ form.funding_goal.errors|first }}</span>{% endif %}
-                        </div>
+                        
                         
                     </div>
                 </div>
@@ -91,16 +85,7 @@
                                 {{ form.franchise_cost|add_class:"form-control"|attr:"placeholder:Стоимость франшизы ₽"|attr:"type:number"|attr:"min:0" }}
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="{{ form.valuation.id_for_label }}">{{ form.valuation.label }}</label>
-                            <div class="input-wrapper valuation-input">
-                                {{ form.valuation|add_class:"form-control"|attr:"placeholder:Оценка"|attr:"type:number"|attr:"min:0" }}
-                                <div class="valuation-spin-buttons">
-                                    <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="increase value" class="spin-up">
-                                    <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="decrease value" class="spin-down">
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -155,24 +140,7 @@
                             </div>
                             {% if form.pitch_deck_url.errors %}<span class="error-message">{{ form.pitch_deck_url.errors|first }}</span>{% endif %}
                         </div>
-                        <div class="form-group">
-                            <label for="{{ form.valuation.id_for_label }}">{{ form.valuation.label }}</label>
-                            <div class="input-wrapper valuation-input">
-                                {{ form.valuation|add_class:"form-control"|attr:"placeholder:Оценка"|attr:"type:number"|attr:"min:0" }}
-                                <div class="valuation-spin-buttons">
-                                    <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="increase value" class="spin-up">
-                                    <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="decrease value" class="spin-down">
-                                </div>
-                            </div>
-                            {% if form.valuation.errors %}<span class="error-message">{{ form.valuation.errors|first }}</span>{% endif %}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.amount_raised.id_for_label }}">{{ form.amount_raised.label }}</label>
-                            <div class="input-wrapper">
-                                {{ form.amount_raised|add_class:"form-control"|attr:"placeholder:Введите сумму"|attr:"type:number" }}
-                            </div>
-                            {% if form.amount_raised.errors %}<span class="error-message">{{ form.amount_raised.errors|first }}</span>{% endif %}
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -445,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Обработка отправки формы ---
-    const franchiseFormEl = document.getElementById('franchiseForm');
+            const franchiseFormEl = document.getElementById('franchiseForm');
     if (franchiseFormEl) {
         function displayValidationMessage(element, message, fieldType = 'input') {
             const parentGroup = element.closest('.form-group, .upload-box, .logo-upload-group');
@@ -476,10 +444,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return errorMsg;
         }
-
+        
         franchiseFormEl.addEventListener('submit', function(e) {
             let firstInvalidElementOrGroup = null;
             let validationPassed = true;
+            let firstErrorText = null;
 
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
             document.querySelectorAll('.custom-validation-error').forEach(el => el.remove());
@@ -487,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const requiredFields = [
                 { id: '{{ form.title.id_for_label }}', name: 'Название стартапа', type: 'text' },
-                        
+                
                 { id: '{{ form.short_description.id_for_label }}', name: 'Вводная', type: 'textarea' },
                 { id: '{{ form.description.id_for_label }}', name: 'Описание', type: 'textarea' },
                 { id: '{{ form.terms.id_for_label }}', name: 'Условия', type: 'textarea' },
@@ -496,7 +465,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 { id: 'id_logo_input', name: 'Логотип', type: 'file', required: true },
                 { id: 'id_creatives_input', name: 'Изображения', type: 'file', required: true },
                 { id: 'id_video_input', name: 'Видео', type: 'file', required: true },
-                { id: 'id_planet_image', name: 'Планета', type: 'hidden' }
+                
             ];
 
             for (const field of requiredFields) {
@@ -522,6 +491,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const errorElement = displayValidationMessage(element, `Пожалуйста, заполните поле "${field.name}".`);
                         if (!firstInvalidElementOrGroup) {
                             firstInvalidElementOrGroup = errorElement.closest('.form-group, .upload-box, .logo-upload-group') || errorElement;
+                            if (!firstErrorText) firstErrorText = errorElement.textContent || `Пожалуйста, заполните поле "${field.name}".`;
                         }
                         if (field.type === 'file') {
                             const parentBox = element.closest('.upload-box, .logo-upload-group');
@@ -546,6 +516,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (proofsInput.files.length === 0) {
                     validationPassed = false;
                     const errorEl = displayValidationMessage(proofsUploadButton || proofsInput, 'Пожалуйста, загрузите Документы.', proofsUploadButton ? 'fileButton' : 'file');
+                    if (!firstErrorText) firstErrorText = errorEl.textContent;
                     if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = proofsUploadButton || proofsInput;
                 }
             }
@@ -556,6 +527,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     validationPassed = false;
                     const parentDiv = agreeRulesCheckbox.closest('.checkbox-group');
                     const errorEl = displayValidationMessage(parentDiv || agreeRulesCheckbox, 'Необходимо подтвердить согласие с правилами.', 'checkbox');
+                    if (!firstErrorText) firstErrorText = errorEl.textContent;
                     if (parentDiv) parentDiv.classList.add('input-error');
                     if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = parentDiv || agreeRulesCheckbox;
                 }
@@ -567,6 +539,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     validationPassed = false;
                     const parentDiv = agreeDataProcessingCheckbox.closest('.checkbox-group');
                     const errorEl = displayValidationMessage(parentDiv || agreeDataProcessingCheckbox, 'Необходимо подтвердить согласие на обработку персональных данных.', 'checkbox');
+                    if (!firstErrorText) firstErrorText = errorEl.textContent;
                     if (parentDiv) parentDiv.classList.add('input-error');
                     if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = parentDiv || agreeDataProcessingCheckbox;
                 }
@@ -578,6 +551,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Отправить на модерацию';
+                }
+                if (firstErrorText && typeof window.showNotification === 'function') {
+                    window.showNotification(firstErrorText, 'error', 5000);
                 }
                 if (firstInvalidElementOrGroup) {
                     if (firstInvalidElementOrGroup.classList && firstInvalidElementOrGroup.classList.contains('timeline-description-textarea')) {
