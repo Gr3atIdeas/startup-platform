@@ -4000,6 +4000,9 @@ def startuper_main(request):
     return render(request, "accounts/startuper_main.html", context)
 def moderator_dashboard(request):
     pending_startups_list = Startups.objects.filter(status="pending")
+    pending_franchises_list = Franchises.objects.filter(status="pending")
+    pending_agencies_list = Agencies.objects.filter(status="pending")
+    pending_specialists_list = Specialists.objects.filter(status="pending")
     all_categories = Directions.objects.all().order_by("direction_name")
     selected_category_name = request.GET.get("category")
     sort_order = request.GET.get("sort")
@@ -4027,6 +4030,9 @@ def moderator_dashboard(request):
             pending_startups_list = pending_startups_list.order_by("-startup_id")
     context = {
         "pending_startups": pending_startups_list,
+        "pending_franchises": pending_franchises_list,
+        "pending_agencies": pending_agencies_list,
+        "pending_specialists": pending_specialists_list,
         "all_categories": all_categories,
         "selected_category_name": selected_category_name,
         "current_sort_order": sort_order,
@@ -5714,6 +5720,62 @@ def reject_franchise(request, franchise_id):
             raise ValueError("Статус 'Rejected' не найден в базе данных.")
         franchise.save()
         messages.success(request, "Франшиза отклонена.")
+    return redirect("moderator_dashboard")
+
+
+def approve_agency(request, franchise_id):
+    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+        messages.error(request, "У вас нет прав для этого действия.")
+        return redirect("home")
+    agency = get_object_or_404(Agencies, agency_id=franchise_id)
+    if request.method == "POST":
+        moderator_comment = request.POST.get("moderator_comment", "")
+        agency.moderator_comment = moderator_comment
+        agency.status = "approved"
+        agency.save()
+        messages.success(request, "Агентство одобрено.")
+    return redirect("moderator_dashboard")
+
+
+def reject_agency(request, franchise_id):
+    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+        messages.error(request, "У вас нет прав для этого действия.")
+        return redirect("home")
+    agency = get_object_or_404(Agencies, agency_id=franchise_id)
+    if request.method == "POST":
+        moderator_comment = request.POST.get("moderator_comment", "")
+        agency.moderator_comment = moderator_comment
+        agency.status = "rejected"
+        agency.save()
+        messages.success(request, "Агентство отклонено.")
+    return redirect("moderator_dashboard")
+
+
+def approve_specialist(request, specialist_id):
+    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+        messages.error(request, "У вас нет прав для этого действия.")
+        return redirect("home")
+    spec = get_object_or_404(Specialists, specialist_id=specialist_id)
+    if request.method == "POST":
+        moderator_comment = request.POST.get("moderator_comment", "")
+        spec.moderator_comment = moderator_comment
+        spec.status = "approved"
+        spec.save()
+        messages.success(request, "Специалист одобрен.")
+    return redirect("moderator_dashboard")
+
+
+def reject_specialist(request, specialist_id):
+    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+        messages.error(request, "У вас нет прав для этого действия.")
+        return redirect("home")
+    spec = get_object_or_404(Specialists, specialist_id=specialist_id)
+    if request.method == "POST":
+        moderator_comment = request.POST.get("moderator_comment", "")
+        spec.moderator_comment = moderator_comment
+        spec.status = "rejected"
+        spec.save()
+        messages.success(request, "Специалист отклонен.")
     return redirect("moderator_dashboard")
 
 

@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <header class="page-header">
             <div class="header-title-block">
                 <h1 class="header-title-main">Заявки на</h1>
-                <h2 class="header-title-highlight">СТАРТАПЫ</h2>
+                <h2 class="header-title-highlight">ЗАЯВКИ</h2>
             </div>
         </header>
 
@@ -356,9 +356,200 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
                 {% endfor %}
             </div>
-            {% else %}
+    {% endif %}
+
+    {% if pending_franchises %}
+            <div class="startup-cards-grid">
+                {% for franchise in pending_franchises %}
+                <div class="startup-card-item">
+                    <div class="startup-card-item-content">
+                        <div class="startup-card-main-info">
+                            {% if franchise.planet_image %}
+                                <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ franchise.planet_image }}" alt="{{ franchise.title }} planet" class="startup-card-image">
+                            {% else %}
+                                <div class="startup-card-image-placeholder">Нет изображения</div>
+                            {% endif %}
+                            <div class="startup-card-details">
+                                <div class="detail-group">
+                                    <span class="detail-label">Автор</span>
+                                    <div class="author-info">
+                                        {% if franchise.owner %}
+                                            <div class="author-text-details">
+                                                <span class="author-name">{{ franchise.owner.get_full_name|default:franchise.owner.email|default:"Не указан" }}</span>
+                                            </div>
+                                        {% else %}
+                                            <div class="author-text-details">
+                                                <span class="author-name">Автор не указан</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="detail-group">
+                                    <span class="detail-label">Наименование</span>
+                                    <h3 class="startup-name">{{ franchise.title }}</h3>
+                                </div>
+                                <div class="detail-group">
+                                    <span class="detail-label">Категория</span>
+                                    <div class="category-tag">
+                                        <span class="category-tag-text">{{ franchise.direction.direction_name|translate_category|default:"Не указана" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="startup-description-group">
+                            <span class="detail-label">Описание</span>
+                            <p class="startup-description-text">{{ franchise.description|default:franchise.short_description|default:"Описание отсутствует."|truncatewords:30 }}</p>
+                        </div>
+                    </div>
+                    <div class="funding-info-actions">
+                        <div class="funding-details-row">
+                            <div class="action-buttons-group">
+                                <form method="post" action="{% url 'approve_franchise' franchise.franchise_id %}" class="inline-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-button approve">Одобрить</button>
+                                </form>
+                                <form method="post" action="{% url 'reject_franchise' franchise.franchise_id %}" class="inline-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-button reject">Отклонить</button>
+                                </form>
+                                <a href="{% url 'franchise_detail' franchise.franchise_id %}" class="action-button details">К заявке</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+    {% endif %}
+
+    {% if pending_agencies %}
+            <div class="startup-cards-grid">
+                {% for agency in pending_agencies %}
+                <div class="startup-card-item">
+                    <div class="startup-card-item-content">
+                        <div class="startup-card-main-info">
+                            {% if agency.planet_image %}
+                                <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ agency.planet_image }}" alt="{{ agency.title }} planet" class="startup-card-image">
+                            {% else %}
+                                <div class="startup-card-image-placeholder">Нет изображения</div>
+                            {% endif %}
+                            <div class="startup-card-details">
+                                <div class="detail-group">
+                                    <span class="detail-label">Автор</span>
+                                    <div class="author-info">
+                                        {% if agency.owner %}
+                                            <div class="author-text-details">
+                                                <span class="author-name">{{ agency.owner.get_full_name|default:agency.owner.email|default:"Не указан" }}</span>
+                                            </div>
+                                        {% else %}
+                                            <div class="author-text-details">
+                                                <span class="author-name">Автор не указан</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="detail-group">
+                                    <span class="detail-label">Наименование</span>
+                                    <h3 class="startup-name">{{ agency.title }}</h3>
+                                </div>
+                                <div class="detail-group">
+                                    <span class="detail-label">Категория</span>
+                                    <div class="category-tag">
+                                        <span class="category-tag-text">{{ agency.customization_data.agency_category|default:"Не указана" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="startup-description-group">
+                            <span class="detail-label">Описание</span>
+                            <p class="startup-description-text">{{ agency.description|default:agency.short_description|default:"Описание отсутствует."|truncatewords:30 }}</p>
+                        </div>
+                    </div>
+                    <div class="funding-info-actions">
+                        <div class="funding-details-row">
+                            <div class="action-buttons-group">
+                                <form method="post" action="{% url 'approve_agency' agency.agency_id %}" class="inline-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-button approve">Одобрить</button>
+                                </form>
+                                <form method="post" action="{% url 'reject_agency' agency.agency_id %}" class="inline-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-button reject">Отклонить</button>
+                                </form>
+                                <a href="{% url 'agency_detail' agency.agency_id %}" class="action-button details">К заявке</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+    {% endif %}
+
+    {% if pending_specialists %}
+            <div class="startup-cards-grid">
+                {% for specialist in pending_specialists %}
+                <div class="startup-card-item">
+                    <div class="startup-card-item-content">
+                        <div class="startup-card-main-info">
+                            {% if specialist.planet_image %}
+                                <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ specialist.planet_image }}" alt="{{ specialist.title }} planet" class="startup-card-image">
+                            {% else %}
+                                <div class="startup-card-image-placeholder">Нет изображения</div>
+                            {% endif %}
+                            <div class="startup-card-details">
+                                <div class="detail-group">
+                                    <span class="detail-label">Автор</span>
+                                    <div class="author-info">
+                                        {% if specialist.owner %}
+                                            <div class="author-text-details">
+                                                <span class="author-name">{{ specialist.owner.get_full_name|default:specialist.owner.email|default:"Не указан" }}</span>
+                                            </div>
+                                        {% else %}
+                                            <div class="author-text-details">
+                                                <span class="author-name">Автор не указан</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="detail-group">
+                                    <span class="detail-label">Наименование</span>
+                                    <h3 class="startup-name">{{ specialist.title }}</h3>
+                                </div>
+                                <div class="detail-group">
+                                    <span class="detail-label">Категория</span>
+                                    <div class="category-tag">
+                                        <span class="category-tag-text">{{ specialist.customization_data.specialist_category|default:"Не указана" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="startup-description-group">
+                            <span class="detail-label">Описание</span>
+                            <p class="startup-description-text">{{ specialist.description|default:specialist.short_description|default:"Описание отсутствует."|truncatewords:30 }}</p>
+                        </div>
+                    </div>
+                    <div class="funding-info-actions">
+                        <div class="funding-details-row">
+                            <div class="action-buttons-group">
+                                <form method="post" action="{% url 'approve_specialist' specialist.specialist_id %}" class="inline-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-button approve">Одобрить</button>
+                                </form>
+                                <form method="post" action="{% url 'reject_specialist' specialist.specialist_id %}" class="inline-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-button reject">Отклонить</button>
+                                </form>
+                                <a href="{% url 'specialist_detail' specialist.specialist_id %}" class="action-button details">К заявке</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+    {% endif %}
+
+    {% if not pending_startups and not pending_franchises and not pending_agencies and not pending_specialists %}
             <p class="no-applications">Нет заявок на рассмотрение.</p>
-            {% endif %}
+    {% endif %}
         </section>
 
         {% if pending_startups and pending_startups|length > 4 %} 
