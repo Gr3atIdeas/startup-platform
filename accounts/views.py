@@ -415,7 +415,7 @@ def home(request):
             planet_image_url = None
             
             if startup.planet_image:
-                planet_image_url = f"https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{startup.planet_image}"
+                planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
             
             if not planet_image_url:
                 import random
@@ -1996,7 +1996,7 @@ def investments(request):
                         )
                         if "Contents" in response and len(response["Contents"]) > 0:
                             file_key = response["Contents"][0]["Key"]
-                            logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
+                            logo_url = f"{settings.AWS_S3_ENDPOINT_URL}/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
                             logger.info(
                                 f"Сгенерирован URL для логотипа стартапа {startup_obj.startup_id}: {logo_url}"
                             )
@@ -4662,7 +4662,7 @@ def planetary_system(request):
         planet_image_url = None
         
         if startup.planet_image:
-            planet_image_url = f"https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{startup.planet_image}"
+            planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
         
         if not planet_image_url:
             import random
@@ -4702,7 +4702,7 @@ def planetary_system(request):
         planet_image_url = None
         
         if startup.planet_image:
-            planet_image_url = f"https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{startup.planet_image}"
+            planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
         
         if not planet_image_url:
             import random

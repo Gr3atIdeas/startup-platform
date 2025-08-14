@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 BASE_DIR = Path(__file__).resolve().parent.parent
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME = "1-st-test-bucket-for-startup-platform-3gb-1"
+AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "1-st-test-bucket-for-startup-platform-3gb-1")
 AWS_S3_ENDPOINT_URL = "https://storage.yandexcloud.net"
 AWS_DEFAULT_ACL = "public-read"
 AWS_S3_FILE_OVERWRITE = False
@@ -111,6 +111,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "marketplace.context_processors.s3_public_base_url",
             ],
         },
     },
@@ -156,7 +157,8 @@ DJANGO_VITE = {
         "static_url_prefix": "dist",
     }
 }
-MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.storage.yandexcloud.net/"
+S3_PUBLIC_BASE_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.storage.yandexcloud.net"
+MEDIA_URL = f"{S3_PUBLIC_BASE_URL}/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "accounts.Users"
 LOGGING = {

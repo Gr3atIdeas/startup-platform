@@ -194,7 +194,7 @@
 <script>
 const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
 const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
-const planetBaseUrl = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/";
+const planetBaseUrl = "{{ S3_PUBLIC_BASE_URL }}/choosable_planets/";
 
 document.addEventListener('DOMContentLoaded', function() {
     // --- Предзагрузка планет ---

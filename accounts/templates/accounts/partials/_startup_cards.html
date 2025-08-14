@@ -9,7 +9,7 @@
     <span class="startup-franchise-tag">Стартап</span>
     <div class="startup-image">
       {% if startup.planet_image %}
-        <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="Планета {{ startup.title }}" class="planet-image">
+        <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ startup.planet_image }}" alt="Планета {{ startup.title }}" class="planet-image">
       {% else %}
         <div class="startup-image-placeholder">
           {{ startup.title|make_list|first|upper }}

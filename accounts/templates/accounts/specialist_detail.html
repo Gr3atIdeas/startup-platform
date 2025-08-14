@@ -49,7 +49,7 @@
         <div class="planet-display-container">
           <div class="space-background"></div>
            {% if specialist.planet_image %}
-            <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ specialist.planet_image }}" alt="Планета {{ specialist.title }}" class="planet-image">
+            <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ specialist.planet_image }}" alt="Планета {{ specialist.title }}" class="planet-image">
           {% else %}
             <img src="{% static 'accounts/images/icons/planet_placeholder.svg' %}" alt="Планета не выбрана" class="planet-placeholder">
           {% endif %}

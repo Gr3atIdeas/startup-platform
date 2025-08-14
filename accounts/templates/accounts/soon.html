@@ -258,8 +258,8 @@
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
         // Ссылки на видео
-        const desktopVideo = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/%D0%97%D0%B0%D0%B3%D0%BB%D1%83%D1%88%D0%BA%D0%B0.mp4";
-        const mobileVideo = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/%D0%9A%D0%BE%D0%BC%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F%201_2.mp4"; // Замените на вашу ссылку
+        const desktopVideo = "{{ S3_PUBLIC_BASE_URL }}/%D0%97%D0%B0%D0%B3%D0%BB%D1%83%D1%88%D0%BA%D0%B0.mp4";
+        const mobileVideo = "{{ S3_PUBLIC_BASE_URL }}/%D0%9A%D0%BE%D0%BC%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F%201_2.mp4"; // Замените на вашу ссылку
 
         // Установка нужного видео
         const videoSource = document.getElementById("video-source");

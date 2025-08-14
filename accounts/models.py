@@ -543,7 +543,8 @@ class NewsArticles(models.Model):
     def get_image_url(self):
         """Генерирует полный URL для картинки новости."""
         if self.image_url:
-            base_url = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/"
+            from django.conf import settings
+            base_url = getattr(settings, "S3_PUBLIC_BASE_URL", "") + "/"
             return f"{base_url}{self.image_url}"
         return None
 
