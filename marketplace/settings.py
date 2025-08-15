@@ -5,8 +5,8 @@ import dj_database_url
 from django.core.files.storage import default_storage
 logger = logging.getLogger(__name__)
 BASE_DIR = Path(__file__).resolve().parent.parent
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", os.getenv("BOT_ACCESS_TOKEN", "8036121538:AAG6PyLDOnTNL6rLgRKaq2w1mrXKTYNsDlc"))
-TELEGRAM_OWNER_CHAT_ID = os.getenv("TELEGRAM_OWNER_CHAT_ID", "209725232")
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN") or os.getenv("BOT_ACCESS_TOKEN") or "8036121538:AAG6PyLDOnTNL6rLgRKaq2w1mrXKTYNsDlc"
+TELEGRAM_OWNER_CHAT_ID = os.getenv("TELEGRAM_OWNER_CHAT_ID") or "209725232"
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "1-bucket-for-startup-platform1")
