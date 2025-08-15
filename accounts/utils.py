@@ -235,6 +235,7 @@ def send_telegram_support_message(ticket):
     }
 
     try:
+        logger.info(f"Sending support ticket {ticket.ticket_id} to Telegram chat {chat_id}")
         response = requests.post(url, json=payload, timeout=10)
         status_code = response.status_code
         text = response.text
@@ -245,4 +246,22 @@ def send_telegram_support_message(ticket):
     except requests.exceptions.RequestException as e:
         resp_text = getattr(e.response, 'text', '') if hasattr(e, 'response') else ''
         logger.error(f"Failed to send support ticket {ticket.ticket_id} to Telegram: {e}. Response: {resp_text}", exc_info=True)
-        return False
+        try:
+            fallback_text = (
+                f"Новая заявка #{ticket.ticket_id}\n\n"
+                f"Тема: {ticket.subject or ''}\n\n"
+                f"Сообщение:\n{ticket.message or ''}\n\n"
+                f"Пользователь: {user_full_name if user else 'Анонимный'}"
+            )
+            fallback_payload = {
+                'chat_id': chat_id,
+                'text': fallback_text,
+            }
+            fallback_resp = requests.post(url, json=fallback_payload, timeout=10)
+            logger.debug(f"Telegram fallback response status={fallback_resp.status_code} body={fallback_resp.text}")
+            fallback_resp.raise_for_status()
+            logger.info(f"Fallback send succeeded for ticket {ticket.ticket_id}")
+            return True
+        except requests.exceptions.RequestException as e2:
+            logger.error(f"Fallback send failed for ticket {ticket.ticket_id}: {e2}", exc_info=True)
+            return False
