@@ -5373,7 +5373,12 @@ def support_contact_view(request):
             ticket = form.save(commit=False)
             ticket.user = request.user
             ticket.save()
-            send_telegram_support_message(ticket)
+            try:
+                logger.info(f"Dispatching Telegram for support ticket {ticket.ticket_id}")
+                sent_ok = send_telegram_support_message(ticket)
+                logger.info(f"Telegram dispatch result for ticket {ticket.ticket_id}: {sent_ok}")
+            except Exception as e:
+                logger.error(f"Unexpected error during Telegram dispatch for ticket {ticket.ticket_id}: {e}", exc_info=True)
             messages.success(
                 request, "Ваше обращение успешно отправлено! Мы скоро с вами свяжемся."
             )
