@@ -236,9 +236,13 @@ def send_telegram_support_message(ticket):
 
     try:
         response = requests.post(url, json=payload, timeout=10)
+        status_code = response.status_code
+        text = response.text
+        logger.debug(f"Telegram API response status={status_code} body={text}")
         response.raise_for_status()
         logger.info(f"Successfully sent support ticket {ticket.ticket_id} to Telegram chat {chat_id}.")
         return True
     except requests.exceptions.RequestException as e:
-        logger.error(f"Failed to send support ticket {ticket.ticket_id} to Telegram: {e}", exc_info=True)
+        resp_text = getattr(e.response, 'text', '') if hasattr(e, 'response') else ''
+        logger.error(f"Failed to send support ticket {ticket.ticket_id} to Telegram: {e}. Response: {resp_text}", exc_info=True)
         return False
