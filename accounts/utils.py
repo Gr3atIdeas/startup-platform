@@ -185,8 +185,12 @@ def send_telegram_support_message(ticket):
     Sends a formatted support ticket message with an inline button to a specific Telegram chat.
     Uses HTML parse mode for robust formatting.
     """
-    bot_token = '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko'
-    chat_id = '2064613329'
+    from django.conf import settings
+    bot_token = getattr(settings, 'TELEGRAM_BOT_TOKEN', None)
+    chat_id = getattr(settings, 'TELEGRAM_OWNER_CHAT_ID', None)
+    if not bot_token or not chat_id:
+        logger.error("Telegram credentials are not configured (TELEGRAM_BOT_TOKEN/TELEGRAM_OWNER_CHAT_ID)")
+        return False
     
     user = ticket.user
     if not user:

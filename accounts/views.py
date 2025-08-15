@@ -5465,7 +5465,11 @@ def custom_404(request, exception):
 @csrf_exempt
 @require_POST
 def telegram_webhook(request, token):
-    bot_token = "7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko"
+    from django.conf import settings
+    bot_token = getattr(settings, 'TELEGRAM_BOT_TOKEN', None)
+    if not bot_token:
+        logger.error("TELEGRAM_BOT_TOKEN is not configured")
+        return HttpResponse(status=500)
     if token != bot_token:
         logger.warning("Invalid token in webhook URL.")
         return HttpResponseForbidden("Invalid token")

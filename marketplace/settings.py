@@ -5,6 +5,8 @@ import dj_database_url
 from django.core.files.storage import default_storage
 logger = logging.getLogger(__name__)
 BASE_DIR = Path(__file__).resolve().parent.parent
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", os.getenv("BOT_ACCESS_TOKEN"))
+TELEGRAM_OWNER_CHAT_ID = os.getenv("TELEGRAM_OWNER_CHAT_ID")
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "1-bucket-for-startup-platform1")
@@ -70,7 +72,7 @@ SOCIALACCOUNT_PROVIDERS = {
     'telegram': {
         'APP': {
             'client_id': 'testmarketstartup_bot',
-            'secret': os.getenv('BOT_ACCESS_TOKEN'),
+            'secret': TELEGRAM_BOT_TOKEN,
         },
         'AUTH_PARAMS': {
             'auth_date_valid_within': 90,
