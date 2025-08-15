@@ -6,6 +6,7 @@ import re
 import boto3
 from botocore.exceptions import ClientError
 from django.conf import settings
+from html import escape
 logger = logging.getLogger(__name__)
 def _prefix_for(entity_type: str, entity_id: int, file_type: str) -> str:
     if file_type == "avatar":
@@ -209,8 +210,10 @@ def send_telegram_support_message(ticket):
             f"✈️ <b>Telegram:</b> {telegram_handle}"
         )
 
-    subject = f"<pre>{ticket.subject}</pre>"
-    message = f"<pre>{ticket.message}</pre>"
+    safe_subject = escape(ticket.subject or "")
+    safe_message = escape(ticket.message or "")
+    subject = f"<pre>{safe_subject}</pre>"
+    message = f"<pre>{safe_message}</pre>"
 
     message_text = (
         f"🚨 <b>Новая заявка в техподдержку ({ticket.ticket_id})</b> 🚨\n\n"
