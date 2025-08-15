@@ -210,7 +210,7 @@ def send_telegram_support_message(ticket):
     safe_tg = escape_markdown_v2(telegram_handle)
 
     message_text = (
-        "🚨 *Новая заявка в техподдержку!* 🚨\n\n"
+        "🚨 *Новая заявка в техподдержку\!* 🚨\n\n"
         f"📝 *Тема:* {safe_subject}\n\n"
         f"📄 *Сообщение:*\n{safe_message}\n\n"
         f"— Техническая информация —\n"
