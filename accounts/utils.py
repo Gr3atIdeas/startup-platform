@@ -241,6 +241,14 @@ def send_telegram_support_message(ticket):
         text = response.text
         logger.debug(f"Telegram API response status={status_code} body={text}")
         response.raise_for_status()
+        try:
+            data = response.json()
+        except ValueError:
+            data = None
+        if not data or data.get("ok") is not True:
+            desc = (data or {}).get("description", "no description")
+            logger.error(f"Telegram returned ok!=True for ticket {ticket.ticket_id}: {desc}")
+            raise requests.exceptions.RequestException(desc, response=response)
         logger.info(f"Successfully sent support ticket {ticket.ticket_id} to Telegram chat {chat_id}.")
         return True
     except requests.exceptions.RequestException as e:
