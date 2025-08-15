@@ -195,32 +195,29 @@ def send_telegram_support_message(ticket):
     
     user = ticket.user
     if not user:
-        user_info = "<b>Пользователь:</b> Анонимный"
+        user_full_name = "Анонимный"
+        email = "Не указан"
+        telegram_handle = "Не указан"
     else:
-        user_full_name = f"{user.first_name or ''} {user.last_name or ''}".strip()
-        user_full_name = user_full_name or "Имя не указано"
-        
+        user_full_name = (f"{user.first_name or ''} {user.last_name or ''}".strip()) or "Имя не указано"
         email = user.email or "Не указан"
         telegram_handle = user.social_links.get('telegram', 'Не указан') if isinstance(user.social_links, dict) else 'Не указан'
 
-        user_info = (
-            f"👤 <b>Пользователь:</b> {user_full_name}\n"
-            f"🆔 <b>ID на платформе:</b> <code>{user.user_id}</code>\n"
-            f"✉️ <b>Email:</b> <code>{email}</code>\n"
-            f"✈️ <b>Telegram:</b> {telegram_handle}"
-        )
-
-    safe_subject = escape(ticket.subject or "")
-    safe_message = escape(ticket.message or "")
-    subject = f"<pre>{safe_subject}</pre>"
-    message = f"<pre>{safe_message}</pre>"
+    safe_subject = escape_markdown_v2(ticket.subject or "")
+    safe_message = escape_markdown_v2(ticket.message or "")
+    safe_user_full_name = escape_markdown_v2(user_full_name)
+    safe_email = escape_markdown_v2(email)
+    safe_tg = escape_markdown_v2(telegram_handle)
 
     message_text = (
-        f"🚨 <b>Новая заявка в техподдержку ({ticket.ticket_id})</b> 🚨\n\n"
-        f"📝 <b>Тема:</b>\n{subject}\n\n"
-        f"📄 <b>Сообщение:</b>\n{message}\n\n"
-        f"--- Техническая информация ---\n"
-        f"{user_info}"
+        "🚨 *Новая заявка в техподдержку!* 🚨\n\n"
+        f"📝 *Тема:* {safe_subject}\n\n"
+        f"📄 *Сообщение:*\n{safe_message}\n\n"
+        f"— Техническая информация —\n"
+        f"👤 *Пользователь:* {safe_user_full_name}\n"
+        f"🆔 *ID на платформе:* `{ticket.user.user_id if user else 'N/A'}`\n"
+        f"✉️ *Email:* `{safe_email}`\n"
+        f"✈️ *Telegram:* `{safe_tg}`"
     )
 
     inline_keyboard = {
@@ -233,7 +230,7 @@ def send_telegram_support_message(ticket):
     payload = {
         'chat_id': chat_id,
         'text': message_text,
-        'parse_mode': 'HTML',
+        'parse_mode': 'MarkdownV2',
         'reply_markup': inline_keyboard
     }
 
