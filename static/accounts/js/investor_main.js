@@ -39,20 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
         inner.style.transform = `translateX(-${offset}px)`;
         markCenterItem();
       }
-      function markCenterItem() {
-        const items = inner.querySelectorAll('.journey-start-category');
-        items.forEach(function(it){ it.classList.remove('is-center'); });
-        const centerX = viewport.getBoundingClientRect().left + viewport.clientWidth / 2;
-        let closest = null;
-        let closestDist = Infinity;
-        items.forEach(function(it){
-          const rect = it.getBoundingClientRect();
-          const mid = rect.left + rect.width / 2;
-          const dist = Math.abs(mid - centerX);
-          if (dist < closestDist) { closestDist = dist; closest = it; }
-        });
-        if (closest) closest.classList.add('is-center');
-      }
+      function markCenterItem() {}
       leftArrow.addEventListener('click', function() {
         offset = clamp(offset - getStep(), 0, maxOffset());
         update();
@@ -75,11 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
         url.searchParams.append('category', category);
         window.location.href = url.toString();
       });
-      item.addEventListener('mouseenter', function(){
-        inner && inner.querySelectorAll('.journey-start-category').forEach(function(it){ it.classList.remove('is-selected'); });
-        item.classList.add('is-selected');
-      });
-      item.addEventListener('mouseleave', function(){ item.classList.remove('is-selected'); });
+      // no selection scale to keep sizes identical
     });
   }
 });
