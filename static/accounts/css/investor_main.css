@@ -378,19 +378,24 @@ body {
 }
 
 .featured4 .parent6 {
-  width: 55%;
-  display: flex;
+  width: 100%;
+  height: 100%;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
-  gap: 35px;
+  gap: 27px;
+  display: inline-flex;
   position: relative;
   z-index: 1;
 }
 
 .featured4 .parent6 .div23 {
-  text-align: center;
-  width: 100%;
+  width: 375px;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .featured4 .parent6 .div23 .txt > span {
@@ -400,79 +405,100 @@ body {
 .featured4 .parent6 .div23 .txt > span:first-child {
   color: #004E9F;
   font-size: 35px;
-  font-family: Unbounded, sans-serif;
+  font-family: Unbounded;
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 35px;
   word-wrap: break-word;
 }
 
 .featured4 .parent6 .div23 .txt .span3 {
   color: black;
   font-size: 35px;
-  font-family: Unbounded, sans-serif;
+  font-family: Unbounded;
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 35px;
   word-wrap: break-word;
 }
 
 .featured4 .group-parent {
   align-self: stretch;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-around;
-  align-items: flex-start;
-  gap: 20px;
-  margin-top: 20px;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 15px;
+  display: inline-flex;
 }
 
 .featured4 .group-div {
   width: 187px;
-  height: 187px;
+  height: 181px;
   position: relative;
   background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
+  overflow: hidden;
   border-radius: 10px;
-  padding: 0 14px 20px;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
-  overflow: visible;
-  gap: 10px;
+  justify-content: center;
 }
 
 .featured4 .group-div .card-icon-container {
   width: 100%;
-  min-height: 80px;
-  margin-top: -60px;
+  height: 100%;
   position: relative;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
-  margin-bottom: 10px;
-  z-index: 1;
+  align-items: center;
 }
 
 .featured4 .group-div .card-icon {
-  width: 140px;
-  height: 140px;
+  width: 165px;
+  height: 127px;
   object-fit: contain;
+}
+
+.featured4 .frame-parent5.group-div .card-icon {
+  width: 129px;
+  height: 99px;
 }
 
 .featured4 .div24,
 .featured4 .div25,
 .featured4 .div26 {
+  width: 159px;
+  left: 14px;
+  position: absolute;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
   color: white;
   font-size: 14px;
-  font-family: Unbounded, sans-serif;
+  font-family: Unbounded;
   font-weight: 400;
   line-height: 18px;
   word-wrap: break-word;
 }
 
+.featured4 .div24 {
+  top: 93px;
+}
+
+.featured4 .div25 {
+  top: 97px;
+}
+
+.featured4 .div26 {
+  top: 86px;
+}
+
 .featured4 .btn.btn--yellow-gradient {
   height: 40px;
-  padding: 12px 25px;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
   border-radius: 10px;
   justify-content: flex-start;
@@ -486,7 +512,7 @@ body {
 .featured4 .btn.btn--yellow-gradient span {
   color: black;
   font-size: 16px;
-  font-family: Unbounded, sans-serif;
+  font-family: Unbounded;
   font-weight: 400;
   line-height: 16px;
   word-wrap: break-word;
@@ -502,32 +528,7 @@ body {
 
 
 
-.featured4 .parent7 {
-  
-  padding: 12px 25px;
-  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
-  border-radius: 10px;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 9px;
-  display: inline-flex;
-  text-decoration: none;
-  box-sizing: border-box;
-  margin-top: 20px;
-}
 
-.featured4 .parent7 .div22 {
-  color: black;
-  font-size: 16px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 400; 
-  line-height: 16px; 
-}
-
-.featured4 .parent7 .iconeye {
-  width: 24px;
-  height: 24px;
-}
 
 .featured4 .icon10 {
   position: absolute;
