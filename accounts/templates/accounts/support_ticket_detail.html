@@ -4,12 +4,6 @@
 {% block custom_styles %}
 <style>
 /* Основные стили страницы */
-body {
-    background: white;
-    margin: 0;
-    padding: 0;
-}
-
 .ticket-detail-container {
     width: 100%;
     min-height: 100vh;
@@ -63,7 +57,6 @@ body {
     font-weight: 300;
     letter-spacing: 0.12px;
     word-wrap: break-word;
-    margin-bottom: 20px;
 }
 
 .info-field {
@@ -101,7 +94,6 @@ body {
     font-family: Unbounded;
     font-weight: 300;
     color: black;
-    margin-bottom: 20px;
 }
 
 .comment-field {
@@ -113,7 +105,6 @@ body {
     border-radius: 7px;
     outline: 1px black solid;
     outline-offset: -1px;
-    margin-bottom: 20px;
 }
 
 .comment-placeholder {
@@ -173,6 +164,7 @@ body {
     align-items: flex-start;
     gap: 24px;
     display: flex;
+    max-height: 600px;
 }
 
 .tickets-header {
@@ -192,11 +184,25 @@ body {
 }
 
 .tickets-list {
-    max-height: 600px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 24px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.20) transparent;
+}
+
+.tickets-list::-webkit-scrollbar {
+    width: 10px;
+}
+
+.tickets-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tickets-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.20);
+    border-radius: 6px;
 }
 
 .ticket-card {
