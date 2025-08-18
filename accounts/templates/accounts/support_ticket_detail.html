@@ -6,143 +6,220 @@
 /* Основные стили страницы */
 .ticket-detail-container {
     width: 100%;
-    max-width: 1303px;
-    margin: 0 auto;
+    height: 100%;
     padding: 60px 71px;
     background: white;
-    display: flex;
-    gap: 104px;
+    overflow: hidden;
+    justify-content: flex-start;
     align-items: flex-start;
+    gap: 104px;
+    display: inline-flex;
 }
 
 .left-panel {
     width: 520px;
-    display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     gap: 20px;
+    display: inline-flex;
 }
 
 .info-block {
-    display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     gap: 15px;
+    display: flex;
 }
 
 .info-label {
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
     color: black;
     font-size: 12px;
+    font-family: Unbounded;
     font-weight: 300;
-    text-align: center;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
 }
 
 .info-field {
     height: 40px;
     padding: 12px 16px;
     background: white;
-    border: 1px solid black;
     border-radius: 5px;
-    display: flex;
+    outline: 1px black solid;
+    outline-offset: -0.50px;
+    justify-content: flex-start;
     align-items: center;
+    gap: 8px;
+    display: inline-flex;
 }
 
 .info-value {
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
     color: black;
     font-size: 14px;
+    font-family: Unbounded;
     font-weight: 300;
+    line-height: 18px;
+    word-wrap: break-word;
 }
 
 .status-select {
     height: 40px;
     padding: 12px 16px;
     background: white;
-    border: 1px solid black;
     border-radius: 5px;
+    outline: 1px black solid;
+    outline-offset: -0.50px;
     font-size: 14px;
+    font-family: Unbounded;
     font-weight: 300;
     color: black;
 }
 
 .comment-field {
+    align-self: stretch;
     height: 120px;
-    padding: 20px;
+    position: relative;
     background: white;
-    border: 1px solid black;
+    overflow: hidden;
     border-radius: 7px;
+    outline: 1px black solid;
+    outline-offset: -1px;
 }
 
-.comment-content {
-    color: black;
+.comment-placeholder {
+    left: 20px;
+    top: 17px;
+    position: absolute;
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: #CACACA;
     font-size: 14px;
+    font-family: Unbounded;
     font-weight: 300;
-    line-height: 18px;
+    letter-spacing: 0.14px;
+    word-wrap: break-word;
 }
 
 .close-ticket-btn {
     height: 40px;
     padding: 12px 35px;
     background: #004E9F;
-    color: white;
-    border: none;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
     border-radius: 10px;
-    font-size: 16px;
-    font-weight: 400;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    display: inline-flex;
+    border: none;
     cursor: pointer;
 }
 
+.close-ticket-btn div {
+    color: white;
+    font-size: 16px;
+    font-family: Unbounded;
+    font-weight: 400;
+    line-height: 16px;
+    word-wrap: break-word;
+}
+
 .right-panel {
-    flex: 1;
-    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
     gap: 19px;
+    display: flex;
 }
 
 .tickets-list-section {
     width: 621px;
-    display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     gap: 24px;
+    display: inline-flex;
 }
 
 .tickets-header {
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
     color: black;
     font-size: 35px;
+    font-family: Unbounded;
     font-weight: 600;
+    line-height: 35px;
+    word-wrap: break-word;
     margin: 0;
 }
 
 .ticket-card {
+    align-self: stretch;
     padding: 24px 31px;
-    border: 1px solid black;
     border-radius: 10px;
-    background: white;
-    display: flex;
+    outline: 1px black solid;
+    outline-offset: -1px;
     justify-content: space-between;
     align-items: center;
+    display: inline-flex;
+    background: white;
     cursor: pointer;
 }
 
 .ticket-info-left,
 .ticket-info-right {
-    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     gap: 50px;
+    display: flex;
 }
 
 .ticket-detail {
-    display: flex;
+    width: 95px;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     gap: 24px;
-    min-width: 95px;
+    display: inline-flex;
 }
 
 .detail-label {
+    align-self: stretch;
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
     color: #B0B0B0;
     font-size: 14px;
+    font-family: Unbounded;
     font-weight: 300;
+    line-height: 18px;
+    word-wrap: break-word;
 }
 
 .detail-value {
+    align-self: stretch;
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
     color: black;
     font-size: 14px;
+    font-family: Unbounded;
     font-weight: 300;
+    line-height: 18px;
+    word-wrap: break-word;
 }
 
 .scrollbar {
@@ -230,16 +307,18 @@
                     </div>
                 </div>
                 
-                <div class="info-block">
-                    <div class="info-label">Сообщение</div>
-                    <div class="comment-field">
-                        <div class="comment-content">{{ ticket.message }}</div>
-                    </div>
-                </div>
+                                 <div class="info-block">
+                     <div class="info-label">Сообщение</div>
+                     <div class="comment-field">
+                         <div class="comment-placeholder">Комментарий</div>
+                     </div>
+                 </div>
                 
-                {% if is_moderator %}
-                <button class="close-ticket-btn">Закрыть заявку</button>
-                {% endif %}
+                                 {% if is_moderator %}
+                 <button class="close-ticket-btn">
+                     <div>Закрыть заявку</div>
+                 </button>
+                 {% endif %}
             </div>
         </div>
         
