@@ -1319,6 +1319,20 @@ body {
   align-items: center;
   gap: 12px;
 }
+/* Сброс глобальных круглых стилей только в блоке featured3 */
+.featured3 .chevron-forward-circle-outline-parent {
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  overflow: visible;
+  position: static;
+  cursor: default;
+  padding: 0;
+}
+.featured3 .chevron-forward-circle-outline-parent::before { content: none; }
+.featured3 .chevron-forward-circle-outline-parent:hover { transform: none; box-shadow: none; }
 .featured3 .frame-icon {
   width: 32px;
   height: 32px;

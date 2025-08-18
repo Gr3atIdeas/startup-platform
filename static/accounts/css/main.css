@@ -800,6 +800,11 @@ body > main.content::after {
   display: flex;
   align-items: center;
   gap: 15px;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
 }
 
 .featured3 .frame-icon {
