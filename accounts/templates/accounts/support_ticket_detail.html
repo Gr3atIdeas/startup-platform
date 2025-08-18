@@ -2,168 +2,131 @@
 {% load static %}
 
 {% block custom_styles %}
-<link rel="stylesheet" href="{% static 'accounts/css/support_orders.css' %}">
-<style>
-    .ticket-detail-container {
-        display: flex;
-        gap: 30px;
-        padding: 2rem;
-        max-width: 1200px;
-        margin: auto;
-        align-items: flex-start;
-    }
+<link rel="stylesheet" href="{% static 'accounts/css/support_ticket_detail.css' %}">
+{% endblock %}
 
-    .left-panel, .right-panel {
-        background: white;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
-
-    .left-panel {
-        flex: 1;
-        min-width: 350px;
-        max-width: 400px;
-    }
-
-    .right-panel {
-        flex: 2;
-    }
-
-    .info-block {
-        margin-bottom: 20px;
-    }
-    
-    .info-block label {
-        display: block;
-        color: #888;
-        margin-bottom: 8px;
-        font-size: 14px;
-        font-weight: 500;
-    }
-
-    .info-block input[type="text"],
-    .info-block select,
-    .info-block textarea {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        background-color: #fff;
-        font-size: 16px;
-        box-sizing: border-box;
-    }
-    
-    .info-block input[disabled] {
-        background-color: #f7f7f7;
-        cursor: not-allowed;
-        color: #333;
-        border-color: #eee;
-    }
-    
-    .right-panel h3 {
-        margin-top: 0;
-        margin-bottom: 20px;
-        font-size: 24px;
-        font-weight: 700;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 15px;
-    }
-
-    .ticket-message {
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        line-height: 1.6;
-        color: #333;
-        margin-bottom: 30px;
-    }
-
-    .moderator-section {
-        margin-top: 30px;
-        border-top: 1px solid #eee;
-        padding-top: 20px;
-    }
-
-    .moderator-section h4 {
-        margin-top: 0;
-        margin-bottom: 15px;
-        font-size: 18px;
-        font-weight: 600;
-    }
-
-    .blue-button {
-        width: 100%;
-        padding: 15px;
-        font-size: 16px;
-    }
-</style>
+{% block scripts %}
+<script src="{% static 'accounts/js/support_ticket_detail.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 <main>
     <div class="ticket-detail-container">
         <div class="left-panel">
-            <a href="{% url 'support_orders' %}" class="back-button" style="margin-bottom: 20px;">&larr; К списку заявок</a>
-            
-            <div class="info-block">
-                <label>Статус работы</label>
-                <input type="text" value="{{ ticket.get_status_display }}" disabled>
+            <div class="back-link">
+                <a href="{% url 'support_orders' %}">&larr; К списку заявок</a>
             </div>
-            
-            <div class="info-block">
-                <label>Дата создания</label>
-                <input type="text" value="{{ ticket.created_at|date:'d.m.Y, H:i' }}" disabled>
-            </div>
-
-            <div class="info-block">
-                <label>Номер заявки</label>
-                <input type="text" value="#{{ ticket.ticket_id }}" disabled>
-            </div>
-            
-            <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
-
-            <div class="info-block">
-                <label>ID аккаунта</label>
-                <input type="text" value="{{ ticket.user.id }}" disabled>
-            </div>
-
-            <div class="info-block">
-                <label>Имя</label>
-                <input type="text" value="{{ ticket.user.get_full_name|default:ticket.user.username }}" disabled>
-            </div>
-            
-            <div class="info-block">
-                <label>Почта</label>
-                <input type="text" value="{{ ticket.user.email }}" disabled>
+            <div class="info-section">
+                <div class="info-block">
+                    <div class="info-label">Статус работы</div>
+                    {% if is_moderator %}
+                    <select class="status-select" data-ticket-id="{{ ticket.ticket_id }}">
+                        <option value="new" {% if ticket.status == 'new' %}selected{% endif %}>Новая</option>
+                        <option value="in_progress" {% if ticket.status == 'in_progress' %}selected{% endif %}>В обработке</option>
+                        <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Закрыта</option>
+                    </select>
+                    {% else %}
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.get_status_display }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="info-block">
+                    <div class="info-label">Дата создания</div>
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.created_at|date:'d/m/Y' }}</div>
+                    </div>
+                </div>
+                
+                <div class="info-block">
+                    <div class="info-label">Номер заявки</div>
+                    <div class="info-field">
+                        <div class="info-value">#{{ ticket.ticket_id }}</div>
+                    </div>
+                </div>
+                
+                <div class="info-block">
+                    <div class="info-label">Тема обращения</div>
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.subject }}</div>
+                    </div>
+                </div>
+                
+                <div class="info-block">
+                    <div class="info-label">Роль</div>
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.user.role.role_name|title|default:"Пользователь" }}</div>
+                    </div>
+                </div>
+                
+                <div class="info-block">
+                    <div class="info-label">ID аккаунта обращения</div>
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.user.user_id }}</div>
+                    </div>
+                </div>
+                
+                <div class="info-block">
+                    <div class="info-label">Ваше имя</div>
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.user.get_full_name|default:ticket.user.username }}</div>
+                    </div>
+                </div>
+                
+                <div class="info-block">
+                    <div class="info-label">Почта для связи</div>
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.user.email }}</div>
+                    </div>
+                </div>
+                
+                <div class="info-block">
+                    <div class="info-label">Сообщение</div>
+                    <div class="comment-field">
+                        <div class="comment-content">{{ ticket.message }}</div>
+                    </div>
+                </div>
+                
+                {% if is_moderator %}
+                <button class="close-ticket-btn">Закрыть заявку</button>
+                {% endif %}
             </div>
         </div>
-
+        
         <div class="right-panel">
-            <h3>{{ ticket.subject }}</h3>
-            <p class="ticket-message">{{ ticket.message }}</p>
-
-            {% if is_moderator %}
-            <div class="moderator-section">
-                <form method="post">
-                    {% csrf_token %}
-                    <h4>Ответ модератора</h4>
-                    <div class="info-block">
-                        <label for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
-                        {{ form.status }}
+            <div class="tickets-list-section">
+                <div class="tickets-header">Все заявки</div>
+                
+                <div class="tickets-list">
+                    {% for order in all_tickets %}
+                    <div class="ticket-card">
+                        <div class="ticket-info-left">
+                            <div class="ticket-detail">
+                                <div class="detail-label">Создана</div>
+                                <div class="detail-value">{{ order.created_at|date:'d.m.Y' }}</div>
+                            </div>
+                            <div class="ticket-detail">
+                                <div class="detail-label">Тема</div>
+                                <div class="detail-value">{{ order.subject|truncatechars:25 }}</div>
+                            </div>
+                        </div>
+                        <div class="ticket-info-right">
+                            <div class="ticket-detail">
+                                <div class="detail-label">Статус</div>
+                                <div class="detail-value status-{{ order.status }}">{{ order.get_status_display }}</div>
+                            </div>
+                            <div class="ticket-detail">
+                                <div class="detail-label">Номер</div>
+                                <div class="detail-value">#{{ order.ticket_id }}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="info-block">
-                        <label for="{{ form.moderator_comment.id_for_label }}">{{ form.moderator_comment.label }}</label>
-                        {{ form.moderator_comment }}
-                    </div>
-                    <button type="submit" class="blue-button">Сохранить изменения</button>
-                </form>
+                    {% endfor %}
+                </div>
             </div>
-            {% elif ticket.moderator_comment %}
-             <div class="moderator-section">
-                <h4>Ответ модератора</h4>
-                <p class="ticket-message">{{ ticket.moderator_comment }}</p>
-            </div>
-            {% endif %}
+            
+            <div class="scrollbar"></div>
         </div>
     </div>
 </main>

@@ -5349,6 +5349,9 @@ def support_ticket_detail(request, ticket_id):
     )
     if not (user == ticket.user or is_moderator):
         return HttpResponseForbidden("У вас нет доступа к этой заявке.")
+    
+    all_tickets = SupportTicket.objects.all().order_by("-created_at")
+    
     form = None
     if is_moderator:
         if request.method == "POST":
@@ -5359,12 +5362,67 @@ def support_ticket_detail(request, ticket_id):
                 return redirect("support_ticket_detail", ticket_id=ticket.ticket_id)
         else:
             form = ModeratorTicketForm(instance=ticket)
+    
     context = {
         "ticket": ticket,
         "form": form,
         "is_moderator": is_moderator,
+        "all_tickets": all_tickets,
     }
     return render(request, "accounts/support_ticket_detail.html", context)
+
+@login_required
+def close_support_ticket(request, ticket_id):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
+    
+    ticket = get_object_or_404(SupportTicket, pk=ticket_id)
+    user = request.user
+    
+    is_moderator = (
+        user.is_authenticated and user.role and user.role.role_name == "moderator"
+    )
+    
+    if not (user == ticket.user or is_moderator):
+        return JsonResponse({"success": False, "error": "У вас нет доступа к этой заявке"}, status=403)
+    
+    try:
+        ticket.status = 'closed'
+        ticket.save()
+        return JsonResponse({"success": True})
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+@login_required
+def update_ticket_status(request, ticket_id):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
+    
+    ticket = get_object_or_404(SupportTicket, pk=ticket_id)
+    user = request.user
+    
+    is_moderator = (
+        user.is_authenticated and user.role and user.role.role_name == "moderator"
+    )
+    
+    if not is_moderator:
+        return JsonResponse({"success": False, "error": "У вас нет прав для изменения статуса"}, status=403)
+    
+    try:
+        import json
+        data = json.loads(request.body)
+        new_status = data.get('status')
+        
+        if new_status not in ['new', 'in_progress', 'closed']:
+            return JsonResponse({"success": False, "error": "Неверный статус"}, status=400)
+        
+        ticket.status = new_status
+        ticket.save()
+        return JsonResponse({"success": True})
+    except json.JSONDecodeError:
+        return JsonResponse({"success": False, "error": "Неверный формат данных"}, status=400)
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
 @login_required
 def support_contact_view(request):
     if request.method == "POST":

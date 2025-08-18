@@ -125,6 +125,16 @@ urlpatterns = [
         views.support_ticket_detail,
         name="support_ticket_detail",
     ),
+    path(
+        "support/ticket/<int:ticket_id>/close/",
+        views.close_support_ticket,
+        name="close_support_ticket",
+    ),
+    path(
+        "support/ticket/<int:ticket_id>/update-status/",
+        views.update_ticket_status,
+        name="update_ticket_status",
+    ),
     path("support/contact/", views.support_contact_view, name="support_contact"),
     path(
         "telegram-bot-webhook/<str:token>/",
