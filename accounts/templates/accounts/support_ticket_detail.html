@@ -4,16 +4,21 @@
 {% block custom_styles %}
 <style>
 /* Основные стили страницы */
+body {
+    background: white;
+    margin: 0;
+    padding: 0;
+}
+
 .ticket-detail-container {
     width: 100%;
-    height: 100%;
-    padding: 60px 71px;
+    min-height: 100vh;
+    padding: 60px 71px 60px 71px;
     background: white;
-    overflow: hidden;
     justify-content: flex-start;
     align-items: flex-start;
     gap: 104px;
-    display: inline-flex;
+    display: flex;
 }
 
 .left-panel {
@@ -22,14 +27,26 @@
     justify-content: flex-start;
     align-items: flex-start;
     gap: 20px;
-    display: inline-flex;
+    display: flex;
+}
+
+.back-link {
+    margin-bottom: 20px;
+}
+
+.back-link a {
+    color: black;
+    text-decoration: none;
+    font-family: Unbounded;
+    font-size: 14px;
+    font-weight: 300;
 }
 
 .info-block {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 15px;
+    gap: 20px;
     display: flex;
 }
 
@@ -46,6 +63,7 @@
     font-weight: 300;
     letter-spacing: 0.12px;
     word-wrap: break-word;
+    margin-bottom: 20px;
 }
 
 .info-field {
@@ -58,7 +76,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: 8px;
-    display: inline-flex;
+    display: flex;
 }
 
 .info-value {
@@ -83,6 +101,7 @@
     font-family: Unbounded;
     font-weight: 300;
     color: black;
+    margin-bottom: 20px;
 }
 
 .comment-field {
@@ -94,6 +113,7 @@
     border-radius: 7px;
     outline: 1px black solid;
     outline-offset: -1px;
+    margin-bottom: 20px;
 }
 
 .comment-placeholder {
@@ -123,9 +143,10 @@
     justify-content: center;
     align-items: center;
     gap: 8px;
-    display: inline-flex;
+    display: flex;
     border: none;
     cursor: pointer;
+    margin-top: 20px;
 }
 
 .close-ticket-btn div {
@@ -139,9 +160,10 @@
 
 .right-panel {
     justify-content: flex-start;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 19px;
     display: flex;
+    height: fit-content;
 }
 
 .tickets-list-section {
@@ -150,7 +172,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     gap: 24px;
-    display: inline-flex;
+    display: flex;
 }
 
 .tickets-header {
@@ -166,6 +188,15 @@
     line-height: 35px;
     word-wrap: break-word;
     margin: 0;
+    margin-bottom: 24px;
+}
+
+.tickets-list {
+    max-height: 600px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
 .ticket-card {
@@ -176,7 +207,7 @@
     outline-offset: -1px;
     justify-content: space-between;
     align-items: center;
-    display: inline-flex;
+    display: flex;
     background: white;
     cursor: pointer;
 }
@@ -195,7 +226,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     gap: 24px;
-    display: inline-flex;
+    display: flex;
 }
 
 .detail-label {
