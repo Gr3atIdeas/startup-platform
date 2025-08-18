@@ -434,7 +434,7 @@ body {
   height: 181px;
   position: relative;
   background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
-  overflow: hidden;
+  overflow: visible;
   border-radius: 10px;
   transition: transform 0.3s ease;
   cursor: pointer;
@@ -446,10 +446,10 @@ body {
 
 .featured4 .group-div .card-icon {
   width: 165px;
-  height: 127px;
+  height: 115px;
   object-fit: contain;
   position: absolute;
-  top: -20px;
+  top: -25px;
   left: 50%;
   transform: translateX(-50%);
 }
