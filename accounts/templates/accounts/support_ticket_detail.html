@@ -3,6 +3,154 @@
 
 {% block custom_styles %}
 <link rel="stylesheet" href="{% static 'accounts/css/support_ticket_detail.css' %}">
+<style>
+.ticket-detail-container {
+    width: 100%;
+    max-width: 1303px;
+    margin: 0 auto;
+    padding: 60px 71px;
+    background: white;
+    display: flex;
+    gap: 104px;
+    align-items: flex-start;
+}
+
+.left-panel {
+    width: 520px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info-block {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.info-label {
+    color: black;
+    font-size: 12px;
+    font-weight: 300;
+    text-align: center;
+}
+
+.info-field {
+    height: 40px;
+    padding: 12px 16px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.info-value {
+    color: #1E1E1E;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.status-select {
+    height: 40px;
+    padding: 12px 16px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.comment-field {
+    height: 120px;
+    padding: 20px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 7px;
+}
+
+.comment-content {
+    color: black;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+}
+
+.close-ticket-btn {
+    height: 40px;
+    padding: 12px 35px;
+    background: #004E9F;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.right-panel {
+    flex: 1;
+    display: flex;
+    gap: 19px;
+}
+
+.tickets-list-section {
+    width: 621px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.tickets-header {
+    color: black;
+    font-size: 35px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.ticket-card {
+    padding: 24px 31px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.ticket-info-left,
+.ticket-info-right {
+    display: flex;
+    gap: 50px;
+}
+
+.ticket-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 95px;
+}
+
+.detail-label {
+    color: #B0B0B0;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.detail-value {
+    color: black;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.scrollbar {
+    width: 10px;
+    height: 202px;
+    background: rgba(0, 0, 0, 0.20);
+    border-radius: 6px;
+}
+</style>
 {% endblock %}
 
 {% block scripts %}
