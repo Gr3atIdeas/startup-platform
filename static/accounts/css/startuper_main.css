@@ -1328,9 +1328,12 @@ body {
   align-items: center;
   gap: 10px;
 }
+
+/* Выровнять текст всех трёх строк по одному левому краю */
+.featured3 .frame-group > * { margin-left: 0; }
 .featured3 .chevron-forward-circle-outline-parent {
-  width: auto;
-  height: auto;
+  width: 35px;
+  height: 35px;
   border: none;
   border-radius: 0;
   background: transparent;
@@ -1339,7 +1342,9 @@ body {
   position: static;
   cursor: default;
   padding: 0;
-  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .featured3 .chevron-forward-circle-outline-parent::before { content: none; }
 .featured3 .chevron-forward-circle-outline-parent:hover { transform: none; box-shadow: none; }
