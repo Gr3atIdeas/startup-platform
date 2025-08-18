@@ -247,34 +247,56 @@
             <div class="journey-start-interests">
                 <div class="journey-start-title">Начните свое путешествие вместе с Great Ideas</div>
                 <div class="journey-start-subtitle">Какие направления вас интересуют?</div>
-                <div class="journey-start-categories">
-                    <div class="journey-start-categories-row">
-                        <div class="journey-start-category">
-                            <img src="{% static 'accounts/images/investor_main/4block_mini.png' %}" />
-                            <div class="journey-start-category-name">Медицина</div>
+                <div class="journey-start-categories" data-startups-url="{% url 'startups_list' %}">
+                    <div class="category-carousel" data-icon-left="{% static 'accounts/images/main_page/left_swipe.svg' %}" data-icon-right="{% static 'accounts/images/main_page/right_swipe.svg' %}">
+                        <img class="category-carousel-arrow category-carousel-arrow-left" alt="Prev">
+                        <div class="category-carousel-viewport">
+                            <div class="category-carousel-inner">
+                                <div class="journey-start-category" data-category="AI">
+                                    <img src="{% static 'accounts/images/categories/ai.png' %}" alt="AI" />
+                                    <div class="journey-start-category-name">AI</div>
+                                </div>
+                                <div class="journey-start-category" data-category="Auto">
+                                    <img src="{% static 'accounts/images/categories/auto.png' %}" alt="Авто" />
+                                    <div class="journey-start-category-name">Авто</div>
+                                </div>
+                                <div class="journey-start-category" data-category="Cafe">
+                                    <img src="{% static 'accounts/images/categories/cafe.png' %}" alt="Кафе" />
+                                    <div class="journey-start-category-name">Кафе</div>
+                                </div>
+                                <div class="journey-start-category" data-category="Delivery">
+                                    <img src="{% static 'accounts/images/categories/delivery.png' %}" alt="Доставка" />
+                                    <div class="journey-start-category-name">Доставка</div>
+                                </div>
+                                <div class="journey-start-category" data-category="Food">
+                                    <img src="{% static 'accounts/images/categories/food.png' %}" alt="Еда" />
+                                    <div class="journey-start-category-name">Еда</div>
+                                </div>
+                                <div class="journey-start-category" data-category="Health">
+                                    <img src="{% static 'accounts/images/categories/health.png' %}" alt="Здоровье" />
+                                    <div class="journey-start-category-name">Здоровье</div>
+                                </div>
+                                <div class="journey-start-category" data-category="Medicine">
+                                    <img src="{% static 'accounts/images/categories/medicine.png' %}" alt="Медицина" />
+                                    <div class="journey-start-category-name">Медицина</div>
+                                </div>
+                                <div class="journey-start-category" data-category="Psychology">
+                                    <img src="{% static 'accounts/images/categories/psichology.png' %}" alt="Психология" />
+                                    <div class="journey-start-category-name">Психология</div>
+                                </div>
+                                <div class="journey-start-category" data-category="Sport">
+                                    <img src="{% static 'accounts/images/categories/sport.png' %}" alt="Спорт" />
+                                    <div class="journey-start-category-name">Спорт</div>
+                                </div>
+                                <div class="journey-start-category" data-category="Transport">
+                                    <img src="{% static 'accounts/images/categories/transport.png' %}" alt="Транспорт" />
+                                    <div class="journey-start-category-name">Транспорт</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="journey-start-category active">
-                            <img src="{% static 'accounts/images/investor_main/4block_mini.png' %}" />
-                            <div class="journey-start-category-name large">Технологии</div>
-                        </div>
-                        <div class="journey-start-category">
-                            <img src="{% static 'accounts/images/investor_main/4block_mini.png' %}" />
-                            <div class="journey-start-category-name">Медицина</div>
-                        </div>
-                        <div class="journey-start-category">
-                            <img src="{% static 'accounts/images/investor_main/4block_mini.png' %}" />
-                            <div class="journey-start-category-name">Медицина</div>
-                        </div>
-                        <div class="journey-start-category">
-                            <img src="{% static 'accounts/images/investor_main/4block_mini.png' %}" />
-                            <div class="journey-start-category-name">Медицина</div>
-                        </div>
-                        <div class="journey-start-category">
-                            <img src="{% static 'accounts/images/investor_main/4block_mini.png' %}" />
-                            <div class="journey-start-category-name">Медицина</div>
-                        </div>
-            </div>
-                    <a href="#" class="btn btn--yellow-gradient journey-start-button">Подобрать стартап</a>
+                        <img class="category-carousel-arrow category-carousel-arrow-right" alt="Next">
+                    </div>
+                    <a href="{% url 'startups_list' %}" class="btn btn--yellow-gradient journey-start-button">Подобрать стартап</a>
                 </div>
             </div>
         </div>
