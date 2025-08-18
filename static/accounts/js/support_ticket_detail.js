@@ -3,9 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (closeTicketBtn) {
         closeTicketBtn.addEventListener('click', function() {
-            if (confirm('Вы уверены, что хотите закрыть эту заявку?')) {
-                closeTicket();
-            }
+            showConfirmDialog('Закрытие заявки', 'Вы уверены, что хотите закрыть эту заявку?', closeTicket);
         });
     }
     
@@ -32,7 +30,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function closeTicket() {
     const url = window.location.pathname;
-    const ticketId = url.split('/').pop();
+    const ticketId = url.split('/').filter(segment => segment && segment !== 'close').pop();
+    
+    if (!ticketId || isNaN(ticketId)) {
+        showNotification('Ошибка: не удалось определить ID заявки', 'error');
+        return;
+    }
     
     fetch(`/support/ticket/${ticketId}/close/`, {
         method: 'POST',
@@ -41,24 +44,34 @@ function closeTicket() {
             'Content-Type': 'application/json',
         },
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
-            alert('Заявка успешно закрыта');
-            location.reload();
+            showNotification('Заявка успешно закрыта', 'success');
+            setTimeout(() => location.reload(), 1500);
         } else {
-            alert('Ошибка при закрытии заявки: ' + data.error);
+            showNotification('Ошибка при закрытии заявки: ' + data.error, 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Произошла ошибка при закрытии заявки');
+        showNotification('Произошла ошибка при закрытии заявки', 'error');
     });
 }
 
 function updateTicketStatus(status) {
     const url = window.location.pathname;
-    const ticketId = url.split('/').pop();
+    const ticketId = url.split('/').filter(segment => segment && segment !== 'close' && segment !== 'update-status').pop();
+    
+    if (!ticketId || isNaN(ticketId)) {
+        showNotification('Ошибка: не удалось определить ID заявки', 'error');
+        return;
+    }
     
     fetch(`/support/ticket/${ticketId}/update-status/`, {
         method: 'POST',
@@ -68,17 +81,23 @@ function updateTicketStatus(status) {
         },
         body: JSON.stringify({ status: status }),
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
-            location.reload();
+            showNotification('Статус заявки успешно обновлен', 'success');
+            setTimeout(() => location.reload(), 1500);
         } else {
-            alert('Ошибка при обновлении статуса: ' + data.error);
+            showNotification('Ошибка при обновлении статуса: ' + data.error, 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Произошла ошибка при обновлении статуса');
+        showNotification('Произошла ошибка при обновлении статуса', 'error');
     });
 }
 

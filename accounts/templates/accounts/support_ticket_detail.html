@@ -4,6 +4,108 @@
 {% block custom_styles %}
 <link rel="stylesheet" href="{% static 'accounts/css/support_ticket_detail.css' %}">
 <style>
+/* Стили для хедера */
+#main-header {
+    background: linear-gradient(135deg, #004E9F 0%, #006EDF 100%);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    max-width: 1303px;
+    margin: 0 auto;
+}
+
+.header-logo-link {
+    display: flex;
+    align-items: center;
+}
+
+.header-search-bar {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    padding: 8px 16px;
+    flex: 1;
+    max-width: 400px;
+    margin: 0 20px;
+}
+
+.header-search-input {
+    background: transparent;
+    border: none;
+    color: white;
+    outline: none;
+    width: 100%;
+    margin-left: 8px;
+}
+
+.header-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+}
+
+.header-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.header-nav-link:hover {
+    opacity: 0.8;
+}
+
+.header-create-button {
+    background: #00D4AA;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.header-create-button:hover {
+    background: #00B894;
+}
+
+.header-profile-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+/* Основные стили страницы */
 .ticket-detail-container {
     width: 100%;
     max-width: 1303px;
