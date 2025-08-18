@@ -584,7 +584,7 @@ body {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .journey-start-category img {
-  height: 284px;
+  height: 142px;
 }
 .journey-start-category:hover {
   transform: translateY(-6px) scale(1.03);
