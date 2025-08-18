@@ -13,11 +13,14 @@ document.addEventListener('DOMContentLoaded', function () {
       if (iconLeft) leftArrow.src = iconLeft;
       if (iconRight) rightArrow.src = iconRight;
       let offset = 0;
+      let stepCache = 0;
       function getStep() {
         const item = inner.querySelector('.journey-start-category');
         if (!item) return 0;
         const gap = parseInt(getComputedStyle(inner).gap) || 0;
-        return item.offsetWidth + gap;
+        const value = item.offsetWidth + gap;
+        stepCache = value;
+        return value;
       }
       function maxOffset() {
         const totalWidth = inner.scrollWidth;
@@ -29,6 +32,21 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       function update() {
         inner.style.transform = `translateX(-${offset}px)`;
+        markCenterItem();
+      }
+      function markCenterItem() {
+        const items = inner.querySelectorAll('.journey-start-category');
+        items.forEach(function(it){ it.classList.remove('is-center'); });
+        const centerX = viewport.getBoundingClientRect().left + viewport.clientWidth / 2;
+        let closest = null;
+        let closestDist = Infinity;
+        items.forEach(function(it){
+          const rect = it.getBoundingClientRect();
+          const mid = rect.left + rect.width / 2;
+          const dist = Math.abs(mid - centerX);
+          if (dist < closestDist) { closestDist = dist; closest = it; }
+        });
+        if (closest) closest.classList.add('is-center');
       }
       leftArrow.addEventListener('click', function() {
         offset = clamp(offset - getStep(), 0, maxOffset());
@@ -38,7 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
         offset = clamp(offset + getStep(), 0, maxOffset());
         update();
       });
-      window.addEventListener('resize', update);
+      window.addEventListener('resize', function(){ getStep(); update(); });
+      getStep();
       update();
     }
 
@@ -51,6 +70,11 @@ document.addEventListener('DOMContentLoaded', function () {
         url.searchParams.append('category', category);
         window.location.href = url.toString();
       });
+      item.addEventListener('mouseenter', function(){
+        inner && inner.querySelectorAll('.journey-start-category').forEach(function(it){ it.classList.remove('is-selected'); });
+        item.classList.add('is-selected');
+      });
+      item.addEventListener('mouseleave', function(){ item.classList.remove('is-selected'); });
     });
   }
 })

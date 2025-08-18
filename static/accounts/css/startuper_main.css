@@ -578,6 +578,31 @@ body {
 .category-carousel-arrow-left { left: 0; }
 .category-carousel-arrow-right { right: 0; }
 
+/* Card sizing and hover effects */
+.journey-start-category {
+  width: 358px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.journey-start-category img {
+  height: 284px;
+}
+.journey-start-category:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+/* Center focus scale */
+.category-carousel-inner .journey-start-category {
+  transform-origin: center;
+}
+.category-carousel-inner .journey-start-category.is-center {
+  transform: scale(1.08);
+}
+.category-carousel-inner .journey-start-category.is-selected {
+  transform: translateY(-8px) scale(1.12);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.3);
+}
+
 
 .featured7 {
   width: 100%;
