@@ -1329,17 +1329,17 @@ body {
   gap: 10px;
 }
 .featured3 .chevron-forward-circle-outline-parent {
-  width: 35px;
-  height: 35px;
-  border: 1px solid #ffffff;
-  border-radius: 5px;
+  width: auto;
+  height: auto;
+  border: none;
+  border-radius: 0;
   background: transparent;
   backdrop-filter: none;
-  overflow: hidden;
+  overflow: visible;
   position: static;
   cursor: default;
   padding: 0;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .featured3 .chevron-forward-circle-outline-parent::before { content: none; }
 .featured3 .chevron-forward-circle-outline-parent:hover { transform: none; box-shadow: none; }
@@ -1347,6 +1347,10 @@ body {
   width: 24px;
   height: 24px;
   filter: none;
+  padding: 5px;
+  border-radius: 5px;
+  outline: 1px solid #ffffff;
+  box-sizing: content-box;
 }
 .featured3 .faq,
 .featured3 .div20 {
