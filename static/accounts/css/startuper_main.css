@@ -1301,10 +1301,10 @@ body {
   text-transform: uppercase;
 }
 .featured3 .heading1 .div18 .txt > span:first-child {
-  color: white;
+  color: #ffef2b;
 }
 .featured3 .heading1 .div18 .txt .span1 {
-  color: #ffef2b;
+  color: #f2f2f2;
 }
 
 .featured3 .frame-group {
@@ -1329,7 +1329,7 @@ body {
 .featured3 .div20 {
   color: #fcfcfd;
   font-family: Unbounded, sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 16px;
   line-height: 1.2;
 }
@@ -1338,7 +1338,7 @@ body {
   color: #fcfcfd;
 }
 .featured3 .div20 .txt .span2 {
-  color: #777e90;
+  color: #ffef2b;
 }
 
 
