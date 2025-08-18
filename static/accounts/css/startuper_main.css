@@ -1321,19 +1321,18 @@ body {
   gap: 17px;
   width: 470px;
   margin: 0;
-}
-.featured3 .chevron-forward-circle-outline-parent,
-.featured3 .frame-parent2 {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  align-items: flex-start;
 }
 
-/* Выровнять текст всех трёх строк по одному левому краю */
-.featured3 .frame-group > * { 
-  margin-left: 0; 
-  width: auto;
+.featured3 .chevron-forward-circle-outline-parent,
+.featured3 .frame-parent2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  justify-content: flex-start;
 }
+
 .featured3 .chevron-forward-circle-outline-parent {
   width: 35px;
   height: 35px;
@@ -1350,8 +1349,10 @@ body {
   justify-content: center;
   flex-shrink: 0;
 }
+
 .featured3 .chevron-forward-circle-outline-parent::before { content: none; }
 .featured3 .chevron-forward-circle-outline-parent:hover { transform: none; box-shadow: none; }
+
 .featured3 .frame-icon {
   width: 24px;
   height: 24px;
@@ -1361,6 +1362,7 @@ body {
   outline: 1px solid #ffffff;
   box-sizing: content-box;
 }
+
 .featured3 .faq,
 .featured3 .div20 {
   color: #fcfcfd;
@@ -1368,13 +1370,18 @@ body {
   font-weight: 400;
   font-size: 16px;
   line-height: 18px;
+  flex: 1;
+  min-width: 0;
 }
 
-.featured3 .div20 .txt > span:first-child {
-  color: #fcfcfd;
-}
+.featured3 .div20 .txt > span:first-child { color: #fcfcfd; }
 .featured3 .div20 .txt .span2 {
   color: #ffef2b;
+}
+
+.featured3 .frame-group > * { 
+  margin-left: 0; 
+  width: 100%;
 }
 
 .featured3 .div20 {
