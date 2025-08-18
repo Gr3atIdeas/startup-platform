@@ -1094,6 +1094,8 @@ body {
   max-width: 1303px;
 }
 .category-carousel-viewport {
+  position: relative;
+  z-index: 1;
   overflow: hidden;
   width: 100%;
   padding: 16px 0;
@@ -1112,6 +1114,8 @@ body {
   height: 48px;
   cursor: pointer;
   user-select: none;
+  z-index: 5;
+  pointer-events: auto;
 }
 .category-carousel-arrow-left { left: 0; }
 .category-carousel-arrow-right { right: 0; }
@@ -1132,6 +1136,8 @@ body {
 }
 .journey-start-category:hover {
   transform: translateY(-6px);
+}
+.journey-start-category:hover img {
   box-shadow: 0 8px 24px rgba(0,0,0,0.25);
 }
 

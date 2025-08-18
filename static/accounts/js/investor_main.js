@@ -40,11 +40,15 @@ document.addEventListener('DOMContentLoaded', function () {
         markCenterItem();
       }
       function markCenterItem() {}
-      leftArrow.addEventListener('click', function() {
+      leftArrow.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         offset = clamp(offset - getStep(), 0, maxOffset());
         update();
       });
-      rightArrow.addEventListener('click', function() {
+      rightArrow.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         offset = clamp(offset + getStep(), 0, maxOffset());
         update();
       });
