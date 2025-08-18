@@ -3,7 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (closeTicketBtn) {
         closeTicketBtn.addEventListener('click', function() {
-            showConfirmDialog('Закрытие заявки', 'Вы уверены, что хотите закрыть эту заявку?', closeTicket);
+            if (confirm('Вы уверены, что хотите закрыть эту заявку?')) {
+                closeTicket();
+            }
         });
     }
     
@@ -33,7 +35,7 @@ function closeTicket() {
     const ticketId = url.split('/').filter(segment => segment && segment !== 'close').pop();
     
     if (!ticketId || isNaN(ticketId)) {
-        showNotification('Ошибка: не удалось определить ID заявки', 'error');
+        alert('Ошибка: не удалось определить ID заявки');
         return;
     }
     
@@ -52,15 +54,15 @@ function closeTicket() {
     })
     .then(data => {
         if (data.success) {
-            showNotification('Заявка успешно закрыта', 'success');
-            setTimeout(() => location.reload(), 1500);
+            alert('Заявка успешно закрыта');
+            location.reload();
         } else {
-            showNotification('Ошибка при закрытии заявки: ' + data.error, 'error');
+            alert('Ошибка при закрытии заявки: ' + data.error);
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('Произошла ошибка при закрытии заявки', 'error');
+        alert('Произошла ошибка при закрытии заявки');
     });
 }
 
@@ -69,7 +71,7 @@ function updateTicketStatus(status) {
     const ticketId = url.split('/').filter(segment => segment && segment !== 'close' && segment !== 'update-status').pop();
     
     if (!ticketId || isNaN(ticketId)) {
-        showNotification('Ошибка: не удалось определить ID заявки', 'error');
+        alert('Ошибка: не удалось определить ID заявки');
         return;
     }
     
@@ -89,15 +91,15 @@ function updateTicketStatus(status) {
     })
     .then(data => {
         if (data.success) {
-            showNotification('Статус заявки успешно обновлен', 'success');
-            setTimeout(() => location.reload(), 1500);
+            alert('Статус заявки успешно обновлен');
+            location.reload();
         } else {
-            showNotification('Ошибка при обновлении статуса: ' + data.error, 'error');
+            alert('Ошибка при обновлении статуса: ' + data.error);
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('Произошла ошибка при обновлении статуса', 'error');
+        alert('Произошла ошибка при обновлении статуса');
     });
 }
 
