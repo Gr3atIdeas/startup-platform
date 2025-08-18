@@ -1290,15 +1290,23 @@ body {
   z-index: 1;
 }
 
+.featured3 .heading1 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 45px;
+}
+
 .featured3 .heading1 .div18 {
-  margin-bottom: 40px;
+  width: 375px;
+  margin: 0;
 }
 .featured3 .heading1 .div18 .txt {
-  font-family: 'Blippo Black', sans-serif;
-  font-size: 55px;
-  font-weight: 400;
-  line-height: 1;
-  text-transform: uppercase;
+  font-family: Unbounded, sans-serif;
+  font-size: 35px;
+  font-weight: 600;
+  line-height: 35px;
+  text-transform: none;
 }
 .featured3 .heading1 .div18 .txt > span:first-child {
   color: #ffef2b;
@@ -1310,34 +1318,35 @@ body {
 .featured3 .frame-group {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  margin-bottom: 40px;
+  gap: 17px;
+  width: 470px;
+  margin: 0;
 }
 .featured3 .chevron-forward-circle-outline-parent,
 .featured3 .frame-parent2 {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
-/* Сброс глобальных круглых стилей только в блоке featured3 */
 .featured3 .chevron-forward-circle-outline-parent {
-  width: auto;
-  height: auto;
-  border-radius: 0;
+  width: 35px;
+  height: 35px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
   background: transparent;
   backdrop-filter: none;
-  overflow: visible;
+  overflow: hidden;
   position: static;
   cursor: default;
   padding: 0;
+  justify-content: center;
 }
 .featured3 .chevron-forward-circle-outline-parent::before { content: none; }
 .featured3 .chevron-forward-circle-outline-parent:hover { transform: none; box-shadow: none; }
 .featured3 .frame-icon {
-  width: 32px;
-  height: 32px;
-  filter: brightness(0) saturate(100%) invert(92%) sepia(54%) saturate(5839%)
-    hue-rotate(325deg) brightness(105%) contrast(101%);
+  width: 24px;
+  height: 24px;
+  filter: none;
 }
 .featured3 .faq,
 .featured3 .div20 {
@@ -1345,7 +1354,7 @@ body {
   font-family: Unbounded, sans-serif;
   font-weight: 400;
   font-size: 16px;
-  line-height: 1.2;
+  line-height: 18px;
 }
 
 .featured3 .div20 .txt > span:first-child {
