@@ -5,7 +5,7 @@
 <style>
 /* Основные стили страницы */
 .ticket-detail-container {
-    width: 100%;
+    width: 100vw;
     min-height: 100vh;
     padding: 60px 71px 60px 71px;
     background: white;
@@ -13,6 +13,8 @@
     align-items: flex-start;
     gap: 104px;
     display: flex;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
 }
 
 .left-panel {
@@ -42,6 +44,11 @@
     align-items: flex-start;
     gap: 20px;
     display: flex;
+    margin-bottom: 20px;
+}
+
+.info-block:last-child {
+    margin-bottom: 0;
 }
 
 .info-label {
@@ -258,13 +265,6 @@
     line-height: 18px;
     word-wrap: break-word;
 }
-
-.scrollbar {
-    width: 10px;
-    height: 202px;
-    background: rgba(0, 0, 0, 0.20);
-    border-radius: 6px;
-}
 </style>
 {% endblock %}
 
@@ -390,8 +390,6 @@
                     {% endfor %}
                 </div>
             </div>
-            
-            <div class="scrollbar"></div>
         </div>
     </div>
 </main>
