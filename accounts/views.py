@@ -68,6 +68,7 @@ from .forms import (
     FranchiseCommentForm,
     AgencyCommentForm,
     SpecialistCommentForm,
+    ContactForm,
     LoginForm,
     MessageForm,
     ModeratorTicketForm,
@@ -469,13 +470,40 @@ def home(request):
 def faq_page_view(request):
     return render(request, "accounts/faq.html")
 def contacts_page_view(request):
+    prefix = "contacts"
+    _expire_captcha_if_old(request.session, prefix)
+    captcha_q = None
+    
     if request.method == "POST":
-        name = request.POST.get('name', '').strip()
-        email = request.POST.get('email', '').strip()
-        subject = request.POST.get('subject', '').strip()
-        message = request.POST.get('message', '').strip()
+        form = ContactForm(request.POST)
         
-        if name and email and subject and message:
+        # Для формы контактов капча всегда обязательна
+        if True:  # Всегда показываем капчу для формы контактов
+            _expire_captcha_if_old(request.session, prefix)
+            expected = request.session.get(_session_key(prefix, "captcha_expected"))
+            answer_raw = (form.data.get("captcha_answer") or "").strip()
+            try:
+                answer_normalized = str(int(answer_raw))
+            except ValueError:
+                answer_normalized = ""
+            if not expected or answer_normalized != expected:
+                _clear_captcha_messages(request)
+                messages.error(request, CAPTCHA_INVALID_MESSAGE)
+                _record_attempt(request.session, prefix)
+                _inc_fail_count(request.session, prefix)
+                _generate_captcha(request.session, prefix)
+                captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+                return render(request, "accounts/contacts.html", {"form": form, "captcha_question": captcha_q})
+            else:
+                logger.debug("[contacts] captcha ok, clearing requirement")
+                _clear_captcha(request.session, prefix)
+        
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            
             try:
                 # Отправляем сообщение в Telegram
                 logger.info(f"Sending contact form message from {email} to Telegram")
@@ -495,9 +523,16 @@ def contacts_page_view(request):
                 # Перенаправляем на ту же страницу с GET запросом, чтобы избежать повторной отправки
                 return redirect('contacts')
         else:
-            messages.error(request, "Пожалуйста, заполните все обязательные поля.")
+            # Для формы контактов капча всегда обязательна
+            _generate_captcha(request.session, prefix)
+            captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
+    else:
+        form = ContactForm()
+        # Для формы контактов капча всегда обязательна
+        _generate_captcha(request.session, prefix)
+        captcha_q = request.session.get(_session_key(prefix, "captcha_question"))
     
-    return render(request, "accounts/contacts.html")
+    return render(request, "accounts/contacts.html", {"form": form, "captcha_question": captcha_q})
 def register(request):
     next_url = request.GET.get("next") or request.POST.get("next")
     prefix = "register"

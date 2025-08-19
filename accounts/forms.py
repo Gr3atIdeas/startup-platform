@@ -688,3 +688,23 @@ class ModeratorTicketForm(forms.ModelForm):
             'status': 'Статус работы',
             'moderator_comment': 'Комментарий',
         }
+
+class ContactForm(forms.Form):
+    name = forms.CharField(max_length=100, label="Ваше имя")
+    email = forms.EmailField(label="Email")
+    subject = forms.ChoiceField(
+        choices=[
+            ('general_inquiry', 'Общий вопрос'),
+            ('technical_support', 'Техническая поддержка'),
+            ('business_cooperation', 'Бизнес-сотрудничество'),
+            ('partnership', 'Партнерство'),
+            ('investment', 'Инвестиции'),
+            ('other', 'Другое')
+        ],
+        label="Тема"
+    )
+    message = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 5}),
+        label="Сообщение"
+    )
+    captcha_answer = forms.CharField(required=False, label="Ответ на капчу")
