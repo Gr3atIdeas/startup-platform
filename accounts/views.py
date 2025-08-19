@@ -112,7 +112,7 @@ from .models import (
     SpecialistComments,
     SpecialistVotes,
 )
-from .utils import send_telegram_support_message
+from .utils import send_telegram_support_message, send_telegram_contact_form_message
 logger = logging.getLogger(__name__)
 
 RATE_WINDOW_SECONDS = 60
@@ -478,10 +478,22 @@ def contacts_page_view(request):
         message = request.POST.get('message', '').strip()
         
         if name and email and subject and message:
-            # Здесь можно добавить логику отправки email или сохранения в базу данных
-            # Пока просто показываем сообщение об успехе
-            messages.success(request, "Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.")
-            form_submitted = True
+            try:
+                # Отправляем сообщение в Telegram
+                logger.info(f"Sending contact form message from {email} to Telegram")
+                sent_ok = send_telegram_contact_form_message(name, email, subject, message)
+                logger.info(f"Telegram dispatch result for contact form from {email}: {sent_ok}")
+                
+                if sent_ok:
+                    messages.success(request, "Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.")
+                else:
+                    messages.warning(request, "Сообщение отправлено, но возникли проблемы с уведомлением. Мы все равно получим ваше обращение.")
+                
+                form_submitted = True
+            except Exception as e:
+                logger.error(f"Unexpected error during Telegram dispatch for contact form from {email}: {e}", exc_info=True)
+                messages.success(request, "Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.")
+                form_submitted = True
         else:
             messages.error(request, "Пожалуйста, заполните все обязательные поля.")
     

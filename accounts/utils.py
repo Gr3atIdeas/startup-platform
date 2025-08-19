@@ -273,3 +273,83 @@ def send_telegram_support_message(ticket):
         except requests.exceptions.RequestException as e2:
             logger.error(f"Fallback send failed for ticket {ticket.ticket_id}: {e2}", exc_info=True)
             return False
+
+
+def send_telegram_contact_form_message(name, email, subject, message):
+    """
+    Sends a formatted contact form message to the same Telegram chat.
+    Uses HTML parse mode for robust formatting.
+    """
+    from django.conf import settings
+    bot_token = getattr(settings, 'TELEGRAM_BOT_TOKEN', None)
+    chat_id = getattr(settings, 'TELEGRAM_OWNER_CHAT_ID', None)
+    if not bot_token or not chat_id:
+        logger.error("Telegram credentials are not configured (TELEGRAM_BOT_TOKEN/TELEGRAM_OWNER_CHAT_ID)")
+        return False
+
+    safe_name = escape_markdown_v2(name or "")
+    safe_email = escape_markdown_v2(email or "")
+    safe_subject = escape_markdown_v2(subject or "")
+    safe_message = escape_markdown_v2(message or "")
+
+    message_text = (
+        "📧 *Новое сообщение с сайта\!* 📧\n\n"
+        f"👤 *Имя:* {safe_name}\n"
+        f"✉️ *Email:* `{safe_email}`\n"
+        f"📝 *Тема:* {safe_subject}\n\n"
+        f"📄 *Сообщение:*\n{safe_message}\n\n"
+        f"— Информация —\n"
+        f"🌐 *Источник:* Страница контактов\n"
+        f"⏰ *Время:* " + timezone.now().strftime("%d.%m.%Y %H:%M") + "\n"
+        f"🔗 *Ссылка:* [greatideas\\.ru/contacts](https://greatideas\\.ru/contacts)"
+    )
+
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    payload = {
+        'chat_id': chat_id,
+        'text': message_text,
+        'parse_mode': 'MarkdownV2'
+    }
+
+    try:
+        logger.info(f"Sending contact form message from {email} to Telegram chat {chat_id}")
+        response = requests.post(url, json=payload, timeout=10)
+        status_code = response.status_code
+        text = response.text
+        logger.debug(f"Telegram API response status={status_code} body={text}")
+        response.raise_for_status()
+        try:
+            data = response.json()
+        except ValueError:
+            data = None
+        if not data or data.get("ok") is not True:
+            desc = (data or {}).get("description", "no description")
+            logger.error(f"Telegram returned ok!=True for contact form from {email}: {desc}")
+            raise requests.exceptions.RequestException(desc, response=response)
+        logger.info(f"Successfully sent contact form message from {email} to Telegram chat {chat_id}.")
+        return True
+    except requests.exceptions.RequestException as e:
+        resp_text = getattr(e.response, 'text', '') if hasattr(e, 'response') else ''
+        logger.error(f"Failed to send contact form message from {email} to Telegram: {e}. Response: {resp_text}", exc_info=True)
+        try:
+            fallback_text = (
+                f"Новое сообщение с сайта\n\n"
+                f"Имя: {name or ''}\n"
+                f"Email: {email or ''}\n"
+                f"Тема: {subject or ''}\n\n"
+                f"Сообщение:\n{message or ''}\n\n"
+                f"Источник: Страница контактов\n"
+                f"Время: " + timezone.now().strftime("%d.%m.%Y %H:%M")
+            )
+            fallback_payload = {
+                'chat_id': chat_id,
+                'text': fallback_text,
+            }
+            fallback_resp = requests.post(url, json=fallback_payload, timeout=10)
+            logger.debug(f"Telegram fallback response status={fallback_resp.status_code} body={fallback_resp.text}")
+            fallback_resp.raise_for_status()
+            logger.info(f"Fallback send succeeded for contact form from {email}")
+            return True
+        except requests.exceptions.RequestException as e2:
+            logger.error(f"Fallback send failed for contact form from {email}: {e2}", exc_info=True)
+            return False
