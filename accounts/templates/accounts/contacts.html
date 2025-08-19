@@ -4,9 +4,224 @@
 {% block title %}Контакты - Great Ideas{% endblock %}
 
 {% block content %}
-<div style="padding: 50px; text-align: center; color: white;">
-    <h1>Страница Контактов</h1>
-    <p>Эта страница находится в разработке.</p>
-    <p>Свяжитесь с нами по email: info@greatideas.com</p>
+<div class="contacts-page">
+    <div class="contacts-hero">
+        <div class="contacts-hero-content">
+            <h1 class="contacts-title">Свяжитесь с нами</h1>
+            <p class="contacts-subtitle">Мы всегда готовы помочь и ответить на ваши вопросы</p>
+        </div>
+    </div>
+
+    <div class="contacts-content">
+        <div class="contacts-grid">
+            <!-- Основные контакты -->
+            <div class="contacts-section contact-info">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Контакты">
+                    </div>
+                    <h2>Основные контакты</h2>
+                </div>
+                
+                <div class="contact-methods">
+                    <div class="contact-method primary">
+                        <div class="contact-method-icon telegram-icon">
+                            <img src="{% static 'accounts/images/layout/telegram_footer.svg' %}" alt="Telegram">
+                        </div>
+                        <div class="contact-method-content">
+                            <h3>Telegram</h3>
+                            <p>Наш основной канал связи</p>
+                            <a href="https://t.me/yourgreatideas" target="_blank" class="contact-link">
+                                @yourgreatideas
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-method-icon">
+                            <img src="{% static 'accounts/images/icons/Globe_Line.svg' %}" alt="Веб-сайт">
+                        </div>
+                        <div class="contact-method-content">
+                            <h3>Веб-сайт</h3>
+                            <p>Официальный сайт платформы</p>
+                            <a href="https://greatideas.ru" target="_blank" class="contact-link">
+                                greatideas.ru
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Форма обратной связи -->
+            <div class="contacts-section contact-form">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <img src="{% static 'accounts/images/icons/attach.svg' %}" alt="Форма">
+                    </div>
+                    <h2>Обратная связь</h2>
+                </div>
+                
+                <form class="feedback-form" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Ваше имя *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Тема *</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Выберите тему</option>
+                            <option value="general">Общий вопрос</option>
+                            <option value="technical">Техническая поддержка</option>
+                            <option value="business">Бизнес-вопросы</option>
+                            <option value="partnership">Партнерство</option>
+                            <option value="other">Другое</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Сообщение *</label>
+                        <textarea id="message" name="message" rows="5" required placeholder="Опишите ваш вопрос или предложение..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <span>Отправить сообщение</span>
+                        <div class="btn-arrow">→</div>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Дополнительная информация -->
+        <div class="contacts-section company-info">
+            <div class="section-header">
+                <div class="section-icon">
+                    <img src="{% static 'accounts/images/icons/planet.svg' %}" alt="О компании">
+                </div>
+                <h2>О платформе Great Ideas</h2>
+            </div>
+            
+            <div class="company-details">
+                <div class="company-detail">
+                    <h3>Наша миссия</h3>
+                    <p>Объединяем инноваторов, инвесторов и специалистов для создания успешных стартапов и франшиз. Мы верим, что великие идеи рождаются в сотрудничестве.</p>
+                </div>
+                
+                <div class="company-detail">
+                    <h3>Что мы предлагаем</h3>
+                    <ul>
+                        <li>Каталог стартапов и франшиз</li>
+                        <li>Платформу для инвестиций</li>
+                        <li>Сеть специалистов и агентств</li>
+                        <li>Инструменты для развития бизнеса</li>
+                    </ul>
+                </div>
+                
+                <div class="company-detail">
+                    <h3>Время работы</h3>
+                    <p>Мы работаем 24/7 для вашего удобства. Наша команда отвечает на сообщения в Telegram в течение рабочего дня (Пн-Пт, 9:00-18:00 МСК).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ секция -->
+        <div class="contacts-section faq-section">
+            <div class="section-header">
+                                    <div class="section-icon">
+                        <img src="{% static 'accounts/images/deals/info.svg' %}" alt="FAQ">
+                    </div>
+                <h2>Часто задаваемые вопросы</h2>
+            </div>
+            
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Как связаться с поддержкой?</h3>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Самый быстрый способ - написать нам в Telegram @yourgreatideas. Также вы можете использовать форму обратной связи на этой странице.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Сколько времени занимает ответ?</h3>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Мы стремимся отвечать в течение 24 часов. В рабочее время ответы приходят значительно быстрее.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Можно ли получить консультацию по стартапу?</h3>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Да, мы предоставляем консультации по развитию стартапов. Напишите нам в Telegram с описанием вашего проекта.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // FAQ toggle functionality
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+        const toggle = item.querySelector('.faq-toggle');
+        
+        question.addEventListener('click', () => {
+            const isOpen = answer.style.display === 'block';
+            
+            // Close all other FAQ items
+            faqItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.querySelector('.faq-answer').style.display = 'none';
+                    otherItem.querySelector('.faq-toggle').textContent = '+';
+                    otherItem.classList.remove('active');
+                }
+            });
+            
+            // Toggle current item
+            if (isOpen) {
+                answer.style.display = 'none';
+                toggle.textContent = '+';
+                item.classList.remove('active');
+            } else {
+                answer.style.display = 'block';
+                toggle.textContent = '−';
+                item.classList.add('active');
+            }
+        });
+    });
+    
+    // Form submission - backend handles validation
+    const form = document.querySelector('.feedback-form');
+    if (form) {
+        // Reset form if it was successfully submitted
+        {% if form_submitted %}
+        form.reset();
+        {% endif %}
+        
+        form.addEventListener('submit', function(e) {
+            // Let the form submit normally to backend
+            // Backend will handle validation and show messages
+        });
+    }
+});
+</script>
 {% endblock %} 

@@ -469,7 +469,23 @@ def home(request):
 def faq_page_view(request):
     return render(request, "accounts/faq.html")
 def contacts_page_view(request):
-    return render(request, "accounts/contacts.html", {})
+    form_submitted = False
+    
+    if request.method == "POST":
+        name = request.POST.get('name', '').strip()
+        email = request.POST.get('email', '').strip()
+        subject = request.POST.get('subject', '').strip()
+        message = request.POST.get('message', '').strip()
+        
+        if name and email and subject and message:
+            # Здесь можно добавить логику отправки email или сохранения в базу данных
+            # Пока просто показываем сообщение об успехе
+            messages.success(request, "Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.")
+            form_submitted = True
+        else:
+            messages.error(request, "Пожалуйста, заполните все обязательные поля.")
+    
+    return render(request, "accounts/contacts.html", {"form_submitted": form_submitted})
 def register(request):
     next_url = request.GET.get("next") or request.POST.get("next")
     prefix = "register"
