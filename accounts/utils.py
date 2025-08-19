@@ -292,11 +292,23 @@ def send_telegram_contact_form_message(name, email, subject, message):
     safe_subject = escape_markdown_v2(subject or "")
     safe_message = escape_markdown_v2(message or "")
 
+    # Переводим тему обращения на русский язык
+    subject_translations = {
+        'general_inquiry': 'Общий вопрос',
+        'business_cooperation': 'Бизнес-сотрудничество',
+        'technical_support': 'Техническая поддержка',
+        'partnership': 'Партнерство',
+        'investment': 'Инвестиции',
+        'other': 'Другое'
+    }
+    
+    translated_subject = subject_translations.get(safe_subject.lower(), safe_subject)
+    
     message_text = (
-        "📧 *Новое сообщение с сайта\!* 📧\n\n"
+        "🌐 *Новое сообщение с сайта\!* 🌐\n\n"
         f"👤 *Имя:* {safe_name}\n"
         f"✉️ *Email:* `{safe_email}`\n"
-        f"📝 *Тема:* {safe_subject}\n\n"
+        f"📝 *Тема:* {translated_subject}\n\n"
         f"📄 *Сообщение:*\n{safe_message}\n\n"
         f"— Информация —\n"
         f"🌐 *Источник:* Страница контактов\n"
@@ -332,11 +344,23 @@ def send_telegram_contact_form_message(name, email, subject, message):
         resp_text = getattr(e.response, 'text', '') if hasattr(e, 'response') else ''
         logger.error(f"Failed to send contact form message from {email} to Telegram: {e}. Response: {resp_text}", exc_info=True)
         try:
+            # Переводим тему обращения на русский язык для fallback
+            subject_translations = {
+                'general_inquiry': 'Общий вопрос',
+                'business_cooperation': 'Бизнес-сотрудничество',
+                'technical_support': 'Техническая поддержка',
+                'partnership': 'Партнерство',
+                'investment': 'Инвестиции',
+                'other': 'Другое'
+            }
+            
+            translated_subject = subject_translations.get((subject or '').lower(), subject or '')
+            
             fallback_text = (
-                f"Новое сообщение с сайта\n\n"
+                f"🌐 Новое сообщение с сайта\n\n"
                 f"Имя: {name or ''}\n"
                 f"Email: {email or ''}\n"
-                f"Тема: {subject or ''}\n\n"
+                f"Тема: {translated_subject}\n\n"
                 f"Сообщение:\n{message or ''}\n\n"
                 f"Источник: Страница контактов\n"
                 f"Время: " + timezone.now().strftime("%d.%m.%Y %H:%M")
