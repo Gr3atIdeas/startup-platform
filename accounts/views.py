@@ -469,8 +469,6 @@ def home(request):
 def faq_page_view(request):
     return render(request, "accounts/faq.html")
 def contacts_page_view(request):
-    form_submitted = False
-    
     if request.method == "POST":
         name = request.POST.get('name', '').strip()
         email = request.POST.get('email', '').strip()
@@ -489,15 +487,17 @@ def contacts_page_view(request):
                 else:
                     messages.warning(request, "Сообщение отправлено, но возникли проблемы с уведомлением. Мы все равно получим ваше обращение.")
                 
-                form_submitted = True
+                # Перенаправляем на ту же страницу с GET запросом, чтобы избежать повторной отправки
+                return redirect('contacts')
             except Exception as e:
                 logger.error(f"Unexpected error during Telegram dispatch for contact form from {email}: {e}", exc_info=True)
                 messages.success(request, "Спасибо за ваше сообщение! Мы свяжемся с вами в ближайшее время.")
-                form_submitted = True
+                # Перенаправляем на ту же страницу с GET запросом, чтобы избежать повторной отправки
+                return redirect('contacts')
         else:
             messages.error(request, "Пожалуйста, заполните все обязательные поля.")
     
-    return render(request, "accounts/contacts.html", {"form_submitted": form_submitted})
+    return render(request, "accounts/contacts.html")
 def register(request):
     next_url = request.GET.get("next") or request.POST.get("next")
     prefix = "register"

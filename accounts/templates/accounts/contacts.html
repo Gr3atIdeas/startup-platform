@@ -79,10 +79,11 @@
                         <label for="subject">Тема *</label>
                         <select id="subject" name="subject" required>
                             <option value="">Выберите тему</option>
-                            <option value="general">Общий вопрос</option>
-                            <option value="technical">Техническая поддержка</option>
-                            <option value="business">Бизнес-вопросы</option>
+                            <option value="general_inquiry">Общий вопрос</option>
+                            <option value="technical_support">Техническая поддержка</option>
+                            <option value="business_cooperation">Бизнес-сотрудничество</option>
                             <option value="partnership">Партнерство</option>
+                            <option value="investment">Инвестиции</option>
                             <option value="other">Другое</option>
                         </select>
                     </div>
@@ -214,11 +215,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Form submission - backend handles validation
     const form = document.querySelector('.feedback-form');
     if (form) {
-        // Reset form if it was successfully submitted
-        {% if form_submitted %}
-        form.reset();
-        {% endif %}
-        
         form.addEventListener('submit', function(e) {
             // Let the form submit normally to backend
             // Backend will handle validation and show messages
