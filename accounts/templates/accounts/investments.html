@@ -13,10 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="{% static 'accounts/css/investments.css' %}">
   <style>
-    /* Увеличение времени перехода для сглаживания анимации планет */
-    .planetary-system .planet {
-      transition: all 0.8s ease-out; /* Увеличено с 0.3s до 0.8s для сглаживания */
-    }
+    /* Стили для планетарной системы теперь в investments.css */
   </style>
 {% endblock %}
 
@@ -33,13 +30,13 @@
       <div class="analytics-section">
         <div class="analytics-left">
           
-          <div class="portfolio-image-container planetary-system-container" style="min-height: 451px;">
-            <div class="investments_planetary-system" id="investments_solar-system">
-              <div class="investments_space-background"></div>
-              <div class="investments_stars"></div>
-              <div id="investments_scene">
-                <div id="investments_galaxy">
-                  <div id="investments_logo" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <div class="portfolio-image-container planetary-system-container" style="min-height: 600px;">
+            <div class="my_startups_planetary-system" id="my_startups_solar-system">
+              <div class="my_startups_space-background"></div>
+              <div class="my_startups_stars"></div>
+              <div id="my_startups_scene">
+                <div id="my_startups_galaxy">
+                  <div id="my_startups_logo" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                     <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block;">
                     {% if planetary_investments|length == 0 %}
                       <span style="margin-top: 12px; color: white; font-size: 18px; text-align: center;">Нет инвестиций для отображения</span>
@@ -1029,23 +1026,23 @@
             }
             console.log('Startups object:', startups);
 
-            const planets = document.querySelectorAll('.investments_planetary-system .planet');
-            const infoCard = document.querySelector('.investments_planetary-system #info-card');
-            const planetImage = document.querySelector('.investments_planetary-system #planet-image');
-            const startupName = document.querySelector('.investments_planetary-system #startup-name');
-            const startupRating = document.querySelector('.investments_planetary-system #startup-rating');
-            const startupProgress = document.querySelector('.investments_planetary-system #startup-progress');
-            const startupFunding = document.querySelector('.investments_planetary-system #startup-funding');
-            const startupInvestors = document.querySelector('.investments_planetary-system #startup-investors');
-            const startupDescription = document.querySelector('.investments_planetary-system #startup-description');
-            const closeCard = document.querySelector('.investments_planetary-system #close-card');
-            const moreDetails = document.querySelector('.investments_planetary-system #more-details');
-            const solarSystem = document.querySelector('.investments_planetary-system#investments_solar-system');
-            const scene = document.querySelector('.investments_planetary-system #investments_scene');
-            const galaxy = document.querySelector('.investments_planetary-system #investments_galaxy');
-            const logoElement = document.querySelector('.investments_planetary-system #investments_logo');
+            const planets = document.querySelectorAll('.my_startups_planetary-system .planet');
+            const infoCard = document.querySelector('.my_startups_planetary-system #info-card');
+            const planetImage = document.querySelector('.my_startups_planetary-system #planet-image');
+            const startupName = document.querySelector('.my_startups_planetary-system #startup-name');
+            const startupRating = document.querySelector('.my_startups_planetary-system #startup-rating');
+            const startupProgress = document.querySelector('.my_startups_planetary-system #startup-progress');
+            const startupFunding = document.querySelector('.my_startups_planetary-system #startup-funding');
+            const startupInvestors = document.querySelector('.my_startups_planetary-system #startup-investors');
+            const startupDescription = document.querySelector('.my_startups_planetary-system #startup-description');
+            const closeCard = document.querySelector('.my_startups_planetary-system #close-card');
+            const moreDetails = document.querySelector('.my_startups_planetary-system #more-details');
+            const solarSystem = document.querySelector('.my_startups_planetary-system#my_startups_solar-system');
+            const scene = document.querySelector('.my_startups_planetary-system #my_startups_scene');
+            const galaxy = document.querySelector('.my_startups_planetary-system #my_startups_galaxy');
+            const logoElement = document.querySelector('.my_startups_planetary-system #my_startups_logo');
 
-            const galaxyTiltAngle = 45;
+            const galaxyTiltAngle = 60;
             const planetObjects = [];
             let isPaused = false;
             let pausedTime = 0;
@@ -1088,7 +1085,7 @@
                 console.warn(`Радиус орбиты равен нулю для планеты ${index}.`);
               }
 
-              const tiltCompensation = -galaxyTiltAngle;
+              const tiltCompensation = -60;
               planet.style.transform = `rotateX(${tiltCompensation}deg)`;
 
               planetObjects.push({
@@ -1309,8 +1306,8 @@
 
                   planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
                   planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
-                  const tiltCompensation = -galaxyTiltAngle;
-                  planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+                                            const tiltCompensation = -60;
+                          planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
                 } catch (error) {
                   console.error('Ошибка при обновлении позиции планеты:', error);
                 }
