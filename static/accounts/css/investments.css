@@ -1365,22 +1365,20 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   transform-style: preserve-3d;
   z-index: 1;
   transition: all 0.5s ease;
-}
-
-.my_startups_planetary-system .planet-orientation {
-  position: absolute;
-  transform-style: preserve-3d;
-  animation: orbit-rotation var(--orbit-time) linear infinite;
-  animation-delay: calc(var(--orbit-delay, 0) * -1s);
+  animation: orbit-rotation var(--orbit-time, 80s) linear infinite;
 }
 
 @keyframes orbit-rotation {
-  from {
-    transform: rotate(0deg) translateX(calc(var(--orbit-size) / 2)) rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg) translateX(calc(var(--orbit-size) / 2)) rotate(-360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Анимация для планет по орбитам */
+.my_startups_planetary-system .planet-orientation {
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: left 0.1s ease-out, top 0.1s ease-out;
+  transform-origin: center;
 }
 
 .my_startups_planetary-system .planet {
@@ -1394,11 +1392,13 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   cursor: pointer;
   transform-style: preserve-3d;
   z-index: 5;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease, transform 0.1s ease-out;
   overflow: visible !important;
   border: none;
   pointer-events: auto;
-  transform: rotateX(-60deg);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .my_startups_planetary-system .planet * {
