@@ -50,14 +50,7 @@
                             {% if investment.planet_image %}
                               <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ investment.planet_image }}" alt="{{ investment.name|escape }}" class="planet-img" onerror="this.src='{{ S3_PUBLIC_BASE_URL }}/choosable_planets/0.png'">
                             {% else %}
-                              <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" class="planet-img">
-                            {% endif %}
-                            {% if investment.logo_urls and investment.logo_urls|length > 0 %}
-                              {% with logo_file_id=investment.logo_urls.0 %}
-                                <img src="{% get_file_url_tag file_id=logo_file_id startup_id=investment.startup_id file_type='logo' %}" alt="Лого" class="planet-logo-overlay" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
-                              {% endwith %}
-                            {% else %}
-                              <img src="{% static 'accounts/images/logo.png' %}" alt="Лого по умолчанию" class="planet-logo-overlay">
+                              <img src="{% static 'accounts/images/planetary_system/planets_round/1.png' %}" alt="Планета по умолчанию" class="planet-img">
                             {% endif %}
                           </div>
                         </div>
@@ -1011,7 +1004,7 @@
               startups_data.forEach(s => {
                 startups[s.startup_id.toString()] = {
                   startup_id: s.startup_id,
-                  image: s.planet_image ? `{{ S3_PUBLIC_BASE_URL }}/choosable_planets/${s.planet_image}` : `{{ S3_PUBLIC_BASE_URL }}/choosable_planets/0.png`,
+                  image: s.planet_image && s.planet_image !== '0.png' ? `{{ S3_PUBLIC_BASE_URL }}/choosable_planets/${s.planet_image}` : null,
                   name: s.name || 'Без названия',
                   rating: s.rating || '0/5 (0)',
                   comment_count: s.comment_count || 0,
@@ -1100,19 +1093,26 @@
                 startTime: Date.now() - Math.random() * orbitTime * 1000
               });
 
-              const id = planet.getAttribute('data-id');
-              if (startups[id]) {
-                planet.style.backgroundImage = 'none';
-                planet.style.backgroundColor = 'transparent';
-                const img = planet.querySelector('.planet-img');
-                if (img) {
-                  img.src = startups[id].image;
-                  img.onerror = () => {
-                    console.warn(`Не удалось загрузить изображение для стартапа ${id}.`);
-                    img.src = '{{ S3_PUBLIC_BASE_URL }}/choosable_planets/0.png';
-                  };
+                              const id = planet.getAttribute('data-id');
+                if (startups[id]) {
+                  planet.style.backgroundImage = 'none';
+                  planet.style.backgroundColor = 'transparent';
+                  const img = planet.querySelector('.planet-img');
+                  if (img) {
+                    if (startups[id].image && startups[id].image !== '{{ S3_PUBLIC_BASE_URL }}/choosable_planets/0.png') {
+                      img.src = startups[id].image;
+                    } else {
+                      // Используем рандомную планету из папки planetary_system
+                      const randomPlanetNum = Math.floor(Math.random() * 15) + 1;
+                      img.src = '{% static "accounts/images/planetary_system/planets_round/" %}' + randomPlanetNum + '.png';
+                    }
+                    img.onerror = () => {
+                      console.warn(`Не удалось загрузить изображение для стартапа ${id}.`);
+                      const fallbackPlanetNum = Math.floor(Math.random() * 15) + 1;
+                      img.src = '{% static "accounts/images/planetary_system/planets_round/" %}' + fallbackPlanetNum + '.png';
+                    };
+                  }
                 }
-              }
 
               planet.addEventListener('click', (e) => {
                 e.stopPropagation();
