@@ -70,3 +70,104 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+
+// Новая планетарная система для страницы Портфель
+document.addEventListener('DOMContentLoaded', function() {
+  const planetaryContainer = document.querySelector('.planetary-system-container');
+  if (!planetaryContainer) return;
+
+  const planetarySystem = planetaryContainer.querySelector('.planetary-system');
+  if (!planetarySystem) return;
+
+  let isDragging = false;
+  let startX, startY, translateX = 0, translateY = 0;
+  let scale = 1;
+
+  // Обработчики для мыши
+  planetarySystem.addEventListener('mousedown', startDragging);
+  document.addEventListener('mousemove', drag);
+  document.addEventListener('mouseup', stopDragging);
+
+  // Обработчики для тач-устройств
+  planetarySystem.addEventListener('touchstart', startDraggingTouch);
+  document.addEventListener('touchmove', dragTouch);
+  document.addEventListener('touchend', stopDragging);
+
+  // Обработчики для колесика мыши
+  planetarySystem.addEventListener('wheel', handleWheel);
+
+  function startDragging(e) {
+    isDragging = true;
+    startX = e.clientX - translateX;
+    startY = e.clientY - translateY;
+    planetarySystem.classList.add('dragging');
+    e.preventDefault();
+  }
+
+  function startDraggingTouch(e) {
+    if (e.touches.length === 1) {
+      isDragging = true;
+      startX = e.touches[0].clientX - translateX;
+      startY = e.touches[0].clientY - translateY;
+      planetarySystem.classList.add('dragging');
+      e.preventDefault();
+    }
+  }
+
+  function drag(e) {
+    if (!isDragging) return;
+    translateX = e.clientX - startX;
+    translateY = e.clientY - startY;
+    updateTransform();
+  }
+
+  function dragTouch(e) {
+    if (!isDragging || e.touches.length !== 1) return;
+    translateX = e.touches[0].clientX - startX;
+    translateY = e.touches[0].clientY - startY;
+    updateTransform();
+    e.preventDefault();
+  }
+
+  function stopDragging() {
+    isDragging = false;
+    planetarySystem.classList.remove('dragging');
+  }
+
+  function handleWheel(e) {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    scale = Math.max(0.5, Math.min(2, scale * delta));
+    updateTransform();
+  }
+
+  function updateTransform() {
+    planetarySystem.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+  }
+
+  // Инициализация планетарной системы
+  function initPlanetarySystem() {
+    const planets = planetarySystem.querySelectorAll('.planet');
+    planets.forEach((planet, index) => {
+      planet.addEventListener('click', function() {
+        showPlanetInfo(planet, index);
+      });
+    });
+  }
+
+  function showPlanetInfo(planet, index) {
+    const infoCard = document.getElementById('info-card');
+    if (!infoCard) return;
+
+    // Здесь можно добавить логику для отображения информации о планете
+    infoCard.style.display = 'block';
+    
+    // Скрыть карточку через 3 секунды
+    setTimeout(() => {
+      infoCard.style.display = 'none';
+    }, 3000);
+  }
+
+  // Запуск инициализации
+  initPlanetarySystem();
+});
