@@ -1083,8 +1083,8 @@
                 console.warn(`Радиус орбиты равен нулю для планеты ${index}.`);
               }
 
-              // Убираем 3D эффекты - планеты остаются плоскими
-              planet.style.transform = 'none';
+              // Компенсируем наклон галактики, чтобы планеты оставались плоскими
+              planet.style.transform = 'rotateX(-60deg)';
 
               planetObjects.push({
                 element: planet,
@@ -1190,10 +1190,14 @@
 
             moreDetails.addEventListener('click', () => {
               console.log('More details clicked');
-              if (currentStartupID && currentStartupID !== 'null' && currentStartupID !== null) {
-                window.location.href = `/startups/${currentStartupID}/`;
+              if (currentStartupID && currentStartupID !== 'null' && currentStartupID !== null && currentStartupID !== 'undefined') {
+                try {
+                  window.location.href = `/startups/${currentStartupID}/`;
+                } catch (error) {
+                  console.error('Ошибка при переходе на страницу стартапа:', error);
+                }
               } else {
-                console.error('Startup ID не найден для перехода на страницу стартапа');
+                console.error('Startup ID не найден для перехода на страницу стартапа:', currentStartupID);
               }
               infoCard.style.display = 'none';
               planets.forEach(p => p.classList.remove('active'));
@@ -1324,8 +1328,8 @@
                   planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
                   planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
                   
-                  // Планеты остаются плоскими (без 3D)
-                  planetObj.element.style.transform = 'none';
+                  // Компенсируем наклон галактики, чтобы планеты оставались плоскими
+                  planetObj.element.style.transform = 'rotateX(-60deg)';
                 } catch (error) {
                   console.error('Ошибка при обновлении позиции планеты:', error);
                 }

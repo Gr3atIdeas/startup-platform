@@ -1365,6 +1365,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   transform-style: preserve-3d;
   z-index: 1;
   transition: all 0.5s ease;
+  pointer-events: none;
 }
 
 /* Анимация для планет по орбитам */
@@ -1373,6 +1374,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   transform-style: preserve-3d;
   transition: left 0.1s ease-out, top 0.1s ease-out;
   transform-origin: center;
+  z-index: 10;
 }
 
 .my_startups_planetary-system .planet {
@@ -1385,7 +1387,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   background-color: transparent !important;
   cursor: pointer;
   transform-style: preserve-3d;
-  z-index: 5;
+  z-index: 15;
   transition: all 0.3s ease, transform 0.1s ease-out;
   overflow: visible !important;
   border: none;
@@ -1393,6 +1395,9 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  /* Обеспечиваем кликабельность */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .my_startups_planetary-system .planet * {
