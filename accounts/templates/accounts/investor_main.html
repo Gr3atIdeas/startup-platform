@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/investor_main.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/faq.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}">
-
+    <link rel="stylesheet" href="{% static 'accounts/css/planetary_system.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -15,27 +15,7 @@
 
 <div class="div">
     
-    <!-- Новая планетарная система для страницы Портфель -->
-    <div class="planetary-system-container">
-        <div class="planetary-system">
-            <div class="space-background"></div>
-            <div class="stars"></div>
-            
-            <!-- Планеты будут добавляться динамически через JavaScript -->
-            <div class="planet" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: url('{% static 'accounts/images/planetary_system/planets_round/1.png' %}') no-repeat center center; background-size: contain; cursor: pointer;" data-id="1"></div>
-            <div class="planet" style="position: absolute; top: 30%; left: 70%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: url('{% static 'accounts/images/planetary_system/planets_round/2.png' %}') no-repeat center center; background-size: contain; cursor: pointer;" data-id="2"></div>
-            <div class="planet" style="position: absolute; top: 70%; left: 30%; transform: translate(-50%, -50%); width: 56px; height: 56px; background: url('{% static 'accounts/images/planetary_system/planets_round/3.png' %}') no-repeat center center; background-size: contain; cursor: pointer;" data-id="3"></div>
-            <div class="planet" style="position: absolute; top: 20%; left: 20%; transform: translate(-50%, -50%); width: 64px; height: 64px; background: url('{% static 'accounts/images/planetary_system/planets_ring/1.png' %}') no-repeat center center; background-size: contain; cursor: pointer;" data-id="4"></div>
-            <div class="planet" style="position: absolute; top: 80%; left: 80%; transform: translate(-50%, -50%); width: 50px; height: 50px; background: url('{% static 'accounts/images/planetary_system/planets_ring/2.png' %}') no-repeat center center; background-size: contain; cursor: pointer;" data-id="5"></div>
-            <div class="planet" style="position: absolute; top: 40%; left: 80%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: url('{% static 'accounts/images/planetary_system/planets_round/4.png' %}') no-repeat center center; background-size: contain; cursor: pointer;" data-id="6"></div>
-        </div>
-        
-        <!-- Карточка с информацией о планете -->
-        <div id="info-card">
-            <h3>Информация о стартапе</h3>
-            <p>Здесь будет отображаться информация о выбранном стартапе</p>
-        </div>
-    </div>
+    {% include 'accounts/partials/planetary_system.html' %}
 
     <div class="featured4">
         <div class="frame-parent3">
@@ -651,5 +631,5 @@
 
 <script src="{% static 'accounts/js/investor_main.js' %}?v={% now 'U' %}"></script>
 <script src="{% static 'accounts/js/faq.js' %}?v={% now 'U' %}"></script>
-
+<script src="{% static 'accounts/js/planetary_system.js' %}"></script>
 {% endblock %}
