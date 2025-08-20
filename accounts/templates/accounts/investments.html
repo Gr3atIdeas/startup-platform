@@ -1076,15 +1076,13 @@
                 planetOrientation.style.left = `${50 + 50 * (x / radius)}%`;
                 planetOrientation.style.top = `${50 + 50 * (y / radius)}%`;
                 
-                // Добавляем CSS анимацию для орбиты
-                planetOrientation.style.animation = `orbit-rotation ${orbitTime}s linear infinite`;
-                planetOrientation.style.animationDelay = `${initialAngle / 360 * orbitTime}s`;
+                // CSS анимация убрана - используется JavaScript для движения по орбитам
               } else {
                 console.warn(`Радиус орбиты равен нулю для планеты ${index}.`);
               }
 
-              const tiltCompensation = -60;
-              planet.style.transform = `rotateX(${tiltCompensation}deg)`;
+              // Убираем 3D эффекты - планеты остаются плоскими
+              planet.style.transform = 'none';
 
               planetObjects.push({
                 element: planet,
@@ -1273,7 +1271,7 @@
             }
             setInterval(checkInactivity, 1000);
 
-                        function updatePlanets() {
+            function updatePlanets() {
               const now = Date.now();
               if (isPaused) {
                 requestAnimationFrame(updatePlanets);
@@ -1284,7 +1282,7 @@
                 try {
                   if (!planetObj.orientation || !planetObj.element) return;
                   
-                  // Используем CSS анимацию для орбит, JavaScript только для начального позиционирования
+                  // JavaScript анимация для движения по орбитам
                   const elapsedSeconds = (now - planetObj.startTime) / 1000;
                   const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
                   if (!orbitTimeSeconds || orbitTimeSeconds <= 0) {
@@ -1292,34 +1290,34 @@
                     return;
                   }
                   
-                  // Только для предотвращения перекрытия в центре
+                  const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
+                  let angle = planetObj.angle + progress * 360;
+                  const angleRad = angle * Math.PI / 180;
                   const radius = planetObj.orbitSize / 2;
+                  
                   if (!radius || radius <= 0) {
                     console.error('Некорректный радиус:', radius);
                     return;
                   }
 
-                  // Проверяем расстояние от центра и корректируем только при необходимости
-                  const centerThreshold = 150;
-                  const currentLeft = parseFloat(planetObj.orientation.style.left) || 50;
-                  const currentTop = parseFloat(planetObj.orientation.style.top) || 50;
-                  const distanceFromCenter = Math.sqrt(Math.pow(currentLeft - 50, 2) + Math.pow(currentTop - 50, 2));
+                  let x = Math.cos(angleRad) * radius;
+                  let y = Math.sin(angleRad) * radius;
                   
+                  // Предотвращаем перекрытие в центре
+                  const centerThreshold = 150;
+                  const distanceFromCenter = Math.sqrt(x * x + y * y);
                   if (distanceFromCenter < centerThreshold) {
-                    // Корректируем позицию только если планета слишком близко к центру
-                    const angle = Math.atan2(currentTop - 50, currentLeft - 50) * 180 / Math.PI;
-                    const newAngle = angle + 10;
-                    const newAngleRad = newAngle * Math.PI / 180;
-                    const x = Math.cos(newAngleRad) * radius;
-                    const y = Math.sin(newAngleRad) * radius;
-                    
-                    planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-                    planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+                    angle += 10;
+                    const newAngleRad = angle * Math.PI / 180;
+                    x = Math.cos(newAngleRad) * radius;
+                    y = Math.sin(newAngleRad) * radius;
                   }
 
-                  // Обновляем только наклон планеты для 3D эффекта
-                  const tiltCompensation = -60;
-                  planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+                  planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
+                  planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+                  
+                  // Планеты остаются плоскими (без 3D)
+                  planetObj.element.style.transform = 'none';
                 } catch (error) {
                   console.error('Ошибка при обновлении позиции планеты:', error);
                 }

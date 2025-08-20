@@ -1326,7 +1326,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   left: 50%;
   width: 100%;
   height: 100%;
-  transform: translate(-50%, -50%) rotateX(60deg);
+  transform: translate(-50%, -50%);
   transform-style: preserve-3d;
   z-index: 5;
 }
@@ -1339,7 +1339,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotateX(-60deg);
+  transform: translate(-50%, -50%);
   z-index: 10;
   display: flex;
   align-items: center;
@@ -1365,12 +1365,6 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   transform-style: preserve-3d;
   z-index: 1;
   transition: all 0.5s ease;
-  animation: orbit-rotation var(--orbit-time, 80s) linear infinite;
-}
-
-@keyframes orbit-rotation {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }
 
 /* Анимация для планет по орбитам */
