@@ -1370,6 +1370,17 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
 .my_startups_planetary-system .planet-orientation {
   position: absolute;
   transform-style: preserve-3d;
+  animation: orbit-rotation var(--orbit-time) linear infinite;
+  animation-delay: calc(var(--orbit-delay, 0) * -1s);
+}
+
+@keyframes orbit-rotation {
+  from {
+    transform: rotate(0deg) translateX(calc(var(--orbit-size) / 2)) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(calc(var(--orbit-size) / 2)) rotate(-360deg);
+  }
 }
 
 .my_startups_planetary-system .planet {
@@ -1387,6 +1398,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   overflow: visible !important;
   border: none;
   pointer-events: auto;
+  transform: rotateX(-60deg);
 }
 
 .my_startups_planetary-system .planet * {
