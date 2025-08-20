@@ -1002,19 +1002,21 @@
             const startups = {};
             if (Array.isArray(startups_data)) {
               startups_data.forEach(s => {
-                startups[s.startup_id.toString()] = {
-                  startup_id: s.startup_id,
-                  image: s.planet_image && s.planet_image !== '0.png' ? `{{ S3_PUBLIC_BASE_URL }}/choosable_planets/${s.planet_image}` : null,
-                  name: s.name || 'Без названия',
-                  rating: s.rating || '0/5 (0)',
-                  comment_count: s.comment_count || 0,
-                  progress: s.progress || '0%',
-                  direction: s.direction || 'Без категории',
-                  funding_goal: s.funding_goal || 0,
-                  investors: s.investors || 'Инвесторов: 0',
-                  investment_type: s.investment_type || 'Не указано',
-                  description: s.description || 'Описание отсутствует'
-                };
+                if (s && s.startup_id && s.startup_id !== 'null' && s.startup_id !== null) {
+                  startups[s.startup_id.toString()] = {
+                    startup_id: s.startup_id,
+                    image: s.planet_image && s.planet_image !== '0.png' ? `{{ S3_PUBLIC_BASE_URL }}/choosable_planets/${s.planet_image}` : null,
+                    name: s.name || 'Без названия',
+                    rating: s.rating || '0/5 (0)',
+                    comment_count: s.comment_count || 0,
+                    progress: s.progress || '0%',
+                    direction: s.direction || 'Без категории',
+                    funding_goal: s.funding_goal || 0,
+                    investors: s.investors || 'Инвесторов: 0',
+                    investment_type: s.investment_type || 'Не указано',
+                    description: s.description || 'Описание отсутствует'
+                  };
+                }
               });
             }
             console.log('Startups object:', startups);
@@ -1058,8 +1060,8 @@
               }
 
               const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size')) || 200;
-              if (orbitSize < 100) {
-                planetOrientation.style.display = 'none'; // Скрываем планеты с орбитой меньше 100px
+              if (orbitSize < 50) {
+                planetOrientation.style.display = 'none'; // Скрываем планеты с орбитой меньше 50px
                 return;
               }
 
@@ -1121,6 +1123,12 @@
                 e.stopPropagation();
                 const id = planet.getAttribute('data-id');
                 console.log('Clicked planet ID:', id);
+                
+                if (!id || id === 'null' || id === null) {
+                  console.error('Некорректный ID планеты:', id);
+                  return;
+                }
+                
                 const startup = startups[id];
                 if (!startup) {
                   console.error('Не найдены данные для стартапа с ID:', id);
@@ -1182,7 +1190,7 @@
 
             moreDetails.addEventListener('click', () => {
               console.log('More details clicked');
-              if (currentStartupID) {
+              if (currentStartupID && currentStartupID !== 'null' && currentStartupID !== null) {
                 window.location.href = `/startups/${currentStartupID}/`;
               } else {
                 console.error('Startup ID не найден для перехода на страницу стартапа');
