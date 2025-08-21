@@ -3043,3 +3043,26 @@ body > main.content::after {
     opacity: 1;
     visibility: visible;
 }
+
+.sticky-sections-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.sticky-sections-wrapper .featured3,
+.sticky-sections-wrapper .featured4 {
+    margin-top: 0;
+}
+
+.sticky-sections-wrapper .featured3 {
+    margin-bottom: 0;
+}
+
+.sticky-sections-wrapper .featured4 {
+    margin-top: 0;
+}
