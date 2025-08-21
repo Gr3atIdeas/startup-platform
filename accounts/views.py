@@ -469,6 +469,7 @@ def home(request):
     return redirect("profile")
 def faq_page_view(request):
     return render(request, "accounts/faq.html")
+@login_required
 def contacts_page_view(request):
     prefix = "contacts"
     _expire_captcha_if_old(request.session, prefix)

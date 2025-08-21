@@ -320,7 +320,9 @@
                     <div class="footer-menu-links">
                         <a href="{% url 'faq' %}" class="footer-menu-link">FAQ</a>
                         <a href="{% url 'support' %}" class="footer-menu-link">Поддержка</a>
-                        <a href="{% url 'contacts' %}" class="footer-menu-link">Контакты</a> 
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'contacts' %}" class="footer-menu-link">Контакты</a>
+                        {% endif %} 
                         <a href="{% url 'legal' %}" class="footer-menu-link">Правовая информация</a>
                     </div>
                 </div>
