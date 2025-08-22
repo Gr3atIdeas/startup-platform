@@ -1408,9 +1408,9 @@ body,
 }
 
 .planet-nav-button img {
-  width: 32px;
-  height: 32px;
-  filter: brightness(1.6) drop-shadow(0 0 1px rgba(255,255,255,0.45));
+  width: 40px;
+  height: 40px;
+  filter: invert(86%) sepia(56%) saturate(705%) hue-rotate(1deg) brightness(104%) contrast(102%) drop-shadow(0 0 2px rgba(255, 239, 43, 0.6));
 }
 
 .planet-nav-button.prev-planet img {
