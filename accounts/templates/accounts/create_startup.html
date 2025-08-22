@@ -302,25 +302,23 @@ document.addEventListener('DOMContentLoaded', function() {
     let isAnimating = false;
 
     function updatePlanetDisplay(direction) {
-        if (isAnimating) return; // Предотвращаем запуск новой анимации, пока текущая не завершена
+        if (isAnimating) return;
         isAnimating = true;
-
-        // Устанавливаем новую планету
         const newPlanet = planetChoices[currentPlanetIndex];
         planetPreview.src = planetBaseUrl + newPlanet;
         planetInput.value = newPlanet;
-
-        // Удаляем старые классы анимации и добавляем новую
         planetPreview.classList.remove('slide-left', 'slide-right');
-        planetPreview.classList.add(direction === 'next' ? 'slide-right' : 'slide-left');
-
-        // После завершения анимации возвращаем планету в центр
-        setTimeout(() => {
+        void planetPreview.offsetWidth;
+        const animClass = direction === 'next' ? 'slide-right' : 'slide-left';
+        const onEnded = () => {
             planetPreview.classList.remove('slide-left', 'slide-right');
-            planetPreview.style.transform = 'translateX(0)';
-            planetPreview.style.opacity = '1';
+            planetPreview.style.transform = '';
+            planetPreview.style.opacity = '';
             isAnimating = false;
-        }, 300); // Длительность анимации (0.3s)
+            planetPreview.removeEventListener('transitionend', onEnded);
+        };
+        planetPreview.addEventListener('transitionend', onEnded);
+        planetPreview.classList.add(animClass);
     }
 
     prevButton.addEventListener('click', () => {
