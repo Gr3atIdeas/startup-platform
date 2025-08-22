@@ -647,10 +647,10 @@ def user_login(request):
                     request, f"Добро пожаловать, {user.first_name or user.email}!"
                 )
                 if next_url == reverse("create_startup"):
-                    if hasattr(user, "role") and user.role and user.role.role_name.lower() == "startuper":
+                    role_name = user.role.role_name.lower() if hasattr(user, "role") and user.role else None
+                    if role_name in ["startuper", "moderator"]:
                         return redirect(next_url)
                     else:
-                        role_name = user.role.role_name.lower() if hasattr(user, "role") and user.role else None
                         if role_name == "investor":
                             return redirect("investor_main")
                         elif role_name == "moderator":

@@ -127,11 +127,16 @@ def get_planet_urls():
         if "Contents" not in response:
             logger.warning(f"No files found in {prefix}")
             return []
-        planets = [
-            obj["Key"].split("/")[-1]
-            for obj in response["Contents"]
-            if obj["Key"] != prefix
-        ]
+        planets = []
+        for obj in response["Contents"]:
+            key = obj.get("Key")
+            if not key or key == prefix:
+                continue
+            filename = key.split("/")[-1]
+            stem = filename.rsplit(".", 1)[0].lower()
+            if stem == "0" or "plus" in stem:
+                continue
+            planets.append(filename)
         return planets
     except ClientError as e:
         logger.error(f"Error listing planets: {e}")
