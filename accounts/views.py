@@ -5402,7 +5402,18 @@ def support_orders_view(request):
     else:
         orders = SupportTicket.objects.filter(user=request.user).order_by("-created_at")
         is_moderator = False
-    context = {"orders": orders, "is_moderator": is_moderator}
+    
+    # Добавляем пагинацию
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(orders, 10)  # 10 заявок на страницу
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        "orders": page_obj,  # Используем page_obj вместо orders
+        "page_obj": page_obj,
+        "paginator": paginator,
+        "is_moderator": is_moderator
+    }
     return render(request, "accounts/support_orders.html", context)
 @login_required
 def support_ticket_detail(request, ticket_id):

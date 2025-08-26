@@ -542,3 +542,153 @@ body {
     gap: 25px;
   }
 }
+
+/* Стили для пагинации */
+.pagination-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 0;
+  width: 100%;
+  gap: 20px;
+}
+
+.pagination-info {
+  display: none;
+}
+
+.show-more-container {
+  display: none;
+}
+
+.pagination-controls .show-more-btn {
+  height: 40px;
+  padding: 12px 35px;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  border-radius: 10px;
+  outline: 1px solid white;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  display: inline-flex !important;
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  color: #f5f5f5 !important;
+  font-family: Unbounded, sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 16px !important;
+  cursor: pointer !important;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    outline-color 0.3s ease !important;
+  text-decoration: none !important;
+  margin: 0 !important;
+  width: auto !important;
+  text-transform: none !important;
+}
+
+.pagination-controls .show-more-btn:hover {
+  background-color: rgb(255 255 255 / 10%) !important;
+  outline-color: #ccc !important;
+  color: #fff !important;
+}
+
+.pagination-controls .show-more-btn i,
+.pagination-controls .show-more-btn svg {
+  width: 16px;
+  height: 16px;
+  color: #f5f5f5 !important;
+  fill: #f5f5f5 !important;
+  stroke: #f5f5f5 !important;
+}
+
+.hide-btn {
+  display: none !important;
+}
+
+.pagination-numbers {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+}
+
+.pagination-numbers a,
+.pagination-numbers span {
+  text-decoration: none;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 18px;
+  word-wrap: break-word;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.pagination-numbers a {
+  color: #004e9f;
+  font-size: 14px;
+}
+
+.pagination-numbers a:hover {
+  background-color: rgba(0, 78, 159, 0.1);
+}
+
+.pagination-numbers .current-page {
+  color: #004e9f;
+  font-size: 14px;
+  background: rgba(0, 78, 159, 0.1);
+  font-weight: 400;
+}
+
+.pagination-numbers .dots {
+  color: #004e9f;
+  font-size: 16px;
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  line-height: 22.4px;
+  padding: 8px 0;
+}
+
+/* Адаптивные стили для пагинации */
+@media (max-width: 768px) {
+  .pagination-controls {
+    margin-top: 20px;
+    gap: 15px;
+  }
+  
+  .pagination-numbers {
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .pagination-numbers a,
+  .pagination-numbers span {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-controls {
+    margin-top: 15px;
+    gap: 12px;
+  }
+  
+  .pagination-numbers {
+    gap: 8px;
+  }
+  
+  .pagination-numbers a,
+  .pagination-numbers span {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+}
