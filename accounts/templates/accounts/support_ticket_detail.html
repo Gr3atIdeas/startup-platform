@@ -362,7 +362,13 @@
         
         <div class="right-panel">
             <div class="tickets-list-section">
-                <div class="tickets-header">Все заявки</div>
+                <div class="tickets-header">
+                    {% if is_moderator %}
+                        Все заявки
+                    {% else %}
+                        Мои заявки
+                    {% endif %}
+                </div>
                 
                 <div class="tickets-list">
                     {% for order in all_tickets %}

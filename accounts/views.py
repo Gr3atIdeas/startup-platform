@@ -5425,7 +5425,10 @@ def support_ticket_detail(request, ticket_id):
     if not (user == ticket.user or is_moderator):
         return HttpResponseForbidden("У вас нет доступа к этой заявке.")
     
-    all_tickets = SupportTicket.objects.all().order_by("-created_at")
+    if is_moderator:
+        all_tickets = SupportTicket.objects.all().order_by("-created_at")
+    else:
+        all_tickets = SupportTicket.objects.filter(user=user).order_by("-created_at")
     
     form = None
     if is_moderator:
