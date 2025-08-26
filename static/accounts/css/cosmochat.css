@@ -1854,7 +1854,7 @@ body.cosmochat-body {
 
 .dropdown-item {
     background: none;
-    border: none;
+    border: 1px solid #004e9f;
     padding: 10px 20px;
     width: 160px;
     text-align: left;
@@ -1863,6 +1863,8 @@ body.cosmochat-body {
     font-family: Unbounded, sans-serif;
     font-size: 14px;
     display: block;
+    box-sizing: border-box;
+    margin: 0 auto 5px auto;
 }
 
 .dropdown-item:hover {
