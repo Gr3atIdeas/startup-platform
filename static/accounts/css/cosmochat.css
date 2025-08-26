@@ -1844,7 +1844,7 @@ body.cosmochat-body {
     box-shadow: 0 4px 15px rgb(0 0 0 / 20%);
     border-radius: 10px;
     z-index: 100;
-    min-width: 150px;
+    min-width: 200px;
     padding: 10px 0;
 }
 
