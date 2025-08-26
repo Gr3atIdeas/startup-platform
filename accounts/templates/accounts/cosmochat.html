@@ -274,7 +274,6 @@
             </div>
 
             <div class="chat-input-field-area" id="chatInputFieldArea" style="display: none;">
-                <img src="{% static 'accounts/images/cosmochat/attach.svg' %}" alt="Прикрепить" class="attach-file-btn" id="attachFileBtn">
                 <form id="messageFormNew" style="width: 100%;">
                     {% csrf_token %}
                     <input type="hidden" id="chatIdInput" name="chat_id" value="">

@@ -804,22 +804,12 @@ body.cosmochat-body {
 .chat-input-field-area {
   display: flex;
   align-items: center;
-  gap: 15px;
   padding: 15px 25px;
   border-top: 1px solid #e0e0e0;
 }
 
-.chat-input-field-area .attach-file-btn {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-
-  
-}
-
 .chat-input-field-area #messageFormNew {
-  
-  flex-grow: 1;
+  width: 100%;
   display: flex;
   align-items: center;
   background: #f3f3f3;
