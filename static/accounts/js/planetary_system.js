@@ -441,7 +441,10 @@
         valuationAmountElement.textContent = valuation;
       }
     }
-    if (investorsCountElement) investorsCountElement.textContent = `Инвестировало (${startup.investors || '0'})`;
+    if (investorsCountElement) {
+      console.log('Modal investors count:', startup.investors);
+      investorsCountElement.textContent = `Инвестировало (${startup.investors || '0'})`;
+    }
     if (planetImageElement) {
       const modalImageUrl = planetImageUrl || startup.image || getUltraNewPlanetaryFallbackImage(0);
       planetImageElement.src = modalImageUrl;
