@@ -1615,6 +1615,101 @@ def search_suggestions(request):
             for user in search_results
         ]
     return JsonResponse({"suggestions": users})
+
+
+def global_search(request):
+    """Глобальный поиск по всем типам карточек"""
+    query = request.GET.get("q", "").strip()
+    
+    if len(query) < 2:
+        return JsonResponse({
+            "users": [],
+            "startups": [],
+            "franchises": [],
+            "agencies": [],
+            "specialists": []
+        })
+    
+    results = {
+        "users": [],
+        "startups": [],
+        "franchises": [],
+        "agencies": [],
+        "specialists": []
+    }
+    
+    # Поиск пользователей
+    users = Users.objects.filter(
+        Q(first_name__icontains=query) |
+        Q(last_name__icontains=query) |
+        Q(email__icontains=query)
+    ).distinct()[:5]
+    
+    for user in users:
+        results["users"].append({
+            "id": user.user_id,
+            "name": f"{user.first_name or ''} {user.last_name or ''}".strip() or user.email,
+            "type": "user",
+            "url": reverse('profile', kwargs={'user_id': user.user_id})
+        })
+    
+    # Поиск стартапов
+    startups = Startups.objects.filter(
+        Q(title__icontains=query) |
+        Q(short_description__icontains=query)
+    ).filter(status="approved").distinct()[:5]
+    
+    for startup in startups:
+        results["startups"].append({
+            "id": startup.startup_id,
+            "name": startup.title,
+            "type": "startup",
+            "url": reverse('startup_detail', kwargs={'startup_id': startup.startup_id})
+        })
+    
+    # Поиск франшиз
+    franchises = Franchises.objects.filter(
+        Q(title__icontains=query) |
+        Q(short_description__icontains=query)
+    ).filter(status="approved").distinct()[:5]
+    
+    for franchise in franchises:
+        results["franchises"].append({
+            "id": franchise.franchise_id,
+            "name": franchise.title,
+            "type": "franchise",
+            "url": reverse('franchise_detail', kwargs={'franchise_id': franchise.franchise_id})
+        })
+    
+    # Поиск агентств
+    agencies = Agencies.objects.filter(
+        Q(title__icontains=query) |
+        Q(short_description__icontains=query)
+    ).filter(status="approved").distinct()[:5]
+    
+    for agency in agencies:
+        results["agencies"].append({
+            "id": agency.agency_id,
+            "name": agency.title,
+            "type": "agency",
+            "url": reverse('agency_detail', kwargs={'agency_id': agency.agency_id})
+        })
+    
+    # Поиск специалистов
+    specialists = Specialists.objects.filter(
+        Q(title__icontains=query) |
+        Q(short_description__icontains=query)
+    ).filter(status="approved").distinct()[:5]
+    
+    for specialist in specialists:
+        results["specialists"].append({
+            "id": specialist.specialist_id,
+            "name": specialist.title,
+            "type": "specialist",
+            "url": reverse('specialist_detail', kwargs={'specialist_id': specialist.specialist_id})
+        })
+    
+    return JsonResponse(results)
 def startup_detail(request, startup_id):
     try:
         startup = Startups.objects.select_related("owner", "direction", "stage").get(
