@@ -176,20 +176,58 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        // Показываем индикатор загрузки
+        searchDropdown.innerHTML = `
+            <div class="search-loading">
+                <div class="spinner"></div>
+                <span>Поиск...</span>
+            </div>
+        `;
+        searchDropdown.style.display = 'block';
+        
         fetch(`/global-search/?q=${encodeURIComponent(query)}`, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            // Проверяем, есть ли ошибка в ответе
+            if (data.error) {
+                throw new Error(data.error);
+            }
             displaySearchResults(data);
         })
         .catch(error => {
             console.error('Ошибка поиска:', error);
+            
+            // Определяем тип ошибки
+            let errorMessage = 'Ошибка при выполнении поиска';
+            let errorDetails = '';
+            
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                errorMessage = 'Ошибка сети';
+                errorDetails = 'Проверьте подключение к интернету';
+            } else if (error.message.includes('HTTP 500')) {
+                errorMessage = 'Ошибка сервера';
+                errorDetails = 'Попробуйте позже';
+            } else if (error.message.includes('HTTP 404')) {
+                errorMessage = 'Страница не найдена';
+                errorDetails = 'Проверьте URL';
+            } else if (error.message) {
+                errorDetails = error.message;
+            }
+            
             searchDropdown.innerHTML = `
                 <div class="search-error">
-                    Ошибка при выполнении поиска
+                    <div class="error-title">${errorMessage}</div>
+                    ${errorDetails ? `<div class="error-details">${errorDetails}</div>` : ''}
+                    <button class="retry-button" onclick="performSearch('${query}')">Повторить</button>
                 </div>
             `;
             searchDropdown.style.display = 'block';
@@ -230,3 +268,5 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Global search functionality loaded successfully');
 });
+
+

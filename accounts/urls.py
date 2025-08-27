@@ -107,6 +107,7 @@ urlpatterns = [
     path("invest/<int:startup_id>/", views.invest, name="invest"),
     path("search-suggestions/", views.search_suggestions, name="search_suggestions"),
     path("global-search/", views.global_search, name="global_search"),
+
     path("planetary-system/", views.planetary_system, name="planetary_system"),
     path("my_startups/", views.my_startups, name="my_startups"),
     path("my_startups/download-report/", views.download_startups_report, name="download_startups_report"),

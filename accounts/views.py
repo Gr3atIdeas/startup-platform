@@ -1619,97 +1619,178 @@ def search_suggestions(request):
 
 def global_search(request):
     """Глобальный поиск по всем типам карточек"""
-    query = request.GET.get("q", "").strip()
-    
-    if len(query) < 2:
-        return JsonResponse({
+    try:
+        query = request.GET.get("q", "").strip()
+        
+        if len(query) < 2:
+            return JsonResponse({
+                "users": [],
+                "startups": [],
+                "franchises": [],
+                "agencies": [],
+                "specialists": []
+            })
+        
+        results = {
             "users": [],
             "startups": [],
             "franchises": [],
             "agencies": [],
             "specialists": []
-        })
-    
-    results = {
-        "users": [],
-        "startups": [],
-        "franchises": [],
-        "agencies": [],
-        "specialists": []
-    }
-    
-    # Поиск пользователей
-    users = Users.objects.filter(
-        Q(first_name__icontains=query) |
-        Q(last_name__icontains=query) |
-        Q(email__icontains=query)
-    ).distinct()[:5]
-    
-    for user in users:
-        results["users"].append({
-            "id": user.user_id,
-            "name": f"{user.first_name or ''} {user.last_name or ''}".strip() or user.email,
-            "type": "user",
-            "url": reverse('profile', kwargs={'user_id': user.user_id})
-        })
-    
-    # Поиск стартапов
-    startups = Startups.objects.filter(
-        Q(title__icontains=query) |
-        Q(short_description__icontains=query)
-    ).filter(status="approved").distinct()[:5]
-    
-    for startup in startups:
-        results["startups"].append({
-            "id": startup.startup_id,
-            "name": startup.title,
-            "type": "startup",
-            "url": reverse('startup_detail', kwargs={'startup_id': startup.startup_id})
-        })
-    
-    # Поиск франшиз
-    franchises = Franchises.objects.filter(
-        Q(title__icontains=query) |
-        Q(short_description__icontains=query)
-    ).filter(status="approved").distinct()[:5]
-    
-    for franchise in franchises:
-        results["franchises"].append({
-            "id": franchise.franchise_id,
-            "name": franchise.title,
-            "type": "franchise",
-            "url": reverse('franchise_detail', kwargs={'franchise_id': franchise.franchise_id})
-        })
-    
-    # Поиск агентств
-    agencies = Agencies.objects.filter(
-        Q(title__icontains=query) |
-        Q(short_description__icontains=query)
-    ).filter(status="approved").distinct()[:5]
-    
-    for agency in agencies:
-        results["agencies"].append({
-            "id": agency.agency_id,
-            "name": agency.title,
-            "type": "agency",
-            "url": reverse('agency_detail', kwargs={'agency_id': agency.agency_id})
-        })
-    
-    # Поиск специалистов
-    specialists = Specialists.objects.filter(
-        Q(title__icontains=query) |
-        Q(short_description__icontains=query)
-    ).filter(status="approved").distinct()[:5]
-    
-    for specialist in specialists:
-        results["specialists"].append({
-            "id": specialist.specialist_id,
-            "name": specialist.title,
-            "type": "specialist",
-            "url": reverse('specialist_detail', kwargs={'specialist_id': specialist.specialist_id})
-        })
-    
-    return JsonResponse(results)
+        }
+        
+        # Поиск пользователей
+        try:
+            users = Users.objects.filter(
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query) |
+                Q(email__icontains=query)
+            ).distinct()[:5]
+            
+            for user in users:
+                try:
+                    results["users"].append({
+                        "id": user.user_id,
+                        "name": f"{user.first_name or ''} {user.last_name or ''}".strip() or user.email,
+                        "type": "user",
+                        "url": reverse('profile', kwargs={'user_id': user.user_id})
+                    })
+                except Exception as e:
+                    logger.error(f"Ошибка при обработке пользователя {user.user_id}: {e}")
+                    continue
+        except Exception as e:
+            logger.error(f"Ошибка при поиске пользователей: {e}")
+        
+        # Поиск стартапов
+        try:
+            # У Startups есть и status (CharField) и status_id (ForeignKey)
+            try:
+                # Сначала пробуем найти по status_id
+                approved_status = ReviewStatuses.objects.get(status_name="Approved")
+                startups = Startups.objects.filter(
+                    Q(title__icontains=query) |
+                    Q(short_description__icontains=query)
+                ).filter(status_id=approved_status).distinct()[:5]
+            except ReviewStatuses.DoesNotExist:
+                # Если статус не найден, ищем по полю status
+                startups = Startups.objects.filter(
+                    Q(title__icontains=query) |
+                    Q(short_description__icontains=query)
+                ).filter(status="approved").distinct()[:5]
+            
+            for startup in startups:
+                try:
+                    # Проверяем, что обязательные поля не пустые
+                    if not startup.title:
+                        continue
+                        
+                    results["startups"].append({
+                        "id": startup.startup_id,
+                        "name": startup.title,
+                        "type": "startup",
+                        "url": reverse('startup_detail', kwargs={'startup_id': startup.startup_id})
+                    })
+                except Exception as e:
+                    logger.error(f"Ошибка при обработке стартапа {startup.startup_id}: {e}")
+                    continue
+        except Exception as e:
+            logger.error(f"Ошибка при поиске стартапов: {e}")
+        
+        # Поиск франшиз
+        try:
+            # У Franchises есть и status (CharField) и status_id (ForeignKey)
+            try:
+                # Сначала пробуем найти по status_id
+                approved_status = ReviewStatuses.objects.get(status_name="Approved")
+                franchises = Franchises.objects.filter(
+                    Q(title__icontains=query) |
+                    Q(short_description__icontains=query)
+                ).filter(status_id=approved_status).distinct()[:5]
+            except ReviewStatuses.DoesNotExist:
+                # Если статус не найден, ищем по полю status
+                franchises = Franchises.objects.filter(
+                    Q(title__icontains=query) |
+                    Q(short_description__icontains=query)
+                ).filter(status="approved").distinct()[:5]
+            
+            for franchise in franchises:
+                try:
+                    # Проверяем, что обязательные поля не пустые
+                    if not franchise.title:
+                        continue
+                        
+                    results["franchises"].append({
+                        "id": franchise.franchise_id,
+                        "name": franchise.title,
+                        "type": "franchise",
+                        "url": reverse('franchise_detail', kwargs={'franchise_id': franchise.franchise_id})
+                    })
+                except Exception as e:
+                    logger.error(f"Ошибка при обработке франшизы {franchise.franchise_id}: {e}")
+                    continue
+        except Exception as e:
+            logger.error(f"Ошибка при поиске франшиз: {e}")
+        
+        # Поиск агентств
+        try:
+            # У Agencies только поле status (CharField)
+            agencies = Agencies.objects.filter(
+                Q(title__icontains=query) |
+                Q(short_description__icontains=query)
+            ).filter(status="approved").distinct()[:5]
+            
+            for agency in agencies:
+                try:
+                    # Проверяем, что обязательные поля не пустые
+                    if not agency.title:
+                        continue
+                        
+                    results["agencies"].append({
+                        "id": agency.agency_id,
+                        "name": agency.title,
+                        "type": "agency",
+                        "url": reverse('agency_detail', kwargs={'agency_id': agency.agency_id})
+                    })
+                except Exception as e:
+                    logger.error(f"Ошибка при обработке агентства {agency.agency_id}: {e}")
+                    continue
+        except Exception as e:
+            logger.error(f"Ошибка при поиске агентств: {e}")
+        
+        # Поиск специалистов
+        try:
+            # У Specialists только поле status (CharField)
+            specialists = Specialists.objects.filter(
+                Q(title__icontains=query) |
+                Q(short_description__icontains=query)
+            ).filter(status="approved").distinct()[:5]
+            
+            for specialist in specialists:
+                try:
+                    # Проверяем, что обязательные поля не пустые
+                    if not specialist.title:
+                        continue
+                        
+                    results["specialists"].append({
+                        "id": specialist.specialist_id,
+                        "name": specialist.title,
+                        "type": "specialist",
+                        "url": reverse('specialist_detail', kwargs={'specialist_id': specialist.specialist_id})
+                    })
+                except Exception as e:
+                    logger.error(f"Ошибка при обработке специалиста {specialist.specialist_id}: {e}")
+                    continue
+        except Exception as e:
+            logger.error(f"Ошибка при поиске специалистов: {e}")
+        
+        return JsonResponse(results)
+        
+    except Exception as e:
+        logger.error(f"Критическая ошибка в global_search: {e}")
+        return JsonResponse({
+            "error": "Ошибка при выполнении поиска",
+            "details": str(e) if settings.DEBUG else "Внутренняя ошибка сервера"
+        }, status=500)
 def startup_detail(request, startup_id):
     try:
         startup = Startups.objects.select_related("owner", "direction", "stage").get(
@@ -2537,80 +2618,6 @@ def delete_avatar(request):
             "show_role_selection": show_role_selection,
         },
     )
-@login_required
-def chat_list(request):
-    user = request.user
-    chats = (
-        ChatConversations.objects.filter(chatparticipants__user=request.user)
-        .prefetch_related("chatparticipants_set__user")
-        .annotate(latest_message_time=Max("messages__created_at"))
-        .order_by(F("latest_message_time").desc(nulls_last=True), "-updated_at")
-    )
-    chat_data = []
-    def build_chat_data(chat):
-        """Создает данные о чате аналогично cosmochat view"""
-        if chat.is_group_chat:
-            display_name = chat.name
-            display_avatar = None
-        else:
-            other_participant = None
-            for p in chat.chatparticipants_set.all():
-                if p.user_id != request.user.user_id:
-                    other_participant = p
-                    break
-            if other_participant and other_participant.user:
-                user_profile = other_participant.user
-                display_name = f"{user_profile.first_name or ''} {user_profile.last_name or ''}".strip()
-                display_avatar = user_profile.get_profile_picture_url()
-            else:
-                display_name = "Удаленный чат"
-                display_avatar = None
-        
-        last_message = chat.get_last_message()
-        last_message_data = None
-        if last_message:
-            last_message_data = {
-                "message_id": last_message.message_id,
-                "message_text": last_message.message_text,
-                "sender_id": last_message.sender.user_id if last_message.sender else None,
-                "created_at_time": last_message.created_at.strftime("%H:%M") if last_message.created_at else "",
-                "created_at_date": last_message.created_at.strftime("%d/%m/%Y") if last_message.created_at else "",
-                "is_read": last_message.is_read(),
-            }
-        
-        unread_count = chat.messages_set.filter(
-            status__status_name="sent"
-        ).exclude(sender=user).count()
-
-        participant_info = None
-        if not chat.is_group_chat:
-            other_participant = None
-            for p in chat.chatparticipants_set.all():
-                if p.user_id != request.user.user_id:
-                    other_participant = p
-                    break
-            if other_participant and other_participant.user:
-                participant_info = {
-                    "user_id": other_participant.user.user_id,
-                    "first_name": other_participant.user.first_name,
-                    "last_name": other_participant.user.last_name,
-                    "profile_picture_url": other_participant.user.get_profile_picture_url(),
-                }
-
-        return {
-            "conversation_id": chat.conversation_id,
-            "name": display_name,
-            "is_group_chat": chat.is_group_chat,
-            "is_deal": chat.is_deal,
-            "last_message": last_message_data,
-            "unread_count": unread_count,
-            "participant": participant_info,
-        }
-
-    for chat in chats:
-        chat_data.append(build_chat_data(chat))
-    logger.info(f"Chat list generated for user {user.email}: {len(chat_data)} chats")
-    return JsonResponse({"success": True, "chats": chat_data})
 @login_required
 def start_deal(request, chat_id):
     if request.method != "POST":
