@@ -353,16 +353,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Анимируем сдвиг ленты
         if (direction === 'next') {
             // Сдвигаем влево для показа следующей планеты
-            // Каждая планета занимает 4.7619%, поэтому сдвигаем на 4.7619% влево
-            const shiftAmount = -50 - 4.7619;
-            console.log('Moving to next planet, setting transform to', shiftAmount + '%');
-            planetRibbon.style.transform = `translateX(${shiftAmount}%)`;
+            console.log('Moving to next planet, setting transform to -150%');
+            planetRibbon.style.transform = 'translateX(-150%)';
         } else {
             // Сдвигаем вправо для показа предыдущей планеты
-            // Каждая планета занимает 4.7619%, поэтому сдвигаем на 4.7619% вправо
-            const shiftAmount = -50 + 4.7619;
-            console.log('Moving to prev planet, setting transform to', shiftAmount + '%');
-            planetRibbon.style.transform = `translateX(${shiftAmount}%)`;
+            console.log('Moving to prev planet, setting transform to 50%');
+            planetRibbon.style.transform = 'translateX(50%)';
         }
         
         // После завершения анимации обновляем значение формы и перепрыгиваем ленту
@@ -373,16 +369,12 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (direction === 'next') {
                 // Если двигались влево, перепрыгиваем вправо
-                // Возвращаемся к позиции, где текущая планета в центре
-                const repositionAmount = -50 + 4.7619;
-                console.log('Repositioning to', repositionAmount + '%');
-                planetRibbon.style.transform = `translateX(${repositionAmount}%)`;
+                console.log('Repositioning to 50%');
+                planetRibbon.style.transform = 'translateX(50%)';
             } else {
                 // Если двигались вправо, перепрыгиваем влево
-                // Возвращаемся к позиции, где текущая планета в центре
-                const repositionAmount = -50 - 4.7619;
-                console.log('Repositioning to', repositionAmount + '%');
-                planetRibbon.style.transform = `translateX(${repositionAmount}%)`;
+                console.log('Repositioning to -150%');
+                planetRibbon.style.transform = 'translateX(-150%)';
             }
             
             // Восстанавливаем анимацию
