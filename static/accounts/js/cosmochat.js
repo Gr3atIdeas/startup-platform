@@ -536,9 +536,31 @@ function startPolling() {
                                 }
                             });
                             lastMessageTimestamp = newMessages[newMessages.length - 1].created_at_iso;
-                            if (chatMessagesArea) chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
-                            updateChatListItem(newMessages[newMessages.length - 1]);
-                        }
+                                                         if (chatMessagesArea) chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
+                             
+                             // Обновляем метаданные чата в списке
+                             if (newMessages.length > 0) {
+                                 updateChatListItem(newMessages[newMessages.length - 1]);
+                                 
+                                 // Также обновляем счетчик непрочитанных сообщений
+                                 const chatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
+                                 if (chatItem) {
+                                     const unreadBadge = chatItem.querySelector('.unread-badge-chat');
+                                     if (unreadBadge) {
+                                         // Подсчитываем непрочитанные сообщения
+                                         const unreadCount = newMessages.filter(msg => 
+                                             msg.sender_id != window.REQUEST_USER_ID && !msg.is_read
+                                         ).length;
+                                         
+                                         if (unreadCount > 0) {
+                                             unreadBadge.textContent = unreadCount;
+                                             unreadBadge.style.display = 'inline';
+                                         } else {
+                                             unreadBadge.style.display = 'none';
+                                         }
+                                     }
+                                 }
+                             }
                     } else {
                         console.error('Ошибка опроса:', data.error);
                     }
@@ -879,6 +901,7 @@ function updateChatListItem(lastMessage) {
     const timestampChat = chatItem.querySelector('.timestamp-chat')
     const dateChatPreview = chatItem.querySelector('.date-chat-preview')
     const unreadBadge = chatItem.querySelector('.unread-badge-chat')
+    
     if (lastMessagePreview) {
       let previewText = ''
       if (lastMessage.sender_id == window.REQUEST_USER_ID) {
@@ -888,12 +911,15 @@ function updateChatListItem(lastMessage) {
       lastMessagePreview.textContent =
         previewText.substring(0, 30) + (previewText.length > 30 ? '...' : '')
     }
+    
     if (timestampChat && lastMessage.created_at_time) {
       timestampChat.textContent = lastMessage.created_at_time
     }
+    
     if (dateChatPreview && lastMessage.created_at_date) {
       dateChatPreview.textContent = lastMessage.created_at_date
     }
+    
     if (unreadBadge) {
       if (
         lastMessage.sender_id == window.REQUEST_USER_ID ||
@@ -901,6 +927,13 @@ function updateChatListItem(lastMessage) {
       ) {
         unreadBadge.style.display = 'none';
       } else {
+        // Если сообщение не от текущего пользователя и не прочитано, показываем счетчик
+        unreadBadge.style.display = 'inline';
+        // Обновляем счетчик непрочитанных сообщений
+        const currentCount = parseInt(unreadBadge.textContent) || 0;
+        if (lastMessage.sender_id != window.REQUEST_USER_ID && !lastMessage.is_read) {
+          unreadBadge.textContent = currentCount + 1;
+        }
       }
     }
   }
@@ -1448,6 +1481,26 @@ function startChatWithUser(userId) {
             // Добавляем новый чат в начало списка
             chatListContainer.prepend(newChatItem)
             
+            // Принудительно обновляем метаданные чата
+            setTimeout(() => {
+                const chatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${data.chat.conversation_id}"]`);
+                if (chatItem) {
+                    // Обновляем время и дату для нового чата
+                    const timestampChat = chatItem.querySelector('.timestamp-chat');
+                    const dateChatPreview = chatItem.querySelector('.date-chat-preview');
+                    
+                    if (timestampChat) {
+                        const now = new Date();
+                        timestampChat.textContent = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                    }
+                    
+                    if (dateChatPreview) {
+                        const now = new Date();
+                        dateChatPreview.textContent = now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+                    }
+                }
+            }, 100);
+            
             startPolling();
             waitForChatInDOM(data.chat.conversation_id, 3000)
               .then(() => {
@@ -1504,8 +1557,29 @@ function createGroupChat(chatName, userIds) {
           if (noChatsMessage) {
             noChatsMessage.remove()
           }
-          chatListContainer.prepend(newChatItem)
-          loadChat(data.chat.conversation_id)
+                     chatListContainer.prepend(newChatItem)
+           
+           // Принудительно обновляем метаданные группового чата
+           setTimeout(() => {
+               const chatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${data.chat.conversation_id}"]`);
+               if (chatItem) {
+                   // Обновляем время и дату для нового группового чата
+                   const timestampChat = chatItem.querySelector('.timestamp-chat');
+                   const dateChatPreview = chatItem.querySelector('.date-chat-preview');
+                   
+                   if (timestampChat) {
+                       const now = new Date();
+                       timestampChat.textContent = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                   }
+                   
+                   if (dateChatPreview) {
+                       const now = new Date();
+                       dateChatPreview.textContent = now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+                   }
+               }
+           }, 100);
+           
+           loadChat(data.chat.conversation_id)
         }
         if (typeof closeGroupChatModal === 'function') {
           closeGroupChatModal()
@@ -2075,8 +2149,33 @@ function createChatItemElement(chat) {
         }
         previewText += chat.last_message.message_text;
         lastMessageText = previewText.substring(0, 30) + (previewText.length > 30 ? '...' : '');
-        timestampText = chat.last_message.created_at_time || '';
-        dateText = chat.last_message.created_at_date || '';
+        
+        // Форматируем время и дату из created_at, если нет готовых полей
+        if (chat.last_message.created_at_time) {
+            timestampText = chat.last_message.created_at_time;
+        } else if (chat.last_message.created_at) {
+            try {
+                const messageDate = new Date(chat.last_message.created_at);
+                timestampText = messageDate.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+            } catch (e) {
+                timestampText = '';
+            }
+        } else {
+            timestampText = '';
+        }
+        
+        if (chat.last_message.created_at_date) {
+            dateText = chat.last_message.created_at_date;
+        } else if (chat.last_message.created_at) {
+            try {
+                const messageDate = new Date(chat.last_message.created_at);
+                dateText = messageDate.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+            } catch (e) {
+                dateText = '';
+            }
+        } else {
+            dateText = '';
+        }
     }
     
     if (chat.unread_count > 0) {
