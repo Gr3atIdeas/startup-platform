@@ -417,29 +417,47 @@ document.addEventListener('DOMContentLoaded', function() {
     if (createChatBtn) {
         createChatBtn.addEventListener('click', function() {
             if (typeof openGroupChatModal === 'function') {
-                openGroupChatModal();
+                if (typeof openGroupChatModal === 'function') {
+            openGroupChatModal();
+        }
             }
         });
     }
     
     const closeProfileModalBtn = document.getElementById('closeProfileModalBtn');
     if (closeProfileModalBtn) {
-        closeProfileModalBtn.addEventListener('click', closeProfileModal);
+        closeProfileModalBtn.addEventListener('click', function() {
+            if (typeof closeProfileModal === 'function') {
+                closeProfileModal();
+            }
+        });
     }
     
     const startChatBtn = document.getElementById('startChatBtn');
     if (startChatBtn) {
-        startChatBtn.addEventListener('click', startChat);
+        startChatBtn.addEventListener('click', function() {
+            if (typeof startChat === 'function') {
+                startChat();
+            }
+        });
     }
     
     const closeAddParticipantModalBtn = document.getElementById('closeAddParticipantModalBtn');
     if (closeAddParticipantModalBtn) {
-        closeAddParticipantModalBtn.addEventListener('click', closeAddParticipantModal);
+        closeAddParticipantModalBtn.addEventListener('click', function() {
+            if (typeof closeAddParticipantModal === 'function') {
+                closeAddParticipantModal();
+            }
+        });
     }
     
     const leaveChatBtn = document.getElementById('leaveChatBtn');
     if (leaveChatBtn) {
-        leaveChatBtn.addEventListener('click', leaveChat);
+        leaveChatBtn.addEventListener('click', function() {
+            if (typeof leaveChat === 'function') {
+                leaveChat();
+            }
+        });
     }
 
     const showMoreUsersBtn = document.getElementById('showMoreUsersBtn');

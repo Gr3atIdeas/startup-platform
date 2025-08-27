@@ -561,9 +561,9 @@ function startPolling() {
                                      }
                                  }
                              }
-                    } else {
-                        console.error('Ошибка опроса:', data.error);
-                    }
+                         } else {
+                             console.error('Ошибка опроса:', data.error);
+                         }
                 })
                 .catch(error => {
                     console.error('Ошибка при опросе новых сообщений:', error);
