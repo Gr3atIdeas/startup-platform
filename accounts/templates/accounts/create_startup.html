@@ -330,7 +330,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Обновляем ленту планет при изменении направления
     function updatePlanetRibbon(direction) {
-        if (isAnimating) return;
+        console.log('updatePlanetRibbon called with direction:', direction);
+        if (isAnimating) {
+            console.log('Animation in progress, returning');
+            return;
+        }
         isAnimating = true;
         
         const totalPlanets = planetChoices.length;
@@ -349,23 +353,28 @@ document.addEventListener('DOMContentLoaded', function() {
         // Анимируем сдвиг ленты
         if (direction === 'next') {
             // Сдвигаем влево для показа следующей планеты
-            planetRibbon.style.transform = 'translateX(-50% - 100%)';
+            console.log('Moving to next planet, setting transform to -150%');
+            planetRibbon.style.transform = 'translateX(-150%)';
         } else {
             // Сдвигаем вправо для показа предыдущей планеты
-            planetRibbon.style.transform = 'translateX(-50% + 100%)';
+            console.log('Moving to prev planet, setting transform to 50%');
+            planetRibbon.style.transform = 'translateX(50%)';
         }
         
         // После завершения анимации обновляем значение формы и перепрыгиваем ленту
         setTimeout(() => {
+            console.log('Animation completed, repositioning ribbon');
             // Перепрыгиваем ленту в противоположную сторону для бесконечности
             planetRibbon.style.transition = 'none';
             
             if (direction === 'next') {
                 // Если двигались влево, перепрыгиваем вправо
-                planetRibbon.style.transform = 'translateX(-50% + 100%)';
+                console.log('Repositioning to 50%');
+                planetRibbon.style.transform = 'translateX(50%)';
             } else {
                 // Если двигались вправо, перепрыгиваем влево
-                planetRibbon.style.transform = 'translateX(-50% - 100%)';
+                console.log('Repositioning to -150%');
+                planetRibbon.style.transform = 'translateX(-150%)';
             }
             
             // Восстанавливаем анимацию
@@ -375,9 +384,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Обновляем значение формы
             planetInput.value = planetChoices[currentPlanetIndex];
+            console.log('Updated form value to:', planetChoices[currentPlanetIndex]);
             
             // Завершаем анимацию
             isAnimating = false;
+            console.log('Animation completed, isAnimating set to false');
         }, 400); // Время анимации
     }
 
