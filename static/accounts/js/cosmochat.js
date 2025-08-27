@@ -564,6 +564,7 @@ function startPolling() {
                          } else {
                              console.error('Ошибка опроса:', data.error);
                          }
+                    }
                 })
                 .catch(error => {
                     console.error('Ошибка при опросе новых сообщений:', error);
@@ -1915,6 +1916,7 @@ function closeGroupChatModal() {
     groupChatModal.style.display = 'none'
   }, 300)
 }
+
 function loadGroupChatUsers(usersListElement, countElement, pillsContainer) {
   console.log('loadGroupChatUsers called')
   if (!usersListElement) {
