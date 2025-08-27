@@ -326,35 +326,85 @@ document.addEventListener('DOMContentLoaded', function() {
         return planetElements;
     }
 
+    // Создаем ленту планет с правильным позиционированием для направления
+    function createPlanetRibbonForDirection(direction) {
+        planetRibbon.innerHTML = '';
+        
+        const totalPlanets = planetChoices.length;
+        const planetElements = [];
+        
+        if (direction === 'next') {
+            // Для движения вправо: текущая, следующая, следующая+1
+            for (let i = 0; i <= 2; i++) {
+                const planetIndex = (currentPlanetIndex + i) % totalPlanets;
+                const planetImg = document.createElement('img');
+                planetImg.className = 'planet-ribbon-item';
+                planetImg.src = planetBaseUrl + planetChoices[planetIndex];
+                planetImg.alt = `Планета ${planetIndex + 1}`;
+                planetImg.dataset.planetIndex = planetIndex;
+                planetElements.push(planetImg);
+                planetRibbon.appendChild(planetImg);
+            }
+        } else {
+            // Для движения влево: предыдущая-1, предыдущая, текущая
+            for (let i = -2; i <= 0; i++) {
+                const planetIndex = (currentPlanetIndex + i + totalPlanets) % totalPlanets;
+                const planetImg = document.createElement('img');
+                planetImg.className = 'planet-ribbon-item';
+                planetImg.src = planetBaseUrl + planetChoices[planetIndex];
+                planetImg.alt = `Планета ${planetIndex + 1}`;
+                planetImg.dataset.planetIndex = planetIndex;
+                planetElements.push(planetImg);
+                planetRibbon.appendChild(planetImg);
+            }
+        }
+        
+        return planetElements;
+    }
+
     function updatePlanetRibbon(direction) {
         if (isAnimating) return;
         isAnimating = true;
         
-        const ribbonItems = planetRibbon.querySelectorAll('.planet-ribbon-item');
-        const translateAmount = direction === 'next' ? -100 : 100;
+        // Сначала создаем новую ленту с правильным позиционированием для направления
+        createPlanetRibbonForDirection(direction);
+        
+        // Позиционируем ленту так, чтобы текущая планета была в центре
+        if (direction === 'next') {
+            // Для движения вправо: текущая планета должна быть в центре (33.333%)
+            planetRibbon.style.transform = 'translateX(-33.333%)';
+        } else {
+            // Для движения влево: текущая планета должна быть в центре (33.333%)
+            planetRibbon.style.transform = 'translateX(-33.333%)';
+        }
         
         // Анимация сдвига ленты
-        planetRibbon.style.transform = `translateX(${translateAmount}%)`;
+        const translateAmount = direction === 'next' ? -66.666% : 0;
         
-        // После завершения анимации обновляем содержимое
-        setTimeout(() => {
-            // Обновляем индекс
-            if (direction === 'next') {
-                currentPlanetIndex = (currentPlanetIndex + 1) % planetChoices.length;
-            } else {
-                currentPlanetIndex = (currentPlanetIndex - 1 + planetChoices.length) % planetChoices.length;
-            }
+        // Небольшая задержка для стабилизации DOM
+        requestAnimationFrame(() => {
+            planetRibbon.style.transform = `translateX(${translateAmount}%)`;
             
-            // Пересоздаем ленту с новыми планетами
-            createPlanetRibbon();
-            
-            // Сбрасываем позицию ленты
-            planetRibbon.style.transform = 'translateX(0)';
-            
-            // Обновляем значение формы
-            planetInput.value = planetChoices[currentPlanetIndex];
-            isAnimating = false;
-        }, 300);
+            // После завершения анимации обновляем индекс и пересоздаем ленту
+            setTimeout(() => {
+                // Обновляем индекс
+                if (direction === 'next') {
+                    currentPlanetIndex = (currentPlanetIndex + 1) % planetChoices.length;
+                } else {
+                    currentPlanetIndex = (currentPlanetIndex - 1 + planetChoices.length) % planetChoices.length;
+                }
+                
+                // Пересоздаем ленту с новыми планетами
+                createPlanetRibbon();
+                
+                // Сбрасываем позицию ленты в центр
+                planetRibbon.style.transform = 'translateX(-33.333%)';
+                
+                // Обновляем значение формы
+                planetInput.value = planetChoices[currentPlanetIndex];
+                isAnimating = false;
+            }, 300);
+        });
     }
 
     prevButton.addEventListener('click', () => {
