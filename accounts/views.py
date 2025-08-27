@@ -1659,7 +1659,7 @@ def global_search(request):
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске пользователей: {e}")
-    
+        
         # Поиск стартапов
         try:
             # У Startups есть и status (CharField) и status_id (ForeignKey)
@@ -1694,7 +1694,7 @@ def global_search(request):
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске стартапов: {e}")
-    
+        
         # Поиск франшиз
         try:
             # У Franchises есть и status (CharField) и status_id (ForeignKey)
@@ -1729,7 +1729,7 @@ def global_search(request):
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске франшиз: {e}")
-    
+        
         # Поиск агентств
         try:
             # У Agencies только поле status (CharField)
@@ -1755,7 +1755,7 @@ def global_search(request):
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске агентств: {e}")
-    
+        
         # Поиск специалистов
         try:
             # У Specialists только поле status (CharField)
@@ -4526,6 +4526,120 @@ def cosmochat(request):
             "message_form": message_form,
         },
     )
+
+def chat_list(request):
+    """API endpoint для получения списка чатов пользователя"""
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "Требуется авторизация"}, status=401)
+    
+    try:
+        chats = (
+            ChatConversations.objects.filter(chatparticipants__user=request.user)
+            .prefetch_related(
+                "chatparticipants_set__user",
+                "messages_set"
+            )
+            .annotate(
+                latest_message_time=Max("messages__created_at")
+            )
+            .order_by(F("latest_message_time").desc(nulls_last=True), "-updated_at")
+        )
+        
+        chats_data = []
+        for chat in chats:
+            if chat.is_group_chat:
+                chat_data = {
+                    "conversation_id": chat.conversation_id,
+                    "name": chat.name or "Групповой чат",
+                    "is_group_chat": True,
+                    "is_deleted": False,
+                    "has_left": False,
+                    "is_deal": False,
+                    "latest_message": None,
+                    "unread_count": 0
+                }
+            else:
+                other_participant = None
+                for p in chat.chatparticipants_set.all():
+                    if p.user_id != request.user.user_id:
+                        other_participant = p
+                        break
+                
+                if other_participant and other_participant.user:
+                    user_profile = other_participant.user
+                    chat_data = {
+                        "conversation_id": chat.conversation_id,
+                        "name": f"{user_profile.first_name or ''} {user_profile.last_name or ''}".strip() or user_profile.email,
+                        "is_group_chat": False,
+                        "is_deleted": False,
+                        "has_left": False,
+                        "is_deal": False,
+                        "latest_message": None,
+                        "unread_count": 0
+                    }
+                else:
+                    chat_data = {
+                        "conversation_id": chat.conversation_id,
+                        "name": "Удаленный чат",
+                        "is_group_chat": False,
+                        "is_deleted": True,
+                        "has_left": True,
+                        "is_deal": False,
+                        "latest_message": None,
+                        "unread_count": 0
+                    }
+            
+            # Получаем последнее сообщение
+            latest_message = chat.messages_set.order_by('-created_at').first()
+            if latest_message:
+                chat_data["last_message"] = {
+                    "message_id": latest_message.message_id,
+                    "message_text": latest_message.message_text,
+                    "sender_id": latest_message.sender.user_id if latest_message.sender else None,
+                    "sender_name": f"{latest_message.sender.first_name} {latest_message.sender.last_name}" if latest_message.sender else "Неизвестно",
+                    "created_at": latest_message.created_at.strftime("%d.%m.%Y %H:%M") if latest_message.created_at else "",
+                    "created_at_time": latest_message.created_at.strftime("%H:%M") if latest_message.created_at else "",
+                    "created_at_date": latest_message.created_at.strftime("%d.%m") if latest_message.created_at else "",
+                    "is_read": latest_message.is_read()
+                }
+            
+            # Подсчитываем непрочитанные сообщения
+            unread_count = chat.messages_set.filter(
+                ~Q(sender=request.user),
+                is_read=False
+            ).count()
+            chat_data["unread_count"] = unread_count
+            
+            # Добавляем информацию об участнике для личных чатов
+            if not chat.is_group_chat:
+                other_participant = None
+                for p in chat.chatparticipants_set.all():
+                    if p.user_id != request.user.user_id:
+                        other_participant = p
+                        break
+                
+                if other_participant and other_participant.user:
+                    chat_data["participant"] = {
+                        "user_id": other_participant.user.user_id,
+                        "first_name": other_participant.user.first_name or "",
+                        "last_name": other_participant.user.last_name or "",
+                        "profile_picture_url": other_participant.user.get_profile_picture_url()
+                    }
+            
+            chats_data.append(chat_data)
+        
+        return JsonResponse({
+            "success": True,
+            "chats": chats_data
+        })
+        
+    except Exception as e:
+        logger.error(f"Ошибка при получении списка чатов: {e}")
+        return JsonResponse({
+            "success": False,
+            "error": "Внутренняя ошибка сервера"
+        }, status=500)
+
 def get_chat_messages(request, chat_id):
     if not request.user.is_authenticated:
         return JsonResponse({"success": False, "error": "Требуется авторизация"})

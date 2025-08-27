@@ -50,6 +50,7 @@ urlpatterns = [
     path("news/<int:article_id>/", views.news_detail, name="news_detail"),
     path("news/<int:article_id>/delete/", views.delete_news, name="delete_news"),
     path("cosmochat/", views.cosmochat, name="cosmochat"),
+    path("cosmochat/chat-list/", views.chat_list, name="chat_list"),
     path("cosmochat/<int:chat_id>/", views.get_chat_messages, name="get_chat_messages"),
     path("cosmochat/send-message/", views.send_message, name="send_message"),
     path(
