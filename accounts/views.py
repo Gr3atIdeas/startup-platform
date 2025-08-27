@@ -3734,7 +3734,7 @@ def investor_main(request):
     startups_query = Startups.objects.filter(status="approved").annotate(
         rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
         voters_count=Count("uservotes", distinct=True),
-        total_investors=Count("investmenttransactions__investor", distinct=True),
+        total_investors=Count("investmenttransactions", distinct=True),
         current_funding=Coalesce(
             Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
         ),
@@ -3810,7 +3810,7 @@ def investor_main(request):
     all_startups_query = Startups.objects.filter(status="approved").annotate(
         rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
         voters_count=Count("uservotes", distinct=True),
-        total_investors=Count("investmenttransactions__investor", distinct=True),
+        total_investors=Count("investmenttransactions", distinct=True),
         current_funding=Coalesce(
             Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
         ),
@@ -3885,7 +3885,7 @@ def startuper_main(request):
     startups_query = Startups.objects.filter(status="approved").annotate(
         rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
         voters_count=Count("uservotes", distinct=True),
-        total_investors=Count("investmenttransactions__investor", distinct=True),
+        total_investors=Count("investmenttransactions", distinct=True),
         current_funding=Coalesce(
             Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
         ),
@@ -3986,7 +3986,7 @@ def startuper_main(request):
     all_startups_query = Startups.objects.filter(status="approved").annotate(
         rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
         voters_count=Count("uservotes", distinct=True),
-        total_investors=Count("investmenttransactions__investor", distinct=True),
+        total_investors=Count("investmenttransactions", distinct=True),
         current_funding=Coalesce(
             Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
         ),
