@@ -1619,48 +1619,48 @@ def search_suggestions(request):
 def global_search(request):
     """Глобальный поиск по всем типам карточек"""
     try:
-    query = request.GET.get("q", "").strip()
-    
-    if len(query) < 2:
-        return JsonResponse({
+        query = request.GET.get("q", "").strip()
+        
+        if len(query) < 2:
+            return JsonResponse({
+                "users": [],
+                "startups": [],
+                "franchises": [],
+                "agencies": [],
+                "specialists": []
+            })
+        
+        results = {
             "users": [],
             "startups": [],
             "franchises": [],
             "agencies": [],
             "specialists": []
-        })
-    
-    results = {
-        "users": [],
-        "startups": [],
-        "franchises": [],
-        "agencies": [],
-        "specialists": []
-    }
-    
-    # Поиск пользователей
+        }
+        
+        # Поиск пользователей
         try:
-    users = Users.objects.filter(
-        Q(first_name__icontains=query) |
-        Q(last_name__icontains=query) |
-        Q(email__icontains=query)
-    ).distinct()[:5]
-    
-    for user in users:
+            users = Users.objects.filter(
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query) |
+                Q(email__icontains=query)
+            ).distinct()[:5]
+            
+            for user in users:
                 try:
-        results["users"].append({
-            "id": user.user_id,
-            "name": f"{user.first_name or ''} {user.last_name or ''}".strip() or user.email,
-            "type": "user",
-            "url": reverse('profile', kwargs={'user_id': user.user_id})
-        })
+                    results["users"].append({
+                        "id": user.user_id,
+                        "name": f"{user.first_name or ''} {user.last_name or ''}".strip() or user.email,
+                        "type": "user",
+                        "url": reverse('profile', kwargs={'user_id': user.user_id})
+                    })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке пользователя {user.user_id}: {e}")
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске пользователей: {e}")
-    
-    # Поиск стартапов
+        
+        # Поиск стартапов
         try:
             # У Startups есть и status (CharField) и status_id (ForeignKey)
             try:
@@ -1672,30 +1672,30 @@ def global_search(request):
                 ).filter(status_id=approved_status).distinct()[:5]
             except ReviewStatuses.DoesNotExist:
                 # Если статус не найден, ищем по полю status
-    startups = Startups.objects.filter(
-        Q(title__icontains=query) |
-        Q(short_description__icontains=query)
-    ).filter(status="approved").distinct()[:5]
-    
-    for startup in startups:
+                startups = Startups.objects.filter(
+                    Q(title__icontains=query) |
+                    Q(short_description__icontains=query)
+                ).filter(status="approved").distinct()[:5]
+            
+            for startup in startups:
                 try:
                     # Проверяем, что обязательные поля не пустые
                     if not startup.title:
                         continue
                         
-        results["startups"].append({
-            "id": startup.startup_id,
-            "name": startup.title,
-            "type": "startup",
-            "url": reverse('startup_detail', kwargs={'startup_id': startup.startup_id})
-        })
+                    results["startups"].append({
+                        "id": startup.startup_id,
+                        "name": startup.title,
+                        "type": "startup",
+                        "url": reverse('startup_detail', kwargs={'startup_id': startup.startup_id})
+                    })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке стартапа {startup.startup_id}: {e}")
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске стартапов: {e}")
-    
-    # Поиск франшиз
+        
+        # Поиск франшиз
         try:
             # У Franchises есть и status (CharField) и status_id (ForeignKey)
             try:
@@ -1707,82 +1707,82 @@ def global_search(request):
                 ).filter(status_id=approved_status).distinct()[:5]
             except ReviewStatuses.DoesNotExist:
                 # Если статус не найден, ищем по полю status
-    franchises = Franchises.objects.filter(
-        Q(title__icontains=query) |
-        Q(short_description__icontains=query)
-    ).filter(status="approved").distinct()[:5]
-    
-    for franchise in franchises:
+                franchises = Franchises.objects.filter(
+                    Q(title__icontains=query) |
+                    Q(short_description__icontains=query)
+                ).filter(status="approved").distinct()[:5]
+            
+            for franchise in franchises:
                 try:
                     # Проверяем, что обязательные поля не пустые
                     if not franchise.title:
                         continue
                         
-        results["franchises"].append({
-            "id": franchise.franchise_id,
-            "name": franchise.title,
-            "type": "franchise",
-            "url": reverse('franchise_detail', kwargs={'franchise_id': franchise.franchise_id})
-        })
+                    results["franchises"].append({
+                        "id": franchise.franchise_id,
+                        "name": franchise.title,
+                        "type": "franchise",
+                        "url": reverse('franchise_detail', kwargs={'franchise_id': franchise.franchise_id})
+                    })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке франшизы {franchise.franchise_id}: {e}")
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске франшиз: {e}")
-    
-    # Поиск агентств
+        
+        # Поиск агентств
         try:
             # У Agencies только поле status (CharField)
-    agencies = Agencies.objects.filter(
-        Q(title__icontains=query) |
-        Q(short_description__icontains=query)
-    ).filter(status="approved").distinct()[:5]
-    
-    for agency in agencies:
+            agencies = Agencies.objects.filter(
+                Q(title__icontains=query) |
+                Q(short_description__icontains=query)
+            ).filter(status="approved").distinct()[:5]
+            
+            for agency in agencies:
                 try:
                     # Проверяем, что обязательные поля не пустые
                     if not agency.title:
                         continue
                         
-        results["agencies"].append({
-            "id": agency.agency_id,
-            "name": agency.title,
-            "type": "agency",
-            "url": reverse('agency_detail', kwargs={'agency_id': agency.agency_id})
-        })
+                    results["agencies"].append({
+                        "id": agency.agency_id,
+                        "name": agency.title,
+                        "type": "agency",
+                        "url": reverse('agency_detail', kwargs={'agency_id': agency.agency_id})
+                    })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке агентства {agency.agency_id}: {e}")
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске агентств: {e}")
-    
-    # Поиск специалистов
+        
+        # Поиск специалистов
         try:
             # У Specialists только поле status (CharField)
-    specialists = Specialists.objects.filter(
-        Q(title__icontains=query) |
-        Q(short_description__icontains=query)
-    ).filter(status="approved").distinct()[:5]
-    
-    for specialist in specialists:
+            specialists = Specialists.objects.filter(
+                Q(title__icontains=query) |
+                Q(short_description__icontains=query)
+            ).filter(status="approved").distinct()[:5]
+            
+            for specialist in specialists:
                 try:
                     # Проверяем, что обязательные поля не пустые
                     if not specialist.title:
                         continue
                         
-        results["specialists"].append({
-            "id": specialist.specialist_id,
-            "name": specialist.title,
-            "type": "specialist",
-            "url": reverse('specialist_detail', kwargs={'specialist_id': specialist.specialist_id})
-        })
+                    results["specialists"].append({
+                        "id": specialist.specialist_id,
+                        "name": specialist.title,
+                        "type": "specialist",
+                        "url": reverse('specialist_detail', kwargs={'specialist_id': specialist.specialist_id})
+                    })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке специалиста {specialist.specialist_id}: {e}")
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске специалистов: {e}")
-    
-    return JsonResponse(results)
+        
+        return JsonResponse(results)
         
     except Exception as e:
         logger.error(f"Критическая ошибка в global_search: {e}")
@@ -4858,6 +4858,8 @@ def get_chat_messages(request, chat_id):
     return JsonResponse(
         {"success": True, "messages": messages_data, "participants": participants_data}
     )
+
+
 @login_required
 def send_message(request):
     if request.method != "POST":
@@ -4897,6 +4899,8 @@ def send_message(request):
             },
         }
     )
+
+
 @login_required
 def mark_messages_read(request, chat_id):
     if request.method != "POST":
@@ -4912,6 +4916,8 @@ def mark_messages_read(request, chat_id):
     )
     messages.update(status=read_status, updated_at=timezone.now())
     return JsonResponse({"success": True})
+
+
 @login_required
 def start_chat(request, user_id):
     if request.method != "POST":
@@ -4954,6 +4960,8 @@ def start_chat(request, user_id):
         "unread_count": 0,
     }
     return JsonResponse({"success": True, "chat": chat_data, "existed": False})
+
+
 @login_required
 def add_participant(request, chat_id):
     logger.debug(
@@ -5015,6 +5023,8 @@ def add_participant(request, chat_id):
             },
         }
     )
+
+
 @login_required
 def available_users_for_chat(request, chat_id):
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
@@ -5046,6 +5056,8 @@ def available_users_for_chat(request, chat_id):
         for user in users
     ]
     return JsonResponse({"success": True, "users": users_data})
+
+
 @login_required
 def leave_chat(request, chat_id):
     if request.method != "POST":
@@ -5073,6 +5085,8 @@ def leave_chat(request, chat_id):
         chat.delete()
         return JsonResponse({"success": True, "deleted": True})
     return JsonResponse({"success": True, "deleted": False})
+
+
 def planetary_system(request):
     """
     Планетарная система - отображает стартапы как планеты на орбитах
@@ -5203,6 +5217,8 @@ def planetary_system(request):
         "selected_galaxy": selected_direction_name,
     }
     return render(request, "accounts/planetary_system.html", context)
+
+
 @login_required
 def my_startups(request):
     try:
@@ -5444,9 +5460,13 @@ def my_startups(request):
         planetary_startups, cls=DjangoJSONEncoder, ensure_ascii=False
     )
     return render(request, "accounts/my_startups.html", context)
+
+
 @login_required
 def notifications_view(request):
     return render(request, "accounts/notifications.html")
+
+
 @login_required
 def create_group_chat(request):
     if request.method != "POST":
@@ -5539,6 +5559,8 @@ def create_group_chat(request):
         return JsonResponse(
             {"success": False, "error": "Внутренняя ошибка сервера."}, status=500
         )
+
+
 @login_required
 def support_page_view(request):
     is_moderator = (
@@ -5548,6 +5570,8 @@ def support_page_view(request):
     )
     context = {"is_moderator": is_moderator}
     return render(request, "accounts/support.html", context)
+
+
 @login_required
 def change_owner(request, startup_id):
     logger.info(f"Change owner request for startup {startup_id} by user {request.user.user_id}")
@@ -5580,6 +5604,8 @@ def change_owner(request, startup_id):
     except Exception as e:
         logger.error(f"Error changing owner for startup {startup_id}: {str(e)}")
         return JsonResponse({"success": False, "error": f"Ошибка при смене владельца: {str(e)}"})
+
+
 @login_required
 def get_investors(request, startup_id):
     logger.info(f"Get investors request for startup {startup_id} by user {request.user.user_id}")
@@ -5618,6 +5644,8 @@ def get_investors(request, startup_id):
     except Exception as e:
         logger.error(f"Error getting investors for startup {startup_id}: {str(e)}")
         return JsonResponse({"error": f"Ошибка при получении списка инвесторов: {str(e)}"}, status=500)
+
+
 @login_required
 def add_investor(request, startup_id):
     logger.info(f"Add investor request for startup {startup_id} by user {request.user.user_id}")
@@ -5698,6 +5726,8 @@ def add_investor(request, startup_id):
     
     logger.warning(f"Invalid method {request.method} for add_investor")
     return JsonResponse({"error": "Метод не поддерживается"}, status=405)
+
+
 @login_required
 def edit_investment(request, startup_id, user_id):
     if request.method != "POST":
@@ -5726,6 +5756,8 @@ def edit_investment(request, startup_id, user_id):
     )
     startup.save()
     return JsonResponse({"success": True})
+
+
 @login_required
 def delete_investment(request, startup_id, user_id):
     logger.info(f"Delete investment request for startup {startup_id}, user {user_id} by user {request.user.user_id}")
@@ -5774,6 +5806,8 @@ def delete_investment(request, startup_id, user_id):
     
     logger.warning(f"Invalid method {request.method} for delete_investment")
     return JsonResponse({"error": "Неверный метод запроса"}, status=405)
+
+
 @login_required
 def support_orders_view(request):
     if (
@@ -5799,6 +5833,8 @@ def support_orders_view(request):
         "is_moderator": is_moderator
     }
     return render(request, "accounts/support_orders.html", context)
+
+
 @login_required
 def support_ticket_detail(request, ticket_id):
     ticket = get_object_or_404(SupportTicket, pk=ticket_id)
@@ -5833,6 +5869,7 @@ def support_ticket_detail(request, ticket_id):
     }
     return render(request, "accounts/support_ticket_detail.html", context)
 
+
 @login_required
 def close_support_ticket(request, ticket_id):
     if request.method != "POST":
@@ -5854,6 +5891,7 @@ def close_support_ticket(request, ticket_id):
         return JsonResponse({"success": True})
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)}, status=500)
+
 
 @login_required
 def update_ticket_status(request, ticket_id):
@@ -5885,6 +5923,8 @@ def update_ticket_status(request, ticket_id):
         return JsonResponse({"success": False, "error": "Неверный формат данных"}, status=400)
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+
 @login_required
 def support_contact_view(request):
     if request.method == "POST":
@@ -5907,6 +5947,8 @@ def support_contact_view(request):
         form = SupportTicketForm()
     context = {"form": form}
     return render(request, "accounts/support_contact.html", context)
+
+
 @login_required
 def rename_chat(request, chat_id):
     if request.method != "POST":
@@ -5941,6 +5983,8 @@ def rename_chat(request, chat_id):
         return JsonResponse(
             {"success": False, "error": f"Ошибка: {str(e)}"}, status=500
         )
+
+
 @login_required
 def available_users(request):
     users = Users.objects.exclude(user_id=request.user.user_id).exclude(
@@ -5956,6 +6000,8 @@ def available_users(request):
         for user in users
     ]
     return JsonResponse({"success": True, "users": users_data})
+
+
 @login_required
 def find_or_create_chat(request, recipient_id):
     if request.method == "POST":
