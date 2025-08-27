@@ -4540,9 +4540,16 @@ def chat_list(request):
                 "messages_set"
             )
             .annotate(
-                latest_message_time=Max("messages__created_at")
+                latest_message_time=Max("messages__created_at"),
+                has_messages=Count("messages"),
+                chat_created_at=F("created_at")
             )
-            .order_by(F("latest_message_time").desc(nulls_last=True), "-updated_at")
+            .order_by(
+                "-has_messages",  # Сначала чаты с сообщениями
+                F("latest_message_time").desc(nulls_last=True),  # Затем по времени последнего сообщения
+                "-updated_at",  # И по времени обновления
+                "-chat_created_at"  # Новые чаты сверху
+            )
         )
         
         chats_data = []
@@ -4558,6 +4565,26 @@ def chat_list(request):
                 except:
                     conversation_id = 0
                 
+                try:
+                    created_at = chat.created_at.isoformat() if chat.created_at else None
+                except:
+                    created_at = None
+                
+                try:
+                    updated_at = chat.updated_at.isoformat() if chat.updated_at else None
+                except:
+                    updated_at = None
+                
+                try:
+                    has_messages = chat.has_messages or 0
+                except:
+                    has_messages = 0
+                
+                try:
+                    latest_message_time = chat.latest_message_time.isoformat() if chat.latest_message_time else None
+                except:
+                    latest_message_time = None
+                
                 chat_data = {
                     "conversation_id": conversation_id,
                     "name": chat_name,
@@ -4566,7 +4593,11 @@ def chat_list(request):
                     "has_left": False,
                     "is_deal": False,
                     "latest_message": None,
-                    "unread_count": 0
+                    "unread_count": 0,
+                    "created_at": created_at,
+                    "updated_at": updated_at,
+                    "has_messages": has_messages,
+                    "latest_message_time": latest_message_time
                 }
             else:
                 other_participant = None
@@ -4595,6 +4626,26 @@ def chat_list(request):
                     except:
                         conversation_id = 0
                     
+                    try:
+                        created_at = chat.created_at.isoformat() if chat.created_at else None
+                    except:
+                        created_at = None
+                    
+                    try:
+                        updated_at = chat.updated_at.isoformat() if chat.updated_at else None
+                    except:
+                        updated_at = None
+                    
+                    try:
+                        has_messages = chat.has_messages or 0
+                    except:
+                        has_messages = 0
+                    
+                    try:
+                        latest_message_time = chat.latest_message_time.isoformat() if chat.latest_message_time else None
+                    except:
+                        latest_message_time = None
+                    
                     chat_data = {
                         "conversation_id": conversation_id,
                         "name": user_name,
@@ -4603,13 +4654,37 @@ def chat_list(request):
                         "has_left": False,
                         "is_deal": False,
                         "latest_message": None,
-                        "unread_count": 0
+                        "unread_count": 0,
+                        "created_at": created_at,
+                        "updated_at": updated_at,
+                        "has_messages": has_messages,
+                        "latest_message_time": latest_message_time
                     }
                 else:
                     try:
                         conversation_id = chat.conversation_id or 0
                     except:
                         conversation_id = 0
+                    
+                    try:
+                        created_at = chat.created_at.isoformat() if chat.created_at else None
+                    except:
+                        created_at = None
+                    
+                    try:
+                        updated_at = chat.updated_at.isoformat() if chat.updated_at else None
+                    except:
+                        updated_at = None
+                    
+                    try:
+                        has_messages = chat.has_messages or 0
+                    except:
+                        has_messages = 0
+                    
+                    try:
+                        latest_message_time = chat.latest_message_time.isoformat() if chat.latest_message_time else None
+                    except:
+                        latest_message_time = None
                     
                     chat_data = {
                         "conversation_id": conversation_id,
@@ -4619,7 +4694,11 @@ def chat_list(request):
                         "has_left": True,
                         "is_deal": False,
                         "latest_message": None,
-                        "unread_count": 0
+                        "unread_count": 0,
+                        "created_at": created_at,
+                        "updated_at": updated_at,
+                        "has_messages": has_messages,
+                        "latest_message_time": latest_message_time
                     }
             
             # Получаем последнее сообщение

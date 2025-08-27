@@ -1444,6 +1444,10 @@ function startChatWithUser(userId) {
             if (noChatsMessage) {
               noChatsMessage.remove()
             }
+            
+            // Добавляем новый чат в начало списка
+            chatListContainer.prepend(newChatItem)
+            
             startPolling();
             waitForChatInDOM(data.chat.conversation_id, 3000)
               .then(() => {
