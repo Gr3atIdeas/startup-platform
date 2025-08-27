@@ -1439,8 +1439,8 @@ body,
 }
 
 .planet-ribbon-item {
-  flex: 0 0 100%;
-  width: 100%;
+  flex: 0 0 450px; /* Fixed width matching planet-display */
+  width: 450px;    /* Fixed width matching planet-display */
   height: 100%;
   object-fit: contain;
   display: block;
