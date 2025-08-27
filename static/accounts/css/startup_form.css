@@ -1428,6 +1428,9 @@ body,
   background-color: #333;
   overflow: hidden;
   position: relative;
+  /* Временные стили для отладки */
+  border: 2px solid green;
+  background-color: rgba(0, 255, 0, 0.1);
 }
 
 .planet-ribbon {
@@ -1436,6 +1439,9 @@ body,
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(0);
   position: relative;
+  /* Временные стили для отладки */
+  border: 2px solid red;
+  background-color: rgba(255, 0, 0, 0.1);
 }
 
 .planet-ribbon-item {
@@ -1444,6 +1450,10 @@ body,
   height: 100%;
   object-fit: contain;
   display: block;
+  flex-shrink: 0;
+  /* Временные стили для отладки */
+  border: 1px solid blue;
+  background-color: rgba(0, 0, 255, 0.1);
 }
 
 .logo-upload-group .logo-upload-label {
