@@ -286,6 +286,13 @@ const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
 const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
 const planetBaseUrl = "{{ S3_PUBLIC_BASE_URL }}/choosable_planets/";
 
+// Отладочная информация о переменных
+console.log('=== ОТЛАДКА ПЛАНЕТ ===');
+console.log('planetChoices:', planetChoices);
+console.log('planetBaseUrl:', planetBaseUrl);
+console.log('Тип planetChoices:', typeof planetChoices);
+console.log('Длина planetChoices:', planetChoices ? planetChoices.length : 'undefined');
+
 document.addEventListener('DOMContentLoaded', function() {
 
     // --- Планеты ---
@@ -294,13 +301,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const prevButton = document.querySelector('.planet-nav-button.prev-planet');
     const nextButton = document.querySelector('.planet-nav-button.next-planet');
     let currentPlanetIndex = 0;
+    
+    // Проверяем, что все элементы найдены
+    console.log('=== ЭЛЕМЕНТЫ DOM ===');
+    console.log('planetInput:', planetInput);
+    console.log('planetRibbon:', planetRibbon);
+    console.log('prevButton:', prevButton);
+    console.log('nextButton:', nextButton);
+    
+    if (!planetRibbon) {
+        console.error('Элемент planetRibbon не найден!');
+        return;
+    }
 
     // Создаем ленту планет
     function createPlanetRibbon() {
+        console.log('Создание ленты планет...');
         planetRibbon.innerHTML = '';
         
         const totalPlanets = planetChoices.length;
-        if (totalPlanets === 0) return;
+        console.log('Всего планет:', totalPlanets);
+        
+        if (totalPlanets === 0) {
+            console.error('Нет планет для отображения');
+            return;
+        }
         
         // Создаем ленту планет
         planetChoices.forEach((planet, index) => {
@@ -309,6 +334,18 @@ document.addEventListener('DOMContentLoaded', function() {
             planetImg.src = planetBaseUrl + planet;
             planetImg.alt = `Планета ${index + 1}`;
             planetImg.dataset.planetIndex = index;
+            
+            console.log(`Создаю планету ${index + 1}: ${planetBaseUrl + planet}`);
+            
+            // Добавляем обработчик ошибок для отладки
+            planetImg.onerror = () => {
+                console.error(`Ошибка загрузки планеты: ${planetBaseUrl + planet}`);
+            };
+            
+            // Добавляем обработчик успешной загрузки
+            planetImg.onload = () => {
+                console.log(`Планета ${index + 1} загружена успешно`);
+            };
             
             planetRibbon.appendChild(planetImg);
         });
@@ -322,6 +359,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Устанавливаем начальное значение формы
         planetInput.value = planetChoices[0];
+        
+        // Отладочная информация
+        console.log(`Создано ${totalPlanets} планет`);
+        console.log(`Ширина ленты: ${planetRibbon.style.width}`);
+        console.log(`Первый выбор: ${planetChoices[0]}`);
+        console.log('HTML ленты:', planetRibbon.innerHTML);
     }
 
     // Обновляем ленту планет при изменении направления
@@ -345,24 +388,48 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Обновляем значение формы
         planetInput.value = planetChoices[currentPlanetIndex];
+        
+        // Отладочная информация
+        console.log(`Переключение на планету ${currentPlanetIndex + 1}: ${planetChoices[currentPlanetIndex]}`);
+        console.log(`Позиция: translateX(${translateX}%)`);
     }
 
     prevButton.addEventListener('click', () => {
+        console.log('Клик по кнопке "Предыдущая"');
         if (planetChoices.length > 0) {
             updatePlanetRibbon('prev');
+        } else {
+            console.error('Нет планет для переключения');
         }
     });
 
     nextButton.addEventListener('click', () => {
+        console.log('Клик по кнопке "Следующая"');
         if (planetChoices.length > 0) {
             updatePlanetRibbon('next');
+        } else {
+            console.error('Нет планет для переключения');
         }
     });
 
     // Инициализация ленты планет
+    console.log('Доступные планеты:', planetChoices);
+    console.log('URL планет:', planetBaseUrl);
+    
     if (planetChoices && planetChoices.length > 0) {
+        console.log('Инициализация ленты планет...');
         createPlanetRibbon();
+        
+        // Проверяем результат создания
+        setTimeout(() => {
+            const planetImages = planetRibbon.querySelectorAll('img');
+            console.log(`Найдено изображений в ленте: ${planetImages.length}`);
+            planetImages.forEach((img, index) => {
+                console.log(`Изображение ${index}:`, img.src, img.complete ? 'загружено' : 'загружается');
+            });
+        }, 1000);
     } else {
+        console.error('Нет доступных планет');
         planetRibbon.innerHTML = '<img src="https://via.placeholder.com/150" alt="Нет планет" class="planet-ribbon-item">';
         planetInput.value = '';
     }
