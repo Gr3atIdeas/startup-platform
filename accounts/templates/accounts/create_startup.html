@@ -305,6 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Создаем ленту планет
     function createPlanetRibbon() {
+        console.log('Creating planet ribbon, current index:', currentPlanetIndex);
         planetRibbon.innerHTML = '';
         
         // Создаем копии планет для бесшовной анимации
@@ -321,109 +322,70 @@ document.addEventListener('DOMContentLoaded', function() {
             planetImg.dataset.planetIndex = planetIndex;
             planetElements.push(planetImg);
             planetRibbon.appendChild(planetImg);
+            console.log('Added planet:', planetChoices[planetIndex], 'at index:', planetIndex);
         }
+        
+        // Устанавливаем правильную позицию ленты
+        planetRibbon.style.transform = 'translateX(-33.333%)';
         
         return planetElements;
     }
 
-    // Создаем ленту планет с правильным позиционированием для направления
-    function createPlanetRibbonForDirection(direction) {
-        planetRibbon.innerHTML = '';
-        
-        const totalPlanets = planetChoices.length;
-        const planetElements = [];
-        
-        if (direction === 'next') {
-            // Для движения вправо: текущая, следующая, следующая+1
-            for (let i = 0; i <= 2; i++) {
-                const planetIndex = (currentPlanetIndex + i) % totalPlanets;
-                const planetImg = document.createElement('img');
-                planetImg.className = 'planet-ribbon-item';
-                planetImg.src = planetBaseUrl + planetChoices[planetIndex];
-                planetImg.alt = `Планета ${planetIndex + 1}`;
-                planetImg.dataset.planetIndex = planetIndex;
-                planetElements.push(planetImg);
-                planetRibbon.appendChild(planetImg);
-            }
-        } else {
-            // Для движения влево: предыдущая-1, предыдущая, текущая
-            for (let i = -2; i <= 0; i++) {
-                const planetIndex = (currentPlanetIndex + i + totalPlanets) % totalPlanets;
-                const planetImg = document.createElement('img');
-                planetImg.className = 'planet-ribbon-item';
-                planetImg.src = planetBaseUrl + planetChoices[planetIndex];
-                planetImg.alt = `Планета ${planetIndex + 1}`;
-                planetImg.dataset.planetIndex = planetIndex;
-                planetElements.push(planetImg);
-                planetRibbon.appendChild(planetImg);
-            }
-        }
-        
-        return planetElements;
-    }
+
 
     function updatePlanetRibbon(direction) {
         if (isAnimating) return;
         isAnimating = true;
         
-        // Сначала создаем новую ленту с правильным позиционированием для направления
-        createPlanetRibbonForDirection(direction);
-        
-        // Позиционируем ленту так, чтобы текущая планета была в центре
+        // Обновляем индекс
         if (direction === 'next') {
-            // Для движения вправо: текущая планета должна быть в центре (33.333%)
-            planetRibbon.style.transform = 'translateX(-33.333%)';
+            currentPlanetIndex = (currentPlanetIndex + 1) % planetChoices.length;
         } else {
-            // Для движения влево: текущая планета должна быть в центре (33.333%)
-            planetRibbon.style.transform = 'translateX(-33.333%)';
+            currentPlanetIndex = (currentPlanetIndex - 1 + planetChoices.length) % planetChoices.length;
         }
         
-        // Анимация сдвига ленты
-        const translateAmount = direction === 'next' ? -66.666% : 0;
+        // Создаем новую ленту с обновленным индексом
+        createPlanetRibbon();
         
-        // Небольшая задержка для стабилизации DOM
-        requestAnimationFrame(() => {
-            planetRibbon.style.transform = `translateX(${translateAmount}%)`;
-            
-            // После завершения анимации обновляем индекс и пересоздаем ленту
-            setTimeout(() => {
-                // Обновляем индекс
-                if (direction === 'next') {
-                    currentPlanetIndex = (currentPlanetIndex + 1) % planetChoices.length;
-                } else {
-                    currentPlanetIndex = (currentPlanetIndex - 1 + planetChoices.length) % planetChoices.length;
-                }
-                
-                // Пересоздаем ленту с новыми планетами
-                createPlanetRibbon();
-                
-                // Сбрасываем позицию ленты в центр
-                planetRibbon.style.transform = 'translateX(-33.333%)';
-                
-                // Обновляем значение формы
-                planetInput.value = planetChoices[currentPlanetIndex];
-                isAnimating = false;
-            }, 300);
-        });
+        // Обновляем значение формы
+        planetInput.value = planetChoices[currentPlanetIndex];
+        
+        // Завершаем анимацию
+        setTimeout(() => {
+            isAnimating = false;
+        }, 100);
     }
 
     prevButton.addEventListener('click', () => {
-        if (planetChoices.length === 0) return;
+        console.log('Prev button clicked');
+        if (planetChoices.length === 0) {
+            console.log('No planets available');
+            return;
+        }
         updatePlanetRibbon('prev');
     });
 
     nextButton.addEventListener('click', () => {
-        if (planetChoices.length === 0) return;
+        console.log('Next button clicked');
+        if (planetChoices.length === 0) {
+            console.log('No planets available');
+            return;
+        }
         updatePlanetRibbon('next');
     });
 
     // Инициализация ленты планет
+    console.log('Planet choices:', planetChoices);
+    console.log('Planet base URL:', planetBaseUrl);
+    
     if (planetChoices.length > 0) {
         createPlanetRibbon();
         planetInput.value = planetChoices[0];
+        console.log('Initialized with planet:', planetChoices[0]);
     } else {
         planetRibbon.innerHTML = '<img src="https://via.placeholder.com/150" alt="Нет планет" class="planet-ribbon-item">';
         planetInput.value = '';
+        console.log('No planets available');
     }
 
     // --- Логотип ---
