@@ -303,119 +303,89 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentPlanetIndex = 0;
     let isAnimating = false;
 
-    // Создаем ленту планет
+    // Создаем ленту планет один раз с достаточным количеством планет
     function createPlanetRibbon() {
         console.log('Creating planet ribbon, current index:', currentPlanetIndex);
         planetRibbon.innerHTML = '';
         
-        // Создаем копии планет для бесшовной анимации
         const totalPlanets = planetChoices.length;
-        const planetElements = [];
+        if (totalPlanets === 0) return;
         
-        // Добавляем планеты: предыдущая, текущая, следующая
-        for (let i = -1; i <= 1; i++) {
+        // Создаем ленту с 5 планетами для плавной прокрутки
+        // [предыдущая-1, предыдущая, текущая, следующая, следующая+1]
+        for (let i = -2; i <= 2; i++) {
             const planetIndex = (currentPlanetIndex + i + totalPlanets) % totalPlanets;
             const planetImg = document.createElement('img');
             planetImg.className = 'planet-ribbon-item';
             planetImg.src = planetBaseUrl + planetChoices[planetIndex];
             planetImg.alt = `Планета ${planetIndex + 1}`;
             planetImg.dataset.planetIndex = planetIndex;
-            planetElements.push(planetImg);
             planetRibbon.appendChild(planetImg);
             console.log('Added planet:', planetChoices[planetIndex], 'at index:', planetIndex);
         }
         
-        // Устанавливаем правильную позицию ленты
-        planetRibbon.style.transform = 'translateX(-33.333%)';
-        
-        return planetElements;
+        // Устанавливаем начальную позицию - текущая планета в центре
+        planetRibbon.style.transform = 'translateX(-40%)';
     }
 
-    // Создаем ленту планет с правильным позиционированием для направления
-    function createPlanetRibbonForDirection(direction) {
-        planetRibbon.innerHTML = '';
+    // Обновляем ленту планет при изменении направления
+    function updatePlanetRibbon(direction) {
+        if (isAnimating) return;
+        isAnimating = true;
         
         const totalPlanets = planetChoices.length;
-        const planetElements = [];
+        if (totalPlanets === 0) {
+            isAnimating = false;
+            return;
+        }
         
+        // Обновляем индекс
         if (direction === 'next') {
-            // Для движения вправо: текущая, следующая, следующая+1
-            for (let i = 0; i <= 2; i++) {
-                const planetIndex = (currentPlanetIndex + i) % totalPlanets;
-                const planetImg = document.createElement('img');
-                planetImg.className = 'planet-ribbon-item';
-                planetImg.src = planetBaseUrl + planetChoices[planetIndex];
-                planetImg.alt = `Планета ${planetIndex + 1}`;
-                planetImg.dataset.planetIndex = planetIndex;
-                planetElements.push(planetImg);
-                planetRibbon.appendChild(planetImg);
-            }
+            currentPlanetIndex = (currentPlanetIndex + 1) % totalPlanets;
         } else {
-            // Для движения влево: текущая, предыдущая, предыдущая-1
-            for (let i = 0; i >= -2; i--) {
+            currentPlanetIndex = (currentPlanetIndex - 1 + totalPlanets) % totalPlanets;
+        }
+        
+        // Анимируем сдвиг ленты
+        if (direction === 'next') {
+            // Сдвигаем влево для показа следующей планеты
+            planetRibbon.style.transform = 'translateX(-60%)';
+        } else {
+            // Сдвигаем вправо для показа предыдущей планеты
+            planetRibbon.style.transform = 'translateX(-20%)';
+        }
+        
+        // После завершения анимации обновляем содержимое ленты
+        setTimeout(() => {
+            // Пересоздаем ленту с новыми планетами, но без анимации
+            planetRibbon.style.transition = 'none';
+            
+            // Создаем новую ленту с текущим индексом в центре
+            planetRibbon.innerHTML = '';
+            for (let i = -2; i <= 2; i++) {
                 const planetIndex = (currentPlanetIndex + i + totalPlanets) % totalPlanets;
                 const planetImg = document.createElement('img');
                 planetImg.className = 'planet-ribbon-item';
                 planetImg.src = planetBaseUrl + planetChoices[planetIndex];
                 planetImg.alt = `Планета ${planetIndex + 1}`;
                 planetImg.dataset.planetIndex = planetIndex;
-                planetElements.push(planetImg);
                 planetRibbon.appendChild(planetImg);
             }
-        }
-        
-        return planetElements;
-    }
-
-
-
-    function updatePlanetRibbon(direction) {
-        if (isAnimating) return;
-        isAnimating = true;
-        
-        // Сначала создаем новую ленту с правильным позиционированием для направления
-        if (direction === 'next') {
-            // Для движения вправо: создаем ленту [текущая, следующая, следующая+1]
-            createPlanetRibbonForDirection('next');
-            // Позиционируем так, чтобы текущая планета была в центре
-            planetRibbon.style.transform = 'translateX(-33.333%)';
-        } else {
-            // Для движения влево: создаем ленту [текущая, предыдущая, предыдущая-1]
-            createPlanetRibbonForDirection('prev');
-            // Позиционируем так, чтобы текущая планета была в центре
-            planetRibbon.style.transform = 'translateX(-33.333%)';
-        }
-        
-        // Небольшая задержка для стабилизации DOM
-        requestAnimationFrame(() => {
-            // Анимация сдвига ленты
-            if (direction === 'next') {
-                // Сдвигаем влево, показывая следующую планету
-                planetRibbon.style.transform = 'translateX(-66.666%)';
-            } else {
-                // Сдвигаем вправо, показывая предыдущую планету
-                planetRibbon.style.transform = 'translateX(-66.666%)';
-            }
             
-            // После завершения анимации обновляем содержимое
-            setTimeout(() => {
-                // Обновляем индекс
-                if (direction === 'next') {
-                    currentPlanetIndex = (currentPlanetIndex + 1) % planetChoices.length;
-                } else {
-                    currentPlanetIndex = (currentPlanetIndex - 1 + planetChoices.length) % planetChoices.length;
-                }
-                
-                // Пересоздаем ленту с новыми планетами
-                createPlanetRibbon();
-                
-                // Обновляем значение формы
-                planetInput.value = planetChoices[currentPlanetIndex];
-                
-                // Завершаем анимацию
-                isAnimating = false;
-            }, 400); // Время анимации
-        });
+            // Возвращаем ленту в центральное положение без анимации
+            planetRibbon.style.transform = 'translateX(-40%)';
+            
+            // Восстанавливаем анимацию
+            requestAnimationFrame(() => {
+                planetRibbon.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+            
+            // Обновляем значение формы
+            planetInput.value = planetChoices[currentPlanetIndex];
+            
+            // Завершаем анимацию
+            isAnimating = false;
+        }, 400); // Время анимации
     }
 
     prevButton.addEventListener('click', () => {

@@ -1432,15 +1432,15 @@ body,
 
 .planet-ribbon {
   display: flex;
-  width: 300%;
+  width: 500%;
   height: 100%;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateX(-33.333%);
+  transform: translateX(-40%);
   position: relative;
 }
 
 .planet-ribbon-item {
-  flex: 0 0 33.333%;
+  flex: 0 0 20%;
   width: 100%;
   height: 100%;
   object-fit: contain;
