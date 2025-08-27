@@ -77,7 +77,6 @@ urlpatterns = [
     path("cosmochat/rename-chat/<int:chat_id>/", views.rename_chat, name="rename_chat"),
     path("cosmochat/available_users/", views.available_users, name="available_users"),
     path("cosmochat/start-deal/<int:chat_id>/", views.start_deal, name="start_deal"),
-    path("cosmochat/chat-list/", views.chat_list, name="chat_list"),
     path("profile/", views.profile, name="profile"),
     path("profile/delete-avatar/", views.delete_avatar, name="delete_avatar"),
     path("profile/<int:user_id>/", views.profile, name="user_profile"),
@@ -107,7 +106,6 @@ urlpatterns = [
     path("invest/<int:startup_id>/", views.invest, name="invest"),
     path("search-suggestions/", views.search_suggestions, name="search_suggestions"),
     path("global-search/", views.global_search, name="global_search"),
-
     path("planetary-system/", views.planetary_system, name="planetary_system"),
     path("my_startups/", views.my_startups, name="my_startups"),
     path("my_startups/download-report/", views.download_startups_report, name="download_startups_report"),

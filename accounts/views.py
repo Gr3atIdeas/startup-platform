@@ -1616,7 +1616,6 @@ def search_suggestions(request):
         ]
     return JsonResponse({"suggestions": users})
 
-
 def global_search(request):
     """Глобальный поиск по всем типам карточек"""
     try:
@@ -1791,6 +1790,7 @@ def global_search(request):
             "error": "Ошибка при выполнении поиска",
             "details": str(e) if settings.DEBUG else "Внутренняя ошибка сервера"
         }, status=500)
+
 def startup_detail(request, startup_id):
     try:
         startup = Startups.objects.select_related("owner", "direction", "stage").get(
