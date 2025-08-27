@@ -4548,9 +4548,19 @@ def chat_list(request):
         chats_data = []
         for chat in chats:
             if chat.is_group_chat:
+                try:
+                    chat_name = chat.name or "Групповой чат"
+                except:
+                    chat_name = "Групповой чат"
+                
+                try:
+                    conversation_id = chat.conversation_id or 0
+                except:
+                    conversation_id = 0
+                
                 chat_data = {
-                    "conversation_id": chat.conversation_id,
-                    "name": chat.name or "Групповой чат",
+                    "conversation_id": conversation_id,
+                    "name": chat_name,
                     "is_group_chat": True,
                     "is_deleted": False,
                     "has_left": False,
@@ -4567,9 +4577,27 @@ def chat_list(request):
                 
                 if other_participant and other_participant.user:
                     user_profile = other_participant.user
+                    try:
+                        user_name = f"{user_profile.first_name or ''} {user_profile.last_name or ''}".strip() or user_profile.email
+                    except:
+                        try:
+                            user_id = user_profile.user_id or 0
+                            user_name = user_profile.email or f"Пользователь {user_id}"
+                        except:
+                            try:
+                                user_id = user_profile.user_id or 0
+                            except:
+                                user_id = 0
+                            user_name = f"Пользователь {user_id}"
+                    
+                    try:
+                        conversation_id = chat.conversation_id or 0
+                    except:
+                        conversation_id = 0
+                    
                     chat_data = {
-                        "conversation_id": chat.conversation_id,
-                        "name": f"{user_profile.first_name or ''} {user_profile.last_name or ''}".strip() or user_profile.email,
+                        "conversation_id": conversation_id,
+                        "name": user_name,
                         "is_group_chat": False,
                         "is_deleted": False,
                         "has_left": False,
@@ -4578,8 +4606,13 @@ def chat_list(request):
                         "unread_count": 0
                     }
                 else:
+                    try:
+                        conversation_id = chat.conversation_id or 0
+                    except:
+                        conversation_id = 0
+                    
                     chat_data = {
-                        "conversation_id": chat.conversation_id,
+                        "conversation_id": conversation_id,
                         "name": "Удаленный чат",
                         "is_group_chat": False,
                         "is_deleted": True,
@@ -4592,22 +4625,59 @@ def chat_list(request):
             # Получаем последнее сообщение
             latest_message = chat.messages_set.order_by('-created_at').first()
             if latest_message:
+                try:
+                    is_read = latest_message.is_read()
+                except:
+                    is_read = False
+                
+                try:
+                    sender_name = f"{latest_message.sender.first_name} {latest_message.sender.last_name}" if latest_message.sender else "Неизвестно"
+                except:
+                    sender_name = "Неизвестно"
+                
+                try:
+                    created_at = latest_message.created_at.strftime("%d.%m.%Y %H:%M") if latest_message.created_at else ""
+                    created_at_time = latest_message.created_at.strftime("%H:%M") if latest_message.created_at else ""
+                    created_at_date = latest_message.created_at.strftime("%d.%m") if latest_message.created_at else ""
+                except:
+                    created_at = ""
+                    created_at_time = ""
+                    created_at_date = ""
+                
+                try:
+                    message_text = latest_message.message_text or ""
+                except:
+                    message_text = ""
+                
+                try:
+                    message_id = latest_message.message_id or 0
+                except:
+                    message_id = 0
+                
+                try:
+                    sender_id = latest_message.sender.user_id if latest_message.sender else None
+                except:
+                    sender_id = None
+                
                 chat_data["last_message"] = {
-                    "message_id": latest_message.message_id,
-                    "message_text": latest_message.message_text,
-                    "sender_id": latest_message.sender.user_id if latest_message.sender else None,
-                    "sender_name": f"{latest_message.sender.first_name} {latest_message.sender.last_name}" if latest_message.sender else "Неизвестно",
-                    "created_at": latest_message.created_at.strftime("%d.%m.%Y %H:%M") if latest_message.created_at else "",
-                    "created_at_time": latest_message.created_at.strftime("%H:%M") if latest_message.created_at else "",
-                    "created_at_date": latest_message.created_at.strftime("%d.%m") if latest_message.created_at else "",
-                    "is_read": latest_message.is_read()
+                    "message_id": message_id,
+                    "message_text": message_text,
+                    "sender_id": sender_id,
+                    "sender_name": sender_name,
+                    "created_at": created_at,
+                    "created_at_time": created_at_time,
+                    "created_at_date": created_at_date,
+                    "is_read": is_read
                 }
             
             # Подсчитываем непрочитанные сообщения
-            unread_count = chat.messages_set.filter(
-                ~Q(sender=request.user),
-                is_read=False
-            ).count()
+            try:
+                unread_count = chat.messages_set.filter(
+                    ~Q(sender=request.user),
+                    is_read=False
+                ).count()
+            except:
+                unread_count = 0
             chat_data["unread_count"] = unread_count
             
             # Добавляем информацию об участнике для личных чатов
@@ -4619,11 +4689,28 @@ def chat_list(request):
                         break
                 
                 if other_participant and other_participant.user:
+                    try:
+                        profile_picture_url = other_participant.user.get_profile_picture_url()
+                    except:
+                        profile_picture_url = None
+                    
+                    try:
+                        first_name = other_participant.user.first_name or ""
+                        last_name = other_participant.user.last_name or ""
+                    except:
+                        first_name = ""
+                        last_name = ""
+                    
+                    try:
+                        user_id = other_participant.user.user_id or 0
+                    except:
+                        user_id = 0
+                    
                     chat_data["participant"] = {
-                        "user_id": other_participant.user.user_id,
-                        "first_name": other_participant.user.first_name or "",
-                        "last_name": other_participant.user.last_name or "",
-                        "profile_picture_url": other_participant.user.get_profile_picture_url()
+                        "user_id": user_id,
+                        "first_name": first_name,
+                        "last_name": last_name,
+                        "profile_picture_url": profile_picture_url
                     }
             
             chats_data.append(chat_data)
@@ -4634,7 +4721,9 @@ def chat_list(request):
         })
         
     except Exception as e:
+        import traceback
         logger.error(f"Ошибка при получении списка чатов: {e}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
         return JsonResponse({
             "success": False,
             "error": "Внутренняя ошибка сервера"
