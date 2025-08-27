@@ -351,8 +351,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 planetRibbon.appendChild(planetImg);
             }
         } else {
-            // Для движения влево: предыдущая-1, предыдущая, текущая
-            for (let i = -2; i <= 0; i++) {
+            // Для движения влево: текущая, предыдущая, предыдущая-1
+            for (let i = 0; i >= -2; i--) {
                 const planetIndex = (currentPlanetIndex + i + totalPlanets) % totalPlanets;
                 const planetImg = document.createElement('img');
                 planetImg.className = 'planet-ribbon-item';
@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Позиционируем так, чтобы текущая планета была в центре
             planetRibbon.style.transform = 'translateX(-33.333%)';
         } else {
-            // Для движения влево: создаем ленту [предыдущая-1, предыдущая, текущая]
+            // Для движения влево: создаем ленту [текущая, предыдущая, предыдущая-1]
             createPlanetRibbonForDirection('prev');
             // Позиционируем так, чтобы текущая планета была в центре
             planetRibbon.style.transform = 'translateX(-33.333%)';
@@ -393,8 +393,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Сдвигаем влево, показывая следующую планету
                 planetRibbon.style.transform = 'translateX(-66.666%)';
             } else {
-                // Сдвигаем влево, показывая предыдущую планету
-                planetRibbon.style.transform = 'translateX(0%)';
+                // Сдвигаем вправо, показывая предыдущую планету
+                planetRibbon.style.transform = 'translateX(-66.666%)';
             }
             
             // После завершения анимации обновляем содержимое
@@ -412,9 +412,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Обновляем значение формы
                 planetInput.value = planetChoices[currentPlanetIndex];
                 
-                            // Завершаем анимацию
-            isAnimating = false;
-        }, 400); // Время анимации
+                // Завершаем анимацию
+                isAnimating = false;
+            }, 400); // Время анимации
         });
     }
 
