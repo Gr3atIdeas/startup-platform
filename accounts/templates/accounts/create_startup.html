@@ -353,12 +353,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Анимируем сдвиг ленты
         if (direction === 'next') {
             // Сдвигаем влево для показа следующей планеты
-            console.log('Moving to next planet, setting transform to -150%');
-            planetRibbon.style.transform = 'translateX(-150%)';
+            // Каждая планета занимает 4.7619%, поэтому сдвигаем на 4.7619% влево
+            const shiftAmount = -50 - 4.7619;
+            console.log('Moving to next planet, setting transform to', shiftAmount + '%');
+            planetRibbon.style.transform = `translateX(${shiftAmount}%)`;
         } else {
             // Сдвигаем вправо для показа предыдущей планеты
-            console.log('Moving to prev planet, setting transform to 50%');
-            planetRibbon.style.transform = 'translateX(50%)';
+            // Каждая планета занимает 4.7619%, поэтому сдвигаем на 4.7619% вправо
+            const shiftAmount = -50 + 4.7619;
+            console.log('Moving to prev planet, setting transform to', shiftAmount + '%');
+            planetRibbon.style.transform = `translateX(${shiftAmount}%)`;
         }
         
         // После завершения анимации обновляем значение формы и перепрыгиваем ленту
@@ -369,12 +373,16 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (direction === 'next') {
                 // Если двигались влево, перепрыгиваем вправо
-                console.log('Repositioning to 50%');
-                planetRibbon.style.transform = 'translateX(50%)';
+                // Возвращаемся к позиции, где текущая планета в центре
+                const repositionAmount = -50 + 4.7619;
+                console.log('Repositioning to', repositionAmount + '%');
+                planetRibbon.style.transform = `translateX(${repositionAmount}%)`;
             } else {
                 // Если двигались вправо, перепрыгиваем влево
-                console.log('Repositioning to -150%');
-                planetRibbon.style.transform = 'translateX(-150%)';
+                // Возвращаемся к позиции, где текущая планета в центре
+                const repositionAmount = -50 - 4.7619;
+                console.log('Repositioning to', repositionAmount + '%');
+                planetRibbon.style.transform = `translateX(${repositionAmount}%)`;
             }
             
             // Восстанавливаем анимацию
