@@ -1619,48 +1619,48 @@ def search_suggestions(request):
 def global_search(request):
     """Глобальный поиск по всем типам карточек"""
     try:
-    query = request.GET.get("q", "").strip()
-    
-    if len(query) < 2:
-        return JsonResponse({
+        query = request.GET.get("q", "").strip()
+        
+        if len(query) < 2:
+            return JsonResponse({
+                "users": [],
+                "startups": [],
+                "franchises": [],
+                "agencies": [],
+                "specialists": []
+            })
+        
+        results = {
             "users": [],
             "startups": [],
             "franchises": [],
             "agencies": [],
             "specialists": []
-        })
-    
-    results = {
-        "users": [],
-        "startups": [],
-        "franchises": [],
-        "agencies": [],
-        "specialists": []
-    }
-    
-    # Поиск пользователей
+        }
+        
+        # Поиск пользователей
         try:
-    users = Users.objects.filter(
-        Q(first_name__icontains=query) |
-        Q(last_name__icontains=query) |
-        Q(email__icontains=query)
-    ).distinct()[:5]
-    
-    for user in users:
+            users = Users.objects.filter(
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query) |
+                Q(email__icontains=query)
+            ).distinct()[:5]
+            
+            for user in users:
                 try:
-        results["users"].append({
-            "id": user.user_id,
-            "name": f"{user.first_name or ''} {user.last_name or ''}".strip() or user.email,
-            "type": "user",
-            "url": reverse('profile', kwargs={'user_id': user.user_id})
-        })
+                    results["users"].append({
+                        "id": user.user_id,
+                        "name": f"{user.first_name or ''} {user.last_name or ''}".strip() or user.email,
+                        "type": "user",
+                        "url": reverse('profile', kwargs={'user_id': user.user_id})
+                    })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке пользователя {user.user_id}: {e}")
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске пользователей: {e}")
     
-    # Поиск стартапов
+        # Поиск стартапов
         try:
             # У Startups есть и status (CharField) и status_id (ForeignKey)
             try:
@@ -1672,30 +1672,30 @@ def global_search(request):
                 ).filter(status_id=approved_status).distinct()[:5]
             except ReviewStatuses.DoesNotExist:
                 # Если статус не найден, ищем по полю status
-    startups = Startups.objects.filter(
-        Q(title__icontains=query) |
-        Q(short_description__icontains=query)
-    ).filter(status="approved").distinct()[:5]
-    
-    for startup in startups:
+                startups = Startups.objects.filter(
+                    Q(title__icontains=query) |
+                    Q(short_description__icontains=query)
+                ).filter(status="approved").distinct()[:5]
+            
+            for startup in startups:
                 try:
                     # Проверяем, что обязательные поля не пустые
                     if not startup.title:
                         continue
                         
-        results["startups"].append({
-            "id": startup.startup_id,
-            "name": startup.title,
-            "type": "startup",
-            "url": reverse('startup_detail', kwargs={'startup_id': startup.startup_id})
-        })
+                    results["startups"].append({
+                        "id": startup.startup_id,
+                        "name": startup.title,
+                        "type": "startup",
+                        "url": reverse('startup_detail', kwargs={'startup_id': startup.startup_id})
+                    })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке стартапа {startup.startup_id}: {e}")
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске стартапов: {e}")
     
-    # Поиск франшиз
+        # Поиск франшиз
         try:
             # У Franchises есть и status (CharField) и status_id (ForeignKey)
             try:
@@ -1707,82 +1707,82 @@ def global_search(request):
                 ).filter(status_id=approved_status).distinct()[:5]
             except ReviewStatuses.DoesNotExist:
                 # Если статус не найден, ищем по полю status
-    franchises = Franchises.objects.filter(
-        Q(title__icontains=query) |
-        Q(short_description__icontains=query)
-    ).filter(status="approved").distinct()[:5]
-    
-    for franchise in franchises:
+                franchises = Franchises.objects.filter(
+                    Q(title__icontains=query) |
+                    Q(short_description__icontains=query)
+                ).filter(status="approved").distinct()[:5]
+            
+            for franchise in franchises:
                 try:
                     # Проверяем, что обязательные поля не пустые
                     if not franchise.title:
                         continue
                         
-        results["franchises"].append({
-            "id": franchise.franchise_id,
-            "name": franchise.title,
-            "type": "franchise",
-            "url": reverse('franchise_detail', kwargs={'franchise_id': franchise.franchise_id})
-        })
+                    results["franchises"].append({
+                        "id": franchise.franchise_id,
+                        "name": franchise.title,
+                        "type": "franchise",
+                        "url": reverse('franchise_detail', kwargs={'franchise_id': franchise.franchise_id})
+                    })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке франшизы {franchise.franchise_id}: {e}")
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске франшиз: {e}")
     
-    # Поиск агентств
+        # Поиск агентств
         try:
             # У Agencies только поле status (CharField)
-    agencies = Agencies.objects.filter(
-        Q(title__icontains=query) |
-        Q(short_description__icontains=query)
-    ).filter(status="approved").distinct()[:5]
-    
-    for agency in agencies:
+            agencies = Agencies.objects.filter(
+                Q(title__icontains=query) |
+                Q(short_description__icontains=query)
+            ).filter(status="approved").distinct()[:5]
+            
+            for agency in agencies:
                 try:
                     # Проверяем, что обязательные поля не пустые
                     if not agency.title:
                         continue
                         
-        results["agencies"].append({
-            "id": agency.agency_id,
-            "name": agency.title,
-            "type": "agency",
-            "url": reverse('agency_detail', kwargs={'agency_id': agency.agency_id})
-        })
+                    results["agencies"].append({
+                        "id": agency.agency_id,
+                        "name": agency.title,
+                        "type": "agency",
+                        "url": reverse('agency_detail', kwargs={'agency_id': agency.agency_id})
+                    })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке агентства {agency.agency_id}: {e}")
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске агентств: {e}")
     
-    # Поиск специалистов
+        # Поиск специалистов
         try:
             # У Specialists только поле status (CharField)
-    specialists = Specialists.objects.filter(
-        Q(title__icontains=query) |
-        Q(short_description__icontains=query)
-    ).filter(status="approved").distinct()[:5]
-    
-    for specialist in specialists:
+            specialists = Specialists.objects.filter(
+                Q(title__icontains=query) |
+                Q(short_description__icontains=query)
+            ).filter(status="approved").distinct()[:5]
+            
+            for specialist in specialists:
                 try:
                     # Проверяем, что обязательные поля не пустые
                     if not specialist.title:
                         continue
                         
-        results["specialists"].append({
-            "id": specialist.specialist_id,
-            "name": specialist.title,
-            "type": "specialist",
-            "url": reverse('specialist_detail', kwargs={'specialist_id': specialist.specialist_id})
-        })
+                    results["specialists"].append({
+                        "id": specialist.specialist_id,
+                        "name": specialist.title,
+                        "type": "specialist",
+                        "url": reverse('specialist_detail', kwargs={'specialist_id': specialist.specialist_id})
+                    })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке специалиста {specialist.specialist_id}: {e}")
                     continue
         except Exception as e:
             logger.error(f"Ошибка при поиске специалистов: {e}")
-    
-    return JsonResponse(results)
+        
+        return JsonResponse(results)
         
     except Exception as e:
         logger.error(f"Критическая ошибка в global_search: {e}")
