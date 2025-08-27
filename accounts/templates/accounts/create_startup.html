@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentPlanetIndex = 0;
     let isAnimating = false;
 
-    // Создаем ленту планет один раз со всеми планетами
+    // Создаем ленту планет
     function createPlanetRibbon() {
         console.log('Creating planet ribbon, current index:', currentPlanetIndex);
         planetRibbon.innerHTML = '';
@@ -311,21 +311,22 @@ document.addEventListener('DOMContentLoaded', function() {
         const totalPlanets = planetChoices.length;
         if (totalPlanets === 0) return;
         
-        // Создаем ленту со всеми планетами для бесконечной прокрутки
-        // Добавляем планеты в порядке: [все планеты] + [все планеты] для бесшовности
-        for (let i = 0; i < totalPlanets * 2; i++) {
-            const planetIndex = i % totalPlanets;
+        // Создаем ленту только с нужными планетами
+        planetChoices.forEach((planet, index) => {
             const planetImg = document.createElement('img');
             planetImg.className = 'planet-ribbon-item';
-            planetImg.src = planetBaseUrl + planetChoices[planetIndex];
-            planetImg.alt = `Планета ${planetIndex + 1}`;
-            planetImg.dataset.planetIndex = planetIndex;
+            planetImg.src = planetBaseUrl + planet;
+            planetImg.alt = `Планета ${index + 1}`;
+            planetImg.dataset.planetIndex = index;
             planetRibbon.appendChild(planetImg);
-            console.log('Added planet:', planetChoices[planetIndex], 'at index:', planetIndex);
-        }
+            console.log('Added planet:', planet, 'at index:', index);
+        });
         
-        // Устанавливаем начальную позицию - текущая планета в центре
-        planetRibbon.style.transform = 'translateX(-50%)';
+        // Устанавливаем ширину ленты равной количеству планет
+        planetRibbon.style.width = `${totalPlanets * 100}%`;
+        
+        // Устанавливаем начальную позицию - первая планета в центре
+        planetRibbon.style.transform = 'translateX(0)';
     }
 
     // Обновляем ленту планет при изменении направления
@@ -350,38 +351,14 @@ document.addEventListener('DOMContentLoaded', function() {
             currentPlanetIndex = (currentPlanetIndex - 1 + totalPlanets) % totalPlanets;
         }
         
-        // Анимируем сдвиг ленты
-        if (direction === 'next') {
-            // Сдвигаем влево для показа следующей планеты
-            console.log('Moving to next planet, setting transform to -150%');
-            planetRibbon.style.transform = 'translateX(-150%)';
-        } else {
-            // Сдвигаем вправо для показа предыдущей планеты
-            console.log('Moving to prev planet, setting transform to 50%');
-            planetRibbon.style.transform = 'translateX(50%)';
-        }
+        // Вычисляем позицию для показа текущей планеты
+        const translateX = -currentPlanetIndex * 100;
         
-        // После завершения анимации обновляем значение формы и перепрыгиваем ленту
+        // Анимируем сдвиг ленты
+        planetRibbon.style.transform = `translateX(${translateX}%)`;
+        
+        // После завершения анимации обновляем значение формы
         setTimeout(() => {
-            console.log('Animation completed, repositioning ribbon');
-            // Перепрыгиваем ленту в противоположную сторону для бесконечности
-            planetRibbon.style.transition = 'none';
-            
-            if (direction === 'next') {
-                // Если двигались влево, перепрыгиваем вправо
-                console.log('Repositioning to 50%');
-                planetRibbon.style.transform = 'translateX(50%)';
-            } else {
-                // Если двигались вправо, перепрыгиваем влево
-                console.log('Repositioning to -150%');
-                planetRibbon.style.transform = 'translateX(-150%)';
-            }
-            
-            // Восстанавливаем анимацию
-            requestAnimationFrame(() => {
-                planetRibbon.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-            });
-            
             // Обновляем значение формы
             planetInput.value = planetChoices[currentPlanetIndex];
             console.log('Updated form value to:', planetChoices[currentPlanetIndex]);
