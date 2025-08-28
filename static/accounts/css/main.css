@@ -799,6 +799,7 @@ body > main.content::after {
   border-radius: 5px;
   outline: 1px solid #ffffff;
   box-sizing: content-box;
+  transition: transform 0.3s ease;
 }
 
 .featured3 .faq,
