@@ -539,8 +539,8 @@ body > main.content::after {
 }
 
 .featured1 .feature-card {
-  min-width: 395px;
-  width: 395px;
+  min-width: 405px;
+  width: 405px;
   height: 514px;
   position: relative;
   background: white;
@@ -571,15 +571,8 @@ body > main.content::after {
   font-family: 'Blippo Black', sans-serif;
   font-weight: normal;
   line-height: 1;
-
-  
-
-  
-
-  
-
-  
-  white-space: nowrap; 
+  white-space: normal;
+  word-wrap: break-word;
   margin-bottom: 15px;
 }
 
@@ -587,7 +580,7 @@ body > main.content::after {
 .featured1 .feature-card .div11 {
   position: relative;
   z-index: 2;
-  width: 395px;
+  width: 405px;
   color: #004e9f;
   font-size: 16px;
   font-family: Unbounded, sans-serif;
@@ -2681,8 +2674,8 @@ body > main.content::after {
 
 @media (width <= 1350px) {
   .featured1 .feature-card {
-    min-width: 360px;
-    width: 360px;
+    min-width: 370px;
+    width: 370px;
   }
   
   .featured1-carousel-inner {
@@ -2846,8 +2839,8 @@ body > main.content::after {
   }
 
   .featured1 .feature-card {
-    min-width: 310px; 
-    width: 310px;
+    min-width: 320px; 
+    width: 320px;
     height: auto;
   }
   
@@ -2952,8 +2945,8 @@ body > main.content::after {
   }
   
   .featured1 .feature-card {
-    min-width: 260px;
-    width: 260px;
+    min-width: 270px;
+    width: 270px;
   }
   
   .featured1-carousel-inner {
@@ -3015,8 +3008,8 @@ body > main.content::after {
   }
   
   .featured1 .feature-card {
-    min-width: 230px;
-    width: 230px;
+    min-width: 240px;
+    width: 240px;
   }
   
   .featured1-carousel-inner {
