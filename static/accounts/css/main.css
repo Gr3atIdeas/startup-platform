@@ -539,8 +539,8 @@ body > main.content::after {
 }
 
 .featured1 .feature-card {
-  min-width: 390px;
-  width: 390px;
+  min-width: 395px;
+  width: 395px;
   height: 514px;
   position: relative;
   background: white;
@@ -587,7 +587,7 @@ body > main.content::after {
 .featured1 .feature-card .div11 {
   position: relative;
   z-index: 2;
-  width: 390px;
+  width: 395px;
   color: #004e9f;
   font-size: 16px;
   font-family: Unbounded, sans-serif;
@@ -2681,8 +2681,8 @@ body > main.content::after {
 
 @media (width <= 1350px) {
   .featured1 .feature-card {
-    min-width: 350px;
-    width: 350px;
+    min-width: 360px;
+    width: 360px;
   }
   
   .featured1-carousel-inner {
@@ -2846,8 +2846,8 @@ body > main.content::after {
   }
 
   .featured1 .feature-card {
-    min-width: 300px; 
-    width: 300px;
+    min-width: 310px; 
+    width: 310px;
     height: auto;
   }
   
@@ -2952,8 +2952,8 @@ body > main.content::after {
   }
   
   .featured1 .feature-card {
-    min-width: 250px;
-    width: 250px;
+    min-width: 260px;
+    width: 260px;
   }
   
   .featured1-carousel-inner {
@@ -3015,8 +3015,8 @@ body > main.content::after {
   }
   
   .featured1 .feature-card {
-    min-width: 220px;
-    width: 220px;
+    min-width: 230px;
+    width: 230px;
   }
   
   .featured1-carousel-inner {
