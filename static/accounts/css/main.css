@@ -791,6 +791,96 @@ body > main.content::after {
   justify-content: flex-start;
 }
 
+.featured3 .chevron-forward-circle-outline-parent {
+  width: 35px;
+  height: 35px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  overflow: visible;
+  cursor: default;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.featured3 .chevron-forward-circle-outline-parent::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease;
+}
+
+.featured3 .chevron-forward-circle-outline-parent:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+.featured3 .chevron-forward-circle-outline-parent:hover {
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.featured3 .chevron-forward-circle-outline-parent:hover .frame-icon {
+  transform: translateX(2px);
+}
+
+.featured3 .frame-parent2 {
+  width: 35px;
+  height: 35px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  overflow: visible;
+  cursor: default;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.featured3 .frame-parent2::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease;
+}
+
+.featured3 .frame-parent2:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+.featured3 .frame-parent2:hover {
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.featured3 .frame-parent2:hover .frame-icon {
+  transform: translateX(2px);
+}
+
 .featured3 .frame-icon {
   width: 24px;
   height: 24px;
