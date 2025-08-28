@@ -2325,7 +2325,7 @@ body > main.content::after {
   position: absolute;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 24px;
   box-sizing: border-box;
 }
@@ -2364,11 +2364,12 @@ body > main.content::after {
 }
 
 .consent-label {
-  padding: 16px 32px;
+  padding: 16px 0;
   display: flex;
   align-items: center;
   gap: 16px;
   cursor: pointer;
+  align-self: flex-start;
 }
 
 .consent-checkbox-input {
