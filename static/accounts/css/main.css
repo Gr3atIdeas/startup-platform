@@ -564,7 +564,7 @@ body > main.content::after {
 }
 
 .featured1 .feature-card .div8 {
-  position: relative;
+  position: absolute;
   z-index: 2;
   color: #004e9f;
   font-size: clamp(20px, 3.5vw, 50px);
@@ -575,8 +575,7 @@ body > main.content::after {
   margin-bottom: 15px;
   width: 100%;
   box-sizing: border-box;
-  position: absolute;
-  bottom: 120px;
+  bottom: 145px;
   left: 43px;
   right: 43px;
 }
@@ -594,7 +593,7 @@ body > main.content::after {
   word-wrap: break-word;
   overflow-wrap: break-word;
   box-sizing: border-box;
-  bottom: 60px;
+  bottom: 85px;
   left: 43px;
   right: 43px;
 }
