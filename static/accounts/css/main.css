@@ -575,7 +575,7 @@ body > main.content::after {
   margin-bottom: 15px;
   width: 100%;
   box-sizing: border-box;
-  bottom: 100px;
+  bottom: 145px;
   left: 43px;
   right: 43px;
 }
@@ -593,7 +593,7 @@ body > main.content::after {
   word-wrap: break-word;
   overflow-wrap: break-word;
   box-sizing: border-box;
-  bottom: 50px;
+  bottom: 85px;
   left: 43px;
   right: 43px;
 }
