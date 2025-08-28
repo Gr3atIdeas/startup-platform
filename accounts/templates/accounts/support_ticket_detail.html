@@ -150,6 +150,10 @@
     overflow-y: auto;
 }
 
+.moderator-comment-field {
+    margin-bottom: 30px;
+}
+
 .moderator-form {
     width: 100%;
 }
@@ -420,7 +424,7 @@
                 
                 <!-- Комментарий модератора -->
                 <div class="info-block">
-                    <div class="info-title">Комментарий модератора</div>
+                    <div class="info-label">Комментарий модератора</div>
                     {% if is_moderator %}
                         <form method="post" class="moderator-form">
                             {% csrf_token %}
@@ -430,7 +434,7 @@
                             </button>
                         </form>
                     {% else %}
-                        <div class="comment-field">
+                        <div class="comment-field moderator-comment-field">
                             {% if ticket.moderator_comment %}
                                 <div class="comment-content">{{ ticket.moderator_comment }}</div>
                             {% else %}
