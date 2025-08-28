@@ -599,22 +599,17 @@
             
             <div class="subscription-form-wrapper">
                 <form>
-                    <div class="email-input-wrapper">
-                        <input type="email" placeholder="Email" class="email-input">
-                    </div>
-                    <div class="form-bottom-row">
-                        <label class="consent-label">
-                            <input type="checkbox" class="consent-checkbox-input">
-                            <span class="consent-checkbox-visual">
-                                <img src="{% static 'accounts/images/main_page/check.svg' %}" alt="check" class="check-icon">
-                            </span>
-                            <span class="consent-text">Я даю согласие на обработку персональных данных</span>
-                        </label>
-                        <button type="submit" class="subscribe-btn">
-                            <span>Подписаться</span>
-                            <img src="{% static 'accounts/images/main_page/send.svg' %}" alt="send" class="send-icon">
-                        </button>
-                    </div>
+                    <button type="submit" class="subscribe-btn">
+                        <span>Подписаться</span>
+                        <img src="{% static 'accounts/images/main_page/send.svg' %}" alt="send" class="send-icon">
+                    </button>
+                    <label class="consent-label">
+                        <input type="checkbox" class="consent-checkbox-input">
+                        <span class="consent-checkbox-visual">
+                            <img src="{% static 'accounts/images/main_page/check.svg' %}" alt="check" class="check-icon">
+                        </span>
+                        <span class="consent-text">Я даю согласие на обработку персональных данных</span>
+                    </label>
                 </form>
             </div>
     
