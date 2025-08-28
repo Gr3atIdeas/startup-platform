@@ -534,13 +534,13 @@ body > main.content::after {
 
 .featured1-carousel-inner {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   transition: transform 0.5s ease-in-out;
 }
 
 .featured1 .feature-card {
-  min-width: 449px;
-  width: 449px;
+  min-width: 390px;
+  width: 390px;
   height: 514px;
   position: relative;
   background: white;
@@ -2680,6 +2680,15 @@ body > main.content::after {
 
 
 @media (width <= 1350px) {
+  .featured1 .feature-card {
+    min-width: 350px;
+    width: 350px;
+  }
+  
+  .featured1-carousel-inner {
+    gap: 12px;
+  }
+  
   .featured3 .frame-parent,
   .featured4 .frame-parent3 {
     flex-direction: column;
@@ -2838,7 +2847,12 @@ body > main.content::after {
 
   .featured1 .feature-card {
     min-width: 300px; 
+    width: 300px;
     height: auto;
+  }
+  
+  .featured1-carousel-inner {
+    gap: 10px;
   }
   .featured1 .heading {
     flex-direction: column;
@@ -2939,6 +2953,11 @@ body > main.content::after {
   
   .featured1 .feature-card {
     min-width: 250px;
+    width: 250px;
+  }
+  
+  .featured1-carousel-inner {
+    gap: 8px;
   }
   
   .final-cta-heading-main,
@@ -2997,6 +3016,11 @@ body > main.content::after {
   
   .featured1 .feature-card {
     min-width: 220px;
+    width: 220px;
+  }
+  
+  .featured1-carousel-inner {
+    gap: 6px;
   }
   
   .final-cta-heading-main,
