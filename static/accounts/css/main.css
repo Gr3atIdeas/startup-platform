@@ -567,26 +567,29 @@ body > main.content::after {
   position: relative;
   z-index: 2;
   color: #004e9f;
-  font-size: 55px;
+  font-size: clamp(24px, 4vw, 55px);
   font-family: 'Blippo Black', sans-serif;
   font-weight: normal;
-  line-height: 1;
-  white-space: normal;
-  word-wrap: break-word;
+  line-height: 1.1;
+  white-space: nowrap;
   margin-bottom: 15px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .featured1 .feature-card .div9,
 .featured1 .feature-card .div11 {
   position: relative;
   z-index: 2;
-  width: 405px;
+  width: 100%;
   color: #004e9f;
   font-size: 16px;
   font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 1.2;
   word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
 }
 
 .featured1 .heading .parent3 .div16 {
@@ -2678,6 +2681,10 @@ body > main.content::after {
     width: 370px;
   }
   
+  .featured1 .feature-card .div8 {
+    font-size: clamp(32px, 3.5vw, 48px);
+  }
+  
   .featured1-carousel-inner {
     gap: 12px;
   }
@@ -2844,6 +2851,10 @@ body > main.content::after {
     height: auto;
   }
   
+  .featured1 .feature-card .div8 {
+    font-size: clamp(28px, 3vw, 42px);
+  }
+  
   .featured1-carousel-inner {
     gap: 10px;
   }
@@ -2949,6 +2960,10 @@ body > main.content::after {
     width: 270px;
   }
   
+  .featured1 .feature-card .div8 {
+    font-size: clamp(24px, 2.5vw, 36px);
+  }
+  
   .featured1-carousel-inner {
     gap: 8px;
   }
@@ -3010,6 +3025,10 @@ body > main.content::after {
   .featured1 .feature-card {
     min-width: 240px;
     width: 240px;
+  }
+  
+  .featured1 .feature-card .div8 {
+    font-size: clamp(20px, 2vw, 32px);
   }
   
   .featured1-carousel-inner {
