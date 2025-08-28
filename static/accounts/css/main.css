@@ -617,17 +617,16 @@ body > main.content::after {
   word-wrap: break-word;
 }
 
-.featured1 .wrap {
+.featured1 .heading .wrap {
   padding: 24px 32px; 
   justify-content: center;
   align-items: center;
   gap: 24px;
   display: flex;
-  margin-bottom: 20px;
 }
 
-.featured1 .arrow-left-control,
-.featured1 .arrow-right-control {
+.featured1 .heading .arrow-left-control,
+.featured1 .heading .arrow-right-control {
   width: 46px;
   height: 46px;
   position: relative;
@@ -642,31 +641,31 @@ body > main.content::after {
     opacity 0.3s;
 }
 
-.featured1 .arrow-left-control .vector-icon,
-.featured1 .arrow-right-control .vector-icon1 {
+.featured1 .heading .arrow-left-control .vector-icon,
+.featured1 .heading .arrow-right-control .vector-icon1 {
   width: 9px;
   height: 16px;
   object-fit: contain;
 }
 
 
-.featured1 .arrow-left-control.disabled .chevron-left,
-.featured1 .arrow-right-control.disabled .chevron-left {
+.featured1 .heading .arrow-left-control.disabled .chevron-left,
+.featured1 .heading .arrow-right-control.disabled .chevron-left {
   background: rgb(255 255 255 / 38%);
 }
 
-.featured1 .arrow-left-control.disabled .vector-icon,
-.featured1 .arrow-right-control.disabled .vector-icon1 {
+.featured1 .heading .arrow-left-control.disabled .vector-icon,
+.featured1 .heading .arrow-right-control.disabled .vector-icon1 {
   filter: brightness(0) invert(1) opacity(0.7);
 }
 
-.featured1 .chevron-forward-circle-outline-parent {
+.featured1 .heading .chevron-forward-circle-outline-parent {
   display: flex;
   gap: 10px;
 }
 
-.featured1 .chevron-forward-circle-outline-icon,
-.featured1 .chevron-forward-circle-outline-icon1 {
+.featured1 .heading .chevron-forward-circle-outline-icon,
+.featured1 .heading .chevron-forward-circle-outline-icon1 {
   width: 12px;
   height: 12px;
   background: rgb(255 255 255 / 38%);
@@ -675,8 +674,8 @@ body > main.content::after {
   transition: background-color 0.3s;
 }
 
-.featured1 .chevron-forward-circle-outline-icon.active, 
-.featured1 img.chevron-forward-circle-outline-icon {
+.featured1 .heading .chevron-forward-circle-outline-icon.active, 
+.featured1 .heading img.chevron-forward-circle-outline-icon {
   background: #ffef2b;
 }
 
