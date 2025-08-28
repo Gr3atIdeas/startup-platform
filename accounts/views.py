@@ -5853,6 +5853,8 @@ def support_ticket_detail(request, ticket_id):
     form = None
     if is_moderator:
         if request.method == "POST":
+            print(f"DEBUG: POST данные: {request.POST}")
+            print(f"DEBUG: moderator_comment в POST: {request.POST.get('moderator_comment')}")
             form = ModeratorTicketForm(request.POST, instance=ticket)
             if form.is_valid():
                 # Отладочная информация перед сохранением
@@ -5863,6 +5865,8 @@ def support_ticket_detail(request, ticket_id):
                 print(f"DEBUG: После сохранения ticket.moderator_comment = {ticket.moderator_comment}")
                 messages.success(request, "Заявка успешно обновлена.")
                 return redirect("support_ticket_detail", ticket_id=ticket.ticket_id)
+            else:
+                print(f"DEBUG: Форма невалидна: {form.errors}")
         else:
             form = ModeratorTicketForm(instance=ticket)
     
