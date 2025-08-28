@@ -417,18 +417,20 @@
                     </div>
                 </div>
                 
-                {% if ticket.moderator_comment %}
                 <div class="info-block">
                     <div class="info-label">Комментарий модератора</div>
                     <div class="comment-field">
-                        <div class="comment-content">{{ ticket.moderator_comment }}</div>
+                        {% if ticket.moderator_comment %}
+                            <div class="comment-content">{{ ticket.moderator_comment }}</div>
+                        {% else %}
+                            <div class="comment-placeholder">Комментарий модератора отсутствует</div>
+                        {% endif %}
                     </div>
                 </div>
-                {% endif %}
                 
                 {% if is_moderator %}
                 <div class="info-block">
-                    <div class="info-label">Комментарий модератора</div>
+                    <div class="info-label">Добавить/изменить комментарий модератора</div>
                     <form method="post" class="moderator-form">
                         {% csrf_token %}
                         {{ form.moderator_comment }}
