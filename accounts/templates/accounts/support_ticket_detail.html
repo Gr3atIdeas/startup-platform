@@ -156,18 +156,19 @@
 
 .moderator-form textarea {
     width: 100%;
-    height: 80px;
-    padding: 12px 16px;
+    height: 120px;
+    padding: 20px;
     background: white;
-    border-radius: 5px;
+    border-radius: 7px;
     outline: 1px black solid;
-    outline-offset: -0.50px;
+    outline-offset: -1px;
     font-size: 14px;
     font-family: Unbounded;
     font-weight: 300;
     color: black;
     resize: vertical;
     margin-bottom: 15px;
+    border: none;
 }
 
 .save-comment-btn {
@@ -419,27 +420,26 @@
                 
                 <div class="info-block">
                     <div class="info-label">Комментарий модератора</div>
-                    <div class="comment-field">
-                        {% if ticket.moderator_comment %}
-                            <div class="comment-content">{{ ticket.moderator_comment }}</div>
-                        {% else %}
-                            <div class="comment-placeholder">Комментарий модератора отсутствует</div>
-                        {% endif %}
-                    </div>
+                    {% if is_moderator %}
+                        <form method="post" class="moderator-form">
+                            {% csrf_token %}
+                            {{ form.moderator_comment }}
+                            <button type="submit" class="save-comment-btn">
+                                <div>Сохранить комментарий</div>
+                            </button>
+                        </form>
+                    {% else %}
+                        <div class="comment-field">
+                            {% if ticket.moderator_comment %}
+                                <div class="comment-content">{{ ticket.moderator_comment }}</div>
+                            {% else %}
+                                <div class="comment-placeholder">Комментарий модератора отсутствует</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 </div>
                 
                 {% if is_moderator %}
-                <div class="info-block">
-                    <div class="info-label">Добавить/изменить комментарий модератора</div>
-                    <form method="post" class="moderator-form">
-                        {% csrf_token %}
-                        {{ form.moderator_comment }}
-                        <button type="submit" class="save-comment-btn">
-                            <div>Сохранить комментарий</div>
-                        </button>
-                    </form>
-                </div>
-                
                 <button class="close-ticket-btn">
                     <div>Закрыть заявку</div>
                 </button>
