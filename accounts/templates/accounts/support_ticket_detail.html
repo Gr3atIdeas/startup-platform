@@ -418,18 +418,12 @@
                     </div>
                 </div>
                 
+                <!-- Комментарий модератора -->
                 <div class="info-block">
-                    <div class="info-label">Комментарий модератора</div>
+                    <div class="info-title">Комментарий модератора</div>
                     {% if is_moderator %}
                         <form method="post" class="moderator-form">
                             {% csrf_token %}
-                            <!-- Отладочная информация -->
-                            <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
-                                Текущий комментарий: "{{ ticket.moderator_comment|default:'НЕТ' }}"
-                            </div>
-                            <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
-                                Форма moderator_comment: "{{ form.moderator_comment.value|default:'НЕТ' }}"
-                            </div>
                             {{ form.moderator_comment }}
                             <button type="submit" class="save-comment-btn">
                                 <div>Сохранить комментарий</div>
@@ -437,16 +431,6 @@
                         </form>
                     {% else %}
                         <div class="comment-field">
-                            <!-- Отладочная информация для стартапера -->
-                            <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
-                                Отладка: ticket.moderator_comment = "{{ ticket.moderator_comment|default:'НЕТ' }}"
-                            </div>
-                            <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
-                                Длина комментария: {{ ticket.moderator_comment|length|default:0 }}
-                            </div>
-                            <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
-                                Есть ли комментарий: {{ ticket.moderator_comment|yesno:"да,нет" }}
-                            </div>
                             {% if ticket.moderator_comment %}
                                 <div class="comment-content">{{ ticket.moderator_comment }}</div>
                             {% else %}
