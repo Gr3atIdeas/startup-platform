@@ -2330,38 +2330,37 @@ body > main.content::after {
   box-sizing: border-box;
 }
 
-.email-input-wrapper {
-  align-self: stretch;
-  padding: 24px 32px;
-  border-radius: 5px;
-  outline: 1px white solid;
-  outline-offset: -1px;
-}
 
-.email-input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: white;
-  font-size: 14px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-  line-height: 18px;
-}
 
-.email-input::placeholder {
-  color: white;
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-}
-
-.form-bottom-row {
-  display: flex;
+.subscribe-btn {
+  height: 40px;
+  padding: 12px 25px;
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%) !important;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  border-radius: 10px;
   justify-content: flex-start;
   align-items: center;
-  gap: 113px;
-  margin-top: 15px;
+  gap: 9px;
+  display: flex;
+  border: none;
+  cursor: pointer;
+  font-weight: 400;
+  line-height: 16px;
+  text-decoration: none;
+  align-self: flex-start;
+  margin-bottom: 16px;
+}
+
+.subscribe-btn span {
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+}
+
+.send-icon {
+  width: 14.77px;
+  height: 11.31px;
 }
 
 .consent-label {
@@ -2408,34 +2407,7 @@ body > main.content::after {
   letter-spacing: 0.08px;
 }
 
-.subscribe-btn {
-  height: 40px;
-  padding: 12px 25px;
-  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%) !important;
-  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
-  border-radius: 10px;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 9px;
-  display: flex;
-  border: none;
-  cursor: pointer;
-  font-weight: 400;
-  line-height: 16px;
-  text-decoration: none;
-}
 
-.subscribe-btn span {
-  color: black;
-  font-size: 16px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 400;
-}
-
-.send-icon {
-  width: 14.77px;
-  height: 11.31px;
-}
 
 .subscription-info {
   left: 62px;
