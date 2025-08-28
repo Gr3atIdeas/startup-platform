@@ -520,8 +520,7 @@ body > main.content::after {
 .featured1 .features-carousel-wrapper {
   width: 100%;
   position: relative;
-
-  
+  overflow: hidden;
 }
 
 .featured1 .features-carousel {
@@ -536,6 +535,7 @@ body > main.content::after {
   display: flex;
   gap: 15px;
   transition: transform 0.5s ease-in-out;
+  width: fit-content;
 }
 
 .featured1 .feature-card {
