@@ -958,12 +958,7 @@ def startups_list(request):
     min_rating_str = request.GET.get("min_rating", "0")
     max_rating_str = request.GET.get("max_rating", "5")
     sort_order = request.GET.get("sort_order", "newest")
-    try:
-        page_number = int(request.GET.get("page", 1))
-        if page_number < 1:
-            page_number = 1
-    except (ValueError, TypeError):
-        page_number = 1
+    page_number = request.GET.get("page", 1)
     
     startups_qs = startups_qs.annotate(
         total_voters_agg=Count("uservotes", distinct=True),
@@ -1051,11 +1046,6 @@ def startups_list(request):
             startups_qs = startups_qs.order_by("created_at")
     
     paginator = Paginator(startups_qs, 6)
-    
-    # Проверяем, что номер страницы не превышает общее количество страниц
-    if page_number > paginator.num_pages and paginator.num_pages > 0:
-        page_number = paginator.num_pages
-    
     page_obj = paginator.get_page(page_number)
     
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -1161,12 +1151,7 @@ def franchises_list(request):
     min_rating_str = request.GET.get("min_rating", "0")
     max_rating_str = request.GET.get("max_rating", "5")
     sort_order = request.GET.get("sort_order", "newest")
-    try:
-        page_number = int(request.GET.get("page", 1))
-        if page_number < 1:
-            page_number = 1
-    except (ValueError, TypeError):
-        page_number = 1
+    page_number = request.GET.get("page", 1)
     
     franchises_qs = franchises_qs.annotate(
         rating_agg=ExpressionWrapper(
@@ -1321,11 +1306,6 @@ def franchises_list(request):
         pass
     
     paginator = Paginator(franchises_qs, 6)
-    
-    # Проверяем, что номер страницы не превышает общее количество страниц
-    if page_number > paginator.num_pages and paginator.num_pages > 0:
-        page_number = paginator.num_pages
-    
     page_obj = paginator.get_page(page_number)
     
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -1377,12 +1357,7 @@ def agencies_list(request):
     min_rating_str = request.GET.get("min_rating", "0")
     max_rating_str = request.GET.get("max_rating", "5")
     sort_order = request.GET.get("sort_order", "newest")
-    try:
-        page_number = int(request.GET.get("page", 1))
-        if page_number < 1:
-            page_number = 1
-    except (ValueError, TypeError):
-        page_number = 1
+    page_number = request.GET.get("page", 1)
 
     agencies_qs = agencies_qs.annotate(
         rating_agg=ExpressionWrapper(
@@ -1438,11 +1413,6 @@ def agencies_list(request):
             agencies_qs = agencies_qs.order_by("created_at")
 
     paginator = Paginator(agencies_qs, 6)
-    
-    # Проверяем, что номер страницы не превышает общее количество страниц
-    if page_number > paginator.num_pages and paginator.num_pages > 0:
-        page_number = paginator.num_pages
-    
     page_obj = paginator.get_page(page_number)
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -1490,12 +1460,7 @@ def specialists_list(request):
     min_rating_str = request.GET.get("min_rating", "0")
     max_rating_str = request.GET.get("max_rating", "5")
     sort_order = request.GET.get("sort_order", "newest")
-    try:
-        page_number = int(request.GET.get("page", 1))
-        if page_number < 1:
-            page_number = 1
-    except (ValueError, TypeError):
-        page_number = 1
+    page_number = request.GET.get("page", 1)
 
     specialists_qs = specialists_qs.annotate(
         rating_agg=ExpressionWrapper(
@@ -1551,11 +1516,6 @@ def specialists_list(request):
             specialists_qs = specialists_qs.order_by("created_at")
 
     paginator = Paginator(specialists_qs, 6)
-    
-    # Проверяем, что номер страницы не превышает общее количество страниц
-    if page_number > paginator.num_pages and paginator.num_pages > 0:
-        page_number = paginator.num_pages
-    
     page_obj = paginator.get_page(page_number)
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"

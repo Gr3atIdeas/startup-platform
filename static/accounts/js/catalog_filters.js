@@ -25,41 +25,15 @@
   function findPaginationContainer(documentRoot) {
     return documentRoot.querySelector('.pagination-controls') || null;
   }
-  
-  function validatePagination() {
-    var paginationContainer = findPaginationContainer(document);
-    if (!paginationContainer) return;
-    
-    var pageNumbers = paginationContainer.querySelectorAll('.pagination-numbers a[href]');
-    var currentPage = paginationContainer.querySelector('.current-page');
-    
-    if (pageNumbers.length === 0 && currentPage) {
-      console.warn('Pagination found but no page links detected');
-    }
-    
-    // Проверяем, что все ссылки на страницы имеют корректный href
-    pageNumbers.forEach(function(link) {
-      var href = link.getAttribute('href');
-      if (!href || !href.includes('page=')) {
-        console.warn('Invalid pagination link:', href);
-      }
-    });
-    
-    console.log('Pagination validation completed. Found', pageNumbers.length, 'page links');
-  }
 
   function serializeFormToParams(form) {
     var formData = new FormData(form);
     var params = new URLSearchParams();
     var seenKeys = new Set();
-    
-    // Получаем текущий параметр page из URL
-    var currentPage = new URLSearchParams(window.location.search).get('page');
-    
     formData.forEach(function (value, key) {
       if (value !== null && value !== undefined && String(value).length > 0) {
         if (key === 'page') {
-          return; // Пропускаем page из формы
+          return;
         }
         if (key === 'sort_order' && String(value) === 'newest') {
           return;
@@ -79,11 +53,6 @@
         }
       }
     });
-    
-    // Добавляем текущую страницу, если она есть
-    if (currentPage && currentPage !== '1') {
-      params.set('page', currentPage);
-    }
 
     // Сбрасываем параметры рейтинга, если на дефолтах
     try {
@@ -249,9 +218,6 @@
     clearButtonElement = document.getElementById('clearFiltersBtn');
     bindClearButton();
     updateClearButtonVisibility();
-    
-    // Логируем успешное обновление пагинации
-    console.log('Pagination updated successfully for URL:', newUrl);
   }
 
   function fetchAndUpdate(url, options) {
@@ -261,25 +227,11 @@
     currentFetchController = new AbortController();
 
     return fetch(url, { signal: currentFetchController.signal, credentials: 'same-origin' })
-      .then(function (response) { 
-        if (!response.ok) {
-          throw new Error('HTTP error! status: ' + response.status);
-        }
-        return response.text(); 
-      })
-      .then(function (htmlText) { 
-        if (!htmlText || htmlText.trim().length === 0) {
-          throw new Error('Empty response received');
-        }
-        updatePageFromHtmlResponse(htmlText, url); 
-      })
+      .then(function (response) { return response.text(); })
+      .then(function (htmlText) { updatePageFromHtmlResponse(htmlText, url); })
       .catch(function (error) {
         if (error && error.name === 'AbortError') return;
-        
-        console.error('Error updating pagination:', error);
-        
         // Фолбэк: если что-то пошло не так — обычная навигация
-        console.log('Falling back to regular navigation');
         window.location.href = url;
       });
   }
@@ -473,17 +425,9 @@
   function bindPaginationHandlers() {
     var container = document.querySelector('.pagination-numbers');
     if (!container) return;
-    
-    // Удаляем старые обработчики событий
-    var oldLinks = container.querySelectorAll('a[href]');
-    oldLinks.forEach(function (link) {
-      link.removeEventListener('click', link._paginationHandler);
-    });
-    
-    // Добавляем новые обработчики
     var links = container.querySelectorAll('a[href]');
     links.forEach(function (link) {
-      var handler = function (e) {
+      link.addEventListener('click', function (e) {
         e.preventDefault();
         var targetUrl = new URL(link.href);
         var targetParams = new URLSearchParams(targetUrl.search);
@@ -498,11 +442,7 @@
 
         var finalUrl = buildUrlWithParams(formParams, true);
         fetchAndUpdate(finalUrl);
-      };
-      
-      // Сохраняем ссылку на обработчик для возможности удаления
-      link._paginationHandler = handler;
-      link.addEventListener('click', handler);
+      });
     });
   }
 
@@ -529,9 +469,6 @@
     setTimeout(function () { updateClearButtonVisibility(); }, 0);
     setTimeout(function () { updateClearButtonVisibility(); }, 150);
     setTimeout(function () { updateClearButtonVisibility(); }, 400);
-    
-    // Проверяем корректность пагинации
-    validatePagination();
 
     window.addEventListener('popstate', function () {
       var url = window.location.href;
