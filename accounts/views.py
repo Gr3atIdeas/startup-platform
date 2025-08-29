@@ -21,6 +21,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.staticfiles import finders
 from django.core.files.storage import default_storage
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import (
     models,
@@ -4779,8 +4780,93 @@ def news(request):
             return JsonResponse({"success": True})
         else:
             return JsonResponse({"success": False, "error": "Форма содержит ошибки."})
-    articles = NewsArticles.objects.all().order_by("-published_at")
-    return render(request, "accounts/news.html", {"articles": articles})
+    
+    # Получаем параметры фильтрации
+    articles = NewsArticles.objects.all()
+    
+    # Сортировка
+    sort_order = request.GET.get("sort", "new")
+    if sort_order == "old":
+        articles = articles.order_by("published_at")
+    elif sort_order == "rating":
+        articles = articles.order_by("-rating_agg", "-published_at")
+    else:  # new
+        articles = articles.order_by("-published_at")
+    
+    # Фильтрация по категориям
+    selected_categories = request.GET.getlist("category")
+    if selected_categories:
+        # Здесь можно добавить логику фильтрации по категориям
+        # Пока оставляем как есть
+        pass
+    
+    # Фильтрация по микроинвестициям
+    micro_investment = request.GET.get("micro_investment")
+    if micro_investment == "1":
+        # Здесь можно добавить логику фильтрации по микроинвестициям
+        # Пока оставляем как есть
+        pass
+    
+    # Фильтрация по рейтингу
+    min_rating = request.GET.get("min_rating")
+    max_rating = request.GET.get("max_rating")
+    if min_rating:
+        try:
+            min_rating_val = float(min_rating)
+            articles = articles.filter(rating_agg__gte=min_rating_val)
+        except ValueError:
+            pass
+    
+    if max_rating:
+        try:
+            max_rating_val = float(max_rating)
+            articles = articles.filter(rating_agg__lte=max_rating_val)
+        except ValueError:
+            pass
+    
+    # Поиск
+    search_query = request.GET.get("search")
+    if search_query:
+        articles = articles.filter(
+            Q(title__icontains=search_query) | 
+            Q(content__icontains=search_query) |
+            Q(tags__icontains=search_query)
+        )
+    
+    # Добавляем пагинацию для новостей
+    try:
+        page_number = int(request.GET.get("page", 1))
+        if page_number < 1:
+            page_number = 1
+    except (ValueError, TypeError):
+        page_number = 1
+    
+    paginator = Paginator(articles, 12)  # 12 новостей на страницу
+    
+    # Проверяем, что номер страницы не превышает общее количество страниц
+    if page_number > paginator.num_pages and paginator.num_pages > 0:
+        page_number = paginator.num_pages
+    
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        "articles": page_obj,
+        "page_obj": page_obj,
+        "paginator": paginator,
+        "sort_order": sort_order,
+        "selected_categories": selected_categories,
+        "micro_investment": micro_investment == "1",
+        "min_rating": min_rating,
+        "max_rating": max_rating,
+        "search_query": search_query,
+    }
+    
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    if is_ajax:
+        html = render_to_string("accounts/partials/_news_cards.html", context, request=request)
+        return JsonResponse({"html": html})
+    
+    return render(request, "accounts/news.html", context)
 def news_detail(request, article_id):
     article = get_object_or_404(NewsArticles, article_id=article_id)
     user = request.user if request.user.is_authenticated else None

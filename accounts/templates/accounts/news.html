@@ -22,32 +22,32 @@
       <div class="sidebar-block">
         <label for="sort-by" class="sidebar-label">Показать сначала</label>
         <select id="sort-by" class="sidebar-select">
-          <option value="new">Новые</option>
-          <option value="old">Старые</option>
-          <option value="rating">Популярные</option>
+          <option value="new" {% if sort_order == 'new' %}selected{% endif %}>Новые</option>
+          <option value="old" {% if sort_order == 'old' %}selected{% endif %}>Старые</option>
+          <option value="rating" {% if sort_order == 'rating' %}selected{% endif %}>Популярные</option>
         </select>
       </div>
       <div class="sidebar-block">
         <h3 class="sidebar-title">Категории</h3>
         <ul class="category-list">
-          <li><input type="checkbox" id="cat-medicine" name="category" value="medicine" checked> <label for="cat-medicine">Медицина</label></li>
-          <li><input type="checkbox" id="cat-auto" name="category" value="auto"> <label for="cat-auto">Автомобили</label></li>
-          <li><input type="checkbox" id="cat-delivery" name="category" value="delivery"> <label for="cat-delivery">Доставка</label></li>
-          <li><input type="checkbox" id="cat-cafe" name="category" value="cafe"> <label for="cat-cafe">Кафе/рестораны</label></li>
-          <li><input type="checkbox" id="cat-fastfood" name="category" value="fastfood"> <label for="cat-fastfood">Фастфуд</label></li>
-          <li><input type="checkbox" id="cat-health" name="category" value="health"> <label for="cat-health">Здоровье</label></li>
-          <li><input type="checkbox" id="cat-beauty" name="category" value="beauty"> <label for="cat-beauty">Красота</label></li>
-          <li><input type="checkbox" id="cat-transport" name="category" value="transport"> <label for="cat-transport">Транспорт</label></li>
-          <li><input type="checkbox" id="cat-sport" name="category" value="sport"> <label for="cat-sport">Спорт</label></li>
-          <li><input type="checkbox" id="cat-psychology" name="category" value="psychology"> <label for="cat-psychology">Психология</label></li>
-          <li><input type="checkbox" id="cat-ai" name="category" value="ai"> <label for="cat-ai">ИИ</label></li>
+          <li><input type="checkbox" id="cat-medicine" name="category" value="medicine" {% if 'medicine' in selected_categories %}checked{% endif %}> <label for="cat-medicine">Медицина</label></li>
+          <li><input type="checkbox" id="cat-auto" name="category" value="auto" {% if 'auto' in selected_categories %}checked{% endif %}> <label for="cat-auto">Автомобили</label></li>
+          <li><input type="checkbox" id="cat-delivery" name="category" value="delivery" {% if 'delivery' in selected_categories %}checked{% endif %}> <label for="cat-delivery">Доставка</label></li>
+          <li><input type="checkbox" id="cat-cafe" name="category" value="cafe" {% if 'cafe' in selected_categories %}checked{% endif %}> <label for="cat-cafe">Кафе/рестораны</label></li>
+          <li><input type="checkbox" id="cat-fastfood" name="category" value="fastfood" {% if 'fastfood' in selected_categories %}checked{% endif %}> <label for="cat-fastfood">Фастфуд</label></li>
+          <li><input type="checkbox" id="cat-health" name="category" value="health" {% if 'health' in selected_categories %}checked{% endif %}> <label for="cat-health">Здоровье</label></li>
+          <li><input type="checkbox" id="cat-beauty" name="category" value="beauty" {% if 'beauty' in selected_categories %}checked{% endif %}> <label for="cat-beauty">Красота</label></li>
+          <li><input type="checkbox" id="cat-transport" name="category" value="transport" {% if 'transport' in selected_categories %}checked{% endif %}> <label for="cat-transport">Транспорт</label></li>
+          <li><input type="checkbox" id="cat-sport" name="category" value="sport" {% if 'sport' in selected_categories %}checked{% endif %}> <label for="cat-sport">Спорт</label></li>
+          <li><input type="checkbox" id="cat-psychology" name="category" value="psychology" {% if 'psychology' in selected_categories %}checked{% endif %}> <label for="cat-psychology">Психология</label></li>
+          <li><input type="checkbox" id="cat-ai" name="category" value="ai" {% if 'ai' in selected_categories %}checked{% endif %}> <label for="cat-ai">ИИ</label></li>
         </ul>
       </div>
       <div class="sidebar-block microinvest-block">
         <label for="microinvest" class="sidebar-label">Микроинвестиции</label>
         <span class="help-icon" title="Информация о микроинвестициях">?</span>
         <label class="switch">
-          <input type="checkbox" id="microinvest">
+          <input type="checkbox" id="microinvest" {% if micro_investment %}checked{% endif %}>
           <span class="slider round"></span>
         </label>
       </div>
@@ -56,11 +56,11 @@
       <div class="sidebar-block rating-filter">
         <div class="rating-header">
           <label class="sidebar-label">Рейтинг</label>
-          <span id="newsRatingValueDisplay" class="rating-value">0-3,2</span> 
+          <span id="newsRatingValueDisplay" class="rating-value">{{ min_rating|default:0|floatformat:1 }}-{{ max_rating|default:5|floatformat:1 }}</span> 
         </div>
         <div id="newsRatingSlider"></div> 
-        <input type="hidden" name="min_rating" id="newsMinRatingInput" value="0"> 
-        <input type="hidden" name="max_rating" id="newsMaxRatingInput" value="3.2"> 
+        <input type="hidden" name="min_rating" id="newsMinRatingInput" value="{{ min_rating|default:0|floatformat:1 }}"> 
+        <input type="hidden" name="max_rating" id="newsMaxRatingInput" value="{{ max_rating|default:5|floatformat:1 }}"> 
         <span class="rating-range-label">Диапазон</span>
       </div>
 
@@ -72,7 +72,7 @@
     <div class="news-feed-column">
       
       <div class="search-bar-container">
-        <input type="text" placeholder="Поиск по каталогу" class="search-input">
+        <input type="text" placeholder="Поиск по каталогу" class="search-input" value="{{ search_query|default_if_none:'' }}">
         <button class="search-button">
           <img src="{% static 'accounts/images/search.svg' %}" alt="Поиск">
         </button>
@@ -102,110 +102,7 @@
         </div>
       </div>
 
-      <div class="news-grid">
-        {% for article in articles %}
-          <div class="news-card">
-            {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-              <button class="delete-news-btn" onclick="deleteNews({{ article.article_id }})">Удалить</button>
-            {% endif %}
-            
-            <a href="{% url 'news_detail' article.article_id %}" class="news-image-link">
-              {% if article.get_image_url %}
-                <img src="{{ article.get_image_url }}" alt="{{ article.title }}" class="news-image">
-              {% else %}
-                <img src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="{{ article.title|default:'Заголовок новости' }}" class="news-image">
-              {% endif %}
-            </a>
-            
-            <div class="news-content">
-              <div class="news-card-header">
-                 <img src="{{ article.author.avatar.url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="Аватар" class="news-avatar">
-                 <div class="news-title-meta">
-                    <h2 class="news-title"><a href="{% url 'news_detail' article.article_id %}">{{ article.title|default:"Заголовок новости" }}</a></h2>
-                    <div class="news-meta">
-                      {{ article.published_at|date:"d M Y"|default:"2 дня назад" }} | Автор: {{ article.author.get_full_name|default:article.author.email|default:"Неизвестно" }}
-                    </div>
-                 </div>
-              </div>
-              <div class="news-tags">
-                Теги: {{ article.tags|default:"Нет тегов" }}
-              </div>
-              <div class="news-excerpt">
-                {{ article.content|truncatewords:25|default:"Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям..." }}
-              </div>
-            </div>
-          </div>
-        {% empty %}
-          {% comment %}This block will be rendered if there are no articles. We'll add static cards below anyway for layout purposes.{% endcomment %}
-        {% endfor %}
-
-        
-        {% for i in "12345" %}
-        <div class="news-card {% if i == '4' %}news-card-ad{% endif %}"> 
-            <a href="#" class="news-image-link">
-                <img src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Новость {{ i }}" class="news-image">
-                {% if i == '4' %}
-                <div class="ad-label-on-image">
-                    <img src="{% static 'accounts/images/alert-circle.svg' %}" alt="Реклама"> Реклама
-                </div>
-                {% endif %}
-            </a>
-            <div class="news-content">
-              <div class="news-card-header">
-                 <img src="/static/accounts/images/avatars/default_avatar_ufo.png" alt="Аватар автора" class="news-avatar">
-                 <div class="news-title-meta">
-                    <h2 class="news-title"><a href="#">Ромашка {{ i }}</a></h2>
-                    <div class="news-meta">
-                      2 дня назад | Автор: Неизвестно
-                    </div>
-                 </div>
-              </div>
-              <div class="news-tags">
-                Теги: Медицина, Инновации
-              </div>
-              <div class="news-excerpt">
-                Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте...
-              </div>
-            </div>
-        </div>
-        {% endfor %}
-         
-        <div class="news-card">
-            <a href="#" class="news-image-link">
-                <img src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Новость 6" class="news-image">
-            </a>
-            <div class="news-content">
-              <div class="news-card-header">
-                 <img src="/static/accounts/images/avatars/default_avatar_ufo.png" alt="Аватар автора" class="news-avatar">
-                 <div class="news-title-meta">
-                    <h2 class="news-title"><a href="#">Еще одна Ромашка</a></h2>
-                    <div class="news-meta">
-                      3 дня назад | Автор: Аноним
-                    </div>
-                 </div>
-              </div>
-              <div class="news-tags">
-                Теги: Технологии
-              </div>
-              <div class="news-excerpt">
-                Описание еще одного интересного стартапа, который меняет мир к лучшему с помощью новейших технологий и разработок.
-              </div>
-            </div>
-        </div>
-
-      </div> 
-
-      <div class="pagination">
-        <a href="#" class="page-item current">1</a>
-        <a href="#" class="page-item">2</a>
-        <a href="#" class="page-item">3</a>
-        <span class="page-item dots">...</span>
-        <a href="#" class="page-item">67</a>
-        <a href="#" class="page-item">68</a>
-      </div>
-       <div class="show-more-container">
-         <button class="show-more-btn">Показать еще</button>
-       </div>
+      {% include 'accounts/partials/_news_cards.html' with articles=articles page_obj=page_obj paginator=paginator %}
 
     </div> 
   </div> 
@@ -214,6 +111,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js" referrerpolicy="no-referrer"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js" referrerpolicy="no-referrer"></script>
+  <script src="{% static 'accounts/js/news_filters.js' %}" defer></script>
 <script>
   function openPopup() {
     document.getElementById('newsPopup').style.display = 'flex';
@@ -289,6 +187,9 @@
     if (newsRatingSlider && newsRatingValueDisplay && newsMinRatingInput && newsMaxRatingInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
         var initialMin = parseFloat(newsMinRatingInput.value) || 0;
         var initialMax = parseFloat(newsMaxRatingInput.value) || 5;
+        
+        // Обновляем отображение
+        newsRatingValueDisplay.textContent = initialMin + '-' + initialMax;
 
         noUiSlider.create(newsRatingSlider, {
             start: [initialMin, initialMax],
@@ -323,6 +224,31 @@
         if (typeof noUiSlider === 'undefined') console.error('Library noUiSlider not loaded');
         if (typeof wNumb === 'undefined') console.error('Library wNumb not loaded');
     }
+
+    // Инициализация пагинации для новостей
+    bindNewsPaginationHandlers();
   });
+
+  // Функция для обработки пагинации новостей
+  function bindNewsPaginationHandlers() {
+    var paginationContainer = document.querySelector('.pagination');
+    if (!paginationContainer) return;
+    
+    var pageLinks = paginationContainer.querySelectorAll('a[href]');
+    pageLinks.forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var href = this.getAttribute('href');
+        if (href && href.includes('page=')) {
+          var url = new URL(window.location.href);
+          var pageParam = new URLSearchParams(href.substring(1)).get('page');
+          if (pageParam) {
+            url.searchParams.set('page', pageParam);
+            window.location.href = url.toString();
+          }
+        }
+      });
+    });
+  }
 </script>
 {% endblock %}

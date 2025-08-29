@@ -1,0 +1,66 @@
+{% load static %}
+
+<div class="news-grid">
+  {% for article in articles %}
+    <div class="news-card">
+      {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+        <button class="delete-news-btn" onclick="deleteNews({{ article.article_id }})">Удалить</button>
+      {% endif %}
+      
+      <a href="{% url 'news_detail' article.article_id %}" class="news-image-link">
+        {% if article.get_image_url %}
+          <img src="{{ article.get_image_url }}" alt="{{ article.title }}" class="news-image">
+        {% else %}
+          <img src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="{{ article.title|default:'Заголовок новости' }}" class="news-image">
+        {% endif %}
+      </a>
+      
+      <div class="news-content">
+        <div class="news-card-header">
+           <img src="{{ article.author.avatar.url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="Аватар" class="news-avatar">
+           <div class="news-title-meta">
+              <h2 class="news-title"><a href="{% url 'news_detail' article.article_id %}">{{ article.title|default:"Заголовок новости" }}</a></h2>
+              <div class="news-meta">
+                {{ article.published_at|date:"d M Y"|default:"2 дня назад" }} | Автор: {{ article.author.get_full_name|default:article.author.email|default:"Неизвестно" }}
+              </div>
+           </div>
+        </div>
+        <div class="news-tags">
+          Теги: {{ article.tags|default:"Нет тегов" }}
+        </div>
+        <div class="news-excerpt">
+          {{ article.content|truncatewords:25|default:"Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям..." }}
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="no-news">
+      <p>В настоящее время нет доступных новостей. Загляните позже!</p>
+    </div>
+  {% endfor %}
+</div>
+
+{% if page_obj and paginator.num_pages > 1 %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}" class="page-item">« Предыдущая</a>
+    {% endif %}
+
+    {% for num in paginator.page_range %}
+      {% if page_obj.number == num %}
+        <span class="page-item current">{{ num }}</span>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a href="?page={{ num }}" class="page-item">{{ num }}</a>
+      {% elif num == page_obj.number|add:'-3' %}
+        <span class="page-item dots">...</span>
+      {% elif num == page_obj.number|add:'3' %}
+        <span class="page-item dots">...</span>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}" class="page-item">Следующая »</a>
+      <a href="?page={{ paginator.num_pages }}" class="page-item">Последняя &raquo;</a>
+    {% endif %}
+  </div>
+{% endif %}
