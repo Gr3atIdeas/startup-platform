@@ -4469,6 +4469,69 @@ def startuper_main(request):
             }
         ]
 
+    # Получаем 3 случайных стартапера для блока "Последние обновления от стартаперов 🔥"
+    try:
+        random_startupers = Users.objects.filter(role__role_name='startuper').order_by('?')[:3]
+        random_startupers_data = []
+        
+        for startuper in random_startupers:
+            # Получаем аватар стартапера
+            if hasattr(startuper, 'get_profile_picture_url'):
+                avatar_url = startuper.get_profile_picture_url() or static('accounts/images/avatars/default_avatar_ufo.png')
+            else:
+                avatar_url = static('accounts/images/avatars/default_avatar_ufo.png')
+            
+            # Форматируем рейтинг
+            rating = getattr(startuper, 'rating_avg', 0.0)
+            if rating:
+                rating_formatted = f"{rating:.1f}/5"
+            else:
+                rating_formatted = "0.0/5"
+            
+            # Получаем имя стартапера
+            first_name = getattr(startuper, 'first_name', '') or ''
+            last_name = getattr(startuper, 'last_name', '') or ''
+            if first_name and last_name:
+                full_name = f"{first_name} {last_name}"
+            elif first_name:
+                full_name = first_name
+            elif last_name:
+                full_name = last_name
+            else:
+                full_name = "Стартапер"
+            
+            startuper_data = {
+                'id': getattr(startuper, 'user_id', 'Unknown'),
+                'name': full_name,
+                'rating': rating_formatted,
+                'avatar': avatar_url
+            }
+            random_startupers_data.append(startuper_data)
+            
+    except Exception as e:
+        logger.error(f"Error getting random startupers for startuper_main: {e}")
+        # Fallback данные
+        random_startupers_data = [
+            {
+                'id': 'fallback1',
+                'name': 'Виктор Смирнов',
+                'rating': '4.5/5',
+                'avatar': static('accounts/images/avatars/default_avatar_ufo.png')
+            },
+            {
+                'id': 'fallback2',
+                'name': 'Анна Кузнецова',
+                'rating': '4.9/5',
+                'avatar': static('accounts/images/avatars/default_avatar_ufo.png')
+            },
+            {
+                'id': 'fallback3',
+                'name': 'Дмитрий Иванов',
+                'rating': '4.3/5',
+                'avatar': static('accounts/images/avatars/default_avatar_ufo.png')
+            }
+        ]
+
     context = {
         "planets_data": planets_data_for_template,
         "logo_data": logo_data,
@@ -4479,6 +4542,7 @@ def startuper_main(request):
         "all_startups_data_json": json.dumps(all_startups_data, cls=DjangoJSONEncoder),
         "is_startuper": is_startuper,
         "random_startups": random_startups_data,
+        "random_startupers": random_startupers_data,
     }
     
     print(f"🔍 STARTUPPER_MAIN: Передаем в шаблон:")
