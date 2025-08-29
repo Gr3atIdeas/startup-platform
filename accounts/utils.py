@@ -41,7 +41,8 @@ def get_file_info(file_id, entity_id, file_type, entity_type: str = "startup"):
         response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
         if "Contents" in response and len(response["Contents"]) > 0:
             key = response["Contents"][0]["Key"]
-            url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
+            # Используем правильный формат URL для Yandex Cloud S3
+            url = f"{settings.S3_PUBLIC_BASE_URL}/{key}"
             filename = key.split('/')[-1]
             parts = filename.split('_', 2)
             if len(parts) >= 3:
@@ -60,7 +61,8 @@ def get_file_info(file_id, entity_id, file_type, entity_type: str = "startup"):
                 response2 = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=legacy_prefix)
                 if "Contents" in response2 and len(response2["Contents"]) > 0:
                     key = response2["Contents"][0]["Key"]
-                    url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
+                    # Используем правильный формат URL для Yandex Cloud S3
+                    url = f"{settings.S3_PUBLIC_BASE_URL}/{key}"
                     filename = key.split('/')[-1]
                     parts = filename.split('_', 2)
                     original_name = parts[2] if len(parts) >= 3 else filename
@@ -87,7 +89,8 @@ def get_file_url(file_id, entity_id, file_type, entity_type: str = "startup"):
         response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
         if "Contents" in response and len(response["Contents"]) > 0:
             key = response["Contents"][0]["Key"]
-            url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
+            # Используем правильный формат URL для Yandex Cloud S3
+            url = f"{settings.S3_PUBLIC_BASE_URL}/{key}"
             logger.debug(f"Сгенерирован URL для {file_type}: {url}")
             return url
         else:
@@ -96,7 +99,8 @@ def get_file_url(file_id, entity_id, file_type, entity_type: str = "startup"):
                 response2 = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=legacy_prefix)
                 if "Contents" in response2 and len(response2["Contents"]) > 0:
                     key = response2["Contents"][0]["Key"]
-                    url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
+                    # Используем правильный формат URL для Yandex Cloud S3
+                    url = f"{settings.S3_PUBLIC_BASE_URL}/{key}"
                     return url
             logger.warning(f"Файл не найден: prefix={prefix}")
             return None
