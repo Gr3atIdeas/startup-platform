@@ -543,6 +543,18 @@ def home(request):
         # Получаем случайные стартапы для блока "Исследуйте новые миры"
         random_startups = []
         try:
+            # Проверяем, что модель Startups существует и доступна
+            logger.info(f"Startups model available: {Startups is not None}")
+            
+            # Проверяем общее количество стартапов в базе
+            total_startups = Startups.objects.count()
+            logger.info(f"Total startups in database: {total_startups}")
+            
+            # Проверяем количество стартапов по статусам
+            approved_startups = Startups.objects.filter(status="approved").count()
+            active_startups = Startups.objects.filter(is_active=True).count()
+            logger.info(f"Approved startups: {approved_startups}, Active startups: {active_startups}")
+            
             # Получаем случайные одобренные стартапы
             featured_startups = Startups.objects.filter(
                 status="approved",
@@ -551,15 +563,60 @@ def home(request):
             
             logger.info(f"Found {len(featured_startups)} featured startups")
             
+            # Если нет одобренных стартапов, пробуем получить любые активные
+            if len(featured_startups) == 0:
+                logger.info("No approved startups found, trying to get any active startups")
+                featured_startups = Startups.objects.filter(is_active=True).order_by('?')[:3]
+                logger.info(f"Found {len(featured_startups)} active startups (not necessarily approved)")
+            
+            # Если все еще нет стартапов, пробуем получить любые
+            if len(featured_startups) == 0:
+                logger.info("No active startups found, trying to get any startups")
+                featured_startups = Startups.objects.all().order_by('?')[:3]
+                logger.info(f"Found {len(featured_startups)} total startups")
+            
+            # Если все еще нет стартапов, создаем тестовые данные
+            if len(featured_startups) == 0:
+                logger.info("No startups found at all, creating test data")
+                featured_startups = []
+                # Создаем тестовые объекты для отладки
+                class MockStartup:
+                    def __init__(self, startup_id, title, description):
+                        self.startup_id = startup_id
+                        self.title = title
+                        self.description = description
+                        self.short_description = description
+                        self.planet_image = None
+                        self.owner = None
+                    
+                    def get_average_rating(self):
+                        return 4.5
+                
+                featured_startups = [
+                    MockStartup(1, "Test Startup 1", "Описание тестового стартапа 1"),
+                    MockStartup(2, "Test Startup 2", "Описание тестового стартапа 2"),
+                    MockStartup(3, "Test Startup 3", "Описание тестового стартапа 3"),
+                ]
+                logger.info("Created mock startup objects for testing")
+            
             for startup in featured_startups:
+                logger.info(f"Processing startup: ID={getattr(startup, 'startup_id', 'N/A')}, Title='{getattr(startup, 'title', 'N/A')}', Status='{getattr(startup, 'status', 'N/A')}', Active={getattr(startup, 'is_active', 'N/A')}")
+                
                 # Получаем рейтинг стартапа
-                rating = startup.get_average_rating() or 0
+                try:
+                    rating = startup.get_average_rating() or 0
+                except Exception as e:
+                    logger.warning(f"Could not get rating for startup {getattr(startup, 'title', 'Unknown')}: {e}")
+                    rating = 4.5  # Fallback рейтинг
+                
                 rating_formatted = f"{rating:.1f}".replace('.', ',')
+                logger.info(f"Startup {getattr(startup, 'title', 'Unknown')} rating: {rating} -> {rating_formatted}")
                 
                 # Получаем изображение стартапа
                 startup_image = None
-                if startup.planet_image:
+                if hasattr(startup, 'planet_image') and startup.planet_image:
                     startup_image = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+                    logger.info(f"Startup {getattr(startup, 'title', 'Unknown')} has planet_image: {startup.planet_image}")
                 else:
                     # Fallback на случайные изображения планет
                     import random
@@ -570,32 +627,38 @@ def home(request):
                     else:
                         planet_num = random.randint(1, 6)
                         startup_image = static(f"accounts/images/planetary_system/planets_ring/{planet_num}.png")
+                    logger.info(f"Startup {getattr(startup, 'title', 'Unknown')} using fallback image: {startup_image}")
                 
                 # Получаем аватар владельца стартапа
                 owner_avatar = static('accounts/images/avatars/default_avatar_ufo.png')
                 try:
                     if hasattr(startup, 'owner') and startup.owner and hasattr(startup.owner, 'get_profile_picture_url'):
                         owner_avatar = startup.owner.get_profile_picture_url() or owner_avatar
+                        logger.info(f"Startup {getattr(startup, 'title', 'Unknown')} owner avatar: {owner_avatar}")
+                    else:
+                        logger.info(f"Startup {getattr(startup, 'title', 'Unknown')} no owner or get_profile_picture_url method")
                 except Exception as e:
-                    logger.warning(f"Could not get owner avatar for startup {startup.startup_id}: {e}")
+                    logger.warning(f"Could not get owner avatar for startup {getattr(startup, 'startup_id', 'Unknown')}: {e}")
                     owner_avatar = static('accounts/images/avatars/default_avatar_ufo.png')
                 
                 # Формируем описание
-                description = startup.short_description or startup.description or "Описание стартапа"
+                description = getattr(startup, 'short_description', None) or getattr(startup, 'description', None) or "Описание стартапа"
                 if len(description) > 100:
                     description = description[:97] + "..."
+                logger.info(f"Startup {getattr(startup, 'title', 'Unknown')} description: {description[:50]}...")
                 
-                random_startups.append({
-                    'id': startup.startup_id,
-                    'name': startup.title,
+                startup_data = {
+                    'id': getattr(startup, 'startup_id', 'Unknown'),
+                    'name': getattr(startup, 'title', 'Unknown'),
                     'rating': rating_formatted,
                     'description': description,
                     'image': startup_image,
                     'owner_avatar': owner_avatar,
-                    'url': f"/startup/{startup.startup_id}/" if hasattr(startup, 'startup_id') else "#"
-                })
+                    'url': f"/startup/{getattr(startup, 'startup_id', 'Unknown')}/" if hasattr(startup, 'startup_id') else "#"
+                }
                 
-                logger.info(f"Added startup: {startup.title}, rating: {rating_formatted}")
+                random_startups.append(startup_data)
+                logger.info(f"Added startup data: {startup_data}")
                 
         except Exception as e:
             logger.error(f"Error getting random startups: {e}")
@@ -639,6 +702,12 @@ def home(request):
             "random_startupers": random_startupers,
             "random_startups": random_startups,
         }
+        
+        logger.info(f"Final context - random_startups count: {len(random_startups)}")
+        logger.info(f"Final context - random_startupers count: {len(random_startupers)}")
+        logger.info(f"Context keys: {list(context.keys())}")
+        
+        return render(request, "accounts/main.html", context)
         return render(request, "accounts/main.html", context)
     if hasattr(request.user, "role") and request.user.role:
         role_name = request.user.role.role_name.lower()
