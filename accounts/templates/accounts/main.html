@@ -172,8 +172,10 @@
             <div class="frame-parent7">
                 <div class="frame-parent8">
                     <div class="group-wrapper">
-                        <img class="group-child-main-img-1" alt="Sidebar startups" src="{% static 'accounts/images/main_page/siddebar_startups_preview.webp' %}">
-                        <img class="group-child-main-img-2" alt="Startups preview" src="{% static 'accounts/images/main_page/startups_preview.webp' %}">
+                        <video class="group-child-main-video" autoplay muted loop playsinline>
+                            <source src="{% static 'accounts/images/main_page/all_startup.mp4' %}" type="video/mp4">
+                            Ваш браузер не поддерживает видео.
+                        </video>
                     </div>
                     <a href="{% url 'startups_list' %}" class="btn btn--yellow-gradient">
                         <span>Все стартапы</span>

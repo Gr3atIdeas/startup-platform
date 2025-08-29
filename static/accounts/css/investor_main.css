@@ -619,20 +619,11 @@ body {
   align-items: center;
 }
 
-.featured5 .group-child-main-img-1 {
-  width: 122.15px;
-  height: 345.36px;
-  left: 36px;
-  top: 83px;
-  position: absolute;
-}
-
-.featured5 .group-child-main-img-2 {
-  width: 388.42px;
-  height: 345.36px;
-  left: 168.7px;
-  top: 85.64px;
-  position: absolute;
+.featured5 .group-child-main-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
 }
 
 .featured5 .parent9 {
