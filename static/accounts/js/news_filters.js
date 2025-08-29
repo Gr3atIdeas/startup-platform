@@ -101,6 +101,7 @@
     // Перевешиваем обработчики
     bindNewsPaginationHandlers();
     bindFormHandlers();
+    bindDeleteNewsHandlers();
   }
 
   function fetchAndUpdate(url) {
@@ -218,6 +219,24 @@
     });
   }
 
+  function bindDeleteNewsHandlers() {
+    var deleteButtons = document.querySelectorAll('.delete-news-btn');
+    deleteButtons.forEach(function(button) {
+      button.removeEventListener('click', button._deleteHandler);
+      
+      var handler = function(e) {
+        e.preventDefault();
+        var articleId = this.getAttribute('data-article-id');
+        if (articleId && typeof deleteNews === 'function') {
+          deleteNews(articleId);
+        }
+      };
+      
+      button._deleteHandler = handler;
+      button.addEventListener('click', handler);
+    });
+  }
+
   function init() {
     filterFormElement = document.querySelector('.news-feed-column');
     newsGridElement = findNewsGrid(document);
@@ -229,6 +248,7 @@
     
     bindFormHandlers();
     bindNewsPaginationHandlers();
+    bindDeleteNewsHandlers();
     
     // Обработка кнопки "Назад" в браузере
     window.addEventListener('popstate', function () {

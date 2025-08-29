@@ -4,7 +4,7 @@
   {% for article in articles %}
     <div class="news-card">
       {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-        <button class="delete-news-btn" onclick="deleteNews({{ article.article_id }})">Удалить</button>
+        <button class="delete-news-btn" data-article-id="{{ article.article_id }}">Удалить</button>
       {% endif %}
       <a href="{% url 'news_detail' article.article_id %}" class="news-image-link">
         {% if article.get_image_url %}
