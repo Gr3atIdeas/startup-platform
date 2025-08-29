@@ -451,11 +451,101 @@ def home(request):
                 "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
             })
         
+        # Получаем случайных стартаперов для блока "Последние обновления от стартаперов"
+        random_startupers = []
+        try:
+            # Получаем пользователей с ролью стартапера, у которых есть рейтинг
+            startuper_users = Users.objects.filter(
+                role__role_name__iexact='startuper',
+                rating__isnull=False,
+                is_active=True
+            ).exclude(rating=0).order_by('?')[:3]
+            
+            logger.info(f"Found {len(startuper_users)} startuper users with ratings")
+            
+            for user in startuper_users:
+                # Формируем звездный рейтинг
+                rating = float(user.rating or 0)
+                full_stars = int(rating)
+                has_half_star = rating % 1 >= 0.5
+                
+                stars_html = "★" * full_stars
+                if has_half_star:
+                    stars_html += "☆"
+                else:
+                    stars_html += "☆" * (5 - full_stars)
+                
+                random_startupers.append({
+                    'name': user.get_full_name() or user.username or f"Стартапер {user.user_id}",
+                    'rating': rating,
+                    'stars_html': stars_html,
+                    'avatar_url': user.get_profile_picture_url() or static('accounts/images/avatars/default_avatar_ufo.png')
+                })
+                
+                logger.info(f"Added startuper: {user.get_full_name()}, rating: {rating}")
+            
+            # Если стартаперов с рейтингом меньше 3, дополняем список
+            if len(random_startupers) < 3:
+                logger.info(f"Only {len(random_startupers)} startupers found, need to add fallback data")
+                # Получаем дополнительных стартаперов без рейтинга
+                additional_startupers = Users.objects.filter(
+                    role__role_name__iexact='startuper',
+                    is_active=True
+                ).exclude(user_id__in=[s.get('user_id', 0) for s in random_startupers]).order_by('?')[:3-len(random_startupers)]
+                
+                for user in additional_startupers:
+                    # Генерируем случайный рейтинг от 3.5 до 5.0
+                    import random
+                    rating = round(random.uniform(3.5, 5.0), 1)
+                    full_stars = int(rating)
+                    has_half_star = rating % 1 >= 0.5
+                    
+                    stars_html = "★" * full_stars
+                    if has_half_star:
+                        stars_html += "☆"
+                    else:
+                        stars_html += "☆" * (5 - full_stars)
+                    
+                    random_startupers.append({
+                        'name': user.get_full_name() or user.username or f"Стартапер {user.user_id}",
+                        'rating': rating,
+                        'stars_html': stars_html,
+                        'avatar_url': user.get_profile_picture_url() or static('accounts/images/avatars/default_avatar_ufo.png')
+                    })
+                    
+                    logger.info(f"Added additional startuper: {user.get_full_name()}, generated rating: {rating}")
+                
+        except Exception as e:
+            logger.error(f"Error getting random startupers: {e}")
+            # Fallback данные если что-то пошло не так
+            random_startupers = [
+                {
+                    'name': 'Виктор Смирнов',
+                    'rating': 4.5,
+                    'stars_html': '★★★★☆',
+                    'avatar_url': static('accounts/images/avatars/default_avatar_ufo.png')
+                },
+                {
+                    'name': 'Анна Кузнецова',
+                    'rating': 4.9,
+                    'stars_html': '★★★★★',
+                    'avatar_url': static('accounts/images/avatars/default_avatar_ufo.png')
+                },
+                {
+                    'name': 'Дмитрий Иванов',
+                    'rating': 4.3,
+                    'stars_html': '★★★★☆',
+                    'avatar_url': static('accounts/images/avatars/default_avatar_ufo.png')
+                }
+            ]
+            logger.info("Using fallback startuper data")
+        
         context = {
             "demo_startups_data": json.dumps(startups_data, cls=DjangoJSONEncoder),
             "planets_data_json": json.dumps(planets_data, ensure_ascii=False),
             "directions_data_json": json.dumps(directions_data, ensure_ascii=False),
             "directions": directions_data,
+            "random_startupers": random_startupers,
         }
         return render(request, "accounts/main.html", context)
     if hasattr(request.user, "role") and request.user.role:

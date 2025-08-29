@@ -246,49 +246,24 @@
                 <div class="creators">
                     <div class="div31">Последние обновления от стартаперов 🔥</div>
                     <div class="frame-parent13">
+                        {% for startuper in random_startupers %}
                         <div class="frame-parent14">
                             <div class="user-parent">
-                                <img class="avatar01-icon3" alt="Avatar" src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}">
+                                <img class="avatar01-icon3" alt="Avatar" src="{{ startuper.avatar_url }}">
                                 <div class="name-parent">
                                     <div class="name-wrapper">
-                                        <span class="cosmochat-name">Виктор Смирнов</span>
-                                        </div>
-                                    <div class="rating-wrapper">
-                                        <span class="rating-stars">★★★★☆</span> <span class="rating-value">(4,5/5)</span>
+                                        <span class="cosmochat-name">{{ startuper.name }}</span>
                                     </div>
+                                    <div class="rating-wrapper">
+                                        <span class="rating-stars">{{ startuper.stars_html }}</span> <span class="rating-value">({{ startuper.rating|floatformat:1 }}/5)</span>
                                     </div>
                                 </div>
+                            </div>
+                            {% if not forloop.last %}
                             <div class="divider1"></div>
+                            {% endif %}
                         </div>
-                        <div class="frame-parent14">
-                            <div class="user-parent">
-                                <img class="avatar01-icon3" alt="Avatar" src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}">
-                                <div class="name-parent">
-                                     <div class="name-wrapper">
-                                        <span class="cosmochat-name">Анна Кузнецова</span>
-                                        </div>
-                                    <div class="rating-wrapper">
-                                        <span class="rating-stars">★★★★★</span> <span class="rating-value">(4,9/5)</span>
-                                    </div>
-                                    </div>
-                                </div>
-                            <div class="divider1"></div>
-                        </div>
-                        <div class="frame-parent14">
-                            <div class="user-parent">
-                                <img class="avatar01-icon3" alt="Avatar" src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}">
-                                <div class="name-parent">
-                                     <div class="name-wrapper">
-                                        <span class="cosmochat-name">Дмитрий Иванов</span>
-                                        </div>
-                                    <div class="rating-wrapper">
-                                        <span class="rating-stars">★★★★☆</span> <span class="rating-value">(4,3/5)</span>
-                                    </div>
-                                    </div>
-                                </div>
-                            <div class="divider1"></div>
-                        </div>
-
+                        {% endfor %}
                     </div>
                 </div>
             </div>
