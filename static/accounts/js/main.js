@@ -210,8 +210,8 @@ document.addEventListener('DOMContentLoaded', function () {
       let currentCardIndex = 0
       const iconLeftInactive = successContainer.dataset.iconLeftInactive
       const iconRightActive = successContainer.dataset.iconRightActive
-      const iconLeftActive = iconLeftInactive.replace('left', 'right')
-      const iconRightInactive = iconRightActive.replace('right', 'left')
+      const iconLeftActive = iconLeftInactive
+      const iconRightInactive = iconRightActive
       function updateSuccessControls() {
         if (currentCardIndex > 0) {
           successArrowLeft.src = iconLeftActive
