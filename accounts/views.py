@@ -460,8 +460,6 @@ def home(request):
                 rating__isnull=False
             ).exclude(rating=0).order_by('?')[:3]
             
-            logger.info(f"Found {len(startuper_users)} startuper users with ratings")
-            
             for user in startuper_users:
                 # Формируем звездный рейтинг
                 rating = float(user.rating or 0)
@@ -480,12 +478,9 @@ def home(request):
                     'stars_html': stars_html,
                     'avatar_url': user.get_profile_picture_url() or static('accounts/images/avatars/default_avatar_ufo.png')
                 })
-                
-                logger.info(f"Added startuper: {user.get_full_name()}, rating: {rating}")
             
             # Если стартаперов с рейтингом меньше 3, дополняем список
             if len(random_startupers) < 3:
-                logger.info(f"Only {len(random_startupers)} startupers found, need to add fallback data")
                 # Получаем дополнительных стартаперов без рейтинга
                 additional_startupers = Users.objects.filter(
                     role__role_name__iexact='startuper'
@@ -510,12 +505,9 @@ def home(request):
                         'stars_html': stars_html,
                         'avatar_url': user.get_profile_picture_url() or static('accounts/images/avatars/default_avatar_ufo.png')
                     })
-                    
-                    logger.info(f"Added additional startuper: {user.get_full_name()}, generated rating: {rating}")
             
             # Если все еще нет стартаперов, используем fallback
             if len(random_startupers) == 0:
-                logger.warning("No startupers found, using fallback data")
                 random_startupers = [
                     {
                         'name': 'Виктор Смирнов',
@@ -536,7 +528,6 @@ def home(request):
                         'avatar_url': static('accounts/images/avatars/default_avatar_ufo.png')
                     }
                 ]
-                logger.info("Using fallback startuper data due to empty result")
                 
         except Exception as e:
             logger.error(f"Error getting random startupers: {e}")
@@ -567,26 +558,18 @@ def home(request):
         random_startups = []
         try:
             # Получаем случайные одобренные стартапы
-            logger.info("Attempting to fetch approved startups...")
             featured_startups = Startups.objects.filter(
                 status="approved"
             ).order_by('?')[:3]
             
-            logger.info(f"Found {len(featured_startups)} approved startups")
-            
             # Если нет одобренных стартапов, пробуем получить любые
             if len(featured_startups) == 0:
-                logger.info("No approved startups found, trying to get any startups...")
                 featured_startups = Startups.objects.all().order_by('?')[:3]
-                logger.info(f"Found {len(featured_startups)} total startups")
             
             for startup in featured_startups:
-                logger.info(f"Processing startup: {getattr(startup, 'title', 'Unknown')} (ID: {getattr(startup, 'startup_id', 'Unknown')})")
-                
                 # Получаем рейтинг стартапа
                 try:
                     rating = startup.get_average_rating() or 0
-                    logger.info(f"Startup {getattr(startup, 'title', 'Unknown')} rating: {rating}")
                 except Exception as e:
                     logger.warning(f"Could not get rating for startup {getattr(startup, 'title', 'Unknown')}: {e}")
                     rating = 4.5  # Fallback рейтинг
@@ -622,24 +605,27 @@ def home(request):
                 if len(description) > 100:
                     description = description[:97] + "..."
                 
+                # Проверяем, что startup_id является валидным числом
+                startup_id = getattr(startup, 'startup_id', None)
+                if startup_id and str(startup_id).isdigit():
+                    startup_url = f"/startups/{startup_id}/"
+                else:
+                    startup_url = "/startups_list/"
+                
                 startup_data = {
-                    'id': getattr(startup, 'startup_id', 'Unknown'),
+                    'id': startup_id or 'Unknown',
                     'name': getattr(startup, 'title', 'Unknown'),
                     'rating': rating_formatted,
                     'description': description,
                     'image': startup_image,
                     'owner_avatar': owner_avatar,
-                    'url': f"/startup/{getattr(startup, 'startup_id', 'Unknown')}/" if hasattr(startup, 'startup_id') and getattr(startup, 'startup_id') != 'Unknown' else "/startups_list/"
+                    'url': startup_url
                 }
                 
                 random_startups.append(startup_data)
-                logger.info(f"Added startup: {startup_data['name']}, rating: {startup_data['rating']}")
-            
-            logger.info(f"Successfully processed {len(random_startups)} startups for random_startups")
             
             # Если все еще нет стартапов, используем fallback
             if len(random_startups) == 0:
-                logger.warning("No startups found, using fallback data")
                 random_startups = [
                     {
                         'id': 1,
@@ -669,7 +655,6 @@ def home(request):
                         'url': '/startups_list/'
                     }
                 ]
-                logger.info("Using fallback startup data due to empty result")
                 
         except Exception as e:
             logger.error(f"Error getting random startups: {e}")
@@ -713,9 +698,6 @@ def home(request):
             "random_startupers": random_startupers,
             "random_startups": random_startups,
         }
-        
-        logger.info(f"Context prepared - random_startupers: {len(random_startupers)}, random_startups: {len(random_startups)}")
-        logger.info(f"Random startups data: {random_startups}")
         
         return render(request, "accounts/main.html", context)
         return render(request, "accounts/main.html", context)

@@ -185,7 +185,6 @@
 
                 
                 <div class="frame-parent9">
-                    <!-- DEBUG: {{ random_startups|length }} startups found -->
                     {% if random_startups %}
                         {% for startup in random_startups %}
                         <div class="frame-wrapper">
@@ -202,7 +201,7 @@
                                         </div>
                                     </div>
                                     <div class="voltforge-description">{{ startup.description }}</div>
-                                    <a href="{{ startup.url }}" class="btn btn--blue">
+                                    <a href="{% if startup.url|slice:':1' == '/' %}{{ startup.url }}{% else %}/startups_list/{% endif %}" class="btn btn--blue">
                                         <span>Подробнее</span>
                                     </a>
                                 </div>
@@ -275,7 +274,6 @@
                 </div>
                 <div class="creators">
                     <div class="div31">Последние обновления от стартаперов 🔥</div>
-                    <!-- DEBUG: {{ random_startupers|length }} startupers found -->
                     <div class="frame-parent13">
                         {% if random_startupers %}
                             {% for startuper in random_startupers %}
