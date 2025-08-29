@@ -8,6 +8,7 @@ let isDragging = false
 let startX
 let scrollLeft
 let selectedGroupChatUserIds = []
+let currentPage = 1
 const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value
 const chatListContainer = document.getElementById('chatListContainer')
 const chatWindowColumn = document.getElementById('chatWindowColumn')
@@ -1743,15 +1744,21 @@ function updatePaginationHTML() {
     if (!usersList || !paginationContainer || userCards.length === 0) return
     const itemsPerPage = 8
     const totalPages = Math.ceil(userCards.length / itemsPerPage)
+    
+    // Сбрасываем currentPage если она выходит за пределы
+    if (currentPage > totalPages) {
+        currentPage = 1
+    }
+    
     let paginationHTML = ''
     paginationHTML += `<span class="page-number-item" data-page="prev">‹</span>`
     if (totalPages <= 7) {
         for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`
+            paginationHTML += `<span class="page-number-item ${i === currentPage ? 'current' : ''}" data-page="${i}">${i}</span>`
         }
     } else {
         for (let i = 1; i <= 3; i++) {
-            paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`
+            paginationHTML += `<span class="page-number-item ${i === currentPage ? 'current' : ''}" data-page="${i}">${i}</span>`
         }
         paginationHTML += `<span class="dots">...</span>`
         for (let i = totalPages - 2; i <= totalPages; i++) {
@@ -1760,6 +1767,7 @@ function updatePaginationHTML() {
     }
     paginationHTML += `<span class="page-number-item" data-page="next">›</span>`
     paginationContainer.innerHTML = paginationHTML
+    
     const pageButtons = paginationContainer.querySelectorAll('.page-number-item')
     pageButtons.forEach((button) => {
         if (button.classList.contains('dots')) return
@@ -1781,6 +1789,11 @@ function updatePaginationHTML() {
             }
         })
     })
+    
+    // Показываем первую страницу при инициализации
+    if (userCards.length > 0) {
+        showPage(currentPage)
+    }
 }
 let additionalUsersShown = 0
 function showMoreUsers() {
@@ -1797,6 +1810,9 @@ function showMoreUsers() {
     if (paginationContainer) {
         paginationContainer.style.display = 'none'
     }
+    
+    // Сбрасываем текущую страницу при использовании "Показать еще"
+    currentPage = 1
     let buttonsContainer = document.querySelector('.pagination-buttons-container')
     if (!buttonsContainer) {
         buttonsContainer = document.createElement('div')
@@ -1856,7 +1872,7 @@ function hideExtraUsers() {
     additionalUsersShown = 0
     const currentPageBtn = document.querySelector('.page-number-item.current')
     if (currentPageBtn) {
-        const currentPage = parseInt(currentPageBtn.dataset.page)
+        currentPage = parseInt(currentPageBtn.dataset.page)
         showPage(currentPage)
     }
 }
@@ -1867,17 +1883,42 @@ function showPage(page) {
     : []
   const itemsPerPage = 8
   if (!usersList || userCards.length === 0) return
+  
+  // Скрываем все карточки сначала
+  userCards.forEach((card) => {
+    card.classList.add('hidden-user')
+  })
+  
+  // Показываем только карточки для текущей страницы
   const startIndex = (page - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  userCards.forEach((card, index) => {
-    if (index >= startIndex && index < endIndex) {
-      card.classList.remove('hidden-user')
-    } else {
-      if (!card.classList.contains('show-more-revealed')) {
-        card.classList.add('hidden-user')
-      }
-    }
-  })
+  
+  for (let i = startIndex; i < endIndex && i < userCards.length; i++) {
+    userCards[i].classList.remove('hidden-user')
+  }
+  
+  // Обновляем активную страницу в пагинации
+  const currentPageBtn = document.querySelector('.page-number-item.current')
+  if (currentPageBtn) {
+    currentPageBtn.classList.remove('current')
+  }
+  
+  const newCurrentPageBtn = document.querySelector(`[data-page="${page}"]`)
+  if (newCurrentPageBtn && !newCurrentPageBtn.classList.contains('dots')) {
+    newCurrentPageBtn.classList.add('current')
+  }
+  
+  // Скрываем кнопку "Показать еще" при использовании пагинации
+  const showMoreBtn = document.getElementById('showMoreUsersBtn')
+  if (showMoreBtn) {
+    showMoreBtn.style.display = 'none'
+  }
+  
+  // Показываем пагинацию
+  const paginationContainer = document.getElementById('userPagination')
+  if (paginationContainer) {
+    paginationContainer.style.display = 'flex'
+  }
 }
 function openGroupChatModal() {
   console.log('openGroupChatModal called');

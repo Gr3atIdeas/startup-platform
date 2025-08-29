@@ -103,3 +103,6 @@ staticfiles/
 /media
 *.swp
 *.swo
+BACKEND.md
+FRONTEND.md
+README.md
