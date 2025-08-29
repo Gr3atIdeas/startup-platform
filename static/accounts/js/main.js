@@ -214,14 +214,14 @@ document.addEventListener('DOMContentLoaded', function () {
       const iconRightInactive = iconRightActive.replace('right', 'left')
       function updateSuccessControls() {
         if (currentCardIndex > 0) {
-          successArrowLeft.src = iconRightActive
+          successArrowLeft.src = iconLeftActive
           successArrowLeft.classList.remove('disabled')
         } else {
           successArrowLeft.src = iconLeftInactive
           successArrowLeft.classList.add('disabled')
         }
         if (currentCardIndex >= maxCardIndex) {
-          successArrowRight.src = iconLeftInactive
+          successArrowRight.src = iconRightInactive
           successArrowRight.classList.add('disabled')
         } else {
           successArrowRight.src = iconRightActive
