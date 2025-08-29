@@ -209,9 +209,9 @@ document.addEventListener('DOMContentLoaded', function () {
       const maxCardIndex = Math.max(0, totalCards - visibleCards)
       let currentCardIndex = 0
       const iconLeftInactive = successContainer.dataset.iconLeftInactive
+      const iconLeftActive = successContainer.dataset.iconLeftActive
       const iconRightActive = successContainer.dataset.iconRightActive
-      const iconLeftActive = iconLeftInactive
-      const iconRightInactive = iconRightActive
+      const iconRightInactive = successContainer.dataset.iconRightInactive
       function updateSuccessControls() {
         if (currentCardIndex > 0) {
           successArrowLeft.src = iconLeftActive
