@@ -6,7 +6,6 @@
       {% if user.is_authenticated and user.role.role_name == 'moderator' %}
         <button class="delete-news-btn" onclick="deleteNews({{ article.article_id }})">Удалить</button>
       {% endif %}
-      
       <a href="{% url 'news_detail' article.article_id %}" class="news-image-link">
         {% if article.get_image_url %}
           <img src="{{ article.get_image_url }}" alt="{{ article.title }}" class="news-image">
@@ -40,7 +39,7 @@
   {% endfor %}
 </div>
 
-{% if page_obj and paginator.num_pages > 1 %}
+{% if page_obj and paginator and paginator.num_pages > 1 %}
   <div class="pagination">
     {% if page_obj.has_previous %}
       <a href="?page={{ page_obj.previous_page_number }}" class="page-item">« Предыдущая</a>
