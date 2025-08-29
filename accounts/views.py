@@ -543,6 +543,20 @@ def home(request):
         # Получаем случайные стартапы для блока "Исследуйте новые миры"
         random_startups = []
         try:
+            logger.info("=== STARTUP FETCHING DEBUG ===")
+            
+            # Проверяем, что модель Startups существует и доступна
+            logger.info(f"Startups model available: {Startups is not None}")
+            
+            # Проверяем общее количество стартапов в базе
+            total_startups = Startups.objects.count()
+            logger.info(f"Total startups in database: {total_startups}")
+            
+            # Проверяем количество стартапов по статусам
+            approved_startups = Startups.objects.filter(status="approved").count()
+            active_startups = Startups.objects.filter(is_active=True).count()
+            logger.info(f"Approved startups: {approved_startups}, Active startups: {active_startups}")
+            
             # Получаем случайные одобренные стартапы
             featured_startups = Startups.objects.filter(
                 status="approved",
@@ -660,6 +674,8 @@ def home(request):
         
         logger.info(f"Final context - random_startups count: {len(random_startups)}")
         logger.info(f"Final context - random_startupers count: {len(random_startupers)}")
+        logger.info(f"Context keys: {list(context.keys())}")
+        logger.info("=== END STARTUP FETCHING DEBUG ===")
         
         return render(request, "accounts/main.html", context)
         return render(request, "accounts/main.html", context)

@@ -181,6 +181,15 @@
                     </a>
                 </div>
                 <div class="divider"></div>
+                
+                <!-- DEBUG INFO -->
+                <div style="color: white; background: red; padding: 10px; margin: 10px;">
+                    <strong>DEBUG:</strong> 
+                    random_startups count: {{ random_startups|length }}<br>
+                    random_startups: {{ random_startups|safe }}<br>
+                    random_startupers count: {{ random_startupers|length }}
+                </div>
+                
                 <div class="frame-parent9">
                     {% for startup in random_startups %}
                     <div class="frame-wrapper">
