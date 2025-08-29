@@ -36,72 +36,100 @@
                     </div>
                 </div>
                 <div style="width: 355px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 49px; display: inline-flex">
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex">
-                        <div style="width: 355px; justify-content: space-between; align-items: center; display: flex">
-                            <img style="width: 160px; height: 156px; position: relative; border-radius: 10px" src="{% static 'accounts/images/main_page/volt_forge.webp' %}" />
-                            <div style="flex-direction: column; justify-content: center; align-items: flex-start; gap: 16px; display: inline-flex">
-                                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-                                    <div style="width: 167px; color: #FCFCFD; font-size: 16px; font-family: Unbounded; font-weight: 400; line-height: 16px; word-wrap: break-word">VoltForge Dynamics</div>
-                                    <div style="width: 155px; justify-content: flex-start; align-items: center; gap: 11px; display: inline-flex">
-                                        <div style="width: 24px; height: 24px; position: relative; background: #9757D7; overflow: hidden; border-radius: 36px">
-                                            <img style="width: 24px; height: 36px; left: 0px; top: -6.50px; position: absolute" src="{% static 'accounts/images/default_icon.svg' %}" />
-                                        </div>
-                                        <div style="padding-top: 8px; padding-bottom: 6px; padding-left: 8px; padding-right: 8px; border-radius: 4px; outline: 2px #FFEF2B solid; outline-offset: -2px; justify-content: center; align-items: center; gap: 10px; display: flex">
-                                            <div style="color: #FFEF2B; font-size: 12px; font-family: Unbounded; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12px; word-wrap: break-word">4,4/5</div>
+                    {% if random_startups %}
+                        {% for startup in random_startups %}
+                        <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex">
+                            <div style="width: 355px; justify-content: space-between; align-items: center; display: flex">
+                                <img style="width: 160px; height: 156px; position: relative; border-radius: 10px" src="{{ startup.image }}" alt="{{ startup.name }}" />
+                                <div style="flex-direction: column; justify-content: center; align-items: flex-start; gap: 16px; display: inline-flex">
+                                    <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                                        <div style="width: 167px; color: #FCFCFD; font-size: 16px; font-family: Unbounded; font-weight: 400; line-height: 16px; word-wrap: break-word">{{ startup.name }}</div>
+                                        <div style="width: 155px; justify-content: flex-start; align-items: center; gap: 11px; display: inline-flex">
+                                            <div style="width: 24px; height: 24px; position: relative; background: #9757D7; overflow: hidden; border-radius: 36px">
+                                                <img style="width: 24px; height: 36px; left: 0px; top: -6.50px; position: absolute" src="{{ startup.owner_avatar }}" />
+                                            </div>
+                                            <div style="padding-top: 8px; padding-bottom: 6px; padding-left: 8px; padding-right: 8px; border-radius: 4px; outline: 2px #FFEF2B solid; outline-offset: -2px; justify-content: center; align-items: center; gap: 10px; display: flex">
+                                                <div style="color: #FFEF2B; font-size: 12px; font-family: Unbounded; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12px; word-wrap: break-word">{{ startup.rating }}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div style="width: 175px; color: #E6E8EC; font-size: 8px; font-family: Unbounded; font-weight: 300; line-height: 9px; word-wrap: break-word">VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...</div>
-                                <div style="padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px; background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); border-radius: 10px; justify-content: center; align-items: center; gap: 12px; display: inline-flex">
-                                    <div style="color: #FCFCFD; font-size: 14px; font-family: Unbounded; font-weight: 300; line-height: 18px; word-wrap: break-word">Подробнее</div>
+                                    <div style="width: 175px; color: #E6E8EC; font-size: 8px; font-family: Unbounded; font-weight: 300; line-height: 9px; word-wrap: break-word">{{ startup.description }}</div>
+                                    <a href="{{ startup.url }}" style="padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px; background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); border-radius: 10px; justify-content: center; align-items: center; gap: 12px; display: inline-flex; text-decoration: none;">
+                                        <div style="color: #FCFCFD; font-size: 14px; font-family: Unbounded; font-weight: 300; line-height: 18px; word-wrap: break-word">Подробнее</div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex">
-                        <div style="width: 355px; justify-content: space-between; align-items: center; display: flex">
-                            <img style="width: 160px; height: 156px; position: relative; border-radius: 10px" src="{% static 'accounts/images/main_page/neuro_bloom.webp' %}" />
-                            <div style="flex-direction: column; justify-content: center; align-items: flex-start; gap: 16px; display: inline-flex">
-                                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-                                    <div style="width: 167px; color: #FCFCFD; font-size: 16px; font-family: Unbounded; font-weight: 400; line-height: 16px; word-wrap: break-word">NeuroBloom</div>
-                                    <div style="width: 155px; justify-content: flex-start; align-items: center; gap: 11px; display: inline-flex">
-                                        <div style="width: 24px; height: 24px; position: relative; background: #9757D7; overflow: hidden; border-radius: 36px">
-                                            <img style="width: 24px; height: 36px; left: 0px; top: -6.50px; position: absolute" src="{% static 'accounts/images/default_icon.svg' %}" />
-                                        </div>
-                                        <div style="padding-top: 8px; padding-bottom: 6px; padding-left: 8px; padding-right: 8px; border-radius: 4px; outline: 2px #FFEF2B solid; outline-offset: -2px; justify-content: center; align-items: center; gap: 10px; display: flex">
-                                            <div style="color: #FFEF2B; font-size: 12px; font-family: Unbounded; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12px; word-wrap: break-word">4,7/5</div>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Fallback карточки если динамические данные не загрузились -->
+                        <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex">
+                            <div style="width: 355px; justify-content: space-between; align-items: center; display: flex">
+                                <img style="width: 160px; height: 156px; position: relative; border-radius: 10px" src="{% static 'accounts/images/main_page/volt_forge.webp' %}" />
+                                <div style="flex-direction: column; justify-content: center; align-items: flex-start; gap: 16px; display: inline-flex">
+                                    <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                                        <div style="width: 167px; color: #FCFCFD; font-size: 16px; font-family: Unbounded; font-weight: 400; line-height: 16px; word-wrap: break-word">VoltForge Dynamics</div>
+                                        <div style="width: 155px; justify-content: flex-start; align-items: center; gap: 11px; display: inline-flex">
+                                            <div style="width: 24px; height: 24px; position: relative; background: #9757D7; overflow: hidden; border-radius: 36px">
+                                                <img style="width: 24px; height: 36px; left: 0px; top: -6.50px; position: absolute" src="{% static 'accounts/images/default_icon.svg' %}" />
+                                            </div>
+                                            <div style="padding-top: 8px; padding-bottom: 6px; padding-left: 8px; padding-right: 8px; border-radius: 4px; outline: 2px #FFEF2B solid; outline-offset: -2px; justify-content: center; align-items: center; gap: 10px; display: flex">
+                                                <div style="color: #FFEF2B; font-size: 12px; font-family: Unbounded; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12px; word-wrap: break-word">4,4/5</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div style="width: 175px; color: #E6E8EC; font-size: 8px; font-family: Unbounded; font-weight: 300; line-height: 9px; word-wrap: break-word">NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны для раннего выявления тревоги, депрессии и выгорания.</div>
-                                <div style="padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px; background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); border-radius: 10px; justify-content: center; align-items: center; gap: 12px; display: inline-flex">
-                                    <div style="color: #FCFCFD; font-size: 14px; font-family: Unbounded; font-weight: 300; line-height: 18px; word-wrap: break-word">Подробнее</div>
+                                    <div style="width: 175px; color: #E6E8EC; font-size: 8px; font-family: Unbounded; font-weight: 300; line-height: 9px; word-wrap: break-word">VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...</div>
+                                    <div style="padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px; background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); border-radius: 10px; justify-content: center; align-items: center; gap: 12px; display: inline-flex">
+                                        <div style="color: #FCFCFD; font-size: 14px; font-family: Unbounded; font-weight: 300; line-height: 18px; word-wrap: break-word">Подробнее</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex">
-                        <div style="width: 355px; justify-content: space-between; align-items: center; display: flex">
-                            <img style="width: 160px; height: 156px; position: relative; border-radius: 10px" src="{% static 'accounts/images/main_page/biocrop_nexus.webp' %}" />
-                            <div style="flex-direction: column; justify-content: center; align-items: flex-start; gap: 16px; display: inline-flex">
-                                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
-                                    <div style="width: 167px; color: #FCFCFD; font-size: 16px; font-family: Unbounded; font-weight: 400; line-height: 16px; word-wrap: break-word">BioCrop Nexus</div>
-                                    <div style="width: 155px; justify-content: flex-start; align-items: center; gap: 11px; display: inline-flex">
-                                        <div style="width: 24px; height: 24px; position: relative; background: #9757D7; overflow: hidden; border-radius: 36px">
-                                            <img style="width: 24px; height: 36px; left: 0px; top: -6.50px; position: absolute" src="{% static 'accounts/images/default_icon.svg' %}" />
-                                        </div>
-                                        <div style="padding-top: 8px; padding-bottom: 6px; padding-left: 8px; padding-right: 8px; border-radius: 4px; outline: 2px #FFEF2B solid; outline-offset: -2px; justify-content: center; align-items: center; gap: 10px; display: flex">
-                                            <div style="color: #FFEF2B; font-size: 12px; font-family: Unbounded; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12px; word-wrap: break-word">4,2/5</div>
+                        <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex">
+                            <div style="width: 355px; justify-content: space-between; align-items: center; display: flex">
+                                <img style="width: 160px; height: 156px; position: relative; border-radius: 10px" src="{% static 'accounts/images/main_page/neuro_bloom.webp' %}" />
+                                <div style="flex-direction: column; justify-content: center; align-items: flex-start; gap: 16px; display: inline-flex">
+                                    <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                                        <div style="width: 167px; color: #FCFCFD; font-size: 16px; font-family: Unbounded; font-weight: 400; line-height: 16px; word-wrap: break-word">NeuroBloom</div>
+                                        <div style="width: 155px; justify-content: flex-start; align-items: center; gap: 11px; display: inline-flex">
+                                            <div style="width: 24px; height: 24px; position: relative; background: #9757D7; overflow: hidden; border-radius: 36px">
+                                                <img style="width: 24px; height: 36px; left: 0px; top: -6.50px; position: absolute" src="{% static 'accounts/images/default_icon.svg' %}" />
+                                            </div>
+                                            <div style="padding-top: 8px; padding-bottom: 6px; padding-left: 8px; padding-right: 8px; border-radius: 4px; outline: 2px #FFEF2B solid; outline-offset: -2px; justify-content: center; align-items: center; gap: 10px; display: flex">
+                                                <div style="color: #FFEF2B; font-size: 12px; font-family: Unbounded; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12px; word-wrap: break-word">4,7/5</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div style="width: 175px; color: #E6E8EC; font-size: 8px; font-family: Unbounded; font-weight: 300; line-height: 9px; word-wrap: break-word">BioCrop Nexus создает генетически оптимизированные семена, устойчивые к экстремальным климатическим условиям и вредителям. </div>
-                                <div style="padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px; background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); border-radius: 10px; justify-content: center; align-items: center; gap: 12px; display: inline-flex">
-                                    <div style="color: #FCFCFD; font-size: 14px; font-family: Unbounded; font-weight: 300; line-height: 18px; word-wrap: break-word">Подробнее</div>
+                                    <div style="width: 175px; color: #E6E8EC; font-size: 8px; font-family: Unbounded; font-weight: 300; line-height: 9px; word-wrap: break-word">NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны для раннего выявления тревоги, депрессии и выгорания.</div>
+                                    <div style="padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px; background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); border-radius: 10px; justify-content: center; align-items: center; gap: 12px; display: inline-flex">
+                                        <div style="color: #FCFCFD; font-size: 14px; font-family: Unbounded; font-weight: 300; line-height: 18px; word-wrap: break-word">Подробнее</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 20px; display: inline-flex">
+                            <div style="width: 355px; justify-content: space-between; align-items: center; display: flex">
+                                <img style="width: 160px; height: 156px; position: relative; border-radius: 10px" src="{% static 'accounts/images/main_page/biocrop_nexus.webp' %}" />
+                                <div style="flex-direction: column; justify-content: center; align-items: flex-start; gap: 16px; display: inline-flex">
+                                    <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 8px; display: flex">
+                                        <div style="width: 167px; color: #FCFCFD; font-size: 16px; font-family: Unbounded; font-weight: 400; line-height: 16px; word-wrap: break-word">BioCrop Nexus</div>
+                                        <div style="width: 155px; justify-content: flex-start; align-items: center; gap: 11px; display: inline-flex">
+                                            <div style="width: 24px; height: 24px; position: relative; background: #9757D7; overflow: hidden; border-radius: 36px">
+                                                <img style="width: 24px; height: 36px; left: 0px; top: -6.50px; position: absolute" src="{% static 'accounts/images/default_icon.svg' %}" />
+                                            </div>
+                                            <div style="padding-top: 8px; padding-bottom: 6px; padding-left: 8px; padding-right: 8px; border-radius: 4px; outline: 2px #FFEF2B solid; outline-offset: -2px; justify-content: center; align-items: center; gap: 10px; display: flex">
+                                                <div style="color: #FFEF2B; font-size: 12px; font-family: Unbounded; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12px; word-wrap: break-word">4,2/5</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="width: 175px; color: #E6E8EC; font-size: 8px; font-family: Unbounded; font-weight: 300; line-height: 9px; word-wrap: break-word">BioCrop Nexus создает генетически оптимизированные семена, устойчивые к экстремальным климатическим условиям и вредителям. </div>
+                                    <div style="padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px; background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); border-radius: 10px; justify-content: center; align-items: center; gap: 12px; display: inline-flex">
+                                        <div style="color: #FCFCFD; font-size: 14px; font-family: Unbounded; font-weight: 300; line-height: 18px; word-wrap: break-word">Подробнее</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
                 <div style="width: 1px; height: 566px; position: relative; background: rgba(255, 255, 255, 0.13)"></div>
                 <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; display: inline-flex">

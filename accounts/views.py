@@ -4385,6 +4385,90 @@ def startuper_main(request):
             "description": startup.short_description,
             "investment_type": investment_type,
         })
+    # Получаем 3 случайных стартапа для блока "Нет идей ДЛЯ СТАРТАПА?"
+    try:
+        random_startups = Startups.objects.filter(status="approved").order_by('?')[:3]
+        random_startups_data = []
+        
+        for startup in random_startups:
+            # Определяем изображение стартапа
+            if startup.planet_image:
+                startup_image = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+            else:
+                startup_image = static('accounts/images/main_page/volt_forge.webp')  # fallback изображение
+            
+            # Получаем аватар владельца
+            if hasattr(startup, 'owner') and startup.owner and hasattr(startup.owner, 'get_profile_picture_url'):
+                owner_avatar = startup.owner.get_profile_picture_url() or static('accounts/images/default_icon.svg')
+            else:
+                owner_avatar = static('accounts/images/default_icon.svg')
+            
+            # Форматируем рейтинг
+            rating = getattr(startup, 'rating_avg', 0.0)
+            if rating:
+                rating_formatted = f"{rating:.1f}/5"
+            else:
+                rating_formatted = "0.0/5"
+            
+            # Обрезаем описание
+            description = getattr(startup, 'short_description', '') or getattr(startup, 'description', '')
+            if description:
+                if len(description) > 100:
+                    description = description[:100] + "..."
+            else:
+                description = "Описание не указано"
+            
+            # Проверяем, что startup_id является валидным числом
+            startup_id = getattr(startup, 'startup_id', None)
+            if startup_id and str(startup_id).isdigit():
+                startup_url = f"/startups/{startup_id}/"
+            else:
+                startup_url = "/startups_list/"
+            
+            startup_data = {
+                'id': startup_id or 'Unknown',
+                'name': getattr(startup, 'title', 'Unknown'),
+                'rating': rating_formatted,
+                'description': description,
+                'image': startup_image,
+                'owner_avatar': owner_avatar,
+                'url': startup_url
+            }
+            random_startups_data.append(startup_data)
+            
+    except Exception as e:
+        logger.error(f"Error getting random startups for startuper_main: {e}")
+        # Fallback данные
+        random_startups_data = [
+            {
+                'id': 'fallback1',
+                'name': 'VoltForge Dynamics',
+                'rating': '4.4/5',
+                'description': 'VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...',
+                'image': static('accounts/images/main_page/volt_forge.webp'),
+                'owner_avatar': static('accounts/images/default_icon.svg'),
+                'url': '/startups_list/'
+            },
+            {
+                'id': 'fallback2',
+                'name': 'NeuroBloom',
+                'rating': '4.7/5',
+                'description': 'NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны для раннего выявления тревоги, депрессии и выгорания.',
+                'image': static('accounts/images/main_page/neuro_bloom.webp'),
+                'owner_avatar': static('accounts/images/default_icon.svg'),
+                'url': '/startups_list/'
+            },
+            {
+                'id': 'fallback3',
+                'name': 'BioCrop Nexus',
+                'rating': '4.2/5',
+                'description': 'BioCrop Nexus создает генетически оптимизированные семена, устойчивые к экстремальным климатическим условиям и вредителям.',
+                'image': static('accounts/images/main_page/biocrop_nexus.webp'),
+                'owner_avatar': static('accounts/images/default_icon.svg'),
+                'url': '/startups_list/'
+            }
+        ]
+
     context = {
         "planets_data": planets_data_for_template,
         "logo_data": logo_data,
@@ -4394,6 +4478,7 @@ def startuper_main(request):
         "directions_data_json": json.dumps(directions_data_json, cls=DjangoJSONEncoder),
         "all_startups_data_json": json.dumps(all_startups_data, cls=DjangoJSONEncoder),
         "is_startuper": is_startuper,
+        "random_startups": random_startups_data,
     }
     
     print(f"🔍 STARTUPPER_MAIN: Передаем в шаблон:")
