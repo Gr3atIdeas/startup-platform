@@ -540,12 +540,104 @@ def home(request):
             ]
             logger.info("Using fallback startuper data")
         
+        # Получаем случайные стартапы для блока "Исследуйте новые миры"
+        random_startups = []
+        try:
+            # Получаем случайные одобренные стартапы
+            featured_startups = Startups.objects.filter(
+                status="approved",
+                is_active=True
+            ).order_by('?')[:3]
+            
+            logger.info(f"Found {len(featured_startups)} featured startups")
+            
+            for startup in featured_startups:
+                # Получаем рейтинг стартапа
+                rating = startup.get_average_rating() or 0
+                rating_formatted = f"{rating:.1f}".replace('.', ',')
+                
+                # Получаем изображение стартапа
+                startup_image = None
+                if startup.planet_image:
+                    startup_image = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+                else:
+                    # Fallback на случайные изображения планет
+                    import random
+                    folder_choice = random.choice(['planets_round', 'planets_ring'])
+                    if folder_choice == 'planets_round':
+                        planet_num = random.randint(1, 15)
+                        startup_image = static(f"accounts/images/planetary_system/planets_round/{planet_num}.png")
+                    else:
+                        planet_num = random.randint(1, 6)
+                        startup_image = static(f"accounts/images/planetary_system/planets_ring/{planet_num}.png")
+                
+                # Получаем аватар владельца стартапа
+                owner_avatar = static('accounts/images/avatars/default_avatar_ufo.png')
+                try:
+                    if hasattr(startup, 'owner') and startup.owner and hasattr(startup.owner, 'get_profile_picture_url'):
+                        owner_avatar = startup.owner.get_profile_picture_url() or owner_avatar
+                except Exception as e:
+                    logger.warning(f"Could not get owner avatar for startup {startup.startup_id}: {e}")
+                    owner_avatar = static('accounts/images/avatars/default_avatar_ufo.png')
+                
+                # Формируем описание
+                description = startup.short_description or startup.description or "Описание стартапа"
+                if len(description) > 100:
+                    description = description[:97] + "..."
+                
+                random_startups.append({
+                    'id': startup.startup_id,
+                    'name': startup.title,
+                    'rating': rating_formatted,
+                    'description': description,
+                    'image': startup_image,
+                    'owner_avatar': owner_avatar,
+                    'url': f"/startup/{startup.startup_id}/" if hasattr(startup, 'startup_id') else "#"
+                })
+                
+                logger.info(f"Added startup: {startup.title}, rating: {rating_formatted}")
+                
+        except Exception as e:
+            logger.error(f"Error getting random startups: {e}")
+            # Fallback данные если что-то пошло не так
+            random_startups = [
+                {
+                    'id': 1,
+                    'name': 'VoltForge Dynamics',
+                    'rating': '4,4',
+                    'description': 'VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...',
+                    'image': static('accounts/images/main_page/volt_forge.webp'),
+                    'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
+                    'url': '#'
+                },
+                {
+                    'id': 2,
+                    'name': 'NeuroBloom',
+                    'rating': '4,7',
+                    'description': 'NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны...',
+                    'image': static('accounts/images/main_page/neuro_bloom.webp'),
+                    'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
+                    'url': '#'
+                },
+                {
+                    'id': 3,
+                    'name': 'BioCrop Nexus',
+                    'rating': '4,2',
+                    'description': 'BioCrop Nexus создает генетически оптимизированные семена, устойчивые к климату...',
+                    'image': static('accounts/images/main_page/biocrop_nexus.webp'),
+                    'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
+                    'url': '#'
+                }
+            ]
+            logger.info("Using fallback startup data")
+        
         context = {
             "demo_startups_data": json.dumps(startups_data, cls=DjangoJSONEncoder),
             "planets_data_json": json.dumps(planets_data, ensure_ascii=False),
             "directions_data_json": json.dumps(directions_data, ensure_ascii=False),
             "directions": directions_data,
             "random_startupers": random_startupers,
+            "random_startups": random_startups,
         }
         return render(request, "accounts/main.html", context)
     if hasattr(request.user, "role") and request.user.role:
