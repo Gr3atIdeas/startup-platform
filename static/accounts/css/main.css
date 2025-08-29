@@ -1998,7 +1998,7 @@ body > main.content::after {
 }
 
 .featured8 .success-stories-arrow-left {
-  left: 20px;
+  left: 0px;
   position: absolute;
 }
 
