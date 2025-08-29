@@ -457,8 +457,7 @@ def home(request):
             # Получаем пользователей с ролью стартапера, у которых есть рейтинг
             startuper_users = Users.objects.filter(
                 role__role_name__iexact='startuper',
-                rating__isnull=False,
-                is_active=True
+                rating__isnull=False
             ).exclude(rating=0).order_by('?')[:3]
             
             logger.info(f"Found {len(startuper_users)} startuper users with ratings")
@@ -489,8 +488,7 @@ def home(request):
                 logger.info(f"Only {len(random_startupers)} startupers found, need to add fallback data")
                 # Получаем дополнительных стартаперов без рейтинга
                 additional_startupers = Users.objects.filter(
-                    role__role_name__iexact='startuper',
-                    is_active=True
+                    role__role_name__iexact='startuper'
                 ).exclude(user_id__in=[s.get('user_id', 0) for s in random_startupers]).order_by('?')[:3-len(random_startupers)]
                 
                 for user in additional_startupers:
@@ -514,6 +512,31 @@ def home(request):
                     })
                     
                     logger.info(f"Added additional startuper: {user.get_full_name()}, generated rating: {rating}")
+            
+            # Если все еще нет стартаперов, используем fallback
+            if len(random_startupers) == 0:
+                logger.warning("No startupers found, using fallback data")
+                random_startupers = [
+                    {
+                        'name': 'Виктор Смирнов',
+                        'rating': 4.5,
+                        'stars_html': '★★★★☆',
+                        'avatar_url': static('accounts/images/avatars/default_avatar_ufo.png')
+                    },
+                    {
+                        'name': 'Анна Кузнецова',
+                        'rating': 4.9,
+                        'stars_html': '★★★★★',
+                        'avatar_url': static('accounts/images/avatars/default_avatar_ufo.png')
+                    },
+                    {
+                        'name': 'Дмитрий Иванов',
+                        'rating': 4.3,
+                        'stars_html': '★★★★☆',
+                        'avatar_url': static('accounts/images/avatars/default_avatar_ufo.png')
+                    }
+                ]
+                logger.info("Using fallback startuper data due to empty result")
                 
         except Exception as e:
             logger.error(f"Error getting random startupers: {e}")
@@ -544,23 +567,26 @@ def home(request):
         random_startups = []
         try:
             # Получаем случайные одобренные стартапы
+            logger.info("Attempting to fetch approved startups...")
             featured_startups = Startups.objects.filter(
-                status="approved",
-                is_active=True
+                status="approved"
             ).order_by('?')[:3]
             
-            # Если нет одобренных стартапов, пробуем получить любые активные
-            if len(featured_startups) == 0:
-                featured_startups = Startups.objects.filter(is_active=True).order_by('?')[:3]
+            logger.info(f"Found {len(featured_startups)} approved startups")
             
-            # Если все еще нет стартапов, пробуем получить любые
+            # Если нет одобренных стартапов, пробуем получить любые
             if len(featured_startups) == 0:
+                logger.info("No approved startups found, trying to get any startups...")
                 featured_startups = Startups.objects.all().order_by('?')[:3]
+                logger.info(f"Found {len(featured_startups)} total startups")
             
             for startup in featured_startups:
+                logger.info(f"Processing startup: {getattr(startup, 'title', 'Unknown')} (ID: {getattr(startup, 'startup_id', 'Unknown')})")
+                
                 # Получаем рейтинг стартапа
                 try:
                     rating = startup.get_average_rating() or 0
+                    logger.info(f"Startup {getattr(startup, 'title', 'Unknown')} rating: {rating}")
                 except Exception as e:
                     logger.warning(f"Could not get rating for startup {getattr(startup, 'title', 'Unknown')}: {e}")
                     rating = 4.5  # Fallback рейтинг
@@ -608,6 +634,42 @@ def home(request):
                 
                 random_startups.append(startup_data)
                 logger.info(f"Added startup: {startup_data['name']}, rating: {startup_data['rating']}")
+            
+            logger.info(f"Successfully processed {len(random_startups)} startups for random_startups")
+            
+            # Если все еще нет стартапов, используем fallback
+            if len(random_startups) == 0:
+                logger.warning("No startups found, using fallback data")
+                random_startups = [
+                    {
+                        'id': 1,
+                        'name': 'VoltForge Dynamics',
+                        'rating': '4,4',
+                        'description': 'VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...',
+                        'image': static('accounts/images/main_page/volt_forge.webp'),
+                        'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
+                        'url': '/startups_list/'
+                    },
+                    {
+                        'id': 2,
+                        'name': 'NeuroBloom',
+                        'rating': '4,7',
+                        'description': 'NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны...',
+                        'image': static('accounts/images/main_page/neuro_bloom.webp'),
+                        'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
+                        'url': '/startups_list/'
+                    },
+                    {
+                        'id': 3,
+                        'name': 'BioCrop Nexus',
+                        'rating': '4,2',
+                        'description': 'BioCrop Nexus создает генетически оптимизированные семена, устойчивые к климату...',
+                        'image': static('accounts/images/main_page/biocrop_nexus.webp'),
+                        'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
+                        'url': '/startups_list/'
+                    }
+                ]
+                logger.info("Using fallback startup data due to empty result")
                 
         except Exception as e:
             logger.error(f"Error getting random startups: {e}")
@@ -651,6 +713,9 @@ def home(request):
             "random_startupers": random_startupers,
             "random_startups": random_startups,
         }
+        
+        logger.info(f"Context prepared - random_startupers: {len(random_startupers)}, random_startups: {len(random_startups)}")
+        logger.info(f"Random startups data: {random_startups}")
         
         return render(request, "accounts/main.html", context)
         return render(request, "accounts/main.html", context)
