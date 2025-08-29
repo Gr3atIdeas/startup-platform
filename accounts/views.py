@@ -543,39 +543,19 @@ def home(request):
         # Получаем случайные стартапы для блока "Исследуйте новые миры"
         random_startups = []
         try:
-            logger.info("=== STARTUP FETCHING DEBUG ===")
-            
-            # Проверяем, что модель Startups существует и доступна
-            logger.info(f"Startups model available: {Startups is not None}")
-            
-            # Проверяем общее количество стартапов в базе
-            total_startups = Startups.objects.count()
-            logger.info(f"Total startups in database: {total_startups}")
-            
-            # Проверяем количество стартапов по статусам
-            approved_startups = Startups.objects.filter(status="approved").count()
-            active_startups = Startups.objects.filter(is_active=True).count()
-            logger.info(f"Approved startups: {approved_startups}, Active startups: {active_startups}")
-            
             # Получаем случайные одобренные стартапы
             featured_startups = Startups.objects.filter(
                 status="approved",
                 is_active=True
             ).order_by('?')[:3]
             
-            logger.info(f"Found {len(featured_startups)} featured startups")
-            
             # Если нет одобренных стартапов, пробуем получить любые активные
             if len(featured_startups) == 0:
-                logger.info("No approved startups found, trying to get any active startups")
                 featured_startups = Startups.objects.filter(is_active=True).order_by('?')[:3]
-                logger.info(f"Found {len(featured_startups)} active startups (not necessarily approved)")
             
             # Если все еще нет стартапов, пробуем получить любые
             if len(featured_startups) == 0:
-                logger.info("No active startups found, trying to get any startups")
                 featured_startups = Startups.objects.all().order_by('?')[:3]
-                logger.info(f"Found {len(featured_startups)} total startups")
             
             for startup in featured_startups:
                 # Получаем рейтинг стартапа
@@ -623,7 +603,7 @@ def home(request):
                     'description': description,
                     'image': startup_image,
                     'owner_avatar': owner_avatar,
-                    'url': f"/startup/{getattr(startup, 'startup_id', 'Unknown')}/" if hasattr(startup, 'startup_id') else "#"
+                    'url': f"/startup/{getattr(startup, 'startup_id', 'Unknown')}/" if hasattr(startup, 'startup_id') and getattr(startup, 'startup_id') != 'Unknown' else "/startups_list/"
                 }
                 
                 random_startups.append(startup_data)
@@ -640,7 +620,7 @@ def home(request):
                     'description': 'VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...',
                     'image': static('accounts/images/main_page/volt_forge.webp'),
                     'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
-                    'url': '#'
+                    'url': '/startups_list/'
                 },
                 {
                     'id': 2,
@@ -649,7 +629,7 @@ def home(request):
                     'description': 'NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны...',
                     'image': static('accounts/images/main_page/neuro_bloom.webp'),
                     'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
-                    'url': '#'
+                    'url': '/startups_list/'
                 },
                 {
                     'id': 3,
@@ -658,7 +638,7 @@ def home(request):
                     'description': 'BioCrop Nexus создает генетически оптимизированные семена, устойчивые к климату...',
                     'image': static('accounts/images/main_page/biocrop_nexus.webp'),
                     'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
-                    'url': '#'
+                    'url': '/startups_list/'
                 }
             ]
             logger.info("Using fallback startup data")
@@ -671,11 +651,6 @@ def home(request):
             "random_startupers": random_startupers,
             "random_startups": random_startups,
         }
-        
-        logger.info(f"Final context - random_startups count: {len(random_startups)}")
-        logger.info(f"Final context - random_startupers count: {len(random_startupers)}")
-        logger.info(f"Context keys: {list(context.keys())}")
-        logger.info("=== END STARTUP FETCHING DEBUG ===")
         
         return render(request, "accounts/main.html", context)
         return render(request, "accounts/main.html", context)
