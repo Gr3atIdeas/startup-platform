@@ -107,10 +107,6 @@
       ultraNewPlanetaryLogoImage = data.logoImage || '';
       ultraNewPlanetaryAllStartupsData = data.allStartupsData || [];
       ultraNewPlanetaryCategoriesTotal = ultraNewPlanetaryDirectionsData.length;
-      console.log('DIRECTIONS DATA:', ultraNewPlanetaryDirectionsData);
-      console.log('DIRECTIONS COUNT:', ultraNewPlanetaryDirectionsData.length);
-      console.log('Initializing categories:');
-      console.log('Total categories:', ultraNewPlanetaryCategoriesTotal);
       setTimeout(() => {
         ultraNewPlanetaryUpdateArrowStates();
       }, 100);
@@ -250,20 +246,16 @@
     });
   }
   function selectUltraNewPlanetaryGalaxy(galaxyName) {
-    console.log('🔍 JS: selectUltraNewPlanetaryGalaxy called with:', galaxyName);
     ultraNewPlanetarySelectedGalaxy = galaxyName;
     updateUltraNewPlanetaryGalaxyUI();
     
-    console.log('🔍 JS: Forcing data refresh for category:', galaxyName);
     applyUltraNewPlanetaryFilter(galaxyName);
     
     const url = new URL(window.location);
     if (galaxyName && galaxyName !== 'Все' && galaxyName !== 'All') {
       url.searchParams.set('direction', galaxyName);
-      console.log('🔍 JS: Setting URL parameter direction to:', galaxyName);
     } else {
       url.searchParams.delete('direction');
-      console.log('🔍 JS: Removing direction parameter from URL');
     }
     history.replaceState(null, '', url.toString());
   }
@@ -305,13 +297,10 @@
     startUltraNewPlanetaryAnimation();
   }
   function updateUltraNewPlanetaryPlanets(startups) {
-    console.log('🔍 JS: updateUltraNewPlanetaryPlanets called with:', startups.length, 'startups');
     const planets = document.querySelectorAll('.ultra_new_planetary_planet');
-    console.log('🔍 JS: Found', planets.length, 'planets in DOM');
     
     planets.forEach(function(planet, index) {
       const startup = startups[index];
-      console.log('🔍 JS: Planet', index, 'startup:', startup ? startup.name : 'none');
       
       if (startup && (startup.id || startup.startup_id)) {
         planet.removeAttribute('data-startup-id');
@@ -319,21 +308,16 @@
         planet.removeAttribute('data-startup-name');
         
         setupUltraNewPlanetaryPlanet(planet, startup, index);
-        console.log('🔍 JS: Setup planet', index, 'with startup:', startup.name);
       } else {
         setupUltraNewPlanetaryEmptyPlanet(planet, index);
-        console.log('🔍 JS: Hide planet', index, '- no startup');
       }
     });
-    console.log('🔍 JS: Reinitializing planetary objects');
     initializeUltraNewPlanetaryObjects();
     
-    console.log('🔍 JS: Restarting animation');
     stopUltraNewPlanetaryAnimation();
     startUltraNewPlanetaryAnimation();
   }
   function clearUltraNewPlanetaryPlanetData(planet) {
-    console.log('🔍 JS: Clearing planet data');
     const newPlanet = planet.cloneNode(true);
     planet.parentNode.replaceChild(newPlanet, planet);
     newPlanet.removeAttribute('data-startup-id');
@@ -344,20 +328,16 @@
   }
   function setupUltraNewPlanetaryPlanet(planet, startup, index) {
     if (!planet || !startup) return;
-    console.log('🔍 JS: Setting up planet', index, 'with startup:', startup.name);
-    
     const imageUrl = startup.image || getUltraNewPlanetaryFallbackImage(index);
-    console.log('🔍 JS: Planet image URL:', imageUrl);
     
     if (imageUrl && imageUrl !== 'null' && imageUrl !== 'undefined') {
       planet.style.backgroundImage = `url(${imageUrl})`;
       
       const img = new Image();
       img.onload = function() {
-        console.log('🔍 JS: Planet image loaded successfully:', imageUrl);
+        // Image loaded successfully
       };
       img.onerror = function() {
-        console.warn('🔍 JS: Failed to load planet image:', imageUrl);
         const fallbackUrl = getUltraNewPlanetaryFallbackImage(index);
         planet.style.backgroundImage = `url(${fallbackUrl})`;
       };
@@ -380,12 +360,9 @@
     newPlanet.style.cursor = 'pointer';
     newPlanet.style.opacity = '1';
     newPlanet.style.display = 'block';
-    
-    console.log('🔍 JS: Planet setup complete for:', startup.name);
   }
   function setupUltraNewPlanetaryEmptyPlanet(planet, index) {
     if (!planet) return;
-    console.log('🔍 JS: Hiding empty planet', index);
     planet.style.display = 'none';
   }
   function getUltraNewPlanetaryFallbackImage(index) {
@@ -442,7 +419,6 @@
       }
     }
     if (investorsCountElement) {
-      console.log('Modal investors count:', startup.investors);
       investorsCountElement.textContent = `Инвестировало (${startup.investors || '0'})`;
     }
     if (planetImageElement) {
@@ -553,15 +529,12 @@
   });
   let ultraNewPlanetaryObjects = [];
   function initializeUltraNewPlanetaryObjects() {
-    console.log('🔍 JS: Initializing planetary objects');
     const planets = document.querySelectorAll('.ultra_new_planetary_planet');
-    console.log('🔍 JS: Found', planets.length, 'planets for animation');
     ultraNewPlanetaryObjects = [];
     planets.forEach((planet, index) => {
       const orbit = planet.closest('.ultra_new_planetary_orbit');
       const planetOrientation = planet.closest('.ultra_new_planetary_planet_orientation');
       if (!orbit || !planetOrientation) {
-        console.log('🔍 JS: Planet', index, 'missing orbit or orientation');
         return;
       }
       const orbitSize = parseFloat(orbit.style.getPropertyValue('--orbit-size')) || 200;
@@ -578,9 +551,7 @@
         speedFactor: speedFactor,
         startTime: Date.now() - Math.random() * orbitTime * 1000
       });
-      console.log('🔍 JS: Added planet', index, 'to animation objects');
     });
-    console.log('🔍 JS: Total animation objects:', ultraNewPlanetaryObjects.length);
   }
   function updateUltraNewPlanetaryPlanetsPosition() {
     const now = Date.now();
@@ -606,20 +577,9 @@
     });
   }
   function applyUltraNewPlanetaryFilter(categoryName) {
-    console.log('🔍 JS: applyUltraNewPlanetaryFilter called with:', categoryName);
-    console.log('🔍 JS: ultraNewPlanetaryAllStartupsData length:', ultraNewPlanetaryAllStartupsData.length);
-    
-    if (ultraNewPlanetaryAllStartupsData.length > 0) {
-      console.log('🔍 JS: Sample data structure:', ultraNewPlanetaryAllStartupsData[0]);
-      console.log('🔍 JS: Sample data keys:', Object.keys(ultraNewPlanetaryAllStartupsData[0]));
-    }
-    
-    console.log('🔍 JS: Forcing data refresh for category:', categoryName);
-    
     let filtered = [];
     if (!categoryName || categoryName === 'Все' || categoryName === 'All') {
       filtered = ultraNewPlanetaryAllStartupsData.slice();
-      console.log('🔍 JS: Showing all startups, filtered count:', filtered.length);
     } else {
       filtered = ultraNewPlanetaryAllStartupsData.filter(s => {
         if (s.direction === categoryName) return true;
@@ -635,17 +595,6 @@
         
         return false;
       });
-      console.log('🔍 JS: Filtering by direction:', categoryName, 'filtered count:', filtered.length);
-      console.log('🔍 JS: Available directions in data:', [...new Set(ultraNewPlanetaryAllStartupsData.map(s => s.direction))]);
-          console.log('🔍 JS: Sample filtered startups:', filtered.slice(0, 3).map(s => ({ 
-      name: s.name, 
-      direction: s.direction, 
-      id: s.id, 
-      startup_id: s.startup_id,
-      image: s.image,
-      rating: s.rating,
-      voters_count: s.voters_count
-    })));
     }
     
     const startups = [];
@@ -654,14 +603,6 @@
     } else if (filtered.length > 0) {
       startups.push(...filtered);
     }
-    console.log('🔍 JS: Final startups to display:', startups.length);
-    console.log('🔍 JS: Startups to display:', startups.map(s => ({ 
-      name: s.name, 
-      id: s.id, 
-      startup_id: s.startup_id,
-      direction: s.direction,
-      image: s.image 
-    })));
     updateUltraNewPlanetaryPlanets(startups);
   }
   function ultraNewPlanetaryShowArrows() {

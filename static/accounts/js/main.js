@@ -266,7 +266,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (demoDataScript) {
       try {
         demoStartupsData = JSON.parse(demoDataScript.textContent);
-        console.log('Demo startups data loaded:', demoStartupsData.length, 'startups');
       } catch (error) {
         console.warn('Failed to parse demo startups data:', error);
       }
@@ -274,7 +273,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const planetObjects = [];
     const galaxyTiltAngle = 60;
     const numOrbits = Math.max(6, demoStartupsData.length);
-    console.log('Creating', numOrbits, 'orbits with', demoStartupsData.length, 'startup data items');
     
     for (let i = 1; i <= numOrbits; i++) {
         const orbit = document.createElement('div');
@@ -304,7 +302,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const fallbackImage = `/static/accounts/images/planetary_system/planets_round/${Math.floor(Math.random() * 15) + 1}.png`;
             planet.style.backgroundImage = `url('${fallbackImage}')`;
             planet.title = 'Декоративная планета';
-            console.log('Created decorative planet with image:', fallbackImage);
         }
         
         planetOrientation.appendChild(planet);
@@ -327,7 +324,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         
         galaxyContainer.appendChild(orbit);
-        console.log('Added orbit', i, 'with planet to galaxy container');
     }
     function showStartupInfo(startupData) {
         const modal = document.getElementById('demo_planetary_modal');
@@ -412,9 +408,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const y = Math.sin(angleRad) * radius;
             planetObj.orientation.style.transform = `translate(${x}px, ${y}px)`;
             
-            if (index < 3) {
-                console.log(`Planet ${index + 1}: angle=${angle.toFixed(1)}°, x=${x.toFixed(1)}, y=${y.toFixed(1)}, radius=${radius}`);
-            }
+
         });
         requestAnimationFrame(updatePlanets);
     }
