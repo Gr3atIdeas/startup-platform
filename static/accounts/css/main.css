@@ -1859,18 +1859,18 @@ body > main.content::after {
   width: 100%; 
   align-self: stretch; 
   position: relative;
-
-  
-
-  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .featured8 .success-stories-carousel {
   display: flex;
   overflow: hidden;
-  width: 100%; 
-  margin-left: 0; 
+  width: calc(100% - 120px); 
+  margin: 0 auto; 
   padding: 20px 0;
+  flex: 1;
 }
 
 .featured8 .featured8-carousel-inner {
@@ -1999,10 +1999,12 @@ body > main.content::after {
 
 .featured8 .success-stories-arrow-left {
   left: 20px;
+  position: absolute;
 }
 
 .featured8 .success-stories-arrow-right {
   right: 20px;
+  position: absolute;
 }
 
 .featured8 .success-stories-arrow-left:hover,
@@ -2022,6 +2024,12 @@ body > main.content::after {
   width: 46px;
   height: 46px;
   object-fit: contain;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  display: block;
 }
 
 
@@ -2853,9 +2861,11 @@ body > main.content::after {
   }
   .featured8 .success-stories-arrow-left {
     left: 5px;
+    position: absolute;
   }
   .featured8 .success-stories-arrow-right {
     right: 5px;
+    position: absolute;
   }
 
   .final-cta-content-wrapper {

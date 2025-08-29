@@ -1643,10 +1643,12 @@ body {
 
   .featured8 .success-stories-arrow-left {
     left: 5px;
+    position: absolute;
   }
 
   .featured8 .success-stories-arrow-right {
     right: 5px;
+    position: absolute;
   }
 
   .final-cta-content-wrapper {
