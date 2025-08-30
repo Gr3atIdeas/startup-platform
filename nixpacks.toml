@@ -8,4 +8,4 @@ cmds = ['pip install --break-system-packages -r requirements.txt']
 PATH = '/opt/venv/bin:$PATH'
 
 [start]
-cmd = 'python manage.py collectstatic --noinput --clear && which gunicorn && ls -la /opt/venv/bin/gunicorn && /opt/venv/bin/gunicorn --bind 0.0.0.0:3000 marketplace.wsgi:application'
+cmd = 'python manage.py collectstatic --noinput --clear && ls -la /opt/venv/bin/gunicorn && /opt/venv/bin/gunicorn --bind 0.0.0.0:3000 marketplace.wsgi:application'
