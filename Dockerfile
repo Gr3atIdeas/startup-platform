@@ -1,25 +1,39 @@
-# Используем готовый образ с Python 3.11 и Node.js 18
-FROM nikolaik/python-nodejs:python3.11-nodejs18
+# Используем официальный Python образ
+FROM python:3.11-slim
 
-# Установка рабочей директории
+# Устанавливаем Node.js
+RUN apt-get update && apt-get install -y \
+    curl \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копирование файлов зависимостей (кэшируем слои)
+# Копируем файлы зависимостей
 COPY requirements.txt .
-COPY package*.json ./
+COPY package.json .
 
-# Установка зависимостей (кэшируем слои)
-RUN pip install --no-cache-dir -r requirements.txt && \
-    npm ci --only=production
+# Устанавливаем Python зависимости
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Копирование исходного кода
+# Устанавливаем Node.js зависимости
+RUN npm install
+
+# Копируем исходный код
 COPY . .
 
-# Сборка фронтенда
+# Собираем фронтенд
 RUN npm run build
 
-# Открытие порта
+# Создаем пользователя для безопасности
+RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+USER appuser
+
+# Открываем порт
 EXPOSE 3000
 
-# Команда запуска
-CMD ["sh", "-c", "python manage.py migrate --noinput && gunicorn --bind 0.0.0.0:3000 marketplace.wsgi:application"]
+# Запускаем Django приложение
+CMD ["sh", "-c", "python manage.py collectstatic --noinput --clear && python -m gunicorn --bind 0.0.0.0:3000 marketplace.wsgi:application"]
