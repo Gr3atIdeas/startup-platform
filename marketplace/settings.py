@@ -43,7 +43,15 @@ SECRET_KEY = os.getenv(
     "django-insecure-0w+_*%hwspl5i9b)%9!i-3$dq5(e7i%e9*lh=v!u$4brh!5ok9",
 )
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "*",
+    "194.5.78.244",
+    "oswg844ss4sogswg4o4ogwk8.194.5.78.244.sslip.io",
+    "greatideas.ru",
+    "www.greatideas.ru",
+    "localhost",
+    "127.0.0.1"
+]
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -190,16 +198,16 @@ LOGGING = {
         },
     },
 }
-# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")  # Временно отключено
-# SECURE_SSL_REDIRECT = True  # Временно отключено для тестирования
-# SESSION_COOKIE_SECURE = True  # Временно отключено для тестирования
-# CSRF_COOKIE_SECURE = True  # Временно отключено для тестирования
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = ["https://greatideas.ru", "https://www.greatideas.ru"]
-# SECURE_HSTS_SECONDS = 31536000  # Временно отключено
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Временно отключено
-# SECURE_HSTS_PRELOAD = True  # Временно отключено
-# SECURE_CONTENT_TYPE_NOSNIFF = True  # Временно отключено
-# SECURE_BROWSER_XSS_FILTER = True  # Временно отключено
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = "DENY"
 logger.info("=== Проверка настроек Django ===")
 logger.info(f"STORAGES: {STORAGES}")
