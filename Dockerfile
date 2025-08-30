@@ -18,10 +18,6 @@ COPY . .
 # Сборка фронтенда
 RUN npm run build
 
-# Создание пользователя для безопасности
-RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
-USER appuser
-
 # Открытие порта
 EXPOSE 3000
 
