@@ -1,23 +1,16 @@
-FROM python:3.11-slim
-
-# Установка системных зависимостей
-RUN apt-get update && apt-get install -y \
-    nodejs \
-    npm \
-    && rm -rf /var/lib/apt/lists/*
+# Используем готовый образ с Python 3.11 и Node.js 18
+FROM nikolaik/python-nodejs:python3.11-nodejs18
 
 # Установка рабочей директории
 WORKDIR /app
 
-# Копирование файлов зависимостей
+# Копирование файлов зависимостей (кэшируем слои)
 COPY requirements.txt .
-COPY package.json .
+COPY package*.json ./
 
-# Установка Python зависимостей
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Установка Node.js зависимостей
-RUN npm install
+# Установка зависимостей (кэшируем слои)
+RUN pip install --no-cache-dir -r requirements.txt && \
+    npm ci --only=production
 
 # Копирование исходного кода
 COPY . .

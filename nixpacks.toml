@@ -2,7 +2,7 @@
 nixPkgs = ['python311', 'nodejs_18', 'npm-9_x', 'python311Packages.pip']
 
 [phases.install]
-cmds = ['python -m pip install --break-system-packages -r requirements.txt', 'npm install']
+cmds = ['python -m pip install --break-system-packages -r requirements.txt', 'npm ci --only=production']
 
 [phases.build]
 cmds = ['npm run build']
