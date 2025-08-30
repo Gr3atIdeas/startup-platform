@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ['python311', 'nodejs_18', 'npm-9_x']
+
+[phases.install]
+cmds = ['pip install -r requirements.txt', 'npm install']
+
+[phases.build]
+cmds = ['npm run build']
+
+[start]
+cmd = 'python manage.py migrate --noinput && python manage.py collectstatic --noinput --clear && gunicorn --bind 0.0.0.0:8000 marketplace.wsgi:application'
