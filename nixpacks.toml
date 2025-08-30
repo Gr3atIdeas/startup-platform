@@ -8,4 +8,4 @@ cmds = ['python -m pip install --break-system-packages -r requirements.txt', 'np
 cmds = ['npm run build']
 
 [start]
-cmd = 'python manage.py migrate --noinput && python manage.py collectstatic --noinput --clear && gunicorn --bind 0.0.0.0:8000 marketplace.wsgi:application'
+cmd = 'python manage.py migrate --noinput && python manage.py collectstatic --noinput --clear && gunicorn --bind 0.0.0.0:3000 marketplace.wsgi:application'
