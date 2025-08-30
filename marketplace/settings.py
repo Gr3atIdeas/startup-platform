@@ -121,7 +121,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "marketplace.wsgi.application"
 DATABASES = {
     "default": dj_database_url.config(
-        default="postgres://admin:aYNUwQ0YGogGyWIXoUwcNk6sQ5TMZBRd@dpg-cv2qcu0fnakc738e720g-a.frankfurt-postgres.render.com/marketplace_d1gj",
+        default="postgres://postgres:Kc94X8Ke3A9vKDYwPsRQnL6IMWCfOHUG5klqstts0tQRqjIxQ9WV04ZZxbclmGtA@iwk8ws8k888wwk84wkwg8kks:5432/marketplace_db",
         conn_max_age=600,
     )
 }
