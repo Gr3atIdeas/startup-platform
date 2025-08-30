@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Monisarek/startup-platform.git"
+    "url": "git+https://github.com/Gr3atIdeas/startup-platform.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Monisarek/startup-platform/issues"
+    "url": "https://github.com/Gr3atIdeas/startup-platform/issues"
   },
-  "homepage": "https://github.com/Monisarek/startup-platform#readme",
+  "homepage": "https://github.com/Gr3atIdeas/startup-platform#readme",
   "description": "",
   "dependencies": {
     "@vitejs/plugin-vue": "^5.0.5",
