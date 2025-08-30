@@ -1,10 +1,3 @@
-[providers]
-python = 'python311'
-
-[variables]
-NODE_ENV = 'production'
-NPM_CONFIG_PRODUCTION = 'false'
-
 [phases.setup]
 nixPkgs = ['python311', 'nodejs_18', 'npm-9_x', 'python311Packages.pip']
 
