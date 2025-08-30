@@ -1,6 +1,5 @@
 [providers]
 python = 'python311'
-providers = ['python']
 
 [variables]
 NODE_ENV = 'production'
