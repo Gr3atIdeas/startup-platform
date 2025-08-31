@@ -464,7 +464,7 @@
                 
                 <div class="tickets-list">
                     {% for order in all_tickets %}
-                    <div class="ticket-card">
+                    <div class="ticket-card" data-ticket-id="{{ order.pk }}">
                         <div class="ticket-info-left">
                             <div class="ticket-detail">
                                 <div class="detail-label">Создана</div>
