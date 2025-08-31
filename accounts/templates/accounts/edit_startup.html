@@ -9,6 +9,96 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'accounts/css/startup_form.css' %}">
 
+<style>
+/* Стили для селектора планет в странице редактирования */
+.planet-upload-group {
+  margin-bottom: 20px;
+}
+
+.planet-upload-group .planet-upload-label {
+  font-size: 12px;
+  font-family: Unbounded;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  color: white;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.planet-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 200px; /* Ограничиваем ширину как у logo-preview */
+}
+
+.planet-nav-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  flex-shrink: 0;
+}
+
+.planet-nav-button img {
+  width: 20px;
+  height: 20px;
+  filter: invert(86%) sepia(56%) saturate(705%) hue-rotate(1deg) brightness(104%) contrast(102%) drop-shadow(0 0 2px rgba(255, 239, 43, 0.6));
+}
+
+.planet-nav-button.prev-planet img {
+  transform: rotate(90deg);
+}
+
+.planet-nav-button.next-planet img {
+  transform: rotate(-90deg);
+}
+
+.planet-display {
+  width: 160px; /* Уменьшаем размер для соответствия logo-preview */
+  height: 100px; /* Соответствует высоте logo-preview */
+  border-radius: 5px;
+  background-color: #333;
+  overflow: hidden;
+  position: relative;
+  flex: 1;
+}
+
+.planet-ribbon {
+  display: flex;
+  height: 100%;
+  transition: transform 0.4s ease-in-out;
+  transform: translateX(0);
+  position: relative;
+}
+
+.planet-ribbon-item {
+  flex: 0 0 160px; /* Фиксированная ширина, соответствующая planet-display */
+  width: 160px;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .planet-selector {
+    max-width: 100%;
+  }
+  
+  .planet-display {
+    width: 140px;
+    height: 80px;
+  }
+  
+  .planet-ribbon-item {
+    flex: 0 0 140px;
+    width: 140px;
+  }
+}
+</style>
+
 <div class="startup-form-container">
     <div class="form-navigation-header">
         <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="back-button">&larr; Назад к стартапу</a>
@@ -35,6 +125,26 @@
                         {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
                         {% if form.logo.errors %}
                             <span class="error-message">{{ form.logo.errors|first }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group planet-upload-group">
+                        <label class="planet-upload-label">Выберите планету *</label>
+                        <div class="planet-selector">
+                        <button type="button" class="planet-nav-button prev-planet" aria-label="Предыдущая планета">
+                            <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous">
+                        </button>
+                        <div class="planet-display">
+                            <div class="planet-ribbon" id="planetRibbon">
+                                <!-- Планеты будут добавлены динамически -->
+                            </div>
+                        </div>
+                        <button type="button" class="planet-nav-button next-planet" aria-label="Следующая планета">
+                            <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next">
+                        </button>
+                        </div>
+                        {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image" }}
+                        {% if form.planet_image.errors %}
+                        <span class="error-message">{{ form.planet_image.errors|first }}</span>
                         {% endif %}
                     </div>
                     <div class="form-fields-left">
@@ -417,6 +527,98 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Существующие файлы теперь рендерятся на сервере
+    
+    // --- Селектор планет ---
+    const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
+    const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
+    const planetBaseUrl = "{{ S3_PUBLIC_BASE_URL }}/choosable_planets/";
+    const currentPlanetValue = "{{ startup.planet_image|default:'' }}";
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const planetInput = document.getElementById('id_planet_image');
+        const planetRibbon = document.getElementById('planetRibbon');
+        const prevButton = document.querySelector('.planet-nav-button.prev-planet');
+        const nextButton = document.querySelector('.planet-nav-button.next-planet');
+        let currentPlanetIndex = 0;
+
+        if (!planetRibbon) {
+            return;
+        }
+
+        function createPlanetRibbon() {
+            planetRibbon.innerHTML = '';
+
+            const totalPlanets = planetChoices.length;
+            if (totalPlanets === 0) {
+                return;
+            }
+
+            // Определяем размер в зависимости от экрана
+            const isMobile = window.innerWidth <= 768;
+            const planetWidth = isMobile ? 140 : 160;
+
+            planetChoices.forEach((planet, index) => {
+                const planetImg = document.createElement('img');
+                planetImg.className = 'planet-ribbon-item';
+                planetImg.src = planetBaseUrl + planet;
+                planetImg.alt = `Планета ${index + 1}`;
+                planetImg.dataset.planetIndex = index;
+                planetRibbon.appendChild(planetImg);
+            });
+
+            planetRibbon.style.width = `${totalPlanets * planetWidth}px`;
+            
+            // Устанавливаем текущую планету
+            if (currentPlanetValue && planetChoices.includes(currentPlanetValue)) {
+                currentPlanetIndex = planetChoices.indexOf(currentPlanetValue);
+            } else {
+                currentPlanetIndex = 0;
+            }
+            
+            const translateX = -currentPlanetIndex * planetWidth;
+            planetRibbon.style.transform = `translateX(${translateX}px)`;
+            planetInput.value = planetChoices[currentPlanetIndex];
+        }
+
+        function updatePlanetRibbon(direction) {
+            const totalPlanets = planetChoices.length;
+            if (totalPlanets === 0) return;
+
+            // Определяем размер в зависимости от экрана
+            const isMobile = window.innerWidth <= 768;
+            const planetWidth = isMobile ? 140 : 160;
+
+            if (direction === 'next') {
+                currentPlanetIndex = (currentPlanetIndex + 1) % totalPlanets;
+            } else {
+                currentPlanetIndex = (currentPlanetIndex - 1 + totalPlanets) % totalPlanets;
+            }
+
+            const translateX = -currentPlanetIndex * planetWidth;
+            planetRibbon.style.transition = 'transform 0.4s ease-in-out';
+            planetRibbon.style.transform = `translateX(${translateX}px)`;
+            planetInput.value = planetChoices[currentPlanetIndex];
+        }
+
+        prevButton.addEventListener('click', () => {
+            if (planetChoices.length > 0) {
+                updatePlanetRibbon('prev');
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (planetChoices.length > 0) {
+                updatePlanetRibbon('next');
+            }
+        });
+
+        if (planetChoices && planetChoices.length > 0) {
+            createPlanetRibbon();
+        } else {
+            planetRibbon.innerHTML = '<img src="https://via.placeholder.com/150" alt="Нет планет" class="planet-ribbon-item">';
+            planetInput.value = '';
+        }
+    });
 });
 </script>
 {% endblock %}
