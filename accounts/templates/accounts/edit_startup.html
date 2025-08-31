@@ -10,7 +10,97 @@
 <link rel="stylesheet" href="{% static 'accounts/css/startup_form.css' %}">
 
 <style>
-/* Убираем специальные стили для редактирования - используем оригинальные из startup_form.css */
+/* Исправляем стили для страницы редактирования - предотвращаем выход элементов за границы */
+.media-and-finance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  align-items: flex-start;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.upload-box {
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.file-preview-area {
+  max-width: 100%;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.file-preview-item {
+  max-width: 100%;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.file-preview-item p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.presentation-finance-group {
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.presentation-finance-group .form-group {
+  max-width: 100%;
+}
+
+.presentation-finance-group .input-wrapper {
+  max-width: 100%;
+}
+
+.presentation-finance-group .form-control {
+  max-width: 100% !important;
+}
+
+/* Для очень узких экранов делаем одну колонку */
+@media (max-width: 768px) {
+  .media-and-finance-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* Убеждаемся, что длинные имена файлов не выходят за границы */
+.file-preview-item p,
+.file-preview-item a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+
+/* Для видео и изображений предпросмотра */
+.file-preview-item img,
+.file-preview-item video {
+  max-width: 200px;
+  max-height: 150px;
+  object-fit: contain;
+}
+
+/* Основной контейнер формы */
+.form-main-content-wrapper {
+  overflow: hidden;
+  word-wrap: break-word;
+  box-sizing: border-box;
+}
+
+/* Убеждаемся, что все секции вписываются в контейнер */
+.form-content-section {
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
 </style>
 
 <div class="startup-form-container">
