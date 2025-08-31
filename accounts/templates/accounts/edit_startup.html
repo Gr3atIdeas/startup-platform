@@ -16,6 +16,8 @@
   flex-direction: column;
   gap: 15px;
   width: 144px; /* Ширина как у логотипа */
+  margin-right: 20px; /* Добавляем отступ справа */
+  flex-shrink: 0; /* Запрещаем сжатие */
 }
 
 .planet-upload-group {
@@ -91,6 +93,7 @@
   object-fit: contain;
   display: block;
   flex-shrink: 0;
+  object-position: center; /* Центрируем изображение */
 }
 
 /* Убеждаемся, что логотип и селектор планет правильно позиционированы */
@@ -109,10 +112,17 @@
   display: block; /* Явно указываем display */
 }
 
+/* Стили для form-fields-left */
+.form-fields-left {
+  flex: 1; /* Занимает оставшееся пространство */
+  min-width: 0; /* Позволяет сжатие */
+}
+
 /* Адаптивность */
 @media (max-width: 768px) {
   .logo-and-planet-container {
     width: 120px;
+    margin-right: 15px; /* Уменьшаем отступ на мобильных */
   }
   
   .planet-selector {
