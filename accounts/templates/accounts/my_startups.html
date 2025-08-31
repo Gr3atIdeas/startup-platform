@@ -51,8 +51,9 @@
 
     .applications-list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, 310.75px);
       gap: 20px;
+      justify-content: start;
     }
     .application-card {
       background-color: #1A1D2E; /* Темный фон для карточки заявки */
@@ -63,6 +64,9 @@
       flex-direction: column;
       gap: 10px;
       transition: background-color 0.3s linear, border-color 0.3s linear;
+      width: 310.75px;
+      height: 221px;
+      box-sizing: border-box;
     }
     .application-card:hover {
       background-color: #212538;
