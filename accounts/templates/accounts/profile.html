@@ -85,9 +85,15 @@
             </div>
             {% endif %}
 
-            <a href="#" class="profile-sidebar-my-galaxy-btn">
+            {% if user.role.role_name == "startuper" %}
+            <a href="{% url 'my_startups' %}" class="profile-sidebar-my-galaxy-btn">
                 <div class="profile-sidebar-my-galaxy-btn-text">Моя Галактика</div>
             </a>
+            {% elif user.role.role_name == "investor" %}
+            <a href="{% url 'investments' %}" class="profile-sidebar-my-galaxy-btn">
+                <div class="profile-sidebar-my-galaxy-btn-text">Моя Галактика</div>
+            </a>
+            {% endif %}
             
             <div class="profile-sidebar-social-icons-row">
                 {% if user.vk_url %}
