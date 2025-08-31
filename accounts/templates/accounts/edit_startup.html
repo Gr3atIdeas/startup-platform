@@ -14,6 +14,8 @@
 .planet-upload-group {
   margin-bottom: 20px;
   margin-top: 15px; /* Добавляем отступ сверху */
+  clear: both; /* Убеждаемся, что элемент не обтекается */
+  display: block; /* Явно указываем display */
 }
 
 .planet-upload-group .planet-upload-label {
@@ -31,6 +33,7 @@
   align-items: center;
   gap: 10px;
   max-width: 200px; /* Ограничиваем ширину как у logo-preview */
+  width: 100%; /* Занимаем всю доступную ширину */
 }
 
 .planet-nav-button {
@@ -80,6 +83,16 @@
   object-fit: contain;
   display: block;
   flex-shrink: 0;
+}
+
+/* Убеждаемся, что логотип и селектор планет правильно позиционированы */
+.logo-upload-group {
+  margin-bottom: 0; /* Убираем нижний отступ у логотипа */
+}
+
+.planet-upload-group {
+  margin-top: 15px; /* Отступ от логотипа */
+  margin-bottom: 20px; /* Отступ до следующих полей */
 }
 
 /* Адаптивность */
@@ -143,7 +156,7 @@
                             <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next">
                         </button>
                         </div>
-                        {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image" }}
+                        {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image"|attr:"style:display:none;" }}
                         {% if form.planet_image.errors %}
                         <span class="error-message">{{ form.planet_image.errors|first }}</span>
                         {% endif %}
