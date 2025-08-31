@@ -608,23 +608,23 @@ body {
   color: #212529;
 }
 
-/* Стили для скроллбара в выпадающем списке */
+/* Стили для скроллбара в выпадающем списке - в соответствии с глобальным стилем */
 .filter-dropdown-content::-webkit-scrollbar {
   width: 6px;
 }
 
 .filter-dropdown-content::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
+  background: #061e38;
 }
 
 .filter-dropdown-content::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
+  background-color: #004e9f;
+  border-radius: 5px;
+  border: 2px solid #061e38;
 }
 
 .filter-dropdown-content::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background-color: #c6bbfe;
 }
 
 
