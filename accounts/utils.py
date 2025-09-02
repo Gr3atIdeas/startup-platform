@@ -10,7 +10,7 @@ from html import escape
 logger = logging.getLogger(__name__)
 def _prefix_for(entity_type: str, entity_id: int, file_type: str) -> str:
     if file_type == "avatar":
-        return f"users/{entity_id}/avatar/{file_id}_"  # will be overridden by callers
+        return f"users/{entity_id}/avatar/{file_id}_"
     entity_root = {
         "startup": "startups",
         "franchise": "franchises",
@@ -35,13 +35,13 @@ def get_file_info(file_id, entity_id, file_type, entity_type: str = "startup"):
     if file_type == "avatar":
         prefix = f"users/{entity_id}/avatar/{file_id}_"
     else:
-        # новый путь
+
         prefix = _prefix_for(entity_type, entity_id, file_type) + f"{file_id}_"
     try:
         response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
         if "Contents" in response and len(response["Contents"]) > 0:
             key = response["Contents"][0]["Key"]
-            # Используем правильный формат URL для Yandex Cloud S3
+
             url = f"{settings.S3_PUBLIC_BASE_URL}/{key}"
             filename = key.split('/')[-1]
             parts = filename.split('_', 2)
@@ -55,13 +55,13 @@ def get_file_info(file_id, entity_id, file_type, entity_type: str = "startup"):
                 'original_name': original_name
             }
         else:
-            # fallback: старый путь startups/ для обратной совместимости
+
             if entity_type != "startup" and file_type != "avatar":
                 legacy_prefix = f"startups/{entity_id}/{file_type}s/{file_id}_"
                 response2 = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=legacy_prefix)
                 if "Contents" in response2 and len(response2["Contents"]) > 0:
                     key = response2["Contents"][0]["Key"]
-                    # Используем правильный формат URL для Yandex Cloud S3
+
                     url = f"{settings.S3_PUBLIC_BASE_URL}/{key}"
                     filename = key.split('/')[-1]
                     parts = filename.split('_', 2)
@@ -89,7 +89,7 @@ def get_file_url(file_id, entity_id, file_type, entity_type: str = "startup"):
         response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
         if "Contents" in response and len(response["Contents"]) > 0:
             key = response["Contents"][0]["Key"]
-            # Используем правильный формат URL для Yandex Cloud S3
+
             url = f"{settings.S3_PUBLIC_BASE_URL}/{key}"
             logger.debug(f"Сгенерирован URL для {file_type}: {url}")
             return url
@@ -99,7 +99,7 @@ def get_file_url(file_id, entity_id, file_type, entity_type: str = "startup"):
                 response2 = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=legacy_prefix)
                 if "Contents" in response2 and len(response2["Contents"]) > 0:
                     key = response2["Contents"][0]["Key"]
-                    # Используем правильный формат URL для Yandex Cloud S3
+
                     url = f"{settings.S3_PUBLIC_BASE_URL}/{key}"
                     return url
             logger.warning(f"Файл не найден: prefix={prefix}")
@@ -201,7 +201,7 @@ def send_telegram_support_message(ticket):
     if not bot_token or not chat_id:
         logger.error("Telegram credentials are not configured (TELEGRAM_BOT_TOKEN/TELEGRAM_OWNER_CHAT_ID)")
         return False
-    
+
     user = ticket.user
     if not user:
         user_full_name = "Анонимный"
@@ -301,7 +301,7 @@ def send_telegram_contact_form_message(name, email, subject, message):
     safe_subject = escape_markdown_v2(subject or "")
     safe_message = escape_markdown_v2(message or "")
 
-    # Переводим тему обращения на русский язык
+
     subject_translations = {
         'general_inquiry': 'Общий вопрос',
         'business_cooperation': 'Бизнес-сотрудничество',
@@ -310,9 +310,9 @@ def send_telegram_contact_form_message(name, email, subject, message):
         'investment': 'Инвестиции',
         'other': 'Другое'
     }
-    
+
     translated_subject = subject_translations.get(safe_subject.lower(), safe_subject)
-    
+
     message_text = (
         "🌐 *Новое сообщение с сайта\!* 🌐\n\n"
         f"👤 *Имя:* {safe_name}\n"
@@ -353,7 +353,7 @@ def send_telegram_contact_form_message(name, email, subject, message):
         resp_text = getattr(e.response, 'text', '') if hasattr(e, 'response') else ''
         logger.error(f"Failed to send contact form message from {email} to Telegram: {e}. Response: {resp_text}", exc_info=True)
         try:
-            # Переводим тему обращения на русский язык для fallback
+
             subject_translations = {
                 'general_inquiry': 'Общий вопрос',
                 'business_cooperation': 'Бизнес-сотрудничество',
@@ -362,9 +362,9 @@ def send_telegram_contact_form_message(name, email, subject, message):
                 'investment': 'Инвестиции',
                 'other': 'Другое'
             }
-            
+
             translated_subject = subject_translations.get((subject or '').lower(), subject or '')
-            
+
             fallback_text = (
                 f"🌐 Новое сообщение с сайта\n\n"
                 f"Имя: {name or ''}\n"

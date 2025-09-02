@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         url.searchParams.append('category', category);
         window.location.href = url.toString();
       });
-      // no selection scale to keep sizes identical
+
     });
   }
 })

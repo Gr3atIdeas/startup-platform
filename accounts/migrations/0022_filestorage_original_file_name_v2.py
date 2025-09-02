@@ -42,4 +42,4 @@ class Migration(migrations.Migration):
             add_column_if_not_exists,
             remove_column_if_exists
         ),
-    ] 
+    ]

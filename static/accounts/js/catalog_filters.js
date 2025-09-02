@@ -1,9 +1,4 @@
-/*
-  Реал-тайм AJAX фильтрация для каталогов (стартапы, франшизы, агентства, специалисты)
-  Стратегия: загружаем полную страницу по URL с текущими параметрами и
-  заменяем в DOM только сетку карточек и пагинацию. Состояние формы
-  синхронизируем с URL, не переинициализируя существующие слайдеры.
-*/
+
 
 (function () {
   'use strict';
@@ -54,7 +49,7 @@
       }
     });
 
-    // Сбрасываем параметры рейтинга, если на дефолтах
+
     try {
       var minRatingInput = form.querySelector('#minRatingInput');
       var maxRatingInput = form.querySelector('#maxRatingInput');
@@ -68,7 +63,7 @@
       }
     } catch (_) {}
 
-    // Сбрасываем параметры окупаемости, если на дефолтах
+
     try {
       var minPaybackInput = form.querySelector('#minPaybackInput');
       var maxPaybackInput = form.querySelector('#maxPaybackInput');
@@ -82,7 +77,7 @@
       }
     } catch (_) {}
 
-    // Сбрасываем параметры инвестиций, если на дефолтах (0-∞)
+
     try {
       var minInvestmentInput = form.querySelector('#minInvestmentInput');
       var maxInvestmentInput = form.querySelector('#maxInvestmentInput');
@@ -100,7 +95,7 @@
   }
 
   function hasActiveFilters(form) {
-    // Проверяем по значениям элементов формы относительно дефолтов
+
     var elements = form.elements;
     for (var i = 0; i < elements.length; i += 1) {
       var el = elements[i];
@@ -160,7 +155,7 @@
       }
     }
 
-    // Отдельная синхронизация визуальных переключателей/слайдеров
+
     var microToggle = document.getElementById('microToggle');
     var microParam = urlSearchParams.get('micro_investment');
     if (microToggle) {
@@ -168,7 +163,7 @@
       else microToggle.classList.remove('active');
     }
 
-    // Рейтинг слайдер
+
     var ratingSlider = document.getElementById('ratingSlider');
     var minRating = urlSearchParams.get('min_rating');
     var maxRating = urlSearchParams.get('max_rating');
@@ -176,7 +171,7 @@
       try { ratingSlider.noUiSlider.set([minRating, maxRating]); } catch (_) {}
     }
 
-    // Франшизы: слайдеры окупаемости/инвестиций
+
     var paybackSlider = document.getElementById('paybackSlider');
     var investmentSlider = document.getElementById('investmentSlider');
     var minPayback = urlSearchParams.get('min_payback');
@@ -211,7 +206,7 @@
 
     history.pushState({}, '', newUrl);
 
-    // После замены DOM перевешиваем обработчики
+
     bindPaginationHandlers();
     bindFormHandlers();
     attachSliderListenersWithRetry(20, 200);
@@ -231,7 +226,7 @@
       .then(function (htmlText) { updatePageFromHtmlResponse(htmlText, url); })
       .catch(function (error) {
         if (error && error.name === 'AbortError') return;
-        // Фолбэк: если что-то пошло не так — обычная навигация
+
         window.location.href = url;
       });
   }
@@ -240,10 +235,10 @@
     var url = new URL(window.location.href);
     var merged = new URLSearchParams(url.search);
 
-    // Сбрасываем page, если не указано оставить
+
     if (!keepPageParam) merged.delete('page');
 
-    // Полный сброс параметров, контролируемых формой, чтобы удалить снятые чекбоксы и прочие ключи
+
     try {
       if (filterFormElement && filterFormElement.elements) {
         var elements = filterFormElement.elements;
@@ -255,9 +250,9 @@
       }
     } catch (_) {}
 
-    // На всякий случай также удаляем ключи, присланные в текущих params
+
     params.forEach(function (_, key) { merged.delete(key); });
-    // Добавляем актуальные значения формы
+
     params.forEach(function (value, key) { merged.append(key, value); });
 
     url.search = merged.toString();
@@ -339,7 +334,7 @@
     var microToggle = document.getElementById('microToggle');
     if (microToggle) {
       microToggle.addEventListener('click', function () {
-        // toggleMicroInvestment уже обновляет скрытый инпут; просто триггерим запрос
+
         setTimeout(function () { debouncedFormChange(); }, 0);
       });
     }
@@ -432,9 +427,9 @@
         var targetUrl = new URL(link.href);
         var targetParams = new URLSearchParams(targetUrl.search);
 
-        // Собираем текущие параметры формы
+
         var formParams = serializeFormToParams(filterFormElement);
-        // Переносим параметр page из ссылки
+
         var pageValue = targetParams.get('page');
         if (pageValue !== null) {
           formParams.set('page', pageValue);
@@ -452,10 +447,10 @@
     paginationContainerElement = findPaginationContainer(document);
 
     if (!filterFormElement || !gridElement) {
-      return; // не страница каталога
+      return;
     }
 
-    // Синхронизируем форму с текущим URL после короткой задержки, чтобы слайдеры успели инициализироваться
+
     setTimeout(function(){
       applyUrlParamsToForm(new URLSearchParams(window.location.search), filterFormElement);
     }, 0);
@@ -476,7 +471,7 @@
         .then(function (r) { return r.text(); })
         .then(function (htmlText) {
           updatePageFromHtmlResponse(htmlText, url);
-          // После загрузки синхронизируем форму c URL, чтобы отобразить актуальные значения
+
           applyUrlParamsToForm(new URLSearchParams(window.location.search), filterFormElement);
         })
         .catch(function () { window.location.reload(); });

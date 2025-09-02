@@ -39,7 +39,7 @@ export default {
     },
     type: {
       type: String,
-      default: 'content', // 'content' or 'image'
+      default: 'content',
     },
     imgSrc: {
       type: String,

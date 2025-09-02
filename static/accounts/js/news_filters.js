@@ -1,6 +1,4 @@
-/*
-  AJAX фильтрация и пагинация для страницы новостей
-*/
+
 
 (function () {
   'use strict';
@@ -20,26 +18,26 @@
 
   function serializeFormToParams() {
     var params = new URLSearchParams();
-    
-    // Сортировка
+
+
     var sortSelect = document.getElementById('sort-by');
     if (sortSelect && sortSelect.value !== 'new') {
       params.set('sort', sortSelect.value);
     }
-    
-    // Категории
+
+
     var categoryCheckboxes = document.querySelectorAll('input[name="category"]:checked');
     categoryCheckboxes.forEach(function(checkbox) {
       params.append('category', checkbox.value);
     });
-    
-    // Микроинвестиции
+
+
     var microCheckbox = document.getElementById('microinvest');
     if (microCheckbox && microCheckbox.checked) {
       params.set('micro_investment', '1');
     }
-    
-    // Рейтинг
+
+
     var minRatingInput = document.getElementById('newsMinRatingInput');
     var maxRatingInput = document.getElementById('newsMaxRatingInput');
     if (minRatingInput && maxRatingInput) {
@@ -52,28 +50,28 @@
         params.set('max_rating', maxRating);
       }
     }
-    
-    // Поиск
+
+
     var searchInput = document.querySelector('.search-input');
     if (searchInput && searchInput.value.trim()) {
       params.set('search', searchInput.value.trim());
     }
-    
+
     return params;
   }
 
   function buildUrlWithParams(params, keepPageParam) {
     var url = new URL(window.location.href);
     var merged = new URLSearchParams(url.search);
-    
-    // Сбрасываем page, если не указано оставить
+
+
     if (!keepPageParam) merged.delete('page');
-    
-    // Добавляем параметры фильтров
+
+
     params.forEach(function (value, key) {
       merged.set(key, value);
     });
-    
+
     url.search = merged.toString();
     return url.toString();
   }
@@ -81,12 +79,12 @@
   function updateNewsFromHtmlResponse(htmlText, newUrl) {
     var parser = new DOMParser();
     var doc = parser.parseFromString(htmlText, 'text/html');
-    
+
     var newGrid = findNewsGrid(doc);
     var newPagination = findPagination(doc);
     var oldGrid = newsGridElement || findNewsGrid(document);
     var oldPagination = paginationElement || findPagination(document);
-    
+
     if (newGrid && oldGrid) {
       oldGrid.replaceWith(newGrid);
       newsGridElement = newGrid;
@@ -95,10 +93,10 @@
       oldPagination.replaceWith(newPagination);
       paginationElement = newPagination;
     }
-    
+
     history.pushState({}, '', newUrl);
-    
-    // Перевешиваем обработчики
+
+
     bindNewsPaginationHandlers();
     bindFormHandlers();
     bindDeleteNewsHandlers();
@@ -109,29 +107,29 @@
       try { currentFetchController.abort(); } catch (_) {}
     }
     currentFetchController = new AbortController();
-    
-    return fetch(url, { 
-      signal: currentFetchController.signal, 
+
+    return fetch(url, {
+      signal: currentFetchController.signal,
       credentials: 'same-origin',
       headers: {
         'X-Requested-With': 'XMLHttpRequest'
       }
     })
-    .then(function (response) { 
+    .then(function (response) {
       if (!response.ok) {
         throw new Error('HTTP error! status: ' + response.status);
       }
-      return response.text(); 
+      return response.text();
     })
-    .then(function (htmlText) { 
+    .then(function (htmlText) {
       if (!htmlText || htmlText.trim().length === 0) {
         throw new Error('Empty response received');
       }
-      updateNewsFromHtmlResponse(htmlText, url); 
+      updateNewsFromHtmlResponse(htmlText, url);
     })
     .catch(function (error) {
       if (error && error.name === 'AbortError') return;
-      
+
       console.error('Error updating news:', error);
       console.log('Falling back to regular navigation');
       window.location.href = url;
@@ -157,31 +155,31 @@
   var debouncedFormChange = debounce(onFormChangeDebounced, 300);
 
   function bindFormHandlers() {
-    // Сортировка
+
     var sortSelect = document.getElementById('sort-by');
     if (sortSelect) {
       sortSelect.addEventListener('change', debouncedFormChange);
     }
-    
-    // Категории
+
+
     var categoryCheckboxes = document.querySelectorAll('input[name="category"]');
     categoryCheckboxes.forEach(function(checkbox) {
       checkbox.addEventListener('change', debouncedFormChange);
     });
-    
-    // Микроинвестиции
+
+
     var microCheckbox = document.getElementById('microinvest');
     if (microCheckbox) {
       microCheckbox.addEventListener('change', debouncedFormChange);
     }
-    
-    // Поиск
+
+
     var searchInput = document.querySelector('.search-input');
     if (searchInput) {
       searchInput.addEventListener('input', debouncedFormChange);
     }
-    
-    // Кнопка "Показать"
+
+
     var showFiltersBtn = document.querySelector('.show-filters-btn');
     if (showFiltersBtn) {
       showFiltersBtn.addEventListener('click', function(e) {
@@ -194,12 +192,12 @@
   function bindNewsPaginationHandlers() {
     var paginationContainer = document.querySelector('.pagination');
     if (!paginationContainer) return;
-    
+
     var pageLinks = paginationContainer.querySelectorAll('a[href]');
     pageLinks.forEach(function(link) {
-      // Удаляем старые обработчики
+
       link.removeEventListener('click', link._paginationHandler);
-      
+
       var handler = function(e) {
         e.preventDefault();
         var href = this.getAttribute('href');
@@ -212,8 +210,8 @@
           }
         }
       };
-      
-      // Сохраняем ссылку на обработчик
+
+
       link._paginationHandler = handler;
       link.addEventListener('click', handler);
     });
@@ -223,7 +221,7 @@
     var deleteButtons = document.querySelectorAll('.delete-news-btn');
     deleteButtons.forEach(function(button) {
       button.removeEventListener('click', button._deleteHandler);
-      
+
       var handler = function(e) {
         e.preventDefault();
         var articleId = this.getAttribute('data-article-id');
@@ -231,7 +229,7 @@
           deleteNews(articleId);
         }
       };
-      
+
       button._deleteHandler = handler;
       button.addEventListener('click', handler);
     });
@@ -241,19 +239,19 @@
     filterFormElement = document.querySelector('.news-feed-column');
     newsGridElement = findNewsGrid(document);
     paginationElement = findPagination(document);
-    
+
     if (!filterFormElement || !newsGridElement) {
-      return; // не страница новостей
+      return;
     }
-    
+
     bindFormHandlers();
     bindNewsPaginationHandlers();
     bindDeleteNewsHandlers();
-    
-    // Обработка кнопки "Назад" в браузере
+
+
     window.addEventListener('popstate', function () {
       var url = window.location.href;
-      fetch(url, { 
+      fetch(url, {
         credentials: 'same-origin',
         headers: {
           'X-Requested-With': 'XMLHttpRequest'

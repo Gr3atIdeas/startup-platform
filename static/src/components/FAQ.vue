@@ -569,7 +569,7 @@ function toggleSubCategory(catIndex, subCatIndex) {
   box-sizing: border-box;
 }
 
-/* Specific state for the first, non-accordion question */
+
 .faq-question-category {
   background: white;
   color: black;
@@ -585,7 +585,7 @@ function toggleSubCategory(catIndex, subCatIndex) {
   outline: none !important;
 }
 
-/* Accordion headers for main categories */
+
 .faq-accordion-header {
   background: white;
   color: black;
@@ -595,7 +595,7 @@ function toggleSubCategory(catIndex, subCatIndex) {
   line-height: 1.19;
 }
 
-/* Accordion headers for nested categories */
+
 .faq-accordion-category.nested > .faq-accordion-header {
   outline: 1px solid white;
   background: transparent;
@@ -623,7 +623,7 @@ function toggleSubCategory(catIndex, subCatIndex) {
   margin-top: 10px;
 }
 
-/* Question items inside accordions */
+
 .faq-question-item {
   outline: 1px solid white;
   background: transparent;
@@ -631,7 +631,7 @@ function toggleSubCategory(catIndex, subCatIndex) {
   font-size: 12px;
   font-weight: 300;
   line-height: 1;
-  justify-content: flex-start; /* Align text to left */
+  justify-content: flex-start;
 }
 
 .faq-question-item.active {
@@ -640,7 +640,7 @@ function toggleSubCategory(catIndex, subCatIndex) {
   outline: none !important;
 }
 
-/* Hover states */
+
 .faq-question-category:hover,
 .faq-accordion-header:hover {
   background-color: #f0f0f0;
@@ -690,7 +690,7 @@ function toggleSubCategory(catIndex, subCatIndex) {
 }
 
 :deep(.faq-answer-details-link img) {
-  display: none; /* Hide the arrow from old template if it's there */
+  display: none;
 }
 
 .faq-right-panel::-webkit-scrollbar {

@@ -127,7 +127,7 @@ export default {
     .card {
     position: relative;
     border-radius: 10px;
-    overflow: visible; // Allow badge to overflow
+    overflow: visible;
     background: linear-gradient(180deg, #004e9f 0%, black 100%);
     box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
 

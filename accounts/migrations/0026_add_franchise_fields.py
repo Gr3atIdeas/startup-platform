@@ -29,4 +29,4 @@ class Migration(migrations.Migration):
             name='franchise_businesses',
             field=models.IntegerField(default=0),
         ),
-    ] 
+    ]

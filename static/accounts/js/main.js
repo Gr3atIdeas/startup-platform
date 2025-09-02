@@ -273,21 +273,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const planetObjects = [];
     const galaxyTiltAngle = 60;
     const numOrbits = Math.max(6, demoStartupsData.length);
-    
+
     for (let i = 1; i <= numOrbits; i++) {
         const orbit = document.createElement('div');
         orbit.className = 'ultra_new_planetary_orbit';
         const orbitSize = 200 + i * 100;
         orbit.style.setProperty('--orbit-size', `${orbitSize}px`);
-        
+
         const planetOrientation = document.createElement('div');
         planetOrientation.className = 'ultra_new_planetary_planet_orientation';
-        
+
         const planet = document.createElement('div');
         planet.className = 'ultra_new_planetary_planet';
         const planetSize = 60 + Math.random() * 20;
         planet.style.setProperty('--planet-size', `${planetSize}px`);
-        
+
         const startupData = demoStartupsData[i - 1];
         if (startupData) {
             planet.style.backgroundImage = `url('${startupData.image}')`;
@@ -303,14 +303,14 @@ document.addEventListener('DOMContentLoaded', function () {
             planet.style.backgroundImage = `url('${fallbackImage}')`;
             planet.title = 'Декоративная планета';
         }
-        
+
         planetOrientation.appendChild(planet);
         orbit.appendChild(planetOrientation);
-        
+
         const orbitTime = 80 + i * 20 + (Math.random() - 0.5) * 40;
         const initialAngle = Math.random() * 360;
         const speedFactor = 0.8 + Math.random() * 0.4;
-        
+
         planetObjects.push({
             element: planet,
             orientation: planetOrientation,
@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function () {
             speedFactor: speedFactor,
             startTime: Date.now() - Math.random() * orbitTime * 1000,
         });
-        
+
         galaxyContainer.appendChild(orbit);
     }
     function showStartupInfo(startupData) {
@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('demo_planetary_modal_name').textContent = startupData.name;
             document.getElementById('demo_planetary_modal_rating').textContent = `Рейтинг ${startupData.rating}/5 (${startupData.voters_count})`;
             document.getElementById('demo_planetary_modal_comments_count').textContent = startupData.comment_count;
-            
+
             let categoryDisplayName = startupData.direction || 'Не указана';
             document.getElementById('demo_planetary_modal_category').textContent = categoryDisplayName;
             document.getElementById('demo_planetary_modal_description').textContent = startupData.description;
@@ -403,11 +403,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const angle = planetObj.angle + progress * 360;
             const angleRad = angle * Math.PI / 180;
             const radius = planetObj.orbitSize / 2;
-            
+
             const x = Math.cos(angleRad) * radius;
             const y = Math.sin(angleRad) * radius;
             planetObj.orientation.style.transform = `translate(${x}px, ${y}px)`;
-            
+
 
         });
         requestAnimationFrame(updatePlanets);

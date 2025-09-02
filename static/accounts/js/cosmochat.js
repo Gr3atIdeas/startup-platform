@@ -507,7 +507,7 @@ function startPolling() {
                 const chatListContainer = document.getElementById('chatListContainer');
                 if (chatListContainer) {
                     updateChatList(data.chats, chatListContainer);
-                    
+
                     const currentChatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
                     if (currentChatItem && chatWindowTitle) {
                         chatWindowTitle.textContent = currentChatItem.dataset.chatName;
@@ -518,7 +518,7 @@ function startPolling() {
             }
         })
         .catch(error => console.error('Ошибка при опросе списка чатов:', error));
-        
+
         if (currentChatId) {
             const url = lastMessageTimestamp
                 ? `/cosmochat/${currentChatId}/?since=${encodeURIComponent(lastMessageTimestamp)}`
@@ -538,21 +538,21 @@ function startPolling() {
                             });
                             lastMessageTimestamp = newMessages[newMessages.length - 1].created_at_iso;
                                                          if (chatMessagesArea) chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
-                             
-                             // Обновляем метаданные чата в списке
+
+
                              if (newMessages.length > 0) {
                                  updateChatListItem(newMessages[newMessages.length - 1]);
-                                 
-                                 // Также обновляем счетчик непрочитанных сообщений
+
+
                                  const chatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
                                  if (chatItem) {
                                      const unreadBadge = chatItem.querySelector('.unread-badge-chat');
                                      if (unreadBadge) {
-                                         // Подсчитываем непрочитанные сообщения
-                                         const unreadCount = newMessages.filter(msg => 
+
+                                         const unreadCount = newMessages.filter(msg =>
                                              msg.sender_id != window.REQUEST_USER_ID && !msg.is_read
                                          ).length;
-                                         
+
                                          if (unreadCount > 0) {
                                              unreadBadge.textContent = unreadCount;
                                              unreadBadge.style.display = 'inline';
@@ -577,20 +577,20 @@ function startPolling() {
 function updateChatList(newChats, container) {
     const existingChats = new Map();
     const existingChatElements = container.querySelectorAll('.chat-item-new');
-    
+
     existingChatElements.forEach(element => {
         const chatId = element.dataset.chatId;
         if (chatId) {
             existingChats.set(chatId, element);
         }
     });
-    
+
     const fragment = document.createDocumentFragment();
-    
+
     newChats.forEach(chat => {
         if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && requestUserRole === 'moderator'))) {
             const existingElement = existingChats.get(chat.conversation_id);
-            
+
             if (existingElement) {
                 updateExistingChatElement(existingElement, chat);
                 fragment.appendChild(existingElement);
@@ -601,11 +601,11 @@ function updateChatList(newChats, container) {
             }
         }
     });
-    
+
     existingChats.forEach(element => {
         element.remove();
     });
-    
+
     container.innerHTML = '';
     container.appendChild(fragment);
 }
@@ -613,7 +613,7 @@ function updateChatList(newChats, container) {
 function updateExistingChatElement(element, chat) {
     const currentName = element.dataset.chatName;
     const newName = chat.name || `Чат ${chat.conversation_id}`;
-    
+
     if (currentName !== newName) {
         element.dataset.chatName = newName;
         const nameElement = element.querySelector('h4');
@@ -624,39 +624,39 @@ function updateExistingChatElement(element, chat) {
             `;
         }
     }
-    
+
     const isDeal = chat.is_deal ? 'true' : 'false';
     if (element.dataset.isDeal !== isDeal) {
         element.dataset.isDeal = isDeal;
     }
-    
+
     const chatType = chat.is_group_chat ? 'group' : 'personal';
     if (element.dataset.chatType !== chatType) {
         element.dataset.chatType = chatType;
     }
-    
+
     const avatarElement = element.querySelector('.chat-avatar-img');
     if (avatarElement) {
         const defaultAvatarSrc = '/static/accounts/images/cosmochat/group_avatar.svg';
         let avatarUrl = defaultAvatarSrc;
         let avatarAlt = newName;
-        
+
         if (chatType === 'personal' && chat.participant && chat.participant.profile_picture_url) {
             avatarUrl = chat.participant.profile_picture_url;
             avatarAlt = `${chat.participant.first_name || 'Чат'} ${chat.participant.last_name || ''}`.trim();
         }
-        
+
         if (avatarElement.src !== avatarUrl) {
             avatarElement.src = avatarUrl;
             avatarElement.alt = avatarAlt;
         }
     }
-    
+
     const lastMessagePreview = element.querySelector('.last-message-preview');
     const timestampChat = element.querySelector('.timestamp-chat');
     const dateChatPreview = element.querySelector('.date-chat-preview');
     const unreadBadge = element.querySelector('.unread-badge-chat');
-    
+
     if (chat.last_message) {
         if (lastMessagePreview) {
             let previewText = '';
@@ -666,11 +666,11 @@ function updateExistingChatElement(element, chat) {
             previewText += chat.last_message.message_text;
             lastMessagePreview.textContent = previewText.substring(0, 30) + (previewText.length > 30 ? '...' : '');
         }
-        
+
         if (timestampChat) {
             timestampChat.textContent = chat.last_message.created_at_time || '';
         }
-        
+
         if (dateChatPreview) {
             dateChatPreview.textContent = chat.last_message.created_at_date || '';
         }
@@ -685,7 +685,7 @@ function updateExistingChatElement(element, chat) {
             dateChatPreview.textContent = '';
         }
     }
-    
+
     if (unreadBadge) {
         if (chat.unread_count > 0) {
             unreadBadge.textContent = chat.unread_count;
@@ -903,7 +903,7 @@ function updateChatListItem(lastMessage) {
     const timestampChat = chatItem.querySelector('.timestamp-chat')
     const dateChatPreview = chatItem.querySelector('.date-chat-preview')
     const unreadBadge = chatItem.querySelector('.unread-badge-chat')
-    
+
     if (lastMessagePreview) {
       let previewText = ''
       if (lastMessage.sender_id == window.REQUEST_USER_ID) {
@@ -913,15 +913,15 @@ function updateChatListItem(lastMessage) {
       lastMessagePreview.textContent =
         previewText.substring(0, 30) + (previewText.length > 30 ? '...' : '')
     }
-    
+
     if (timestampChat && lastMessage.created_at_time) {
       timestampChat.textContent = lastMessage.created_at_time
     }
-    
+
     if (dateChatPreview && lastMessage.created_at_date) {
       dateChatPreview.textContent = lastMessage.created_at_date
     }
-    
+
     if (unreadBadge) {
       if (
         lastMessage.sender_id == window.REQUEST_USER_ID ||
@@ -929,9 +929,9 @@ function updateChatListItem(lastMessage) {
       ) {
         unreadBadge.style.display = 'none';
       } else {
-        // Если сообщение не от текущего пользователя и не прочитано, показываем счетчик
+
         unreadBadge.style.display = 'inline';
-        // Обновляем счетчик непрочитанных сообщений
+
         const currentCount = parseInt(unreadBadge.textContent) || 0;
         if (lastMessage.sender_id != window.REQUEST_USER_ID && !lastMessage.is_read) {
           unreadBadge.textContent = currentCount + 1;
@@ -1479,30 +1479,30 @@ function startChatWithUser(userId) {
             if (noChatsMessage) {
               noChatsMessage.remove()
             }
-            
-            // Добавляем новый чат в начало списка
+
+
             chatListContainer.prepend(newChatItem)
-            
-            // Принудительно обновляем метаданные чата
+
+
             setTimeout(() => {
                 const chatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${data.chat.conversation_id}"]`);
                 if (chatItem) {
-                    // Обновляем время и дату для нового чата
+
                     const timestampChat = chatItem.querySelector('.timestamp-chat');
                     const dateChatPreview = chatItem.querySelector('.date-chat-preview');
-                    
+
                     if (timestampChat) {
                         const now = new Date();
                         timestampChat.textContent = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
                     }
-                    
+
                     if (dateChatPreview) {
                         const now = new Date();
                         dateChatPreview.textContent = now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
                     }
                 }
             }, 100);
-            
+
             startPolling();
             waitForChatInDOM(data.chat.conversation_id, 3000)
               .then(() => {
@@ -1560,27 +1560,27 @@ function createGroupChat(chatName, userIds) {
             noChatsMessage.remove()
           }
                      chatListContainer.prepend(newChatItem)
-           
-           // Принудительно обновляем метаданные группового чата
+
+
            setTimeout(() => {
                const chatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${data.chat.conversation_id}"]`);
                if (chatItem) {
-                   // Обновляем время и дату для нового группового чата
+
                    const timestampChat = chatItem.querySelector('.timestamp-chat');
                    const dateChatPreview = chatItem.querySelector('.date-chat-preview');
-                   
+
                    if (timestampChat) {
                        const now = new Date();
                        timestampChat.textContent = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
                    }
-                   
+
                    if (dateChatPreview) {
                        const now = new Date();
                        dateChatPreview.textContent = now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
                    }
                }
            }, 100);
-           
+
            loadChat(data.chat.conversation_id)
         }
         if (typeof closeGroupChatModal === 'function') {
@@ -1744,12 +1744,12 @@ function updatePaginationHTML() {
     if (!usersList || !paginationContainer || userCards.length === 0) return
     const itemsPerPage = 8
     const totalPages = Math.ceil(userCards.length / itemsPerPage)
-    
-    // Сбрасываем currentPage если она выходит за пределы
+
+
     if (currentPage > totalPages) {
         currentPage = 1
     }
-    
+
     let paginationHTML = ''
     paginationHTML += `<span class="page-number-item" data-page="prev">‹</span>`
     if (totalPages <= 7) {
@@ -1767,7 +1767,7 @@ function updatePaginationHTML() {
     }
     paginationHTML += `<span class="page-number-item" data-page="next">›</span>`
     paginationContainer.innerHTML = paginationHTML
-    
+
     const pageButtons = paginationContainer.querySelectorAll('.page-number-item')
     pageButtons.forEach((button) => {
         if (button.classList.contains('dots')) return
@@ -1789,8 +1789,8 @@ function updatePaginationHTML() {
             }
         })
     })
-    
-    // Показываем первую страницу при инициализации
+
+
     if (userCards.length > 0) {
         showPage(currentPage)
     }
@@ -1810,8 +1810,8 @@ function showMoreUsers() {
     if (paginationContainer) {
         paginationContainer.style.display = 'none'
     }
-    
-    // Сбрасываем текущую страницу при использовании "Показать еще"
+
+
     currentPage = 1
     let buttonsContainer = document.querySelector('.pagination-buttons-container')
     if (!buttonsContainer) {
@@ -1883,38 +1883,38 @@ function showPage(page) {
     : []
   const itemsPerPage = 8
   if (!usersList || userCards.length === 0) return
-  
-  // Скрываем все карточки сначала
+
+
   userCards.forEach((card) => {
     card.classList.add('hidden-user')
   })
-  
-  // Показываем только карточки для текущей страницы
+
+
   const startIndex = (page - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  
+
   for (let i = startIndex; i < endIndex && i < userCards.length; i++) {
     userCards[i].classList.remove('hidden-user')
   }
-  
-  // Обновляем активную страницу в пагинации
+
+
   const currentPageBtn = document.querySelector('.page-number-item.current')
   if (currentPageBtn) {
     currentPageBtn.classList.remove('current')
   }
-  
+
   const newCurrentPageBtn = document.querySelector(`[data-page="${page}"]`)
   if (newCurrentPageBtn && !newCurrentPageBtn.classList.contains('dots')) {
     newCurrentPageBtn.classList.add('current')
   }
-  
-  // Скрываем кнопку "Показать еще" при использовании пагинации
+
+
   const showMoreBtn = document.getElementById('showMoreUsersBtn')
   if (showMoreBtn) {
     showMoreBtn.style.display = 'none'
   }
-  
-  // Показываем пагинацию
+
+
   const paginationContainer = document.getElementById('userPagination')
   if (paginationContainer) {
     paginationContainer.style.display = 'flex'
@@ -2179,12 +2179,12 @@ function createChatItemElement(chat) {
     chatItem.dataset.chatName = chat.name || `Чат ${chat.conversation_id}`;
     chatItem.dataset.chatType = chatType;
     chatItem.dataset.isDeal = chat.is_deal ? 'true' : 'false';
-    
+
     let lastMessageText = 'Нет сообщений';
     let timestampText = '';
     let dateText = '';
     let unreadBadgeHtml = '';
-    
+
     if (chat.last_message) {
         let previewText = '';
         if (chat.last_message.sender_id == window.REQUEST_USER_ID) {
@@ -2192,8 +2192,8 @@ function createChatItemElement(chat) {
         }
         previewText += chat.last_message.message_text;
         lastMessageText = previewText.substring(0, 30) + (previewText.length > 30 ? '...' : '');
-        
-        // Форматируем время и дату из created_at, если нет готовых полей
+
+
         if (chat.last_message.created_at_time) {
             timestampText = chat.last_message.created_at_time;
         } else if (chat.last_message.created_at) {
@@ -2206,7 +2206,7 @@ function createChatItemElement(chat) {
         } else {
             timestampText = '';
         }
-        
+
         if (chat.last_message.created_at_date) {
             dateText = chat.last_message.created_at_date;
         } else if (chat.last_message.created_at) {
@@ -2220,13 +2220,13 @@ function createChatItemElement(chat) {
             dateText = '';
         }
     }
-    
+
     if (chat.unread_count > 0) {
         unreadBadgeHtml = `<span class="unread-badge-chat">${chat.unread_count}</span>`;
     } else {
         unreadBadgeHtml = `<span class="unread-badge-chat" style="display: none;"></span>`;
     }
-    
+
     chatItem.innerHTML = `
         <img src="${avatarUrl}" alt="${avatarAlt}" class="chat-avatar-img">
         <div class="chat-item-info-new">

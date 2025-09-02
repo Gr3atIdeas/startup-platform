@@ -777,11 +777,11 @@ class FranchiseComments(models.Model):
 class FranchiseCategories(models.Model):
     category_id = models.AutoField(primary_key=True)
     category_name = models.CharField(max_length=255, blank=True, null=True)
-    
+
     class Meta:
         managed = True
         db_table = "franchise_categories"
-    
+
     def __str__(self):
         return self.category_name or "Без названия"
 

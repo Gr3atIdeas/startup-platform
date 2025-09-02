@@ -133,7 +133,7 @@ body {
   z-index: -1;
 }
 
-/* Старые стили для investments_planetary-system удалены - теперь используется my_startups_planetary-system */
+
 
 @keyframes parallax {
   from { background-position: 0 0; }
@@ -586,9 +586,9 @@ body {
   min-width: 150px;
   z-index: 10;
   margin-top: 8px;
-  max-height: 400px; /* Ограничиваем высоту примерно для 10 элементов (40px на элемент) */
-  overflow-y: auto; /* Добавляем вертикальный скролл */
-  overflow-x: hidden; /* Скрываем горизонтальный скролл */
+  max-height: 400px; 
+  overflow-y: auto; 
+  overflow-x: hidden; 
 }
 
 .filter-dropdown-wrapper:hover .filter-dropdown-content {
@@ -608,7 +608,7 @@ body {
   color: #212529;
 }
 
-/* Стили для скроллбара в выпадающем списке - в соответствии с глобальным стилем */
+
 .filter-dropdown-content::-webkit-scrollbar {
   width: 6px;
 }
@@ -1279,7 +1279,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   }
 }
 
-/* Стили для планетарной системы my_startups */
+
 .planetary-system-container {
   position: relative;
   width: 100%;
@@ -1390,7 +1390,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   pointer-events: none;
 }
 
-/* Анимация для планет по орбитам */
+
 .my_startups_planetary-system .planet-orientation {
   position: absolute;
   transform-style: preserve-3d;
@@ -1417,7 +1417,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  /* Обеспечиваем кликабельность */
+  
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }

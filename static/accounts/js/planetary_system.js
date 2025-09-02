@@ -49,7 +49,7 @@
   const ultraNewPlanetaryMaxScale = 2.5;
   const ultraNewPlanetaryMaxOffset = 500;
   let ultraNewPlanetaryCategoriesTotal = 0;
-  
+
   function getCurrentPage() {
     const path = window.location.pathname;
     if (path === '/') {
@@ -61,7 +61,7 @@
     }
     return 'other';
   }
-  
+
   function setInitialGalaxyPosition() {
     const currentPage = getCurrentPage();
     if (currentPage === 'home') {
@@ -248,9 +248,9 @@
   function selectUltraNewPlanetaryGalaxy(galaxyName) {
     ultraNewPlanetarySelectedGalaxy = galaxyName;
     updateUltraNewPlanetaryGalaxyUI();
-    
+
     applyUltraNewPlanetaryFilter(galaxyName);
-    
+
     const url = new URL(window.location);
     if (galaxyName && galaxyName !== 'Все' && galaxyName !== 'All') {
       url.searchParams.set('direction', galaxyName);
@@ -298,22 +298,22 @@
   }
   function updateUltraNewPlanetaryPlanets(startups) {
     const planets = document.querySelectorAll('.ultra_new_planetary_planet');
-    
+
     planets.forEach(function(planet, index) {
       const startup = startups[index];
-      
+
       if (startup && (startup.id || startup.startup_id)) {
         planet.removeAttribute('data-startup-id');
         planet.removeAttribute('data-startup-data');
         planet.removeAttribute('data-startup-name');
-        
+
         setupUltraNewPlanetaryPlanet(planet, startup, index);
       } else {
         setupUltraNewPlanetaryEmptyPlanet(planet, index);
       }
     });
     initializeUltraNewPlanetaryObjects();
-    
+
     stopUltraNewPlanetaryAnimation();
     startUltraNewPlanetaryAnimation();
   }
@@ -329,13 +329,13 @@
   function setupUltraNewPlanetaryPlanet(planet, startup, index) {
     if (!planet || !startup) return;
     const imageUrl = startup.image || getUltraNewPlanetaryFallbackImage(index);
-    
+
     if (imageUrl && imageUrl !== 'null' && imageUrl !== 'undefined') {
       planet.style.backgroundImage = `url(${imageUrl})`;
-      
+
       const img = new Image();
       img.onload = function() {
-        // Image loaded successfully
+
       };
       img.onerror = function() {
         const fallbackUrl = getUltraNewPlanetaryFallbackImage(index);
@@ -346,14 +346,14 @@
       const fallbackUrl = getUltraNewPlanetaryFallbackImage(index);
       planet.style.backgroundImage = `url(${fallbackUrl})`;
     }
-    
+
     planet.setAttribute('data-startup-id', startup.id || startup.startup_id || 0);
     planet.setAttribute('data-startup-name', startup.name || 'Пустая орбита');
     planet.setAttribute('data-startup-data', JSON.stringify(startup));
-    
+
     const newPlanet = planet.cloneNode(true);
     planet.parentNode.replaceChild(newPlanet, planet);
-    
+
     newPlanet.addEventListener('click', function() {
       showUltraNewPlanetaryModal(startup, imageUrl);
     });
@@ -388,10 +388,10 @@
     if (nameElement) nameElement.textContent = startup.name || 'Без названия';
     if (ratingElement) ratingElement.textContent = `Рейтинг ${startup.rating || '0'}/5 (${startup.voters_count || '0'})`;
     if (commentsElement) commentsElement.textContent = startup.comment_count || '0';
-    
+
     let categoryDisplayName = startup.direction || 'Не указана';
     if (startup.direction && ultraNewPlanetaryDirectionsData) {
-      const categoryData = ultraNewPlanetaryDirectionsData.find(d => 
+      const categoryData = ultraNewPlanetaryDirectionsData.find(d =>
         d.original_name === startup.direction || d.direction_name === startup.direction
       );
       if (categoryData) {
@@ -424,7 +424,7 @@
     if (planetImageElement) {
       const modalImageUrl = planetImageUrl || startup.image || getUltraNewPlanetaryFallbackImage(0);
       planetImageElement.src = modalImageUrl;
-      
+
       planetImageElement.onerror = function() {
         console.warn('Не удалось загрузить изображение стартапа:', modalImageUrl);
         this.src = getUltraNewPlanetaryFallbackImage(0);
@@ -556,11 +556,11 @@
   function updateUltraNewPlanetaryPlanetsPosition() {
     const now = Date.now();
     const currentPage = getCurrentPage();
-    
+
     if (currentPage === 'home') {
       return;
     }
-    
+
     ultraNewPlanetaryObjects.forEach((planetObj, index) => {
       if (!planetObj.orientation || !planetObj.element) return;
       const elapsedSeconds = (now - planetObj.startTime) / 1000;
@@ -571,7 +571,7 @@
       const radius = planetObj.orbitSize / 2;
       const x = Math.cos(angleRad) * radius;
       const y = Math.sin(angleRad) * radius;
-      
+
       planetObj.orientation.style.left = `${50 + (x / radius) * 50}%`;
       planetObj.orientation.style.top = `${50 + (y / radius) * 50}%`;
     });
@@ -583,20 +583,20 @@
     } else {
       filtered = ultraNewPlanetaryAllStartupsData.filter(s => {
         if (s.direction === categoryName) return true;
-        
+
         if (ultraNewPlanetaryDirectionsData) {
-          const categoryData = ultraNewPlanetaryDirectionsData.find(d => 
+          const categoryData = ultraNewPlanetaryDirectionsData.find(d =>
             d.original_name === categoryName || d.direction_name === categoryName
           );
           if (categoryData) {
             return s.direction === categoryData.direction_name || s.direction === categoryData.original_name;
           }
         }
-        
+
         return false;
       });
     }
-    
+
     const startups = [];
     if (filtered.length >= 6) {
       startups.push(...filtered.slice(0, 6));

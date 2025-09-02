@@ -17,7 +17,7 @@ def create_telegram_social_app(apps, schema_editor):
         defaults={
             'name': 'Telegram',
             'client_id': bot_token,
-            'secret': '' # Для Telegram secret key не требуется
+            'secret': ''
         }
     )
 
