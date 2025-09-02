@@ -19,11 +19,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const ticketCards = document.querySelectorAll('.ticket-card');
     ticketCards.forEach(card => {
         card.addEventListener('click', function() {
-            const ticketNumberElement = this.querySelector('.detail-value:last-child');
-            if (ticketNumberElement) {
-                const ticketId = ticketNumberElement.textContent.replace('#', '');
-                if (ticketId) {
-                    window.location.href = `/support/ticket/${ticketId}/`;
+            // Используем data-атрибут для получения ID заявки
+            const ticketId = this.getAttribute('data-ticket-id');
+            console.log('Found ticket ID from data attribute:', ticketId); // Отладочная информация
+            
+            if (ticketId && !isNaN(ticketId)) {
+                const url = `/support/ticket/${ticketId}/`;
+                console.log('Redirecting to:', url); // Отладочная информация
+                window.location.href = url;
+            } else {
+                console.error('Invalid ticket ID:', ticketId);
+                // Fallback: попробуем получить из текста элемента
+                const ticketNumberElement = this.querySelector('.ticket-info-right .detail-value:last-child');
+                if (ticketNumberElement) {
+                    const fallbackId = ticketNumberElement.textContent.replace('#', '');
+                    console.log('Fallback ticket ID:', fallbackId);
+                    if (fallbackId && !isNaN(fallbackId)) {
+                        const url = `/support/ticket/${fallbackId}/`;
+                        console.log('Redirecting to (fallback):', url);
+                        window.location.href = url;
+                    }
                 }
             }
         });

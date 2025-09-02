@@ -9,6 +9,100 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'accounts/css/startup_form.css' %}">
 
+<style>
+/* Исправляем стили для страницы редактирования - предотвращаем выход элементов за границы */
+.media-and-finance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  align-items: flex-start;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.upload-box {
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.file-preview-area {
+  max-width: 100%;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.file-preview-item {
+  max-width: 100%;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.file-preview-item p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.presentation-finance-group {
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.presentation-finance-group .form-group {
+  max-width: 100%;
+}
+
+.presentation-finance-group .input-wrapper {
+  max-width: 100%;
+}
+
+.presentation-finance-group .form-control {
+  max-width: 100% !important;
+}
+
+/* Для очень узких экранов делаем одну колонку */
+@media (max-width: 768px) {
+  .media-and-finance-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* Убеждаемся, что длинные имена файлов не выходят за границы */
+.file-preview-item p,
+.file-preview-item a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+
+/* Для видео и изображений предпросмотра */
+.file-preview-item img,
+.file-preview-item video {
+  max-width: 200px;
+  max-height: 150px;
+  object-fit: contain;
+}
+
+/* Основной контейнер формы */
+.form-main-content-wrapper {
+  overflow: hidden;
+  word-wrap: break-word;
+  box-sizing: border-box;
+}
+
+/* Убеждаемся, что все секции вписываются в контейнер */
+.form-content-section {
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+</style>
+
 <div class="startup-form-container">
     <div class="form-navigation-header">
         <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="back-button">&larr; Назад к стартапу</a>
@@ -22,21 +116,41 @@
         <div class="form-section-top">
             <div class="form-top-grid">
                 <div class="form-top-left">
-                    <div class="form-group logo-upload-group">
-                        <label for="{{ form.logo.id_for_label }}" class="logo-upload-label">
-                            {% with logo_file_id=startup.logo_urls|first %}
-                            <div class="logo-placeholder" id="logoPlaceholder" {% if logo_file_id %}style="display:none;"{% endif %}>
-                                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon">
-                                <span>*Загрузить логотип</span>
-                            </div>
-                            <img src="{% if logo_file_id %}{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}{% else %}""{% endif %}" alt="Логотип" class="logo-preview" id="logoPreview" {% if not logo_file_id %}style="display:none;"{% endif %}>
-                            {% endwith %}
-                        </label>
-                        {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
-                        {% if form.logo.errors %}
-                            <span class="error-message">{{ form.logo.errors|first }}</span>
-                        {% endif %}
+                <div class="form-group planet-upload-group">
+                    <label class="planet-upload-label">Выберите планету *</label>
+                    <div class="planet-selector">
+                    <button type="button" class="planet-nav-button prev-planet" aria-label="Предыдущая планета">
+                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous">
+                    </button>
+                    <div class="planet-display">
+                        <div class="planet-ribbon" id="planetRibbon">
+                            <!-- Планеты будут добавлены динамически -->
+                        </div>
                     </div>
+                    <button type="button" class="planet-nav-button next-planet" aria-label="Следующая планета">
+                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next">
+                    </button>
+                    </div>
+                    {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image"|attr:"style:display:none;" }}
+                    {% if form.planet_image.errors %}
+                    <span class="error-message">{{ form.planet_image.errors|first }}</span>
+                    {% endif %}
+                </div>
+                <div class="form-group logo-upload-group">
+                    <label for="{{ form.logo.id_for_label }}" class="logo-upload-label">
+                        {% with logo_file_id=startup.logo_urls|first %}
+                        <div class="logo-placeholder" id="logoPlaceholder" {% if logo_file_id %}style="display:none;"{% endif %}>
+                            <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon">
+                            <span>*Загрузить логотип</span>
+                        </div>
+                        <img src="{% if logo_file_id %}{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}{% else %}""{% endif %}" alt="Логотип" class="logo-preview" id="logoPreview" {% if not logo_file_id %}style="display:none;"{% endif %}>
+                        {% endwith %}
+                    </label>
+                    {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
+                    {% if form.logo.errors %}
+                        <span class="error-message">{{ form.logo.errors|first }}</span>
+                    {% endif %}
+                </div>
                     <div class="form-fields-left">
                         <div class="form-group">
                             <label for="{{ form.title.id_for_label }}">*{{ form.title.label }}</label>
@@ -417,6 +531,90 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Существующие файлы теперь рендерятся на сервере
+    
+    // --- Селектор планет ---
+    const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
+    const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
+    const planetBaseUrl = "{{ S3_PUBLIC_BASE_URL }}/choosable_planets/";
+    const currentPlanetValue = "{{ startup.planet_image|default:'' }}";
+
+    const planetInput = document.getElementById('id_planet_image');
+    const planetRibbon = document.getElementById('planetRibbon');
+    const prevButton = document.querySelector('.planet-nav-button.prev-planet');
+    const nextButton = document.querySelector('.planet-nav-button.next-planet');
+    let currentPlanetIndex = 0;
+
+    if (planetRibbon) {
+        function createPlanetRibbon() {
+            planetRibbon.innerHTML = '';
+
+            const totalPlanets = planetChoices.length;
+            if (totalPlanets === 0) {
+                return;
+            }
+
+            planetChoices.forEach((planet, index) => {
+                const planetImg = document.createElement('img');
+                planetImg.className = 'planet-ribbon-item';
+                planetImg.src = planetBaseUrl + planet;
+                planetImg.alt = `Планета ${index + 1}`;
+                planetImg.dataset.planetIndex = index;
+                planetRibbon.appendChild(planetImg);
+            });
+
+            planetRibbon.style.width = `${totalPlanets * 450}px`;
+            
+            // Устанавливаем текущую планету
+            if (currentPlanetValue && planetChoices.includes(currentPlanetValue)) {
+                currentPlanetIndex = planetChoices.indexOf(currentPlanetValue);
+            } else {
+                currentPlanetIndex = 0;
+            }
+            
+            const translateX = -currentPlanetIndex * 450;
+            planetRibbon.style.transform = `translateX(${translateX}px)`;
+            planetInput.value = planetChoices[currentPlanetIndex];
+        }
+
+        function updatePlanetRibbon(direction) {
+            const totalPlanets = planetChoices.length;
+            if (totalPlanets === 0) return;
+
+            if (direction === 'next') {
+                currentPlanetIndex = (currentPlanetIndex + 1) % totalPlanets;
+            } else {
+                currentPlanetIndex = (currentPlanetIndex - 1 + totalPlanets) % totalPlanets;
+            }
+
+            const translateX = -currentPlanetIndex * 450;
+            planetRibbon.style.transition = 'transform 0.4s ease-in-out';
+            planetRibbon.style.transform = `translateX(${translateX}px)`;
+            planetInput.value = planetChoices[currentPlanetIndex];
+        }
+
+        if (prevButton) {
+            prevButton.addEventListener('click', () => {
+                if (planetChoices.length > 0) {
+                    updatePlanetRibbon('prev');
+                }
+            });
+        }
+
+        if (nextButton) {
+            nextButton.addEventListener('click', () => {
+                if (planetChoices.length > 0) {
+                    updatePlanetRibbon('next');
+                }
+            });
+        }
+
+        if (planetChoices && planetChoices.length > 0) {
+            createPlanetRibbon();
+        } else {
+            planetRibbon.innerHTML = '<img src="https://via.placeholder.com/150" alt="Нет планет" class="planet-ribbon-item">';
+            planetInput.value = '';
+        }
+    }
 });
 </script>
 {% endblock %}

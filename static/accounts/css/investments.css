@@ -586,6 +586,9 @@ body {
   min-width: 150px;
   z-index: 10;
   margin-top: 8px;
+  max-height: 400px; /* Ограничиваем высоту примерно для 10 элементов (40px на элемент) */
+  overflow-y: auto; /* Добавляем вертикальный скролл */
+  overflow-x: hidden; /* Скрываем горизонтальный скролл */
 }
 
 .filter-dropdown-wrapper:hover .filter-dropdown-content {
@@ -603,6 +606,25 @@ body {
 .filter-dropdown-content a:hover {
   background-color: #f8f9fa;
   color: #212529;
+}
+
+/* Стили для скроллбара в выпадающем списке - в соответствии с глобальным стилем */
+.filter-dropdown-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filter-dropdown-content::-webkit-scrollbar-track {
+  background: #061e38;
+}
+
+.filter-dropdown-content::-webkit-scrollbar-thumb {
+  background-color: #004e9f;
+  border-radius: 5px;
+  border: 2px solid #061e38;
+}
+
+.filter-dropdown-content::-webkit-scrollbar-thumb:hover {
+  background-color: #c6bbfe;
 }
 
 
