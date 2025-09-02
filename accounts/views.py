@@ -6706,9 +6706,11 @@ def download_startups_report(request):
                     investors_list = [
                         f"{first or ''} {last or ''}".strip() for first, last in investors if first or last
                     ]
-                    ws.cell(row=row, column=10, value="\n".join(investors_list))
+                    cell = ws.cell(row=row, column=10, value="\n".join(investors_list))
+                    cell.alignment = Alignment(wrap_text=True, vertical='top')
                 except Exception:
-                    ws.cell(row=row, column=10, value="")
+                    cell = ws.cell(row=row, column=10, value="")
+                    cell.alignment = Alignment(wrap_text=True, vertical='top')
 
                 try:
                     created_date = startup.created_at.strftime("%d.%m.%Y") if startup.created_at else ""
@@ -6719,6 +6721,7 @@ def download_startups_report(request):
                 logger.error(f"Ошибка при обработке стартапа {startup.startup_id}: {e}")
                 continue
         
+        # Устанавливаем ширину столбцов
         for column in ws.columns:
             max_length = 0
             column_letter = get_column_letter(column[0].column)
@@ -6730,6 +6733,10 @@ def download_startups_report(request):
                     pass
             adjusted_width = min(max_length + 2, 50)
             ws.column_dimensions[column_letter].width = adjusted_width
+        
+        # Устанавливаем минимальную высоту строк для корректного отображения переносов
+        for row_num in range(5, len(startups) + 5):
+            ws.row_dimensions[row_num].height = 50  # Устанавливаем высоту строки
         
         response = HttpResponse(
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
