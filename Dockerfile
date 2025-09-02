@@ -37,6 +37,9 @@ COPY health_check.py .
 # Копируем собранный фронтенд из первого этапа
 COPY --from=frontend-builder /app/static/dist ./static/dist/
 
+# Копируем остальные статические файлы
+COPY static/accounts/ ./static/accounts/
+
 # Делаем скрипт проверки здоровья исполняемым
 RUN chmod +x health_check.py
 
