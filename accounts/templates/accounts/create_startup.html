@@ -146,9 +146,9 @@
                     
                     <div class="form-group upload-box" id="videoDropArea">
                         <label for="id_video_input">*Видео</label>
-                        {{ form.video|attr:"style:display:none"|attr:"id:id_video_input" }}
-                        <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файл</div>
-                        <div class="small-text">Допустимый формат MOV, MP4 (1 файл)</div>
+                        {{ form.video|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_video_input" }}
+                        <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файлы</div>
+                        <div class="small-text">Допустимый формат MOV, MP4 (до 3 файлов)</div>
                         <div id="videoPreview" class="file-preview-area"></div>
                         {% if form.video.errors %}<span class="error-message">{{ form.video.errors|first }}</span>{% endif %}
                     </div>
@@ -235,8 +235,8 @@
                 <div class="form-group upload-box full-width" id="proofsDropArea">
                     <label for="id_proofs_input">*Документы</label>
                     {{ form.proofs|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_proofs_input" }}
-                    <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файл</div>
-                    <div class="small-text">Допустимый формат Doc, Excel, PDF (до 3 файлов)</div>
+                    <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файлы</div>
+                    <div class="small-text">Допустимый формат Doc, Excel, PDF (до 10 файлов)</div>
                     <div id="proofsPreview" class="file-preview-area">
                     </div>
                     {% if form.proofs.errors %}<span class="error-message">{{ form.proofs.errors|first }}</span>{% endif %}
