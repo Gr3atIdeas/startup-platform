@@ -205,12 +205,16 @@ SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", "False") == "True"
 SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "False") == "True"
 CSRF_COOKIE_SECURE = os.getenv("CSRF_COOKIE_SECURE", "False") == "True"
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "https://greatideas.ru,https://www.greatideas.ru").split(",")
+CSRF_USE_SESSIONS = True
 SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "31536000"))
 SECURE_HSTS_INCLUDE_SUBDOMAINS = os.getenv("SECURE_HSTS_INCLUDE_SUBDOMAINS", "True") == "True"
 SECURE_HSTS_PRELOAD = os.getenv("SECURE_HSTS_PRELOAD", "True") == "True"
 SECURE_CONTENT_TYPE_NOSNIFF = os.getenv("SECURE_CONTENT_TYPE_NOSNIFF", "True") == "True"
 SECURE_BROWSER_XSS_FILTER = os.getenv("SECURE_BROWSER_XSS_FILTER", "True") == "True"
 X_FRAME_OPTIONS = os.getenv("X_FRAME_OPTIONS", "DENY")
+# Дополнительные настройки для HTTPS
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
 logger.info("=== Проверка настроек Django ===")
 logger.info(f"STORAGES: {STORAGES}")
 logger.info(f"INSTALLED_APPS: {INSTALLED_APPS}")
