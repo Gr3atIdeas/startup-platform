@@ -2393,6 +2393,13 @@ body > main.content::after {
               text-decoration: none;
               align-self: flex-start;
               margin-bottom: 16px;
+              transition: all 0.3s ease;
+            }
+
+            .subscribe-btn:hover {
+              background: linear-gradient(180deg, #ffe600 0%, #f0ed00 100%) !important;
+              box-shadow: 3px 3px 6px rgb(0 0 0 / 30%);
+              transform: translateY(-2px);
             }
 
 .subscribe-btn span {

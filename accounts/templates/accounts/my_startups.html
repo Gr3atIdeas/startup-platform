@@ -51,8 +51,9 @@
 
     .applications-list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, 310.75px);
       gap: 20px;
+      justify-content: start;
     }
     .application-card {
       background-color: #1A1D2E; /* Темный фон для карточки заявки */
@@ -63,6 +64,9 @@
       flex-direction: column;
       gap: 10px;
       transition: background-color 0.3s linear, border-color 0.3s linear;
+      width: 310.75px;
+      height: 221px;
+      box-sizing: border-box;
     }
     .application-card:hover {
       background-color: #212538;
@@ -91,14 +95,7 @@
     .status-blocked { background-color: #6c757d; color: #fff; } /* Добавим стиль для blocked */
     .status-closed { background-color: #343a40; color: #fff; } /* Добавим стиль для closed */
 
-    .application-comment {
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.7);
-      font-style: italic;
-      margin-top: auto; /* Прижимаем комментарий к низу */
-      padding-top: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
+
     .application-card a {
         color: #FFEF2B;
         text-decoration: none;
@@ -1213,16 +1210,9 @@
               <div class="application-status status-{{ app.status|lower|default:'pending' }}">
                 {{ app.get_status_display }}
               </div>
-              {% if app.status == 'rejected' or app.status == 'blocked' %}
-                {% if app.moderator_comment %}
-                  <div class="application-comment">
-                    <strong>Комментарий модератора:</strong> {{ app.moderator_comment|escape }}
-                  </div>
-                {% endif %}
-              {% endif %}
               {% if app.status == 'pending' or app.status == 'rejected' %}
                 <a href="{% url 'edit_startup' startup_id=app.startup_id|default_if_none:'' %}">Редактировать заявку</a>
-              {% elif app.status == 'approved' %}
+              {% elif app.status == 'approved' or app.status == 'blocked' %}
                 <a href="{% url 'startup_detail' startup_id=app.startup_id|default_if_none:'' %}">Перейти к стартапу</a>
               {% endif %}
               <span style="font-size: 12px; color: rgba(255, 255, 255, 0.5); margin-top: 5px;">
