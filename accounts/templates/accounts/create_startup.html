@@ -281,6 +281,7 @@
     </form>
 </div>
 
+<script src="{% static 'accounts/js/startup_form.js' %}"></script>
 <script>
 const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
 const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
