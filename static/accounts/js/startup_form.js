@@ -147,8 +147,8 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   }
   bindInputWithDropArea('id_creatives_input', 'creativesDropArea', 'creativesPreview', { kind: 'image', mimePrefix: 'image/', maxCount: 3 })
-  bindInputWithDropArea('id_video_input', 'videoDropArea', 'videoPreview', { kind: 'video', mimePrefix: 'video/', maxCount: 1 })
-  bindInputWithDropArea('id_proofs_input', 'proofsDropArea', 'proofsPreview', { kind: 'file', allowedExts: ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx'], maxCount: 3 })
+  bindInputWithDropArea('id_video_input', 'videoDropArea', 'videoPreview', { kind: 'video', mimePrefix: 'video/', maxCount: 3 })
+  bindInputWithDropArea('id_proofs_input', 'proofsDropArea', 'proofsPreview', { kind: 'file', allowedExts: ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx'], maxCount: 10 })
   var microCheckbox = document.getElementById('id_micro_investment_available')
   var microLabel = document.querySelector('.micro-investment-label-new')
   function syncMicroUI() {
