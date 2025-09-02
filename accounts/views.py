@@ -3425,12 +3425,23 @@ def create_startup(request):
             logger.info(
                 f"Стартап создан: ID={startup.startup_id}, Planet={startup.planet_image}"
             )
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "redirect_url": reverse("startup_creation_success")
+                })
             messages.success(
                 request,
                 f'Стартап "{startup.title}" успешно создан и отправлен на модерацию!',
             )
             return redirect("startup_creation_success")
         else:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": False,
+                    "errors": form.errors,
+                    "non_field_errors": form.non_field_errors(),
+                }, status=400)
             messages.error(request, "Форма содержит ошибки.")
             return render(
                 request,

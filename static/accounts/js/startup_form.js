@@ -339,6 +339,73 @@ document.addEventListener('DOMContentLoaded', function () {
             target.scrollIntoView({ behavior: 'smooth', block: 'center' })
           }
         }
+        return
+      }
+
+      // AJAX submit, чтобы не терялись прикрепленные файлы при серверных ошибках
+      try {
+        e.preventDefault()
+        var formData = new FormData(startupForm)
+        var csrfInput = startupForm.querySelector('input[name="csrfmiddlewaretoken"]')
+        var csrfToken = csrfInput ? csrfInput.value : null
+        fetch(startupForm.action || window.location.href, {
+          method: 'POST',
+          headers: Object.assign({ 'X-Requested-With': 'XMLHttpRequest' }, csrfToken ? { 'X-CSRFToken': csrfToken } : {}),
+          body: formData,
+          credentials: 'same-origin',
+        }).then(function (res) {
+          if (!res.ok) return res.json().then(function (data) { throw data })
+          return res.json()
+        }).then(function (data) {
+          if (data && data.success && data.redirect_url) {
+            window.location.assign(data.redirect_url)
+          }
+        }).catch(function (err) {
+          // показать серверные ошибки без перезагрузки
+          var errors = (err && err.errors) || {}
+          var nonField = (err && err.non_field_errors) || []
+          var generalBox = document.getElementById('formGeneralErrors')
+          if (!generalBox) {
+            generalBox = document.createElement('div')
+            generalBox.id = 'formGeneralErrors'
+            generalBox.style.color = '#e74c3c'
+            generalBox.style.margin = '10px 0'
+            startupForm.insertBefore(generalBox, startupForm.firstChild)
+          }
+          generalBox.innerHTML = ''
+          if (Array.isArray(nonField) && nonField.length) {
+            var nf = document.createElement('div')
+            nf.textContent = nonField.join('\n')
+            generalBox.appendChild(nf)
+          }
+          var firstErrorField = null
+          Object.keys(errors).forEach(function (fieldName) {
+            var fieldErrors = errors[fieldName]
+            if (!Array.isArray(fieldErrors)) return
+            var selector = "[name='" + fieldName + "']"
+            var el = startupForm.querySelector(selector)
+            if (!el) {
+              // для файлов ids
+              if (fieldName === 'creatives') el = document.getElementById('id_creatives_input')
+              if (fieldName === 'video') el = document.getElementById('id_video_input')
+              if (fieldName === 'proofs') el = document.getElementById('id_proofs_input')
+            }
+            if (el) {
+              showFieldError(el, fieldErrors[0])
+              if (!firstErrorField) firstErrorField = el
+            } else {
+              var item = document.createElement('div')
+              item.textContent = fieldErrors.join('\n')
+              generalBox.appendChild(item)
+            }
+          })
+          var target = firstErrorField ? (firstErrorField.closest('.form-group') || firstErrorField) : generalBox
+          if (target && typeof target.scrollIntoView === 'function') {
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }
+        })
+      } catch (_) {
+        // если что-то пошло не так — позволим обычной отправке
       }
     })
   }
