@@ -3271,6 +3271,7 @@ def create_startup(request):
             creatives_ids = []
             proofs_ids = []
             video_ids = []
+            file_save_errors = []
             logo = form.cleaned_data.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
@@ -3299,9 +3300,8 @@ def create_startup(request):
                     logger.info(f"Логотип сохранён: {file_path}")
                 except Exception as e:
                     logger.error(f"Ошибка сохранения логотипа: {e}", exc_info=True)
-                    messages.warning(
-                        request, "Не удалось сохранить логотип, но стартап создан."
-                    )
+                    messages.warning(request, "Не удалось сохранить логотип, но стартап создан.")
+                    file_save_errors.append({"field": "logo", "error": str(e)})
             creatives = form.cleaned_data.get("creatives", [])
             if creatives:
                 creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
@@ -3336,10 +3336,8 @@ def create_startup(request):
                         logger.info(f"Креатив сохранён: {file_path}")
                     except Exception as e:
                         logger.error(f"Ошибка сохранения креатива: {e}", exc_info=True)
-                        messages.warning(
-                            request,
-                            "Не удалось сохранить один из креативов, но стартап создан.",
-                        )
+                        messages.warning(request, "Не удалось сохранить один из креативов, но стартап создан.")
+                        file_save_errors.append({"field": "creatives", "file": getattr(creative_file, "name", ""), "error": str(e)})
             proofs = form.cleaned_data.get("proofs", [])
             if proofs:
                 proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
@@ -3376,10 +3374,8 @@ def create_startup(request):
                         logger.info(f"Пруф сохранён: {file_path}, оригинальное название: {unique_filename}")
                     except Exception as e:
                         logger.error(f"Ошибка сохранения пруфа: {e}", exc_info=True)
-                        messages.warning(
-                            request,
-                            "Не удалось сохранить один из пруфов, но стартап создан.",
-                        )
+                        messages.warning(request, "Не удалось сохранить один из документов, но стартап создан.")
+                        file_save_errors.append({"field": "proofs", "file": getattr(proof_file, "name", ""), "error": str(e)})
             videos = form.cleaned_data.get("video", [])
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
@@ -3414,9 +3410,8 @@ def create_startup(request):
                         logger.info(f"Видео сохранено: {file_path}")
                     except Exception as e:
                         logger.error(f"Ошибка сохранения видео: {e}", exc_info=True)
-                        messages.warning(
-                            request, "Не удалось сохранить одно из видео, но стартап создан."
-                        )
+                        messages.warning(request, "Не удалось сохранить одно из видео, но стартап создан.")
+                        file_save_errors.append({"field": "video", "file": getattr(video, "name", ""), "error": str(e)})
             startup.logo_urls = logo_ids
             startup.creatives_urls = creatives_ids
             startup.proofs_urls = proofs_ids
@@ -3428,7 +3423,8 @@ def create_startup(request):
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
-                    "redirect_url": reverse("startup_creation_success")
+                    "redirect_url": reverse("startup_creation_success"),
+                    "file_save_errors": file_save_errors,
                 })
             messages.success(
                 request,
