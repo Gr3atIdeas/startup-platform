@@ -1,33 +1,41 @@
-# Используем официальный Python образ
-FROM python:3.11-slim
+# Этап 1: Сборка фронтенда
+FROM node:20-alpine AS frontend-builder
 
-# Устанавливаем системные зависимости
-RUN apt-get update && apt-get install -y \
-    curl \
-    gnupg \
-    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+
+# Копируем файлы зависимостей
+COPY package.json package-lock.json ./
+
+# Устанавливаем Node.js зависимости
+RUN npm ci --only=production
+
+# Копируем исходный код фронтенда
+COPY static/ ./static/
+COPY vite.config.js ./
+
+# Собираем фронтенд
+RUN npm run build
+
+# Этап 2: Финальный образ с Python
+FROM python:3.11-slim
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
 # Копируем файлы зависимостей
 COPY requirements.txt .
-COPY package.json .
 
 # Устанавливаем Python зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Устанавливаем Node.js зависимости
-RUN npm ci --only=production
+# Копируем исходный код Django
+COPY marketplace/ ./marketplace/
+COPY accounts/ ./accounts/
+COPY manage.py .
+COPY health_check.py .
 
-# Копируем исходный код
-COPY . .
-
-# Собираем фронтенд
-RUN npm run build
+# Копируем собранный фронтенд из первого этапа
+COPY --from=frontend-builder /app/static/dist ./static/dist/
 
 # Делаем скрипт проверки здоровья исполняемым
 RUN chmod +x health_check.py
