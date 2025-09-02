@@ -370,13 +370,41 @@ document.addEventListener('DOMContentLoaded', function () {
             generalBox.id = 'formGeneralErrors'
             generalBox.style.color = '#e74c3c'
             generalBox.style.margin = '10px 0'
+            generalBox.style.padding = '10px'
+            generalBox.style.border = '1px solid #e74c3c'
+            generalBox.style.borderRadius = '6px'
+            generalBox.setAttribute('role', 'alert')
             startupForm.insertBefore(generalBox, startupForm.firstChild)
           }
           generalBox.innerHTML = ''
+          var header = document.createElement('div')
+          header.style.fontWeight = '600'
+          header.textContent = 'Форма содержит ошибки. Исправьте следующие поля:'
+          generalBox.appendChild(header)
+          var ul = document.createElement('ul')
+          ul.style.margin = '8px 0 0 18px'
+          ul.style.padding = '0'
+          generalBox.appendChild(ul)
           if (Array.isArray(nonField) && nonField.length) {
-            var nf = document.createElement('div')
-            nf.textContent = nonField.join('\n')
-            generalBox.appendChild(nf)
+            nonField.forEach(function (msg) {
+              var li = document.createElement('li')
+              li.textContent = msg
+              ul.appendChild(li)
+            })
+          }
+          function getLabelForField(el, fieldName) {
+            try {
+              if (el && el.id) {
+                var direct = document.querySelector("label[for='" + el.id + "']")
+                if (direct && direct.textContent) return direct.textContent.trim()
+              }
+              var group = el ? el.closest('.form-group') : null
+              if (group) {
+                var lbl = group.querySelector('label')
+                if (lbl && lbl.textContent) return lbl.textContent.trim()
+              }
+            } catch (_) {}
+            return fieldName
           }
           var firstErrorField = null
           Object.keys(errors).forEach(function (fieldName) {
@@ -393,11 +421,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (el) {
               showFieldError(el, fieldErrors[0])
               if (!firstErrorField) firstErrorField = el
-            } else {
-              var item = document.createElement('div')
-              item.textContent = fieldErrors.join('\n')
-              generalBox.appendChild(item)
             }
+            var label = getLabelForField(el, fieldName)
+            var li = document.createElement('li')
+            li.textContent = label + ': ' + fieldErrors.join(' ')
+            ul.appendChild(li)
           })
           var target = firstErrorField ? (firstErrorField.closest('.form-group') || firstErrorField) : generalBox
           if (target && typeof target.scrollIntoView === 'function') {
