@@ -48,7 +48,7 @@
       <div class="tickets-list">
         {% if orders %}
           {% for order in orders %}
-            <a href="{% url 'support_ticket_detail' order.ticket_id %}" class="order-card-link">
+            <a href="{% url 'support_ticket_detail' order.pk %}" class="order-card-link">
               <div class="order-card">
                 <div class="order-details-grid">
                   <div class="order-detail-item">
@@ -65,7 +65,7 @@
                   </div>
                   <div class="order-detail-item">
                     <span class="detail-label">Номер</span>
-                    <span class="detail-value">#{{ order.ticket_id }}</span>
+                    <span class="detail-value">#{{ order.pk }}</span>
                   </div>
                 </div>
               </div>
