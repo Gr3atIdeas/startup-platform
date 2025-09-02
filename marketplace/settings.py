@@ -31,7 +31,7 @@ STORAGES = {
         },
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.StaticFilesStorage",
     },
 }
 try:
@@ -43,7 +43,8 @@ SECRET_KEY = os.getenv(
     "DJANGO_SECRET_KEY",
     "django-insecure-0w+_*%hwspl5i9b)%9!i-3$dq5(e7i%e9*lh=v!u$4brh!5ok9",
 )
-DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
+# Временно включаем DEBUG для отладки
+DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 ALLOWED_HOSTS = [
     "*",
     "194.5.78.244",
@@ -53,6 +54,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1"
 ]
+# Убираем django-vite из INSTALLED_APPS временно
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -64,7 +66,7 @@ INSTALLED_APPS = [
     "storages",
     "widget_tweaks",
     "django.contrib.humanize",
-    "django_vite",
+    # "django_vite",  # Временно отключаем
     'django.contrib.sites',
     'allauth',
     'allauth.account',
