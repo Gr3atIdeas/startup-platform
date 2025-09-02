@@ -787,6 +787,20 @@ h3.section-title {
   background-color: #feeaea; 
 }
 
+/* Общая подсветка ошибок полей */
+.form-control.input-error,
+select.form-control.input-error,
+textarea.form-control.input-error {
+  border-color: #f00 !important;
+  background-color: #feeaea !important;
+}
+
+.custom-validation-error {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
 
 .agreement-section-wrapper.content-section {
   gap: 25px; 
@@ -1067,9 +1081,13 @@ h3.section-title {
 }
 
 .micro-checkbox-checked {
-  width: 100%; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
-  display: none; 
+  object-fit: contain;
+  display: none;
 }
 
 
