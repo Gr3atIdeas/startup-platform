@@ -3380,41 +3380,43 @@ def create_startup(request):
                             request,
                             "Не удалось сохранить один из пруфов, но стартап создан.",
                         )
-            video = form.cleaned_data.get("video")
-            if video:
-                unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
-                video_id = str(uuid.uuid4())
-                base_name = os.path.splitext(video.name)[0]
-                ext = os.path.splitext(video.name)[1]
-                safe_base_name = "".join(
-                    c for c in base_name if c.isalnum() or c in ("-", "_")
-                )
-                safe_name = slugify(safe_base_name) + ext
-                file_path = (
-                    f"startups/{startup.startup_id}/videos/{video_id}_{safe_name}"
-                )
+            videos = form.cleaned_data.get("video", [])
+            if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
-                try:
-                    logger.info(f"Попытка сохранить видео по пути: {file_path}")
-                    default_storage.save(file_path, video)
-                    logger.info(f"Видео успешно сохранено по пути: {file_path}")
-                    video_ids.append(video_id)
-                    safe_create_file_storage(
-                        entity_type=entity_type,
-                        entity_id=startup.startup_id,
-                        file_type=video_type,
-                        file_url=video_id,
-                        uploaded_at=timezone.now(),
-                        startup=startup,
-                        original_file_name=unique_filename,
+                for video in videos:
+                    if not hasattr(video, "name"):
+                        logger.warning(f"Пропущено видео: {video}")
+                        continue
+                    unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
+                    video_id = str(uuid.uuid4())
+                    base_name = os.path.splitext(video.name)[0]
+                    ext = os.path.splitext(video.name)[1]
+                    safe_base_name = "".join(
+                        c for c in base_name if c.isalnum() or c in ("-", "_")
                     )
-                    logger.info(f"Видео сохранено: {file_path}")
-                except Exception as e:
-                    logger.error(f"Ошибка сохранения видео: {e}", exc_info=True)
-                    messages.warning(
-                        request, "Не удалось сохранить видео, но стартап создан."
-                    )
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"startups/{startup.startup_id}/videos/{video_id}_{safe_name}"
+                    try:
+                        logger.info(f"Попытка сохранить видео по пути: {file_path}")
+                        default_storage.save(file_path, video)
+                        logger.info(f"Видео успешно сохранено по пути: {file_path}")
+                        video_ids.append(video_id)
+                        safe_create_file_storage(
+                            entity_type=entity_type,
+                            entity_id=startup.startup_id,
+                            file_type=video_type,
+                            file_url=video_id,
+                            uploaded_at=timezone.now(),
+                            startup=startup,
+                            original_file_name=unique_filename,
+                        )
+                        logger.info(f"Видео сохранено: {file_path}")
+                    except Exception as e:
+                        logger.error(f"Ошибка сохранения видео: {e}", exc_info=True)
+                        messages.warning(
+                            request, "Не удалось сохранить одно из видео, но стартап создан."
+                        )
             startup.logo_urls = logo_ids
             startup.creatives_urls = creatives_ids
             startup.proofs_urls = proofs_ids
