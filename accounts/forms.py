@@ -78,7 +78,7 @@ class StartupForm(forms.ModelForm):
         required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)"
     )
     proofs = MultipleFileField(
-        required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)"
+        required=True, help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
     )
     direction = forms.ModelChoiceField(
         queryset=Directions.objects.all(), label="Направление *", required=True
@@ -93,7 +93,7 @@ class StartupForm(forms.ModelForm):
     micro_investment_available = forms.BooleanField(
         required=False, label="Микроинвестиции доступны"
     )
-    video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
+    video = MultipleFileField(required=True, help_text="Загрузите видео (до 3 файлов: MP4, MOV)")
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
@@ -236,6 +236,12 @@ class StartupForm(forms.ModelForm):
             cleaned_data["creatives"] = [creatives]
         else:
             cleaned_data["creatives"] = creatives if creatives else []
+        # Валидация количества изображений: от 1 до 3
+        if len(cleaned_data.get("creatives", [])) == 0:
+            self.add_error("creatives", "Загрузите хотя бы одно изображение (до 3 файлов).")
+        elif len(cleaned_data.get("creatives", [])) > 3:
+            self.add_error("creatives", "Можно прикрепить не более 3 изображений.")
+
         proofs = cleaned_data.get("proofs", [])
         if isinstance(proofs, list) and all(isinstance(item, list) for item in proofs):
             cleaned_data["proofs"] = [file for sublist in proofs for file in sublist]
@@ -243,6 +249,25 @@ class StartupForm(forms.ModelForm):
             cleaned_data["proofs"] = [proofs]
         else:
             cleaned_data["proofs"] = proofs if proofs else []
+        # Валидация количества документов: от 1 до 10
+        if len(cleaned_data.get("proofs", [])) == 0:
+            self.add_error("proofs", "Загрузите хотя бы один документ (до 10 файлов).")
+        elif len(cleaned_data.get("proofs", [])) > 10:
+            self.add_error("proofs", "Можно прикрепить не более 10 документов.")
+
+        # Видео: MultipleFileField, от 1 до 3
+        videos = cleaned_data.get("video", [])
+        if isinstance(videos, list) and all(isinstance(item, list) for item in videos):
+            cleaned_data["video"] = [file for sublist in videos for file in sublist]
+        elif videos and not isinstance(videos, list):
+            cleaned_data["video"] = [videos]
+        else:
+            cleaned_data["video"] = videos if videos else []
+
+        if len(cleaned_data.get("video", [])) == 0:
+            self.add_error("video", "Загрузите хотя бы одно видео (до 3 файлов).")
+        elif len(cleaned_data.get("video", [])) > 3:
+            self.add_error("video", "Можно прикрепить не более 3 видео.")
         return cleaned_data
 
 class DirectionModelChoiceField(forms.ModelChoiceField):
