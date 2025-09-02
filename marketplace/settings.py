@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     "storages",
     "widget_tweaks",
     "django.contrib.humanize",
-    # "django_vite",  # Временно отключаем
+    "django_vite",
     'django.contrib.sites',
     'allauth',
     'allauth.account',
