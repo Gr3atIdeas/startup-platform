@@ -162,6 +162,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
     BASE_DIR / "static/dist",
+    BASE_DIR / "static/accounts",
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 VITE_APP_DIR = BASE_DIR / "static/src"
