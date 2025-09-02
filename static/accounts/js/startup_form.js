@@ -358,6 +358,31 @@ document.addEventListener('DOMContentLoaded', function () {
           return res.json()
         }).then(function (data) {
           if (data && data.success && data.redirect_url) {
+            if (data.file_save_errors && data.file_save_errors.length) {
+              var generalBox = document.getElementById('formGeneralErrors')
+              if (!generalBox) {
+                generalBox = document.createElement('div')
+                generalBox.id = 'formGeneralErrors'
+                generalBox.style.color = '#e74c3c'
+                generalBox.style.margin = '10px 0'
+                generalBox.style.padding = '10px'
+                generalBox.style.border = '1px solid #e74c3c'
+                generalBox.style.borderRadius = '6px'
+                generalBox.setAttribute('role', 'alert')
+                startupForm.insertBefore(generalBox, startupForm.firstChild)
+              }
+              var warn = document.createElement('div')
+              warn.textContent = 'Часть файлов не сохранилась:'
+              generalBox.appendChild(warn)
+              var ulw = document.createElement('ul')
+              ulw.style.margin = '8px 0 0 18px'
+              generalBox.appendChild(ulw)
+              data.file_save_errors.forEach(function (it) {
+                var li = document.createElement('li')
+                li.textContent = (it.field || 'file') + (it.file ? ' (' + it.file + ')' : '')
+                ulw.appendChild(li)
+              })
+            }
             window.location.assign(data.redirect_url)
           }
         }).catch(function (err) {
