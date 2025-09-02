@@ -543,7 +543,7 @@ body {
   }
 }
 
-/* Стили для пагинации */
+
 .pagination-controls {
   display: flex;
   flex-direction: column;
@@ -656,7 +656,7 @@ body {
   padding: 8px 0;
 }
 
-/* Адаптивные стили для пагинации */
+
 @media (max-width: 768px) {
   .pagination-controls {
     margin-top: 20px;

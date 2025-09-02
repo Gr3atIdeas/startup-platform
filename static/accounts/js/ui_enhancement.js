@@ -3,29 +3,29 @@ document.addEventListener('DOMContentLoaded', function() {
     let lastClickTime = 0;
     const CLICK_TIMEOUT = 3000;
     const REQUIRED_CLICKS = 10;
-    
+
     const copyrightElement = document.querySelector('.footer-copyright-text');
-    
+
     if (copyrightElement) {
         copyrightElement.addEventListener('click', function(e) {
             const currentTime = Date.now();
-            
+
             if (currentTime - lastClickTime > CLICK_TIMEOUT) {
                 clickCount = 0;
             }
-            
+
             clickCount++;
             lastClickTime = currentTime;
-            
+
             console.log(`Клик ${clickCount}/${REQUIRED_CLICKS}`);
-            
+
             if (clickCount >= REQUIRED_CLICKS) {
                 showVideoEasterEgg();
                 clickCount = 0;
             }
         });
     }
-    
+
     function showVideoEasterEgg() {
         const modal = document.createElement('div');
         modal.className = 'easter-egg-modal';
@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
         `;
-        
+
         document.body.appendChild(modal);
-        
+
         if (typeof Plyr !== 'undefined') {
             const player = new Plyr('#easter-egg-video', {
             controls: ['play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'fullscreen'],
@@ -100,16 +100,16 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             console.error('Plyr не загружен');
         }
-        
 
-        
+
+
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeVideoEasterEgg();
             }
         });
     }
-    
+
     window.closeVideoEasterEgg = function() {
         const modal = document.querySelector('.easter-egg-modal');
         if (modal) {
@@ -123,4 +123,4 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.remove();
         }
     };
-}); 
+});

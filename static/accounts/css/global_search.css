@@ -1,4 +1,4 @@
-/* Стили для глобального поиска */
+
 .global-search-dropdown {
     position: absolute;
     top: 100%;
@@ -161,7 +161,7 @@
     100% { transform: rotate(360deg); }
 }
 
-/* Адаптивность для мобильных устройств */
+
 @media (max-width: 768px) {
     .global-search-dropdown {
         left: -10px;

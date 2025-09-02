@@ -20,10 +20,10 @@ function toggleTextTruncation(sectionId, maxLines) {
       console.warn(`Container with id '${sectionId}' not found`);
       return;
     }
-    
+
     const isTruncated = container.classList.contains(`truncated-${maxLines}-lines`);
     const toggle = container.querySelector('.text-truncate-toggle');
-    
+
     if (isTruncated) {
       container.classList.remove(`truncated-${maxLines}-lines`);
       if (toggle) toggle.textContent = 'Скрыть';
@@ -47,10 +47,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const franchiseId = pageDataElement.dataset.franchiseId
   const csrfTokenInput = document.querySelector('input[name="csrfmiddlewaretoken"]')
   const csrfToken = csrfTokenInput ? csrfTokenInput.value : getCookie('csrftoken')
-  
+
   console.log('CSRF Token found:', !!csrfToken);
   console.log('Franchise ID found:', franchiseId);
-  
+
   if (!franchiseId) {
     console.error('Franchise ID не найден в data-атрибутах.')
           return
@@ -72,27 +72,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     const searchInput = document.getElementById(searchInputId)
     const searchResults = document.getElementById(resultsId)
-    
+
     if (!searchInput) {
       console.error(`Search input with id '${searchInputId}' not found`);
       return;
     }
-    
+
     if (!searchResults) {
       console.error(`Search results with id '${resultsId}' not found`);
       return;
     }
-    
+
     const debouncedSearch = debounce(function (query) {
       if (query.length < 2) {
         searchResults.innerHTML = ''
         return
       }
-      
+
       console.log('Searching for:', query);
-      
+
       fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`, {
-        headers: { 
+        headers: {
           'X-Requested-With': 'XMLHttpRequest',
           'X-CSRFToken': csrfToken
         },
@@ -136,11 +136,11 @@ document.addEventListener('DOMContentLoaded', function () {
         searchResults.innerHTML = '<li class="list-group-item">Ошибка поиска</li>'
       })
     }, 300)
-    
+
     searchInput.addEventListener('input', function () {
       debouncedSearch(this.value.trim())
     })
-    
+
     if (searchModalElement) {
     searchModalElement.addEventListener('hidden.bs.modal', function () {
           if (searchInput) searchInput.value = '';
@@ -159,16 +159,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     const newOwnerNameEl = document.getElementById('newOwnerName');
     const newOwnerIdEl = document.getElementById('newOwnerId');
-    
+
     console.log('newOwnerName element found:', !!newOwnerNameEl);
     console.log('newOwnerId element found:', !!newOwnerIdEl);
-    
+
     if (!newOwnerNameEl || !newOwnerIdEl) {
       console.error('Required elements for change owner not found');
       alert('Ошибка: элементы формы не найдены');
       return;
     }
-    
+
     newOwnerNameEl.textContent = user.name;
     newOwnerIdEl.value = user.id;
     console.log('Set new owner name:', user.name, 'id:', user.id);
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
       alert('Ошибка: Bootstrap не загружен');
     }
   });
-  
+
   const confirmChangeOwnerBtn = document.querySelector('.confirm-change-owner')
   console.log('Confirm change owner button found:', !!confirmChangeOwnerBtn);
   if (confirmChangeOwnerBtn) {
@@ -193,19 +193,19 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       const newOwnerId = newOwnerIdEl.value;
-      
+
       if (!newOwnerId) {
         alert('Не выбран новый владелец.');
         return;
       }
-      
+
       if (!csrfToken) {
         alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
         return;
       }
-      
+
       console.log('Sending change owner request for franchise:', franchiseId, 'new owner:', newOwnerId);
-      
+
               fetch(`/change_owner_franchise/${franchiseId}/`, {
         method: 'POST',
         headers: {
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (e) {
           console.error('Error parsing JSON response:', e);
         }
-        
+
         if (response.ok && data && data.success) {
           alert('Владелец успешно изменён!');
           location.reload();
@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let selectedInvestor = null;
   if (addInvestorModalEl) {
     console.log('Add investor modal found');
-    
+
     setupUserSearch('addInvestorModal', 'investorSearchInput', 'investorSearchResults', (user) => {
       console.log('Investor selected:', user);
       selectedInvestor = user;
@@ -256,52 +256,52 @@ document.addEventListener('DOMContentLoaded', function () {
       investorSearchInput.value = user.name;
       investorSearchInput.disabled = true;
       }
-      
+
       const searchResults = document.getElementById('investorSearchResults');
       console.log('Investor search results found:', !!searchResults);
       if (searchResults) {
         searchResults.innerHTML = '';
       }
-      
+
       const addInvestmentButton = document.getElementById('addInvestmentButton');
       console.log('Add investment button found in setup:', !!addInvestmentButton);
       if (addInvestmentButton) {
         addInvestmentButton.disabled = false;
       }
     });
-    
+
     const addInvestmentButton = document.getElementById('addInvestmentButton');
     console.log('Add investment button found:', !!addInvestmentButton);
     if (addInvestmentButton) {
     addInvestmentButton.addEventListener('click', function() {
         console.log('Add investment button clicked');
-        
+
         if (!selectedInvestor) {
             alert('Сначала выберите пользователя из списка.');
             return;
         }
-        
+
         const amountInput = document.getElementById('investmentAmount');
         if (!amountInput) {
           console.error('Investment amount input not found');
           alert('Ошибка: поле суммы инвестиции не найдено');
           return;
         }
-        
+
         const amount = amountInput.value;
         console.log('Investment amount:', amount);
         if (!amount || parseFloat(amount) <= 0) {
             alert('Введите корректную сумму инвестиции.');
             return;
         }
-        
+
         if (!csrfToken) {
           alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
           return;
         }
-        
+
         console.log('Adding investor:', selectedInvestor, 'amount:', amount);
-        
+
         fetch(`/add_investor_franchise/${franchiseId}/`, {
             method: 'POST',
             headers: {
@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } catch (e) {
                 console.error('Error parsing JSON response:', e);
             }
-            
+
             if (response.ok && data && data.success) {
                 alert('Инвестор успешно добавлен!');
                 loadCurrentInvestors();
@@ -342,31 +342,31 @@ document.addEventListener('DOMContentLoaded', function () {
       console.error('Add investment button not found');
     }
   }
-  
+
     function resetAddInvestorForm() {
       console.log('Resetting add investor form');
         selectedInvestor = null;
-      
+
         const searchInput = document.getElementById('investorSearchInput');
       console.log('Search input found in reset:', !!searchInput);
       if (searchInput) {
         searchInput.value = '';
         searchInput.disabled = false;
       }
-      
+
       const amountInput = document.getElementById('investmentAmount');
       console.log('Amount input found in reset:', !!amountInput);
       if (amountInput) {
           amountInput.value = '';
       }
-      
+
       const addButton = document.getElementById('addInvestmentButton');
       console.log('Add button found in reset:', !!addButton);
       if (addButton) {
           addButton.disabled = true;
       }
   }
-  
+
     function loadCurrentInvestors() {
       console.log('Loading current investors for franchise:', franchiseId);
         fetch(`/get_investors_franchise/${franchiseId}/`)
@@ -408,17 +408,17 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Delete investment button clicked');
             const userId = deleteButton.dataset.userId;
             console.log('Deleting investment for user:', userId);
-            
+
             if (!userId) {
                 alert('Ошибка: не удалось определить пользователя.');
                 return;
             }
-            
+
             if (!csrfToken) {
                 alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
                 return;
             }
-            
+
             if (confirm(`Вы уверены, что хотите удалить этого инвестора?`)) {
                 console.log('Sending delete investment request');
                 fetch(`/delete_investment_franchise/${franchiseId}/${userId}/`, {
@@ -428,9 +428,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => {
                     console.log('Delete investment response status:', response.status);
                     if (!response.ok) {
-                        return response.text().then(text => { 
+                        return response.text().then(text => {
                             console.error('Delete investment error response:', text);
-                            throw new Error(text) 
+                            throw new Error(text)
                         });
                     }
                     return response.json();
@@ -458,7 +458,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateStartupFinancials(investorCount, amountRaised) {
         console.log('Updating financials:', { investorCount, amountRaised });
-      
+
         const investorCountDisplay = document.getElementById('investor-count-display');
       console.log('Investor count display found:', !!investorCountDisplay);
         if (investorCountDisplay) {
@@ -466,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             console.error('Element with id "investor-count-display" not found.');
         }
-      
+
         const amountRaisedCard = document.querySelector('.info-card-value-button.accent-blue-bg');
       console.log('Amount raised card found:', !!amountRaisedCard);
         if (amountRaisedCard) {
@@ -474,29 +474,29 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
           console.error('Amount raised card element not found.');
         }
-      
+
         const fundingGoal = parseFloat(pageDataElement.dataset.fundingGoal) || 0;
         const progressPercentage = fundingGoal > 0 ? (amountRaised / fundingGoal) * 100 : 0;
-      
+
         const progressBar = document.querySelector('.progress-animation-container');
         const progressText = document.querySelector('.progress-percentage');
-      
+
       console.log('Progress bar found:', !!progressBar);
       console.log('Progress text found:', !!progressText);
-      
+
         if (progressBar) {
             progressBar.style.width = `${Math.min(progressPercentage, 100)}%`;
       } else {
           console.error('Progress bar element not found.');
         }
-      
+
         if (progressText) {
             progressText.textContent = `${Math.floor(progressPercentage)}%`;
       } else {
           console.error('Progress text element not found.');
         }
     }
-  
+
   if (addInvestorModalEl) {
     addInvestorModalEl.addEventListener('show.bs.modal', function () {
         console.log('Add investor modal shown');
@@ -523,7 +523,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const ratingContainers = ratingStars.querySelectorAll('.rating-icon-container');
     const currentRatingStr = ratingStars.dataset.rating || '0';
     const currentRating = parseFloat(currentRatingStr.replace(',', '.')) || 0;
-    
+
     console.log('Found rating stars:', ratingStars);
     console.log('Rating containers count:', ratingContainers.length);
     console.log('Current rating:', currentRating);
@@ -535,7 +535,7 @@ document.addEventListener('DOMContentLoaded', function () {
     ratingContainers.forEach((container, index) => {
       const emptyIcon = container.querySelector('.icon-empty');
       const filledIcon = container.querySelector('.icon-filled');
-      
+
       if (emptyIcon) {
         emptyIcon.style.display = 'block';
         emptyIcon.style.opacity = '1';
@@ -544,7 +544,7 @@ document.addEventListener('DOMContentLoaded', function () {
         filledIcon.style.display = 'none';
         filledIcon.style.opacity = '0';
       }
-      
+
       console.log(`Container ${index + 1} initial state:`, {
         emptyDisplay: emptyIcon ? emptyIcon.style.display : 'no element',
         filledDisplay: filledIcon ? filledIcon.style.display : 'no element'
@@ -556,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (ratingStars.dataset.interactive === 'true') {
       ratingContainers.forEach((container, index) => {
         const value = index + 1;
-        
+
         container.addEventListener('mouseenter', () => {
           console.log('Mouse enter on rating container:', value);
           updateRatingDisplay(value);
@@ -578,14 +578,14 @@ document.addEventListener('DOMContentLoaded', function () {
   function updateRatingDisplay(rating) {
     console.log('Updating rating display to:', rating);
     const ratingContainers = document.querySelectorAll('.rating-stars .rating-icon-container');
-    
+
     ratingContainers.forEach((container, index) => {
       const value = index + 1;
       const emptyIcon = container.querySelector('.icon-empty');
       const filledIcon = container.querySelector('.icon-filled');
-      
+
       console.log(`Container ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
-      
+
       if (value <= Math.floor(rating)) {
         if (emptyIcon) {
           emptyIcon.style.display = 'none';
@@ -623,7 +623,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function submitRating(rating) {
     console.log('Submitting rating:', rating);
-    
+
     if (!csrfToken) {
       alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
       return;
@@ -656,19 +656,19 @@ document.addEventListener('DOMContentLoaded', function () {
           ratingStars.dataset.rating = rating;
           updateRatingDisplay(rating);
         }
-        
+
         const averageRatingElement = document.querySelector('.rating-label');
         if (averageRatingElement && data.average_rating) {
           averageRatingElement.textContent = `Рейтинг ${data.average_rating.toFixed(1)}/5`;
         }
-        
+
         ratingStars.removeAttribute('data-interactive');
         ratingStars.querySelectorAll('.rating-icon-container').forEach(container => {
           container.removeEventListener('mouseenter', () => {});
           container.removeEventListener('mouseleave', () => {});
           container.removeEventListener('click', () => {});
         });
-        
+
         alert('Спасибо за оценку!');
       } else {
         alert(data.error || 'Ошибка при отправке оценки.');
@@ -683,18 +683,18 @@ document.addEventListener('DOMContentLoaded', function () {
   function setupCommentRatings() {
     console.log('Setting up comment ratings...');
     const commentRatings = document.querySelectorAll('.comment-rating');
-    
+
     commentRatings.forEach((ratingContainer, index) => {
       const rating = parseFloat(ratingContainer.dataset.rating) || 0;
       const ratingIcons = ratingContainer.querySelectorAll('.rating-icon-container');
-      
+
       console.log(`Comment ${index + 1} rating:`, rating);
-      
+
       ratingIcons.forEach((iconContainer, iconIndex) => {
         const value = iconIndex + 1;
         const emptyIcon = iconContainer.querySelector('.icon-empty');
         const filledIcon = iconContainer.querySelector('.icon-filled');
-        
+
         if (value <= Math.floor(rating)) {
           if (emptyIcon) {
             emptyIcon.style.display = 'none';
@@ -734,21 +734,21 @@ document.addEventListener('DOMContentLoaded', function () {
   function setupOverallRating() {
     console.log('Setting up overall rating...');
     const overallRating = document.querySelector('.overall-rating-stars');
-    
+
     if (overallRating) {
       const rating = parseFloat(overallRating.dataset.rating) || 0;
       const ratingIcons = overallRating.querySelectorAll('.rating-icon-container');
-      
+
       console.log('Overall rating:', rating);
       console.log('Rating icons found:', ratingIcons.length);
-      
+
       ratingIcons.forEach((iconContainer, iconIndex) => {
         const value = iconIndex + 1;
         const emptyIcon = iconContainer.querySelector('.icon-empty');
         const filledIcon = iconContainer.querySelector('.icon-filled');
-        
+
         console.log(`Icon ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
-        
+
         if (value <= Math.floor(rating)) {
           if (emptyIcon) {
             emptyIcon.style.display = 'none';
@@ -791,15 +791,15 @@ document.addEventListener('DOMContentLoaded', function () {
   function setupTextTruncation() {
     const introSection = document.getElementById('intro-section');
     const aboutSection = document.getElementById('about-section');
-    
+
     if (introSection) {
       const introText = introSection.querySelector('.text-content');
       const introToggle = introSection.querySelector('.text-truncate-toggle');
-      
+
       if (introText && introToggle) {
         const lineHeight = parseInt(window.getComputedStyle(introText).lineHeight);
         const maxHeight = lineHeight * 3;
-        
+
         if (introText.scrollHeight <= maxHeight) {
           introToggle.style.display = 'none';
           introSection.classList.remove('truncated-3-lines');
@@ -809,15 +809,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     }
-    
+
     if (aboutSection) {
       const aboutText = aboutSection.querySelector('.text-content');
       const aboutToggle = aboutSection.querySelector('.text-truncate-toggle');
-      
+
       if (aboutText && aboutToggle) {
         const lineHeight = parseInt(window.getComputedStyle(aboutText).lineHeight);
         const maxHeight = lineHeight * 5;
-        
+
         if (aboutText.scrollHeight <= maxHeight) {
           aboutToggle.style.display = 'none';
           aboutSection.classList.remove('truncated-5-lines');
@@ -830,37 +830,37 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   setupRatingStars();
-  
+
   setupCommentRatings();
-  
+
   setupOverallRating();
-  
+
   setupSimilarStartupsRatings();
-  
+
   setupSimilarStartupsShowMore();
-  
+
   setupCommentsShowMore();
-  
+
   setupCommentRatingInput();
-  
+
   setupTextTruncation();
   setupModeratorDelete();
-  
+
   function setupSimilarStartupsRatings() {
     console.log('Setting up similar startups ratings...');
     const similarRatings = document.querySelectorAll('.similar-card-rating');
-    
+
     similarRatings.forEach((ratingContainer, index) => {
       const rating = parseFloat(ratingContainer.dataset.rating) || 0;
       const ratingIcons = ratingContainer.querySelectorAll('.rating-icon-container');
-      
+
       console.log(`Similar startup ${index + 1} rating:`, rating);
-      
+
       ratingIcons.forEach((iconContainer, iconIndex) => {
         const value = iconIndex + 1;
         const emptyIcon = iconContainer.querySelector('.icon-empty');
         const filledIcon = iconContainer.querySelector('.icon-filled');
-        
+
         if (value <= Math.floor(rating)) {
           if (emptyIcon) {
             emptyIcon.style.display = 'none';
@@ -900,24 +900,24 @@ document.addEventListener('DOMContentLoaded', function () {
   function setupSimilarStartupsShowMore() {
     console.log('Setting up similar startups show more button...');
     const showMoreButton = document.querySelector('.show-more-similar');
-    
+
     if (showMoreButton) {
       console.log('Show more button found');
       showMoreButton.addEventListener('click', (e) => {
         e.preventDefault();
         console.log('Show more button clicked');
-        
+
         const franchiseId = document.querySelector('.franchise-detail-page').dataset.franchiseId;
         const loadSimilarUrl = document.querySelector('.franchise-detail-page').dataset.loadSimilarUrl;
-        
+
         if (!loadSimilarUrl) {
           console.error('Load similar URL not found');
           return;
         }
-        
+
         showMoreButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Загрузка...';
         showMoreButton.disabled = true;
-        
+
         fetch(loadSimilarUrl)
           .then(response => {
             if (!response.ok) {
@@ -955,7 +955,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const showMoreButton = document.querySelector('.show-more-comments');
     const hideButton = document.querySelector('.hide-comments-button');
     const hiddenComments = document.querySelectorAll('.comment-card.hidden');
-    
+
     if (showMoreButton && hiddenComments.length > 0) {
       showMoreButton.addEventListener('click', function() {
         hiddenComments.forEach(comment => {
@@ -967,7 +967,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     }
-    
+
     if (hideButton) {
       hideButton.addEventListener('click', function() {
         const allComments = document.querySelectorAll('.comment-card');
@@ -1011,10 +1011,10 @@ document.addEventListener('DOMContentLoaded', function () {
   function setupCommentRatingInput() {
     const commentForm = document.querySelector('.comment-form');
     if (!commentForm) return;
-    
+
     const textarea = commentForm.querySelector('.comment-textarea');
     if (!textarea) return;
-    
+
     const ratingContainer = document.createElement('div');
     ratingContainer.className = 'comment-rating-input';
     ratingContainer.innerHTML = `
@@ -1043,30 +1043,30 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
       <input type="hidden" name="user_rating" value="0" class="rating-input-hidden">
     `;
-    
+
     commentForm.insertBefore(ratingContainer, textarea);
-    
+
     const ratingStars = ratingContainer.querySelector('.rating-input-stars');
     const ratingIcons = ratingStars.querySelectorAll('.rating-input-icon');
     const hiddenInput = ratingContainer.querySelector('.rating-input-hidden');
-    
+
     ratingIcons.forEach((icon, index) => {
       const value = index + 1;
-      
+
       icon.addEventListener('click', function() {
         const currentRating = parseInt(ratingStars.dataset.rating);
         const newRating = currentRating === value ? 0 : value;
-        
+
         ratingStars.dataset.rating = newRating;
         hiddenInput.value = newRating;
-        
+
         updateCommentRatingDisplay(ratingIcons, newRating);
       });
-      
+
       icon.addEventListener('mouseenter', function() {
         updateCommentRatingDisplay(ratingIcons, value);
       });
-      
+
       icon.addEventListener('mouseleave', function() {
         const currentRating = parseInt(ratingStars.dataset.rating);
         updateCommentRatingDisplay(ratingIcons, currentRating);
@@ -1079,7 +1079,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const value = index + 1;
       const emptyIcon = icon.querySelector('.icon-empty');
       const filledIcon = icon.querySelector('.icon-filled');
-      
+
       if (value <= rating) {
         if (emptyIcon) {
           emptyIcon.style.display = 'none';
@@ -1108,7 +1108,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Setting up tab navigation...');
     const tabButtons = document.querySelectorAll('.tab-button');
     const contentSections = document.querySelectorAll('.content-section');
-    
+
     console.log('Found tab buttons:', tabButtons.length);
     console.log('Found content sections:', contentSections.length);
 
@@ -1127,10 +1127,10 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('Tab button clicked, target:', targetId);
         console.log('Button element:', button);
         console.log('Button text:', button.textContent.trim());
-        
+
         tabButtons.forEach(btn => btn.classList.remove('active'));
         contentSections.forEach(section => section.classList.remove('active'));
-        
+
         button.classList.add('active');
         const targetSection = document.getElementById(targetId);
         console.log('Target section found:', !!targetSection);
@@ -1140,8 +1140,8 @@ document.addEventListener('DOMContentLoaded', function () {
           console.log('Section classes after activation:', targetSection.className);
         } else {
           console.error('Target section not found:', targetId);
-          const partialMatch = Array.from(contentSections).find(section => 
-            section.id.includes(targetId.replace('-section', '')) || 
+          const partialMatch = Array.from(contentSections).find(section =>
+            section.id.includes(targetId.replace('-section', '')) ||
             targetId.includes(section.id.replace('-section', ''))
           );
           if (partialMatch) {
@@ -1157,7 +1157,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function setupActionButtons() {
     console.log('Setting up action buttons...');
-    
+
     const chatButton = document.querySelector('.chat-button');
     console.log('Chat button found:', !!chatButton);
     if (chatButton) {
@@ -1166,13 +1166,13 @@ document.addEventListener('DOMContentLoaded', function () {
       chatButton.addEventListener('click', (e) => {
         e.preventDefault();
         console.log('Chat button clicked');
-        
+
         const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
         if (!ownerId) {
           alert('Ошибка: не удалось определить автора стартапа');
           return;
         }
-        
+
         window.location.href = `/cosmochat/`;
       });
     } else {
@@ -1187,13 +1187,13 @@ document.addEventListener('DOMContentLoaded', function () {
       writeButton.addEventListener('click', (e) => {
         e.preventDefault();
         console.log('Write button clicked');
-        
+
         const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
         if (!ownerId) {
           alert('Ошибка: не удалось определить автора стартапа');
           return;
         }
-        
+
         window.location.href = `/cosmochat/`;
       });
     } else {
@@ -1215,27 +1215,27 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Setting up timeline steps...');
     const timelineSteps = document.querySelectorAll('.timeline-step');
     const descriptionItems = document.querySelectorAll('.timeline-description-item');
-    
+
     if (timelineSteps.length === 0) {
       console.log('No timeline steps found');
       return;
     }
-    
+
     console.log('Found timeline steps:', timelineSteps.length);
     console.log('Found description items:', descriptionItems.length);
-    
+
     timelineSteps.forEach((step, index) => {
       const stepNumber = step.dataset.step;
       console.log(`Setting up step ${stepNumber} (index ${index})`);
-      
+
       step.addEventListener('click', () => {
         console.log(`Step ${stepNumber} clicked`);
-        
+
         timelineSteps.forEach(s => s.classList.remove('active-step-display'));
         descriptionItems.forEach(d => d.classList.remove('active'));
-        
+
         step.classList.add('active-step-display');
-        
+
         const targetDescription = document.querySelector(`.timeline-description-item:nth-child(${parseInt(stepNumber)})`);
         if (targetDescription) {
           targetDescription.classList.add('active');
@@ -1244,10 +1244,10 @@ document.addEventListener('DOMContentLoaded', function () {
           console.error(`Description not found for step ${stepNumber}`);
         }
       });
-      
+
       step.style.cursor = 'pointer';
     });
   }
 
   setupTimelineSteps();
-}); 
+});

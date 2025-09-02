@@ -5,7 +5,7 @@ import dj_database_url
 from django.core.files.storage import default_storage
 logger = logging.getLogger(__name__)
 BASE_DIR = Path(__file__).resolve().parent.parent
-# Убираем жестко закодированные токены
+
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_OWNER_CHAT_ID = os.getenv("TELEGRAM_OWNER_CHAT_ID")
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
@@ -43,14 +43,14 @@ SECRET_KEY = os.getenv(
     "DJANGO_SECRET_KEY",
     "django-insecure-0w+_*%hwspl5i9b)%9!i-3$dq5(e7i%e9*lh=v!u$4brh!5ok9",
 )
-# Временно включаем DEBUG для отладки
+
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 ALLOWED_HOSTS = [
     "*",
     "greatideas.ru",
     "www.greatideas.ru",
 ]
-# Убираем django-vite из INSTALLED_APPS временно
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -199,7 +199,7 @@ LOGGING = {
         },
     },
 }
-# Настройки SSL для работы с прокси
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", "False") == "True"
 SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "False") == "True"
@@ -212,7 +212,7 @@ SECURE_HSTS_PRELOAD = os.getenv("SECURE_HSTS_PRELOAD", "True") == "True"
 SECURE_CONTENT_TYPE_NOSNIFF = os.getenv("SECURE_CONTENT_TYPE_NOSNIFF", "True") == "True"
 SECURE_BROWSER_XSS_FILTER = os.getenv("SECURE_BROWSER_XSS_FILTER", "True") == "True"
 X_FRAME_OPTIONS = os.getenv("X_FRAME_OPTIONS", "DENY")
-# Дополнительные настройки для HTTPS
+
 USE_X_FORWARDED_HOST = True
 USE_X_FORWARDED_PORT = True
 logger.info("=== Проверка настроек Django ===")

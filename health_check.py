@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+
 """
 Скрипт для проверки здоровья Django приложения
 """
@@ -7,11 +7,11 @@ import sys
 import django
 from pathlib import Path
 
-# Добавляем путь к проекту
+
 BASE_DIR = Path(__file__).resolve().parent
 sys.path.append(str(BASE_DIR))
 
-# Настраиваем Django
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'marketplace.settings')
 django.setup()
 
@@ -49,12 +49,12 @@ def check_environment():
         'DJANGO_SECRET_KEY',
         'DATABASE_URL',
     ]
-    
+
     missing_vars = []
     for var in required_vars:
         if not os.getenv(var):
             missing_vars.append(var)
-    
+
     if missing_vars:
         logger.error(f"❌ Отсутствуют переменные окружения: {', '.join(missing_vars)}")
         return False
@@ -65,13 +65,13 @@ def check_environment():
 def main():
     """Основная функция проверки"""
     logger.info("🔍 Начинаем проверку здоровья приложения...")
-    
+
     checks = [
         check_environment(),
         check_database(),
         check_static_files(),
     ]
-    
+
     if all(checks):
         logger.info("✅ Все проверки пройдены успешно")
         sys.exit(0)

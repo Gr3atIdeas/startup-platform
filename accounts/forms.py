@@ -279,7 +279,7 @@ class FranchiseForm(forms.ModelForm):
         label="Категория *",
         required=True,
     )
-    # Стадий для новых сущностей не используем
+
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
     video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
@@ -294,7 +294,7 @@ class FranchiseForm(forms.ModelForm):
         except Exception as e:
             print(f"Error fetching planet URLs: {e}")
             self.fields["planet_image"].choices = []
-        
+
 
     class Meta:
         model = Franchises
@@ -308,7 +308,7 @@ class FranchiseForm(forms.ModelForm):
             "pitch_deck_url",
             "logo",
             "direction",
-            # stage removed for new entity creation
+
             "agree_rules",
             "agree_data_processing",
             "creatives",
@@ -324,7 +324,7 @@ class FranchiseForm(forms.ModelForm):
             "terms": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Условия сотрудничества"}),
             "investment_size": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Введите сумму ₽"}),
             "franchise_cost": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Стоимость франшизы ₽"}),
-            
+
             "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
             "direction": forms.Select(attrs={"class": "form-control"}),
             "logo": forms.FileInput(attrs={"class": "form-control-file"}),
@@ -380,7 +380,7 @@ class AgencyForm(forms.ModelForm):
         ("Брендинг", "Брендинг"),
         ("Видео и мультимедиа", "Видео и мультимедиа"),
     ], label="Категория *", required=True)
-    # Стадий для новых сущностей не используем
+
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
     video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
@@ -395,7 +395,7 @@ class AgencyForm(forms.ModelForm):
         except Exception as e:
             print(f"Error fetching planet URLs: {e}")
             self.fields["planet_image"].choices = []
-        
+
 
     class Meta:
         model = Agencies
@@ -406,7 +406,7 @@ class AgencyForm(forms.ModelForm):
             "terms",
             "pitch_deck_url",
             "logo",
-            # stage removed for new entity creation
+
             "agree_rules",
             "agree_data_processing",
             "creatives",
@@ -470,7 +470,7 @@ class SpecialistForm(forms.ModelForm):
         ("Брендинг", "Брендинг"),
         ("Видео и мультимедиа", "Видео и мультимедиа"),
     ], label="Категория *", required=True)
-    # Стадий для новых сущностей не используем
+
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
     video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
@@ -497,7 +497,7 @@ class SpecialistForm(forms.ModelForm):
             "additional_info",
             "pitch_deck_url",
             "logo",
-            # stage removed for new entity creation
+
             "agree_rules",
             "agree_data_processing",
             "creatives",

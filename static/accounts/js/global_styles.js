@@ -73,15 +73,15 @@ document.addEventListener('DOMContentLoaded', function () {
   })
   const catalogDropdownButtons = document.querySelectorAll('.catalog-dropdown-button');
   const catalogDropdownContainers = document.querySelectorAll('.catalog-dropdown-container');
-  
+
   catalogDropdownButtons.forEach((button, index) => {
       const container = catalogDropdownContainers[index];
       const menu = container.querySelector('.catalog-dropdown-menu');
-      
+
       if (button && menu && container) {
           button.addEventListener('click', function (event) {
           event.stopPropagation();
-              
+
               closeAllHeaderMenus();
               catalogDropdownContainers.forEach(cont => {
                   cont.classList.remove('open');
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   }
               });
               container.classList.toggle('open');
-              
+
               const overlay = container.nextElementSibling;
               if (overlay && overlay.classList.contains('catalog-dropdown-overlay')) {
                   if (container.classList.contains('open')) {
@@ -106,14 +106,14 @@ document.addEventListener('DOMContentLoaded', function () {
           });
       }
   });
-  
+
   document.addEventListener('click', function (event) {
       catalogDropdownContainers.forEach(container => {
           if (container.classList.contains('open')) {
               const menu = container.querySelector('.catalog-dropdown-menu');
               const button = container.querySelector('.catalog-dropdown-button');
               const overlay = container.nextElementSibling;
-              
+
               if (!menu.contains(event.target) && !button.contains(event.target)) {
                   container.classList.remove('open');
                   const overlay = container.nextElementSibling;
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
           }
       });
   });
-  
+
   const catalogDropdownOverlays = document.querySelectorAll('.catalog-dropdown-overlay');
   catalogDropdownOverlays.forEach(overlay => {
       overlay.addEventListener('click', function() {
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
           document.body.classList.remove('catalog-menu-open');
       });
   });
-  
+
   document.addEventListener('keydown', function(event) {
       if (event.key === 'Escape') {
           catalogDropdownContainers.forEach(container => {
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   }
               }
           });
-          
+
           createDropdownContainers.forEach(container => {
               if (container.classList.contains('open')) {
                   container.classList.remove('open');
@@ -164,18 +164,18 @@ document.addEventListener('DOMContentLoaded', function () {
           });
       }
   });
-  
+
   const createDropdownButtons = document.querySelectorAll('.create-dropdown-button');
   const createDropdownContainers = document.querySelectorAll('.create-dropdown-container');
-  
+
   createDropdownButtons.forEach((button, index) => {
       const container = createDropdownContainers[index];
       const menu = container.querySelector('.create-dropdown-menu');
-      
+
       if (button && menu && container) {
           button.addEventListener('click', function (event) {
               event.stopPropagation();
-              
+
               closeAllHeaderMenus();
               createDropdownContainers.forEach(cont => {
                   cont.classList.remove('open');
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   }
               });
               container.classList.toggle('open');
-              
+
               const overlay = container.nextElementSibling;
               if (overlay && overlay.classList.contains('create-dropdown-overlay')) {
                   if (container.classList.contains('open')) {
@@ -200,14 +200,14 @@ document.addEventListener('DOMContentLoaded', function () {
           });
       }
   });
-  
+
       document.addEventListener('click', function (event) {
       createDropdownContainers.forEach(container => {
           if (container.classList.contains('open')) {
               const menu = container.querySelector('.create-dropdown-menu');
               const button = container.querySelector('.create-dropdown-button');
               const overlay = container.nextElementSibling;
-              
+
               if (!menu.contains(event.target) && !button.contains(event.target)) {
                   container.classList.remove('open');
                   const overlay = container.nextElementSibling;
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
           }
       });
   });
-  
+
   const createDropdownOverlays = document.querySelectorAll('.create-dropdown-overlay');
   createDropdownOverlays.forEach(overlay => {
       overlay.addEventListener('click', function() {

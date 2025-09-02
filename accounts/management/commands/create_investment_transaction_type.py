@@ -13,7 +13,7 @@ class Command(BaseCommand):
                     "description": "Investment transaction type"
                 }
             )
-            
+
             if created:
                 self.stdout.write(
                     self.style.SUCCESS('Successfully created investment transaction type')
@@ -22,8 +22,8 @@ class Command(BaseCommand):
                 self.stdout.write(
                     self.style.WARNING('Investment transaction type already exists')
                 )
-                
+
         except Exception as e:
             self.stdout.write(
                 self.style.ERROR(f'Error creating investment transaction type: {e}')
-            ) 
+            )

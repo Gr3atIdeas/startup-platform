@@ -21,14 +21,14 @@ def seed_specialists(apps, schema_editor):
         ("Юлия Павлова", "ИИ"),
     ]
 
-    # Определяем стартовое значение PK (startup_id)
+
     with connection.cursor() as cursor:
         cursor.execute("SELECT COALESCE(MAX(startup_id), 0) FROM specialists;")
         row = cursor.fetchone()
         next_id = (row[0] or 0) + 1
 
         for title, category in entries:
-            # если уже есть с таким title — пропускаем
+
             cursor.execute("SELECT 1 FROM specialists WHERE title=%s LIMIT 1;", [title])
             if cursor.fetchone():
                 continue

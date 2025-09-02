@@ -14,4 +14,4 @@ class Migration(migrations.Migration):
             name='moderator_comment',
             field=models.TextField(blank=True, null=True),
         ),
-    ] 
+    ]

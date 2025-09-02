@@ -550,7 +550,7 @@ body {
   word-wrap: break-word;
 }
 
-/* Category carousel */
+
 .category-carousel {
   position: relative;
   width: 100%;
@@ -583,7 +583,7 @@ body {
 .category-carousel-arrow-left { left: 0; }
 .category-carousel-arrow-right { right: 0; }
 
-/* Card sizing and hover effects */
+
 .journey-start-category {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -604,7 +604,7 @@ body {
   box-shadow: 0 8px 24px rgba(0,0,0,0.25);
 }
 
-/* Center focus scale */
+
 .category-carousel-inner .journey-start-category { transform-origin: center; }
 
 

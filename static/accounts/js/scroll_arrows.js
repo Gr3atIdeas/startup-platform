@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function smoothScrollTo(target) {
         const targetPosition = target === 'top' ? 0 : document.documentElement.scrollHeight - window.innerHeight;
-        
+
         window.scrollTo({
             top: targetPosition,
             behavior: 'smooth'
@@ -44,15 +44,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
         const hasVerticalScroll = documentHeight > windowHeight;
-        
+
         if (hasVerticalScroll) {
             scrollArrowUp.classList.add('show');
             scrollArrowDown.classList.add('show');
-            
+
             if (scrollTop <= 50) {
                 scrollArrowUp.classList.remove('show');
             }
-            
+
             if (scrollTop + windowHeight >= documentHeight - 50) {
                 scrollArrowDown.classList.remove('show');
             }
@@ -73,4 +73,4 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('resize', function() {
         updateScrollArrows();
     });
-}); 
+});

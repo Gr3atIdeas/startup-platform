@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const closeTicketBtn = document.querySelector('.close-ticket-btn');
-    
+
     if (closeTicketBtn) {
         closeTicketBtn.addEventListener('click', function() {
             if (confirm('Вы уверены, что хотите закрыть эту заявку?')) {
@@ -8,28 +8,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     const statusSelect = document.querySelector('.status-select');
     if (statusSelect) {
         statusSelect.addEventListener('change', function() {
             updateTicketStatus(this.value);
         });
     }
-    
+
     const ticketCards = document.querySelectorAll('.ticket-card');
     ticketCards.forEach(card => {
         card.addEventListener('click', function() {
-            // Используем data-атрибут для получения ID заявки
+
             const ticketId = this.getAttribute('data-ticket-id');
-            console.log('Found ticket ID from data attribute:', ticketId); // Отладочная информация
-            
+            console.log('Found ticket ID from data attribute:', ticketId);
+
             if (ticketId && !isNaN(ticketId)) {
                 const url = `/support/ticket/${ticketId}/`;
-                console.log('Redirecting to:', url); // Отладочная информация
+                console.log('Redirecting to:', url);
                 window.location.href = url;
             } else {
                 console.error('Invalid ticket ID:', ticketId);
-                // Fallback: попробуем получить из текста элемента
+
                 const ticketNumberElement = this.querySelector('.ticket-info-right .detail-value:last-child');
                 if (ticketNumberElement) {
                     const fallbackId = ticketNumberElement.textContent.replace('#', '');
@@ -48,12 +48,12 @@ document.addEventListener('DOMContentLoaded', function() {
 function closeTicket() {
     const url = window.location.pathname;
     const ticketId = url.split('/').filter(segment => segment && segment !== 'close').pop();
-    
+
     if (!ticketId || isNaN(ticketId)) {
         alert('Ошибка: не удалось определить ID заявки');
         return;
     }
-    
+
     fetch(`/support/ticket/${ticketId}/close/`, {
         method: 'POST',
         headers: {
@@ -84,12 +84,12 @@ function closeTicket() {
 function updateTicketStatus(status) {
     const url = window.location.pathname;
     const ticketId = url.split('/').filter(segment => segment && segment !== 'close' && segment !== 'update-status').pop();
-    
+
     if (!ticketId || isNaN(ticketId)) {
         alert('Ошибка: не удалось определить ID заявки');
         return;
     }
-    
+
     fetch(`/support/ticket/${ticketId}/update-status/`, {
         method: 'POST',
         headers: {
