@@ -78,7 +78,7 @@ SOCIALACCOUNT_ADAPTER = 'accounts.adapter.CustomSocialAccountAdapter'
 SOCIALACCOUNT_PROVIDERS = {
     'telegram': {
         'APP': {
-            'client_id': 'testmarketstartup_bot',
+            'client_id': '8036121538',  # ID бота из токена
             'secret': TELEGRAM_BOT_TOKEN,
         },
         'AUTH_PARAMS': {
