@@ -3272,7 +3272,8 @@ def create_startup(request):
             proofs_ids = []
             video_ids = []
             file_save_errors = []
-            logo = form.cleaned_data.get("logo")
+            # Fallback: если по какой-то причине cleaned_data пустой, берем из request.FILES
+            logo = form.cleaned_data.get("logo") or request.FILES.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
                 base_name = os.path.splitext(logo.name)[0]
@@ -3303,6 +3304,8 @@ def create_startup(request):
                     messages.warning(request, "Не удалось сохранить логотип, но стартап создан.")
                     file_save_errors.append({"field": "logo", "error": str(e)})
             creatives = form.cleaned_data.get("creatives", [])
+            if not creatives:
+                creatives = request.FILES.getlist("creatives")
             if creatives:
                 creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
@@ -3339,6 +3342,8 @@ def create_startup(request):
                         messages.warning(request, "Не удалось сохранить один из креативов, но стартап создан.")
                         file_save_errors.append({"field": "creatives", "file": getattr(creative_file, "name", ""), "error": str(e)})
             proofs = form.cleaned_data.get("proofs", [])
+            if not proofs:
+                proofs = request.FILES.getlist("proofs")
             if proofs:
                 proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
@@ -3377,6 +3382,8 @@ def create_startup(request):
                         messages.warning(request, "Не удалось сохранить один из документов, но стартап создан.")
                         file_save_errors.append({"field": "proofs", "file": getattr(proof_file, "name", ""), "error": str(e)})
             videos = form.cleaned_data.get("video", [])
+            if not videos:
+                videos = request.FILES.getlist("video")
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
