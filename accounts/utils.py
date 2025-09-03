@@ -10,7 +10,7 @@ from html import escape
 logger = logging.getLogger(__name__)
 def _prefix_for(entity_type: str, entity_id: int, file_type: str) -> str:
     if file_type == "avatar":
-        return f"users/{entity_id}/avatar/{file_id}_"
+        return f"users/{entity_id}/avatar/"
     entity_root = {
         "startup": "startups",
         "franchise": "franchises",
@@ -42,7 +42,7 @@ def get_file_info(file_id, entity_id, file_type, entity_type: str = "startup"):
         if "Contents" in response and len(response["Contents"]) > 0:
             key = response["Contents"][0]["Key"]
 
-            url = f"{settings.S3_PUBLIC_BASE_URL}/{key}"
+            url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
             filename = key.split('/')[-1]
             parts = filename.split('_', 2)
             if len(parts) >= 3:
@@ -62,7 +62,7 @@ def get_file_info(file_id, entity_id, file_type, entity_type: str = "startup"):
                 if "Contents" in response2 and len(response2["Contents"]) > 0:
                     key = response2["Contents"][0]["Key"]
 
-                    url = f"{settings.S3_PUBLIC_BASE_URL}/{key}"
+                    url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
                     filename = key.split('/')[-1]
                     parts = filename.split('_', 2)
                     original_name = parts[2] if len(parts) >= 3 else filename
@@ -90,7 +90,7 @@ def get_file_url(file_id, entity_id, file_type, entity_type: str = "startup"):
         if "Contents" in response and len(response["Contents"]) > 0:
             key = response["Contents"][0]["Key"]
 
-            url = f"{settings.S3_PUBLIC_BASE_URL}/{key}"
+            url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
             logger.debug(f"Сгенерирован URL для {file_type}: {url}")
             return url
         else:
@@ -100,7 +100,7 @@ def get_file_url(file_id, entity_id, file_type, entity_type: str = "startup"):
                 if "Contents" in response2 and len(response2["Contents"]) > 0:
                     key = response2["Contents"][0]["Key"]
 
-                    url = f"{settings.S3_PUBLIC_BASE_URL}/{key}"
+                    url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
                     return url
             logger.warning(f"Файл не найден: prefix={prefix}")
             return None
