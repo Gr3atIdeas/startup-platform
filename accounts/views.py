@@ -3272,6 +3272,28 @@ def create_startup(request):
             proofs_ids = []
             video_ids = []
             file_save_errors = []
+            def try_save_file(file_obj, file_path):
+                try:
+                    default_storage.save(file_path, file_obj)
+                    return True
+                except Exception as e:
+                    logger.error(f"Ошибка default_storage.save для {file_path}: {e}", exc_info=True)
+                    try:
+                        s3 = boto3.client(
+                            's3',
+                            endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+                            aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+                            aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+                            region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                        )
+                        bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+                        content_type = getattr(file_obj, 'content_type', 'application/octet-stream')
+                        body_bytes = file_obj.read()
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
+                        return True
+                    except Exception as e2:
+                        logger.error(f"Ошибка прямой загрузки в S3 для {file_path}: {e2}", exc_info=True)
+                        return False
             # Fallback: если по какой-то причине cleaned_data пустой, берем из request.FILES
             logo = form.cleaned_data.get("logo") or request.FILES.get("logo")
             if logo:
@@ -3287,7 +3309,8 @@ def create_startup(request):
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
                 try:
                     logger.info(f"Попытка сохранить логотип по пути: {file_path}")
-                    default_storage.save(file_path, logo)
+                    if not try_save_file(logo, file_path):
+                        raise Exception("Не удалось сохранить логотип")
                     logger.info(f"Логотип успешно сохранён по пути: {file_path}")
                     logo_ids.append(logo_id)
                     FileStorage.objects.create(
@@ -3324,7 +3347,8 @@ def create_startup(request):
                     file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{safe_name}"
                     try:
                         logger.info(f"Попытка сохранить креатив по пути: {file_path}")
-                        default_storage.save(file_path, creative_file)
+                        if not try_save_file(creative_file, file_path):
+                            raise Exception("Не удалось сохранить креатив")
                         logger.info(f"Креатив успешно сохранён по пути: {file_path}")
                         creatives_ids.append(creative_id)
                         safe_create_file_storage(
@@ -3364,7 +3388,8 @@ def create_startup(request):
                     )
                     try:
                         logger.info(f"Попытка сохранить пруф по пути: {file_path}")
-                        default_storage.save(file_path, proof_file)
+                        if not try_save_file(proof_file, file_path):
+                            raise Exception("Не удалось сохранить документ")
                         logger.info(f"Пруф успешно сохранён по пути: {file_path}")
                         proofs_ids.append(proof_id)
                         safe_create_file_storage(
@@ -3402,7 +3427,8 @@ def create_startup(request):
                     file_path = f"startups/{startup.startup_id}/videos/{video_id}_{safe_name}"
                     try:
                         logger.info(f"Попытка сохранить видео по пути: {file_path}")
-                        default_storage.save(file_path, video)
+                        if not try_save_file(video, file_path):
+                            raise Exception("Не удалось сохранить видео")
                         logger.info(f"Видео успешно сохранено по пути: {file_path}")
                         video_ids.append(video_id)
                         safe_create_file_storage(
