@@ -3285,11 +3285,15 @@ def create_startup(request):
                             aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
                             aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
                             region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                            config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
                         )
                         bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
                         content_type = getattr(file_obj, 'content_type', 'application/octet-stream')
                         body_bytes = file_obj.read()
-                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
+                        try:
+                            s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type)
+                        except Exception:
+                            s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes)
                         return True
                     except Exception as e2:
                         logger.error(f"Ошибка прямой загрузки в S3 для {file_path}: {e2}", exc_info=True)

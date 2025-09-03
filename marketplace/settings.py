@@ -16,6 +16,7 @@ AWS_DEFAULT_ACL = "public-read"
 AWS_S3_FILE_OVERWRITE = False
 AWS_S3_REGION_NAME = "ru-central1"
 AWS_S3_SIGNATURE_VERSION = "s3v4"
+AWS_S3_ADDRESSING_STYLE = "virtual"
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
@@ -28,6 +29,7 @@ STORAGES = {
             "file_overwrite": AWS_S3_FILE_OVERWRITE,
             "region_name": AWS_S3_REGION_NAME,
             "signature_version": AWS_S3_SIGNATURE_VERSION,
+            "addressing_style": AWS_S3_ADDRESSING_STYLE,
         },
     },
     "staticfiles": {
