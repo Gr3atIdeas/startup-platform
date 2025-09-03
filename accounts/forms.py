@@ -81,7 +81,7 @@ class StartupForm(forms.ModelForm):
         required=True, help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
     )
     direction = forms.ModelChoiceField(
-        queryset=Directions.objects.all(), label="Направление *", required=True
+        queryset=Directions.objects.none(), label="Направление *", required=True
     )
     stage = forms.ModelChoiceField(
         queryset=StartupStages.objects.all(), label="Стадия *", required=True
@@ -124,6 +124,16 @@ class StartupForm(forms.ModelForm):
         except Exception as e:
             print(f"Error fetching planet URLs: {e}")
             self.fields["planet_image"].choices = []
+        allowed_startup_directions = [
+            'Technology', 'Healthcare', 'Finance', 'Education', 'Entertainment',
+            'Fashion', 'Food', 'Gaming', 'Real Estate', 'Travel', 'Agriculture',
+            'Energy', 'Environment', 'Social', 'Medicine', 'Auto', 'Delivery',
+            'Cafe', 'Fastfood', 'Health', 'Beauty', 'Transport', 'Sport',
+            'Psychology', 'AI', 'IT', 'Retail'
+        ]
+        self.fields["direction"].queryset = Directions.objects.filter(
+            direction_name__in=allowed_startup_directions
+        ).order_by("direction_name")
     class Meta:
         model = Startups
         fields = [
