@@ -134,6 +134,39 @@ class StartupForm(forms.ModelForm):
         self.fields["direction"].queryset = Directions.objects.filter(
             direction_name__in=allowed_startup_directions
         ).order_by("direction_name")
+        direction_translations = {
+            "Technology": "Технологии",
+            "Healthcare": "Здравоохранение",
+            "Finance": "Финансы",
+            "Education": "Образование",
+            "Entertainment": "Развлечения",
+            "Fashion": "Мода",
+            "Food": "Еда",
+            "Gaming": "Игры",
+            "Real Estate": "Недвижимость",
+            "Travel": "Путешествия",
+            "Agriculture": "Сельское хозяйство",
+            "Energy": "Энергетика",
+            "Environment": "Экология",
+            "Social": "Социальные проекты",
+            "Medicine": "Медицина",
+            "Auto": "Авто",
+            "Delivery": "Доставка",
+            "Cafe": "Кафе/рестораны",
+            "Fastfood": "Фастфуд",
+            "Health": "Здоровье",
+            "Beauty": "Красота",
+            "Transport": "Транспорт",
+            "Sport": "Спорт",
+            "Psychology": "Психология",
+            "AI": "ИИ",
+            "IT": "ИТ",
+            "Retail": "Ритейл",
+        }
+        def _label_from_instance(obj):
+            name = getattr(obj, "direction_name", str(obj))
+            return direction_translations.get(name, name)
+        self.fields["direction"].label_from_instance = _label_from_instance
     class Meta:
         model = Startups
         fields = [
