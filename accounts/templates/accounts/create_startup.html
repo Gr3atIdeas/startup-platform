@@ -312,6 +312,15 @@ document.addEventListener('DOMContentLoaded', function() {
             planetImg.src = planetBaseUrl + planet;
             planetImg.alt = `Планета ${index + 1}`;
             planetImg.dataset.planetIndex = index;
+
+            planetImg.onerror = () => {
+                planetImg.src = 'https://via.placeholder.com/150';
+            };
+
+            planetImg.onload = () => {
+                planetImg.style.opacity = '1';
+            };
+
             planetRibbon.appendChild(planetImg);
         });
 
@@ -354,6 +363,234 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         planetRibbon.innerHTML = '<img src="https://via.placeholder.com/150" alt="Нет планет" class="planet-ribbon-item">';
         planetInput.value = '';
+    }
+
+    const logoInput = document.getElementById('id_logo_input');
+    const logoPlaceholder = document.getElementById('logoPlaceholder');
+    const logoPreviewImg = document.getElementById('logoPreview');
+
+    if (logoInput && logoPlaceholder && logoPreviewImg) {
+        logoPlaceholder.addEventListener('click', () => logoInput.click());
+        logoPreviewImg.addEventListener('click', () => logoInput.click());
+
+        logoInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    logoPreviewImg.src = e.target.result;
+                    logoPreviewImg.style.display = 'block';
+                    logoPlaceholder.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    const timelineSteps = document.querySelectorAll('.timeline-step');
+    const descriptionContainers = document.querySelectorAll('.timeline-description-container');
+    const currentStepInput = document.getElementById('step_number');
+    const setCurrentButtons = document.querySelectorAll('.btn-select-current-step');
+    const timelineProgressFilled = document.getElementById('timelineProgressFilled');
+    const totalSteps = 5;
+
+    function selectStepDescription(stepNumber) {
+        descriptionContainers.forEach(container => {
+            container.classList.toggle('active', container.dataset.stepContent == stepNumber);
+        });
+        timelineSteps.forEach(step => {
+            step.classList.toggle('active-step-display', step.dataset.step == stepNumber);
+        });
+    }
+
+    function setCurrentStep(stepNumber) {
+        const currentStep = parseInt(stepNumber);
+        currentStepInput.value = currentStep;
+
+        timelineSteps.forEach(step => {
+            const stepNum = parseInt(step.dataset.step);
+            const stepWrapper = step.querySelector('.step-number-wrapper');
+
+            step.classList.remove('active-step-display');
+            stepWrapper.classList.remove('active');
+
+            if (stepNum <= currentStep) {
+                stepWrapper.classList.add('active');
+            }
+
+            if (stepNum === currentStep) {
+                selectStepDescription(currentStep);
+            }
+        });
+
+        let progressPercentage = 0;
+        if (currentStep > 1) {
+            progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+        }
+        if (timelineProgressFilled) {
+            timelineProgressFilled.style.width = `${progressPercentage}%`;
+        }
+    }
+
+    timelineSteps.forEach(step => {
+        step.addEventListener('click', function() {
+            const stepNum = this.dataset.step;
+            selectStepDescription(stepNum);
+        });
+    });
+
+    setCurrentButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const stepNum = this.dataset.stepTarget;
+            setCurrentStep(stepNum);
+        });
+    });
+    
+    if (timelineSteps.length > 0) {
+        setCurrentStep(1);
+    }
+
+    const firstServerSideError = document.querySelector('.error-message:not(.custom-validation-error)');
+    if (firstServerSideError) {
+        const errorParentGroup = firstServerSideError.closest('.form-group, .upload-box, .agreement-section');
+        if (errorParentGroup) {
+            errorParentGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const inputField = errorParentGroup.querySelector('.form-control, .form-control-file, input[type="checkbox"], .custom-checkbox-label');
+            if (inputField && inputField.type !== 'checkbox') {
+                inputField.classList.add('input-error');
+            } else if (inputField && (inputField.type === 'checkbox' || inputField.classList.contains('custom-checkbox-label')) && errorParentGroup.classList.contains('checkbox-group')) {
+                errorParentGroup.classList.add('input-error');
+            }
+        } else {
+            firstServerSideError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    const startupForm = document.getElementById('startupForm');
+    if (startupForm) {
+        function displayValidationMessage(element, message, fieldType = 'input') {
+            const parentGroup = element.closest('.form-group, .upload-box, .logo-upload-group');
+            let existingErrorMsg = null;
+            if (parentGroup) {
+                existingErrorMsg = parentGroup.querySelector('.custom-validation-error.field-specific-error');
+            } else if (element.nextElementSibling && element.nextElementSibling.classList.contains('custom-validation-error')) {
+                existingErrorMsg = element.nextElementSibling;
+            }
+            if (existingErrorMsg) {
+                existingErrorMsg.remove();
+            }
+
+            const errorMsg = document.createElement('p');
+            errorMsg.className = 'error-message custom-validation-error field-specific-error';
+            errorMsg.textContent = message;
+
+            if (parentGroup) {
+                parentGroup.appendChild(errorMsg);
+                if (fieldType === 'fileButton' && element.classList.contains('custom-file-upload-button')) {
+                    element.classList.add('input-error');
+                } else if (element.type !== 'checkbox') {
+                    element.classList.add('input-error');
+                }
+            } else {
+                element.parentNode.insertBefore(errorMsg, element.nextSibling);
+                element.classList.add('input-error');
+            }
+            return errorMsg;
+        }
+
+        startupForm.addEventListener('submit', function(e) {
+            let firstInvalidElementOrGroup = null;
+            let validationPassed = true;
+
+            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            document.querySelectorAll('.custom-validation-error').forEach(el => el.remove());
+            document.querySelectorAll('.timeline-step .step-number-wrapper').forEach(el => el.classList.remove('error-step'));
+
+            const requiredFields = [
+                { id: '{{ form.title.id_for_label }}', name: 'Название стартапа', type: 'text' },
+                { id: '{{ form.funding_goal.id_for_label }}', name: 'Цель финансирования', type: 'text' },
+                { id: '{{ form.short_description.id_for_label }}', name: 'Вводная', type: 'textarea' },
+                { id: '{{ form.description.id_for_label }}', name: 'Описание', type: 'textarea' },
+                { id: '{{ form.terms.id_for_label }}', name: 'Условия', type: 'textarea' },
+                { id: '{{ form.direction.id_for_label }}', name: 'Направление', type: 'select' },
+                { id: '{{ form.stage.id_for_label }}', name: 'Стадия', type: 'select' },
+                { id: 'id_logo_input', name: 'Логотип', type: 'file', required: true },
+                { id: 'id_creatives_input', name: 'Изображения', type: 'file', required: true },
+                { id: 'id_video_input', name: 'Видео', type: 'file', required: true },
+                { id: 'id_planet_image', name: 'Планета', type: 'hidden' }
+            ];
+
+            for (const field of requiredFields) {
+                const element = document.getElementById(field.id);
+                if (element) {
+                    let isInvalid = false;
+                    if (field.type === 'text' || field.type === 'textarea') {
+                        if (!element.value.trim()) {
+                            isInvalid = true;
+                        }
+                    } else if (field.type === 'select' || field.type === 'hidden') {
+                        if (element.value === '' || element.value === null) {
+                            isInvalid = true;
+                        }
+                    } else if (field.type === 'file' && field.required) {
+                        if (element.files.length === 0) {
+                            isInvalid = true;
+                        }
+                    }
+
+                    if (isInvalid) {
+                        validationPassed = false;
+                        const errorElement = displayValidationMessage(element, `Пожалуйста, заполните поле "${field.name}".`);
+                        if (!firstInvalidElementOrGroup) {
+                            firstInvalidElementOrGroup = errorElement.closest('.form-group, .upload-box, .logo-upload-group') || errorElement;
+                        }
+                        if (field.type === 'file') {
+                            const parentBox = element.closest('.upload-box, .logo-upload-group');
+                            const uploadButton = parentBox ? parentBox.querySelector('.custom-file-upload-button, .logo-placeholder') : null;
+                            if (uploadButton) {
+                                uploadButton.classList.add('input-error');
+                                if (!firstInvalidElementOrGroup || firstInvalidElementOrGroup === errorElement) {
+                                    firstInvalidElementOrGroup = uploadButton;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            const timelineTextareas = startupForm.querySelectorAll('textarea.timeline-description-textarea');
+            let timelineErrorDisplayed = false;
+            let firstTimelineError = null;
+
+            timelineTextareas.forEach(textarea => {
+                if (!textarea.value.trim()) {
+                    if (!timelineErrorDisplayed) {
+                        const timelineContainer = textarea.closest('.timeline-description-container');
+                        if (timelineContainer) {
+                            const stepNumber = timelineContainer.dataset.stepContent;
+                            const stepElement = document.querySelector(`.timeline-step[data-step="${stepNumber}"]`);
+                            if (stepElement) {
+                                const stepWrapper = stepElement.querySelector('.step-number-wrapper');
+                                stepWrapper.classList.add('error-step');
+                                if (!firstTimelineError) {
+                                    firstTimelineError = stepElement;
+                                }
+                            }
+                        }
+                        timelineErrorDisplayed = true;
+                    }
+                    validationPassed = false;
+                }
+            });
+
+            if (!validationPassed) {
+                e.preventDefault();
+                const elementToScroll = firstInvalidElementOrGroup || firstTimelineError || firstServerSideError;
+                if (elementToScroll) {
+                    elementToScroll.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
     }
 });
 </script>
