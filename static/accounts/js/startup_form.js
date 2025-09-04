@@ -470,6 +470,13 @@ document.addEventListener('DOMContentLoaded', function () {
     if(d){ if(allow){ d.removeAttribute('disabled'); } else { d.setAttribute('disabled','disabled'); d.checked=false; } }
   }
   setConsentsState();
+  // Кнопка выбора лого — триггерит скрытый input
+  ;(function(){
+    var btn=document.getElementById('logoUploadButton')
+    var input=document.getElementById('id_logo_input')
+    if(btn && input){ btn.addEventListener('click', function(){ input.click() }) }
+  })()
+
   // Планеты
   try {
     var cfg = (window.STARTUP_FORM_CONFIG||{})
@@ -483,25 +490,28 @@ document.addEventListener('DOMContentLoaded', function () {
     function buildRibbon(){
       if(!planetRibbon) return
       planetRibbon.innerHTML=''
-      planetChoices.forEach(function(p, i){
+      var list = planetChoices && planetChoices.length ? planetChoices : ['placeholder.svg']
+      list.forEach(function(p, i){
         var img=document.createElement('img')
         img.className='planet-ribbon-item'
         img.src=(planetBaseUrl||'')+p
         img.alt='Планета '+(i+1)
         img.loading='lazy'; img.decoding='async'
+        img.onerror=function(){ img.src='https://via.placeholder.com/450x450?text=Planet' }
         planetRibbon.appendChild(img)
       })
-      if(planetInput && planetChoices.length){ planetInput.value=planetChoices[0] }
+      if(planetInput){ planetInput.value = (planetChoices && planetChoices[0]) ? planetChoices[0] : '' }
       planetRibbon.style.transform='translateX(0)'
       planetIndex=0
     }
     function shift(dir){
-      if(!planetRibbon||!planetChoices.length) return
-      planetIndex = (planetIndex + (dir==='next'?1:-1) + planetChoices.length) % planetChoices.length
+      if(!planetRibbon) return
+      var total = planetChoices && planetChoices.length ? planetChoices.length : 1
+      planetIndex = (planetIndex + (dir==='next'?1:-1) + total) % total
       var x = -planetIndex * 450
       planetRibbon.style.transition='none'
       planetRibbon.style.transform='translateX('+x+'px)'
-      if(planetInput) planetInput.value = planetChoices[planetIndex]
+      if(planetInput && planetChoices && planetChoices.length){ planetInput.value = planetChoices[planetIndex] }
     }
     if(planetRibbon){ buildRibbon() }
     if(prevBtn) prevBtn.addEventListener('click', function(){ shift('prev') })
@@ -523,15 +533,17 @@ document.addEventListener('DOMContentLoaded', function () {
     content.appendChild(inner)
     confirm.disabled=true
     inner.onscroll=function(){ if(inner.scrollTop+inner.clientHeight>=inner.scrollHeight-2){ confirm.disabled=false } }
+    modal.classList.add('open')
     modal.style.visibility='visible'; modal.style.opacity='1'
     confirm.onclick=function(){
+      modal.classList.remove('open')
       modal.style.visibility='hidden'; modal.style.opacity='0'
       if(docNumber===1) doc1Read=true; else doc2Read=true
       setConsentsState()
     }
     var close=document.getElementById('consentCloseBtn')
-    if(close) close.onclick=function(){ modal.style.visibility='hidden'; modal.style.opacity='0' }
-    modal.onclick=function(e){ if(e.target===modal){ modal.style.visibility='hidden'; modal.style.opacity='0' } }
+    if(close) close.onclick=function(){ modal.classList.remove('open'); modal.style.visibility='hidden'; modal.style.opacity='0' }
+    modal.onclick=function(e){ if(e.target===modal){ modal.classList.remove('open'); modal.style.visibility='hidden'; modal.style.opacity='0' } }
   }
   document.querySelectorAll('.consent-doc-btn').forEach(function(b){
     b.addEventListener('click', function(){
@@ -580,5 +592,9 @@ document.addEventListener('DOMContentLoaded', function () {
       if(icon) icon.style.display = (input && input.checked) ? 'block' : 'none'
     }
     if(input){ input.addEventListener('change', paint); paint() }
-    if(label){ label.addEventListener('click', function(){ setTimeout(paint,0) }) }
+    if(label){
+      label.addEventListener('click', function(e){
+        if(input){ e.preventDefault(); input.checked = !input.checked; input.dispatchEvent(new Event('change')) }
+      })
+    }
   })()
