@@ -385,7 +385,7 @@ html, body { overflow-x: hidden; }
   margin-bottom: 18px; 
 }
 
-.logo-upload-group { margin-top: 36px; }
+.logo-upload-group { margin-top: 32px; }
 .logo-upload-group #logoUploadButton { margin-top: 12px; pointer-events: auto; position: relative; z-index: 2; }
 .custom-file-upload-button { position: relative; z-index: 2; }
 .micro-investment-label-new { pointer-events: auto; position: relative; z-index: 2; cursor: pointer; }
@@ -1732,9 +1732,9 @@ input[type=number] { -moz-appearance: textfield; }
 #consentsModal .modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 12px 20px; border-top: 1px solid rgba(255,255,255,.1); }
 
 /* One-row layout for URL / valuation / amount */
-.presentation-finance-group { display: grid; grid-template-columns: 1fr 160px 1fr; align-items: end; gap: 20px; }
-.presentation-finance-group .form-group { margin: 0; }
-.presentation-finance-group .input-wrapper .form-control { width: 100%; }
+.presentation-finance-group { display: flex; flex-direction: column; gap: 45px; align-items: flex-start; }
+.presentation-finance-group .form-group { margin: 0; width: 100%; }
+.presentation-finance-group .input-wrapper .form-control { width: 100%; max-width: 361px; }
 
 /* Keep currency label inline */
 .presentation-finance-group .form-group label span.currency-note { white-space: nowrap; }

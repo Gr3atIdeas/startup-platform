@@ -220,7 +220,7 @@
                 </div>
                 <div id="step-descriptions">
                     {% for i in "12345" %}
-                    <div class="timeline-description-container" id="step-description-{{ i }}" data-step-content="{{ i }}">
+                    <div class="timeline-description-container{% if i == "1" %} active{% endif %}" id="step-description-{{ i }}" data-step-content="{{ i }}">
                         <div class="timeline-description-header">
                             <div class="timeline-description-title-wrapper">
                                 <div class="timeline-description-title">Этап {{ i }}</div>
