@@ -60,7 +60,7 @@ body {
 
 .form-top-grid {
   display: grid;
-  grid-template-columns: 1fr 180px 1fr;
+  grid-template-columns: 1fr 180px 360px;
   align-items: start;
   gap: 35px;
 }
