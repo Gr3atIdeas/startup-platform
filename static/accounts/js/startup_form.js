@@ -475,16 +475,33 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   setConsentsState();
   function openConsentModal(docNumber){
-    var modal = document.getElementById('consentModal');
-    if(!modal) return;
-    modal.classList.add('open');
-    var confirmBtn = modal.querySelector('.confirm-consent-btn');
-    if(confirmBtn){
-      confirmBtn.onclick=function(){
-        modal.classList.remove('open');
+    const modal=document.getElementById('consentsModal');
+    const content=document.getElementById('consentDocContent');
+    const title=document.getElementById('consentDocTitle');
+    if(!modal||!content||!title) return;
+    title.textContent=docNumber===1?'Документ 1':'Документ 2';
+    content.innerHTML='';
+    const inner=document.createElement('div');
+    inner.style.maxHeight='60vh';
+    inner.style.overflow='auto';
+    inner.style.padding='8px';
+    inner.innerHTML='<p>Краткий текст документа '+docNumber+'. Пролистайте до конца, чтобы подтвердить.</p>'.repeat(8);
+    content.appendChild(inner);
+    const btn=document.getElementById('consentConfirmBtn');
+    if(btn) btn.disabled=true;
+    inner.onscroll=function(){ if(inner.scrollTop+inner.clientHeight>=inner.scrollHeight-2 && btn){ btn.disabled=false; } };
+    modal.style.visibility='visible';
+    modal.style.opacity='1';
+    if(btn){
+      btn.onclick=function(){
+        modal.style.visibility='hidden';
+        modal.style.opacity='0';
         if(docNumber===1) doc1Read=true; else doc2Read=true;
         setConsentsState();
       }
     }
+    const close=document.getElementById('consentCloseBtn');
+    if(close){ close.onclick=function(){ modal.style.visibility='hidden'; modal.style.opacity='0'; } }
+    modal.onclick=function(e){ if(e.target===modal){ modal.style.visibility='hidden'; modal.style.opacity='0'; } }
   }
 })
