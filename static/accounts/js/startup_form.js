@@ -608,3 +608,26 @@ document.addEventListener('DOMContentLoaded', function () {
       })
     }
   })()
+
+  // Таймлайн — форс показать шаг 1 и его textarea
+  ;(function(){
+    var current=document.getElementById('step_number')
+    if(current){ current.value=1 }
+    var desc=document.getElementById('step-description-1')
+    if(desc){ desc.classList.add('active') }
+    var step=document.querySelector('.timeline-step[data-step="1"] .step-number-wrapper')
+    if(step){ step.classList.add('active') }
+  })()
+
+  // Открытие модалки по кнопкам документов
+  ;(function(){
+    var btns=document.querySelectorAll('.consent-doc-btn')
+    if(btns && btns.length){
+      btns.forEach(function(b){
+        b.addEventListener('click', function(){
+          var n=parseInt(b.getAttribute('data-doc'))||1
+          openConsentModalInstant(n)
+        })
+      })
+    }
+  })()
