@@ -18,6 +18,7 @@
 
         
         <div class="form-section-top">
+            <div class="form-top-card">
             <div class="form-top-grid">
                 <div class="form-top-left">
                 <div class="form-group planet-upload-group">
@@ -54,7 +55,9 @@
                     <span class="error-message">{{ form.logo.errors|first }}</span>
                     {% endif %}
                 </div>
-                <div class="form-fields-left">
+                </div>
+                <div class="form-top-right">
+                    <div class="form-fields-left">
                         <div class="form-group">
                             <label for="{{ form.title.id_for_label }}">*{{ form.title.label }}</label>
                             <div class="input-wrapper">
@@ -86,8 +89,6 @@
                             {% if form.stage.errors %}<span class="error-message">{{ form.stage.errors|first }}</span>{% endif %}
                         </div>
                     </div>
-                </div>
-                <div class="form-top-right">
                     <div class="investment-type-card">
                         <div class="form-group checkbox-group micro-investment-group">
                             {{ form.micro_investment_available|attr:"id:id_micro_investment_available"|add_class:"form-check-input-hidden" }}
@@ -110,6 +111,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
 
@@ -311,7 +313,7 @@ window.STARTUP_FORM_CONFIG = {
   </div>
 </div>
 <style>
-#consentsModal { position:fixed; inset:0; background:rgba(0,0,0,.6); }
-#consentsModal.open { visibility:visible !important; opacity:1 !important; }
+#consentsModal { position:fixed; inset:0; background:rgba(0,0,0,.6); pointer-events:none; }
+#consentsModal.open { visibility:visible !important; opacity:1 !important; pointer-events:auto; }
 </style>
 {% endblock %}
