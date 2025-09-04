@@ -24,7 +24,7 @@
                     <label class="planet-upload-label">Выберите планету *</label>
                     <div class="planet-selector">
                     <button type="button" class="planet-nav-button prev-planet" aria-label="Предыдущая планета">
-                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous">
+                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous" loading="lazy" decoding="async">
                     </button>
                     <div class="planet-display">
                         <div class="planet-ribbon" id="planetRibbon">
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <button type="button" class="planet-nav-button next-planet" aria-label="Следующая планета">
-                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next">
+                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next" loading="lazy" decoding="async">
                     </button>
                     </div>
                     {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image" }}
@@ -41,14 +41,15 @@
                     {% endif %}
                 </div>
                 <div class="form-group logo-upload-group">
-                    <label for="{{ form.logo.id_for_label }}" class="logo-upload-label">
+                    <div class="logo-upload-label">
                     <div class="logo-placeholder" id="logoPlaceholder">
-                        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon">
+                        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon" loading="lazy" decoding="async">
                         <span>*Загрузить логотип</span>
                     </div>
                     <img src="" alt="Логотип" class="logo-preview" id="logoPreview" style="display:none;">
-                    </label>
+                    </div>
                     {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
+                    <div class="custom-file-upload-button" id="logoUploadButton">Выбрать логотип</div>
                     {% if form.logo.errors %}
                     <span class="error-message">{{ form.logo.errors|first }}</span>
                     {% endif %}
@@ -65,7 +66,7 @@
                             <label for="{{ form.direction.id_for_label }}">*{{ form.direction.label }}</label>
                             <div class="input-wrapper select-wrapper">
                                 {{ form.direction|add_class:"form-control" }}
-                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
+                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow" loading="lazy" decoding="async">
                             </div>
                             {% if form.direction.errors %}<span class="error-message">{{ form.direction.errors|first }}</span>{% endif %}
                         </div>
@@ -80,7 +81,7 @@
                             <label for="{{ form.stage.id_for_label }}">*{{ form.stage.label }}</label>
                             <div class="input-wrapper select-wrapper">
                                 {{ form.stage|add_class:"form-control" }}
-                                 <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
+                                 <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow" loading="lazy" decoding="async">
                             </div>
                             {% if form.stage.errors %}<span class="error-message">{{ form.stage.errors|first }}</span>{% endif %}
                         </div>
@@ -103,7 +104,7 @@
                             <label for="{{ form.investment_type.id_for_label }}" class="investment-type-label">Тип инвестирования</label>
                             <div class="input-wrapper select-wrapper">
                                 {{ form.investment_type|add_class:"form-control" }}
-                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
+                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow" loading="lazy" decoding="async">
                             </div>
                             {% if form.investment_type.errors %}<span class="error-message">{{ form.investment_type.errors|first }}</span>{% endif %}
                         </div>
@@ -136,7 +137,7 @@
                 <div class="upload-section-grid media-and-finance-grid">
                     
                     <div class="form-group upload-box" id="creativesDropArea">
-                        <label for="id_creatives_input">*Изображения</label>
+                        <label>*Изображения</label>
                         {{ form.creatives|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_creatives_input" }}
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_creatives_input').click()">Выбрать файл</div>
                         <div class="small-text">Допустимый формат PNG, JPEG (до 3 файлов)</div>
@@ -145,7 +146,7 @@
                     </div>
                     
                     <div class="form-group upload-box" id="videoDropArea">
-                        <label for="id_video_input">*Видео</label>
+                        <label>*Видео</label>
                         {{ form.video|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_video_input" }}
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файлы</div>
                         <div class="small-text">Допустимый формат MOV, MP4 (до 3 файлов)</div>
@@ -204,11 +205,11 @@
                     {% for i in "12345" %}
                     <div class="timeline-step" data-step="{{ i }}">
                         <div class="step-number-wrapper" id="stepNumber{{ i }}">
-                             {% if i == "1" %}<img src="{% static 'accounts/images/creat_startup/Frame 996.svg' %}" alt="Иконка Этап 1" class="step-icon">{% endif %}
-                             {% if i == "2" %}<img src="{% static 'accounts/images/creat_startup/Frame 995.svg' %}" alt="Иконка Этап 2" class="step-icon">{% endif %}
-                             {% if i == "3" %}<img src="{% static 'accounts/images/creat_startup/Frame 994.svg' %}" alt="Иконка Этап 3" class="step-icon">{% endif %}
-                             {% if i == "4" %}<img src="{% static 'accounts/images/creat_startup/Frame 993.svg' %}" alt="Иконка Этап 4" class="step-icon">{% endif %}
-                             {% if i == "5" %}<img src="{% static 'accounts/images/creat_startup/Frame 992.svg' %}" alt="Иконка Этап 5" class="step-icon">{% endif %}
+                             {% if i == "1" %}<img src="{% static 'accounts/images/creat_startup/Frame 996.svg' %}" alt="Иконка Этап 1" class="step-icon" loading="lazy" decoding="async">{% endif %}
+                             {% if i == "2" %}<img src="{% static 'accounts/images/creat_startup/Frame 995.svg' %}" alt="Иконка Этап 2" class="step-icon" loading="lazy" decoding="async">{% endif %}
+                             {% if i == "3" %}<img src="{% static 'accounts/images/creat_startup/Frame 994.svg' %}" alt="Иконка Этап 3" class="step-icon" loading="lazy" decoding="async">{% endif %}
+                             {% if i == "4" %}<img src="{% static 'accounts/images/creat_startup/Frame 993.svg' %}" alt="Иконка Этап 4" class="step-icon" loading="lazy" decoding="async">{% endif %}
+                             {% if i == "5" %}<img src="{% static 'accounts/images/creat_startup/Frame 992.svg' %}" alt="Иконка Этап 5" class="step-icon" loading="lazy" decoding="async">{% endif %}
                         </div>
                         <div class="step-text">Этап {{ i }}</div>
                         <button type="button" class="btn-select-current-step" data-step-target="{{ i }}">Мы здесь</button>
@@ -233,7 +234,7 @@
             
              <div class="form-content-section">
                 <div class="form-group upload-box full-width" id="proofsDropArea">
-                    <label for="id_proofs_input">*Документы</label>
+                    <label>*Документы</label>
                     {{ form.proofs|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_proofs_input" }}
                     <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файлы</div>
                     <div class="small-text">Допустимый формат Doc, Excel, PDF (до 10 файлов)</div>
@@ -247,8 +248,15 @@
              <div class="form-content-section agreement-section-outer-wrapper">
                 <div class="agreement-section">
                     <h3 class="section-title">Согласие</h3>
+                    <div class="form-group">
+                        <div class="small-text">Перед установкой галочек ознакомьтесь с документами:</div>
+                        <div class="consents-docs-buttons">
+                            <button type="button" class="custom-file-upload-button consent-doc-btn" data-doc="1">Документ 1</button>
+                            <button type="button" class="custom-file-upload-button consent-doc-btn" data-doc="2">Документ 2</button>
+                        </div>
+                    </div>
                     <div class="form-group checkbox-group">
-                        {{ form.agree_rules|attr:"id:id_agree_rules"|add_class:"form-check-input-hidden" }}
+                        {{ form.agree_rules|attr:"id:id_agree_rules"|add_class:"form-check-input-hidden"|attr:"disabled:disabled" }}
                         <label for="id_agree_rules" class="custom-checkbox-label">
                             <span class="custom-checkbox-visual">
                                 <span class="custom-checkbox-unchecked"></span>
@@ -259,7 +267,7 @@
                         {% if form.agree_rules.errors %}<span class="error-message">{{ form.agree_rules.errors|first }}</span>{% endif %}
                     </div>
                     <div class="form-group checkbox-group">
-                        {{ form.agree_data_processing|attr:"id:id_agree_data_processing"|add_class:"form-check-input-hidden" }}
+                        {{ form.agree_data_processing|attr:"id:id_agree_data_processing"|add_class:"form-check-input-hidden"|attr:"disabled:disabled" }}
                         <label for="id_agree_data_processing" class="custom-checkbox-label">
                             <span class="custom-checkbox-visual">
                                 <span class="custom-checkbox-unchecked"></span>
@@ -312,6 +320,8 @@ document.addEventListener('DOMContentLoaded', function() {
             planetImg.src = planetBaseUrl + planet;
             planetImg.alt = `Планета ${index + 1}`;
             planetImg.dataset.planetIndex = index;
+            planetImg.loading = 'lazy';
+            planetImg.decoding = 'async';
 
             planetImg.onerror = () => {
                 planetImg.src = 'https://via.placeholder.com/150';
@@ -368,10 +378,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoInput = document.getElementById('id_logo_input');
     const logoPlaceholder = document.getElementById('logoPlaceholder');
     const logoPreviewImg = document.getElementById('logoPreview');
+    const logoUploadButton = document.getElementById('logoUploadButton');
 
-    if (logoInput && logoPlaceholder && logoPreviewImg) {
-        logoPlaceholder.addEventListener('click', () => logoInput.click());
-        logoPreviewImg.addEventListener('click', () => logoInput.click());
+    if (logoInput && logoUploadButton && logoPreviewImg) {
+        logoUploadButton.addEventListener('click', () => logoInput.click());
 
         logoInput.addEventListener('change', function() {
             const file = this.files[0];
@@ -380,7 +390,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 reader.onload = function(e) {
                     logoPreviewImg.src = e.target.result;
                     logoPreviewImg.style.display = 'block';
-                    logoPlaceholder.style.display = 'none';
+                    if (logoPlaceholder) { logoPlaceholder.style.display = 'none'; }
                 };
                 reader.readAsDataURL(file);
             }
@@ -592,6 +602,91 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    // Consents modal logic
+    const agreeRules = document.getElementById('id_agree_rules');
+    const agreeData = document.getElementById('id_agree_data_processing');
+    let doc1Read = false;
+    let doc2Read = false;
+
+    function updateConsentsAvailability() {
+        if (doc1Read && doc2Read) {
+            if (agreeRules) agreeRules.removeAttribute('disabled');
+            if (agreeData) agreeData.removeAttribute('disabled');
+        }
+    }
+
+    function openConsentModal(docNumber) {
+        const modal = document.getElementById('consentsModal');
+        const content = document.getElementById('consentDocContent');
+        const title = document.getElementById('consentDocTitle');
+        if (!modal || !content || !title) return;
+        title.textContent = docNumber === 1 ? 'Документ 1' : 'Документ 2';
+        content.innerHTML = '';
+        const inner = document.createElement('div');
+        inner.className = 'consent-doc-inner';
+        inner.style.maxHeight = '50vh';
+        inner.style.overflow = 'auto';
+        inner.style.paddingRight = '8px';
+        inner.innerHTML = '<p>Краткий тестовый текст документа ' + docNumber + '. Пролистайте до конца, чтобы подтвердить прочтение.</p><p>Раздел 1. Описание условий.</p><p>Раздел 2. Положения и определения.</p><p>Раздел 3. Заключительные положения.</p><p>Спасибо за внимание.</p>';
+        content.appendChild(inner);
+        const confirmBtn = document.getElementById('consentConfirmBtn');
+        if (confirmBtn) confirmBtn.disabled = true;
+        inner.addEventListener('scroll', function onScroll() {
+            const atBottom = inner.scrollTop + inner.clientHeight >= inner.scrollHeight - 4;
+            if (atBottom && confirmBtn) {
+                confirmBtn.disabled = false;
+            }
+        });
+        modal.classList.add('open');
+        if (confirmBtn) {
+            confirmBtn.onclick = function() {
+                modal.classList.remove('open');
+                if (docNumber === 1) doc1Read = true; else doc2Read = true;
+                updateConsentsAvailability();
+            }
+        }
+        const closeBtn = document.getElementById('consentCloseBtn');
+        if (closeBtn) {
+            closeBtn.onclick = function() { modal.classList.remove('open'); };
+        }
+        modal.addEventListener('click', function(e){ if (e.target === modal) modal.classList.remove('open'); });
+    }
+
+    document.querySelectorAll('.consent-doc-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const n = parseInt(btn.getAttribute('data-doc')) || 1;
+            openConsentModal(n);
+        });
+    });
+
+    document.querySelectorAll('.agreement-section .custom-checkbox-label').forEach(lbl => {
+        lbl.addEventListener('click', function(e){
+            const inputId = this.getAttribute('for');
+            const input = document.getElementById(inputId);
+            if (input && input.hasAttribute('disabled')) {
+                e.preventDefault();
+                if (!doc1Read) openConsentModal(1); else if (!doc2Read) openConsentModal(2);
+            }
+        });
+    });
 });
 </script>
+
+<!-- Consents Modal -->
+<div id="consentsModal" class="modal-overlay" style="display:block; visibility:hidden; opacity:0; transition:opacity .2s ease, visibility .2s ease;">
+  <div class="modal-dialog" style="max-width:640px; margin:10vh auto; background:#222; color:#fff; border-radius:10px; border:1px solid rgba(255,255,255,.2); box-shadow:0 10px 30px rgba(0,0,0,.5);">
+    <div class="modal-header" style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid rgba(255,255,255,.1)">
+      <div id="consentDocTitle" style="font-weight:600;">Документ</div>
+      <button id="consentCloseBtn" type="button" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer">×</button>
+    </div>
+    <div id="consentDocContent" class="modal-body" style="padding:16px 20px;"></div>
+    <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:10px; padding:12px 20px; border-top:1px solid rgba(255,255,255,.1);">
+      <button id="consentConfirmBtn" type="button" class="custom-file-upload-button" disabled>Подтвердить прочтение</button>
+    </div>
+  </div>
+</div>
+<style>
+#consentsModal { position:fixed; inset:0; background:rgba(0,0,0,.6); }
+#consentsModal.open { visibility:visible !important; opacity:1 !important; }
+</style>
 {% endblock %}

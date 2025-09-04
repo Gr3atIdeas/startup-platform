@@ -1,4 +1,21 @@
 document.addEventListener('DOMContentLoaded', function () {
+  try {
+    if (!('loading' in HTMLImageElement.prototype)) {
+      var imgs = document.querySelectorAll('img[loading="lazy"]')
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              var img = entry.target
+              if (img.dataset && img.dataset.src) img.src = img.dataset.src
+              io.unobserve(img)
+            }
+          })
+        }, { rootMargin: '200px' })
+        imgs.forEach(function (img) { io.observe(img) })
+      }
+    }
+  } catch (e) {}
   const featuresCarousel = document.querySelector('.features-carousel')
   const featuresWrapper = document.querySelector('.features-carousel-wrapper')
   const featuresArrowLeft = document.querySelector('.arrow-left-control')

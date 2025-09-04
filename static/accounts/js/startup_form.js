@@ -127,12 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
       setFiles(filtered)
     })
   }
-  if (logoLabel && logoInput) {
-    logoLabel.addEventListener('click', function (e) {
-      if (e.target && e.target.tagName && e.target.tagName.toLowerCase() === 'input') return
-      logoInput.click()
-    })
-  }
+  // Ограничиваем клик логотипа только кнопкой (см. шаблон: #logoUploadButton)
   if (logoInput && logoPreview && logoPlaceholder) {
     logoInput.addEventListener('change', function () {
       var file = logoInput.files && logoInput.files[0]

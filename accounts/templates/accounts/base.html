@@ -55,6 +55,39 @@
   {% block head_extra %}
     {{ block.super }}
   {% endblock %}
+  <script>
+  (function(){
+    try {
+      function isExempt(img){
+        if (img.hasAttribute('data-lazy-exempt')) return true;
+        // Освобождаем от ленивки критичный логотип в шапке
+        if (img.classList && img.classList.contains('header-logo-icon-img')) return true;
+        return false;
+      }
+      function lazify(img){
+        if (!img || isExempt(img)) return;
+        if (!img.hasAttribute('loading')) img.setAttribute('loading','lazy');
+        if (!img.hasAttribute('decoding')) img.setAttribute('decoding','async');
+      }
+      var mo = new MutationObserver(function(muts){
+        muts.forEach(function(m){
+          m.addedNodes && m.addedNodes.forEach(function(n){
+            if (n && n.tagName === 'IMG') lazify(n);
+            else if (n && n.querySelectorAll) n.querySelectorAll('img').forEach(lazify);
+          });
+        });
+      });
+      mo.observe(document.documentElement, { childList:true, subtree:true });
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function(){
+          document.querySelectorAll('img').forEach(lazify);
+        });
+      } else {
+        document.querySelectorAll('img').forEach(lazify);
+      }
+    } catch(e) {}
+  })();
+  </script>
 </head>
 <body>
   <script>

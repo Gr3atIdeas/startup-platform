@@ -59,27 +59,26 @@ body {
 }
 
 .form-top-grid {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 35px; 
+  display: grid;
+  grid-template-columns: auto 301px 1fr;
+  align-items: start;
+  gap: 35px;
 }
 
 .form-top-left {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px; 
-  flex-grow: 1; 
+  display: grid;
+  grid-template-columns: 450px 1fr;
+  align-items: start;
+  gap: 20px;
 }
 
 
 .logo-upload-group .logo-upload-label {
   display: block;
-  width: 144px; 
-  height: 144px; 
+  width: 144px;
+  height: 144px;
   border-radius: 5px;
   background-color: #333;
-  cursor: pointer;
   position: relative;
   overflow: hidden;
 }
@@ -115,7 +114,7 @@ body {
 }
 
 .form-top-right {
-  width: 531px; 
+  width: 100%;
 }
 
 .investment-type-card {
@@ -330,6 +329,9 @@ body {
   flex-direction: column;
   gap: 20px; 
 }
+.upload-box { position: relative; }
+.upload-box label { pointer-events: none; }
+.upload-box .custom-file-upload-button { pointer-events: auto; }
 
 .presentation-finance-group {
   gap: 45px; 
@@ -366,6 +368,10 @@ body {
   margin-bottom: 18px; 
 }
 
+.logo-upload-group #logoUploadButton {
+  margin-top: 10px;
+}
+
 .upload-box .small-text {
   
   font-size: 12px;
@@ -378,18 +384,9 @@ body {
 }
 
 
-.file-upload-area {
-  border: 2px dashed #757575;
-  border-radius: 10px;
-  padding: 20px;
-  text-align: center;
-  cursor: pointer;
-  background-color: rgb(255 255 255 / 5%);
-  display: flex;
-  flex-direction: column; 
-  align-items: flex-start; 
-  gap: 0; 
-}
+/* Убрали кликабельность всей области — кликаем только по кнопке */
+.file-upload-area { pointer-events: none; }
+.custom-file-upload-button { pointer-events: auto; }
 
 
 .file-upload-area
@@ -813,6 +810,8 @@ textarea.form-control.input-error {
   align-items: flex-start; 
 }
 
+.consents-docs-buttons { display: flex; gap: 10px; }
+
 .agreement-section .section-title {
   font-size: 20px;
   font-family: Unbounded;
@@ -902,7 +901,7 @@ textarea.form-control.input-error {
 .submit-button-container {
   text-align: center;
   margin-top: 40px;
-  padding-bottom: 40px; 
+  padding-bottom: 0; 
 }
 
 .submit-button {
@@ -1442,7 +1441,7 @@ body,
 
 .planet-display {
   width: 450px;
-  height: 451px;
+  height: 450px;
   border-radius: 10px;
   background-color: #333;
   overflow: hidden;
@@ -1468,11 +1467,10 @@ body,
 
 .logo-upload-group .logo-upload-label {
   display: block;
-  width: 200px;
-  height: 100px; 
+  width: 144px;
+  height: 144px; 
   border-radius: 5px;
   background-color: #333;
-  cursor: pointer;
   position: relative;
   overflow: hidden;
 }
@@ -1482,9 +1480,8 @@ body,
     max-width: 1000px;
   }
   
-  .form-top-grid {
-    gap: 30px;
-  }
+  .form-top-grid { gap: 30px; grid-template-columns: 1fr; }
+  .form-top-left { grid-template-columns: 1fr; }
   
   .planet-display {
     width: 400px;
@@ -1497,15 +1494,9 @@ body,
     max-width: 900px;
   }
   
-  .form-top-grid {
-    flex-direction: column;
-    gap: 25px;
-  }
-  
-  .form-top-left,
-  .form-top-right {
-    width: 100%;
-  }
+  .form-top-grid { grid-template-columns: 1fr; }
+  .form-top-left { grid-template-columns: 1fr; }
+  .form-top-right { width: 100%; }
   
   .planet-display {
     width: 350px;
@@ -1681,18 +1672,9 @@ body,
 }
 
 @media (max-width: 768px) and (orientation: landscape) {
-  .form-top-grid {
-    flex-direction: row;
-    gap: 20px;
-  }
-  
-  .form-top-left {
-    width: 60%;
-  }
-  
-  .form-top-right {
-    width: 40%;
-  }
+  .form-top-grid { grid-template-columns: 3fr 2fr; gap: 20px; }
+  .form-top-left { width: 100%; }
+  .form-top-right { width: 100%; }
   
   .planet-display {
     width: 250px;
