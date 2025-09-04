@@ -60,14 +60,14 @@ body {
 
 .form-top-grid {
   display: grid;
-  grid-template-columns: 1fr 180px 360px;
+  grid-template-columns: 450px 180px minmax(320px, 1fr);
   align-items: start;
   gap: 35px;
 }
 
 .form-top-left {
   display: grid;
-  grid-template-columns: 1fr 180px;
+  grid-template-columns: 450px 180px;
   align-items: start;
   gap: 20px;
 }
@@ -1448,7 +1448,7 @@ body,
 }
 
 .planet-display {
-  width: 100%;
+  width: 450px;
   height: 450px;
   border-radius: 10px;
   background-color: #333;
@@ -1465,8 +1465,8 @@ body,
 }
 
 .planet-ribbon-item {
-  flex: 0 0 100%;
-  width: 100%;
+  flex: 0 0 450px;
+  width: 450px;
   height: 100%;
   object-fit: contain;
   display: block;
