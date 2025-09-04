@@ -9,14 +9,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 40px;
-  padding-bottom: 0;
+  padding: 40px 0 0 0;
   box-sizing: border-box;
 }
 
 .footer-positioning-container {
   width: 1316px;
-  max-width: 95%;
+  max-width: 100%;
   height: auto;
   position: relative;
   display: flex;
