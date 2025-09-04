@@ -59,6 +59,15 @@ body {
   margin-bottom: 30px; 
 }
 
+.form-top-card {
+  background: rgb(255 255 255 / 7%);
+  box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);
+  border-radius: 20px;
+  border: 1px solid rgb(255 255 255 / 36%);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+}
+
 .form-top-grid {
   display: grid;
   grid-template-columns: auto 360px;
@@ -118,6 +127,9 @@ body {
 .form-top-right {
   width: 360px;
   align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .investment-type-card {
