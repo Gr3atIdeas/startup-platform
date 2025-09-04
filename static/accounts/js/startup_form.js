@@ -461,4 +461,30 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     })
   }
+  // throttle scroll listeners
+  function rafThrottle(fn){
+    var ticking=false;return function(){if(!ticking){window.requestAnimationFrame(()=>{fn();ticking=false});ticking=true}}}
+  // Consents strict lock
+  var doc1Read=false, doc2Read=false;
+  function setConsentsState(){
+    var allow=doc1Read&&doc2Read;
+    var r=document.getElementById('id_agree_rules');
+    var d=document.getElementById('id_agree_data_processing');
+    if(r){ if(allow){ r.removeAttribute('disabled'); } else { r.setAttribute('disabled','disabled'); r.checked=false; } }
+    if(d){ if(allow){ d.removeAttribute('disabled'); } else { d.setAttribute('disabled','disabled'); d.checked=false; } }
+  }
+  setConsentsState();
+  function openConsentModal(docNumber){
+    var modal = document.getElementById('consentModal');
+    if(!modal) return;
+    modal.classList.add('open');
+    var confirmBtn = modal.querySelector('.confirm-consent-btn');
+    if(confirmBtn){
+      confirmBtn.onclick=function(){
+        modal.classList.remove('open');
+        if(docNumber===1) doc1Read=true; else doc2Read=true;
+        setConsentsState();
+      }
+    }
+  }
 })
