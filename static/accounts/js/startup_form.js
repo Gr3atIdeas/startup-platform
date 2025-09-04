@@ -554,3 +554,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Валидация — используем мгновенный скролл
   // (замена в одном месте ниже)
+
+  // Починка кликов модалки (pointer-events)
+  ;(function(){
+    var modal=document.getElementById('consentsModal')
+    if(modal){
+      modal.addEventListener('click', function(e){
+        if(e.target===modal){ modal.style.visibility='hidden'; modal.style.opacity='0' }
+      })
+      var dialog=modal.querySelector('.modal-dialog')
+      if(dialog){ dialog.style.pointerEvents='auto' }
+      var btn=document.getElementById('consentConfirmBtn')
+      if(btn){ btn.style.pointerEvents='auto' }
+      var close=document.getElementById('consentCloseBtn')
+      if(close){ close.style.pointerEvents='auto' }
+    }
+  })()
+
+  // Микроинвестиции — надёжная синхронизация
+  ;(function(){
+    var input=document.getElementById('id_micro_investment_available')
+    var label=document.querySelector('label[for="id_micro_investment_available"]')
+    function paint(){
+      var icon=label?label.querySelector('.micro-checkbox-checked'):null
+      if(icon) icon.style.display = (input && input.checked) ? 'block' : 'none'
+    }
+    if(input){ input.addEventListener('change', paint); paint() }
+    if(label){ label.addEventListener('click', function(){ setTimeout(paint,0) }) }
+  })()
