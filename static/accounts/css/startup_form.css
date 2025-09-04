@@ -1720,3 +1720,21 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin
 input[type=number] { -moz-appearance: textfield; }
 .valuation-input .form-control { height: 40px; width: 100%; }
 .valuation-spin-buttons { display: none; }
+
+/* Modal styles (was inline) */
+#consentsModal.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); visibility: hidden; opacity: 0; pointer-events: none; }
+#consentsModal.open { visibility: visible !important; opacity: 1 !important; pointer-events: auto; }
+#consentsModal .modal-dialog { max-width: 640px; margin: 10vh auto; background: #222; color: #fff; border-radius: 10px; border: 1px solid rgba(255,255,255,.2); box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+#consentsModal .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,.1); }
+#consentsModal .modal-title { font-weight: 600; }
+#consentsModal .modal-close-btn { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; }
+#consentsModal .modal-body { padding: 16px 20px; }
+#consentsModal .modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 12px 20px; border-top: 1px solid rgba(255,255,255,.1); }
+
+/* One-row layout for URL / valuation / amount */
+.presentation-finance-group { display: grid; grid-template-columns: 1fr 160px 1fr; align-items: end; gap: 20px; }
+.presentation-finance-group .form-group { margin: 0; }
+.presentation-finance-group .input-wrapper .form-control { width: 100%; }
+
+/* Keep currency label inline */
+.presentation-finance-group .form-group label span.currency-note { white-space: nowrap; }
