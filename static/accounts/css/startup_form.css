@@ -11,6 +11,7 @@ body {
   max-width: 1303px; 
   margin: 0 auto;
   padding: 20px; 
+  overflow-x: hidden;
 }
 
 .form-navigation-header {
@@ -60,16 +61,17 @@ body {
 
 .form-top-grid {
   display: grid;
-  grid-template-columns: 450px 180px minmax(320px, 1fr);
+  grid-template-columns: auto 360px;
   align-items: start;
   gap: 35px;
 }
 
 .form-top-left {
   display: grid;
-  grid-template-columns: 450px 180px;
+  grid-template-columns: 450px 301px;
   align-items: start;
   gap: 20px;
+  grid-auto-rows: min-content;
 }
 
 
@@ -114,7 +116,7 @@ body {
 }
 
 .form-top-right {
-  width: 100%;
+  width: 360px;
   align-self: start;
 }
 
