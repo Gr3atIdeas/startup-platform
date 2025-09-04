@@ -173,8 +173,12 @@ document.addEventListener('DOMContentLoaded', function () {
       var ta = container.querySelector('textarea')
       if (!ta) return
       var isActive = String(container.getAttribute('data-step-content')) === String(stepNumber)
-      if (isActive) ta.setAttribute('required', 'required')
-      else ta.removeAttribute('required')
+      var stepNum = parseInt(container.getAttribute('data-step-content'))
+      if (stepNum === 1) {
+        ta.setAttribute('required', 'required')
+      } else {
+        ta.removeAttribute('required')
+      }
     })
   }
   function selectStepDescription(stepNumber) {
