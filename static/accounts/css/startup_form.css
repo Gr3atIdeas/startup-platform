@@ -7,6 +7,8 @@ body {
   padding: 20px;
 }
 
+html, body { overflow-x: hidden; }
+
 .startup-form-container {
   max-width: 1303px; 
   margin: 0 auto;
@@ -384,7 +386,8 @@ body {
 }
 
 .logo-upload-group #logoUploadButton {
-  margin-top: 10px;
+  margin-top: 12px;
+  pointer-events: auto;
 }
 
 .upload-box .small-text {
