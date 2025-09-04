@@ -60,14 +60,14 @@ body {
 
 .form-top-grid {
   display: grid;
-  grid-template-columns: auto 301px 1fr;
+  grid-template-columns: 1fr 180px 1fr;
   align-items: start;
   gap: 35px;
 }
 
 .form-top-left {
   display: grid;
-  grid-template-columns: 450px 1fr;
+  grid-template-columns: 1fr 180px;
   align-items: start;
   gap: 20px;
 }
@@ -75,8 +75,8 @@ body {
 
 .logo-upload-group .logo-upload-label {
   display: block;
-  width: 144px;
-  height: 144px;
+  width: 180px;
+  height: 180px;
   border-radius: 5px;
   background-color: #333;
   position: relative;
@@ -115,6 +115,7 @@ body {
 
 .form-top-right {
   width: 100%;
+  align-self: start;
 }
 
 .investment-type-card {
@@ -976,6 +977,13 @@ textarea.form-control.input-error {
   gap: 25px; 
 }
 
+.form-main-content-wrapper .form-content-section,
+.form-main-content-wrapper .form-group.full-width {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 
 @media (width <= 768px) {
   .form-main-content-wrapper {
@@ -1440,7 +1448,7 @@ body,
 }
 
 .planet-display {
-  width: 450px;
+  width: 100%;
   height: 450px;
   border-radius: 10px;
   background-color: #333;
@@ -1457,8 +1465,8 @@ body,
 }
 
 .planet-ribbon-item {
-  flex: 0 0 450px; 
-  width: 450px;    
+  flex: 0 0 100%;
+  width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
@@ -1467,8 +1475,8 @@ body,
 
 .logo-upload-group .logo-upload-label {
   display: block;
-  width: 144px;
-  height: 144px; 
+  width: 180px;
+  height: 180px; 
   border-radius: 5px;
   background-color: #333;
   position: relative;
@@ -1699,3 +1707,9 @@ body,
     height: 200px;
   }
 }
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+.valuation-input .form-control { height: 40px; width: 100%; }
+.valuation-spin-buttons { display: none; }
