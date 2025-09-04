@@ -508,7 +508,8 @@ html, body { overflow-x: hidden; }
   .form-group
   .input-wrapper.valuation-input
   .form-control {
-  max-width: 117px; 
+  /* делаем поле оценки такой же ширины, как URL и сумма */
+  max-width: 361px; 
   padding-right: 30px; 
 }
 
