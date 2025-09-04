@@ -176,7 +176,7 @@
                             {% if form.valuation.errors %}<span class="error-message">{{ form.valuation.errors|first }}</span>{% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.amount_raised.id_for_label }}">{{ form.amount_raised.label }} <span class="currency-note">(₽)</span></label>
+                            <label for="{{ form.amount_raised.id_for_label }}">{{ form.amount_raised.label }}</label>
                             <div class="input-wrapper">
                                 {{ form.amount_raised|add_class:"form-control"|attr:"placeholder:Введите сумму"|attr:"type:number" }}
                             </div>
