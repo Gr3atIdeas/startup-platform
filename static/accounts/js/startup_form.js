@@ -477,7 +477,19 @@ document.addEventListener('DOMContentLoaded', function () {
     if(btn && input){ btn.addEventListener('click', function(){ input.click() }) }
   })()
 
-  // Планеты
+  // Надёжные кнопки для файлов
+  ;(function(){
+    var bind=function(btnSelector, inputId){
+      var btn=document.querySelector(btnSelector)
+      var input=document.getElementById(inputId)
+      if(btn && input){ btn.addEventListener('click', function(){ input.click() }) }
+    }
+    bind('#creativesDropArea .custom-file-upload-button','id_creatives_input')
+    bind('#videoDropArea .custom-file-upload-button','id_video_input')
+    bind('#proofsDropArea .custom-file-upload-button','id_proofs_input')
+  })()
+
+  // Планеты (оптимизация: один IMG)
   try {
     var cfg = (window.STARTUP_FORM_CONFIG||{})
     var planetChoices = Array.isArray(cfg.planetChoices)?cfg.planetChoices:[]
@@ -487,33 +499,31 @@ document.addEventListener('DOMContentLoaded', function () {
     var prevBtn = document.querySelector('.planet-nav-button.prev-planet')
     var nextBtn = document.querySelector('.planet-nav-button.next-planet')
     var planetIndex = 0
-    function buildRibbon(){
+    var imgEl
+    function setSrc(){
+      if(!imgEl) return
+      var name=(planetChoices && planetChoices.length)?planetChoices[planetIndex]:'placeholder.svg'
+      imgEl.src=(planetBaseUrl||'')+name
+      if(planetInput){ planetInput.value=(planetChoices && planetChoices.length)?name:'' }
+    }
+    function build(){
       if(!planetRibbon) return
       planetRibbon.innerHTML=''
-      var list = planetChoices && planetChoices.length ? planetChoices : ['placeholder.svg']
-      list.forEach(function(p, i){
-        var img=document.createElement('img')
-        img.className='planet-ribbon-item'
-        img.src=(planetBaseUrl||'')+p
-        img.alt='Планета '+(i+1)
-        img.loading='lazy'; img.decoding='async'
-        img.onerror=function(){ img.src='https://via.placeholder.com/450x450?text=Planet' }
-        planetRibbon.appendChild(img)
-      })
-      if(planetInput){ planetInput.value = (planetChoices && planetChoices[0]) ? planetChoices[0] : '' }
-      planetRibbon.style.transform='translateX(0)'
+      imgEl=document.createElement('img')
+      imgEl.className='planet-ribbon-item'
+      imgEl.loading='lazy'; imgEl.decoding='async'
+      imgEl.onerror=function(){ imgEl.src='https://via.placeholder.com/450x450?text=Planet' }
+      planetRibbon.appendChild(imgEl)
       planetIndex=0
+      setSrc()
     }
     function shift(dir){
       if(!planetRibbon) return
-      var total = planetChoices && planetChoices.length ? planetChoices.length : 1
-      planetIndex = (planetIndex + (dir==='next'?1:-1) + total) % total
-      var x = -planetIndex * 450
-      planetRibbon.style.transition='none'
-      planetRibbon.style.transform='translateX('+x+'px)'
-      if(planetInput && planetChoices && planetChoices.length){ planetInput.value = planetChoices[planetIndex] }
+      var total=(planetChoices && planetChoices.length)?planetChoices.length:1
+      planetIndex=(planetIndex+(dir==='next'?1:-1)+total)%total
+      setSrc()
     }
-    if(planetRibbon){ buildRibbon() }
+    if(planetRibbon){ build() }
     if(prevBtn) prevBtn.addEventListener('click', function(){ shift('prev') })
     if(nextBtn) nextBtn.addEventListener('click', function(){ shift('next') })
   } catch(_) {}
