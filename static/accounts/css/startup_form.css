@@ -385,21 +385,11 @@ html, body { overflow-x: hidden; }
   margin-bottom: 18px; 
 }
 
-.logo-upload-group #logoUploadButton {
-  margin-top: 12px;
-  pointer-events: auto;
-}
-
-.upload-box .small-text {
-  
-  font-size: 12px;
-  font-family: Unbounded;
-  font-weight: 300;
-  letter-spacing: 0.12px;
-  color: white;
-  text-align: left; 
-  margin-top: -10px; 
-}
+.logo-upload-group { margin-top: 36px; }
+.logo-upload-group #logoUploadButton { margin-top: 12px; pointer-events: auto; position: relative; z-index: 2; }
+.custom-file-upload-button { position: relative; z-index: 2; }
+.micro-investment-label-new { pointer-events: auto; position: relative; z-index: 2; cursor: pointer; }
+.agreement-section .custom-checkbox-label { pointer-events: auto; position: relative; z-index: 2; cursor: pointer; }
 
 
 /* Убрали кликабельность всей области — кликаем только по кнопке */
