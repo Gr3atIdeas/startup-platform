@@ -176,7 +176,7 @@
                             {% if form.valuation.errors %}<span class="error-message">{{ form.valuation.errors|first }}</span>{% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.amount_raised.id_for_label }}">{{ form.amount_raised.label }}</label>
+                            <label for="{{ form.amount_raised.id_for_label }}">{{ form.amount_raised.label }} <span class="currency-note">(₽)</span></label>
                             <div class="input-wrapper">
                                 {{ form.amount_raised|add_class:"form-control"|attr:"placeholder:Введите сумму"|attr:"type:number" }}
                             </div>
@@ -300,20 +300,16 @@ window.STARTUP_FORM_CONFIG = {
 </script>
 
 <!-- Consents Modal -->
-<div id="consentsModal" class="modal-overlay" style="display:block; visibility:hidden; opacity:0;">
-  <div class="modal-dialog" style="max-width:640px; margin:10vh auto; background:#222; color:#fff; border-radius:10px; border:1px solid rgba(255,255,255,.2); box-shadow:0 10px 30px rgba(0,0,0,.5);">
-    <div class="modal-header" style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid rgba(255,255,255,.1)">
-      <div id="consentDocTitle" style="font-weight:600;">Документ</div>
-      <button id="consentCloseBtn" type="button" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer">×</button>
+<div id="consentsModal" class="modal-overlay">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div id="consentDocTitle" class="modal-title">Документ</div>
+      <button id="consentCloseBtn" type="button" class="modal-close-btn">×</button>
     </div>
-    <div id="consentDocContent" class="modal-body" style="padding:16px 20px;"></div>
-    <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:10px; padding:12px 20px; border-top:1px solid rgba(255,255,255,.1);">
+    <div id="consentDocContent" class="modal-body"></div>
+    <div class="modal-footer">
       <button id="consentConfirmBtn" type="button" class="custom-file-upload-button" disabled>Подтвердить прочтение</button>
     </div>
   </div>
 </div>
-<style>
-#consentsModal { position:fixed; inset:0; background:rgba(0,0,0,.6); pointer-events:none; }
-#consentsModal.open { visibility:visible !important; opacity:1 !important; pointer-events:auto; }
-</style>
 {% endblock %}
