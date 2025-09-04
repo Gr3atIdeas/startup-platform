@@ -334,9 +334,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var firstError = startupForm.querySelector('.input-error') || startupForm.querySelector('.custom-validation-error')
         if (firstError) {
           var target = firstError.closest('.form-group') || firstError
-          if (target && typeof target.scrollIntoView === 'function') {
-            target.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          }
+          if (target) { instantScrollIntoView(target) }
         }
         return
       }
@@ -452,9 +450,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ul.appendChild(li)
           })
           var target = firstErrorField ? (firstErrorField.closest('.form-group') || firstErrorField) : generalBox
-          if (target && typeof target.scrollIntoView === 'function') {
-            target.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          }
+          if (target) { instantScrollIntoView(target) }
         })
       } catch (_) {
         // если что-то пошло не так — позволим обычной отправке
@@ -474,34 +470,87 @@ document.addEventListener('DOMContentLoaded', function () {
     if(d){ if(allow){ d.removeAttribute('disabled'); } else { d.setAttribute('disabled','disabled'); d.checked=false; } }
   }
   setConsentsState();
-  function openConsentModal(docNumber){
-    const modal=document.getElementById('consentsModal');
-    const content=document.getElementById('consentDocContent');
-    const title=document.getElementById('consentDocTitle');
-    if(!modal||!content||!title) return;
-    title.textContent=docNumber===1?'Документ 1':'Документ 2';
-    content.innerHTML='';
-    const inner=document.createElement('div');
-    inner.style.maxHeight='60vh';
-    inner.style.overflow='auto';
-    inner.style.padding='8px';
-    inner.innerHTML='<p>Краткий текст документа '+docNumber+'. Пролистайте до конца, чтобы подтвердить.</p>'.repeat(8);
-    content.appendChild(inner);
-    const btn=document.getElementById('consentConfirmBtn');
-    if(btn) btn.disabled=true;
-    inner.onscroll=function(){ if(inner.scrollTop+inner.clientHeight>=inner.scrollHeight-2 && btn){ btn.disabled=false; } };
-    modal.style.visibility='visible';
-    modal.style.opacity='1';
-    if(btn){
-      btn.onclick=function(){
-        modal.style.visibility='hidden';
-        modal.style.opacity='0';
-        if(docNumber===1) doc1Read=true; else doc2Read=true;
-        setConsentsState();
-      }
+  // Планеты
+  try {
+    var cfg = (window.STARTUP_FORM_CONFIG||{})
+    var planetChoices = Array.isArray(cfg.planetChoices)?cfg.planetChoices:[]
+    var planetBaseUrl = cfg.planetBaseUrl || ''
+    var planetInput = document.getElementById('id_planet_image')
+    var planetRibbon = document.getElementById('planetRibbon')
+    var prevBtn = document.querySelector('.planet-nav-button.prev-planet')
+    var nextBtn = document.querySelector('.planet-nav-button.next-planet')
+    var planetIndex = 0
+    function buildRibbon(){
+      if(!planetRibbon) return
+      planetRibbon.innerHTML=''
+      planetChoices.forEach(function(p, i){
+        var img=document.createElement('img')
+        img.className='planet-ribbon-item'
+        img.src=(planetBaseUrl||'')+p
+        img.alt='Планета '+(i+1)
+        img.loading='lazy'; img.decoding='async'
+        planetRibbon.appendChild(img)
+      })
+      if(planetInput && planetChoices.length){ planetInput.value=planetChoices[0] }
+      planetRibbon.style.transform='translateX(0)'
+      planetIndex=0
     }
-    const close=document.getElementById('consentCloseBtn');
-    if(close){ close.onclick=function(){ modal.style.visibility='hidden'; modal.style.opacity='0'; } }
-    modal.onclick=function(e){ if(e.target===modal){ modal.style.visibility='hidden'; modal.style.opacity='0'; } }
+    function shift(dir){
+      if(!planetRibbon||!planetChoices.length) return
+      planetIndex = (planetIndex + (dir==='next'?1:-1) + planetChoices.length) % planetChoices.length
+      var x = -planetIndex * 450
+      planetRibbon.style.transition='none'
+      planetRibbon.style.transform='translateX('+x+'px)'
+      if(planetInput) planetInput.value = planetChoices[planetIndex]
+    }
+    if(planetRibbon){ buildRibbon() }
+    if(prevBtn) prevBtn.addEventListener('click', function(){ shift('prev') })
+    if(nextBtn) nextBtn.addEventListener('click', function(){ shift('next') })
+  } catch(_) {}
+
+  // Модалка согласий (мгновенно)
+  function openConsentModalInstant(docNumber){
+    var modal=document.getElementById('consentsModal')
+    var content=document.getElementById('consentDocContent')
+    var title=document.getElementById('consentDocTitle')
+    var confirm=document.getElementById('consentConfirmBtn')
+    if(!modal||!content||!title||!confirm) return
+    title.textContent = docNumber===1?'Документ 1':'Документ 2'
+    content.innerHTML=''
+    var inner=document.createElement('div')
+    inner.style.maxHeight='60vh'; inner.style.overflow='auto'; inner.style.padding='8px'
+    inner.innerHTML = ('<p>Текст документа '+docNumber+'. Пролистайте до конца для подтверждения.</p>').repeat(12)
+    content.appendChild(inner)
+    confirm.disabled=true
+    inner.onscroll=function(){ if(inner.scrollTop+inner.clientHeight>=inner.scrollHeight-2){ confirm.disabled=false } }
+    modal.style.visibility='visible'; modal.style.opacity='1'
+    confirm.onclick=function(){
+      modal.style.visibility='hidden'; modal.style.opacity='0'
+      if(docNumber===1) doc1Read=true; else doc2Read=true
+      setConsentsState()
+    }
+    var close=document.getElementById('consentCloseBtn')
+    if(close) close.onclick=function(){ modal.style.visibility='hidden'; modal.style.opacity='0' }
+    modal.onclick=function(e){ if(e.target===modal){ modal.style.visibility='hidden'; modal.style.opacity='0' } }
   }
-})
+  document.querySelectorAll('.consent-doc-btn').forEach(function(b){
+    b.addEventListener('click', function(){
+      var n=parseInt(b.getAttribute('data-doc'))||1
+      openConsentModalInstant(n)
+    })
+  })
+  document.querySelectorAll('.agreement-section .custom-checkbox-label').forEach(function(lbl){
+    lbl.addEventListener('click', function(e){
+      var inputId=this.getAttribute('for'); var input=document.getElementById(inputId)
+      if(input && input.hasAttribute('disabled')){ e.preventDefault(); if(!doc1Read) openConsentModalInstant(1); else if(!doc2Read) openConsentModalInstant(2) }
+    })
+  })
+
+  // Убираем плавный скролл — только мгновенный
+  function instantScrollIntoView(node){ try{ node.scrollIntoView({behavior:'instant', block:'center'}) }catch(_){ node.scrollIntoView() } }
+  // Подменяем вызовы внутри формы
+  var originalScroll = Element.prototype.scrollIntoView
+  // оставляем по умолчанию, а точечные места ниже вызываем instantScrollIntoView
+
+  // Валидация — используем мгновенный скролл
+  // (замена в одном месте ниже)
