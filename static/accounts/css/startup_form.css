@@ -824,7 +824,7 @@ textarea.form-control.input-error {
   align-items: flex-start; 
 }
 
-.consents-docs-buttons { display: flex; gap: 10px; }
+.consents-docs-buttons { display: flex; gap: 10px; pointer-events: auto; }
 
 .agreement-section .section-title {
   font-size: 20px;
