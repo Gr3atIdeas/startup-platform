@@ -561,14 +561,26 @@ document.addEventListener('DOMContentLoaded', function () {
   // Кнопки документов: строгое делегирование от контейнера
   var docsContainer=document.querySelector('.consents-docs-buttons')
   if(docsContainer){
-    docsContainer.addEventListener('click', function(e){
-      var btn=e.target.closest('.consent-doc-btn')
+    var handler=function(e){
+      var btn=e.target && e.target.closest ? e.target.closest('.consent-doc-btn') : null
       if(!btn) return
-      e.preventDefault(); e.stopPropagation()
+      e.preventDefault();
       var n=parseInt(btn.getAttribute('data-doc'))||1
       openConsentModalInstant(n)
-    })
+    }
+    docsContainer.addEventListener('click', handler, true)
   }
+  // Прямое навешивание на кнопки (подстраховка)
+  document.querySelectorAll('.consent-doc-btn').forEach(function(b){
+    if(!b._consentDirect){
+      b.addEventListener('click', function(e){
+        e.preventDefault();
+        var n=parseInt(b.getAttribute('data-doc'))||1
+        openConsentModalInstant(n)
+      }, true)
+      b._consentDirect=true
+    }
+  })
   var agreeLabels=document.querySelectorAll('.agreement-section .custom-checkbox-label')
   if(agreeLabels && agreeLabels.length){
     agreeLabels.forEach(function(lbl){
