@@ -854,6 +854,7 @@ textarea.form-control.input-error {
   align-items: center;
   gap: 11px;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 .agreement-section .checkbox-group .custom-checkbox-label img.checkbox-icon {
