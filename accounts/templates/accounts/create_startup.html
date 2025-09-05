@@ -252,13 +252,13 @@
                     <div class="form-group">
                         <div class="small-text">Перед установкой галочек ознакомьтесь с документами:</div>
                         <div class="consents-docs-buttons">
-                            <button type="button" class="custom-file-upload-button consent-doc-btn" data-doc="1">Документ 1</button>
-                            <button type="button" class="custom-file-upload-button consent-doc-btn" data-doc="2">Документ 2</button>
+                            <button type="button" class="custom-file-upload-button consent-doc-btn" data-doc="1" onclick="openConsentModalInstant(1)">Документ 1</button>
+                            <button type="button" class="custom-file-upload-button consent-doc-btn" data-doc="2" onclick="openConsentModalInstant(2)">Документ 2</button>
                         </div>
                     </div>
                     <div class="form-group checkbox-group">
                         {{ form.agree_rules|attr:"id:id_agree_rules"|add_class:"form-check-input-hidden"|attr:"disabled:disabled" }}
-                        <label for="id_agree_rules" class="custom-checkbox-label">
+                        <label for="id_agree_rules" class="custom-checkbox-label" onclick="openConsentModalInstant(1); return false;">
                             <span class="custom-checkbox-visual">
                                 <span class="custom-checkbox-unchecked"></span>
                                 <span class="custom-checkbox-checked"></span>
@@ -269,7 +269,7 @@
                     </div>
                     <div class="form-group checkbox-group">
                         {{ form.agree_data_processing|attr:"id:id_agree_data_processing"|add_class:"form-check-input-hidden"|attr:"disabled:disabled" }}
-                        <label for="id_agree_data_processing" class="custom-checkbox-label">
+                        <label for="id_agree_data_processing" class="custom-checkbox-label" onclick="openConsentModalInstant(2); return false;">
                             <span class="custom-checkbox-visual">
                                 <span class="custom-checkbox-unchecked"></span>
                                 <span class="custom-checkbox-checked"></span>

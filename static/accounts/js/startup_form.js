@@ -558,6 +558,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if(close) close.onclick=function(){ modal.classList.remove('open'); modal.style.visibility='hidden'; modal.style.opacity='0' }
     modal.onclick=function(e){ if(e.target===modal){ modal.classList.remove('open'); modal.style.visibility='hidden'; modal.style.opacity='0' } }
   }
+  // Экспортируем для inline-обработчиков в шаблоне
+  window.openConsentModalInstant = openConsentModalInstant
   // Кнопки документов: строгое делегирование от контейнера
   var docsContainer=document.querySelector('.consents-docs-buttons')
   if(docsContainer){
