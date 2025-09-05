@@ -154,6 +154,11 @@ html, body { overflow-x: hidden; }
   box-shadow: 6px 6px 10px rgb(0 0 0 / 25%); 
 }
 
+/* уменьшение ширины карточки микроинвестиций на 15px */
+.form-top-right .investment-type-card {
+  width: calc(100% - 15px);
+}
+
 .micro-investment-group {
   display: flex;
   align-items: center;
