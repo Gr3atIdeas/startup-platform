@@ -462,6 +462,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var ticking=false;return function(){if(!ticking){window.requestAnimationFrame(()=>{fn();ticking=false});ticking=true}}}
   // Consents strict lock
   var doc1Read=false, doc2Read=false;
+  var currentDocNumber=null; // 1 или 2 — какой документ открыт сейчас
   function setConsentsState(){
     var allow=doc1Read&&doc2Read;
     var r=document.getElementById('id_agree_rules');
@@ -538,6 +539,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var title=document.getElementById('consentDocTitle')
     var confirm=document.getElementById('consentConfirmBtn')
     if(!modal||!content||!title||!confirm) return
+    currentDocNumber = docNumber
     title.textContent = docNumber===1?'Документ 1':'Документ 2'
     content.innerHTML=''
     var inner=document.createElement('div')
@@ -551,7 +553,15 @@ document.addEventListener('DOMContentLoaded', function () {
     confirm.onclick=function(){
       modal.classList.remove('open')
       modal.style.visibility='hidden'; modal.style.opacity='0'
-      if(docNumber===1) doc1Read=true; else doc2Read=true
+      if(docNumber===1){
+        doc1Read=true
+        var cb1=document.getElementById('id_agree_rules')
+        if(cb1){ cb1.checked=true; cb1.dispatchEvent(new Event('change')) }
+      } else {
+        doc2Read=true
+        var cb2=document.getElementById('id_agree_data_processing')
+        if(cb2){ cb2.checked=true; cb2.dispatchEvent(new Event('change')) }
+      }
       setConsentsState()
     }
     var close=document.getElementById('consentCloseBtn')
@@ -572,7 +582,14 @@ document.addEventListener('DOMContentLoaded', function () {
     agreeLabels.forEach(function(lbl){
       lbl.addEventListener('click', function(e){
         var inputId=this.getAttribute('for'); var input=document.getElementById(inputId)
-        if(input && input.hasAttribute('disabled')){ e.preventDefault(); if(!doc1Read) openConsentModalInstant(1); else if(!doc2Read) openConsentModalInstant(2) }
+        // Всегда открываем соответствующий документ по клику на чекбокс
+        if(inputId==='id_agree_rules'){
+          e.preventDefault(); openConsentModalInstant(1)
+        } else if(inputId==='id_agree_data_processing'){
+          e.preventDefault(); openConsentModalInstant(2)
+        } else if(input && input.hasAttribute('disabled')){
+          e.preventDefault(); openConsentModalInstant(!doc1Read?1:2)
+        }
       })
     })
   }
