@@ -1,6 +1,7 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
 {% load socialaccount %}
+{% load accounts_extras %}
 
 {% block title %}Регистрация{% endblock %}
 
@@ -83,7 +84,7 @@
             <div style="flex-grow: 1; height: 1px; background-color: #555;"></div>
         </div>
 
-        <a href="{% provider_login_url 'telegram' %}" class="telegram-login-btn">
+        <a href="{% get_telegram_login_url %}" class="telegram-login-btn">
             Зарегистрироваться через Telegram
         </a>
 
