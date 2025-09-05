@@ -1733,9 +1733,19 @@ input[type=number] { -moz-appearance: textfield; }
 .valuation-spin-buttons { display: none; }
 
 /* Modal styles (was inline) */
-#consentsModal.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); visibility: hidden; opacity: 0; pointer-events: none; z-index: 9999; }
-#consentsModal.open { visibility: visible !important; opacity: 1 !important; pointer-events: auto; }
-#consentsModal .modal-dialog { position: relative; z-index: 10000; }
+#consentsModal.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,.6);
+  visibility: hidden; opacity: 0; display: none;
+  pointer-events: none; z-index: 2147483647;
+}
+#consentsModal.open {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important; pointer-events: auto !important;
+}
+#consentsModal .modal-dialog { position: relative; z-index: 2147483647; }
 #consentsModal .modal-dialog { max-width: 640px; margin: 10vh auto; background: #222; color: #fff; border-radius: 10px; border: 1px solid rgba(255,255,255,.2); box-shadow: 0 10px 30px rgba(0,0,0,.5); }
 #consentsModal .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,.1); }
 #consentsModal .modal-title { font-weight: 600; }
