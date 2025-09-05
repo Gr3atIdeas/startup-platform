@@ -373,8 +373,8 @@
                 <div class="agreement-section">
                     <h3 class="section-title">Согласие</h3>
                     <div class="form-group checkbox-group">
-                        {{ form.agree_rules|attr:"id:id_agree_rules"|add_class:"form-check-input-hidden" }}
-                        <label for="id_agree_rules" class="custom-checkbox-label">
+                        {{ form.agree_rules|attr:"id:id_agree_rules"|add_class:"form-check-input-hidden"|attr:"disabled:disabled" }}
+                        <label for="id_agree_rules" class="custom-checkbox-label" onclick="openConsentModalInstant(1); return false;">
                             <span class="custom-checkbox-visual">
                                 <span class="custom-checkbox-unchecked"></span>
                                 <span class="custom-checkbox-checked"></span>
@@ -384,8 +384,8 @@
                         {% if form.agree_rules.errors %}<span class="error-message">{{ form.agree_rules.errors|first }}</span>{% endif %}
                     </div>
                     <div class="form-group checkbox-group">
-                        {{ form.agree_data_processing|attr:"id:id_agree_data_processing"|add_class:"form-check-input-hidden" }}
-                        <label for="id_agree_data_processing" class="custom-checkbox-label">
+                        {{ form.agree_data_processing|attr:"id:id_agree_data_processing"|add_class:"form-check-input-hidden"|attr:"disabled:disabled" }}
+                        <label for="id_agree_data_processing" class="custom-checkbox-label" onclick="openConsentModalInstant(2); return false;">
                             <span class="custom-checkbox-visual">
                                 <span class="custom-checkbox-unchecked"></span>
                                 <span class="custom-checkbox-checked"></span>
