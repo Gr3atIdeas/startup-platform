@@ -603,6 +603,14 @@ document.addEventListener('DOMContentLoaded', function () {
       })
     })
   }
+  // Делегирование клика по любым лейблам согласий (на случай динамики/оверлеев)
+  document.addEventListener('click', function(e){
+    var lbl=e.target.closest && e.target.closest('.agreement-section .custom-checkbox-label')
+    if(!lbl) return
+    var inputId=lbl.getAttribute('for')
+    if(inputId==='id_agree_rules'){ e.preventDefault(); openConsentModalInstant(1) }
+    else if(inputId==='id_agree_data_processing'){ e.preventDefault(); openConsentModalInstant(2) }
+  }, true)
 
   // Убираем плавный скролл — только мгновенный
   function instantScrollIntoView(node){ try{ node.scrollIntoView({behavior:'instant', block:'center'}) }catch(_){ node.scrollIntoView() } }
