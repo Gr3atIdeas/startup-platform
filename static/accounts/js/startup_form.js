@@ -556,6 +556,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var close=document.getElementById('consentCloseBtn')
     if(close) close.onclick=function(){ modal.classList.remove('open'); modal.style.visibility='hidden'; modal.style.opacity='0' }
     modal.onclick=function(e){ if(e.target===modal){ modal.classList.remove('open'); modal.style.visibility='hidden'; modal.style.opacity='0' } }
+    // принудительный фокус в модалку
+    setTimeout(function(){ try{ (dialog||modal).focus({preventScroll:true}) }catch(_){ } }, 0)
   }
   // Экспортируем для inline-обработчиков в шаблоне
   window.openConsentModalInstant = openConsentModalInstant
