@@ -481,17 +481,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if(label && input){ label.addEventListener('click', function(e){ e.preventDefault(); input.click() }) }
   })()
 
-  // Надёжные кнопки для файлов
-  ;(function(){
-    var bind=function(btnSelector, inputId){
-      var btn=document.querySelector(btnSelector)
-      var input=document.getElementById(inputId)
-      if(btn && input){ btn.addEventListener('click', function(){ input.click() }) }
-    }
-    bind('#creativesDropArea .custom-file-upload-button','id_creatives_input')
-    bind('#videoDropArea .custom-file-upload-button','id_video_input')
-    bind('#proofsDropArea .custom-file-upload-button','id_proofs_input')
-  })()
+  // Кнопки выбора файлов уже имеют inline onclick в шаблоне — дублирующее навешивание убрано
 
   // Планеты (оптимизация: один IMG)
   try {
@@ -568,25 +558,17 @@ document.addEventListener('DOMContentLoaded', function () {
     if(close) close.onclick=function(){ modal.classList.remove('open'); modal.style.visibility='hidden'; modal.style.opacity='0' }
     modal.onclick=function(e){ if(e.target===modal){ modal.classList.remove('open'); modal.style.visibility='hidden'; modal.style.opacity='0' } }
   }
-  // Кнопки документов: навешиваем и через делегирование на случай рендеров
-  function bindConsentButtons(){
-    document.querySelectorAll('.consent-doc-btn').forEach(function(b){
-      if(!b._consentBound){
-        b.addEventListener('click', function(){
-          var n=parseInt(b.getAttribute('data-doc'))||1
-          openConsentModalInstant(n)
-        })
-        b._consentBound=true
-      }
+  // Кнопки документов: строгое делегирование от контейнера
+  var docsContainer=document.querySelector('.consents-docs-buttons')
+  if(docsContainer){
+    docsContainer.addEventListener('click', function(e){
+      var btn=e.target.closest('.consent-doc-btn')
+      if(!btn) return
+      e.preventDefault(); e.stopPropagation()
+      var n=parseInt(btn.getAttribute('data-doc'))||1
+      openConsentModalInstant(n)
     })
   }
-  bindConsentButtons()
-  document.addEventListener('click', function(e){
-    if(e.target && e.target.classList && e.target.classList.contains('consent-doc-btn')){
-      var n=parseInt(e.target.getAttribute('data-doc'))||1
-      openConsentModalInstant(n)
-    }
-  })
   var agreeLabels=document.querySelectorAll('.agreement-section .custom-checkbox-label')
   if(agreeLabels && agreeLabels.length){
     agreeLabels.forEach(function(lbl){
