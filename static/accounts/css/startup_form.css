@@ -822,6 +822,9 @@ textarea.form-control.input-error {
   flex-direction: column;
   gap: 15px; 
   align-items: flex-start; 
+  pointer-events: auto;
+  position: relative;
+  z-index: 5;
 }
 
 .consents-docs-buttons { display: flex; gap: 10px; pointer-events: auto; position: relative; z-index: 5; }
