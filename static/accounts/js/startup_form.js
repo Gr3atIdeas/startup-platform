@@ -475,6 +475,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var btn=document.getElementById('logoUploadButton')
     var input=document.getElementById('id_logo_input')
     if(btn && input){ btn.addEventListener('click', function(){ input.click() }) }
+    // доп. клик по самой плитке логотипа
+    var label=document.querySelector('.logo-upload-label')
+    if(label && input){ label.addEventListener('click', function(e){ e.preventDefault(); input.click() }) }
   })()
 
   // Надёжные кнопки для файлов
@@ -512,7 +515,7 @@ document.addEventListener('DOMContentLoaded', function () {
       imgEl=document.createElement('img')
       imgEl.className='planet-ribbon-item'
       imgEl.loading='lazy'; imgEl.decoding='async'
-      imgEl.onerror=function(){ imgEl.src='https://via.placeholder.com/450x450?text=Planet' }
+      imgEl.onerror=function(){ imgEl.src='https://via.placeholder.com/520x520?text=Planet' }
       planetRibbon.appendChild(imgEl)
       planetIndex=0
       setSrc()
@@ -555,18 +558,24 @@ document.addEventListener('DOMContentLoaded', function () {
     if(close) close.onclick=function(){ modal.classList.remove('open'); modal.style.visibility='hidden'; modal.style.opacity='0' }
     modal.onclick=function(e){ if(e.target===modal){ modal.classList.remove('open'); modal.style.visibility='hidden'; modal.style.opacity='0' } }
   }
-  document.querySelectorAll('.consent-doc-btn').forEach(function(b){
-    b.addEventListener('click', function(){
-      var n=parseInt(b.getAttribute('data-doc'))||1
-      openConsentModalInstant(n)
+  var consentBtns = document.querySelectorAll('.consent-doc-btn')
+  if(consentBtns && consentBtns.length){
+    consentBtns.forEach(function(b){
+      b.addEventListener('click', function(){
+        var n=parseInt(b.getAttribute('data-doc'))||1
+        openConsentModalInstant(n)
+      })
     })
-  })
-  document.querySelectorAll('.agreement-section .custom-checkbox-label').forEach(function(lbl){
-    lbl.addEventListener('click', function(e){
-      var inputId=this.getAttribute('for'); var input=document.getElementById(inputId)
-      if(input && input.hasAttribute('disabled')){ e.preventDefault(); if(!doc1Read) openConsentModalInstant(1); else if(!doc2Read) openConsentModalInstant(2) }
+  }
+  var agreeLabels=document.querySelectorAll('.agreement-section .custom-checkbox-label')
+  if(agreeLabels && agreeLabels.length){
+    agreeLabels.forEach(function(lbl){
+      lbl.addEventListener('click', function(e){
+        var inputId=this.getAttribute('for'); var input=document.getElementById(inputId)
+        if(input && input.hasAttribute('disabled')){ e.preventDefault(); if(!doc1Read) openConsentModalInstant(1); else if(!doc2Read) openConsentModalInstant(2) }
+      })
     })
-  })
+  }
 
   // Убираем плавный скролл — только мгновенный
   function instantScrollIntoView(node){ try{ node.scrollIntoView({behavior:'instant', block:'center'}) }catch(_){ node.scrollIntoView() } }
