@@ -568,15 +568,25 @@ document.addEventListener('DOMContentLoaded', function () {
     if(close) close.onclick=function(){ modal.classList.remove('open'); modal.style.visibility='hidden'; modal.style.opacity='0' }
     modal.onclick=function(e){ if(e.target===modal){ modal.classList.remove('open'); modal.style.visibility='hidden'; modal.style.opacity='0' } }
   }
-  var consentBtns = document.querySelectorAll('.consent-doc-btn')
-  if(consentBtns && consentBtns.length){
-    consentBtns.forEach(function(b){
-      b.addEventListener('click', function(){
-        var n=parseInt(b.getAttribute('data-doc'))||1
-        openConsentModalInstant(n)
-      })
+  // Кнопки документов: навешиваем и через делегирование на случай рендеров
+  function bindConsentButtons(){
+    document.querySelectorAll('.consent-doc-btn').forEach(function(b){
+      if(!b._consentBound){
+        b.addEventListener('click', function(){
+          var n=parseInt(b.getAttribute('data-doc'))||1
+          openConsentModalInstant(n)
+        })
+        b._consentBound=true
+      }
     })
   }
+  bindConsentButtons()
+  document.addEventListener('click', function(e){
+    if(e.target && e.target.classList && e.target.classList.contains('consent-doc-btn')){
+      var n=parseInt(e.target.getAttribute('data-doc'))||1
+      openConsentModalInstant(n)
+    }
+  })
   var agreeLabels=document.querySelectorAll('.agreement-section .custom-checkbox-label')
   if(agreeLabels && agreeLabels.length){
     agreeLabels.forEach(function(lbl){
