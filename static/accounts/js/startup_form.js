@@ -533,10 +533,23 @@ document.addEventListener('DOMContentLoaded', function () {
     content.innerHTML=''
     var inner=document.createElement('div')
     inner.style.maxHeight='60vh'; inner.style.overflow='auto'; inner.style.padding='8px'
-    inner.innerHTML = ('<p>Текст документа '+docNumber+'. Пролистайте до конца для подтверждения.</p>').repeat(12)
+    // Делаем первый документ длиннее, чтобы точно был скролл
+    var repeatCount = docNumber===1 ? 24 : 12
+    inner.innerHTML = ('<p>Текст документа '+docNumber+'. Пролистайте до конца для подтверждения.</p>').repeat(repeatCount)
     content.appendChild(inner)
     confirm.disabled=true
-    inner.onscroll=function(){ if(inner.scrollTop+inner.clientHeight>=inner.scrollHeight-2){ confirm.disabled=false } }
+    function tryUnlock(){
+      var atBottom = inner.scrollTop + inner.clientHeight >= inner.scrollHeight - 2
+      if(atBottom){ confirm.disabled=false; return true }
+      return false
+    }
+    inner.addEventListener('scroll', tryUnlock)
+    inner.addEventListener('wheel', tryUnlock, {passive:true})
+    inner.addEventListener('touchmove', tryUnlock, {passive:true})
+    // Если текста мало и скролла нет — сразу разблокируем
+    setTimeout(function(){
+      if(inner.scrollHeight<=inner.clientHeight+2){ confirm.disabled=false }
+    }, 0)
     modal.classList.add('open')
     modal.style.visibility='visible'; modal.style.opacity='1'
     confirm.onclick=function(){
