@@ -464,11 +464,10 @@ document.addEventListener('DOMContentLoaded', function () {
   var doc1Read=false, doc2Read=false;
   var currentDocNumber=null; // 1 или 2 — какой документ открыт сейчас
   function setConsentsState(){
-    var allow=doc1Read&&doc2Read;
     var r=document.getElementById('id_agree_rules');
     var d=document.getElementById('id_agree_data_processing');
-    if(r){ if(allow){ r.removeAttribute('disabled'); } else { r.setAttribute('disabled','disabled'); r.checked=false; } }
-    if(d){ if(allow){ d.removeAttribute('disabled'); } else { d.setAttribute('disabled','disabled'); d.checked=false; } }
+    if(r){ if(doc1Read){ r.removeAttribute('disabled'); } else { r.setAttribute('disabled','disabled'); r.checked=false; } }
+    if(d){ if(doc2Read){ d.removeAttribute('disabled'); } else { d.setAttribute('disabled','disabled'); d.checked=false; } }
   }
   setConsentsState();
   // Кнопка выбора лого — триггерит скрытый input
@@ -575,14 +574,30 @@ document.addEventListener('DOMContentLoaded', function () {
   // Прямое навешивание на кнопки (подстраховка)
   document.querySelectorAll('.consent-doc-btn').forEach(function(b){
     if(!b._consentDirect){
-      b.addEventListener('click', function(e){
+      var fn=function(e){
         e.preventDefault();
+        e.stopPropagation();
         var n=parseInt(b.getAttribute('data-doc'))||1
         openConsentModalInstant(n)
-      }, true)
+      }
+      ;['click','mousedown','touchstart'].forEach(function(t){ b.addEventListener(t, fn, true) })
+      b.style.pointerEvents='auto'
       b._consentDirect=true
     }
   })
+
+  // Жёсткая привязка к лейблам чекбоксов (включая mousedown/touchstart)
+  ;(function(){
+    function bindLabel(labelSel, docNum){
+      var lbl=document.querySelector(labelSel)
+      if(!lbl) return
+      var fn=function(e){ e.preventDefault(); e.stopPropagation(); openConsentModalInstant(docNum) }
+      ;['click','mousedown','touchstart'].forEach(function(t){ lbl.addEventListener(t, fn, true) })
+      lbl.style.pointerEvents='auto'
+    }
+    bindLabel('label[for="id_agree_rules"]', 1)
+    bindLabel('label[for="id_agree_data_processing"]', 2)
+  })()
   var agreeLabels=document.querySelectorAll('.agreement-section .custom-checkbox-label')
   if(agreeLabels && agreeLabels.length){
     agreeLabels.forEach(function(lbl){
