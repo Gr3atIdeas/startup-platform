@@ -372,6 +372,13 @@
              <div class="form-content-section agreement-section-outer-wrapper">
                 <div class="agreement-section">
                     <h3 class="section-title">Согласие</h3>
+                    <div class="form-group">
+                        <div class="small-text">Перед установкой галочек ознакомьтесь с документами:</div>
+                        <div class="consents-docs-buttons">
+                            <button type="button" class="custom-file-upload-button consent-doc-btn" data-doc="1" onclick="openConsentModalInstant(1)">Документ 1</button>
+                            <button type="button" class="custom-file-upload-button consent-doc-btn" data-doc="2" onclick="openConsentModalInstant(2)">Документ 2</button>
+                        </div>
+                    </div>
                     <div class="form-group checkbox-group">
                         {{ form.agree_rules|attr:"id:id_agree_rules"|add_class:"form-check-input-hidden"|attr:"disabled:disabled" }}
                         <label for="id_agree_rules" class="custom-checkbox-label" onclick="openConsentModalInstant(1); return false;">
