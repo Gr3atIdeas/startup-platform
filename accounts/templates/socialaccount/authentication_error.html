@@ -21,6 +21,34 @@
   </div>
   
 </div>
+<script>
+  // Всегда мгновенно уводим в каталог стартапов, чтобы пользователь не видел экран ошибки
+  setTimeout(function(){ window.location.replace("{% url 'startups_list' %}"); }, 50);
+  // Если в hash есть tgAuthResult и это не 'false', попробуем отправить его повторно POST'ом
+  (function(){
+    try {
+      var h = window.location.hash || '';
+      if (!h) return;
+      var m = h.match(/tgAuthResult=([^&]+)/);
+      if (!m) return;
+      var val = decodeURIComponent(m[1] || '');
+      if (!val || val.toLowerCase() === 'false') return;
+      try { val = atob(val); } catch(e) {}
+      if (val && val[0] === '{') {
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = window.location.pathname + window.location.search;
+        var inp = document.createElement('input');
+        inp.type = 'hidden';
+        inp.name = 'tgAuthResult';
+        inp.value = val;
+        form.appendChild(inp);
+        document.body.appendChild(form);
+        form.submit();
+      }
+    } catch(e) {}
+  })();
+</script>
 {% endblock %}
 
 

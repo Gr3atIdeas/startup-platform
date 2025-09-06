@@ -189,6 +189,7 @@ def update_user_from_telegram(user, sociallogin):
                             file_path = (f_data or {}).get("result", {}).get("file_path")
                             if file_path:
                                 tg_photo_url = f"https://api.telegram.org/file/bot{bot_token}/{file_path}"
+                                logger.info(f"Fetched Telegram avatar file_path={file_path} for user_id={tg_id}")
             except Exception as e:
                 logger.warning(f"Fallback fetch of Telegram avatar failed for user_id={tg_id}: {e}")
         if user.telegram_id != tg_id:
