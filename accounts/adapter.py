@@ -56,8 +56,6 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         return url
     def get_login_redirect_url(self, request):
         logger.debug("Redirecting after login to /profile/")
-        # Если пользователь уже аутентифицирован, но попал на ошибку из allauth,
-        # подстрахуемся явным редиректом на целевую страницу.
         next_url = request.GET.get('next') or request.POST.get('next')
         if next_url:
             return next_url
@@ -82,7 +80,6 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
                 logger.warning(f"Multiple SocialApps found: {[app.id for app in apps]}")
             app = apps.first()
             logger.info(f"Selected SocialApp: id={app.id}, provider={app.provider}, name={app.name}, sites={list(app.sites.values('id', 'domain'))}")
-            # Ensure secret (bot token) is set from settings, if available
             try:
                 token = getattr(settings, 'TELEGRAM_BOT_TOKEN', None)
                 if token and (not app.secret or app.secret != token):

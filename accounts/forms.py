@@ -279,7 +279,6 @@ class StartupForm(forms.ModelForm):
             cleaned_data["creatives"] = [creatives]
         else:
             cleaned_data["creatives"] = creatives if creatives else []
-        # Валидация количества изображений: от 1 до 3
         if len(cleaned_data.get("creatives", [])) == 0:
             self.add_error("creatives", "Загрузите хотя бы одно изображение (до 3 файлов).")
         elif len(cleaned_data.get("creatives", [])) > 3:
@@ -292,13 +291,11 @@ class StartupForm(forms.ModelForm):
             cleaned_data["proofs"] = [proofs]
         else:
             cleaned_data["proofs"] = proofs if proofs else []
-        # Валидация количества документов: от 1 до 10
         if len(cleaned_data.get("proofs", [])) == 0:
             self.add_error("proofs", "Загрузите хотя бы один документ (до 10 файлов).")
         elif len(cleaned_data.get("proofs", [])) > 10:
             self.add_error("proofs", "Можно прикрепить не более 10 документов.")
 
-        # Видео: MultipleFileField, от 1 до 3
         videos = cleaned_data.get("video", [])
         if isinstance(videos, list) and all(isinstance(item, list) for item in videos):
             cleaned_data["video"] = [file for sublist in videos for file in sublist]

@@ -3298,7 +3298,6 @@ def create_startup(request):
                     except Exception as e2:
                         logger.error(f"Ошибка прямой загрузки в S3 для {file_path}: {e2}", exc_info=True)
                         return False
-            # Fallback: если по какой-то причине cleaned_data пустой, берем из request.FILES
             logo = form.cleaned_data.get("logo") or request.FILES.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
