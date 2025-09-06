@@ -77,6 +77,15 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
                 logger.warning(f"Multiple SocialApps found: {[app.id for app in apps]}")
             app = apps.first()
             logger.info(f"Selected SocialApp: id={app.id}, provider={app.provider}, name={app.name}, sites={list(app.sites.values('id', 'domain'))}")
+            # Ensure secret (bot token) is set from settings, if available
+            try:
+                token = getattr(settings, 'TELEGRAM_BOT_TOKEN', None)
+                if token and (not app.secret or app.secret != token):
+                    app.secret = token
+                    app.save(update_fields=['secret'])
+                    logger.info("Updated Telegram SocialApp.secret from settings token")
+            except Exception:
+                logger.warning("Could not ensure Telegram SocialApp.secret from settings", exc_info=True)
             return app
         except MultipleObjectsReturned:
             logger.error(f"MultipleObjectsReturned caught for provider '{provider}'")
