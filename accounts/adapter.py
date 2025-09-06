@@ -57,8 +57,11 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     def get_login_redirect_url(self, request):
         logger.debug("Redirecting after login to /profile/")
         return reverse("profile")
-    def get_app(self, request, provider):
-        logger.debug(f"Attempting to get SocialApp for provider '{provider}' with SITE_ID={settings.SITE_ID}")
+    def get_app(self, request, provider, client_id=None, **kwargs):
+        logger.debug(
+            f"Attempting to get SocialApp for provider '{provider}' with SITE_ID={settings.SITE_ID}"
+            + (f", client_id={client_id}" if client_id else "")
+        )
         try:
             current_site = Site.objects.get(id=settings.SITE_ID)
             apps = SocialApp.objects.filter(provider=provider, sites=current_site)
