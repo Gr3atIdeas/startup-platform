@@ -1,0 +1,29 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+
+{% block title %}Ошибка авторизации{% endblock %}
+
+{% block content %}
+<div style="min-height: 50vh; display: flex; align-items: center; justify-content: center;">
+  <div style="max-width: 560px; padding: 24px; border-radius: 12px; background: rgba(255,255,255,0.04); color: #fff; text-align: center;">
+    {% if request.user.is_authenticated %}
+      <h1 style="margin: 0 0 12px">Вы уже авторизованы</h1>
+      <p style="margin: 0 0 20px; color: #ccc">Сейчас вернём вас на предыдущую страницу…</p>
+      <a href="{% url 'startups_list' %}" style="display:inline-block; padding:12px 18px; border:1px solid #fff; border-radius:8px; text-decoration:none; color:#fff">Перейти на главную</a>
+      <script>
+        setTimeout(function(){
+          if (window.history.length > 1) { window.history.back(); }
+          else { window.location.href = "{% url 'startups_list' %}"; }
+        }, 300);
+      </script>
+    {% else %}
+      <h1 style="margin: 0 0 12px">Third-Party Login Failure</h1>
+      <p style="margin: 0 0 20px; color: #ccc">Произошла ошибка при попытке входа через сторонний сервис.</p>
+      <a href="{% url 'login' %}" style="display:inline-block; padding:12px 18px; border:1px solid #fff; border-radius:8px; text-decoration:none; color:#fff">Вернуться к входу</a>
+    {% endif %}
+  </div>
+  
+</div>
+{% endblock %}
+
+

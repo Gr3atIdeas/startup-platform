@@ -56,7 +56,12 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         return url
     def get_login_redirect_url(self, request):
         logger.debug("Redirecting after login to /profile/")
-        return reverse("profile")
+        # Если пользователь уже аутентифицирован, но попал на ошибку из allauth,
+        # подстрахуемся явным редиректом на целевую страницу.
+        next_url = request.GET.get('next') or request.POST.get('next')
+        if next_url:
+            return next_url
+        return reverse("startups_list")
     def get_app(self, request, provider, client_id=None, **kwargs):
         logger.debug(
             f"Attempting to get SocialApp for provider '{provider}' with SITE_ID={settings.SITE_ID}"
