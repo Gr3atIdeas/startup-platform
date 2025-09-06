@@ -59,16 +59,13 @@ def is_encoding_cookie(line: str) -> bool:
 
 
 def should_skip_dir(dirpath: str, root: str) -> bool:
-    # Normalize for consistent comparisons
     rel = os.path.relpath(dirpath, root).replace("\\", "/")
     parts = set(rel.split("/"))
     if any(name in parts for name in SKIP_DIR_NAMES):
         return True
-    # Skip any migrations subdirectory
     if "/migrations" in f"/{rel}":
         return True
 
-    # Skip most of static, but allow certain subtrees
     if rel.startswith("static/"):
         allow_prefixes = [
             "static/src/",
@@ -93,10 +90,8 @@ def remove_full_line_comments(
 
     def is_hash_comment(idx: int, line: str) -> bool:
         stripped = line.lstrip()
-        # Preserve shebang on the very first line
         if idx == 0 and stripped.startswith("#!"):
             return False
-        # Preserve encoding cookie on first two lines (PEP 263)
         if idx in (0, 1) and stripped.startswith("#") and is_encoding_cookie(line):
             return False
         return stripped.startswith("#")
@@ -115,7 +110,6 @@ def remove_full_line_comments(
                 removed += 1
                 continue
         else:
-            # Unknown ext (should not happen due to filtering)
             pass
 
         new_lines.append(line)
@@ -194,7 +188,6 @@ def remove_block_comments_js_like(text: str) -> Tuple[str, int]:
             elif ch == "`":
                 in_template = False
             elif ch == "{" and peek(1) == "}":
-                # handle empty interpolation edge harmlessly
                 pass
             elif ch == "$" and peek(1) == "{" :
                 template_brace_depth += 1
@@ -204,7 +197,6 @@ def remove_block_comments_js_like(text: str) -> Tuple[str, int]:
             i += 1
             continue
 
-        # Not in any string/template/comment
         if ch == "/" and nxt == "*":
             in_block_comment = True
             i += 2
@@ -246,7 +238,6 @@ def remove_html_comments(text: str) -> Tuple[str, int]:
 
     while i < n:
         if text[i] == "<" and peek(1) == "!" and peek(2) == "-" and peek(3) == "-":
-            # enter comment
             i += 4
             while i < n and not (
                 text[i] == "-" and peek(1) == "-" and peek(2) == ">"
@@ -254,7 +245,6 @@ def remove_html_comments(text: str) -> Tuple[str, int]:
                 if text[i] == "\n":
                     removed_newlines += 1
                 i += 1
-            # skip closing '-->' if present
             if i < n:
                 i += 3
             continue
@@ -266,7 +256,6 @@ def remove_html_comments(text: str) -> Tuple[str, int]:
 
 def iter_target_files(root: str) -> Iterable[str]:
     for dirpath, dirnames, filenames in os.walk(root):
-        # In-place filter dirnames to prune walk efficiently
         pruned = []
         for d in list(dirnames):
             full = os.path.join(dirpath, d)
@@ -282,7 +271,6 @@ def iter_target_files(root: str) -> Iterable[str]:
 
 
 def process_file(path: str, apply: bool, backup: bool) -> Tuple[int, int]:
-    # Returns (removed_lines, written_bytes)
     try:
         with io.open(path, "r", encoding="utf-8", errors="replace", newline="") as f:
             original = f.read()
@@ -290,24 +278,19 @@ def process_file(path: str, apply: bool, backup: bool) -> Tuple[int, int]:
         print(f"[WARN] Failed to read {path}: {e}", file=sys.stderr)
         return 0, 0
 
-    # Keep original line endings by splitting on \n and preserving terminators
-    # Use splitlines(keepends=True) to preserve EOLs.
     lines = original.splitlines(keepends=True)
     _, ext = os.path.splitext(path)
 
-    # Step 1: remove full-line comments (#, //)
     new_lines, removed_full_lines = remove_full_line_comments(lines, ext)
     text_after_line_cleanup = "".join(new_lines)
 
     removed_extra_lines = 0
 
-    # Step 2: remove block comments where applicable
     if ext in {".js", ".jsx", ".ts", ".tsx", ".vue", ".scss", ".css"}:
         text_after_blocks, removed_nl = remove_block_comments_js_like(text_after_line_cleanup)
         removed_extra_lines += removed_nl
         text_after_line_cleanup = text_after_blocks
 
-    # Step 3: remove HTML comments for HTML/Vue templates
     if ext in {".html", ".htm", ".vue"}:
         text_after_html, removed_nl_html = remove_html_comments(text_after_line_cleanup)
         removed_extra_lines += removed_nl_html
