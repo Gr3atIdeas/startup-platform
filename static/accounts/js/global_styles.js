@@ -44,14 +44,12 @@ document.addEventListener('DOMContentLoaded', function () {
   })
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener('click', function (e) {
-      const targetId = this.getAttribute('href')
-      if (targetId && targetId.length > 1) {
+      const hrefValue = this.getAttribute('href')
+      if (hrefValue && hrefValue.startsWith('#') && hrefValue.length > 1) {
         e.preventDefault()
-        const targetElement = document.querySelector(targetId)
+        const targetElement = document.querySelector(hrefValue)
         if (targetElement) {
-          targetElement.scrollIntoView({
-            behavior: 'smooth',
-          })
+          targetElement.scrollIntoView({ behavior: 'smooth' })
         }
       }
     })
