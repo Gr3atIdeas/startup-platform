@@ -56,8 +56,11 @@ class TelegramCallbackCompatMiddleware:
                 try:
                     if hasattr(request, "POST"):
                         parsed_value = request.POST.get("tgAuthResult", None)
-                        # Приводим строковое "false" к False
-                        if isinstance(parsed_value, str) and parsed_value.strip().lower() == "false":
+                        # Строковые true/false считаем некорректными
+                        if isinstance(parsed_value, str) and parsed_value.strip().lower() in ("true", "false"):
+                            parsed_value = False
+                        # Булевы тоже некорректны
+                        if isinstance(parsed_value, bool):
                             parsed_value = False
                         # Если это строка JSON — распарсим для проверки
                         if isinstance(parsed_value, str) and parsed_value and parsed_value.strip().startswith("{"):
