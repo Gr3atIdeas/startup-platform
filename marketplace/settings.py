@@ -101,6 +101,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "accounts.middleware.SecurityMiddleware",
+    "accounts.middleware.TelegramCallbackCompatMiddleware",
     "accounts.middleware.WwwRedirectMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
