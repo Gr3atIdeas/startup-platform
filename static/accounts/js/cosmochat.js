@@ -575,6 +575,7 @@ function startPolling() {
 }
 
 function updateChatList(newChats, container) {
+    const effectiveRole = (window.REQUEST_USER_ROLE || window.requestUserRole || '').toLowerCase();
     const existingChats = new Map();
     const existingChatElements = container.querySelectorAll('.chat-item-new');
 
@@ -588,7 +589,7 @@ function updateChatList(newChats, container) {
     const fragment = document.createDocumentFragment();
 
     newChats.forEach(chat => {
-        if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && requestUserRole === 'moderator'))) {
+        if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && effectiveRole === 'moderator'))) {
             const existingElement = existingChats.get(chat.conversation_id);
 
             if (existingElement) {
@@ -942,7 +943,8 @@ function updateChatListItem(lastMessage) {
 }
 function openProfileModal(userId) {
   currentProfileUserId = userId
-  if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = true;
+  const startChatButtonEl = document.getElementById('startChatBtn');
+  if (startChatButtonEl) startChatButtonEl.disabled = true;
   fetch(`/profile/?user_id=${userId}`, {
     headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
   })
@@ -967,12 +969,14 @@ function openProfileModal(userId) {
       if (profileLink) profileLink.href = `/profile/${userId}/`
       profileModal.style.display = 'flex';
       profileModal.classList.add('active');
-      if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = false;
+      const startChatButtonEl2 = document.getElementById('startChatBtn');
+      if (startChatButtonEl2) startChatButtonEl2.disabled = false;
     })
     .catch((error) => {
       console.error('Ошибка загрузки профиля:', error)
       alert('Произошла ошибка при загрузке профиля.')
-      if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = false;
+      const startChatButtonEl3 = document.getElementById('startChatBtn');
+      if (startChatButtonEl3) startChatButtonEl3.disabled = false;
     })
 }
 function closeProfileModal() {
@@ -988,7 +992,8 @@ function startChat() {
     alert('Ошибка: пользователь не выбран')
     return
   }
-  if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = true;
+  const startChatButtonEl = document.getElementById('startChatBtn');
+  if (startChatButtonEl) startChatButtonEl.disabled = true;
   fetch(`/cosmochat/start-chat/${userId}/`, {
     method: 'POST',
     headers: {
@@ -1022,6 +1027,26 @@ function startChat() {
             if (noChatsMessage) {
               noChatsMessage.remove()
             }
+            // Добавляем новый чат сразу в список
+            chatListContainer.prepend(newChatItem)
+
+            // Быстро обновляем время/дату предпросмотра
+            setTimeout(() => {
+                const chatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${data.chat.conversation_id}"]`);
+                if (chatItem) {
+                    const timestampChat = chatItem.querySelector('.timestamp-chat');
+                    const dateChatPreview = chatItem.querySelector('.date-chat-preview');
+                    if (timestampChat) {
+                        const now = new Date();
+                        timestampChat.textContent = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                    }
+                    if (dateChatPreview) {
+                        const now = new Date();
+                        dateChatPreview.textContent = now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+                    }
+                }
+            }, 100);
+
             startPolling()
             waitForChatInDOM(chatId, 3000)
               .then(() => {
@@ -1044,11 +1069,13 @@ function startChat() {
       } else {
         alert(data.error || 'Ошибка при создании чата')
       }
-      if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = false;
+      const startChatButtonEl2 = document.getElementById('startChatBtn');
+      if (startChatButtonEl2) startChatButtonEl2.disabled = false;
     })
     .catch(() => {
       alert('Произошла ошибка при создании чата')
-      if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = false;
+      const startChatButtonEl3 = document.getElementById('startChatBtn');
+      if (startChatButtonEl3) startChatButtonEl3.disabled = false;
     })
 }
 function openAddParticipantModal() {
@@ -1328,8 +1355,20 @@ async function leaveChat() {
     .then(data => {
       if (data.success) {
         window.showNotification(data.message || 'Вы покинули чат.', 'success');
+        // Удаляем чат из списка
+        const chatElem = chatListContainer && currentChatId
+          ? chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`)
+          : null;
+        if (chatElem) chatElem.remove();
+
+        // Сбрасываем состояние окна чата
         currentChatId = null;
-        location.reload();
+        lastMessageTimestamp = null;
+        displayedMessageIds.clear();
+        showNoChatSelected();
+
+        // Перезапускаем polling, чтобы обновить список чатов из бэка
+        startPolling();
       } else {
         window.showNotification(data.error || 'Ошибка при выходе из чата', 'error');
       }
