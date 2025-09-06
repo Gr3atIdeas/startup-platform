@@ -159,6 +159,38 @@ def update_user_from_telegram(user, sociallogin):
         tg_id = str(telegram_data.get('id'))
         tg_username = telegram_data.get('username')
         tg_photo_url = telegram_data.get('photo_url')
+        # Fallback: если Telegram не прислал photo_url, пробуем получить фото через Bot API
+        if not tg_photo_url:
+            try:
+                bot_token = getattr(settings, 'TELEGRAM_BOT_TOKEN', None)
+                if bot_token and tg_id:
+                    # 1) Получаем file_id аватара пользователя
+                    resp = requests.get(
+                        f"https://api.telegram.org/bot{bot_token}/getUserProfilePhotos",
+                        params={"user_id": tg_id, "limit": 1},
+                        timeout=5,
+                    )
+                    resp.raise_for_status()
+                    data = resp.json()
+                    photos = (data or {}).get("result", {}).get("photos", [])
+                    if photos:
+                        sizes = photos[0]
+                        # Берём самый большой размер (последний в массиве)
+                        file_id = sizes[-1].get("file_id") if sizes else None
+                        if file_id:
+                            # 2) Получаем file_path и строим постоянную ссылку
+                            f_resp = requests.get(
+                                f"https://api.telegram.org/bot{bot_token}/getFile",
+                                params={"file_id": file_id},
+                                timeout=5,
+                            )
+                            f_resp.raise_for_status()
+                            f_data = f_resp.json()
+                            file_path = (f_data or {}).get("result", {}).get("file_path")
+                            if file_path:
+                                tg_photo_url = f"https://api.telegram.org/file/bot{bot_token}/{file_path}"
+            except Exception as e:
+                logger.warning(f"Fallback fetch of Telegram avatar failed for user_id={tg_id}: {e}")
         if user.telegram_id != tg_id:
             user.telegram_id = tg_id
             update_fields.append('telegram_id')
