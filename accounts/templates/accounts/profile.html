@@ -557,11 +557,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     initializeActiveTab();
 
-    // Поделиться профилем: копирование ссылки
+    // Поделиться профилем: копирование абсолютной ссылки и нотификация
     const shareBtn = document.getElementById('shareProfileBtn');
     if (shareBtn) {
         shareBtn.addEventListener('click', function() {
-            const url = window.location.href.split('#')[0];
+            const absoluteUrl = window.location.origin + "{% url 'user_profile' user.user_id %}";
             function copyViaTextarea(text) {
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
@@ -571,18 +571,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 textarea.select();
                 try {
                     document.execCommand('copy');
-                    alert('Ссылка на профиль скопирована');
+                    if (typeof window.showNotification === 'function') {
+                        window.showNotification('Ссылка на профиль скопирована', 'success', 3000);
+                    }
                 } catch (e) {
                     console.error(e);
                 }
                 document.body.removeChild(textarea);
             }
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(url)
-                    .then(() => alert('Ссылка на профиль скопирована'))
-                    .catch(() => copyViaTextarea(url));
+                navigator.clipboard.writeText(absoluteUrl)
+                    .then(() => {
+                        if (typeof window.showNotification === 'function') {
+                            window.showNotification('Ссылка на профиль скопирована', 'success', 3000);
+                        }
+                    })
+                    .catch(() => copyViaTextarea(absoluteUrl));
             } else {
-                copyViaTextarea(url);
+                copyViaTextarea(absoluteUrl);
             }
         });
     }
