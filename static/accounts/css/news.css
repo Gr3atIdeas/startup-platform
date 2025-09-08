@@ -761,6 +761,19 @@ input:checked + .slider::before {
   background: rgba(255,255,255,0.1);
 }
 
+/* Обеспечиваем 100% ширину полей внутри модалки */
+.modal-popup .form-group,
+.modal-popup form { width: 100%; }
+.modal-popup .form-group input[type='text'],
+.modal-popup .form-group textarea,
+.modal-popup .form-group input[type='file'],
+.modal-popup .custom-file-label {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  box-sizing: border-box;
+}
+
 .form-group textarea {
   min-height: 150px; 
   resize: vertical;
