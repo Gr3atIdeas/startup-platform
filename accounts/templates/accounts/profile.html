@@ -63,14 +63,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="profile-sidebar-social-icons-round">
-                <div class="profile-sidebar-social-icon-round-item">
-                    <img src="{% static 'accounts/images/profile/share_icon.svg' %}" alt="Share" class="profile-sidebar-social-icon-img">
-                </div>
-                <div class="profile-sidebar-social-icon-round-item">
-                     <img src="{% static 'accounts/images/profile/dots.svg' %}" alt="More options" class="profile-sidebar-social-icon-img">
-                </div>
-            </div>
+            
             
             {% if is_own_profile %}
             <div class="profile-avatar-upload-section" style="display: none;">
@@ -96,6 +89,7 @@
             {% endif %}
             
             <div class="profile-sidebar-social-icons-row">
+                <img id="shareProfileBtn" class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/share_icon.svg' %}" alt="Поделиться" title="Поделиться" />
                 {% if user.vk_url %}
                 <a href="{{ user.vk_url }}" target="_blank" class="profile-sidebar-social-link">
                     <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/vk_icon_social.svg' %}" alt="VK" />
@@ -562,6 +556,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     initializeActiveTab();
+
+    // Поделиться профилем: копирование ссылки
+    const shareBtn = document.getElementById('shareProfileBtn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', function() {
+            const url = window.location.href.split('#')[0];
+            function copyViaTextarea(text) {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('Ссылка на профиль скопирована');
+                } catch (e) {
+                    console.error(e);
+                }
+                document.body.removeChild(textarea);
+            }
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url)
+                    .then(() => alert('Ссылка на профиль скопирована'))
+                    .catch(() => copyViaTextarea(url));
+            } else {
+                copyViaTextarea(url);
+            }
+        });
+    }
 });
 </script>
 {% endblock %}
