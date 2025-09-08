@@ -662,7 +662,7 @@ input:checked + .slider::before {
 }
 
 .popup {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.16);
   border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 24px 24px 28px;
   border-radius: 16px;
@@ -739,6 +739,26 @@ input:checked + .slider::before {
   font-family: Unbounded, sans-serif; 
   font-size: 14px;
   box-sizing: border-box;
+}
+
+.custom-file-label {
+  display: inline-block;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border-radius: 10px;
+  font-family: Unbounded, sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.custom-file-label:focus,
+.custom-file-label:hover {
+  outline: none;
+  background: rgba(255,255,255,0.1);
 }
 
 .form-group textarea {
