@@ -651,20 +651,43 @@ input:checked + .slider::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgb(0 0 0 / 50%);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 1000;
   justify-content: center;
   align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .popup {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  width: 500px;
-  max-width: 90%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 24px 24px 28px;
+  border-radius: 16px;
+  width: 560px;
+  max-width: 95%;
   position: relative;
-  box-shadow: 0 5px 15px rgb(0 0 0 / 30%);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  color: #fff;
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 16px;
+  background: radial-gradient(120% 120% at 10% 0%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.02) 60%, rgba(255,255,255,0) 100%);
+}
+
+.modal-title {
+  margin: 0 0 18px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
 }
 
 .popup-close {
@@ -675,20 +698,21 @@ input:checked + .slider::before {
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #888;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color .2s ease;
 }
 
 .popup-close:hover {
-  color: #000;
+  background: rgba(255,255,255,0.15);
 }
 
-.popup h2 {
-  font-family: Unbounded, sans-serif;
-  font-weight: 400;
-  font-size: 20px;
-  margin-top: 0;
-  margin-bottom: 20px;
-}
+.popup h2 { display: none; }
 
 .form-group {
   margin-bottom: 20px;
@@ -697,18 +721,21 @@ input:checked + .slider::before {
 .form-group label {
   display: block;
   font-family: Unbounded, sans-serif; 
-  font-size: 14px; 
+  font-size: 13px; 
   font-weight: 300;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  color: #e9eef7;
 }
 
 .form-group input[type='text'],
 .form-group textarea,
 .form-group input[type='file'] {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border-radius: 10px;
   font-family: Unbounded, sans-serif; 
   font-size: 14px;
   box-sizing: border-box;
@@ -721,14 +748,20 @@ input:checked + .slider::before {
 
 .submit-btn {
   padding: 12px 25px;
-  background: #7b61ff; 
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%) !important;
   color: #fff;
   border: none;
-  border-radius: 99px;
+  border-radius: 10px;
   cursor: pointer;
   font-family: Unbounded, sans-serif; 
   font-size: 16px;
   font-weight: 400;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 

@@ -79,11 +79,11 @@
       </div>
 
       
-      <div class="popup-overlay" id="newsPopup">
-        <div class="popup">
-          <button class="popup-close" onclick="closePopup()">×</button>
-          <h2>Создать новость</h2>
-          <form id="newsForm" enctype="multipart/form-data">
+      <div class="popup-overlay modal-overlay" id="newsPopup" aria-hidden="true" role="dialog">
+        <div class="popup modal-popup glass-panel" role="document">
+          <button class="popup-close modal-close-button" onclick="closePopup()" aria-label="Закрыть">×</button>
+          <h2 class="modal-title">Создать новость</h2>
+          <form id="newsForm" enctype="multipart/form-data" autocomplete="off">
             {% csrf_token %}
             <div class="form-group">
               <label for="id_title">Заголовок</label>
@@ -97,7 +97,7 @@
               <label for="id_image">Картинка</label>
               <input type="file" name="image" id="id_image" accept="image/*">
             </div>
-            <button type="submit" class="submit-btn">Создать</button>
+            <button type="submit" class="submit-btn btn btn--blue">Создать</button>
           </form>
         </div>
       </div>
@@ -114,12 +114,21 @@
   <script src="{% static 'accounts/js/news_filters.js' %}" defer></script>
 <script>
   function openPopup() {
-    document.getElementById('newsPopup').style.display = 'flex';
+    const overlay = document.getElementById('newsPopup');
+    if (!overlay) return;
+    overlay.style.display = 'flex';
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
   }
 
   function closePopup() {
-    document.getElementById('newsPopup').style.display = 'none';
-    document.getElementById('newsForm').reset();
+    const overlay = document.getElementById('newsPopup');
+    if (!overlay) return;
+    overlay.style.display = 'none';
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    const form = document.getElementById('newsForm');
+    if (form) form.reset();
   }
 
   document.getElementById('newsForm').addEventListener('submit', function(e) {
@@ -138,15 +147,26 @@
     .then(response => response.json())
     .then(data => {
       if (data.success) {
+        if (typeof window.showNotification === 'function') {
+          window.showNotification('Новость отправлена на модерацию', 'success', 3000);
+        }
         closePopup();
         location.reload();
       } else {
-        alert(data.error || 'Ошибка при создании новости: ' + JSON.stringify(data.errors));
+        if (typeof window.showNotification === 'function') {
+          window.showNotification(data.error || 'Ошибка при создании новости', 'error', 4000);
+        } else {
+          alert(data.error || 'Ошибка при создании новости: ' + JSON.stringify(data.errors));
+        }
       }
     })
     .catch(error => {
       console.error('Ошибка:', error);
-      alert('Произошла ошибка при отправке формы');
+      if (typeof window.showNotification === 'function') {
+        window.showNotification('Произошла ошибка при отправке формы', 'error', 4000);
+      } else {
+        alert('Произошла ошибка при отправке формы');
+      }
     });
   });
 
@@ -250,5 +270,13 @@
       });
     });
   }
+
+  // Закрытие по ESC и клику на оверлей
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePopup();
+  });
+  document.getElementById('newsPopup').addEventListener('click', function(e) {
+    if (e.target === this) closePopup();
+  });
 </script>
 {% endblock %}
