@@ -186,22 +186,24 @@ function initTooltips() {
 }
 
 function initNotifications() {
-    window.showNotification = function(message, type = 'info', duration = 3000) {
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.textContent = message;
+    if (!window.showNotification) {
+        window.showNotification = function(message, type = 'info', duration = 3000) {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
 
-        document.body.appendChild(notification);
+            document.body.appendChild(notification);
 
-        setTimeout(() => {
-            notification.classList.add('active');
-        }, 100);
+            setTimeout(() => {
+                notification.classList.add('active');
+            }, 100);
 
-        setTimeout(() => {
-            notification.classList.remove('active');
-            setTimeout(() => notification.remove(), 300);
-        }, duration);
-    };
+            setTimeout(() => {
+                notification.classList.remove('active');
+                setTimeout(() => notification.remove(), 300);
+            }, duration);
+        };
+    }
 }
 
 function initResponsiveUtils() {
