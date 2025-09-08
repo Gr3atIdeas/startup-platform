@@ -194,10 +194,10 @@
     }
 
     .my_startups_planetary-system #my_startups_logo {
-      width: 100px;
-      height: 100px;
+      width: auto;
+      height: auto;
       background-size: cover;
-      border-radius: 50%;
+      border-radius: 0;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -211,7 +211,14 @@
       color: #333;
       text-align: center;
       line-height: 1.2;
-      overflow: hidden; /* Предотвращаем обрезку */
+      overflow: visible; /* Разрешаем отображение текста под аватаром */
+    }
+
+    .my_startups_planetary-system #my_startups_logo .my-startups-empty-text {
+      margin-top: 12px;
+      color: #fff;
+      font-size: 18px;
+      text-align: center;
     }
 
     .my_startups_planetary-system .orbit {
@@ -847,9 +854,11 @@
                 <div id="my_startups_scene">
                   <div id="my_startups_galaxy">
                     <div id="my_startups_logo" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                        <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block;">
+                        <div class="profile-avatar-wrapper">
+                          <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" class="profile-dropdown-avatar">
+                        </div>
                         {% if planetary_startups|length == 0 %}
-                          <span style="margin-top: 12px; color: white; font-size: 18px; text-align: center;">Нет стартапов для отображения</span>
+                          <span class="my-startups-empty-text">Нет стартапов для отображения</span>
                         {% endif %}
                     </div>
                     {% for startup in planetary_startups %}
