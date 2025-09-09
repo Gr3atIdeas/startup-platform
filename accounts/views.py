@@ -4080,12 +4080,23 @@ def edit_startup(request, startup_id):
                     f"Ошибка подключения к Yandex Object Storage: {str(e)}",
                     exc_info=True,
                 )
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "redirect_url": reverse("profile"),
+                })
             messages.success(
                 request,
                 f'Стартап "{startup.title}" успешно отредактирован и отправлен на модерацию!',
             )
             return redirect("profile")
         else:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": False,
+                    "errors": form.errors,
+                    "non_field_errors": form.non_field_errors(),
+                }, status=400)
             messages.error(request, "Форма содержит ошибки.")
             return render(
                 request,

@@ -10,97 +10,12 @@
 <link rel="stylesheet" href="{% static 'accounts/css/startup_form.css' %}">
 
 <style>
-/* Исправляем стили для страницы редактирования - предотвращаем выход элементов за границы */
-.media-and-finance-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  align-items: flex-start;
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.upload-box {
-  max-width: 100%;
-  width: 100%;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-.file-preview-area {
-  max-width: 100%;
-  overflow: hidden;
-  word-wrap: break-word;
-}
-
-.file-preview-item {
-  max-width: 100%;
-  overflow: hidden;
-  word-wrap: break-word;
-}
-
-.file-preview-item p {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
-}
-
-.presentation-finance-group {
-  max-width: 100%;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.presentation-finance-group .form-group {
-  max-width: 100%;
-}
-
-.presentation-finance-group .input-wrapper {
-  max-width: 100%;
-}
-
-.presentation-finance-group .form-control {
-  max-width: 100% !important;
-}
-
-/* Для очень узких экранов делаем одну колонку */
-@media (max-width: 768px) {
-  .media-and-finance-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-}
-
-/* Убеждаемся, что длинные имена файлов не выходят за границы */
+/* Небольшие правки для стабильности в редактировании */
+.presentation-finance-group .form-control { max-width: 100% !important; }
 .file-preview-item p,
-.file-preview-item a {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 200px;
-}
-
-/* Для видео и изображений предпросмотра */
+.file-preview-item a { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
 .file-preview-item img,
-.file-preview-item video {
-  max-width: 200px;
-  max-height: 150px;
-  object-fit: contain;
-}
-
-/* Основной контейнер формы */
-.form-main-content-wrapper {
-  overflow: hidden;
-  word-wrap: break-word;
-  box-sizing: border-box;
-}
-
-/* Убеждаемся, что все секции вписываются в контейнер */
-.form-content-section {
-  max-width: 100%;
-  overflow: hidden;
-  box-sizing: border-box;
-}
+.file-preview-item video { max-width: 200px; max-height: 150px; object-fit: contain; }
 </style>
 
 <div class="startup-form-container">
@@ -112,15 +27,15 @@
     <form method="post" enctype="multipart/form-data" id="startupForm" novalidate>
         {% csrf_token %}
 
-        
         <div class="form-section-top">
+            <div class="form-top-card">
             <div class="form-top-grid">
                 <div class="form-top-left">
                 <div class="form-group planet-upload-group">
                     <label class="planet-upload-label">*Выберите планету</label>
-                    <div class="planet-selector">
+                    <div class="planet-selector" id="planetSelector">
                     <button type="button" class="planet-nav-button prev-planet" aria-label="Предыдущая планета">
-                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous">
+                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous" loading="lazy" decoding="async">
                     </button>
                     <div class="planet-display">
                         <div class="planet-ribbon" id="planetRibbon">
@@ -128,29 +43,31 @@
                         </div>
                     </div>
                     <button type="button" class="planet-nav-button next-planet" aria-label="Следующая планета">
-                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next">
+                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next" loading="lazy" decoding="async">
                     </button>
                     </div>
-                    {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image"|attr:"style:display:none;" }}
+                    {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image" }}
                     {% if form.planet_image.errors %}
                     <span class="error-message">{{ form.planet_image.errors|first }}</span>
                     {% endif %}
                 </div>
                 <div class="form-group logo-upload-group">
-                    <label for="{{ form.logo.id_for_label }}" class="logo-upload-label">
-                        {% with logo_file_id=startup.logo_urls|first %}
+                    <div class="logo-upload-label">
+                    {% with logo_file_id=startup.logo_urls|first %}
                         <div class="logo-placeholder" id="logoPlaceholder" {% if logo_file_id %}style="display:none;"{% endif %}>
-                            <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon">
-                            <span>*Загрузить логотип</span>
+                            <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon" loading="lazy" decoding="async">
                         </div>
                         <img src="{% if logo_file_id %}{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}{% else %}""{% endif %}" alt="Логотип" class="logo-preview" id="logoPreview" {% if not logo_file_id %}style="display:none;"{% endif %}>
-                        {% endwith %}
-                    </label>
+                    {% endwith %}
+                    </div>
                     {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
+                    <div class="custom-file-upload-button" id="logoUploadButton">*Выбрать логотип</div>
                     {% if form.logo.errors %}
-                        <span class="error-message">{{ form.logo.errors|first }}</span>
+                    <span class="error-message">{{ form.logo.errors|first }}</span>
                     {% endif %}
                 </div>
+                </div>
+                <div class="form-top-right">
                     <div class="form-fields-left">
                         <div class="form-group">
                             <label for="{{ form.title.id_for_label }}">*{{ form.title.label|cut:"*" }}</label>
@@ -163,7 +80,7 @@
                             <label for="{{ form.direction.id_for_label }}">*{{ form.direction.label|cut:"*" }}</label>
                             <div class="input-wrapper select-wrapper">
                                 {{ form.direction|add_class:"form-control" }}
-                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
+                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow" loading="lazy" decoding="async">
                             </div>
                             {% if form.direction.errors %}<span class="error-message">{{ form.direction.errors|first }}</span>{% endif %}
                         </div>
@@ -178,21 +95,15 @@
                             <label for="{{ form.stage.id_for_label }}">*{{ form.stage.label|cut:"*" }}</label>
                             <div class="input-wrapper select-wrapper">
                                 {{ form.stage|add_class:"form-control" }}
-                                 <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
+                                 <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow" loading="lazy" decoding="async">
                             </div>
                             {% if form.stage.errors %}<span class="error-message">{{ form.stage.errors|first }}</span>{% endif %}
                         </div>
                     </div>
-                </div>
-                <div class="form-top-right">
                     <div class="investment-type-card">
                         <div class="form-group checkbox-group micro-investment-group">
-                            <input type="checkbox" 
-                                   name="{{ form.micro_investment_available.name }}" 
-                                   id="{{ form.micro_investment_available.id_for_label }}" 
-                                   class="form-check-input-hidden" 
-                                   {% if startup.micro_investment_available %}checked{% endif %}>
-                            <label for="{{ form.micro_investment_available.id_for_label }}" class="micro-investment-label-new">
+                            {{ form.micro_investment_available|attr:"id:id_micro_investment_available"|add_class:"form-check-input-hidden" }}
+                            <label for="id_micro_investment_available" class="micro-investment-label-new">
                                 <span class="micro-checkbox-visual">
                                     <span class="micro-checkbox-unchecked"></span>
                                     <img src="{% static 'accounts/images/creat_startup/checkmark-circle-blue.svg' %}" alt="checked" class="micro-checkbox-checked" style="display:none;">
@@ -205,12 +116,13 @@
                             <label for="{{ form.investment_type.id_for_label }}" class="investment-type-label">Тип инвестирования</label>
                             <div class="input-wrapper select-wrapper">
                                 {{ form.investment_type|add_class:"form-control" }}
-                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
+                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow" loading="lazy" decoding="async">
                             </div>
                             {% if form.investment_type.errors %}<span class="error-message">{{ form.investment_type.errors|first }}</span>{% endif %}
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
 
@@ -273,21 +185,25 @@
                     
                     <div class="presentation-finance-group">
                         <div class="form-group">
-                            <label for="{{ form.pitch_deck_url.id_for_label }}">{{ form.pitch_deck_url.label|cut:"*" }}</label>
+                            <label for="{{ form.pitch_deck_url.id_for_label }}">{{ form.pitch_deck_url.label }}</label>
                             <div class="input-wrapper">
                                 {{ form.pitch_deck_url|add_class:"form-control"|attr:"placeholder:URL" }}
                             </div>
                             {% if form.pitch_deck_url.errors %}<span class="error-message">{{ form.pitch_deck_url.errors|first }}</span>{% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.valuation.id_for_label }}">{{ form.valuation.label|cut:"*" }}</label>
-                            <div class="input-wrapper">
+                            <label for="{{ form.valuation.id_for_label }}">{{ form.valuation.label }}</label>
+                            <div class="input-wrapper valuation-input">
                                 {{ form.valuation|add_class:"form-control"|attr:"placeholder:1"|attr:"type:number"|attr:"min:1" }}
+                                <div class="valuation-spin-buttons">
+                                    <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="increase value" class="spin-up">
+                                    <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="decrease value" class="spin-down">
+                                </div>
                             </div>
                             {% if form.valuation.errors %}<span class="error-message">{{ form.valuation.errors|first }}</span>{% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.amount_raised.id_for_label }}">{{ form.amount_raised.label|cut:"*" }}</label>
+                            <label for="{{ form.amount_raised.id_for_label }}">{{ form.amount_raised.label }}</label>
                             <div class="input-wrapper">
                                 {{ form.amount_raised|add_class:"form-control"|attr:"placeholder:Введите сумму"|attr:"type:number" }}
                             </div>
@@ -405,223 +321,60 @@
             </div>
         </div> 
 
-        <div class="form-actions submit-button-container">
+        <div class="submit-button-container">
             <button type="submit" class="submit-button" id="submitStartupBtn">Сохранить изменения</button>
         </div>
     </form>
 </div>
 
-<div class="error-modal" id="errorModal" style="display: none;">
-    <div class="error-modal-content">
-        <span class="close-error-modal" id="closeErrorModal">&times;</span>
-        <h3>Обнаружены ошибки:</h3>
-        <ul id="errorList"></ul>
-        <p>Пожалуйста, исправьте ошибки и попробуйте снова.</p>
-    </div>
-</div>
-
 <script src="{% static 'accounts/js/startup_form.js' %}"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Переводим опции select direction на русский
-    const directionSelect = document.getElementById('{{ form.direction.id_for_label }}');
-    if (directionSelect) {
-        const translations = {
-            "Medicine": "Медицина",
-            "Auto": "Автомобили",
-            "Delivery": "Доставка",
-            "Cafe": "Кафе/рестораны",
-            "Fastfood": "Фастфуд",
-            "Health": "Здоровье",
-            "Beauty": "Красота",
-            "Transport": "Транспорт",
-            "Sport": "Спорт",
-            "Psychology": "Психология",
-            "AI": "ИИ",
-            "Finance": "Финансы",
-            "Healthcare": "Здравоохранение",
-            "Technology": "Технологии"
-        };
-        Array.from(directionSelect.options).forEach(option => {
-            const originalValue = option.textContent.trim();
-            if (translations[originalValue]) {
-                option.textContent = translations[originalValue];
-            }
-        });
-    }
-    // --- Таймлайн ---
-    const timelineSteps = document.querySelectorAll('.timeline-step');
-    const descriptionContainers = document.querySelectorAll('.timeline-description-container');
-    const currentStepInput = document.getElementById('step_number');
-    const setCurrentButtons = document.querySelectorAll('.btn-select-current-step');
-    const timelineProgressFilled = document.getElementById('timelineProgressFilled');
-    const totalSteps = 5;
-    function selectStepDescription(stepNumber) {
-        descriptionContainers.forEach(container => {
-            container.classList.toggle('active', container.dataset.stepContent == stepNumber);
-        });
-        timelineSteps.forEach(step => {
-            step.classList.toggle('active-step-display', step.dataset.step == stepNumber);
-        });
-        // Фокус на textarea выбранного этапа
-        const activeTextarea = document.querySelector('.timeline-description-container.active textarea');
-        if (activeTextarea) {
-            activeTextarea.focus();
-        }
-    }
-    function setCurrentStep(stepNumber) {
-        const currentStep = parseInt(stepNumber);
-        currentStepInput.value = currentStep;
-        timelineSteps.forEach(step => {
-            const stepNum = parseInt(step.dataset.step);
-            const stepWrapper = step.querySelector('.step-number-wrapper');
-            step.classList.remove('active-step-display');
-            stepWrapper.classList.remove('active');
-            if (stepNum <= currentStep) {
-                stepWrapper.classList.add('active');
-            }
-        });
-        if (currentStep > 1) {
-            const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
-            timelineProgressFilled.style.width = `${progressPercentage}%`;
-        } else {
-            timelineProgressFilled.style.width = '0%';
-        }
-        selectStepDescription(currentStep);
-    }
-    timelineSteps.forEach(step => {
-        step.addEventListener('click', function() {
-            const stepNum = this.dataset.step;
-            selectStepDescription(stepNum);
-        });
-    });
-    setCurrentButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const stepNum = this.dataset.stepTarget;
-            setCurrentStep(stepNum);
-        });
-    });
-    if (timelineSteps.length > 0) {
-        setCurrentStep(currentStepInput.value || 1);
-    }
-    // --- Медиа и документы: показать существующие файлы в превью (заменено на серверный рендеринг) ---
-    
-    // Обработчик удаления существующих файлов
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('delete-existing-file-btn')) {
-            const fileId = event.target.dataset.fileId;
-            const fileType = event.target.dataset.fileType;
-            const fileItem = event.target.closest('.file-preview-item');
-            
-            if (confirm('Вы уверены, что хотите удалить этот файл?')) {
-                // Удаляем из превью
-                fileItem.remove();
-                
-                // Добавляем в список удаляемых файлов (для отправки на сервер)
-                const deletedFilesInput = document.getElementById('deleted-files-input') || createDeletedFilesInput();
-                const deletedFiles = JSON.parse(deletedFilesInput.value || '[]');
-                deletedFiles.push({id: fileId, type: fileType});
-                deletedFilesInput.value = JSON.stringify(deletedFiles);
-            }
-        }
-    });
-    
-    // Создаем скрытое поле для удаляемых файлов
-    function createDeletedFilesInput() {
-        const input = document.createElement('input');
+window.STARTUP_FORM_CONFIG = {
+  planetChoices: [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  planetBaseUrl: "{{ S3_PUBLIC_BASE_URL }}/choosable_planets/",
+};
+</script>
+<script>
+// Удаление существующих файлов на странице редактирования
+document.addEventListener('click', function(event) {
+  if (event.target.classList && event.target.classList.contains('delete-existing-file-btn')) {
+    var fileId = event.target.getAttribute('data-file-id');
+    var fileType = event.target.getAttribute('data-file-type');
+    var fileItem = event.target.closest('.file-preview-item');
+    if (!fileId || !fileType || !fileItem) return;
+    if (confirm('Вы уверены, что хотите удалить этот файл?')) {
+      fileItem.remove();
+      var deletedFilesInput = document.getElementById('deleted-files-input') || (function(){
+        var input = document.createElement('input');
         input.type = 'hidden';
         input.id = 'deleted-files-input';
         input.name = 'deleted_files';
         input.value = '[]';
-        document.getElementById('startupForm').appendChild(input);
+        var form = document.getElementById('startupForm');
+        if (form) form.appendChild(input);
         return input;
+      })();
+      try {
+        var arr = JSON.parse(deletedFilesInput.value || '[]');
+        arr.push({ id: fileId, type: fileType });
+        deletedFilesInput.value = JSON.stringify(arr);
+      } catch (_) {}
     }
-    
-    // Существующие файлы теперь рендерятся на сервере
-    
-    // --- Селектор планет ---
-    const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
-    const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
-    const planetBaseUrl = "{{ S3_PUBLIC_BASE_URL }}/choosable_planets/";
-    const currentPlanetValue = "{{ startup.planet_image|default:'' }}";
-
-    const planetInput = document.getElementById('id_planet_image');
-    const planetRibbon = document.getElementById('planetRibbon');
-    const prevButton = document.querySelector('.planet-nav-button.prev-planet');
-    const nextButton = document.querySelector('.planet-nav-button.next-planet');
-    let currentPlanetIndex = 0;
-
-    if (planetRibbon) {
-        function createPlanetRibbon() {
-            planetRibbon.innerHTML = '';
-
-            const totalPlanets = planetChoices.length;
-            if (totalPlanets === 0) {
-                return;
-            }
-
-            planetChoices.forEach((planet, index) => {
-                const planetImg = document.createElement('img');
-                planetImg.className = 'planet-ribbon-item';
-                planetImg.src = planetBaseUrl + planet;
-                planetImg.alt = `Планета ${index + 1}`;
-                planetImg.dataset.planetIndex = index;
-                planetRibbon.appendChild(planetImg);
-            });
-
-            planetRibbon.style.width = `${totalPlanets * 450}px`;
-            
-            // Устанавливаем текущую планету
-            if (currentPlanetValue && planetChoices.includes(currentPlanetValue)) {
-                currentPlanetIndex = planetChoices.indexOf(currentPlanetValue);
-            } else {
-                currentPlanetIndex = 0;
-            }
-            
-            const translateX = -currentPlanetIndex * 450;
-            planetRibbon.style.transform = `translateX(${translateX}px)`;
-            planetInput.value = planetChoices[currentPlanetIndex];
-        }
-
-        function updatePlanetRibbon(direction) {
-            const totalPlanets = planetChoices.length;
-            if (totalPlanets === 0) return;
-
-            if (direction === 'next') {
-                currentPlanetIndex = (currentPlanetIndex + 1) % totalPlanets;
-            } else {
-                currentPlanetIndex = (currentPlanetIndex - 1 + totalPlanets) % totalPlanets;
-            }
-
-            const translateX = -currentPlanetIndex * 450;
-            planetRibbon.style.transition = 'transform 0.4s ease-in-out';
-            planetRibbon.style.transform = `translateX(${translateX}px)`;
-            planetInput.value = planetChoices[currentPlanetIndex];
-        }
-
-        if (prevButton) {
-            prevButton.addEventListener('click', () => {
-                if (planetChoices.length > 0) {
-                    updatePlanetRibbon('prev');
-                }
-            });
-        }
-
-        if (nextButton) {
-            nextButton.addEventListener('click', () => {
-                if (planetChoices.length > 0) {
-                    updatePlanetRibbon('next');
-                }
-            });
-        }
-
-        if (planetChoices && planetChoices.length > 0) {
-            createPlanetRibbon();
-        } else {
-            planetRibbon.innerHTML = '<img src="https://via.placeholder.com/150" alt="Нет планет" class="planet-ribbon-item">';
-            planetInput.value = '';
-        }
-    }
+  }
 });
 </script>
+
+<!-- Consents Modal -->
+<div id="consentsModal" class="modal-overlay">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div id="consentDocTitle" class="modal-title">Документ</div>
+      <button id="consentCloseBtn" type="button" class="modal-close-btn">×</button>
+    </div>
+    <div id="consentDocContent" class="modal-body"></div>
+    <div class="modal-footer">
+      <button id="consentConfirmBtn" type="button" class="custom-file-upload-button" disabled>Подтвердить прочтение</button>
+    </div>
+  </div>
+</div>
 {% endblock %}
