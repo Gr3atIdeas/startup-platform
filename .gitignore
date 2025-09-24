@@ -80,6 +80,7 @@ venv.bak
 # --- VSCode ---
 # Игнорируем все, кроме важных для проекта настроек
 .vscode/*
+.cursor/*
 !.vscode/settings.json
 !.vscode/extensions.json
 !.vscode/launch.json
