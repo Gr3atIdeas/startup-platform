@@ -5439,8 +5439,22 @@ def get_chat_messages(request, chat_id):
         }
         for p in participants
     ]
+    # Определяем имя чата
+    if chat.is_group_chat:
+        chat_name = chat.name or "Групповой чат"
+    else:
+        other_participant = None
+        for p in participants:
+            if p.user.user_id != request.user.user_id:
+                other_participant = p
+                break
+        if other_participant and other_participant.user:
+            chat_name = f"{other_participant.user.first_name or ''} {other_participant.user.last_name or ''}".strip()
+        else:
+            chat_name = "Удаленный чат"
+    
     return JsonResponse(
-        {"success": True, "messages": messages_data, "participants": participants_data}
+        {"success": True, "messages": messages_data, "participants": participants_data, "chat_name": chat_name}
     )
 
 

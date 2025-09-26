@@ -264,7 +264,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        chatWindowTitle.textContent = data.chat_name;
+                        // Обновляем заголовок чата
+                        if (chatWindowTitle) {
+                            chatWindowTitle.textContent = data.chat_name;
+                        }
+                        
+                        // Обновляем элемент чата в списке
                         const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
                         if (chatItem) {
                             chatItem.dataset.chatName = data.chat_name;
@@ -274,7 +279,11 @@ document.addEventListener('DOMContentLoaded', function () {
                                     (chatItem.dataset.isDeal === 'true' ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : '');
                             }
                         }
+                        
+                        // Перезапускаем polling для синхронизации с сервером
                         startPolling();
+                        
+                        console.log('Чат успешно переименован:', data.chat_name);
                     } else {
                         alert(data.error || 'Ошибка при переименовании чата');
                     }
@@ -516,7 +525,11 @@ function startPolling() {
 
                     const currentChatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
                     if (currentChatItem && chatWindowTitle) {
-                        chatWindowTitle.textContent = currentChatItem.dataset.chatName;
+                        const newChatName = currentChatItem.dataset.chatName;
+                        if (newChatName && newChatName !== chatWindowTitle.textContent) {
+                            console.log('Обновляем заголовок чата из polling:', newChatName);
+                            chatWindowTitle.textContent = newChatName;
+                        }
                     }
                 }
             } else {
