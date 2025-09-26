@@ -2007,7 +2007,10 @@ a:hover {
 
 .similar-startups-grid
   .similar-card.show-more-placeholder
-  .action-button.show-more-similar {
+  .action-button.show-more-similar,
+.similar-startups-grid
+  .similar-card.show-more-placeholder
+  button.action-button.show-more-similar {
   
   display: inline-flex !important;
   align-items: center;
@@ -2042,7 +2045,13 @@ a:hover {
   .action-button.show-more-similar::before,
 .similar-startups-grid
   .similar-card.show-more-placeholder
-  .action-button.show-more-similar::after {
+  .action-button.show-more-similar::after,
+.similar-startups-grid
+  .similar-card.show-more-placeholder
+  button.action-button.show-more-similar::before,
+.similar-startups-grid
+  .similar-card.show-more-placeholder
+  button.action-button.show-more-similar::after {
   content: none !important;
   display: none !important;
 }
@@ -2050,7 +2059,10 @@ a:hover {
 
 .similar-startups-grid
   .similar-card.show-more-placeholder
-  .action-button.show-more-similar:hover {
+  .action-button.show-more-similar:hover,
+.similar-startups-grid
+  .similar-card.show-more-placeholder
+  button.action-button.show-more-similar:hover {
   background-color: rgb(255 255 255 / 10%);
   border-color: var(--accent-green);
   color: var(--accent-green);
