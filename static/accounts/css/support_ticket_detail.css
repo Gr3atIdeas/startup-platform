@@ -315,3 +315,45 @@ body {
     font-weight: 400;
     line-height: 16px;
 }
+
+/* Стили для хедера на этой странице - делаем элементы черными */
+banner {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+header {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+/* Делаем кнопки и ссылки в хедере черными */
+banner button,
+banner a,
+header button,
+header a,
+banner .navigation a,
+banner .navigation button {
+    color: black !important;
+    border-color: black !important;
+}
+
+/* Делаем лого черным */
+banner img[alt="Great Ideas Logo"],
+header img[alt="Great Ideas Logo"] {
+    filter: brightness(0) !important;
+}
+
+/* Делаем иконки в хедере черными */
+banner img,
+header img {
+    filter: brightness(0) !important;
+}
+
+/* Делаем текст в хедере черным */
+banner *,
+header * {
+    color: black !important;
+}
