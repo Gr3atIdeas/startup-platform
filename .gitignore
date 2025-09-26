@@ -81,6 +81,7 @@ venv.bak
 # Игнорируем все, кроме важных для проекта настроек
 .vscode/*
 .cursor/*
+.playwright-mcp/
 !.vscode/settings.json
 !.vscode/extensions.json
 !.vscode/launch.json

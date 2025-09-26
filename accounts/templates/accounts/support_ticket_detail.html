@@ -3,26 +3,21 @@
 
 {% block custom_styles %}
 <style>
-/* Основные стили страницы */
 .ticket-detail-container {
-    min-height: 100%;
-    padding: 40px 72px 0px 200px;
+    max-width: 1303px;
+    margin: 0 auto;
+    padding: 60px 71px;
     background: white;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 130px;
     display: flex;
-    margin-left: calc(-50vw + 50%);
-    margin-right: calc(-50vw + 50%);
+    gap: 104px;
+    min-height: 100vh;
 }
 
 .left-panel {
     width: 520px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 20px;
     display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .back-link {
@@ -37,32 +32,34 @@
     font-weight: 300;
 }
 
-.info-block {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 20px;
+.info-section {
     display: flex;
-    margin-bottom: 20px;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.info-block:last-child {
-    margin-bottom: 0;
+.info-row {
+    display: flex;
+    gap: 20px;
+}
+
+.info-block {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 1;
+}
+
+.info-block.full-width {
+    flex: 1 1 100%;
 }
 
 .info-label {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    text-align: center;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
     color: black;
     font-size: 12px;
     font-family: Unbounded;
     font-weight: 300;
     letter-spacing: 0.12px;
-    word-wrap: break-word;
 }
 
 .info-field {
@@ -70,23 +67,17 @@
     padding: 12px 16px;
     background: white;
     border-radius: 5px;
-    outline: 1px black solid;
-    outline-offset: -0.50px;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 8px;
+    border: 1px solid black;
     display: flex;
+    align-items: center;
 }
 
 .info-value {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
     color: black;
     font-size: 14px;
     font-family: Unbounded;
     font-weight: 300;
     line-height: 18px;
-    word-wrap: break-word;
 }
 
 .status-select {
@@ -94,8 +85,7 @@
     padding: 12px 16px;
     background: white;
     border-radius: 5px;
-    outline: 1px black solid;
-    outline-offset: -0.50px;
+    border: 1px solid black;
     font-size: 14px;
     font-family: Unbounded;
     font-weight: 300;
@@ -103,55 +93,32 @@
 }
 
 .comment-field {
-    align-self: stretch;
+    width: 100%;
     height: 120px;
     position: relative;
     background: white;
-    overflow: hidden;
     border-radius: 7px;
-    outline: 1px black solid;
-    outline-offset: -1px;
+    border: 1px solid black;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .comment-placeholder {
-    left: 20px;
-    top: 17px;
-    position: absolute;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
     color: #CACACA;
     font-size: 14px;
     font-family: Unbounded;
     font-weight: 300;
     letter-spacing: 0.14px;
-    word-wrap: break-word;
 }
 
 .comment-content {
-    left: 20px;
-    top: 17px;
-    position: absolute;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    justify-content: flex-start;
-    display: flex;
-    flex-direction: column;
     color: black;
     font-size: 14px;
     font-family: Unbounded;
     font-weight: 300;
     letter-spacing: 0.14px;
-    word-wrap: break-word;
     line-height: 1.4;
-    max-width: calc(100% - 40px);
-    overflow-y: auto;
-}
-
-.moderator-comment-field {
-    margin-bottom: 30px;
+    word-wrap: break-word;
 }
 
 .moderator-form {
@@ -164,15 +131,14 @@
     padding: 20px;
     background: white;
     border-radius: 7px;
-    outline: 1px black solid;
-    outline-offset: -1px;
+    border: 1px solid black;
     font-size: 14px;
     font-family: Unbounded;
     font-weight: 300;
     color: black;
     resize: vertical;
     margin-bottom: 15px;
-    border: none;
+    box-sizing: border-box;
 }
 
 .save-comment-btn {
@@ -180,12 +146,10 @@
     padding: 12px 35px;
     background: #004E9F;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
     border-radius: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
     display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     cursor: pointer;
     margin-bottom: 20px;
@@ -197,7 +161,6 @@
     font-family: Unbounded;
     font-weight: 400;
     line-height: 16px;
-    word-wrap: break-word;
 }
 
 .close-ticket-btn {
@@ -205,12 +168,10 @@
     padding: 12px 35px;
     background: #004E9F;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
     border-radius: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
     display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     cursor: pointer;
     margin-top: 20px;
@@ -222,50 +183,37 @@
     font-family: Unbounded;
     font-weight: 400;
     line-height: 16px;
-    word-wrap: break-word;
 }
 
 .right-panel {
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 19px;
     display: flex;
-    height: fit-content;
+    align-items: flex-end;
+    gap: 19px;
 }
 
 .tickets-list-section {
-    width: 550px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 24px;
+    width: 621px;
     display: flex;
-    max-height: 1105px;
-    border-bottom: 1px solid black;
-    padding-bottom: 20px;
+    flex-direction: column;
+    gap: 24px;
 }
 
 .tickets-header {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
     color: black;
     font-size: 35px;
     font-family: Unbounded;
     font-weight: 600;
     line-height: 35px;
-    word-wrap: break-word;
+    letter-spacing: -0.02em;
     margin: 0;
-    margin-bottom: 24px;
 }
 
 .tickets-list {
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 0;
+    max-height: 600px;
+    overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.20) transparent;
 }
@@ -284,57 +232,57 @@
 }
 
 .ticket-card {
-    align-self: stretch;
     padding: 24px 31px;
     border-radius: 10px;
-    outline: 1px black solid;
-    outline-offset: -1px;
+    border: 1px solid black;
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    display: flex;
     background: white;
     cursor: pointer;
+    margin-bottom: 0;
+}
+
+.ticket-card:not(:last-child) {
+    margin-bottom: 0;
 }
 
 .ticket-info-left,
 .ticket-info-right {
-    justify-content: flex-start;
+    display: flex;
     align-items: center;
     gap: 50px;
-    display: flex;
 }
 
 .ticket-detail {
-    width: 95px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 24px;
     display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 95px;
 }
 
 .detail-label {
-    align-self: stretch;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
     color: #B0B0B0;
     font-size: 14px;
     font-family: Unbounded;
     font-weight: 300;
     line-height: 18px;
-    word-wrap: break-word;
 }
 
 .detail-value {
-    align-self: stretch;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
     color: black;
     font-size: 14px;
     font-family: Unbounded;
     font-weight: 300;
     line-height: 18px;
-    word-wrap: break-word;
+}
+
+.scrollbar {
+    width: 10px;
+    height: 202px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    flex-shrink: 0;
 }
 </style>
 {% endblock %}
@@ -351,79 +299,86 @@
                 <a href="{% url 'support_orders' %}">&larr; К списку заявок</a>
             </div>
             <div class="info-section">
-                <div class="info-block">
-                    <div class="info-label">Статус работы</div>
-                    {% if is_moderator %}
-                    <select class="status-select" data-ticket-id="{{ ticket.pk }}">
-                        <option value="new" {% if ticket.status == 'new' %}selected{% endif %}>Новая</option>
-                        <option value="in_progress" {% if ticket.status == 'in_progress' %}selected{% endif %}>В обработке</option>
-                        <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Закрыта</option>
-                    </select>
-                    {% else %}
-                    <div class="info-field">
-                        <div class="info-value">{{ ticket.get_status_display }}</div>
+                <div class="info-row">
+                    <div class="info-block">
+                        <div class="info-label">Статус работы</div>
+                        {% if is_moderator %}
+                        <select class="status-select" data-ticket-id="{{ ticket.pk }}">
+                            <option value="new" {% if ticket.status == 'new' %}selected{% endif %}>Новая</option>
+                            <option value="in_progress" {% if ticket.status == 'in_progress' %}selected{% endif %}>В обработке</option>
+                            <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Закрыта</option>
+                        </select>
+                        {% else %}
+                        <div class="info-field">
+                            <div class="info-value">{{ ticket.get_status_display }}</div>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
-                </div>
-                
-                <div class="info-block">
-                    <div class="info-label">Дата создания</div>
-                    <div class="info-field">
-                        <div class="info-value">{{ ticket.created_at|date:'d/m/Y' }}</div>
-                    </div>
-                </div>
-                
-                <div class="info-block">
-                    <div class="info-label">Номер заявки</div>
-                    <div class="info-field">
-                        <div class="info-value">#{{ ticket.pk }}</div>
+                    
+                    <div class="info-block">
+                        <div class="info-label">Дата создания</div>
+                        <div class="info-field">
+                            <div class="info-value">{{ ticket.created_at|date:'d/m/Y' }}</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="info-block">
-                    <div class="info-label">Тема обращения</div>
-                    <div class="info-field">
-                        <div class="info-value">{{ ticket.subject }}</div>
+                <div class="info-row">
+                    <div class="info-block">
+                        <div class="info-label">Номер заявки</div>
+                        <div class="info-field">
+                            <div class="info-value">#{{ ticket.pk }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-block">
+                        <div class="info-label">Тема обращения</div>
+                        <div class="info-field">
+                            <div class="info-value">{{ ticket.subject }}</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="info-block">
-                    <div class="info-label">Роль</div>
-                    <div class="info-field">
-                        <div class="info-value">{{ ticket.user.role.role_name|title|default:"Пользователь" }}</div>
+                <div class="info-row">
+                    <div class="info-block">
+                        <div class="info-label">Роль</div>
+                        <div class="info-field">
+                            <div class="info-value">{{ ticket.user.role.role_name|title|default:"Пользователь" }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-block">
+                        <div class="info-label">ID аккаунта обращения</div>
+                        <div class="info-field">
+                            <div class="info-value">{{ ticket.user.user_id }}</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="info-block">
-                    <div class="info-label">ID аккаунта обращения</div>
-                    <div class="info-field">
-                        <div class="info-value">{{ ticket.user.user_id }}</div>
+                <div class="info-row">
+                    <div class="info-block">
+                        <div class="info-label">Ваше имя</div>
+                        <div class="info-field">
+                            <div class="info-value">{{ ticket.user.get_full_name|default:ticket.user.username }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-block">
+                        <div class="info-label">Почта для связи</div>
+                        <div class="info-field">
+                            <div class="info-value">{{ ticket.user.email }}</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="info-block">
-                    <div class="info-label">Ваше имя</div>
-                    <div class="info-field">
-                        <div class="info-value">{{ ticket.user.get_full_name|default:ticket.user.username }}</div>
-                    </div>
-                </div>
-                
-                <div class="info-block">
-                    <div class="info-label">Почта для связи</div>
-                    <div class="info-field">
-                        <div class="info-value">{{ ticket.user.email }}</div>
-                    </div>
-                </div>
-                
-                <div class="info-block">
+                <div class="info-block full-width">
                     <div class="info-label">Сообщение от стартапера</div>
                     <div class="comment-field">
                         <div class="comment-content">{{ ticket.message|default:"Сообщение не указано" }}</div>
                     </div>
                 </div>
                 
-                
-                <div class="info-block">
+                <div class="info-block full-width">
                     <div class="info-label">Комментарий модератора</div>
                     {% if is_moderator %}
                         <form method="post" class="moderator-form">
@@ -434,7 +389,7 @@
                             </button>
                         </form>
                     {% else %}
-                        <div class="comment-field moderator-comment-field">
+                        <div class="comment-field">
                             {% if ticket.moderator_comment %}
                                 <div class="comment-content">{{ ticket.moderator_comment }}</div>
                             {% else %}
@@ -489,6 +444,7 @@
                     {% endfor %}
                 </div>
             </div>
+            <div class="scrollbar"></div>
         </div>
     </div>
 </main>
