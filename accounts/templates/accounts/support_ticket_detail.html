@@ -2,23 +2,7 @@
 {% load static %}
 
 {% block custom_styles %}
-<link rel="stylesheet" href="{% static 'accounts/css/support_ticket_detail.css' %}?v={% now 'U' %}">
-
-.back-link {
-    margin-bottom: 20px;
-}
-
-.back-link a {
-    color: black;
-    text-decoration: none;
-    font-family: Unbounded;
-    font-size: 14px;
-    font-weight: 300;
-}
-
-.info-block.full-width {
-    flex: 1 1 100%;
-}
+<link rel="stylesheet" href="{% static 'accounts/css/support_ticket_detail.css' %}?v={% now 'U' %}&force=2&cache=bust">
 {% endblock %}
 
 {% block content %}
@@ -149,6 +133,43 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // ПРИНУДИТЕЛЬНОЕ ЦЕНТРИРОВАНИЕ КОНТЕЙНЕРА
+    const container = document.querySelector('.ticket-detail-container');
+    if (container) {
+        const viewportWidth = window.innerWidth;
+        const containerWidth = 1303;
+        const leftPosition = (viewportWidth - containerWidth) / 2;
+        
+        // Принудительно позиционируем контейнер
+        container.style.setProperty('position', 'relative', 'important');
+        container.style.setProperty('left', leftPosition + 'px', 'important');
+        container.style.setProperty('width', containerWidth + 'px', 'important');
+        container.style.setProperty('max-width', 'none', 'important');
+        container.style.setProperty('margin', '0', 'important');
+        container.style.setProperty('transform', 'none', 'important');
+    }
+    
+    // Дополнительные исправления стилей
+    // Исправляем кнопку "Назад"
+    const backLink = document.querySelector('.back-link a');
+    if (backLink) {
+        backLink.style.setProperty('color', 'black', 'important');
+        const span = backLink.querySelector('span');
+        if (span) {
+            span.style.setProperty('color', 'black', 'important');
+        }
+    }
+    
+    // Исправляем overflow
+    document.body.style.setProperty('overflow-x', 'hidden', 'important');
+    const main = document.querySelector('main.content');
+    if (main) {
+        main.style.setProperty('overflow-x', 'hidden', 'important');
+    }
+    
+    // Исправляем фон body
+    document.body.style.setProperty('background-color', 'white', 'important');
+
     // Обработка изменения статуса заявки
     const statusSelect = document.querySelector('.status-select');
     if (statusSelect) {

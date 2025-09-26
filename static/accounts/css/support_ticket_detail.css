@@ -1,22 +1,56 @@
 /* Стили для страницы деталей заявки поддержки */
 .ticket-detail-container {
-    width: 1303px !important;
+    max-width: 1303px !important;
+    width: 100% !important;
     margin: 0 auto !important;
     padding: 60px 71px;
     background: white;
     display: flex;
     gap: 104px;
     min-height: 100vh;
-    max-width: none !important;
-    position: relative !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
+    box-sizing: border-box !important;
 }
 
 main.content {
-    background: white;
-    padding: 0;
-    margin: 0;
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    overflow-x: hidden !important;
+}
+
+body {
+    background: white !important;
+    overflow-x: hidden !important;
+}
+
+.back-link a {
+    color: black !important;
+    text-decoration: none;
+    font-family: Unbounded;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.back-link a span {
+    color: black !important;
+}
+
+.back-link {
+    margin-bottom: 20px;
+}
+
+.back-link a {
+    color: black !important;
+    text-decoration: none;
+    font-family: Unbounded;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.info-block.full-width {
+    flex: 1 1 100%;
 }
 
 .left-panel {
