@@ -272,7 +272,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         
                         // Обновляем отображение оригинального имени пользователя
                         if (originalUserName && currentParticipants && currentParticipants.length > 0) {
-                            const otherParticipant = currentParticipants.find(p => p.user_id !== currentUser.user_id);
+                            const currentUserId = window.REQUEST_USER_ID;
+                            const otherParticipant = currentParticipants.find(p => p.user_id !== currentUserId);
                             if (otherParticipant && data.chat_name !== otherParticipant.name) {
                                 originalUserName.textContent = `(${otherParticipant.name})`;
                                 originalUserName.style.display = 'block';
@@ -440,7 +441,8 @@ function loadChat(chatId) {
             
             // Показываем оригинальное имя пользователя, если чат переименован
             if (originalUserName && data.participants && data.participants.length > 0) {
-                const otherParticipant = data.participants.find(p => p.user_id !== currentUser.user_id);
+                const currentUserId = window.REQUEST_USER_ID;
+                const otherParticipant = data.participants.find(p => p.user_id !== currentUserId);
                 if (otherParticipant && data.chat_name !== otherParticipant.name) {
                     originalUserName.textContent = `(${otherParticipant.name})`;
                     originalUserName.style.display = 'block';
