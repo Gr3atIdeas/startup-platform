@@ -574,6 +574,32 @@ function startPolling() {
     }, 5000);
 }
 
+function removeChatFromList(chatId) {
+    const chatListContainer = document.getElementById('chatListContainer');
+    if (!chatListContainer) return false;
+    
+    const chatElem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${chatId}"]`);
+    if (chatElem) {
+        chatElem.remove();
+        console.log('Чат принудительно удален из списка:', chatId);
+        
+        // Если удаленный чат был активным, сбрасываем состояние
+        if (currentChatId === chatId) {
+            currentChatId = null;
+            lastMessageTimestamp = null;
+            displayedMessageIds.clear();
+            showNoChatSelected();
+        }
+        
+        return true;
+    }
+    console.log('Чат не найден для удаления:', chatId);
+    return false;
+}
+
+// Глобальная функция для удаления чата (может быть вызвана из других частей приложения)
+window.removeChatFromList = removeChatFromList;
+
 function updateChatList(newChats, container) {
     const effectiveRole = (window.REQUEST_USER_ROLE || window.requestUserRole || '').toLowerCase();
     const existingChats = new Map();
@@ -603,7 +629,19 @@ function updateChatList(newChats, container) {
         }
     });
 
+    // Удаляем чаты, которые больше не существуют на сервере
     existingChats.forEach(element => {
+        const chatId = element.dataset.chatId;
+        console.log('Удаляем чат из списка (не найден на сервере):', chatId);
+        
+        // Если удаленный чат был активным, сбрасываем состояние
+        if (currentChatId === chatId) {
+            currentChatId = null;
+            lastMessageTimestamp = null;
+            displayedMessageIds.clear();
+            showNoChatSelected();
+        }
+        
         element.remove();
     });
 
@@ -1354,12 +1392,14 @@ async function leaveChat() {
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        window.showNotification(data.message || 'Вы покинули чат.', 'success');
+        if (data.deleted) {
+          window.showNotification('Чат удален.', 'success');
+        } else {
+          window.showNotification(data.message || 'Вы покинули чат.', 'success');
+        }
+        
         // Удаляем чат из списка
-        const chatElem = chatListContainer && currentChatId
-          ? chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`)
-          : null;
-        if (chatElem) chatElem.remove();
+        removeChatFromList(currentChatId);
 
         // Сбрасываем состояние окна чата
         currentChatId = null;
