@@ -25,15 +25,7 @@ body {
     overflow-x: hidden !important;
 }
 
-banner {
-    background: transparent !important;
-    background-color: transparent !important;
-}
-
-header {
-    background: transparent !important;
-    background-color: transparent !important;
-}
+/* Убираем стили для хедера - пусть берет из глобальных файлов */
 
 .back-link a {
     color: black !important;
@@ -61,6 +53,16 @@ header {
 
 .info-block.full-width {
     flex: 1 1 100%;
+}
+
+.right-panel {
+    height: 1197px !important;
+    max-height: 1197px !important;
+}
+
+.tickets-list {
+    height: calc(100% - 40px) !important;
+    max-height: calc(100% - 40px) !important;
 }
 
 .left-panel {
