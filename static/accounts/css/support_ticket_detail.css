@@ -191,8 +191,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    height: calc(100% - 40px) !important;
-    max-height: calc(100% - 40px) !important;
+    height: 600px !important;
+    max-height: 600px !important;
     overflow-y: auto !important;
     width: 100%;
     padding-right: 10px;
@@ -217,6 +217,30 @@ body {
 
 .tickets-list::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
+}
+
+/* СИЛЬНЫЕ СТИЛИ ДЛЯ СКРОЛЛА */
+.tickets-list {
+    overflow-y: scroll !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #c1c1c1 #f1f1f1 !important;
+}
+
+.tickets-list::-webkit-scrollbar {
+    width: 8px !important;
+    display: block !important;
+}
+
+.tickets-list::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+    border-radius: 4px !important;
+    display: block !important;
+}
+
+.tickets-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1 !important;
+    border-radius: 4px !important;
+    display: block !important;
 }
 
 .ticket-card {
@@ -376,7 +400,8 @@ header * {
 banner button[type="button"],
 banner .btn,
 banner .dropdown-toggle,
-banner .navbar-toggler {
+banner .navbar-toggler,
+banner button {
     color: black !important;
     background-color: transparent !important;
     background: transparent !important;
@@ -386,6 +411,21 @@ banner .navbar-toggler {
 banner button[type="button"] *,
 banner .btn *,
 banner .dropdown-toggle *,
-banner .navbar-toggler * {
+banner .navbar-toggler *,
+banner button * {
+    color: black !important;
+}
+
+/* СИЛЬНЫЕ СТИЛИ ДЛЯ КНОПКИ КАТАЛОГ */
+banner button:contains("Каталог"),
+banner button[aria-expanded="false"] {
+    color: black !important;
+    background-color: transparent !important;
+    background: transparent !important;
+    border-color: black !important;
+}
+
+banner button:contains("Каталог") *,
+banner button[aria-expanded="false"] * {
     color: black !important;
 }
