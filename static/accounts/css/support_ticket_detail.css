@@ -196,6 +196,7 @@ body {
     overflow-y: auto !important;
     width: 100%;
     padding-right: 10px;
+    min-height: 0 !important;
 }
 
 .tickets-list::-webkit-scrollbar {
@@ -340,15 +341,22 @@ banner .navigation button {
     border-color: black !important;
 }
 
+/* Делаем кнопку "Каталог" черной */
+banner button[aria-expanded],
+banner .dropdown-toggle {
+    color: black !important;
+    border-color: black !important;
+}
+
 /* Делаем лого черным */
 banner img[alt="Great Ideas Logo"],
 header img[alt="Great Ideas Logo"] {
     filter: brightness(0) !important;
 }
 
-/* Делаем иконки в хедере черными */
-banner img,
-header img {
+/* Делаем иконки в хедере черными (кроме аватара) */
+banner img:not([alt*="Аватар"]),
+header img:not([alt*="Аватар"]) {
     filter: brightness(0) !important;
 }
 
