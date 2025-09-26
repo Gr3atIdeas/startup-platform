@@ -30,6 +30,11 @@ banner {
     background-color: transparent !important;
 }
 
+header {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
 .back-link a {
     color: black !important;
     text-decoration: none;
