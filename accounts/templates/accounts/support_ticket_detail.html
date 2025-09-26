@@ -2,29 +2,7 @@
 {% load static %}
 
 {% block custom_styles %}
-<style>
-.ticket-detail-container {
-    max-width: 1303px;
-    margin: 0 auto;
-    padding: 60px 71px;
-    background: white;
-    display: flex;
-    gap: 104px;
-    min-height: 100vh;
-}
-
-main.content {
-    background: white;
-    padding: 0;
-    margin: 0;
-}
-
-.left-panel {
-    width: 520px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
+<link rel="stylesheet" href="{% static 'accounts/css/support_ticket_detail.css' %}?v={% now 'U' %}">
 
 .back-link {
     margin-bottom: 20px;
@@ -38,263 +16,22 @@ main.content {
     font-weight: 300;
 }
 
-.info-section {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-}
-
-
-.info-block {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-}
-
 .info-block.full-width {
     flex: 1 1 100%;
 }
-
-.info-label {
-    color: black;
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-}
-
-.info-field {
-    height: 40px;
-    padding: 12px 16px;
-    background: white;
-    border-radius: 5px;
-    border: 1px solid black;
-    display: flex;
-    align-items: center;
-}
-
-.info-value {
-    color: black;
-    font-size: 14px;
-    font-family: Unbounded;
-    font-weight: 300;
-    line-height: 18px;
-}
-
-.status-select {
-    height: 40px;
-    padding: 12px 16px;
-    background: white;
-    border-radius: 5px;
-    border: 1px solid black;
-    font-size: 14px;
-    font-family: Unbounded;
-    font-weight: 300;
-    color: black;
-}
-
-.comment-field {
-    width: 100%;
-    height: 120px;
-    position: relative;
-    background: white;
-    border-radius: 7px;
-    border: 1px solid black;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.comment-placeholder {
-    color: #CACACA;
-    font-size: 14px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.14px;
-}
-
-.comment-content {
-    color: black;
-    font-size: 14px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.14px;
-    line-height: 1.4;
-    word-wrap: break-word;
-}
-
-.moderator-form {
-    width: 100%;
-}
-
-.moderator-form textarea {
-    width: 100%;
-    height: 120px;
-    padding: 20px;
-    background: white;
-    border-radius: 7px;
-    border: 1px solid black;
-    font-size: 14px;
-    font-family: Unbounded;
-    font-weight: 300;
-    color: black;
-    resize: vertical;
-    margin-bottom: 15px;
-    box-sizing: border-box;
-}
-
-.save-comment-btn {
-    height: 40px;
-    padding: 12px 35px;
-    background: #004E9F;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    cursor: pointer;
-    margin-bottom: 20px;
-}
-
-.save-comment-btn div {
-    color: white;
-    font-size: 16px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 16px;
-}
-
-.close-ticket-btn {
-    height: 40px;
-    padding: 12px 35px;
-    background: #004E9F;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-.close-ticket-btn div {
-    color: white;
-    font-size: 16px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 16px;
-}
-
-.right-panel {
-    display: flex;
-    align-items: flex-start;
-    gap: 19px;
-    width: 100%;
-}
-
-.tickets-list-section {
-    width: 621px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    flex: 1;
-}
-
-.tickets-header {
-    color: black;
-    font-size: 35px;
-    font-family: Unbounded;
-    font-weight: 600;
-    line-height: 35px;
-    letter-spacing: -0.02em;
-    margin: 0;
-}
-
-.tickets-list {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    height: calc(100vh - 200px);
-    overflow-y: auto;
-    width: 100%;
-    padding-right: 10px;
-}
-
-.tickets-list::-webkit-scrollbar {
-    width: 10px;
-}
-
-.tickets-list::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.tickets-list::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.20);
-    border-radius: 6px;
-}
-
-.tickets-list::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.30);
-}
-
-.ticket-card {
-    padding: 24px 31px;
-    border-radius: 10px;
-    border: 1px solid black;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: white;
-    cursor: pointer;
-}
-
-.ticket-info-left,
-.ticket-info-right {
-    display: flex;
-    align-items: center;
-    gap: 50px;
-}
-
-.ticket-detail {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    width: 95px;
-}
-
-.detail-label {
-    color: #B0B0B0;
-    font-size: 14px;
-    font-family: Unbounded;
-    font-weight: 300;
-    line-height: 18px;
-}
-
-.detail-value {
-    color: black;
-    font-size: 14px;
-    font-family: Unbounded;
-    font-weight: 300;
-    line-height: 18px;
-}
-
-</style>
-{% endblock %}
-
-{% block scripts %}
-<script src="{% static 'accounts/js/support_ticket_detail.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-<main>
+<main class="content">
     <div class="ticket-detail-container">
         <div class="left-panel">
             <div class="back-link">
-                <a href="{% url 'support_orders' %}">&larr; К списку заявок</a>
+                <a href="{% url 'support_orders' %}">
+                    <img src="{% static 'accounts/images/support/arrow_left.svg' %}" alt="Назад" class="back-link-icon">
+                    <span>← К списку заявок</span>
+                </a>
             </div>
+            
             <div class="info-section">
                 <div class="info-block">
                     <div class="info-label">Статус работы</div>
@@ -310,123 +47,96 @@ main.content {
                     </div>
                     {% endif %}
                 </div>
-                
+
                 <div class="info-block">
                     <div class="info-label">Дата создания</div>
                     <div class="info-field">
-                        <div class="info-value">{{ ticket.created_at|date:'d/m/Y' }}</div>
+                        <div class="info-value">{{ ticket.created_at|date:"d/m/Y" }}</div>
                     </div>
                 </div>
-                
+
                 <div class="info-block">
                     <div class="info-label">Номер заявки</div>
                     <div class="info-field">
                         <div class="info-value">#{{ ticket.pk }}</div>
                     </div>
                 </div>
-                
+
                 <div class="info-block">
                     <div class="info-label">Тема обращения</div>
                     <div class="info-field">
                         <div class="info-value">{{ ticket.subject }}</div>
                     </div>
                 </div>
-                
+
                 <div class="info-block">
                     <div class="info-label">Роль</div>
                     <div class="info-field">
-                        <div class="info-value">{{ ticket.user.role.role_name|title|default:"Пользователь" }}</div>
+                        <div class="info-value">{{ ticket.user.get_role_display }}</div>
                     </div>
                 </div>
-                
+
                 <div class="info-block">
                     <div class="info-label">ID аккаунта обращения</div>
                     <div class="info-field">
-                        <div class="info-value">{{ ticket.user.user_id }}</div>
+                        <div class="info-value">{{ ticket.user.id }}</div>
                     </div>
                 </div>
-                
+
                 <div class="info-block">
                     <div class="info-label">Ваше имя</div>
                     <div class="info-field">
-                        <div class="info-value">{{ ticket.user.get_full_name|default:ticket.user.username }}</div>
+                        <div class="info-value">{{ ticket.user.get_full_name }}</div>
                     </div>
                 </div>
-                
+
                 <div class="info-block">
                     <div class="info-label">Почта для связи</div>
                     <div class="info-field">
                         <div class="info-value">{{ ticket.user.email }}</div>
                     </div>
                 </div>
-                
-                <div class="info-block full-width">
+
+                <div class="info-block">
                     <div class="info-label">Сообщение от стартапера</div>
-                    <div class="comment-field">
-                        <div class="comment-content">{{ ticket.message|default:"Сообщение не указано" }}</div>
-                    </div>
+                    <div class="comment-field">{{ ticket.message }}</div>
                 </div>
-                
-                <div class="info-block full-width">
-                    <div class="info-label">Комментарий модератора</div>
-                    {% if is_moderator %}
-                        <form method="post" class="moderator-form">
-                            {% csrf_token %}
-                            {{ form.moderator_comment }}
-                            <button type="submit" class="save-comment-btn">
-                                <div>Сохранить комментарий</div>
-                            </button>
-                        </form>
-                    {% else %}
-                        <div class="comment-field">
-                            {% if ticket.moderator_comment %}
-                                <div class="comment-content">{{ ticket.moderator_comment }}</div>
-                            {% else %}
-                                <div class="comment-placeholder">Комментарий модератора отсутствует</div>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                </div>
-                
+
                 {% if is_moderator %}
-                <button class="close-ticket-btn">
+                <div class="info-block">
+                    <div class="info-label">Комментарий модератора</div>
+                    <form class="moderator-form" method="post">
+                        {% csrf_token %}
+                        <textarea name="moderator_comment" placeholder="Добавьте комментарий...">{{ ticket.moderator_comment }}</textarea>
+                        <button type="submit" class="btn btn-primary">Сохранить комментарий</button>
+                    </form>
+                </div>
+
+                <button class="close-ticket-btn" data-ticket-id="{{ ticket.pk }}">
                     <div>Закрыть заявку</div>
                 </button>
                 {% endif %}
             </div>
         </div>
-        
+
         <div class="right-panel">
             <div class="tickets-list-section">
-                <div class="tickets-header">
-                    {% if is_moderator %}
-                        Все заявки
-                    {% else %}
-                        Мои заявки
-                    {% endif %}
-                </div>
-                
+                <div class="tickets-list-title">Все заявки</div>
                 <div class="tickets-list">
-                    {% for order in all_tickets %}
-                    <div class="ticket-card" data-ticket-id="{{ order.pk }}">
-                        <div class="ticket-info-left">
-                            <div class="ticket-detail">
-                                <div class="detail-label">Создана</div>
-                                <div class="detail-value">{{ order.created_at|date:'d.m.Y' }}</div>
+                    {% for ticket_item in all_tickets %}
+                    <div class="ticket-card" onclick="window.location.href='{% url 'support_ticket_detail' ticket_item.pk %}'">
+                        <div class="ticket-card-header">
+                            <div class="ticket-card-left">
+                                <div class="ticket-date-label">Создана</div>
+                                <div class="ticket-date-value">{{ ticket_item.created_at|date:"d.m.Y" }}</div>
+                                <div class="ticket-topic-label">Тема</div>
+                                <div class="ticket-topic-value">{{ ticket_item.subject }}</div>
                             </div>
-                            <div class="ticket-detail">
-                                <div class="detail-label">Тема</div>
-                                <div class="detail-value">{{ order.subject|truncatechars:25 }}</div>
-                            </div>
-                        </div>
-                        <div class="ticket-info-right">
-                            <div class="ticket-detail">
-                                <div class="detail-label">Статус</div>
-                                <div class="detail-value status-{{ order.status }}">{{ order.get_status_display }}</div>
-                            </div>
-                            <div class="ticket-detail">
-                                <div class="detail-label">Номер</div>
-                                <div class="detail-value">#{{ order.pk }}</div>
+                            <div class="ticket-card-right">
+                                <div class="ticket-status-label">Статус</div>
+                                <div class="ticket-status-value {{ ticket_item.status }}">{{ ticket_item.get_status_display }}</div>
+                                <div class="ticket-number-label">Номер</div>
+                                <div class="ticket-number-value">#{{ ticket_item.pk }}</div>
                             </div>
                         </div>
                     </div>
@@ -436,4 +146,69 @@ main.content {
         </div>
     </div>
 </main>
-{% endblock %} 
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Обработка изменения статуса заявки
+    const statusSelect = document.querySelector('.status-select');
+    if (statusSelect) {
+        statusSelect.addEventListener('change', function() {
+            const ticketId = this.dataset.ticketId;
+            const newStatus = this.value;
+            
+            fetch(`/support/ticket/${ticketId}/update-status/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({status: newStatus})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Ошибка при обновлении статуса');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ошибка при обновлении статуса');
+            });
+        });
+    }
+
+    // Обработка закрытия заявки
+    const closeBtn = document.querySelector('.close-ticket-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            const ticketId = this.dataset.ticketId;
+            
+            if (confirm('Вы уверены, что хотите закрыть эту заявку?')) {
+                fetch(`/support/ticket/${ticketId}/close/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Ошибка при закрытии заявки');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ошибка при закрытии заявки');
+                });
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}
