@@ -63,6 +63,18 @@ body {
     overflow-y: hidden !important;
 }
 
+/* УНИКАЛЬНЫЕ СТИЛИ ДЛЯ ПРАВОГО СТОЛБЦА НА СТРАНИЦЕ ТИКЕТА */
+.ticket-detail-page .right-panel {
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 19px !important;
+    width: 100% !important;
+}
+
 .tickets-list {
     height: calc(100% - 40px) !important;
     max-height: calc(100% - 40px) !important;
@@ -201,6 +213,21 @@ body {
     position: relative !important;
 }
 
+/* УНИКАЛЬНЫЕ СТИЛИ ДЛЯ СПИСКА ЗАЯВОК НА СТРАНИЦЕ ТИКЕТА */
+.ticket-detail-page .tickets-list {
+    height: 600px !important;
+    max-height: 600px !important;
+    overflow-y: scroll !important;
+    width: 100% !important;
+    padding-right: 10px !important;
+    min-height: 0 !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+}
+
 .tickets-list::-webkit-scrollbar {
     width: 8px;
 }
@@ -241,6 +268,28 @@ body {
     background: #c1c1c1 !important;
     border-radius: 4px !important;
     display: block !important;
+}
+
+/* УНИКАЛЬНЫЕ СТИЛИ ДЛЯ СКРОЛЛБАРА НА СТРАНИЦЕ ТИКЕТА */
+.ticket-detail-page .tickets-list::-webkit-scrollbar {
+    width: 8px !important;
+    display: block !important;
+}
+
+.ticket-detail-page .tickets-list::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+    border-radius: 4px !important;
+    display: block !important;
+}
+
+.ticket-detail-page .tickets-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1 !important;
+    border-radius: 4px !important;
+    display: block !important;
+}
+
+.ticket-detail-page .tickets-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8 !important;
 }
 
 .ticket-card {
@@ -416,16 +465,9 @@ banner button * {
     color: black !important;
 }
 
-/* СИЛЬНЫЕ СТИЛИ ДЛЯ КНОПКИ КАТАЛОГ */
+/* СКРЫВАЕМ КНОПКУ КАТАЛОГ НА ЭТОЙ СТРАНИЦЕ */
 banner button:contains("Каталог"),
 banner button[aria-expanded="false"] {
-    color: black !important;
-    background-color: transparent !important;
-    background: transparent !important;
-    border-color: black !important;
-}
-
-banner button:contains("Каталог") *,
-banner button[aria-expanded="false"] * {
-    color: black !important;
+    display: none !important;
+    visibility: hidden !important;
 }
