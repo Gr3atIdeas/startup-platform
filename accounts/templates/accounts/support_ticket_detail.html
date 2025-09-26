@@ -4,23 +4,12 @@
 {% block custom_styles %}
 <style>
 .ticket-detail-container {
-    width: 1303px;
+    max-width: 1303px;
     margin: 0 auto;
     padding: 60px 71px;
     background: white;
     display: flex;
     gap: 104px;
-    min-height: 100vh;
-}
-
-body {
-    background: white;
-    margin: 0;
-    padding: 0;
-}
-
-main {
-    background: white;
     min-height: 100vh;
 }
 
@@ -56,17 +45,12 @@ main.content {
     width: 100%;
 }
 
-.info-row {
-    display: flex;
-    gap: 20px;
-    width: 100%;
-}
 
 .info-block {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    flex: 1;
+    width: 100%;
 }
 
 .info-block.full-width {
@@ -312,75 +296,67 @@ main.content {
                 <a href="{% url 'support_orders' %}">&larr; К списку заявок</a>
             </div>
             <div class="info-section">
-                <div class="info-row">
-                    <div class="info-block">
-                        <div class="info-label">Статус работы</div>
-                        {% if is_moderator %}
-                        <select class="status-select" data-ticket-id="{{ ticket.pk }}">
-                            <option value="new" {% if ticket.status == 'new' %}selected{% endif %}>Новая</option>
-                            <option value="in_progress" {% if ticket.status == 'in_progress' %}selected{% endif %}>В обработке</option>
-                            <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Закрыта</option>
-                        </select>
-                        {% else %}
-                        <div class="info-field">
-                            <div class="info-value">{{ ticket.get_status_display }}</div>
-                        </div>
-                        {% endif %}
+                <div class="info-block">
+                    <div class="info-label">Статус работы</div>
+                    {% if is_moderator %}
+                    <select class="status-select" data-ticket-id="{{ ticket.pk }}">
+                        <option value="new" {% if ticket.status == 'new' %}selected{% endif %}>Новая</option>
+                        <option value="in_progress" {% if ticket.status == 'in_progress' %}selected{% endif %}>В обработке</option>
+                        <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Закрыта</option>
+                    </select>
+                    {% else %}
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.get_status_display }}</div>
                     </div>
-                    
-                    <div class="info-block">
-                        <div class="info-label">Дата создания</div>
-                        <div class="info-field">
-                            <div class="info-value">{{ ticket.created_at|date:'d/m/Y' }}</div>
-                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="info-block">
+                    <div class="info-label">Дата создания</div>
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.created_at|date:'d/m/Y' }}</div>
                     </div>
                 </div>
                 
-                <div class="info-row">
-                    <div class="info-block">
-                        <div class="info-label">Номер заявки</div>
-                        <div class="info-field">
-                            <div class="info-value">#{{ ticket.pk }}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="info-block">
-                        <div class="info-label">Тема обращения</div>
-                        <div class="info-field">
-                            <div class="info-value">{{ ticket.subject }}</div>
-                        </div>
+                <div class="info-block">
+                    <div class="info-label">Номер заявки</div>
+                    <div class="info-field">
+                        <div class="info-value">#{{ ticket.pk }}</div>
                     </div>
                 </div>
                 
-                <div class="info-row">
-                    <div class="info-block">
-                        <div class="info-label">Роль</div>
-                        <div class="info-field">
-                            <div class="info-value">{{ ticket.user.role.role_name|title|default:"Пользователь" }}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="info-block">
-                        <div class="info-label">ID аккаунта обращения</div>
-                        <div class="info-field">
-                            <div class="info-value">{{ ticket.user.user_id }}</div>
-                        </div>
+                <div class="info-block">
+                    <div class="info-label">Тема обращения</div>
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.subject }}</div>
                     </div>
                 </div>
                 
-                <div class="info-row">
-                    <div class="info-block">
-                        <div class="info-label">Ваше имя</div>
-                        <div class="info-field">
-                            <div class="info-value">{{ ticket.user.get_full_name|default:ticket.user.username }}</div>
-                        </div>
+                <div class="info-block">
+                    <div class="info-label">Роль</div>
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.user.role.role_name|title|default:"Пользователь" }}</div>
                     </div>
-                    
-                    <div class="info-block">
-                        <div class="info-label">Почта для связи</div>
-                        <div class="info-field">
-                            <div class="info-value">{{ ticket.user.email }}</div>
-                        </div>
+                </div>
+                
+                <div class="info-block">
+                    <div class="info-label">ID аккаунта обращения</div>
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.user.user_id }}</div>
+                    </div>
+                </div>
+                
+                <div class="info-block">
+                    <div class="info-label">Ваше имя</div>
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.user.get_full_name|default:ticket.user.username }}</div>
+                    </div>
+                </div>
+                
+                <div class="info-block">
+                    <div class="info-label">Почта для связи</div>
+                    <div class="info-field">
+                        <div class="info-value">{{ ticket.user.email }}</div>
                     </div>
                 </div>
                 
