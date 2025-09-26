@@ -372,6 +372,9 @@ function showNoChatSelected() {
     if (chatMessagesArea) chatMessagesArea.innerHTML = ''
     if (chatMessagesArea) chatMessagesArea.style.display = 'none'
     if (chatInputFieldArea) chatInputFieldArea.style.display = 'none'
+    
+    // Сбрасываем состояние кнопки "Покинуть" когда нет выбранного чата
+    resetLeaveChatButton();
 }
 function showActiveChatWindow() {
     if (noChatSelectedPlaceholder) noChatSelectedPlaceholder.style.display = 'none'
@@ -388,6 +391,9 @@ function loadChat(chatId) {
             clearInterval(pollingInterval);
         }
         displayedMessageIds.clear();
+        
+        // Сбрасываем состояние кнопки "Покинуть" при переключении чатов
+        resetLeaveChatButton();
         document.querySelectorAll('.chat-item-new').forEach((item) => {
             item.classList.remove('active');
             if (item.getAttribute('data-chat-id') == chatId && !item.classList.contains('hidden-chat')) {
@@ -599,6 +605,15 @@ function removeChatFromList(chatId) {
 
 // Глобальная функция для удаления чата (может быть вызвана из других частей приложения)
 window.removeChatFromList = removeChatFromList;
+
+// Функция для сброса состояния кнопки "Покинуть"
+function resetLeaveChatButton() {
+    const leaveChatBtn = document.getElementById('leaveChatBtn');
+    if (leaveChatBtn) {
+        leaveChatBtn.disabled = false;
+        leaveChatBtn.textContent = 'Покинуть';
+    }
+}
 
 function updateChatList(newChats, container) {
     const effectiveRole = (window.REQUEST_USER_ROLE || window.requestUserRole || '').toLowerCase();
@@ -1412,11 +1427,19 @@ async function leaveChat() {
       } else {
         window.showNotification(data.error || 'Ошибка при выходе из чата', 'error');
       }
+      
+      // Сбрасываем состояние кнопки
+      resetLeaveChatButton();
+      
       isLeavingChat = false;
     })
     .catch(error => {
       console.error('Ошибка выхода из чата:', error);
       window.showNotification('Произошла ошибка при выходе из чата.', 'error');
+      
+      // Сбрасываем состояние кнопки при ошибке
+      resetLeaveChatButton();
+      
       isLeavingChat = false;
     });
 }
