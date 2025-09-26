@@ -1191,7 +1191,7 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
 
-        window.location.href = `/cosmochat/`;
+        startChatWithUser(ownerId);
       });
     } else {
       console.error('Write button not found');
@@ -1247,4 +1247,32 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   setupTimelineSteps();
+
+  function startChatWithUser(userId) {
+    fetch(`/cosmochat/start-chat/${userId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Сетевая ошибка: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          window.location.href = `/cosmochat/?chat_id=${data.chat_id}`;
+        } else {
+          alert('Ошибка при создании чата: ' + (data.error || 'Неизвестная ошибка'));
+        }
+      })
+      .catch((error) => {
+        console.error('Ошибка:', error);
+        alert('Ошибка при создании чата: ' + error.message);
+      });
+  }
 });

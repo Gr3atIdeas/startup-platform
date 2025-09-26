@@ -325,6 +325,49 @@ function setupSimilarSpecialistsShowMore() {
     });
   }
 
+  function setupActionButtons() {
+    const writeButton = document.querySelector('.write-author-button');
+    if (writeButton) {
+      writeButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
+        if (!ownerId) {
+          alert('Ошибка: не удалось определить автора специалиста');
+          return;
+        }
+        startChatWithUser(ownerId);
+      });
+    }
+  }
+
+  function startChatWithUser(userId) {
+    fetch(`/cosmochat/start-chat/${userId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrfToken,
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Сетевая ошибка: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          window.location.href = `/cosmochat/?chat_id=${data.chat_id}`;
+        } else {
+          alert('Ошибка при создании чата: ' + (data.error || 'Неизвестная ошибка'));
+        }
+      })
+      .catch((error) => {
+        console.error('Ошибка:', error);
+        alert('Ошибка при создании чата: ' + error.message);
+      });
+  }
+
   setupRatingStars();
   setupCommentRatings();
   setupCommentRatingInput();
@@ -334,6 +377,7 @@ function setupSimilarSpecialistsShowMore() {
   setupTabNavigation();
   setupModeratorDelete();
   setupSimilarSpecialistsShowMore();
+  setupActionButtons();
 });
 
 function setupModeratorDelete() {
