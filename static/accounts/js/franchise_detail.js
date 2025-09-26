@@ -934,7 +934,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             const placeholder = document.createElement('div');
             placeholder.className = 'similar-card show-more-placeholder';
-            placeholder.innerHTML = '<button class="action-button show-more-similar"><i class="fas fa-redo"></i>&nbsp;Показать еще</button>';
+            placeholder.innerHTML = '<button class="action-button show-more-similar"><i class="fas fa-redo"></i> Показать еще</button>';
             similarGrid.innerHTML = html;
             similarGrid.appendChild(placeholder);
             setupSimilarStartupsRatings();

@@ -2011,8 +2011,8 @@ a:hover {
   
   display: inline-flex !important;
   align-items: center;
-  gap: 12px;
-  padding: 12px 24px;
+  gap: 8px;
+  padding: 10px 20px;
   height: auto;
   border: 1px solid var(--text-primary) !important; 
   border-radius: 25px !important; 
@@ -2034,6 +2034,27 @@ a:hover {
   .action-button.show-more-similar
   .wave-effect {
   display: none !important;
+}
+
+
+.similar-startups-grid
+  .similar-card.show-more-placeholder
+  .action-button.show-more-similar::before,
+.similar-startups-grid
+  .similar-card.show-more-placeholder
+  .action-button.show-more-similar::after {
+  content: none !important;
+  display: none !important;
+}
+
+
+.similar-startups-grid
+  .similar-card.show-more-placeholder
+  .action-button.show-more-similar:hover {
+  background-color: rgb(255 255 255 / 10%);
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+  box-shadow: 0 0 15px rgb(8 229 207 / 50%); 
 }
 
 

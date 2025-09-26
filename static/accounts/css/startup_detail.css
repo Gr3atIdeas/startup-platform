@@ -2031,8 +2031,8 @@ a:hover {
   
   display: inline-flex !important;
   align-items: center;
-  gap: 12px;
-  padding: 12px 24px;
+  gap: 8px;
+  padding: 10px 20px;
   height: auto;
   border: 1px solid var(--text-primary) !important; 
   border-radius: 25px !important; 
