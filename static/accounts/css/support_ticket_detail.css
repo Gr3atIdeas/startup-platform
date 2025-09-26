@@ -9,6 +9,8 @@
     gap: 104px;
     min-height: 100vh;
     box-sizing: border-box !important;
+    overflow: visible !important;
+    overflow-y: visible !important;
 }
 
 main.content {
@@ -58,11 +60,13 @@ body {
 .right-panel {
     height: 1197px !important;
     max-height: 1197px !important;
+    overflow-y: hidden !important;
 }
 
 .tickets-list {
     height: calc(100% - 40px) !important;
     max-height: calc(100% - 40px) !important;
+    overflow-y: auto !important;
 }
 
 .left-panel {
@@ -187,8 +191,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: 24px;
-    height: calc(100vh - 100px);
-    overflow-y: auto;
+    height: calc(100% - 40px) !important;
+    max-height: calc(100% - 40px) !important;
+    overflow-y: auto !important;
     width: 100%;
     padding-right: 10px;
 }
