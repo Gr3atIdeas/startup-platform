@@ -14,6 +14,7 @@ const chatListContainer = document.getElementById('chatListContainer')
 const chatWindowColumn = document.getElementById('chatWindowColumn')
 const chatActiveHeader = document.getElementById('chatActiveHeader')
 const chatWindowTitle = document.getElementById('chatWindowTitle')
+const originalUserName = document.getElementById('originalUserName')
 const chatMessagesArea = document.getElementById('chatMessagesArea')
 const noChatSelectedPlaceholder = document.getElementById('noChatSelectedPlaceholder')
 const chatInputFieldArea = document.getElementById('chatInputFieldArea')
@@ -269,6 +270,17 @@ document.addEventListener('DOMContentLoaded', function () {
                             chatWindowTitle.textContent = data.chat_name;
                         }
                         
+                        // Обновляем отображение оригинального имени пользователя
+                        if (originalUserName && currentParticipants && currentParticipants.length > 0) {
+                            const otherParticipant = currentParticipants.find(p => p.user_id !== currentUser.user_id);
+                            if (otherParticipant && data.chat_name !== otherParticipant.name) {
+                                originalUserName.textContent = `(${otherParticipant.name})`;
+                                originalUserName.style.display = 'block';
+                            } else {
+                                originalUserName.style.display = 'none';
+                            }
+                        }
+                        
                         // Обновляем элемент чата в списке
                         const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
                         if (chatItem) {
@@ -283,7 +295,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Перезапускаем polling для синхронизации с сервером
                         startPolling();
                         
-                        console.log('Чат успешно переименован:', data.chat_name);
                     } else {
                         alert(data.error || 'Ошибка при переименовании чата');
                     }
@@ -381,6 +392,7 @@ function showNoChatSelected() {
     if (chatMessagesArea) chatMessagesArea.innerHTML = ''
     if (chatMessagesArea) chatMessagesArea.style.display = 'none'
     if (chatInputFieldArea) chatInputFieldArea.style.display = 'none'
+    if (originalUserName) originalUserName.style.display = 'none'
     
     // Сбрасываем состояние кнопки "Покинуть" когда нет выбранного чата
     resetLeaveChatButton();
@@ -422,10 +434,20 @@ function loadChat(chatId) {
                     displayedMessageIds.clear();
                 }
                 data.messages.forEach((msg) => appendMessage(msg, false));
-                if (chatWindowTitle && data.chat_name) {
-                    console.log('Обновляем заголовок чата из сервера:', data.chat_name);
-                    chatWindowTitle.textContent = data.chat_name;
+            if (chatWindowTitle && data.chat_name) {
+                chatWindowTitle.textContent = data.chat_name;
+            }
+            
+            // Показываем оригинальное имя пользователя, если чат переименован
+            if (originalUserName && data.participants && data.participants.length > 0) {
+                const otherParticipant = data.participants.find(p => p.user_id !== currentUser.user_id);
+                if (otherParticipant && data.chat_name !== otherParticipant.name) {
+                    originalUserName.textContent = `(${otherParticipant.name})`;
+                    originalUserName.style.display = 'block';
+                } else {
+                    originalUserName.style.display = 'none';
                 }
+            }
                 currentParticipants = data.participants || [];
                 const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${chatId}"]`);
                 const isDeal = chatItem && chatItem.dataset.isDeal === 'true';
@@ -526,14 +548,13 @@ function startPolling() {
                 if (chatListContainer) {
                     updateChatList(data.chats, chatListContainer);
 
-                    const currentChatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
-                    if (currentChatItem && chatWindowTitle) {
-                        const newChatName = currentChatItem.dataset.chatName;
-                        if (newChatName && newChatName !== chatWindowTitle.textContent) {
-                            console.log('Обновляем заголовок чата из polling:', newChatName);
-                            chatWindowTitle.textContent = newChatName;
-                        }
-                    }
+                               const currentChatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
+                               if (currentChatItem && chatWindowTitle) {
+                                   const newChatName = currentChatItem.dataset.chatName;
+                                   if (newChatName && newChatName !== chatWindowTitle.textContent) {
+                                       chatWindowTitle.textContent = newChatName;
+                                   }
+                               }
                 }
             } else {
                 console.error('Ошибка данных списка чатов:', data.error);
@@ -603,7 +624,6 @@ function removeChatFromList(chatId) {
     const chatElem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${chatId}"]`);
     if (chatElem) {
         chatElem.remove();
-        console.log('Чат принудительно удален из списка:', chatId);
         
         // Если удаленный чат был активным, сбрасываем состояние
         if (currentChatId === chatId) {
@@ -615,7 +635,6 @@ function removeChatFromList(chatId) {
         
         return true;
     }
-    console.log('Чат не найден для удаления:', chatId);
     return false;
 }
 
@@ -663,7 +682,6 @@ function updateChatList(newChats, container) {
     // Удаляем чаты, которые больше не существуют на сервере
     existingChats.forEach(element => {
         const chatId = element.dataset.chatId;
-        console.log('Удаляем чат из списка (не найден на сервере):', chatId);
         
         // Если удаленный чат был активным, сбрасываем состояние
         if (currentChatId === chatId) {
@@ -685,7 +703,6 @@ function updateExistingChatElement(element, chat) {
     const newName = chat.name || `Чат ${chat.conversation_id}`;
 
     if (currentName !== newName) {
-        console.log('Обновляем имя чата в списке:', currentName, '->', newName);
         element.dataset.chatName = newName;
         const nameElement = element.querySelector('h4');
         if (nameElement) {
@@ -693,6 +710,11 @@ function updateExistingChatElement(element, chat) {
                 ${newName.substring(0, 25)}${newName.length > 25 ? '...' : ''}
                 ${chat.is_deal ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : ''}
             `;
+        }
+        
+        // Обновляем заголовок чата, если это активный чат
+        if (currentChatId === chat.conversation_id && chatWindowTitle) {
+            chatWindowTitle.textContent = newName;
         }
     }
 
