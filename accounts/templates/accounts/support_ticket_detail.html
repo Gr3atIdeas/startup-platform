@@ -170,34 +170,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Исправляем фон body
     document.body.style.setProperty('background-color', 'white', 'important');
     
-    // СКРЫВАЕМ КНОПКУ КАТАЛОГ - АГРЕССИВНЫЙ ПОДХОД
-    const catalogButton = document.querySelector('button[ref="e13"]');
-    if (catalogButton) {
-        catalogButton.style.setProperty('display', 'none', 'important');
-        catalogButton.style.setProperty('visibility', 'hidden', 'important');
-        catalogButton.style.setProperty('opacity', '0', 'important');
-        catalogButton.style.setProperty('position', 'absolute', 'important');
-        catalogButton.style.setProperty('left', '-9999px', 'important');
-        catalogButton.style.setProperty('width', '0', 'important');
-        catalogButton.style.setProperty('height', '0', 'important');
-        catalogButton.style.setProperty('overflow', 'hidden', 'important');
-    }
-    
-    // СКРЫВАЕМ ВСЕ КНОПКИ С ТЕКСТОМ "Каталог"
+    // СКРЫВАЕМ КНОПКУ КАТАЛОГ
     const allButtons = document.querySelectorAll('banner button');
     allButtons.forEach(button => {
         if (button.textContent.includes('Каталог')) {
             button.style.setProperty('display', 'none', 'important');
             button.style.setProperty('visibility', 'hidden', 'important');
-            button.style.setProperty('opacity', '0', 'important');
         }
-    });
-    
-    // СКРЫВАЕМ ПО КЛАССУ DROPDOWN
-    const dropdownButtons = document.querySelectorAll('.dropdown-toggle');
-    dropdownButtons.forEach(button => {
-        button.style.setProperty('display', 'none', 'important');
-        button.style.setProperty('visibility', 'hidden', 'important');
     });
     
     // ИСПРАВЛЯЕМ ПРАВЫЙ СТОЛБЕЦ - ДЕЛАЕМ ЕГО ВЫСОТУ КАК У ЛЕВОГО
