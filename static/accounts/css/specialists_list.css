@@ -167,7 +167,7 @@ body {
   width: 254px;
   height: auto;
   min-height: auto;
-  padding: 53px 28px;
+  padding: 53px 28px 63px 28px;
   border-radius: 10px;
   box-sizing: border-box;
   display: flex;
@@ -971,7 +971,7 @@ body {
 
   .sidebar {
     width: 220px;
-    padding: 30px 20px;
+    padding: 30px 20px 40px 20px;
     height: auto;
   }
 
@@ -1024,7 +1024,7 @@ body {
     width: 100%;
     margin-right: 0;
     margin-bottom: 0;
-    padding: 20px;
+    padding: 20px 20px 30px 20px;
     height: auto;
   }
 
@@ -1167,7 +1167,7 @@ body {
     margin-bottom: 30px;
   }
   .sidebar {
-    padding: 15px;
+    padding: 15px 15px 25px 15px;
   }
   #filterForm {
     gap: 20px;
