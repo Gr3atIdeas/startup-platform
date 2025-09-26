@@ -2011,7 +2011,7 @@ a:hover {
   
   display: inline-flex !important;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   padding: 10px 20px;
   height: auto;
   border: 1px solid var(--text-primary) !important; 

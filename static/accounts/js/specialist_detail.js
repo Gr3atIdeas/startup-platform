@@ -206,7 +206,7 @@ function setupSimilarSpecialistsShowMore() {
         }
         const placeholder = document.createElement('div');
         placeholder.className = 'similar-card show-more-placeholder';
-        placeholder.innerHTML = '<button class="action-button show-more-similar"><i class="fas fa-redo"></i> Показать еще</button>';
+        placeholder.innerHTML = '<button class="action-button show-more-similar"><i class="fas fa-redo"></i>&nbsp;Показать еще</button>';
         grid.innerHTML = html;
         grid.appendChild(placeholder);
         setupSimilarAgencyRatings();
