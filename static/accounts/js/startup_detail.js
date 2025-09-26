@@ -1265,7 +1265,12 @@ document.addEventListener('DOMContentLoaded', function () {
       })
       .then((data) => {
         if (data.success) {
-          window.location.href = `/cosmochat/?chat_id=${data.chat_id}`;
+          const chatId = data.chat_id || (data.chat && data.chat.conversation_id);
+          if (chatId) {
+            window.location.href = `/cosmochat/?chat_id=${chatId}`;
+          } else {
+            alert('Ошибка: не удалось получить ID чата');
+          }
         } else {
           alert('Ошибка при создании чата: ' + (data.error || 'Неизвестная ошибка'));
         }
