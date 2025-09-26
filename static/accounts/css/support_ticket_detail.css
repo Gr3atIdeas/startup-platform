@@ -197,6 +197,8 @@ body {
     width: 100%;
     padding-right: 10px;
     min-height: 0 !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
 }
 
 .tickets-list::-webkit-scrollbar {
@@ -342,10 +344,14 @@ banner .navigation button {
 }
 
 /* Делаем кнопку "Каталог" черной */
-banner button[aria-expanded],
-banner .dropdown-toggle {
+banner button,
+banner button *,
+banner .dropdown-toggle,
+banner .dropdown-toggle * {
     color: black !important;
     border-color: black !important;
+    background-color: transparent !important;
+    background: transparent !important;
 }
 
 /* Делаем лого черным */
@@ -363,5 +369,23 @@ header img:not([alt*="Аватар"]) {
 /* Делаем текст в хедере черным */
 banner *,
 header * {
+    color: black !important;
+}
+
+/* ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ КНОПКИ КАТАЛОГ */
+banner button[type="button"],
+banner .btn,
+banner .dropdown-toggle,
+banner .navbar-toggler {
+    color: black !important;
+    background-color: transparent !important;
+    background: transparent !important;
+    border-color: black !important;
+}
+
+banner button[type="button"] *,
+banner .btn *,
+banner .dropdown-toggle *,
+banner .navbar-toggler * {
     color: black !important;
 }
