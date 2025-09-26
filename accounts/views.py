@@ -6095,15 +6095,11 @@ def create_group_chat(request):
         )
 
 
-@login_required
 def support_page_view(request):
-    is_moderator = (
-        request.user.is_authenticated
-        and request.user.role
-        and request.user.role.role_name == "moderator"
-    )
-    context = {"is_moderator": is_moderator}
-    return render(request, "accounts/support.html", context)
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
+    return redirect('support_orders')
 
 
 @login_required

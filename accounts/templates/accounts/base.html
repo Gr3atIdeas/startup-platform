@@ -283,7 +283,7 @@
                             <img src="{% static 'accounts/images/icons/startups_menu.svg' %}" alt="Стартапы" class="profile-dropdown-item-icon">
                             Стартапы
                         </a> 
-                        <a href="{% url 'support' %}" class="profile-dropdown-item">
+                        <a href="{% url 'support_orders' %}" class="profile-dropdown-item">
                             <img src="{% static 'accounts/images/icons/support_menu.svg' %}" alt="Поддержка" class="profile-dropdown-item-icon">
                             Поддержка
                         </a> 
@@ -357,7 +357,7 @@
                     <div class="footer-menu-title">О нас</div>
                     <div class="footer-menu-links">
                         <a href="{% url 'faq' %}" class="footer-menu-link">FAQ</a>
-                        <a href="{% url 'support' %}" class="footer-menu-link">Поддержка</a>
+                        <a href="{% url 'support_orders' %}" class="footer-menu-link">Поддержка</a>
                         {% if user.is_authenticated %}
                         <a href="{% url 'contacts' %}" class="footer-menu-link">Контакты</a>
                         {% endif %} 
