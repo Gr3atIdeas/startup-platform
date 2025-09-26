@@ -5192,18 +5192,23 @@ def chat_list(request):
 
                 if other_participant and other_participant.user:
                     user_profile = other_participant.user
-                    try:
-                        user_name = f"{user_profile.first_name or ''} {user_profile.last_name or ''}".strip() or user_profile.email
-                    except:
+                    # Используем переименованное имя чата, если оно есть, иначе имя пользователя
+                    if chat.name:
+                        user_name = chat.name
+                        logger.info(f"Используем переименованное имя чата {chat.conversation_id}: {chat.name}")
+                    else:
                         try:
-                            user_id = user_profile.user_id or 0
-                            user_name = user_profile.email or f"Пользователь {user_id}"
+                            user_name = f"{user_profile.first_name or ''} {user_profile.last_name or ''}".strip() or user_profile.email
                         except:
                             try:
                                 user_id = user_profile.user_id or 0
+                                user_name = user_profile.email or f"Пользователь {user_id}"
                             except:
-                                user_id = 0
-                            user_name = f"Пользователь {user_id}"
+                                try:
+                                    user_id = user_profile.user_id or 0
+                                except:
+                                    user_id = 0
+                                user_name = f"Пользователь {user_id}"
 
                     try:
                         conversation_id = chat.conversation_id or 0
@@ -5443,16 +5448,21 @@ def get_chat_messages(request, chat_id):
     if chat.is_group_chat:
         chat_name = chat.name or "Групповой чат"
     else:
-        other_participant = None
-        for p in participants:
-            if p.user.user_id != request.user.user_id:
-                other_participant = p
-                break
-        if other_participant and other_participant.user:
-            chat_name = f"{other_participant.user.first_name or ''} {other_participant.user.last_name or ''}".strip()
+        # Для личных чатов используем переименованное имя чата, если оно есть
+        if chat.name:
+            chat_name = chat.name
         else:
-            chat_name = "Удаленный чат"
+            other_participant = None
+            for p in participants:
+                if p.user.user_id != request.user.user_id:
+                    other_participant = p
+                    break
+            if other_participant and other_participant.user:
+                chat_name = f"{other_participant.user.first_name or ''} {other_participant.user.last_name or ''}".strip()
+            else:
+                chat_name = "Удаленный чат"
     
+    logger.info(f"Возвращаем имя чата {chat_id}: {chat_name}")
     return JsonResponse(
         {"success": True, "messages": messages_data, "participants": participants_data, "chat_name": chat_name}
     )

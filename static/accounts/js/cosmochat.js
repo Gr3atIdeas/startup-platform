@@ -422,7 +422,10 @@ function loadChat(chatId) {
                     displayedMessageIds.clear();
                 }
                 data.messages.forEach((msg) => appendMessage(msg, false));
-                if (chatWindowTitle && data.chat_name) chatWindowTitle.textContent = data.chat_name;
+                if (chatWindowTitle && data.chat_name) {
+                    console.log('Обновляем заголовок чата из сервера:', data.chat_name);
+                    chatWindowTitle.textContent = data.chat_name;
+                }
                 currentParticipants = data.participants || [];
                 const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${chatId}"]`);
                 const isDeal = chatItem && chatItem.dataset.isDeal === 'true';
@@ -581,9 +584,9 @@ function startPolling() {
                                      }
                                  }
                              }
-                         } else {
-                             console.error('Ошибка опроса:', data.error);
-                         }
+                        } else {
+                            console.error('Ошибка опроса:', data.error || 'Неизвестная ошибка', data);
+                        }
                     }
                 })
                 .catch(error => {
@@ -682,6 +685,7 @@ function updateExistingChatElement(element, chat) {
     const newName = chat.name || `Чат ${chat.conversation_id}`;
 
     if (currentName !== newName) {
+        console.log('Обновляем имя чата в списке:', currentName, '->', newName);
         element.dataset.chatName = newName;
         const nameElement = element.querySelector('h4');
         if (nameElement) {
