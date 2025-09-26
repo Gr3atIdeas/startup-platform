@@ -206,7 +206,7 @@ function setupSimilarSpecialistsShowMore() {
         }
         const placeholder = document.createElement('div');
         placeholder.className = 'similar-card show-more-placeholder';
-            placeholder.innerHTML = '<button class="action-button show-more-similar"><i class="fas fa-redo"></i> Показать еще</button>';
+            placeholder.innerHTML = '<button class="action-button show-more-similar" style="display: inline-flex !important; align-items: center; gap: 8px; padding: 10px 20px; height: auto; border: 1px solid var(--text-primary) !important; border-radius: 25px !important; background: transparent !important; color: var(--text-primary) !important; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.3s ease; width: auto; text-decoration: none !important;"><i class="fas fa-redo"></i> Показать еще</button>';
         grid.innerHTML = html;
         grid.appendChild(placeholder);
         setupSimilarAgencyRatings();
