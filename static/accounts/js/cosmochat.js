@@ -282,7 +282,16 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         }
                         
-                        // Не обновляем элемент чата в списке - там остается оригинальное имя пользователя
+                        // Обновляем элемент чата в списке
+                        const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
+                        if (chatItem) {
+                            chatItem.dataset.chatName = data.chat_name;
+                            const chatNameElement = chatItem.querySelector('h4');
+                            if (chatNameElement) {
+                                chatNameElement.innerHTML = data.chat_name.slice(0, 25) + (data.chat_name.length > 25 ? '...' : '') +
+                                    (chatItem.dataset.isDeal === 'true' ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : '');
+                            }
+                        }
                         
                         // Перезапускаем polling для синхронизации с сервером
                         startPolling();
@@ -693,35 +702,21 @@ function updateChatList(newChats, container) {
 
 function updateExistingChatElement(element, chat) {
     const currentName = element.dataset.chatName;
-    // Для личных чатов используем оригинальное имя пользователя, а не переименованное
-    let displayName;
-    if (chat.is_group_chat) {
-        displayName = chat.name || `Чат ${chat.conversation_id}`;
-    } else {
-        // Для личных чатов всегда показываем оригинальное имя пользователя
-        const currentUserId = window.REQUEST_USER_ID;
-        const otherParticipant = chat.participants?.find(p => p.user_id !== currentUserId);
-        if (otherParticipant) {
-            displayName = otherParticipant.name || `Пользователь ${otherParticipant.user_id}`;
-        } else {
-            displayName = `Чат ${chat.conversation_id}`;
-        }
-    }
+    const newName = chat.name || `Чат ${chat.conversation_id}`;
 
-    if (currentName !== displayName) {
-        element.dataset.chatName = displayName;
+    if (currentName !== newName) {
+        element.dataset.chatName = newName;
         const nameElement = element.querySelector('h4');
         if (nameElement) {
             nameElement.innerHTML = `
-                ${displayName.substring(0, 25)}${displayName.length > 25 ? '...' : ''}
+                ${newName.substring(0, 25)}${newName.length > 25 ? '...' : ''}
                 ${chat.is_deal ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : ''}
             `;
         }
         
-        // Обновляем заголовок чата, если это активный чат (используем переименованное имя)
+        // Обновляем заголовок чата, если это активный чат
         if (currentChatId === chat.conversation_id && chatWindowTitle) {
-            const chatName = chat.name || displayName;
-            chatWindowTitle.textContent = chatName;
+            chatWindowTitle.textContent = newName;
         }
     }
 
@@ -957,14 +952,11 @@ function appendMessage(msg, isOwnMessageSentJustNow) {
 function updateChatName(chatId, newName) {
     const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${chatId}"]`);
     if (chatItem) {
-        // Для личных чатов не обновляем имя в списке - там остается оригинальное имя пользователя
-        if (chatItem.dataset.chatType === 'group') {
-            chatItem.dataset.chatName = newName;
-            const chatNameElement = chatItem.querySelector('h4');
-            if (chatNameElement) {
-                chatNameElement.innerHTML = newName.slice(0, 25) + (newName.length > 25 ? '...' : '') +
-                    (chatItem.dataset.isDeal === 'true' ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : '');
-            }
+        chatItem.dataset.chatName = newName;
+        const chatNameElement = chatItem.querySelector('h4');
+        if (chatNameElement) {
+            chatNameElement.innerHTML = newName.slice(0, 25) + (newName.length > 25 ? '...' : '') +
+                (chatItem.dataset.isDeal === 'true' ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : '');
         }
     }
     if (chatWindowTitle && currentChatId === chatId) {

@@ -5040,7 +5040,11 @@ def cosmochat(request):
                     break
             if other_participant and other_participant.user:
                 user_profile = other_participant.user
-                chat.display_name = f"{user_profile.first_name or ''} {user_profile.last_name or ''}".strip()
+                # Используем переименованное имя чата, если оно есть, иначе имя пользователя
+                if chat.name:
+                    chat.display_name = chat.name
+                else:
+                    chat.display_name = f"{user_profile.first_name or ''} {user_profile.last_name or ''}".strip()
                 chat.display_avatar = user_profile.get_profile_picture_url()
             else:
                 chat.display_name = "Удаленный чат"
