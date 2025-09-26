@@ -1552,6 +1552,19 @@ def agency_detail(request, franchise_id):
         return render(request, "accounts/404.html", status=404)
 
     if request.method == "POST":
+        if "status" in request.POST:
+            if not request.user.is_authenticated or not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
+                messages.error(request, "У вас нет прав для этого действия.")
+                return redirect("agency_detail", franchise_id=franchise.agency_id)
+            new_status = (request.POST.get("status", "") or "").strip().lower()
+            allowed_statuses = {"approved", "blocked", "closed", "pending", "rejected"}
+            if new_status in allowed_statuses:
+                franchise.status = new_status
+                franchise.save(update_fields=["status"])
+                messages.success(request, "Статус агентства обновлён.")
+            else:
+                messages.error(request, "Недопустимый статус.")
+            return redirect("agency_detail", franchise_id=franchise.agency_id)
         if not request.user.is_authenticated:
             return redirect("login")
         form = AgencyCommentForm(request.POST)
@@ -1655,6 +1668,19 @@ def specialist_detail(request, specialist_id):
         return render(request, "accounts/404.html", status=404)
 
     if request.method == "POST":
+        if "status" in request.POST:
+            if not request.user.is_authenticated or not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
+                messages.error(request, "У вас нет прав для этого действия.")
+                return redirect("specialist_detail", specialist_id=specialist.specialist_id)
+            new_status = (request.POST.get("status", "") or "").strip().lower()
+            allowed_statuses = {"approved", "blocked", "closed", "pending", "rejected"}
+            if new_status in allowed_statuses:
+                specialist.status = new_status
+                specialist.save(update_fields=["status"])
+                messages.success(request, "Статус специалиста обновлён.")
+            else:
+                messages.error(request, "Недопустимый статус.")
+            return redirect("specialist_detail", specialist_id=specialist.specialist_id)
         if not request.user.is_authenticated:
             return redirect("login")
         form = SpecialistCommentForm(request.POST)
@@ -1757,6 +1783,30 @@ def franchise_detail(request, franchise_id):
         return render(request, "accounts/404.html", status=404)
 
     if request.method == "POST":
+        if "status" in request.POST:
+            if not request.user.is_authenticated or not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
+                messages.error(request, "У вас нет прав для этого действия.")
+                return redirect("franchise_detail", franchise_id=franchise.franchise_id)
+            new_status = (request.POST.get("status", "") or "").strip().lower()
+            allowed_statuses = {"approved", "blocked", "closed", "pending", "rejected"}
+            if new_status in allowed_statuses:
+                franchise.status = new_status
+                try:
+                    status_map = {
+                        "approved": "Approved",
+                        "blocked": "Blocked",
+                        "closed": "Closed",
+                        "pending": "Pending",
+                        "rejected": "Rejected",
+                    }
+                    franchise.status_id = ReviewStatuses.objects.get(status_name=status_map[new_status])
+                except ReviewStatuses.DoesNotExist:
+                    pass
+                franchise.save(update_fields=["status", "status_id"])
+                messages.success(request, "Статус франшизы обновлён.")
+            else:
+                messages.error(request, "Недопустимый статус.")
+            return redirect("franchise_detail", franchise_id=franchise.franchise_id)
         if not request.user.is_authenticated:
             return redirect("login")
         form = FranchiseCommentForm(request.POST)
