@@ -467,7 +467,19 @@ banner button * {
 
 /* СКРЫВАЕМ КНОПКУ КАТАЛОГ НА ЭТОЙ СТРАНИЦЕ */
 banner button:contains("Каталог"),
-banner button[aria-expanded="false"] {
+banner button[aria-expanded="false"],
+banner .dropdown-toggle {
     display: none !important;
     visibility: hidden !important;
+}
+
+/* ДОПОЛНИТЕЛЬНО СКРЫВАЕМ ВСЕ КНОПКИ С ТЕКСТОМ "Каталог" */
+banner button {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+banner button:not([style*="display: none"]) {
+    display: block !important;
+    visibility: visible !important;
 }

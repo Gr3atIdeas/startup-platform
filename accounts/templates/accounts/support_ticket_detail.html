@@ -169,6 +169,37 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Исправляем фон body
     document.body.style.setProperty('background-color', 'white', 'important');
+    
+    // СКРЫВАЕМ КНОПКУ КАТАЛОГ
+    const allButtons = document.querySelectorAll('banner button');
+    allButtons.forEach(button => {
+        if (button.textContent.includes('Каталог')) {
+            button.style.setProperty('display', 'none', 'important');
+            button.style.setProperty('visibility', 'hidden', 'important');
+        }
+    });
+    
+    // ИСПРАВЛЯЕМ ПРАВЫЙ СТОЛБЕЦ - ДЕЛАЕМ ЕГО ВЫСОТУ КАК У ЛЕВОГО
+    const rightPanel = document.querySelector('.right-panel');
+    const leftPanel = document.querySelector('.left-panel');
+    
+    if (rightPanel && leftPanel) {
+        const leftRect = leftPanel.getBoundingClientRect();
+        const leftHeight = leftRect.height;
+        
+        rightPanel.style.setProperty('height', leftHeight + 'px', 'important');
+        rightPanel.style.setProperty('max-height', leftHeight + 'px', 'important');
+        rightPanel.style.removeProperty('min-height');
+        
+        const ticketsList = rightPanel.querySelector('.tickets-list');
+        if (ticketsList) {
+            const availableHeight = leftHeight - 40; // 40px для заголовка
+            ticketsList.style.setProperty('height', availableHeight + 'px', 'important');
+            ticketsList.style.setProperty('max-height', availableHeight + 'px', 'important');
+            ticketsList.style.setProperty('overflow-y', 'auto', 'important');
+            ticketsList.style.removeProperty('min-height');
+        }
+    }
 
     // Обработка изменения статуса заявки
     const statusSelect = document.querySelector('.status-select');
