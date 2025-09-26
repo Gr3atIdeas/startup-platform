@@ -4,13 +4,30 @@
 {% block custom_styles %}
 <style>
 .ticket-detail-container {
-    max-width: 1303px;
+    width: 1303px;
     margin: 0 auto;
     padding: 60px 71px;
     background: white;
     display: flex;
     gap: 104px;
     min-height: 100vh;
+}
+
+body {
+    background: white;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    background: white;
+    min-height: 100vh;
+}
+
+main.content {
+    background: white;
+    padding: 0;
+    margin: 0;
 }
 
 .left-panel {
@@ -36,11 +53,13 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 100%;
 }
 
 .info-row {
     display: flex;
     gap: 20px;
+    width: 100%;
 }
 
 .info-block {
@@ -187,8 +206,9 @@
 
 .right-panel {
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 19px;
+    width: 100%;
 }
 
 .tickets-list-section {
@@ -196,6 +216,7 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
+    flex: 1;
 }
 
 .tickets-header {
@@ -211,11 +232,11 @@
 .tickets-list {
     display: flex;
     flex-direction: column;
-    gap: 0;
-    max-height: 600px;
+    gap: 24px;
+    height: calc(100vh - 200px);
     overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.20) transparent;
+    width: 100%;
+    padding-right: 10px;
 }
 
 .tickets-list::-webkit-scrollbar {
@@ -231,6 +252,10 @@
     border-radius: 6px;
 }
 
+.tickets-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.30);
+}
+
 .ticket-card {
     padding: 24px 31px;
     border-radius: 10px;
@@ -240,11 +265,6 @@
     align-items: center;
     background: white;
     cursor: pointer;
-    margin-bottom: 0;
-}
-
-.ticket-card:not(:last-child) {
-    margin-bottom: 0;
 }
 
 .ticket-info-left,
@@ -277,13 +297,6 @@
     line-height: 18px;
 }
 
-.scrollbar {
-    width: 10px;
-    height: 202px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-    flex-shrink: 0;
-}
 </style>
 {% endblock %}
 
@@ -444,7 +457,6 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="scrollbar"></div>
         </div>
     </div>
 </main>
