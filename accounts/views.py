@@ -4092,18 +4092,21 @@ def edit_startup(request, startup_id):
             print(f"request.FILES.getlist('video'): {request.FILES.getlist('video')}")
             print(f"=== КОНЕЦ ПРОВЕРКИ ===")
             
-            if has_changes:
+            # Логика изменения статуса: только approved -> pending
+            if has_changes and startup.status == "approved":
                 startup.status = "pending"
                 startup.is_edited = True
                 startup.save(update_fields=['status', 'is_edited'])
-                logger.info("Статус установлен: pending")
-                print("СТАТУС: PENDING")
+                logger.info("Статус изменен: approved -> pending")
+                print("СТАТУС: APPROVED -> PENDING")
+            elif not has_changes and startup.status == "pending":
+                # Если нет изменений, но статус pending - оставляем как есть
+                logger.info("Статус остается: pending (изменений нет)")
+                print("СТАТУС: PENDING (без изменений)")
             else:
-                startup.status = "approved"
-                startup.save(update_fields=['status'])
-                startup.is_edited = False
-                logger.info("Статус установлен: approved")
-                print("СТАТУС: APPROVED")
+                # Для всех остальных случаев (approved без изменений, другие статусы)
+                logger.info(f"Статус остается: {startup.status}")
+                print(f"СТАТУС: {startup.status.upper()} (без изменений)")
             
             startup.updated_at = timezone.now()
             if "step_number" in request.POST:

@@ -111,15 +111,25 @@ document.addEventListener('DOMContentLoaded', function() {
                    const fileInputsForFormData = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input'];
                    fileInputsForFormData.forEach(inputId => {
                        const input = document.getElementById(inputId);
-                       if (input && input.files.length > 0) {
-                           // Удаляем старые значения
-                           formData.delete(input.name || inputId.replace('id_', '').replace('_input', ''));
+                       if (input) {
+                           addDebug(`Проверяем ${inputId}: ${input.files.length} файлов`);
                            
-                           // Добавляем новые файлы
-                           for (let i = 0; i < input.files.length; i++) {
-                               formData.append(input.name || inputId.replace('id_', '').replace('_input', ''), input.files[i]);
+                           if (input.files.length > 0) {
+                               // Удаляем старые значения
+                               const fieldName = input.name || inputId.replace('id_', '').replace('_input', '');
+                               formData.delete(fieldName);
+                               
+                               // Добавляем новые файлы
+                               for (let i = 0; i < input.files.length; i++) {
+                                   formData.append(fieldName, input.files[i]);
+                                   addDebug(`Добавлен файл ${i+1}: ${input.files[i].name} (${input.files[i].size} байт)`);
+                               }
+                               addDebug(`✅ Вручную добавлено ${input.files.length} файлов из ${inputId}`);
+                           } else {
+                               addDebug(`❌ Нет файлов в ${inputId}`);
                            }
-                           addDebug(`Вручную добавлено ${input.files.length} файлов из ${inputId}`);
+                       } else {
+                           addDebug(`❌ Input ${inputId} не найден`);
                        }
                    });
             
