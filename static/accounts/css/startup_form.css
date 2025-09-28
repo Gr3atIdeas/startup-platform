@@ -154,9 +154,9 @@ html, body { overflow-x: hidden; }
   box-shadow: 6px 6px 10px rgb(0 0 0 / 25%); 
 }
 
-/* уменьшение ширины карточки микроинвестиций на 15px */
+/* фиксированная ширина карточки микроинвестиций */
 .form-top-right .investment-type-card {
-  width: calc(100% - 15px);
+  width: 301px;
 }
 
 .micro-investment-group {
@@ -196,7 +196,7 @@ html, body { overflow-x: hidden; }
 }
 
 .micro-investment-group .micro-investment-label-custom .checkbox-text-span {
-  
+  /* Стили для текста чекбокса */
 }
 
 .investment-type-group {
@@ -405,7 +405,7 @@ html, body { overflow-x: hidden; }
 .file-upload-area
   input[type='file'][style*='display:none']
   + .custom-file-upload-button {
-  
+  /* Стили для кнопки загрузки файлов */
 }
 
 .file-upload-area > p {
@@ -548,7 +548,7 @@ html, body { overflow-x: hidden; }
 
 
 .timeline-section-wrapper.content-section {
-  
+  /* Стили для секции этапов */
 }
 
 h3.section-title {
@@ -1409,8 +1409,7 @@ textarea.form-control.input-error {
 
 body,
 .startup-form-container {
-  
-  
+  /* Базовые стили для контейнера формы */
 }
 
 
@@ -1727,8 +1726,15 @@ body,
 }
 
 input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-input[type=number] { -moz-appearance: textfield; }
+input[type=number]::-webkit-inner-spin-button { 
+  -webkit-appearance: none; 
+  appearance: none;
+  margin: 0; 
+}
+input[type=number] { 
+  -moz-appearance: textfield; 
+  appearance: textfield;
+}
 .valuation-input .form-control { height: 40px; width: 100%; }
 .valuation-spin-buttons { display: none; }
 

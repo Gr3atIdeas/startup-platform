@@ -76,6 +76,7 @@ from .forms import (
     ProfileEditForm,
     RegisterForm,
     StartupForm,
+    StartupEditForm,
     FranchiseForm,
     AgencyForm,
     SpecialistForm,
@@ -3902,7 +3903,7 @@ def edit_startup(request, startup_id):
     timeline = StartupTimeline.objects.filter(startup=startup)
     timeline_steps = timeline
     if request.method == "POST":
-        form = StartupForm(request.POST, request.FILES, instance=startup)
+        form = StartupEditForm(request.POST, request.FILES, instance=startup)
         if form.is_valid():
             startup = form.save(commit=False)
             startup.status = "pending"
@@ -4158,7 +4159,7 @@ def edit_startup(request, startup_id):
                 },
             )
     else:
-        form = StartupForm(instance=startup)
+        form = StartupEditForm(instance=startup)
     return render(
         request,
         "accounts/edit_startup.html",

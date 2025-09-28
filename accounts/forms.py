@@ -68,6 +68,85 @@ class LoginForm(forms.Form):
         if hp_value:
             raise forms.ValidationError("Обнаружена подозрительная активность.")
         return cleaned_data
+
+class StartupEditForm(forms.ModelForm):
+    logo = forms.ImageField(
+        label="Логотип",
+        required=False,
+        help_text="Загрузите новый логотип стартапа (изображение)",
+    )
+    creatives = MultipleFileField(
+        required=False, help_text="Загрузите новые изображения (до 3 файлов: PNG, JPEG)"
+    )
+    proofs = MultipleFileField(
+        required=False, help_text="Загрузите новые документы (до 10 файлов: PDF, DOC, TXT)"
+    )
+    direction = forms.ModelChoiceField(
+        queryset=Directions.objects.none(), label="Направление *", required=True
+    )
+    stage = forms.ModelChoiceField(
+        queryset=StartupStages.objects.all(), label="Стадия *", required=True
+    )
+    micro_investment_available = forms.BooleanField(
+        required=False, label="Микроинвестиции доступны"
+    )
+    video = MultipleFileField(required=False, help_text="Загрузите новое видео (до 3 файлов: MP4, MOV)")
+    short_description = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
+    )
+    terms = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 5}), label="Условия *", required=True
+    )
+    planet_image = forms.ChoiceField(
+        choices=[],
+        label="Выберите планету *",
+        required=True,
+        widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
+    )
+    INVESTMENT_TYPE_CHOICES = [
+        ("invest", "Инвестирование"),
+        ("buy", "Выкуп"),
+        ("both", "Инвестирование + Выкуп"),
+    ]
+    investment_type = forms.ChoiceField(
+        choices=INVESTMENT_TYPE_CHOICES,
+        label="Тип инвестирования *",
+        required=True,
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
+
+    class Meta:
+        model = Startups
+        fields = [
+            "title",
+            "short_description",
+            "description",
+            "logo",
+            "creatives",
+            "proofs",
+            "video",
+            "direction",
+            "stage",
+            "micro_investment_available",
+            "investment_type",
+            "planet_image",
+            "pitch_deck_url",
+            "valuation",
+            "amount_raised",
+            "terms",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["direction"].queryset = Directions.objects.all()
+        self.fields["planet_image"].choices = [
+            ("planet1", "Планета 1"),
+            ("planet2", "Планета 2"),
+            ("planet3", "Планета 3"),
+            ("planet4", "Планета 4"),
+            ("planet5", "Планета 5"),
+        ]
+
 class StartupForm(forms.ModelForm):
     logo = forms.ImageField(
         label="Логотип *",
