@@ -572,7 +572,10 @@ function removeDuplicateCreatives() {
     const seenUrls = new Set();
     let duplicatesRemoved = 0;
     
-    existingFiles.forEach(file => {
+    // Собираем все элементы в массив для безопасного удаления
+    const filesArray = Array.from(existingFiles);
+    
+    filesArray.forEach(file => {
         const fileId = file.getAttribute('data-file-id');
         if (seenUrls.has(fileId)) {
             file.remove();
@@ -584,6 +587,15 @@ function removeDuplicateCreatives() {
     
     if (duplicatesRemoved > 0) {
         addDebug(`Удалено ${duplicatesRemoved} дублирующихся креативов`);
+        console.log(`Удалено ${duplicatesRemoved} дублирующихся креативов`);
+    }
+}
+
+// Функция для очистки дебаг лога
+function clearDebug() {
+    const debugPanel = document.querySelector('.debug-panel');
+    if (debugPanel) {
+        debugPanel.innerHTML = '<strong>ДЕБАГ ПАНЕЛЬ</strong><br>Загрузка...';
     }
 }
 </script>

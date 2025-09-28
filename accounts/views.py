@@ -3922,6 +3922,35 @@ def edit_startup(request, startup_id):
             f.write(f"File {key}: {value}\n")
         f.write(f"=== END DEBUG ===\n\n")
     startup = get_object_or_404(Startups, startup_id=startup_id)
+    
+    # Очищаем дубликаты в базе данных
+    if startup.creatives_urls:
+        # Удаляем дубликаты из creatives_urls
+        original_count = len(startup.creatives_urls)
+        startup.creatives_urls = list(dict.fromkeys(startup.creatives_urls))  # Удаляет дубликаты, сохраняя порядок
+        if len(startup.creatives_urls) != original_count:
+            logger.info(f"Очищено {original_count - len(startup.creatives_urls)} дубликатов из creatives_urls")
+            print(f"Очищено {original_count - len(startup.creatives_urls)} дубликатов из creatives_urls")
+            startup.save(update_fields=['creatives_urls'])
+    
+    if startup.proofs_urls:
+        # Удаляем дубликаты из proofs_urls
+        original_count = len(startup.proofs_urls)
+        startup.proofs_urls = list(dict.fromkeys(startup.proofs_urls))
+        if len(startup.proofs_urls) != original_count:
+            logger.info(f"Очищено {original_count - len(startup.proofs_urls)} дубликатов из proofs_urls")
+            print(f"Очищено {original_count - len(startup.proofs_urls)} дубликатов из proofs_urls")
+            startup.save(update_fields=['proofs_urls'])
+    
+    if startup.video_urls:
+        # Удаляем дубликаты из video_urls
+        original_count = len(startup.video_urls)
+        startup.video_urls = list(dict.fromkeys(startup.video_urls))
+        if len(startup.video_urls) != original_count:
+            logger.info(f"Очищено {original_count - len(startup.video_urls)} дубликатов из video_urls")
+            print(f"Очищено {original_count - len(startup.video_urls)} дубликатов из video_urls")
+            startup.save(update_fields=['video_urls'])
+    
     if not (
         request.user == startup.owner
         or (
@@ -4201,11 +4230,26 @@ def edit_startup(request, startup_id):
             startup.logo_urls = logo_ids
             # Обновляем URL файлов только если были загружены новые
             if creative_ids:
-                startup.creatives_urls = (startup.creatives_urls or []) + creative_ids
+                # Удаляем дубликаты из существующих URL
+                existing_creatives = startup.creatives_urls or []
+                # Добавляем только новые URL, которых еще нет
+                new_creatives = [url for url in creative_ids if url not in existing_creatives]
+                startup.creatives_urls = existing_creatives + new_creatives
+                logger.info(f"Добавлено {len(new_creatives)} новых креативов (было {len(existing_creatives)}, дубликатов пропущено: {len(creative_ids) - len(new_creatives)})")
             if proofs_ids:
-                startup.proofs_urls = (startup.proofs_urls or []) + proofs_ids
+                # Удаляем дубликаты из существующих URL
+                existing_proofs = startup.proofs_urls or []
+                # Добавляем только новые URL, которых еще нет
+                new_proofs = [url for url in proofs_ids if url not in existing_proofs]
+                startup.proofs_urls = existing_proofs + new_proofs
+                logger.info(f"Добавлено {len(new_proofs)} новых документов (было {len(existing_proofs)}, дубликатов пропущено: {len(proofs_ids) - len(new_proofs)})")
             if video_ids:
-                startup.video_urls = (startup.video_urls or []) + video_ids
+                # Удаляем дубликаты из существующих URL
+                existing_videos = startup.video_urls or []
+                # Добавляем только новые URL, которых еще нет
+                new_videos = [url for url in video_ids if url not in existing_videos]
+                startup.video_urls = existing_videos + new_videos
+                logger.info(f"Добавлено {len(new_videos)} новых видео (было {len(existing_videos)}, дубликатов пропущено: {len(video_ids) - len(new_videos)})")
             # Обработка удаленных файлов
             deleted_files_json = request.POST.get('deleted_files', '[]')
             try:
