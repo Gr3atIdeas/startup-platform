@@ -4104,8 +4104,8 @@ def edit_startup(request, startup_id):
             proofs_ids = []
             video_ids = []
             logger.info("Переменные инициализированы")
-            # Обработка логотипа - приоритет request.FILES
-            logo = request.FILES.get("logo") or form.cleaned_data.get("logo")
+            # Обработка логотипа
+            logo = form.cleaned_data.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
                 file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{logo.name}"
@@ -4117,8 +4117,8 @@ def edit_startup(request, startup_id):
             else:
                 logo_ids = startup.logo_urls or []
                 print("ЛОГОТИП НЕ НАЙДЕН")
-            # Обработка креативов - приоритет request.FILES
-            creatives = request.FILES.getlist("creatives") or form.cleaned_data.get("creatives", [])
+            # Обработка креативов
+            creatives = form.cleaned_data.get("creatives", [])
             if creatives:
                 print(f"КРЕАТИВЫ НАЙДЕНЫ: {len(creatives)} файлов")
                 creative_type = FileTypes.objects.get(type_name="creative")
