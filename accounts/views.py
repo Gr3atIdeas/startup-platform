@@ -3976,8 +3976,8 @@ def edit_startup(request, startup_id):
             # Устанавливаем статус в зависимости от наличия изменений
             logger.info(f"has_changes: {has_changes}")
             if has_changes:
-            startup.status = "pending"
-            startup.is_edited = True
+                startup.status = "pending"
+                startup.is_edited = True
                 logger.info("Статус установлен: pending")
             else:
                 startup.status = "approved"
