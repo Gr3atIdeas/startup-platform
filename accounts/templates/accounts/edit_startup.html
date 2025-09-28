@@ -61,17 +61,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         addDebug(`  Файл ${i + 1}: ${e.target.files[i].name} (${e.target.files[i].size} байт)`);
                     }
                     
-                    // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Копируем файлы в скрытый input
-                    const hiddenInput = document.getElementById(inputId);
-                    if (hiddenInput && e.target.files.length > 0) {
-                        // Создаем новый DataTransfer для копирования файлов
-                        const dataTransfer = new DataTransfer();
-                        for (let i = 0; i < e.target.files.length; i++) {
-                            dataTransfer.items.add(e.target.files[i]);
-                        }
-                        hiddenInput.files = dataTransfer.files;
-                        addDebug(`✅ Файлы скопированы в скрытый input ${inputId}: ${hiddenInput.files.length} файлов`);
-                    }
+                    // Файлы уже находятся в правильном input, просто логируем
+                    addDebug(`✅ Файлы готовы к отправке в ${inputId}: ${e.target.files.length} файлов`);
                 });
             }
         });
