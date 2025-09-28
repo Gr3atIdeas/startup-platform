@@ -3895,6 +3895,18 @@ def edit_startup(request, startup_id):
     print(f"Request FILES keys: {list(request.FILES.keys())}")
     for key, value in request.FILES.items():
         print(f"File {key}: {value}")
+    
+    # Детальная информация о файлах
+    if request.FILES:
+        print("=== ДЕТАЛЬНАЯ ИНФОРМАЦИЯ О ФАЙЛАХ ===")
+        for key, file_list in request.FILES.lists():
+            print(f"Поле {key}: {len(file_list)} файлов")
+            for i, file_obj in enumerate(file_list):
+                print(f"  Файл {i}: {file_obj.name} ({file_obj.size} байт)")
+        print("=== КОНЕЦ ДЕТАЛЬНОЙ ИНФОРМАЦИИ ===")
+    else:
+        print("ФАЙЛЫ НЕ НАЙДЕНЫ В REQUEST.FILES")
+    
     print(f"=== END DEBUG ===")
     
     # Также записываем в файл для отладки
@@ -3959,11 +3971,29 @@ def edit_startup(request, startup_id):
             
             # Проверяем загружены ли новые файлы
             if not has_changes:
-                # Простая проверка - если есть файлы в request.FILES, значит есть изменения
+                # Проверяем файлы в request.FILES
                 if request.FILES:
                     has_changes = True
                     logger.info("Найдены файлы в request.FILES - установлен has_changes = True")
                     logger.info(f"Файлы: {list(request.FILES.keys())}")
+                    for key, file_list in request.FILES.lists():
+                        logger.info(f"  {key}: {len(file_list)} файлов")
+                        for i, file_obj in enumerate(file_list):
+                            logger.info(f"    Файл {i}: {file_obj.name} ({file_obj.size} байт)")
+                
+                # Также проверяем cleaned_data для файлов
+                if not has_changes:
+                    file_fields = ['logo', 'creatives', 'proofs', 'video']
+                    for field_name in file_fields:
+                        field_data = form.cleaned_data.get(field_name)
+                        if field_data:
+                            has_changes = True
+                            logger.info(f"Найдены файлы в form.cleaned_data['{field_name}'] - установлен has_changes = True")
+                            if isinstance(field_data, list):
+                                logger.info(f"  {field_name}: {len(field_data)} файлов")
+                            else:
+                                logger.info(f"  {field_name}: 1 файл")
+                            break
             
             # Проверяем удалены ли файлы
             if not has_changes:
