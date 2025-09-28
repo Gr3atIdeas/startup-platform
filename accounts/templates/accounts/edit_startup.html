@@ -119,44 +119,30 @@ document.addEventListener('DOMContentLoaded', function() {
                        return;
                    }
                    
-                    // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Используем файлы из видимых input'ов
-                    const visibleFileInputs = [
-                        { id: 'id_creatives_input', name: 'creatives' },
-                        { id: 'id_proofs_input', name: 'proofs' },
-                        { id: 'id_video_input', name: 'video' },
-                        { id: 'id_logo_input', name: 'logo' }
-                    ];
+                    // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Ищем ВСЕ file input'ы на странице
+                    const allFileInputs = document.querySelectorAll('input[type="file"]');
+                    addDebug(`Найдено ${allFileInputs.length} file input'ов на странице`);
                     
-                    visibleFileInputs.forEach(({ id, name }) => {
-                        const input = document.getElementById(id);
-                        if (input && input.files.length > 0) {
-                            addDebug(`Найден файл в ${id}: ${input.files.length} файлов`);
+                    allFileInputs.forEach((input, index) => {
+                        addDebug(`File input ${index + 1}: id="${input.id}", name="${input.name}", files=${input.files.length}`);
+                        
+                        if (input.files.length > 0) {
+                            const fieldName = input.name || input.id.replace('id_', '').replace('_input', '');
+                            addDebug(`✅ Найден файл в ${input.id}: ${input.files.length} файлов`);
                             
                             // Удаляем старые значения
-                            formData.delete(name);
+                            formData.delete(fieldName);
                             
                             // Добавляем новые файлы
                             for (let i = 0; i < input.files.length; i++) {
-                                formData.append(name, input.files[i]);
+                                formData.append(fieldName, input.files[i]);
                                 addDebug(`✅ Добавлен файл ${i+1}: ${input.files[i].name} (${input.files[i].size} байт)`);
                             }
-                            addDebug(`✅ Вручную добавлено ${input.files.length} файлов из ${id}`);
+                            addDebug(`✅ Вручную добавлено ${input.files.length} файлов из ${input.id}`);
                         } else {
-                            addDebug(`❌ Нет файлов в ${id}`);
+                            addDebug(`❌ Нет файлов в ${input.id}`);
                         }
                     });
-                   
-                   // Дополнительная проверка - ищем все input[type="file"] на странице
-                   const allFileInputs = document.querySelectorAll('input[type="file"]');
-                   addDebug(`Найдено ${allFileInputs.length} file input'ов на странице`);
-                   allFileInputs.forEach((input, index) => {
-                       addDebug(`File input ${index + 1}: id="${input.id}", name="${input.name}", files=${input.files.length}`);
-                       if (input.files.length > 0) {
-                           for (let i = 0; i < input.files.length; i++) {
-                               addDebug(`  Файл ${i+1}: ${input.files[i].name} (${input.files[i].size} байт)`);
-                           }
-                       }
-                   });
             
             addDebug('Данные формы:');
             for (let [key, value] of formData.entries()) {
