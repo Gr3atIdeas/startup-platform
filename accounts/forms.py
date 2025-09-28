@@ -201,7 +201,7 @@ class StartupForm(forms.ModelForm):
     planet_image = forms.ChoiceField(
         choices=[],
         label="Выберите планету *",
-        required=True,
+        required=False,
         widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
     )
     INVESTMENT_TYPE_CHOICES = [

@@ -4249,6 +4249,9 @@ def edit_startup(request, startup_id):
                 logger.error(f"Поле {field}: {errors}")
             logger.info("=== ФОРМА НЕ ВАЛИДНА ===")
             
+            # Инициализируем has_changes для невалидной формы
+            has_changes = False
+            
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": False,
