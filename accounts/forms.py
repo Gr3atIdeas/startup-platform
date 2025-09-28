@@ -78,11 +78,13 @@ class StartupEditForm(forms.ModelForm):
         required=False,
         help_text="Загрузите новый логотип стартапа (изображение)",
     )
-    creatives = MultipleFileField(
-        required=False, help_text="Загрузите новые изображения (до 3 файлов: PNG, JPEG)"
+    creatives = forms.FileField(
+        required=False, help_text="Загрузите новые изображения (до 3 файлов: PNG, JPEG)",
+        widget=forms.FileInput(attrs={'multiple': True, 'accept': 'image/*'})
     )
-    proofs = MultipleFileField(
-        required=False, help_text="Загрузите новые документы (до 10 файлов: PDF, DOC, TXT)"
+    proofs = forms.FileField(
+        required=False, help_text="Загрузите новые документы (до 10 файлов: PDF, DOC, TXT)",
+        widget=forms.FileInput(attrs={'multiple': True, 'accept': '.pdf,.doc,.docx,.txt'})
     )
     direction = forms.ModelChoiceField(
         queryset=Directions.objects.none(), label="Направление *", required=True
@@ -93,7 +95,8 @@ class StartupEditForm(forms.ModelForm):
     micro_investment_available = forms.BooleanField(
         required=False, label="Микроинвестиции доступны"
     )
-    video = MultipleFileField(required=False, help_text="Загрузите новое видео (до 3 файлов: MP4, MOV)")
+    video = forms.FileField(required=False, help_text="Загрузите новое видео (до 3 файлов: MP4, MOV)",
+        widget=forms.FileInput(attrs={'multiple': True, 'accept': 'video/*'}))
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )

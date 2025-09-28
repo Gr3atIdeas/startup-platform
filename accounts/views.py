@@ -3907,6 +3907,13 @@ def edit_startup(request, startup_id):
     else:
         print("ФАЙЛЫ НЕ НАЙДЕНЫ В REQUEST.FILES")
     
+    # Проверяем, есть ли файлы в POST данных
+    print("=== ПРОВЕРКА POST ДАННЫХ ===")
+    for key, value in request.POST.items():
+        if 'file' in key.lower() or 'creative' in key.lower() or 'proof' in key.lower() or 'video' in key.lower():
+            print(f"POST {key}: {value}")
+    print("=== КОНЕЦ ПРОВЕРКИ POST ===")
+    
     print(f"=== END DEBUG ===")
     
     # Также записываем в файл для отладки
