@@ -4235,10 +4235,10 @@ def edit_startup(request, startup_id):
             
             # Разные сообщения в зависимости от статуса
             if 'has_changes' in locals() and has_changes:
-            messages.success(
-                request,
-                f'Стартап "{startup.title}" успешно отредактирован и отправлен на модерацию!',
-            )
+                messages.success(
+                    request,
+                    f'Стартап "{startup.title}" успешно отредактирован и отправлен на модерацию!',
+                )
             else:
                 messages.success(
                     request,
