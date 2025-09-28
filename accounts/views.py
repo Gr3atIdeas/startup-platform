@@ -3942,8 +3942,26 @@ def edit_startup(request, startup_id):
             
             # Проверяем загружены ли новые файлы
             if not has_changes:
-                if form.cleaned_data.get('logo') or form.cleaned_data.get('creatives') or form.cleaned_data.get('proofs') or form.cleaned_data.get('video'):
+                logger.info("=== ПРОВЕРКА ФАЙЛОВ ===")
+                logger.info(f"form.cleaned_data.get('logo'): {form.cleaned_data.get('logo')}")
+                logger.info(f"form.cleaned_data.get('creatives'): {form.cleaned_data.get('creatives')}")
+                logger.info(f"form.cleaned_data.get('proofs'): {form.cleaned_data.get('proofs')}")
+                logger.info(f"form.cleaned_data.get('video'): {form.cleaned_data.get('video')}")
+                logger.info(f"request.FILES.get('logo'): {request.FILES.get('logo')}")
+                logger.info(f"request.FILES.getlist('creatives'): {request.FILES.getlist('creatives')}")
+                logger.info(f"request.FILES.getlist('proofs'): {request.FILES.getlist('proofs')}")
+                logger.info(f"request.FILES.getlist('video'): {request.FILES.getlist('video')}")
+                
+                if (form.cleaned_data.get('logo') or 
+                    form.cleaned_data.get('creatives') or 
+                    form.cleaned_data.get('proofs') or 
+                    form.cleaned_data.get('video') or
+                    request.FILES.get('logo') or
+                    request.FILES.getlist('creatives') or
+                    request.FILES.getlist('proofs') or
+                    request.FILES.getlist('video')):
                     has_changes = True
+                    logger.info("Найдены новые файлы - установлен has_changes = True")
             
             # Проверяем удалены ли файлы
             if not has_changes:
