@@ -3959,26 +3959,11 @@ def edit_startup(request, startup_id):
             
             # Проверяем загружены ли новые файлы
             if not has_changes:
-                logger.info("=== ПРОВЕРКА ФАЙЛОВ ===")
-                logger.info(f"form.cleaned_data.get('logo'): {form.cleaned_data.get('logo')}")
-                logger.info(f"form.cleaned_data.get('creatives'): {form.cleaned_data.get('creatives')}")
-                logger.info(f"form.cleaned_data.get('proofs'): {form.cleaned_data.get('proofs')}")
-                logger.info(f"form.cleaned_data.get('video'): {form.cleaned_data.get('video')}")
-                logger.info(f"request.FILES.get('logo'): {request.FILES.get('logo')}")
-                logger.info(f"request.FILES.getlist('creatives'): {request.FILES.getlist('creatives')}")
-                logger.info(f"request.FILES.getlist('proofs'): {request.FILES.getlist('proofs')}")
-                logger.info(f"request.FILES.getlist('video'): {request.FILES.getlist('video')}")
-                
-                if (form.cleaned_data.get('logo') or 
-                    form.cleaned_data.get('creatives') or 
-                    form.cleaned_data.get('proofs') or 
-                    form.cleaned_data.get('video') or
-                    request.FILES.get('logo') or
-                    request.FILES.getlist('creatives') or
-                    request.FILES.getlist('proofs') or
-                    request.FILES.getlist('video')):
+                # Простая проверка - если есть файлы в request.FILES, значит есть изменения
+                if request.FILES:
                     has_changes = True
-                    logger.info("Найдены новые файлы - установлен has_changes = True")
+                    logger.info("Найдены файлы в request.FILES - установлен has_changes = True")
+                    logger.info(f"Файлы: {list(request.FILES.keys())}")
             
             # Проверяем удалены ли файлы
             if not has_changes:
@@ -4010,14 +3995,28 @@ def edit_startup(request, startup_id):
             
             # Устанавливаем статус в зависимости от наличия изменений
             logger.info(f"has_changes: {has_changes}")
+            print(f"=== ФИНАЛЬНАЯ ПРОВЕРКА ===")
+            print(f"has_changes: {has_changes}")
+            print(f"form.cleaned_data.get('logo'): {form.cleaned_data.get('logo')}")
+            print(f"form.cleaned_data.get('creatives'): {form.cleaned_data.get('creatives')}")
+            print(f"form.cleaned_data.get('proofs'): {form.cleaned_data.get('proofs')}")
+            print(f"form.cleaned_data.get('video'): {form.cleaned_data.get('video')}")
+            print(f"request.FILES.get('logo'): {request.FILES.get('logo')}")
+            print(f"request.FILES.getlist('creatives'): {request.FILES.getlist('creatives')}")
+            print(f"request.FILES.getlist('proofs'): {request.FILES.getlist('proofs')}")
+            print(f"request.FILES.getlist('video'): {request.FILES.getlist('video')}")
+            print(f"=== КОНЕЦ ПРОВЕРКИ ===")
+            
             if has_changes:
                 startup.status = "pending"
                 startup.is_edited = True
                 logger.info("Статус установлен: pending")
+                print("СТАТУС: PENDING")
             else:
                 startup.status = "approved"
                 startup.is_edited = False
                 logger.info("Статус установлен: approved")
+                print("СТАТУС: APPROVED")
             
             startup.updated_at = timezone.now()
             if "step_number" in request.POST:

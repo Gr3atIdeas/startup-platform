@@ -78,6 +78,20 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Проверяем все поля формы
             const formData = new FormData(form);
+            
+            // Добавляем скрытые поля файлов вручную
+            const fileInputs = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input'];
+            fileInputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                if (input && input.files) {
+                    for (let i = 0; i < input.files.length; i++) {
+                        const fieldName = inputId.replace('id_', '').replace('_input', '');
+                        formData.append(fieldName, input.files[i]);
+                        addDebug(`Добавлен файл: ${fieldName} = ${input.files[i].name}`);
+                    }
+                }
+            });
+            
             addDebug('Данные формы:');
             for (let [key, value] of formData.entries()) {
                 if (typeof value === 'object' && value.name) {
