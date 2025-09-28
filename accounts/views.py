@@ -4147,7 +4147,7 @@ def edit_startup(request, startup_id):
                     logger.info(f"Креатив сохранён с ID: {creative_id}")
                 # creatives_ids будут добавлены в конце функции
             else:
-                creative_ids = startup.creative_urls or []
+                creative_ids = startup.creatives_urls or []
                 print("КРЕАТИВЫ НЕ НАЙДЕНЫ")
             # proofs = request.FILES.getlist("proofs")  # ВРЕМЕННО ОТКЛЮЧЕНО
             proofs = []
