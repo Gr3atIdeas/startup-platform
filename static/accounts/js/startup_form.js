@@ -50,15 +50,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // Сохраняем текущие файлы (инициализируем пустым массивом)
     var currentFiles = []
     
+    // Инициализируем с существующими файлами из input
+    if (input.files && input.files.length > 0) {
+      currentFiles = toArray(input.files)
+    }
+    
     function clearPreview() {
       preview.innerHTML = ''
     }
     function updatePreview(files) {
       // Удаляем только новые файлы (не существующие)
-      var existingFiles = preview.querySelectorAll('.existing-file')
       var newFiles = preview.querySelectorAll('.file-preview-item:not(.existing-file)')
       newFiles.forEach(function(el) { el.remove() })
       
+      // Добавляем только новые файлы, существующие остаются
       files.forEach(function (file, index) {
         var previewNode
         var displayName = file.name
@@ -140,9 +145,13 @@ document.addEventListener('DOMContentLoaded', function () {
       var newFiles = toArray(input.files)
       if (newFiles.length === 0) return
       
+      // Добавляем новые файлы к существующим
       var combined = currentFiles.concat(newFiles)
       var filtered = filterFiles(combined)
       setFiles(filtered)
+      
+      // Очищаем input чтобы можно было загрузить тот же файл снова
+      input.value = ''
     })
     dropArea.addEventListener('dragover', function (e) {
       e.preventDefault()
