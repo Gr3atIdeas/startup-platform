@@ -47,6 +47,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
         addDebug('Форма найдена');
         
+        // Удаляем дублирующиеся креативы
+        removeDuplicateCreatives();
+        
         // Добавляем обработчики для полей файлов
         const fileInputs = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input'];
         fileInputs.forEach(inputId => {
@@ -532,6 +535,30 @@ document.addEventListener('click', function(event) {
     }
   }
 });
+
+// Функция для удаления дублирующихся креативов
+function removeDuplicateCreatives() {
+    const creativesPreview = document.getElementById('creativesPreview');
+    if (!creativesPreview) return;
+    
+    const existingFiles = creativesPreview.querySelectorAll('.existing-file');
+    const seenUrls = new Set();
+    let duplicatesRemoved = 0;
+    
+    existingFiles.forEach(file => {
+        const fileId = file.getAttribute('data-file-id');
+        if (seenUrls.has(fileId)) {
+            file.remove();
+            duplicatesRemoved++;
+        } else {
+            seenUrls.add(fileId);
+        }
+    });
+    
+    if (duplicatesRemoved > 0) {
+        addDebug(`Удалено ${duplicatesRemoved} дублирующихся креативов`);
+    }
+}
 </script>
 
 {% endblock %}
