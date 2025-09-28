@@ -3404,7 +3404,7 @@ def create_startup(request):
                         if not try_save_file(creative_file, file_path):
                             raise Exception("Не удалось сохранить креатив")
                         logger.info(f"Креатив успешно сохранён по пути: {file_path}")
-                        creatives_ids.append(creative_id)
+                        creative_ids.append(creative_id)
                         safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=startup.startup_id,
@@ -3598,7 +3598,7 @@ def create_franchise(request):
                     file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{safe_name}"
                     try:
                         default_storage.save(file_path, creative_file)
-                        creatives_ids.append(creative_id)
+                        creative_ids.append(creative_id)
                         safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=franchise.franchise_id,
@@ -4100,7 +4100,7 @@ def edit_startup(request, startup_id):
             logger.info("Стартап сохранен")
             
             logo_ids = startup.logo_urls or []
-            creatives_ids = []
+            creative_ids = []
             proofs_ids = []
             video_ids = []
             logger.info("Переменные инициализированы")
@@ -4134,7 +4134,7 @@ def edit_startup(request, startup_id):
                     creative_id = str(uuid.uuid4())
                     file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{creative_file.name}"
                     default_storage.save(file_path, creative_file)
-                    creatives_ids.append(creative_id)
+                    creative_ids.append(creative_id)
                     safe_create_file_storage_instance(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
@@ -4147,7 +4147,7 @@ def edit_startup(request, startup_id):
                     logger.info(f"Креатив сохранён с ID: {creative_id}")
                 # creatives_ids будут добавлены в конце функции
             else:
-                creatives_ids = startup.creative_urls or []
+                creative_ids = startup.creative_urls or []
                 print("КРЕАТИВЫ НЕ НАЙДЕНЫ")
             proofs = form.cleaned_data.get("proofs", [])
             if proofs:
@@ -4202,8 +4202,8 @@ def edit_startup(request, startup_id):
                 # video_ids будут добавлены в конце функции
             startup.logo_urls = logo_ids
             # Обновляем URL файлов только если были загружены новые
-            if creatives_ids:
-                startup.creatives_urls = (startup.creatives_urls or []) + creatives_ids
+            if creative_ids:
+                startup.creatives_urls = (startup.creatives_urls or []) + creative_ids
             if proofs_ids:
                 startup.proofs_urls = (startup.proofs_urls or []) + proofs_ids
             if video_ids:
