@@ -27,6 +27,21 @@ document.addEventListener('DOMContentLoaded', function () {
       textWrap.appendChild(typeEl)
     }
     info.appendChild(textWrap)
+    
+    // Добавляем кнопку удаления для новых файлов
+    if (params.showDelete) {
+      var deleteBtn = document.createElement('button')
+      deleteBtn.type = 'button'
+      deleteBtn.className = 'delete-new-file-btn'
+      deleteBtn.textContent = 'Удалить'
+      deleteBtn.addEventListener('click', function() {
+        if (params.onDelete) {
+          params.onDelete(params.index)
+        }
+      })
+      container.appendChild(deleteBtn)
+    }
+    
     container.appendChild(info)
     return container
   }
@@ -41,12 +56,16 @@ document.addEventListener('DOMContentLoaded', function () {
     var dropArea = document.getElementById(dropAreaId)
     var preview = document.getElementById(previewId)
     if (!input || !dropArea || !preview) return
+    
+    // Сохраняем текущие файлы
+    var currentFiles = []
+    
     function clearPreview() {
       preview.innerHTML = ''
     }
     function updatePreview(files) {
       clearPreview()
-      files.forEach(function (file) {
+      files.forEach(function (file, index) {
         var previewNode
         var displayName = file.name
         var typeLabel = ''
@@ -82,7 +101,14 @@ document.addEventListener('DOMContentLoaded', function () {
           previewNode = icon
           typeLabel = 'FILE'
         }
-        var item = createPreviewItem({ previewNode: previewNode, displayName: displayName, typeLabel: typeLabel })
+        var item = createPreviewItem({ 
+          previewNode: previewNode, 
+          displayName: displayName, 
+          typeLabel: typeLabel,
+          showDelete: true,
+          index: index,
+          onDelete: removeFile
+        })
         preview.appendChild(item)
       })
     }
@@ -105,14 +131,21 @@ document.addEventListener('DOMContentLoaded', function () {
       return files
     }
     function setFiles(files) {
+      currentFiles = files.slice() // Сохраняем копию
       var dt = new DataTransfer()
       files.forEach(function (f) { dt.items.add(f) })
       input.files = dt.files
       updatePreview(toArray(input.files))
     }
+    
+    function removeFile(index) {
+      currentFiles.splice(index, 1)
+      setFiles(currentFiles)
+    }
     input.addEventListener('change', function () {
-      var files = toArray(input.files)
-      var filtered = filterFiles(files)
+      var newFiles = toArray(input.files)
+      var combined = currentFiles.concat(newFiles)
+      var filtered = filterFiles(combined)
       setFiles(filtered)
     })
     dropArea.addEventListener('dragover', function (e) {
@@ -121,8 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
     dropArea.addEventListener('drop', function (e) {
       e.preventDefault()
       var dropped = e.dataTransfer && e.dataTransfer.files ? e.dataTransfer.files : []
-      var current = toArray(input.files)
-      var combined = current.concat(toArray(dropped))
+      var combined = currentFiles.concat(toArray(dropped))
       var filtered = filterFiles(combined)
       setFiles(filtered)
     })
