@@ -4118,7 +4118,7 @@ def edit_startup(request, startup_id):
                 logo_ids = startup.logo_urls or []
                 print("ЛОГОТИП НЕ НАЙДЕН")
             # Обработка креативов - приоритет request.FILES
-            creatives = request.FILES.getlist("creatives") or form.cleaned_data.get("creatives", [])
+            creatives = request.FILES.getlist("creatives")
             if creatives:
                 print(f"КРЕАТИВЫ НАЙДЕНЫ: {len(creatives)} файлов")
                 creative_type = FileTypes.objects.get(type_name="creative")
@@ -4146,6 +4146,9 @@ def edit_startup(request, startup_id):
                     )
                     logger.info(f"Креатив сохранён с ID: {creative_id}")
                 # creatives_ids будут добавлены в конце функции
+            else:
+                creatives_ids = startup.creative_urls or []
+                print("КРЕАТИВЫ НЕ НАЙДЕНЫ")
             proofs = form.cleaned_data.get("proofs", [])
             if proofs:
                 proof_type = FileTypes.objects.get(type_name="proof")
