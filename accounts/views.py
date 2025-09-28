@@ -3903,12 +3903,79 @@ def edit_startup(request, startup_id):
     timeline = StartupTimeline.objects.filter(startup=startup)
     timeline_steps = timeline
     if request.method == "POST":
+        # Сохраняем оригинальные данные для сравнения
+        original_data = {
+            'title': startup.title,
+            'short_description': startup.short_description,
+            'description': startup.description,
+            'terms': startup.terms,
+            'funding_goal': startup.funding_goal,
+            'amount_raised': startup.amount_raised,
+            'valuation': startup.valuation,
+            'pitch_deck_url': startup.pitch_deck_url,
+            'planet_image': startup.planet_image,
+        }
+        
         form = StartupEditForm(request.POST, request.FILES, instance=startup)
         
         if form.is_valid():
             startup = form.save(commit=False)
-            startup.status = "pending"
-            startup.is_edited = True
+            
+            # Проверяем были ли изменения
+            has_changes = False
+            
+            # Проверяем основные поля
+            if (startup.title != original_data['title'] or 
+                startup.short_description != original_data['short_description'] or
+                startup.description != original_data['description'] or
+                startup.terms != original_data['terms'] or
+                startup.funding_goal != original_data['funding_goal'] or
+                startup.amount_raised != original_data['amount_raised'] or
+                startup.valuation != original_data['valuation'] or
+                startup.pitch_deck_url != original_data['pitch_deck_url'] or
+                startup.planet_image != original_data['planet_image']):
+                has_changes = True
+            
+            # Проверяем загружены ли новые файлы
+            if not has_changes:
+                if form.cleaned_data.get('logo') or form.cleaned_data.get('creatives') or form.cleaned_data.get('proofs') or form.cleaned_data.get('video'):
+                    has_changes = True
+            
+            # Проверяем удалены ли файлы
+            if not has_changes:
+                deleted_files_json = request.POST.get('deleted_files', '[]')
+                try:
+                    deleted_files = json.loads(deleted_files_json)
+                    if deleted_files:
+                        has_changes = True
+                except json.JSONDecodeError:
+                    pass
+            
+            # Проверяем изменения в этапах
+            if not has_changes:
+                for i in range(1, 6):
+                    description = request.POST.get(f"step_description_{i}", "").strip()
+                    if description:
+                        try:
+                            timeline_entry = StartupTimeline.objects.get(
+                                startup=startup,
+                                step_number=i
+                            )
+                            if timeline_entry.description != description:
+                                has_changes = True
+                                break
+                        except StartupTimeline.DoesNotExist:
+                            # Новый этап - это изменение
+                            has_changes = True
+                            break
+            
+            # Устанавливаем статус в зависимости от наличия изменений
+            if has_changes:
+                startup.status = "pending"
+                startup.is_edited = True
+            else:
+                startup.status = "approved"
+                startup.is_edited = False
             
             startup.updated_at = timezone.now()
             if "step_number" in request.POST:
@@ -4139,10 +4206,17 @@ def edit_startup(request, startup_id):
                     "redirect_url": reverse("profile"),
                 })
             
-            messages.success(
-                request,
-                f'Стартап "{startup.title}" успешно отредактирован и отправлен на модерацию!',
-            )
+            # Разные сообщения в зависимости от статуса
+            if has_changes:
+                messages.success(
+                    request,
+                    f'Стартап "{startup.title}" успешно отредактирован и отправлен на модерацию!',
+                )
+            else:
+                messages.success(
+                    request,
+                    f'Стартап "{startup.title}" сохранен без изменений и остался в каталоге!',
+                )
             return redirect("profile")
         else:
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
