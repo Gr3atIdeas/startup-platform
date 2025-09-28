@@ -47,6 +47,20 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
         addDebug('Форма найдена');
         
+        // Добавляем обработчики для полей файлов
+        const fileInputs = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input'];
+        fileInputs.forEach(inputId => {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.addEventListener('change', function(e) {
+                    addDebug(`Файл выбран в ${inputId}: ${e.target.files.length} файлов`);
+                    for (let i = 0; i < e.target.files.length; i++) {
+                        addDebug(`  Файл ${i + 1}: ${e.target.files[i].name} (${e.target.files[i].size} байт)`);
+                    }
+                });
+            }
+        });
+        
         form.addEventListener('submit', function(e) {
             addDebug('Форма отправляется...');
             
@@ -147,7 +161,7 @@ window.fetch = function(...args) {
                         <img src="{% if logo_file_id %}{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}{% else %}""{% endif %}" alt="Логотип" class="logo-preview" id="logoPreview" {% if not logo_file_id %}style="display:none;"{% endif %}>
                     {% endwith %}
                     </div>
-                    {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
+                    {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;"|attr:"name:logo" }}
                     <div class="custom-file-upload-button" id="logoUploadButton">*Выбрать логотип</div>
                     {% if form.logo.errors %}
                     <span class="error-message">{{ form.logo.errors|first }}</span>
@@ -238,7 +252,7 @@ window.fetch = function(...args) {
                     
                     <div class="form-group upload-box" id="creativesDropArea">
                         <label for="id_creatives_input">*Изображения (новые или для замены)</label>
-                        {{ form.creatives|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_creatives_input" }}
+                        {{ form.creatives|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_creatives_input"|attr:"name:creatives" }}
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_creatives_input').click()">Выбрать файлы</div>
                         <div class="small-text">Допустимый формат PNG, JPEG (до 3 файлов)</div>
                                             <div id="creativesPreview" class="file-preview-area">
@@ -255,7 +269,7 @@ window.fetch = function(...args) {
                     
                     <div class="form-group upload-box" id="videoDropArea">
                         <label for="id_video_input">*Видео (новое или для замены)</label>
-                        {{ form.video|attr:"style:display:none"|attr:"id:id_video_input" }}
+                        {{ form.video|attr:"style:display:none"|attr:"id:id_video_input"|attr:"name:video" }}
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файл</div>
                         <div class="small-text">Допустимый формат MOV, MP4 (1 файл)</div>
                         <div id="videoPreview" class="file-preview-area">
@@ -358,7 +372,7 @@ window.fetch = function(...args) {
              <div class="form-content-section">
                 <div class="form-group upload-box full-width" id="proofsDropArea">
                     <label for="id_proofs_input">*Документы (новые или для замены)</label>
-                    {{ form.proofs|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_proofs_input" }}
+                    {{ form.proofs|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_proofs_input"|attr:"name:proofs" }}
                     <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файл</div>
                     <div class="small-text">Допустимый формат Doc, Excel, PDF (до 3 файлов)</div>
                     <div id="proofsPreview" class="file-preview-area">
