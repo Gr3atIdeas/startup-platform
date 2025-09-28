@@ -7,22 +7,14 @@ class MultipleFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("widget", MultipleFileInput())
         super().__init__(*args, **kwargs)
-    def to_python(self, data):
-        if not data:
-            return []
-        if isinstance(data, list):
-            return data
-        return [data] if data else []
     def clean(self, data, initial=None):
         print(f"MultipleFileField.clean called with data: {data}")
-        files = data if isinstance(data, list) else [data] if data else []
-        print(f"Files after processing: {files}")
-        cleaned_files = []
-        for file in files:
-            if file:
-                cleaned_files.append(super().clean(file, initial))
-        print(f"Cleaned files: {cleaned_files}")
-        return cleaned_files
+        if not data:
+            return []
+        if isinstance(data, (list, tuple)):
+            return [super().clean(d, initial) for d in data if d]
+        else:
+            return [super().clean(data, initial)] if data else []
 class RegisterForm(forms.ModelForm):
     hp_field = forms.CharField(required=False, label="", widget=forms.TextInput(attrs={
         "autocomplete": "off",
