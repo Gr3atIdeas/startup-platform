@@ -156,10 +156,10 @@ class StartupForm(forms.ModelForm):
         required=True,
         help_text="Загрузите логотип стартапа (изображение)",
     )
-    creatives = MultipleFileField(
+    creatives = forms.FileField(
         required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)"
     )
-    proofs = MultipleFileField(
+    proofs = forms.FileField(
         required=True, help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
     )
     direction = forms.ModelChoiceField(
@@ -175,7 +175,7 @@ class StartupForm(forms.ModelForm):
     micro_investment_available = forms.BooleanField(
         required=False, label="Микроинвестиции доступны"
     )
-    video = MultipleFileField(required=True, help_text="Загрузите видео (до 3 файлов: MP4, MOV)")
+    video = forms.FileField(required=True, help_text="Загрузите видео (до 3 файлов: MP4, MOV)")
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
@@ -416,8 +416,8 @@ class DirectionModelChoiceField(forms.ModelChoiceField):
 
 class FranchiseForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
-    creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
-    proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
+    creatives = forms.FileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
+    proofs = forms.FileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
     direction = DirectionModelChoiceField(
         queryset=Directions.objects.filter(
             direction_name__in=[
@@ -524,8 +524,8 @@ class FranchiseForm(forms.ModelForm):
 
 class AgencyForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
-    creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
-    proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
+    creatives = forms.FileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
+    proofs = forms.FileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
     direction = forms.ChoiceField(choices=[
         ("Веб-разработка", "Веб-разработка"),
         ("Мобильная разработка", "Мобильная разработка"),
@@ -614,8 +614,8 @@ class AgencyForm(forms.ModelForm):
 
 class SpecialistForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
-    creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
-    proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
+    creatives = forms.FileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
+    proofs = forms.FileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
     direction = forms.ChoiceField(choices=[
         ("Веб-разработка", "Веб-разработка"),
         ("Мобильная разработка", "Мобильная разработка"),
