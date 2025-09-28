@@ -63,7 +63,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         form.addEventListener('submit', function(e) {
             e.preventDefault(); // Предотвращаем обычную отправку формы
+            addDebug('=== НАЧАЛО ОТПРАВКИ ФОРМЫ ===');
             addDebug('Форма отправляется...');
+            addDebug('Время: ' + new Date().toISOString());
             
             // Проверяем поля формы
             const planetField = document.getElementById('id_planet_image');
@@ -90,6 +92,22 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Отправляем AJAX запрос
             addDebug('Отправка AJAX запроса...');
+            addDebug('URL: ' + form.action);
+            addDebug('FormData размер: ' + formData.entries().length + ' полей');
+            
+            // Детальная информация о файлах
+            const fileInputs = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input'];
+            fileInputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    addDebug(`Файловый input ${inputId}: ${input.files.length} файлов`);
+                    for (let i = 0; i < input.files.length; i++) {
+                        const file = input.files[i];
+                        addDebug(`  Файл ${i}: ${file.name} (${file.size} байт, ${file.type})`);
+                    }
+                }
+            });
+            
             fetch(form.action, {
                 method: 'POST',
                 body: formData,
@@ -98,11 +116,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then(response => {
-                addDebug('AJAX ответ: ' + response.status);
+                addDebug('AJAX ответ получен: ' + response.status);
+                addDebug('Response headers: ' + JSON.stringify([...response.headers.entries()]));
                 if (response.ok) {
+                    addDebug('Ответ успешный, парсим JSON...');
                     return response.json();
                 } else {
-                    throw new Error('Ошибка сервера: ' + response.status);
+                    addDebug('Ошибка ответа: ' + response.status);
+                    return response.text().then(text => {
+                        addDebug('Текст ошибки: ' + text);
+                        throw new Error('Ошибка сервера: ' + response.status);
+                    });
                 }
             })
             .then(data => {
@@ -117,7 +141,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
-                addDebug('AJAX ошибка: ' + error.message);
+                addDebug('=== AJAX ОШИБКА ===');
+                addDebug('Ошибка: ' + error.message);
+                addDebug('Stack: ' + error.stack);
+                addDebug('=== КОНЕЦ ОШИБКИ ===');
             });
         });
     }
