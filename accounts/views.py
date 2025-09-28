@@ -4118,16 +4118,16 @@ def edit_startup(request, startup_id):
                 logo_ids = startup.logo_urls or []
                 print("ЛОГОТИП НЕ НАЙДЕН")
             # Обработка креативов - приоритет request.FILES
-            creatives = request.FILES.getlist("creatives")
-            if creatives and any(f.size > 0 for f in creatives):
+            creatives = request.FILES.getlist("creatives") or form.cleaned_data.get("creatives", [])
+            if creatives:
                 print(f"КРЕАТИВЫ НАЙДЕНЫ: {len(creatives)} файлов")
                 creative_type = FileTypes.objects.get(type_name="creative")
                 entity_type = EntityTypes.objects.get(type_name="startup")
                 # Не очищаем существующие файлы, добавляем новые
                 for creative_file in creatives:
-                    if not hasattr(creative_file, "name") or creative_file.size == 0:
+                    if not hasattr(creative_file, "name"):
                         logger.warning(
-                            f"Пропущен креатив, так как это не файл или пустой файл: {creative_file}"
+                            f"Пропущен креатив, так как это не файл: {creative_file}"
                         )
                         continue
                     unique_filename = get_unique_filename(creative_file.name, startup.startup_id, "creative")
