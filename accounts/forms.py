@@ -58,11 +58,11 @@ class StartupEditForm(forms.ModelForm):
     )
     creatives = forms.FileField(
         required=False, help_text="Загрузите новые изображения (до 3 файлов: PNG, JPEG)",
-        widget=forms.ClearableFileInput(attrs={'multiple': True, 'accept': 'image/*'})
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     proofs = forms.FileField(
         required=False, help_text="Загрузите новые документы (до 10 файлов: PDF, DOC, TXT)",
-        widget=forms.ClearableFileInput(attrs={'multiple': True, 'accept': '.pdf,.doc,.docx,.txt'})
+        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
     )
     direction = forms.ModelChoiceField(
         queryset=Directions.objects.none(), label="Направление *", required=True
@@ -74,7 +74,7 @@ class StartupEditForm(forms.ModelForm):
         required=False, label="Микроинвестиции доступны"
     )
     video = forms.FileField(required=False, help_text="Загрузите новое видео (до 3 файлов: MP4, MOV)",
-        widget=forms.ClearableFileInput(attrs={'multiple': True, 'accept': 'video/*'}))
+        widget=forms.ClearableFileInput(attrs={'accept': 'video/*'}))
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
