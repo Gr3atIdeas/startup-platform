@@ -3420,8 +3420,6 @@ def create_startup(request):
                         messages.warning(request, "Не удалось сохранить один из креативов, но стартап создан.")
                         file_save_errors.append({"field": "creatives", "file": getattr(creative_file, "name", ""), "error": str(e)})
             proofs = form.cleaned_data.get("proofs", [])
-            if not proofs:
-                proofs = request.FILES.getlist("proofs")
             if proofs:
                 proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
@@ -3461,8 +3459,6 @@ def create_startup(request):
                         messages.warning(request, "Не удалось сохранить один из документов, но стартап создан.")
                         file_save_errors.append({"field": "proofs", "file": getattr(proof_file, "name", ""), "error": str(e)})
             videos = form.cleaned_data.get("video", [])
-            if not videos:
-                videos = request.FILES.getlist("video")
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
@@ -4118,7 +4114,7 @@ def edit_startup(request, startup_id):
                 logo_ids = startup.logo_urls or []
                 print("ЛОГОТИП НЕ НАЙДЕН")
             # Обработка креативов
-            creatives = request.FILES.getlist("creatives")
+            creatives = form.cleaned_data.get("creatives", [])
             if creatives:
                 print(f"КРЕАТИВЫ НАЙДЕНЫ: {len(creatives)} файлов")
                 creative_type = FileTypes.objects.get(type_name="creative")
