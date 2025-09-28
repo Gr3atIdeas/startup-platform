@@ -4066,10 +4066,12 @@ def edit_startup(request, startup_id):
             if has_changes:
                 startup.status = "pending"
                 startup.is_edited = True
+                startup.save(update_fields=['status', 'is_edited'])
                 logger.info("Статус установлен: pending")
                 print("СТАТУС: PENDING")
             else:
                 startup.status = "approved"
+                startup.save(update_fields=['status'])
                 startup.is_edited = False
                 logger.info("Статус установлен: approved")
                 print("СТАТУС: APPROVED")
