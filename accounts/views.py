@@ -3919,7 +3919,9 @@ def edit_startup(request, startup_id):
         form = StartupEditForm(request.POST, request.FILES, instance=startup)
         
         if form.is_valid():
+            logger.info("=== ФОРМА ВАЛИДНА ===")
             startup = form.save(commit=False)
+            logger.info(f"Стартап загружен: {startup.startup_id}")
             
             # Проверяем были ли изменения
             has_changes = False
@@ -3970,12 +3972,15 @@ def edit_startup(request, startup_id):
                             break
             
             # Устанавливаем статус в зависимости от наличия изменений
+            logger.info(f"has_changes: {has_changes}")
             if has_changes:
                 startup.status = "pending"
                 startup.is_edited = True
+                logger.info("Статус установлен: pending")
             else:
                 startup.status = "approved"
                 startup.is_edited = False
+                logger.info("Статус установлен: approved")
             
             startup.updated_at = timezone.now()
             if "step_number" in request.POST:
@@ -3994,11 +3999,15 @@ def edit_startup(request, startup_id):
                 startup.only_invest = False
                 startup.only_buy = False
                 startup.both_mode = True
+            logger.info("=== СОХРАНЕНИЕ СТАРТАПА ===")
             startup.save()
+            logger.info("Стартап сохранен")
+            
             logo_ids = startup.logo_urls or []
             creatives_ids = []
             proofs_ids = []
             video_ids = []
+            logger.info("Переменные инициализированы")
             logo = form.cleaned_data.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
@@ -4128,7 +4137,9 @@ def edit_startup(request, startup_id):
                         timeline_entry.description = description
                         timeline_entry.save()
             
+            logger.info("=== ФИНАЛЬНОЕ СОХРАНЕНИЕ ===")
             startup.save()
+            logger.info("Стартап финально сохранен")
             logger.info("=== Обновление стартапа ===")
             logger.info(f"Стартап ID: {startup.startup_id}")
             if logo:
@@ -4233,6 +4244,11 @@ def edit_startup(request, startup_id):
                 )
             return redirect("profile")
         else:
+            logger.info("=== ФОРМА НЕ ВАЛИДНА ===")
+            for field, errors in form.errors.items():
+                logger.error(f"Поле {field}: {errors}")
+            logger.info("=== ФОРМА НЕ ВАЛИДНА ===")
+            
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": False,
