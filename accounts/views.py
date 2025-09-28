@@ -3889,6 +3889,23 @@ def edit_startup(request, startup_id):
     logger.debug(f"Request method: {request.method}")
     logger.debug(f"Request POST: {request.POST}")
     logger.debug(f"Request FILES: {dict(request.FILES)}")
+    print(f"=== DEBUG EDIT STARTUP ===")
+    print(f"Request method: {request.method}")
+    print(f"Request POST keys: {list(request.POST.keys())}")
+    print(f"Request FILES keys: {list(request.FILES.keys())}")
+    for key, value in request.FILES.items():
+        print(f"File {key}: {value}")
+    print(f"=== END DEBUG ===")
+    
+    # Также записываем в файл для отладки
+    with open('/tmp/debug_edit_startup.log', 'a') as f:
+        f.write(f"=== DEBUG EDIT STARTUP {timezone.now()} ===\n")
+        f.write(f"Request method: {request.method}\n")
+        f.write(f"Request POST keys: {list(request.POST.keys())}\n")
+        f.write(f"Request FILES keys: {list(request.FILES.keys())}\n")
+        for key, value in request.FILES.items():
+            f.write(f"File {key}: {value}\n")
+        f.write(f"=== END DEBUG ===\n\n")
     startup = get_object_or_404(Startups, startup_id=startup_id)
     if not (
         request.user == startup.owner

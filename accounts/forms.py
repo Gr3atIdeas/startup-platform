@@ -14,11 +14,14 @@ class MultipleFileField(forms.FileField):
             return data
         return [data] if data else []
     def clean(self, data, initial=None):
+        print(f"MultipleFileField.clean called with data: {data}")
         files = data if isinstance(data, list) else [data] if data else []
+        print(f"Files after processing: {files}")
         cleaned_files = []
         for file in files:
             if file:
                 cleaned_files.append(super().clean(file, initial))
+        print(f"Cleaned files: {cleaned_files}")
         return cleaned_files
 class RegisterForm(forms.ModelForm):
     hp_field = forms.CharField(required=False, label="", widget=forms.TextInput(attrs={
