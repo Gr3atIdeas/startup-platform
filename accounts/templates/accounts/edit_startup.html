@@ -143,6 +143,29 @@ document.addEventListener('DOMContentLoaded', function() {
                             addDebug(`❌ Нет файлов в ${input.id}`);
                         }
                     });
+                    
+                    // ДОПОЛНИТЕЛЬНАЯ ПРОВЕРКА: Ищем видимые input'ы
+                    const visibleInputs = document.querySelectorAll('input[type="file"]:not([style*="display: none"]):not([style*="opacity: 0"])');
+                    addDebug(`Найдено ${visibleInputs.length} видимых file input'ов`);
+                    
+                    visibleInputs.forEach((input, index) => {
+                        addDebug(`Видимый input ${index + 1}: id="${input.id}", name="${input.name}", files=${input.files.length}`);
+                        
+                        if (input.files.length > 0) {
+                            const fieldName = input.name || input.id.replace('id_', '').replace('_input', '');
+                            addDebug(`✅ Найден файл в видимом ${input.id}: ${input.files.length} файлов`);
+                            
+                            // Удаляем старые значения
+                            formData.delete(fieldName);
+                            
+                            // Добавляем новые файлы
+                            for (let i = 0; i < input.files.length; i++) {
+                                formData.append(fieldName, input.files[i]);
+                                addDebug(`✅ Добавлен файл ${i+1}: ${input.files[i].name} (${input.files[i].size} байт)`);
+                            }
+                            addDebug(`✅ Вручную добавлено ${input.files.length} файлов из видимого ${input.id}`);
+                        }
+                    });
             
             addDebug('Данные формы:');
             for (let [key, value] of formData.entries()) {
