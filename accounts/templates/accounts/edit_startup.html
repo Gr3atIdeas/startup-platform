@@ -63,6 +63,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Файлы уже находятся в правильном input, просто логируем
                     addDebug(`✅ Файлы готовы к отправке в ${inputId}: ${e.target.files.length} файлов`);
+                    
+                    // ДОПОЛНИТЕЛЬНАЯ ПРОВЕРКА: Проверяем файлы сразу после выбора
+                    const input = document.getElementById(inputId);
+                    if (input) {
+                        addDebug(`🔍 ПРОВЕРКА СРАЗУ ПОСЛЕ ВЫБОРА: ${inputId} содержит ${input.files.length} файлов`);
+                        if (input.files.length > 0) {
+                            for (let i = 0; i < input.files.length; i++) {
+                                addDebug(`  Файл ${i + 1}: ${input.files[i].name} (${input.files[i].size} байт)`);
+                            }
+                        }
+                    }
                 });
             }
         });
@@ -84,17 +95,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 addDebug('Поле title: ' + titleField.value);
             }
             
-            // Сначала проверяем файлы ДО создания FormData
+            // КРИТИЧЕСКАЯ ПРОВЕРКА: Проверяем файлы прямо перед отправкой
             const creativesInput = document.getElementById('id_creatives_input');
             const proofsInput = document.getElementById('id_proofs_input');
             const videoInput = document.getElementById('id_video_input');
             const logoInput = document.getElementById('id_logo_input');
             
-            // Проверяем файлы
+            addDebug(`=== КРИТИЧЕСКАЯ ПРОВЕРКА ФАЙЛОВ ПЕРЕД ОТПРАВКОЙ ===`);
             addDebug(`Файловый input id_creatives_input: ${creativesInput ? creativesInput.files.length : 'не найден'} файлов`);
             addDebug(`Файловый input id_proofs_input: ${proofsInput ? proofsInput.files.length : 'не найден'} файлов`);
             addDebug(`Файловый input id_video_input: ${videoInput ? videoInput.files.length : 'не найден'} файлов`);
             addDebug(`Файловый input id_logo_input: ${logoInput ? logoInput.files.length : 'не найден'} файлов`);
+            
+            // Проверяем все file input'ы на странице
+            const allFileInputsCheck = document.querySelectorAll('input[type="file"]');
+            addDebug(`Найдено ${allFileInputsCheck.length} file input'ов на странице`);
+            
+            allFileInputsCheck.forEach((input, index) => {
+                addDebug(`File input ${index + 1}: id="${input.id}", name="${input.name}", files=${input.files.length}`);
+                if (input.files.length > 0) {
+                    for (let i = 0; i < input.files.length; i++) {
+                        addDebug(`  Файл ${i + 1}: ${input.files[i].name} (${input.files[i].size} байт)`);
+                    }
+                }
+            });
+            addDebug(`=== КОНЕЦ КРИТИЧЕСКОЙ ПРОВЕРКИ ===`);
             
             // Проверка лимитов файлов
                    
