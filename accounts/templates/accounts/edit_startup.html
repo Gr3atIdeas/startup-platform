@@ -84,13 +84,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 addDebug('Поле title: ' + titleField.value);
             }
             
-            // Проверяем все поля формы
-            const formData = new FormData(form);
+            // Сначала проверяем файлы ДО создания FormData
+            const creativesInput = document.getElementById('id_creatives_input');
+            const proofsInput = document.getElementById('id_proofs_input');
+            const videoInput = document.getElementById('id_video_input');
+            const logoInput = document.getElementById('id_logo_input');
             
-                   // Проверка лимитов файлов
-                   const creativesInput = document.getElementById('id_creatives_input');
-                   const proofsInput = document.getElementById('id_proofs_input');
-                   const videoInput = document.getElementById('id_video_input');
+            // Проверяем файлы
+            addDebug(`Файловый input id_creatives_input: ${creativesInput ? creativesInput.files.length : 'не найден'} файлов`);
+            addDebug(`Файловый input id_proofs_input: ${proofsInput ? proofsInput.files.length : 'не найден'} файлов`);
+            addDebug(`Файловый input id_video_input: ${videoInput ? videoInput.files.length : 'не найден'} файлов`);
+            addDebug(`Файловый input id_logo_input: ${logoInput ? logoInput.files.length : 'не найден'} файлов`);
+            
+            // Проверка лимитов файлов
                    
                    if (creativesInput && creativesInput.files.length > 3) {
                        addDebug('❌ ОШИБКА: Максимально 3 изображения');
@@ -109,6 +115,10 @@ document.addEventListener('DOMContentLoaded', function() {
                        alert('Максимально 1 видео');
                        return;
                    }
+                   
+                   // Теперь создаем FormData после проверки файлов
+                   const formData = new FormData(form);
+                   addDebug('FormData создан из формы');
                    
                     // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Ищем ВСЕ file input'ы на странице
                     const allFileInputs = document.querySelectorAll('input[type="file"]');
