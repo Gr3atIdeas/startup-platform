@@ -130,14 +130,55 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then(data => {
+                addDebug('=== ОТВЕТ СЕРВЕРА ===');
                 addDebug('Ответ сервера: ' + JSON.stringify(data));
+                
                 if (data.success) {
-                    addDebug('Стартап успешно сохранен!');
+                    addDebug('✅ СТАРТАП УСПЕШНО СОХРАНЕН!');
+                    
+                    // Детальная информация о файлах
+                    if (data.files_info) {
+                        addDebug('📁 ИНФОРМАЦИЯ О ФАЙЛАХ:');
+                        addDebug('  Логотип: ' + (data.files_info.logo_saved ? '✅ Сохранен' : '❌ Не сохранен'));
+                        addDebug('  Креативы: ' + (data.files_info.creatives_saved || 0) + ' файлов сохранено');
+                        addDebug('  Документы: ' + (data.files_info.proofs_saved || 0) + ' файлов сохранено');
+                        addDebug('  Видео: ' + (data.files_info.videos_saved || 0) + ' файлов сохранено');
+                    }
+                    
+                    // Информация о статусе
+                    if (data.status_info) {
+                        addDebug('📊 ИНФОРМАЦИЯ О СТАТУСЕ:');
+                        addDebug('  Предыдущий статус: ' + (data.status_info.previous_status || 'неизвестно'));
+                        addDebug('  Новый статус: ' + (data.status_info.new_status || 'неизвестно'));
+                        addDebug('  Статус изменился: ' + (data.status_info.status_changed ? '✅ Да' : '❌ Нет'));
+                        if (data.status_info.reason) {
+                            addDebug('  Причина изменения: ' + data.status_info.reason);
+                        }
+                    }
+                    
+                    // Информация о has_changes
+                    if (data.changes_info) {
+                        addDebug('🔄 ИНФОРМАЦИЯ ОБ ИЗМЕНЕНИЯХ:');
+                        addDebug('  has_changes: ' + (data.changes_info.has_changes ? '✅ True' : '❌ False'));
+                        addDebug('  Текстовые изменения: ' + (data.changes_info.text_changed ? '✅ Да' : '❌ Нет'));
+                        addDebug('  Файловые изменения: ' + (data.changes_info.files_changed ? '✅ Да' : '❌ Нет'));
+                        if (data.changes_info.files_details) {
+                            addDebug('  Детали файлов: ' + JSON.stringify(data.changes_info.files_details));
+                        }
+                    }
+                    
+                    addDebug('=== КОНЕЦ ОТВЕТА ===');
+                    
                     if (data.redirect_url) {
+                        addDebug('🔄 Перенаправление на: ' + data.redirect_url);
                         window.location.href = data.redirect_url;
                     }
                 } else {
-                    addDebug('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+                    addDebug('❌ ОШИБКА СОХРАНЕНИЯ:');
+                    addDebug('  Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+                    if (data.errors) {
+                        addDebug('  Детали ошибок: ' + JSON.stringify(data.errors));
+                    }
                 }
             })
             .catch(error => {

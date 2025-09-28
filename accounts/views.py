@@ -4336,9 +4336,45 @@ def edit_startup(request, startup_id):
                     exc_info=True,
                 )
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                # Собираем информацию о файлах
+                files_info = {
+                    "logo_saved": bool(logo and hasattr(logo, 'size') and logo.size > 0),
+                    "creatives_saved": len(creatives) if creatives else 0,
+                    "proofs_saved": len(proofs) if proofs else 0,
+                    "videos_saved": len(videos) if videos else 0,
+                }
+                
+                # Собираем информацию о статусе
+                previous_status = startup.status.status_name if startup.status else "неизвестно"
+                new_status = startup.status.status_name if startup.status else "неизвестно"
+                status_changed = 'has_changes' in locals() and has_changes
+                
+                status_info = {
+                    "previous_status": previous_status,
+                    "new_status": new_status,
+                    "status_changed": status_changed,
+                    "reason": "Файлы загружены" if files_info["creatives_saved"] > 0 or files_info["proofs_saved"] > 0 or files_info["videos_saved"] > 0 or files_info["logo_saved"] else "Текстовые изменения" if 'has_changes' in locals() and has_changes else "Изменений нет"
+                }
+                
+                # Собираем информацию об изменениях
+                changes_info = {
+                    "has_changes": 'has_changes' in locals() and has_changes,
+                    "text_changed": 'has_changes' in locals() and has_changes and not (files_info["creatives_saved"] > 0 or files_info["proofs_saved"] > 0 or files_info["videos_saved"] > 0 or files_info["logo_saved"]),
+                    "files_changed": files_info["creatives_saved"] > 0 or files_info["proofs_saved"] > 0 or files_info["videos_saved"] > 0 or files_info["logo_saved"],
+                    "files_details": {
+                        "creatives": [f.name for f in creatives] if creatives else [],
+                        "proofs": [f.name for f in proofs] if proofs else [],
+                        "videos": [f.name for f in videos] if videos else [],
+                        "logo": logo.name if logo and hasattr(logo, 'name') else None
+                    }
+                }
+                
                 return JsonResponse({
                     "success": True,
                     "redirect_url": reverse("profile"),
+                    "files_info": files_info,
+                    "status_info": status_info,
+                    "changes_info": changes_info,
                 })
             
             # Разные сообщения в зависимости от статуса
