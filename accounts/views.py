@@ -3995,37 +3995,6 @@ def edit_startup(request, startup_id):
                 startup.only_buy = False
                 startup.both_mode = True
             startup.save()
-            deleted_files_json = request.POST.get('deleted_files', '[]')
-            try:
-                deleted_files = json.loads(deleted_files_json)
-                for deleted_file in deleted_files:
-                    file_id = deleted_file.get('id')
-                    file_type = deleted_file.get('type')
-                    if file_id and file_type:
-                        FileStorage.objects.filter(
-                            startup=startup,
-                            file_url=file_id
-                        ).delete()
-                        if file_type == 'creative' and startup.creatives_urls:
-                            startup.creatives_urls = [url for url in startup.creatives_urls if url != file_id]
-                        elif file_type == 'proof' and startup.proofs_urls:
-                            startup.proofs_urls = [url for url in startup.proofs_urls if url != file_id]
-                        elif file_type == 'video' and startup.video_urls:
-                            startup.video_urls = [url for url in startup.video_urls if url != file_id]
-                        logger.info(f"Удален файл {file_type}: {file_id}")
-            except json.JSONDecodeError:
-                logger.warning("Ошибка при разборе deleted_files JSON")
-            for i in range(1, 6):
-                description = request.POST.get(f"step_description_{i}", "").strip()
-                if description:
-                    timeline_entry, created = StartupTimeline.objects.get_or_create(
-                        startup=startup,
-                        step_number=i,
-                        defaults={"title": f"Этап {i}", "description": description},
-                    )
-                    if not created and timeline_entry.description != description:
-                        timeline_entry.description = description
-                        timeline_entry.save()
             logo_ids = startup.logo_urls or []
             creatives_ids = []
             proofs_ids = []
@@ -4124,6 +4093,41 @@ def edit_startup(request, startup_id):
                 startup.proofs_urls = (startup.proofs_urls or []) + proofs_ids
             if video_ids:
                 startup.video_urls = (startup.video_urls or []) + video_ids
+            # Обработка удаленных файлов
+            deleted_files_json = request.POST.get('deleted_files', '[]')
+            try:
+                deleted_files = json.loads(deleted_files_json)
+                for deleted_file in deleted_files:
+                    file_id = deleted_file.get('id')
+                    file_type = deleted_file.get('type')
+                    if file_id and file_type:
+                        FileStorage.objects.filter(
+                            startup=startup,
+                            file_url=file_id
+                        ).delete()
+                        if file_type == 'creative' and startup.creatives_urls:
+                            startup.creatives_urls = [url for url in startup.creatives_urls if url != file_id]
+                        elif file_type == 'proof' and startup.proofs_urls:
+                            startup.proofs_urls = [url for url in startup.proofs_urls if url != file_id]
+                        elif file_type == 'video' and startup.video_urls:
+                            startup.video_urls = [url for url in startup.video_urls if url != file_id]
+                        logger.info(f"Удален файл {file_type}: {file_id}")
+            except json.JSONDecodeError:
+                logger.warning("Ошибка при разборе deleted_files JSON")
+            
+            # Обработка этапов
+            for i in range(1, 6):
+                description = request.POST.get(f"step_description_{i}", "").strip()
+                if description:
+                    timeline_entry, created = StartupTimeline.objects.get_or_create(
+                        startup=startup,
+                        step_number=i,
+                        defaults={"title": f"Этап {i}", "description": description},
+                    )
+                    if not created and timeline_entry.description != description:
+                        timeline_entry.description = description
+                        timeline_entry.save()
+            
             startup.save()
             logger.info("=== Обновление стартапа ===")
             logger.info(f"Стартап ID: {startup.startup_id}")
