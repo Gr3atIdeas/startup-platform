@@ -4027,9 +4027,7 @@ def edit_startup(request, startup_id):
                         timeline_entry.description = description
                         timeline_entry.save()
             logo_ids = startup.logo_urls or []
-            creatives_ids = startup.creatives_urls or []
-            proofs_ids = startup.proofs_urls or []
-            video_ids = startup.video_urls or []
+            # creatives_ids, proofs_ids, video_ids будут определены в соответствующих блоках
             logo = form.cleaned_data.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
@@ -4039,10 +4037,10 @@ def edit_startup(request, startup_id):
                 logo_ids = [logo_id]
                 logger.info(f"Логотип сохранён с ID: {logo_id}")
             creatives = form.cleaned_data.get("creatives", [])
+            creatives_ids = []
             if creatives:
                 creative_type = FileTypes.objects.get(type_name="creative")
                 entity_type = EntityTypes.objects.get(type_name="startup")
-                creatives_ids = []
                 # Не очищаем существующие файлы, добавляем новые
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
@@ -4068,10 +4066,10 @@ def edit_startup(request, startup_id):
                 # Добавляем новые ID к существующим
                 startup.creatives_urls = (startup.creatives_urls or []) + creatives_ids
             proofs = form.cleaned_data.get("proofs", [])
+            proofs_ids = []
             if proofs:
                 proof_type = FileTypes.objects.get(type_name="proof")
                 entity_type = EntityTypes.objects.get(type_name="startup")
-                proofs_ids = []
                 # Не очищаем существующие файлы, добавляем новые
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
@@ -4097,10 +4095,10 @@ def edit_startup(request, startup_id):
                 # Добавляем новые ID к существующим
                 startup.proofs_urls = (startup.proofs_urls or []) + proofs_ids
             videos = form.cleaned_data.get("video", [])
+            video_ids = []
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
                 entity_type = EntityTypes.objects.get(type_name="startup")
-                video_ids = []
                 for video in videos:
                     if not hasattr(video, "name"):
                         logger.warning(f"Пропущено видео, так как это не файл: {video}")
