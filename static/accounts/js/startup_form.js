@@ -9,24 +9,15 @@ document.addEventListener('DOMContentLoaded', function () {
   function createPreviewItem(params) {
     var container = document.createElement('div')
     container.className = 'file-preview-item'
-    var info = document.createElement('div')
-    info.className = 'file-info'
+    
+    // Создаем превью в том же стиле, что и существующие файлы
     if (params.previewNode) {
-      info.appendChild(params.previewNode)
+      container.appendChild(params.previewNode)
     }
-    var textWrap = document.createElement('div')
-    textWrap.className = 'file-text-details'
+    
     var nameEl = document.createElement('p')
-    nameEl.className = 'file-name-display'
     nameEl.textContent = params.displayName
-    textWrap.appendChild(nameEl)
-    if (params.typeLabel) {
-      var typeEl = document.createElement('p')
-      typeEl.className = 'file-type-display'
-      typeEl.textContent = params.typeLabel
-      textWrap.appendChild(typeEl)
-    }
-    info.appendChild(textWrap)
+    container.appendChild(nameEl)
     
     // Добавляем кнопку удаления для новых файлов
     if (params.showDelete) {
@@ -42,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
       container.appendChild(deleteBtn)
     }
     
-    container.appendChild(info)
     return container
   }
   function isAllowedByExt(filename, allowedExts) {
@@ -57,21 +47,26 @@ document.addEventListener('DOMContentLoaded', function () {
     var preview = document.getElementById(previewId)
     if (!input || !dropArea || !preview) return
     
-    // Сохраняем текущие файлы
+    // Сохраняем текущие файлы (инициализируем пустым массивом)
     var currentFiles = []
     
     function clearPreview() {
       preview.innerHTML = ''
     }
     function updatePreview(files) {
-      clearPreview()
+      // Удаляем только новые файлы (не существующие)
+      var existingFiles = preview.querySelectorAll('.existing-file')
+      var newFiles = preview.querySelectorAll('.file-preview-item:not(.existing-file)')
+      newFiles.forEach(function(el) { el.remove() })
+      
       files.forEach(function (file, index) {
         var previewNode
         var displayName = file.name
         var typeLabel = ''
         if (options.kind === 'image') {
           var img = document.createElement('img')
-          img.className = 'preview-image'
+          img.style.maxWidth = '200px'
+          img.style.maxHeight = '150px'
           var reader = new FileReader()
           reader.onload = function (e) {
             img.src = e.target.result
@@ -92,12 +87,11 @@ document.addEventListener('DOMContentLoaded', function () {
           previewNode = video
           typeLabel = 'VIDEO'
         } else {
-          var icon = document.createElement('div')
+          var icon = document.createElement('img')
+          icon.src = '/static/accounts/images/icons/file_icon.svg'
           icon.className = 'file-icon'
-          icon.style.width = '36px'
-          icon.style.height = '36px'
-          icon.style.background = '#e0e0e0'
-          icon.style.borderRadius = '4px'
+          icon.style.width = '40px'
+          icon.style.height = 'auto'
           previewNode = icon
           typeLabel = 'FILE'
         }
@@ -135,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var dt = new DataTransfer()
       files.forEach(function (f) { dt.items.add(f) })
       input.files = dt.files
-      updatePreview(toArray(input.files))
+      updatePreview(files)
     }
     
     function removeFile(index) {
@@ -144,6 +138,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     input.addEventListener('change', function () {
       var newFiles = toArray(input.files)
+      if (newFiles.length === 0) return
+      
       var combined = currentFiles.concat(newFiles)
       var filtered = filterFiles(combined)
       setFiles(filtered)
