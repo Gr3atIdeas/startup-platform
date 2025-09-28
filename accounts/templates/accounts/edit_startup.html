@@ -9,43 +9,12 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'accounts/css/startup_form.css' %}">
 
-<!-- ДЕБАГ ПАНЕЛЬ -->
-<div id="debugPanel" style="position: fixed; top: 10px; right: 10px; background: #000; color: #0f0; padding: 10px; font-family: monospace; font-size: 12px; z-index: 9999; max-width: 400px; max-height: 300px; overflow: auto; border: 2px solid #0f0;">
-    <div><strong>ДЕБАГ ПАНЕЛЬ</strong></div>
-    <div id="debugInfo">Загрузка...</div>
-    <button onclick="clearDebug()" style="background: #f00; color: #fff; border: none; padding: 5px; margin-top: 5px;">Очистить</button>
-</div>
 
 <script>
-let debugInfo = [];
-function addDebug(message) {
-    const timestamp = new Date().toLocaleTimeString();
-    debugInfo.push(`[${timestamp}] ${message}`);
-    updateDebugDisplay();
-    console.log(`[DEBUG] ${message}`);
-}
 
-function updateDebugDisplay() {
-    const debugDiv = document.getElementById('debugInfo');
-    if (debugDiv) {
-        debugDiv.innerHTML = debugInfo.slice(-20).join('<br>');
-    }
-}
-
-function clearDebug() {
-    debugInfo = [];
-    updateDebugDisplay();
-}
-
-// Дебаг при загрузке страницы
-addDebug('Страница загружена');
-addDebug('URL: ' + window.location.href);
-
-// Дебаг при отправке формы
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('startupForm');
     if (form) {
-        addDebug('Форма найдена');
         
         // Удаляем дублирующиеся креативы
         removeDuplicateCreatives();
@@ -56,51 +25,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const input = document.getElementById(inputId);
             if (input) {
                 input.addEventListener('change', function(e) {
-                    addDebug(`Файл выбран в ${inputId}: ${e.target.files.length} файлов`);
-                    for (let i = 0; i < e.target.files.length; i++) {
-                        addDebug(`  Файл ${i + 1}: ${e.target.files[i].name} (${e.target.files[i].size} байт)`);
-                    }
-                    
-                    // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Сохраняем файлы в глобальную переменную
+                    // Сохраняем файлы в глобальную переменную
                     window.selectedFiles = window.selectedFiles || {};
                     window.selectedFiles[inputId] = e.target.files;
-                    
-                    addDebug(`✅ Файлы готовы к отправке в ${inputId}: ${e.target.files.length} файлов`);
-                    addDebug(`💾 Файлы сохранены в глобальной переменной для ${inputId}`);
-                    
-                    // ДОПОЛНИТЕЛЬНАЯ ПРОВЕРКА: Проверяем файлы сразу после выбора
-                    const input = document.getElementById(inputId);
-                    if (input) {
-                        addDebug(`🔍 ПРОВЕРКА СРАЗУ ПОСЛЕ ВЫБОРА: ${inputId} содержит ${input.files.length} файлов`);
-                        if (input.files.length > 0) {
-                            for (let i = 0; i < input.files.length; i++) {
-                                addDebug(`  Файл ${i + 1}: ${input.files[i].name} (${input.files[i].size} байт)`);
-                            }
-                        }
-                    }
                 });
             }
         });
         
         form.addEventListener('submit', function(e) {
             e.preventDefault(); // Предотвращаем обычную отправку формы
-            addDebug('=== НАЧАЛО ОТПРАВКИ ФОРМЫ ===');
-            addDebug('Форма отправляется...');
-            addDebug('Время: ' + new Date().toISOString());
             
-            // Проверяем поля формы
-            const planetField = document.getElementById('id_planet_image');
-            if (planetField) {
-                addDebug('Поле планеты: ' + planetField.value);
-            }
-            
-            const titleField = document.querySelector('[name="title"]');
-            if (titleField) {
-                addDebug('Поле title: ' + titleField.value);
-            }
-            
-            // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Восстанавливаем файлы из глобальной переменной
-            addDebug(`=== КРИТИЧЕСКОЕ ВОССТАНОВЛЕНИЕ ФАЙЛОВ ===`);
+            // Восстанавливаем файлы из глобальной переменной
             
             // Восстанавливаем файлы для каждого input'а
             const fileInputIds = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input'];
@@ -113,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         dataTransfer.items.add(window.selectedFiles[inputId][i]);
                     }
                     input.files = dataTransfer.files;
-                    addDebug(`🔄 Восстановлены файлы для ${inputId}: ${input.files.length} файлов`);
                 }
             });
             
@@ -123,122 +57,31 @@ document.addEventListener('DOMContentLoaded', function() {
             const videoInput = document.getElementById('id_video_input');
             const logoInput = document.getElementById('id_logo_input');
             
-            addDebug(`=== ПРОВЕРКА ФАЙЛОВ ПОСЛЕ ВОССТАНОВЛЕНИЯ ===`);
-            addDebug(`Файловый input id_creatives_input: ${creativesInput ? creativesInput.files.length : 'не найден'} файлов`);
-            addDebug(`Файловый input id_proofs_input: ${proofsInput ? proofsInput.files.length : 'не найден'} файлов`);
-            addDebug(`Файловый input id_video_input: ${videoInput ? videoInput.files.length : 'не найден'} файлов`);
-            addDebug(`Файловый input id_logo_input: ${logoInput ? logoInput.files.length : 'не найден'} файлов`);
-            addDebug(`=== КОНЕЦ ПРОВЕРКИ ===`);
             
             // Проверка лимитов файлов
                    
                    if (creativesInput && creativesInput.files.length > 3) {
-                       addDebug('❌ ОШИБКА: Максимально 3 изображения');
                        alert('Максимально 3 изображения');
                        return;
                    }
                    
                    if (proofsInput && proofsInput.files.length > 15) {
-                       addDebug('❌ ОШИБКА: Максимально 15 документов');
                        alert('Максимально 15 документов');
                        return;
                    }
                    
                    if (videoInput && videoInput.files.length > 1) {
-                       addDebug('❌ ОШИБКА: Максимально 1 видео');
                        alert('Максимально 1 видео');
                        return;
                    }
                    
-                   // Теперь создаем FormData после проверки файлов
+                   // Создаем FormData после проверки файлов
                    const formData = new FormData(form);
-                   addDebug('FormData создан из формы');
                    
-                    // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Ищем ВСЕ file input'ы на странице
-                    const allFileInputs = document.querySelectorAll('input[type="file"]');
-                    addDebug(`Найдено ${allFileInputs.length} file input'ов на странице`);
-                    
-                    allFileInputs.forEach((input, index) => {
-                        addDebug(`File input ${index + 1}: id="${input.id}", name="${input.name}", files=${input.files.length}`);
-                        
-                        if (input.files.length > 0) {
-                            const fieldName = input.name || input.id.replace('id_', '').replace('_input', '');
-                            addDebug(`✅ Найден файл в ${input.id}: ${input.files.length} файлов`);
-                            
-                            // Удаляем старые значения
-                            formData.delete(fieldName);
-                            
-                            // Добавляем новые файлы
-                            for (let i = 0; i < input.files.length; i++) {
-                                formData.append(fieldName, input.files[i]);
-                                addDebug(`✅ Добавлен файл ${i+1}: ${input.files[i].name} (${input.files[i].size} байт)`);
-                            }
-                            addDebug(`✅ Вручную добавлено ${input.files.length} файлов из ${input.id}`);
-                        } else {
-                            addDebug(`❌ Нет файлов в ${input.id}`);
-                        }
-                    });
-                    
-                    // ДОПОЛНИТЕЛЬНАЯ ПРОВЕРКА: Ищем видимые input'ы
-                    const visibleInputs = document.querySelectorAll('input[type="file"]:not([style*="display: none"]):not([style*="opacity: 0"])');
-                    addDebug(`Найдено ${visibleInputs.length} видимых file input'ов`);
-                    
-                    visibleInputs.forEach((input, index) => {
-                        addDebug(`Видимый input ${index + 1}: id="${input.id}", name="${input.name}", files=${input.files.length}`);
-                        
-                        if (input.files.length > 0) {
-                            const fieldName = input.name || input.id.replace('id_', '').replace('_input', '');
-                            addDebug(`✅ Найден файл в видимом ${input.id}: ${input.files.length} файлов`);
-                            
-                            // Удаляем старые значения
-                            formData.delete(fieldName);
-                            
-                            // Добавляем новые файлы
-                            for (let i = 0; i < input.files.length; i++) {
-                                formData.append(fieldName, input.files[i]);
-                                addDebug(`✅ Добавлен файл ${i+1}: ${input.files[i].name} (${input.files[i].size} байт)`);
-                            }
-                            addDebug(`✅ Вручную добавлено ${input.files.length} файлов из видимого ${input.id}`);
-                        }
-                    });
             
-            addDebug('Данные формы:');
-            for (let [key, value] of formData.entries()) {
-                if (typeof value === 'object' && value.name) {
-                    addDebug(`  ${key}: ${value.name} (файл)`);
-                } else {
-                    addDebug(`  ${key}: ${value}`);
-                }
-            }
             
             // Отправляем AJAX запрос
-            addDebug('Отправка AJAX запроса...');
-            addDebug('URL: ' + form.action);
-            addDebug('FormData размер: ' + formData.entries().length + ' полей');
             
-            // Детальная информация о файлах
-            const fileInputs = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input'];
-            fileInputs.forEach(inputId => {
-                const input = document.getElementById(inputId);
-                if (input) {
-                    addDebug(`Файловый input ${inputId}: ${input.files.length} файлов`);
-                    for (let i = 0; i < input.files.length; i++) {
-                        const file = input.files[i];
-                        addDebug(`  Файл ${i}: ${file.name} (${file.size} байт, ${file.type})`);
-                    }
-                }
-            });
-            
-            // Детальная информация о FormData
-            addDebug('=== ДЕТАЛЬНАЯ ИНФОРМАЦИЯ О FORMDATA ===');
-            for (let [key, value] of formData.entries()) {
-                if (value instanceof File) {
-                    addDebug(`FormData ${key}: File(${value.name}, ${value.size} байт, ${value.type})`);
-                } else {
-                    addDebug(`FormData ${key}: ${value}`);
-                }
-            }
-            addDebug('=== КОНЕЦ FORMDATA ===');
             
             fetch(form.action, {
                 method: 'POST',
@@ -248,100 +91,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then(response => {
-                addDebug('AJAX ответ получен: ' + response.status);
-                addDebug('Response headers: ' + JSON.stringify([...response.headers.entries()]));
                 if (response.ok) {
-                    addDebug('Ответ успешный, парсим JSON...');
                     return response.json();
                 } else {
-                    addDebug('Ошибка ответа: ' + response.status);
                     return response.text().then(text => {
-                        addDebug('Текст ошибки: ' + text);
                         throw new Error('Ошибка сервера: ' + response.status);
                     });
                 }
             })
             .then(data => {
-                addDebug('=== ОТВЕТ СЕРВЕРА ===');
-                addDebug('Ответ сервера: ' + JSON.stringify(data));
-                
                 if (data.success) {
-                    addDebug('✅ СТАРТАП УСПЕШНО СОХРАНЕН!');
-                    
-                    // Детальная информация о файлах
-                    if (data.files_info) {
-                        addDebug('📁 ИНФОРМАЦИЯ О ФАЙЛАХ:');
-                        addDebug('  Логотип: ' + (data.files_info.logo_saved ? '✅ Сохранен' : '❌ Не сохранен'));
-                        addDebug('  Креативы: ' + (data.files_info.creatives_saved || 0) + ' файлов сохранено');
-                        addDebug('  Документы: ' + (data.files_info.proofs_saved || 0) + ' файлов сохранено');
-                        addDebug('  Видео: ' + (data.files_info.videos_saved || 0) + ' файлов сохранено');
-                    }
-                    
-                    // Информация о статусе
-                    if (data.status_info) {
-                        addDebug('📊 ИНФОРМАЦИЯ О СТАТУСЕ:');
-                        addDebug('  Предыдущий статус: ' + (data.status_info.previous_status || 'неизвестно'));
-                        addDebug('  Новый статус: ' + (data.status_info.new_status || 'неизвестно'));
-                        addDebug('  Статус изменился: ' + (data.status_info.status_changed ? '✅ Да' : '❌ Нет'));
-                        if (data.status_info.reason) {
-                            addDebug('  Причина изменения: ' + data.status_info.reason);
-                        }
-                    }
-                    
-                    // Информация о has_changes
-                    if (data.changes_info) {
-                        addDebug('🔄 ИНФОРМАЦИЯ ОБ ИЗМЕНЕНИЯХ:');
-                        addDebug('  has_changes: ' + (data.changes_info.has_changes ? '✅ True' : '❌ False'));
-                        addDebug('  Текстовые изменения: ' + (data.changes_info.text_changed ? '✅ Да' : '❌ Нет'));
-                        addDebug('  Файловые изменения: ' + (data.changes_info.files_changed ? '✅ Да' : '❌ Нет'));
-                        if (data.changes_info.files_details) {
-                            addDebug('  Детали файлов: ' + JSON.stringify(data.changes_info.files_details));
-                        }
-                    }
-                    
-                    addDebug('=== КОНЕЦ ОТВЕТА ===');
                     
                     if (data.redirect_url) {
-                        addDebug('🔄 Перенаправление на: ' + data.redirect_url);
                         window.location.href = data.redirect_url;
                     }
                 } else {
-                    addDebug('❌ ОШИБКА СОХРАНЕНИЯ:');
-                    addDebug('  Ошибка: ' + (data.error || 'Неизвестная ошибка'));
-                    if (data.errors) {
-                        addDebug('  Детали ошибок: ' + JSON.stringify(data.errors));
-                    }
+                    alert('Ошибка сохранения: ' + (data.error || 'Неизвестная ошибка'));
                 }
             })
             .catch(error => {
-                addDebug('=== AJAX ОШИБКА ===');
-                addDebug('Ошибка: ' + error.message);
-                addDebug('Stack: ' + error.stack);
-                addDebug('=== КОНЕЦ ОШИБКИ ===');
+                console.error('AJAX ошибка:', error);
+                alert('Ошибка отправки формы: ' + error.message);
             });
         });
     }
 });
 
-// Дебаг ошибок
-window.addEventListener('error', function(e) {
-    addDebug('ОШИБКА: ' + e.message);
-});
-
-// Дебаг AJAX запросов
-const originalFetch = window.fetch;
-window.fetch = function(...args) {
-    addDebug('AJAX запрос: ' + args[0]);
-    return originalFetch.apply(this, args)
-        .then(response => {
-            addDebug('AJAX ответ: ' + response.status);
-            return response;
-        })
-        .catch(error => {
-            addDebug('AJAX ошибка: ' + error.message);
-            throw error;
-        });
-};
 </script>
 
 <style>
@@ -688,18 +463,10 @@ function removeDuplicateCreatives() {
     });
     
     if (duplicatesRemoved > 0) {
-        addDebug(`Удалено ${duplicatesRemoved} дублирующихся креативов`);
         console.log(`Удалено ${duplicatesRemoved} дублирующихся креативов`);
     }
 }
 
-// Функция для очистки дебаг лога
-function clearDebug() {
-    const debugPanel = document.querySelector('.debug-panel');
-    if (debugPanel) {
-        debugPanel.innerHTML = '<strong>ДЕБАГ ПАНЕЛЬ</strong><br>Загрузка...';
-    }
-}
 </script>
 
 {% endblock %}
