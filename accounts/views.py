@@ -3419,7 +3419,7 @@ def create_startup(request):
                         logger.error(f"Ошибка сохранения креатива: {e}", exc_info=True)
                         messages.warning(request, "Не удалось сохранить один из креативов, но стартап создан.")
                         file_save_errors.append({"field": "creatives", "file": getattr(creative_file, "name", ""), "error": str(e)})
-            proofs = form.cleaned_data.get("proofs", [])
+            proofs = request.FILES.getlist("proofs")
             if proofs:
                 proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
@@ -3458,7 +3458,7 @@ def create_startup(request):
                         logger.error(f"Ошибка сохранения пруфа: {e}", exc_info=True)
                         messages.warning(request, "Не удалось сохранить один из документов, но стартап создан.")
                         file_save_errors.append({"field": "proofs", "file": getattr(proof_file, "name", ""), "error": str(e)})
-            videos = form.cleaned_data.get("video", [])
+            videos = request.FILES.getlist("video")
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
@@ -3607,7 +3607,7 @@ def create_franchise(request):
                     except Exception:
                         messages.warning(request, "Не удалось сохранить один из креативов, но франшиза создана.")
 
-            proofs = form.cleaned_data.get("proofs", [])
+            proofs = request.FILES.getlist("proofs")
             if proofs:
                 proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
@@ -4114,7 +4114,7 @@ def edit_startup(request, startup_id):
                 logo_ids = startup.logo_urls or []
                 print("ЛОГОТИП НЕ НАЙДЕН")
             # Обработка креативов
-            creatives = form.cleaned_data.get("creatives", [])
+            creatives = request.FILES.getlist("creatives")
             if creatives:
                 print(f"КРЕАТИВЫ НАЙДЕНЫ: {len(creatives)} файлов")
                 creative_type = FileTypes.objects.get(type_name="creative")
@@ -4145,7 +4145,7 @@ def edit_startup(request, startup_id):
             else:
                 creative_ids = startup.creative_urls or []
                 print("КРЕАТИВЫ НЕ НАЙДЕНЫ")
-            proofs = form.cleaned_data.get("proofs", [])
+            proofs = request.FILES.getlist("proofs")
             if proofs:
                 proof_type = FileTypes.objects.get(type_name="proof")
                 entity_type = EntityTypes.objects.get(type_name="startup")
@@ -4172,7 +4172,7 @@ def edit_startup(request, startup_id):
                     )
                     logger.info(f"Пруф сохранён с ID: {proof_id}")
                 # proofs_ids будут добавлены в конце функции
-            videos = form.cleaned_data.get("video", [])
+            videos = request.FILES.getlist("video")
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
                 entity_type = EntityTypes.objects.get(type_name="startup")

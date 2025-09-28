@@ -1,20 +1,6 @@
 from django import forms
 from .models import Comments, Directions, Roles, Startups, StartupStages, Users, ChatConversations, TransactionTypes, UserVotes, SupportTicket, Franchises, Agencies, Specialists
 from .utils import get_planet_urls
-class MultipleFileInput(forms.ClearableFileInput):
-    allow_multiple_selected = True
-class MultipleFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("widget", MultipleFileInput())
-        super().__init__(*args, **kwargs)
-    def clean(self, data, initial=None):
-        print(f"MultipleFileField.clean called with data: {data}")
-        if not data:
-            return []
-        if isinstance(data, (list, tuple)):
-            return [super().clean(d, initial) for d in data if d]
-        else:
-            return [super().clean(data, initial)] if data else []
 class RegisterForm(forms.ModelForm):
     hp_field = forms.CharField(required=False, label="", widget=forms.TextInput(attrs={
         "autocomplete": "off",
@@ -70,13 +56,13 @@ class StartupEditForm(forms.ModelForm):
         required=False,
         help_text="Загрузите новый логотип стартапа (изображение)",
     )
-    creatives = MultipleFileField(
+    creatives = forms.FileField(
         required=False, help_text="Загрузите новые изображения (до 3 файлов: PNG, JPEG)",
-        widget=MultipleFileInput(attrs={'accept': 'image/*'})
+        widget=forms.FileInput(attrs={'multiple': True, 'accept': 'image/*'})
     )
-    proofs = MultipleFileField(
+    proofs = forms.FileField(
         required=False, help_text="Загрузите новые документы (до 10 файлов: PDF, DOC, TXT)",
-        widget=MultipleFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
+        widget=forms.FileInput(attrs={'multiple': True, 'accept': '.pdf,.doc,.docx,.txt'})
     )
     direction = forms.ModelChoiceField(
         queryset=Directions.objects.none(), label="Направление *", required=True
@@ -87,8 +73,8 @@ class StartupEditForm(forms.ModelForm):
     micro_investment_available = forms.BooleanField(
         required=False, label="Микроинвестиции доступны"
     )
-    video = MultipleFileField(required=False, help_text="Загрузите новое видео (до 3 файлов: MP4, MOV)",
-        widget=MultipleFileInput(attrs={'accept': 'video/*'}))
+    video = forms.FileField(required=False, help_text="Загрузите новое видео (до 3 файлов: MP4, MOV)",
+        widget=forms.FileInput(attrs={'multiple': True, 'accept': 'video/*'}))
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
