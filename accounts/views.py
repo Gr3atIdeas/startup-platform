@@ -3976,8 +3976,8 @@ def edit_startup(request, startup_id):
             # Устанавливаем статус в зависимости от наличия изменений
             logger.info(f"has_changes: {has_changes}")
             if has_changes:
-                startup.status = "pending"
-                startup.is_edited = True
+            startup.status = "pending"
+            startup.is_edited = True
                 logger.info("Статус установлен: pending")
             else:
                 startup.status = "approved"
@@ -4080,21 +4080,21 @@ def edit_startup(request, startup_id):
                     if not hasattr(video, "name"):
                         logger.warning(f"Пропущено видео, так как это не файл: {video}")
                         continue
-                    unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
-                    video_id = str(uuid.uuid4())
+                unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
+                video_id = str(uuid.uuid4())
                     file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
-                    default_storage.save(file_path, video)
+                default_storage.save(file_path, video)
                     video_ids.append(video_id)
-                    safe_create_file_storage_instance(
-                        entity_type=entity_type,
-                        entity_id=startup.startup_id,
-                        file_type=video_type,
-                        file_url=video_id,
-                        uploaded_at=timezone.now(),
-                        startup=startup,
-                        original_file_name=unique_filename,
-                    )
-                    logger.info(f"Видео сохранено с ID: {video_id}")
+                safe_create_file_storage_instance(
+                    entity_type=entity_type,
+                    entity_id=startup.startup_id,
+                    file_type=video_type,
+                    file_url=video_id,
+                    uploaded_at=timezone.now(),
+                    startup=startup,
+                    original_file_name=unique_filename,
+                )
+                logger.info(f"Видео сохранено с ID: {video_id}")
                 # video_ids будут добавлены в конце функции
             startup.logo_urls = logo_ids
             # Обновляем URL файлов только если были загружены новые
@@ -4235,10 +4235,10 @@ def edit_startup(request, startup_id):
             
             # Разные сообщения в зависимости от статуса
             if 'has_changes' in locals() and has_changes:
-                messages.success(
-                    request,
-                    f'Стартап "{startup.title}" успешно отредактирован и отправлен на модерацию!',
-                )
+            messages.success(
+                request,
+                f'Стартап "{startup.title}" успешно отредактирован и отправлен на модерацию!',
+            )
             else:
                 messages.success(
                     request,

@@ -218,7 +218,15 @@ class StartupForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         try:
-            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
+            planet_urls = get_planet_urls()
+            self.fields["planet_image"].choices = [(p, p) for p in planet_urls]
+            
+            # Если у стартапа уже есть планета, добавляем её в choices если её там нет
+            if hasattr(self, 'instance') and self.instance and hasattr(self.instance, 'planet_image'):
+                current_planet = self.instance.planet_image
+                if current_planet and current_planet not in planet_urls:
+                    # Добавляем текущую планету в начало списка
+                    self.fields["planet_image"].choices = [(current_planet, current_planet)] + self.fields["planet_image"].choices
         except Exception as e:
             print(f"Error fetching planet URLs: {e}")
             self.fields["planet_image"].choices = []
