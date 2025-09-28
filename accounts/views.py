@@ -4345,8 +4345,8 @@ def edit_startup(request, startup_id):
                 }
                 
                 # Собираем информацию о статусе
-                previous_status = startup.status.status_name if startup.status else "неизвестно"
-                new_status = startup.status.status_name if startup.status else "неизвестно"
+                previous_status = startup.status_id.status_name if startup.status_id else "неизвестно"
+                new_status = startup.status_id.status_name if startup.status_id else "неизвестно"
                 status_changed = 'has_changes' in locals() and has_changes
                 
                 status_info = {
