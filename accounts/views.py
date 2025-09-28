@@ -3994,6 +3994,18 @@ def edit_startup(request, startup_id):
                             else:
                                 logger.info(f"  {field_name}: 1 файл")
                             break
+                
+                # Дополнительная проверка - если есть файлы в request.FILES, но нет в cleaned_data
+                if not has_changes and request.FILES:
+                    # Проверяем, есть ли файлы с реальным содержимым
+                    for key, file_list in request.FILES.lists():
+                        for file_obj in file_list:
+                            if file_obj.size > 0:  # Файл не пустой
+                                has_changes = True
+                                logger.info(f"Найден непустой файл {key}: {file_obj.name} ({file_obj.size} байт) - установлен has_changes = True")
+                                break
+                        if has_changes:
+                            break
             
             # Проверяем удалены ли файлы
             if not has_changes:
@@ -4022,6 +4034,12 @@ def edit_startup(request, startup_id):
                             # Новый этап - это изменение
                             has_changes = True
                             break
+            
+            # Принудительная проверка файлов - если есть файлы в request.FILES, устанавливаем has_changes = True
+            if request.FILES and not has_changes:
+                has_changes = True
+                logger.info("ПРИНУДИТЕЛЬНО установлен has_changes = True из-за наличия файлов в request.FILES")
+                print("ПРИНУДИТЕЛЬНО: has_changes = True (файлы в request.FILES)")
             
             # Устанавливаем статус в зависимости от наличия изменений
             logger.info(f"has_changes: {has_changes}")
