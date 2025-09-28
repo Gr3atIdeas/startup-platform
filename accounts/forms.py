@@ -61,7 +61,7 @@ class StartupEditForm(forms.ModelForm):
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     proofs = forms.FileField(
-        required=False, help_text="Загрузите новые документы (до 10 файлов: PDF, DOC, TXT)",
+        required=False, help_text="Загрузите новые документы (до 15 файлов: PDF, DOC, TXT)",
         widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
     )
     direction = forms.ModelChoiceField(
@@ -73,7 +73,7 @@ class StartupEditForm(forms.ModelForm):
     micro_investment_available = forms.BooleanField(
         required=False, label="Микроинвестиции доступны"
     )
-    video = forms.FileField(required=False, help_text="Загрузите новое видео (до 3 файлов: MP4, MOV)",
+    video = forms.FileField(required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
         widget=forms.ClearableFileInput(attrs={'accept': 'video/*'}))
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
@@ -175,7 +175,7 @@ class StartupForm(forms.ModelForm):
     micro_investment_available = forms.BooleanField(
         required=False, label="Микроинвестиции доступны"
     )
-    video = forms.FileField(required=True, help_text="Загрузите видео (до 3 файлов: MP4, MOV)")
+    video = forms.FileField(required=True, help_text="Загрузите видео (1 файл: MP4, MOV)")
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )

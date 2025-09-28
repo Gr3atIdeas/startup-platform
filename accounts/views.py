@@ -4146,6 +4146,22 @@ def edit_startup(request, startup_id):
                 print("ЛОГОТИП НЕ НАЙДЕН")
             # Обработка креативов
             creatives = request.FILES.getlist("creatives")
+            proofs = request.FILES.getlist("proofs")
+            videos = request.FILES.getlist("video")
+            
+            # Проверка лимитов файлов
+            if len(creatives) > 3:
+                messages.error(request, "Максимально 3 изображения")
+                return render(request, "accounts/edit_startup.html", {"form": form, "startup": startup, "timeline_steps": timeline_steps})
+            
+            if len(proofs) > 15:
+                messages.error(request, "Максимально 15 документов")
+                return render(request, "accounts/edit_startup.html", {"form": form, "startup": startup, "timeline_steps": timeline_steps})
+            
+            if len(videos) > 1:
+                messages.error(request, "Максимально 1 видео")
+                return render(request, "accounts/edit_startup.html", {"form": form, "startup": startup, "timeline_steps": timeline_steps})
+            
             if creatives:
                 print(f"КРЕАТИВЫ НАЙДЕНЫ: {len(creatives)} файлов")
                 creative_type = FileTypes.objects.get(type_name="creative")
@@ -4176,7 +4192,6 @@ def edit_startup(request, startup_id):
             else:
                 creative_ids = startup.creatives_urls or []
                 print("КРЕАТИВЫ НЕ НАЙДЕНЫ")
-            proofs = request.FILES.getlist("proofs")
             if proofs:
                 proof_type = FileTypes.objects.get(type_name="proof")
                 entity_type = EntityTypes.objects.get(type_name="startup")

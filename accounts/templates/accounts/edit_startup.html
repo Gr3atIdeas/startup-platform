@@ -84,21 +84,44 @@ document.addEventListener('DOMContentLoaded', function() {
             // Проверяем все поля формы
             const formData = new FormData(form);
             
-            // Вручную добавляем файлы в FormData (исправление проблемы с скрытыми input'ами)
-            const fileInputsForFormData = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input'];
-            fileInputsForFormData.forEach(inputId => {
-                const input = document.getElementById(inputId);
-                if (input && input.files.length > 0) {
-                    // Удаляем старые значения
-                    formData.delete(input.name || inputId.replace('id_', '').replace('_input', ''));
-                    
-                    // Добавляем новые файлы
-                    for (let i = 0; i < input.files.length; i++) {
-                        formData.append(input.name || inputId.replace('id_', '').replace('_input', ''), input.files[i]);
-                    }
-                    addDebug(`Вручную добавлено ${input.files.length} файлов из ${inputId}`);
-                }
-            });
+                   // Проверка лимитов файлов
+                   const creativesInput = document.getElementById('id_creatives_input');
+                   const proofsInput = document.getElementById('id_proofs_input');
+                   const videoInput = document.getElementById('id_video_input');
+                   
+                   if (creativesInput && creativesInput.files.length > 3) {
+                       addDebug('❌ ОШИБКА: Максимально 3 изображения');
+                       alert('Максимально 3 изображения');
+                       return;
+                   }
+                   
+                   if (proofsInput && proofsInput.files.length > 15) {
+                       addDebug('❌ ОШИБКА: Максимально 15 документов');
+                       alert('Максимально 15 документов');
+                       return;
+                   }
+                   
+                   if (videoInput && videoInput.files.length > 1) {
+                       addDebug('❌ ОШИБКА: Максимально 1 видео');
+                       alert('Максимально 1 видео');
+                       return;
+                   }
+                   
+                   // Вручную добавляем файлы в FormData (исправление проблемы с скрытыми input'ами)
+                   const fileInputsForFormData = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input'];
+                   fileInputsForFormData.forEach(inputId => {
+                       const input = document.getElementById(inputId);
+                       if (input && input.files.length > 0) {
+                           // Удаляем старые значения
+                           formData.delete(input.name || inputId.replace('id_', '').replace('_input', ''));
+                           
+                           // Добавляем новые файлы
+                           for (let i = 0; i < input.files.length; i++) {
+                               formData.append(input.name || inputId.replace('id_', '').replace('_input', ''), input.files[i]);
+                           }
+                           addDebug(`Вручную добавлено ${input.files.length} файлов из ${inputId}`);
+                       }
+                   });
             
             addDebug('Данные формы:');
             for (let [key, value] of formData.entries()) {
@@ -506,7 +529,7 @@ window.fetch = function(...args) {
                     <label for="id_proofs_input">*Документы (новые или для замены)</label>
                     {{ form.proofs|attr:"multiple:true"|attr:"id:id_proofs_input"|attr:"name:proofs"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
                     <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файл</div>
-                    <div class="small-text">Допустимый формат Doc, Excel, PDF (до 3 файлов)</div>
+                    <div class="small-text">Допустимый формат Doc, Excel, PDF (до 15 файлов)</div>
                     <div id="proofsPreview" class="file-preview-area">
                         {% for proof_url in startup.proofs_urls %}
                             <div class="file-preview-item existing-file" data-file-id="{{ proof_url }}">
