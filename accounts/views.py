@@ -4035,13 +4035,14 @@ def edit_startup(request, startup_id):
                 logo_id = str(uuid.uuid4())
                 file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{logo.name}"
                 default_storage.save(file_path, logo)
+                # Заменяем логотип (не добавляем)
                 logo_ids = [logo_id]
                 logger.info(f"Логотип сохранён с ID: {logo_id}")
             creatives = form.cleaned_data.get("creatives", [])
             if creatives:
                 creative_type = FileTypes.objects.get(type_name="creative")
                 entity_type = EntityTypes.objects.get(type_name="startup")
-                creatives_ids = []
+                # Не очищаем существующие файлы, добавляем новые
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
                         logger.warning(
@@ -4063,11 +4064,14 @@ def edit_startup(request, startup_id):
                         original_file_name=unique_filename,
                     )
                     logger.info(f"Креатив сохранён с ID: {creative_id}")
+                # Добавляем новые ID к существующим
+                startup.creatives_urls = (startup.creatives_urls or []) + creatives_ids
             proofs = form.cleaned_data.get("proofs", [])
             if proofs:
                 proof_type = FileTypes.objects.get(type_name="proof")
                 entity_type = EntityTypes.objects.get(type_name="startup")
                 proofs_ids = []
+                # Не очищаем существующие файлы, добавляем новые
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
                         logger.warning(
@@ -4089,31 +4093,36 @@ def edit_startup(request, startup_id):
                         original_file_name=unique_filename,
                     )
                     logger.info(f"Пруф сохранён с ID: {proof_id}")
-            video = form.cleaned_data.get("video")
-            if video:
-                unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
-                video_id = str(uuid.uuid4())
-                file_path = (
-                    f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
-                )
-                default_storage.save(file_path, video)
-                video_ids = [video_id]
+                # Добавляем новые ID к существующим
+                startup.proofs_urls = (startup.proofs_urls or []) + proofs_ids
+            videos = form.cleaned_data.get("video", [])
+            if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
                 entity_type = EntityTypes.objects.get(type_name="startup")
-                safe_create_file_storage_instance(
-                    entity_type=entity_type,
-                    entity_id=startup.startup_id,
-                    file_type=video_type,
-                    file_url=video_id,
-                    uploaded_at=timezone.now(),
-                    startup=startup,
-                    original_file_name=unique_filename,
-                )
-                logger.info(f"Видео сохранено с ID: {video_id}")
+                video_ids = []
+                for video in videos:
+                    if not hasattr(video, "name"):
+                        logger.warning(f"Пропущено видео, так как это не файл: {video}")
+                        continue
+                    unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
+                    video_id = str(uuid.uuid4())
+                    file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
+                    default_storage.save(file_path, video)
+                    video_ids.append(video_id)
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=startup.startup_id,
+                        file_type=video_type,
+                        file_url=video_id,
+                        uploaded_at=timezone.now(),
+                        startup=startup,
+                        original_file_name=unique_filename,
+                    )
+                    logger.info(f"Видео сохранено с ID: {video_id}")
+                # Добавляем новые ID к существующим
+                startup.video_urls = (startup.video_urls or []) + video_ids
             startup.logo_urls = logo_ids
-            startup.creatives_urls = creatives_ids
-            startup.proofs_urls = proofs_ids
-            startup.video_urls = video_ids
+            # creatives_urls, proofs_urls, video_urls уже обновлены выше
             startup.save()
             logger.info("=== Обновление стартапа ===")
             logger.info(f"Стартап ID: {startup.startup_id}")
