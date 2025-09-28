@@ -4082,9 +4082,9 @@ def edit_startup(request, startup_id):
                         continue
                 unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
                 video_id = str(uuid.uuid4())
-                    file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
+                file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
                 default_storage.save(file_path, video)
-                    video_ids.append(video_id)
+                video_ids.append(video_id)
                 safe_create_file_storage_instance(
                     entity_type=entity_type,
                     entity_id=startup.startup_id,
