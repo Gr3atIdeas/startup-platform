@@ -3903,11 +3903,101 @@ def edit_startup(request, startup_id):
     timeline = StartupTimeline.objects.filter(startup=startup)
     timeline_steps = timeline
     if request.method == "POST":
+        # Сохраняем оригинальные данные для сравнения
+        original_data = {
+            'title': startup.title,
+            'short_description': startup.short_description,
+            'description': startup.description,
+            'terms': startup.terms,
+            'funding_goal': startup.funding_goal,
+            'amount_raised': startup.amount_raised,
+            'valuation': startup.valuation,
+            'pitch_deck_url': startup.pitch_deck_url,
+            'direction': startup.direction,
+            'stage': startup.stage,
+            'micro_investment_available': startup.micro_investment_available,
+            'investment_type': 'invest' if startup.only_invest else ('buy' if startup.only_buy else 'both'),
+            'planet_image': startup.planet_image,
+        }
+        
         form = StartupEditForm(request.POST, request.FILES, instance=startup)
         if form.is_valid():
             startup = form.save(commit=False)
-            startup.status = "pending"
-            startup.is_edited = True
+            
+            # Проверяем были ли изменения в основных полях
+            has_changes = False
+            new_data = {
+                'title': form.cleaned_data.get('title'),
+                'short_description': form.cleaned_data.get('short_description'),
+                'description': form.cleaned_data.get('description'),
+                'terms': form.cleaned_data.get('terms'),
+                'funding_goal': form.cleaned_data.get('funding_goal'),
+                'amount_raised': form.cleaned_data.get('amount_raised'),
+                'valuation': form.cleaned_data.get('valuation'),
+                'pitch_deck_url': form.cleaned_data.get('pitch_deck_url'),
+                'direction': form.cleaned_data.get('direction'),
+                'stage': form.cleaned_data.get('stage'),
+                'micro_investment_available': form.cleaned_data.get('micro_investment_available'),
+                'investment_type': form.cleaned_data.get('investment_type'),
+                'planet_image': form.cleaned_data.get('planet_image'),
+            }
+            
+            # Сравниваем данные
+            for key, new_value in new_data.items():
+                if key == 'direction':
+                    original_value = original_data[key].id if original_data[key] else None
+                    new_value = new_value.id if new_value else None
+                elif key == 'stage':
+                    original_value = original_data[key].id if original_data[key] else None
+                    new_value = new_value.id if new_value else None
+                else:
+                    original_value = original_data[key]
+                
+                if original_value != new_value:
+                    has_changes = True
+                    break
+            
+            # Проверяем загружены ли новые файлы
+            if not has_changes:
+                if form.cleaned_data.get('logo') or form.cleaned_data.get('creatives') or form.cleaned_data.get('proofs') or form.cleaned_data.get('video'):
+                    has_changes = True
+            
+            # Проверяем удалены ли файлы
+            if not has_changes:
+                deleted_files_json = request.POST.get('deleted_files', '[]')
+                try:
+                    deleted_files = json.loads(deleted_files_json)
+                    if deleted_files:
+                        has_changes = True
+                except json.JSONDecodeError:
+                    pass
+            
+            # Проверяем изменения в этапах
+            if not has_changes:
+                for i in range(1, 6):
+                    description = request.POST.get(f"step_description_{i}", "").strip()
+                    if description:
+                        try:
+                            timeline_entry = StartupTimeline.objects.get(
+                                startup=startup,
+                                step_number=i
+                            )
+                            if timeline_entry.description != description:
+                                has_changes = True
+                                break
+                        except StartupTimeline.DoesNotExist:
+                            # Новый этап - это изменение
+                            has_changes = True
+                            break
+            
+            # Устанавливаем статус в зависимости от наличия изменений
+            if has_changes:
+                startup.status = "pending"
+                startup.is_edited = True
+            else:
+                startup.status = "approved"
+                startup.is_edited = False
+            
             startup.updated_at = timezone.now()
             if "step_number" in request.POST:
                 new_step = int(request.POST.get("step_number"))
@@ -4136,10 +4226,18 @@ def edit_startup(request, startup_id):
                     "success": True,
                     "redirect_url": reverse("profile"),
                 })
-            messages.success(
-                request,
-                f'Стартап "{startup.title}" успешно отредактирован и отправлен на модерацию!',
-            )
+            
+            # Разные сообщения в зависимости от статуса
+            if has_changes:
+                messages.success(
+                    request,
+                    f'Стартап "{startup.title}" успешно отредактирован и отправлен на модерацию!',
+                )
+            else:
+                messages.success(
+                    request,
+                    f'Стартап "{startup.title}" сохранен без изменений и остался в каталоге!',
+                )
             return redirect("profile")
         else:
             if request.headers.get("x-requested-with") == "XMLHttpRequest":

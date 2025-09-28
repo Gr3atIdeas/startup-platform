@@ -340,7 +340,7 @@ html, body { overflow-x: hidden; }
 
 .media-and-finance-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); 
+  grid-template-columns: 1fr 1fr; 
   gap: 45px; 
   align-items: flex-start;
 }

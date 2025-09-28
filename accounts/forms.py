@@ -130,7 +130,7 @@ class StartupEditForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "1"}),
     )
     amount_raised = forms.IntegerField(
-        label="Цель",
+        label="Собранная сумма (₽)",
         required=False,
         widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "Введите сумму"}),
     )
