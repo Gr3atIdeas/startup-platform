@@ -4105,7 +4105,7 @@ def edit_startup(request, startup_id):
             video_ids = []
             logger.info("Переменные инициализированы")
             # Обработка логотипа
-            logo = form.cleaned_data.get("logo")
+            logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
                 file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{logo.name}"
@@ -4118,7 +4118,7 @@ def edit_startup(request, startup_id):
                 logo_ids = startup.logo_urls or []
                 print("ЛОГОТИП НЕ НАЙДЕН")
             # Обработка креативов
-            creatives = form.cleaned_data.get("creatives", [])
+            creatives = request.FILES.getlist("creatives")
             if creatives:
                 print(f"КРЕАТИВЫ НАЙДЕНЫ: {len(creatives)} файлов")
                 creative_type = FileTypes.objects.get(type_name="creative")
