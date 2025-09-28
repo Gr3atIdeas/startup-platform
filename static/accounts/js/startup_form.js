@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   function validateFormClientSide() {
     var hasError = false
-    var isEditPage = window.location.pathname.includes('/edit/')
+    var isEditPage = window.location.pathname.includes('/edit/') || window.location.pathname.includes('/edit-startup/')
     
     var requiredSelectors = [
       "[name='title']",

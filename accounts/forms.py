@@ -130,7 +130,7 @@ class StartupEditForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "1"}),
     )
     amount_raised = forms.IntegerField(
-        label="Сумма привлечения",
+        label="Цель",
         required=False,
         widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "Введите сумму"}),
     )
@@ -160,13 +160,11 @@ class StartupEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["direction"].queryset = Directions.objects.all()
-        self.fields["planet_image"].choices = [
-            ("planet1", "Планета 1"),
-            ("planet2", "Планета 2"),
-            ("planet3", "Планета 3"),
-            ("planet4", "Планета 4"),
-            ("planet5", "Планета 5"),
-        ]
+        try:
+            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
+        except Exception as e:
+            print(f"Error fetching planet URLs: {e}")
+            self.fields["planet_image"].choices = []
 
 class StartupForm(forms.ModelForm):
     logo = forms.ImageField(
