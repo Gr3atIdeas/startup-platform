@@ -4036,10 +4036,15 @@ def edit_startup(request, startup_id):
                             break
             
             # Принудительная проверка файлов - если есть файлы в request.FILES, устанавливаем has_changes = True
-            if request.FILES and not has_changes:
+            if request.FILES:
                 has_changes = True
                 logger.info("ПРИНУДИТЕЛЬНО установлен has_changes = True из-за наличия файлов в request.FILES")
                 print("ПРИНУДИТЕЛЬНО: has_changes = True (файлы в request.FILES)")
+                print(f"Количество файлов: {len(request.FILES)}")
+                for key, file_list in request.FILES.lists():
+                    print(f"  {key}: {len(file_list)} файлов")
+                    for i, file_obj in enumerate(file_list):
+                        print(f"    Файл {i}: {file_obj.name} ({file_obj.size} байт)")
             
             # Устанавливаем статус в зависимости от наличия изменений
             logger.info(f"has_changes: {has_changes}")
@@ -4092,16 +4097,23 @@ def edit_startup(request, startup_id):
             proofs_ids = []
             video_ids = []
             logger.info("Переменные инициализированы")
-            logo = form.cleaned_data.get("logo")
-            if logo:
+            # Обработка логотипа - приоритет request.FILES
+            logo = request.FILES.get("logo") or form.cleaned_data.get("logo")
+            if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
                 file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{logo.name}"
                 default_storage.save(file_path, logo)
                 # Заменяем логотип (не добавляем)
                 logo_ids = [logo_id]
                 logger.info(f"Логотип сохранён с ID: {logo_id}")
-            creatives = form.cleaned_data.get("creatives", [])
+                print(f"ЛОГОТИП СОХРАНЕН: {logo.name} ({logo.size} байт)")
+            else:
+                logo_ids = startup.logo_urls or []
+                print("ЛОГОТИП НЕ НАЙДЕН")
+            # Обработка креативов - приоритет request.FILES
+            creatives = request.FILES.getlist("creatives") or form.cleaned_data.get("creatives", [])
             if creatives:
+                print(f"КРЕАТИВЫ НАЙДЕНЫ: {len(creatives)} файлов")
                 creative_type = FileTypes.objects.get(type_name="creative")
                 entity_type = EntityTypes.objects.get(type_name="startup")
                 # Не очищаем существующие файлы, добавляем новые
