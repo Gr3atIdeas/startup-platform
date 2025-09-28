@@ -305,8 +305,12 @@ document.addEventListener('DOMContentLoaded', function () {
       "[name='short_description']",
       "[name='description']",
       "[name='terms']",
-      "#id_planet_image",
     ]
+    
+    // Планета обязательна только при создании, не при редактировании
+    if (!isEditPage) {
+      requiredSelectors.push("#id_planet_image")
+    }
     requiredSelectors.forEach(function (sel) {
       var el = document.querySelector(sel)
       if (!el) return

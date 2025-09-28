@@ -99,7 +99,7 @@ class StartupEditForm(forms.ModelForm):
     )
     planet_image = forms.ChoiceField(
         choices=[],
-        label="Выберите планету *",
+        label="Выберите планету",
         required=False,
         widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
     )
@@ -200,7 +200,7 @@ class StartupForm(forms.ModelForm):
     )
     planet_image = forms.ChoiceField(
         choices=[],
-        label="Выберите планету *",
+        label="Выберите планету",
         required=False,
         widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
     )
