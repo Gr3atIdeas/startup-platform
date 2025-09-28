@@ -132,6 +132,18 @@ document.addEventListener('DOMContentLoaded', function() {
                            addDebug(`❌ Input ${inputId} не найден`);
                        }
                    });
+                   
+                   // Дополнительная проверка - ищем все input[type="file"] на странице
+                   const allFileInputs = document.querySelectorAll('input[type="file"]');
+                   addDebug(`Найдено ${allFileInputs.length} file input'ов на странице`);
+                   allFileInputs.forEach((input, index) => {
+                       addDebug(`File input ${index + 1}: id="${input.id}", name="${input.name}", files=${input.files.length}`);
+                       if (input.files.length > 0) {
+                           for (let i = 0; i < input.files.length; i++) {
+                               addDebug(`  Файл ${i+1}: ${input.files[i].name} (${input.files[i].size} байт)`);
+                           }
+                       }
+                   });
             
             addDebug('Данные формы:');
             for (let [key, value] of formData.entries()) {
