@@ -9,6 +9,93 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'accounts/css/startup_form.css' %}">
 
+<!-- ДЕБАГ ПАНЕЛЬ -->
+<div id="debugPanel" style="position: fixed; top: 10px; right: 10px; background: #000; color: #0f0; padding: 10px; font-family: monospace; font-size: 12px; z-index: 9999; max-width: 400px; max-height: 300px; overflow: auto; border: 2px solid #0f0;">
+    <div><strong>ДЕБАГ ПАНЕЛЬ</strong></div>
+    <div id="debugInfo">Загрузка...</div>
+    <button onclick="clearDebug()" style="background: #f00; color: #fff; border: none; padding: 5px; margin-top: 5px;">Очистить</button>
+</div>
+
+<script>
+let debugInfo = [];
+function addDebug(message) {
+    const timestamp = new Date().toLocaleTimeString();
+    debugInfo.push(`[${timestamp}] ${message}`);
+    updateDebugDisplay();
+    console.log(`[DEBUG] ${message}`);
+}
+
+function updateDebugDisplay() {
+    const debugDiv = document.getElementById('debugInfo');
+    if (debugDiv) {
+        debugDiv.innerHTML = debugInfo.slice(-20).join('<br>');
+    }
+}
+
+function clearDebug() {
+    debugInfo = [];
+    updateDebugDisplay();
+}
+
+// Дебаг при загрузке страницы
+addDebug('Страница загружена');
+addDebug('URL: ' + window.location.href);
+
+// Дебаг при отправке формы
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('startupForm');
+    if (form) {
+        addDebug('Форма найдена');
+        
+        form.addEventListener('submit', function(e) {
+            addDebug('Форма отправляется...');
+            
+            // Проверяем поля формы
+            const planetField = document.getElementById('id_planet_image');
+            if (planetField) {
+                addDebug('Поле планеты: ' + planetField.value);
+            }
+            
+            const titleField = document.querySelector('[name="title"]');
+            if (titleField) {
+                addDebug('Поле title: ' + titleField.value);
+            }
+            
+            // Проверяем все поля формы
+            const formData = new FormData(form);
+            addDebug('Данные формы:');
+            for (let [key, value] of formData.entries()) {
+                if (typeof value === 'object' && value.name) {
+                    addDebug(`  ${key}: ${value.name} (файл)`);
+                } else {
+                    addDebug(`  ${key}: ${value}`);
+                }
+            }
+        });
+    }
+});
+
+// Дебаг ошибок
+window.addEventListener('error', function(e) {
+    addDebug('ОШИБКА: ' + e.message);
+});
+
+// Дебаг AJAX запросов
+const originalFetch = window.fetch;
+window.fetch = function(...args) {
+    addDebug('AJAX запрос: ' + args[0]);
+    return originalFetch.apply(this, args)
+        .then(response => {
+            addDebug('AJAX ответ: ' + response.status);
+            return response;
+        })
+        .catch(error => {
+            addDebug('AJAX ошибка: ' + error.message);
+            throw error;
+        });
+};
+</script>
+
 <style>
 /* Небольшие правки для стабильности в редактировании */
 .presentation-finance-group .form-control { max-width: 100% !important; }

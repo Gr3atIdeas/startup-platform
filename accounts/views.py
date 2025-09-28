@@ -3920,8 +3920,10 @@ def edit_startup(request, startup_id):
         
         if form.is_valid():
             logger.info("=== ФОРМА ВАЛИДНА ===")
+            logger.info(f"Form data: {form.cleaned_data}")
             startup = form.save(commit=False)
             logger.info(f"Стартап загружен: {startup.startup_id}")
+            logger.info(f"Planet image value: {startup.planet_image}")
             
             # Проверяем были ли изменения
             has_changes = False
@@ -4245,6 +4247,8 @@ def edit_startup(request, startup_id):
             return redirect("profile")
         else:
             logger.info("=== ФОРМА НЕ ВАЛИДНА ===")
+            logger.info(f"Form errors: {form.errors}")
+            logger.info(f"Form data: {request.POST}")
             for field, errors in form.errors.items():
                 logger.error(f"Поле {field}: {errors}")
             logger.info("=== ФОРМА НЕ ВАЛИДНА ===")
