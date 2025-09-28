@@ -4080,21 +4080,21 @@ def edit_startup(request, startup_id):
                     if not hasattr(video, "name"):
                         logger.warning(f"Пропущено видео, так как это не файл: {video}")
                         continue
-                unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
-                video_id = str(uuid.uuid4())
-                file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
-                default_storage.save(file_path, video)
-                video_ids.append(video_id)
-                safe_create_file_storage_instance(
-                    entity_type=entity_type,
-                    entity_id=startup.startup_id,
-                    file_type=video_type,
-                    file_url=video_id,
-                    uploaded_at=timezone.now(),
-                    startup=startup,
-                    original_file_name=unique_filename,
-                )
-                logger.info(f"Видео сохранено с ID: {video_id}")
+                    unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
+                    video_id = str(uuid.uuid4())
+                    file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
+                    default_storage.save(file_path, video)
+                    video_ids.append(video_id)
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=startup.startup_id,
+                        file_type=video_type,
+                        file_url=video_id,
+                        uploaded_at=timezone.now(),
+                        startup=startup,
+                        original_file_name=unique_filename,
+                    )
+                    logger.info(f"Видео сохранено с ID: {video_id}")
                 # video_ids будут добавлены в конце функции
             startup.logo_urls = logo_ids
             # Обновляем URL файлов только если были загружены новые
@@ -4177,9 +4177,17 @@ def edit_startup(request, startup_id):
                         )
             else:
                 logger.info("Пруфы не загружены")
-            if video:
-                logger.info(f"Видео: {video.name}, размер: {video.size} байт")
-                logger.info(f"ID видео: {video_ids[0] if video_ids else 'Не сохранён'}")
+            if videos:
+                logger.info(f"Видео: {len(videos)} файлов")
+                for i, video_file in enumerate(videos, 1):
+                    if hasattr(video_file, "name"):
+                        logger.info(
+                            f"Видео {i}: {video_file.name}, размер: {video_file.size} байт"
+                        )
+                    else:
+                        logger.info(
+                            f"Видео {i}: Неверный формат (не файл): {video_file}"
+                        )
             else:
                 logger.info("Видео не загружено")
             logger.info("=== Переменные окружения ===")
