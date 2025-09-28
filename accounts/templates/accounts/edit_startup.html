@@ -85,8 +85,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = new FormData(form);
             
             // Вручную добавляем файлы в FormData (исправление проблемы с скрытыми input'ами)
-            const fileInputs = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input'];
-            fileInputs.forEach(inputId => {
+            const fileInputsForFormData = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input'];
+            fileInputsForFormData.forEach(inputId => {
                 const input = document.getElementById(inputId);
                 if (input && input.files.length > 0) {
                     // Удаляем старые значения
