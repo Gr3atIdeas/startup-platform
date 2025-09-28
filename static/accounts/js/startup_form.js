@@ -258,6 +258,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   function validateFormClientSide() {
     var hasError = false
+    var isEditPage = window.location.pathname.includes('/edit/')
+    
     var requiredSelectors = [
       "[name='title']",
       "[name='direction']",
@@ -278,42 +280,72 @@ document.addEventListener('DOMContentLoaded', function () {
         showFieldError(el, 'Это поле обязательно')
       }
     })
-    var creativesInput = document.getElementById('id_creatives_input')
-    var videoInput = document.getElementById('id_video_input')
-    var proofsInput = document.getElementById('id_proofs_input')
-    if (creativesInput) {
-      var c = creativesInput.files ? creativesInput.files.length : 0
-      if (c < 1) {
-        hasError = true
-        showFieldError(creativesInput, 'Добавьте хотя бы 1 изображение (до 3)')
-      } else if (c > 3) {
+    
+    // Валидация файлов только для создания, не для редактирования
+    if (!isEditPage) {
+      var creativesInput = document.getElementById('id_creatives_input')
+      var videoInput = document.getElementById('id_video_input')
+      var proofsInput = document.getElementById('id_proofs_input')
+      if (creativesInput) {
+        var c = creativesInput.files ? creativesInput.files.length : 0
+        if (c < 1) {
+          hasError = true
+          showFieldError(creativesInput, 'Добавьте хотя бы 1 изображение (до 3)')
+        } else if (c > 3) {
+          hasError = true
+          showFieldError(creativesInput, 'Не более 3 изображений')
+        } else {
+          clearFieldError(creativesInput)
+        }
+      }
+      if (videoInput) {
+        var v = videoInput.files ? videoInput.files.length : 0
+        if (v < 1) {
+          hasError = true
+          showFieldError(videoInput, 'Добавьте хотя бы 1 видео (до 3)')
+        } else if (v > 3) {
+          hasError = true
+          showFieldError(videoInput, 'Не более 3 видео')
+        } else {
+          clearFieldError(videoInput)
+        }
+      }
+      if (proofsInput) {
+        var p = proofsInput.files ? proofsInput.files.length : 0
+        if (p < 1) {
+          hasError = true
+          showFieldError(proofsInput, 'Добавьте хотя бы 1 документ (до 10)')
+        } else if (p > 10) {
+          hasError = true
+          showFieldError(proofsInput, 'Не более 10 документов')
+        } else {
+          clearFieldError(proofsInput)
+        }
+      }
+    } else {
+      // Для редактирования только проверяем лимиты, если файлы загружены
+      var creativesInput = document.getElementById('id_creatives_input')
+      var videoInput = document.getElementById('id_video_input')
+      var proofsInput = document.getElementById('id_proofs_input')
+      
+      if (creativesInput && creativesInput.files && creativesInput.files.length > 3) {
         hasError = true
         showFieldError(creativesInput, 'Не более 3 изображений')
-      } else {
+      } else if (creativesInput) {
         clearFieldError(creativesInput)
       }
-    }
-    if (videoInput) {
-      var v = videoInput.files ? videoInput.files.length : 0
-      if (v < 1) {
-        hasError = true
-        showFieldError(videoInput, 'Добавьте хотя бы 1 видео (до 3)')
-      } else if (v > 3) {
+      
+      if (videoInput && videoInput.files && videoInput.files.length > 3) {
         hasError = true
         showFieldError(videoInput, 'Не более 3 видео')
-      } else {
+      } else if (videoInput) {
         clearFieldError(videoInput)
       }
-    }
-    if (proofsInput) {
-      var p = proofsInput.files ? proofsInput.files.length : 0
-      if (p < 1) {
-        hasError = true
-        showFieldError(proofsInput, 'Добавьте хотя бы 1 документ (до 10)')
-      } else if (p > 10) {
+      
+      if (proofsInput && proofsInput.files && proofsInput.files.length > 10) {
         hasError = true
         showFieldError(proofsInput, 'Не более 10 документов')
-      } else {
+      } else if (proofsInput) {
         clearFieldError(proofsInput)
       }
     }

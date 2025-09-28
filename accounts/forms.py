@@ -114,6 +114,26 @@ class StartupEditForm(forms.ModelForm):
         required=True,
         widget=forms.Select(attrs={"class": "form-control"}),
     )
+    funding_goal = forms.IntegerField(
+        label="Цель финансирования *",
+        required=True,
+        widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "Введите сумму ₽"}),
+    )
+    pitch_deck_url = forms.URLField(
+        label="Ссылка на презентацию",
+        required=False,
+        widget=forms.URLInput(attrs={"class": "form-control", "placeholder": "URL"}),
+    )
+    valuation = forms.IntegerField(
+        label="Оценка",
+        required=False,
+        widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "1"}),
+    )
+    amount_raised = forms.IntegerField(
+        label="Сумма привлечения",
+        required=False,
+        widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "Введите сумму"}),
+    )
 
     class Meta:
         model = Startups
@@ -133,6 +153,7 @@ class StartupEditForm(forms.ModelForm):
             "pitch_deck_url",
             "valuation",
             "amount_raised",
+            "funding_goal",
             "terms",
         ]
 
