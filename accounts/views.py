@@ -4042,6 +4042,7 @@ def edit_startup(request, startup_id):
             if creatives:
                 creative_type = FileTypes.objects.get(type_name="creative")
                 entity_type = EntityTypes.objects.get(type_name="startup")
+                creatives_ids = []
                 # Не очищаем существующие файлы, добавляем новые
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
