@@ -7478,51 +7478,205 @@ def edit_franchise(request, franchise_id):
         return redirect("franchise_detail", franchise_id=franchise_id)
 
     if request.method == "POST":
+        # Сохраняем оригинальные данные для сравнения
+        original_data = {
+            'title': franchise.title,
+            'short_description': franchise.short_description,
+            'description': franchise.description,
+            'terms': franchise.terms,
+            'investment_size': franchise.investment_size,
+            'franchise_cost': franchise.franchise_cost,
+            'profit_calculation': franchise.profit_calculation,
+            'pitch_deck_url': franchise.pitch_deck_url,
+            'planet_image': franchise.planet_image,
+        }
+        
         form = FranchiseEditForm(request.POST, request.FILES, instance=franchise)
         
         if form.is_valid():
             franchise = form.save(commit=False)
             
-            # Обработка файлов
-            if 'logo' in request.FILES:
-                logo_file = request.FILES['logo']
-                if logo_file.size > 0:
-                    logo_id = str(uuid.uuid4())
-                    file_path = f"franchises/{franchise.franchise_id}/logos/{logo_id}_{logo_file.name}"
-                    default_storage.save(file_path, logo_file)
-                    franchise.logo_urls = [logo_id]
+            # Проверяем были ли изменения
+            has_changes = False
             
-            if 'creatives' in request.FILES:
-                creative_files = request.FILES.getlist('creatives')
-                creative_file_ids = []
-                for creative_file in creative_files:
-                    if creative_file.size > 0:
-                        creative_id = str(uuid.uuid4())
-                        file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{creative_file.name}"
-                        default_storage.save(file_path, creative_file)
-                        creative_file_ids.append(creative_id)
-                if creative_file_ids:
-                    franchise.creatives_urls = creative_file_ids
+            # Проверяем основные поля
+            if (franchise.title != original_data['title'] or 
+                franchise.short_description != original_data['short_description'] or
+                franchise.description != original_data['description'] or
+                franchise.terms != original_data['terms'] or
+                franchise.investment_size != original_data['investment_size'] or
+                franchise.franchise_cost != original_data['franchise_cost'] or
+                franchise.profit_calculation != original_data['profit_calculation'] or
+                franchise.pitch_deck_url != original_data['pitch_deck_url'] or
+                franchise.planet_image != original_data['planet_image']):
+                has_changes = True
             
-            if 'proofs' in request.FILES:
-                proof_files = request.FILES.getlist('proofs')
-                proof_file_ids = []
-                for proof_file in proof_files:
-                    if proof_file.size > 0:
-                        proof_id = str(uuid.uuid4())
-                        file_path = f"franchises/{franchise.franchise_id}/proofs/{proof_id}_{proof_file.name}"
-                        default_storage.save(file_path, proof_file)
-                        proof_file_ids.append(proof_id)
-                if proof_file_ids:
-                    franchise.proofs_urls = proof_file_ids
+            # Проверяем загружены ли новые файлы
+            if not has_changes:
+                if request.FILES:
+                    has_changes = True
             
-            if 'video' in request.FILES:
-                video_file = request.FILES['video']
-                if video_file.size > 0:
+            # Проверяем удалены ли файлы
+            if not has_changes:
+                deleted_files_json = request.POST.get('deleted_files', '[]')
+                try:
+                    deleted_files = json.loads(deleted_files_json)
+                    if deleted_files:
+                        has_changes = True
+                except json.JSONDecodeError:
+                    pass
+            
+            # Принудительная проверка файлов
+            if request.FILES:
+                has_changes = True
+            
+            # Устанавливаем статус в зависимости от наличия изменений
+            if has_changes and franchise.status == "approved":
+                franchise.status = "pending"
+                franchise.is_edited = True
+                franchise.save(update_fields=['status', 'is_edited'])
+            
+            franchise.updated_at = timezone.now()
+            franchise.save()
+            
+            logo_ids = franchise.logo_urls or []
+            creative_ids = []
+            proofs_ids = []
+            video_ids = []
+            
+            # Обработка логотипа
+            logo = request.FILES.get("logo")
+            if logo and logo.size > 0:
+                logo_id = str(uuid.uuid4())
+                file_path = f"franchises/{franchise.franchise_id}/logos/{logo_id}_{logo.name}"
+                default_storage.save(file_path, logo)
+                logo_ids = [logo_id]
+            
+            # Обработка креативов
+            creatives = request.FILES.getlist("creatives")
+            proofs = request.FILES.getlist("proofs")
+            videos = request.FILES.getlist("video")
+            
+            # Проверка лимитов файлов
+            if len(creatives) > 3:
+                messages.error(request, "Максимально 3 изображения")
+                return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
+            
+            if len(proofs) > 15:
+                messages.error(request, "Максимально 15 документов")
+                return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
+            
+            if len(videos) > 1:
+                messages.error(request, "Максимально 1 видео")
+                return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
+            
+            if creatives:
+                creative_type = FileTypes.objects.get(type_name="creative")
+                entity_type = EntityTypes.objects.get(type_name="franchise")
+                for creative_file in creatives:
+                    if not hasattr(creative_file, "name"):
+                        continue
+                    unique_filename = get_unique_filename(creative_file.name, franchise.franchise_id, "creative")
+                    creative_id = str(uuid.uuid4())
+                    file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{creative_file.name}"
+                    default_storage.save(file_path, creative_file)
+                    creative_ids.append(creative_id)
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=franchise.franchise_id,
+                        file_type=creative_type,
+                        file_url=creative_id,
+                        uploaded_at=timezone.now(),
+                        startup=franchise,
+                        original_file_name=unique_filename,
+                    )
+            else:
+                creative_ids = franchise.creatives_urls or []
+            
+            if proofs:
+                proof_type = FileTypes.objects.get(type_name="proof")
+                entity_type = EntityTypes.objects.get(type_name="franchise")
+                for proof_file in proofs:
+                    if not hasattr(proof_file, "name"):
+                        continue
+                    unique_filename = get_unique_filename(proof_file.name, franchise.franchise_id, "proof")
+                    proof_id = str(uuid.uuid4())
+                    file_path = f"franchises/{franchise.franchise_id}/proofs/{proof_id}_{proof_file.name}"
+                    default_storage.save(file_path, proof_file)
+                    proofs_ids.append(proof_id)
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=franchise.franchise_id,
+                        file_type=proof_type,
+                        file_url=proof_id,
+                        uploaded_at=timezone.now(),
+                        startup=franchise,
+                        original_file_name=unique_filename,
+                    )
+            else:
+                proofs_ids = franchise.proofs_urls or []
+            
+            if videos:
+                video_type, _ = FileTypes.objects.get_or_create(type_name="video")
+                entity_type = EntityTypes.objects.get(type_name="franchise")
+                for video in videos:
+                    if not hasattr(video, "name"):
+                        continue
+                    unique_filename = get_unique_filename(video.name, franchise.franchise_id, "video")
                     video_id = str(uuid.uuid4())
-                    file_path = f"franchises/{franchise.franchise_id}/videos/{video_id}_{video_file.name}"
-                    default_storage.save(file_path, video_file)
-                    franchise.video_urls = [video_id]
+                    file_path = f"franchises/{franchise.franchise_id}/videos/{video_id}_{video.name}"
+                    default_storage.save(file_path, video)
+                    video_ids.append(video_id)
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=franchise.franchise_id,
+                        file_type=video_type,
+                        file_url=video_id,
+                        uploaded_at=timezone.now(),
+                        startup=franchise,
+                        original_file_name=unique_filename,
+                    )
+            else:
+                video_ids = franchise.video_urls or []
+            
+            franchise.logo_urls = logo_ids
+            
+            # Обновляем URL файлов только если были загружены новые
+            if creative_ids:
+                existing_creatives = franchise.creatives_urls or []
+                new_creatives = [url for url in creative_ids if url not in existing_creatives]
+                franchise.creatives_urls = existing_creatives + new_creatives
+            
+            if proofs_ids:
+                existing_proofs = franchise.proofs_urls or []
+                new_proofs = [url for url in proofs_ids if url not in existing_proofs]
+                franchise.proofs_urls = existing_proofs + new_proofs
+            
+            if video_ids:
+                existing_videos = franchise.video_urls or []
+                new_videos = [url for url in video_ids if url not in existing_videos]
+                franchise.video_urls = existing_videos + new_videos
+            
+            # Обработка удаленных файлов
+            deleted_files_json = request.POST.get('deleted_files', '[]')
+            try:
+                deleted_files = json.loads(deleted_files_json)
+                for deleted_file in deleted_files:
+                    file_id = deleted_file.get('id')
+                    file_type = deleted_file.get('type')
+                    if file_id and file_type:
+                        FileStorage.objects.filter(
+                            startup=franchise,
+                            file_url=file_id
+                        ).delete()
+                        if file_type == 'creative' and franchise.creatives_urls:
+                            franchise.creatives_urls = [url for url in franchise.creatives_urls if url != file_id]
+                        elif file_type == 'proof' and franchise.proofs_urls:
+                            franchise.proofs_urls = [url for url in franchise.proofs_urls if url != file_id]
+                        elif file_type == 'video' and franchise.video_urls:
+                            franchise.video_urls = [url for url in franchise.video_urls if url != file_id]
+            except json.JSONDecodeError:
+                pass
             
             franchise.save()
             
@@ -7559,51 +7713,199 @@ def edit_agency(request, agency_id):
         return redirect("agency_detail", agency_id=agency_id)
 
     if request.method == "POST":
+        # Сохраняем оригинальные данные для сравнения
+        original_data = {
+            'title': agency.title,
+            'short_description': agency.short_description,
+            'description': agency.description,
+            'terms': agency.terms,
+            'pitch_deck_url': agency.pitch_deck_url,
+            'planet_image': agency.planet_image,
+        }
+        
         form = AgencyEditForm(request.POST, request.FILES, instance=agency)
         
         if form.is_valid():
             agency = form.save(commit=False)
             
-            # Обработка файлов
-            if 'logo' in request.FILES:
-                logo_file = request.FILES['logo']
-                if logo_file.size > 0:
-                    logo_id = str(uuid.uuid4())
-                    file_path = f"agencies/{agency.agency_id}/logos/{logo_id}_{logo_file.name}"
-                    default_storage.save(file_path, logo_file)
-                    agency.logo_urls = [logo_id]
+            # Проверяем были ли изменения
+            has_changes = False
             
-            if 'creatives' in request.FILES:
-                creative_files = request.FILES.getlist('creatives')
-                creative_file_ids = []
-                for creative_file in creative_files:
-                    if creative_file.size > 0:
-                        creative_id = str(uuid.uuid4())
-                        file_path = f"agencies/{agency.agency_id}/creatives/{creative_id}_{creative_file.name}"
-                        default_storage.save(file_path, creative_file)
-                        creative_file_ids.append(creative_id)
-                if creative_file_ids:
-                    agency.creatives_urls = creative_file_ids
+            # Проверяем основные поля
+            if (agency.title != original_data['title'] or 
+                agency.short_description != original_data['short_description'] or
+                agency.description != original_data['description'] or
+                agency.terms != original_data['terms'] or
+                agency.pitch_deck_url != original_data['pitch_deck_url'] or
+                agency.planet_image != original_data['planet_image']):
+                has_changes = True
             
-            if 'proofs' in request.FILES:
-                proof_files = request.FILES.getlist('proofs')
-                proof_file_ids = []
-                for proof_file in proof_files:
-                    if proof_file.size > 0:
-                        proof_id = str(uuid.uuid4())
-                        file_path = f"agencies/{agency.agency_id}/proofs/{proof_id}_{proof_file.name}"
-                        default_storage.save(file_path, proof_file)
-                        proof_file_ids.append(proof_id)
-                if proof_file_ids:
-                    agency.proofs_urls = proof_file_ids
+            # Проверяем загружены ли новые файлы
+            if not has_changes:
+                if request.FILES:
+                    has_changes = True
             
-            if 'video' in request.FILES:
-                video_file = request.FILES['video']
-                if video_file.size > 0:
+            # Проверяем удалены ли файлы
+            if not has_changes:
+                deleted_files_json = request.POST.get('deleted_files', '[]')
+                try:
+                    deleted_files = json.loads(deleted_files_json)
+                    if deleted_files:
+                        has_changes = True
+                except json.JSONDecodeError:
+                    pass
+            
+            # Принудительная проверка файлов
+            if request.FILES:
+                has_changes = True
+            
+            # Устанавливаем статус в зависимости от наличия изменений
+            if has_changes and agency.status == "approved":
+                agency.status = "pending"
+                agency.is_edited = True
+                agency.save(update_fields=['status', 'is_edited'])
+            
+            agency.updated_at = timezone.now()
+            agency.save()
+            
+            logo_ids = agency.logo_urls or []
+            creative_ids = []
+            proofs_ids = []
+            video_ids = []
+            
+            # Обработка логотипа
+            logo = request.FILES.get("logo")
+            if logo and logo.size > 0:
+                logo_id = str(uuid.uuid4())
+                file_path = f"agencies/{agency.agency_id}/logos/{logo_id}_{logo.name}"
+                default_storage.save(file_path, logo)
+                logo_ids = [logo_id]
+            
+            # Обработка креативов
+            creatives = request.FILES.getlist("creatives")
+            proofs = request.FILES.getlist("proofs")
+            videos = request.FILES.getlist("video")
+            
+            # Проверка лимитов файлов
+            if len(creatives) > 3:
+                messages.error(request, "Максимально 3 изображения")
+                return render(request, "accounts/edit_agency.html", {"form": form, "agency": agency})
+            
+            if len(proofs) > 15:
+                messages.error(request, "Максимально 15 документов")
+                return render(request, "accounts/edit_agency.html", {"form": form, "agency": agency})
+            
+            if len(videos) > 1:
+                messages.error(request, "Максимально 1 видео")
+                return render(request, "accounts/edit_agency.html", {"form": form, "agency": agency})
+            
+            if creatives:
+                creative_type = FileTypes.objects.get(type_name="creative")
+                entity_type = EntityTypes.objects.get(type_name="agency")
+                for creative_file in creatives:
+                    if not hasattr(creative_file, "name"):
+                        continue
+                    unique_filename = get_unique_filename(creative_file.name, agency.agency_id, "creative")
+                    creative_id = str(uuid.uuid4())
+                    file_path = f"agencies/{agency.agency_id}/creatives/{creative_id}_{creative_file.name}"
+                    default_storage.save(file_path, creative_file)
+                    creative_ids.append(creative_id)
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=agency.agency_id,
+                        file_type=creative_type,
+                        file_url=creative_id,
+                        uploaded_at=timezone.now(),
+                        startup=agency,
+                        original_file_name=unique_filename,
+                    )
+            else:
+                creative_ids = agency.creatives_urls or []
+            
+            if proofs:
+                proof_type = FileTypes.objects.get(type_name="proof")
+                entity_type = EntityTypes.objects.get(type_name="agency")
+                for proof_file in proofs:
+                    if not hasattr(proof_file, "name"):
+                        continue
+                    unique_filename = get_unique_filename(proof_file.name, agency.agency_id, "proof")
+                    proof_id = str(uuid.uuid4())
+                    file_path = f"agencies/{agency.agency_id}/proofs/{proof_id}_{proof_file.name}"
+                    default_storage.save(file_path, proof_file)
+                    proofs_ids.append(proof_id)
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=agency.agency_id,
+                        file_type=proof_type,
+                        file_url=proof_id,
+                        uploaded_at=timezone.now(),
+                        startup=agency,
+                        original_file_name=unique_filename,
+                    )
+            else:
+                proofs_ids = agency.proofs_urls or []
+            
+            if videos:
+                video_type, _ = FileTypes.objects.get_or_create(type_name="video")
+                entity_type = EntityTypes.objects.get(type_name="agency")
+                for video in videos:
+                    if not hasattr(video, "name"):
+                        continue
+                    unique_filename = get_unique_filename(video.name, agency.agency_id, "video")
                     video_id = str(uuid.uuid4())
-                    file_path = f"agencies/{agency.agency_id}/videos/{video_id}_{video_file.name}"
-                    default_storage.save(file_path, video_file)
-                    agency.video_urls = [video_id]
+                    file_path = f"agencies/{agency.agency_id}/videos/{video_id}_{video.name}"
+                    default_storage.save(file_path, video)
+                    video_ids.append(video_id)
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=agency.agency_id,
+                        file_type=video_type,
+                        file_url=video_id,
+                        uploaded_at=timezone.now(),
+                        startup=agency,
+                        original_file_name=unique_filename,
+                    )
+            else:
+                video_ids = agency.video_urls or []
+            
+            agency.logo_urls = logo_ids
+            
+            # Обновляем URL файлов только если были загружены новые
+            if creative_ids:
+                existing_creatives = agency.creatives_urls or []
+                new_creatives = [url for url in creative_ids if url not in existing_creatives]
+                agency.creatives_urls = existing_creatives + new_creatives
+            
+            if proofs_ids:
+                existing_proofs = agency.proofs_urls or []
+                new_proofs = [url for url in proofs_ids if url not in existing_proofs]
+                agency.proofs_urls = existing_proofs + new_proofs
+            
+            if video_ids:
+                existing_videos = agency.video_urls or []
+                new_videos = [url for url in video_ids if url not in existing_videos]
+                agency.video_urls = existing_videos + new_videos
+            
+            # Обработка удаленных файлов
+            deleted_files_json = request.POST.get('deleted_files', '[]')
+            try:
+                deleted_files = json.loads(deleted_files_json)
+                for deleted_file in deleted_files:
+                    file_id = deleted_file.get('id')
+                    file_type = deleted_file.get('type')
+                    if file_id and file_type:
+                        FileStorage.objects.filter(
+                            startup=agency,
+                            file_url=file_id
+                        ).delete()
+                        if file_type == 'creative' and agency.creatives_urls:
+                            agency.creatives_urls = [url for url in agency.creatives_urls if url != file_id]
+                        elif file_type == 'proof' and agency.proofs_urls:
+                            agency.proofs_urls = [url for url in agency.proofs_urls if url != file_id]
+                        elif file_type == 'video' and agency.video_urls:
+                            agency.video_urls = [url for url in agency.video_urls if url != file_id]
+            except json.JSONDecodeError:
+                pass
             
             agency.save()
             
@@ -7640,51 +7942,201 @@ def edit_specialist(request, specialist_id):
         return redirect("specialist_detail", specialist_id=specialist_id)
 
     if request.method == "POST":
+        # Сохраняем оригинальные данные для сравнения
+        original_data = {
+            'title': specialist.title,
+            'short_description': specialist.short_description,
+            'description': specialist.description,
+            'terms': specialist.terms,
+            'additional_info': specialist.additional_info,
+            'pitch_deck_url': specialist.pitch_deck_url,
+            'planet_image': specialist.planet_image,
+        }
+        
         form = SpecialistEditForm(request.POST, request.FILES, instance=specialist)
         
         if form.is_valid():
             specialist = form.save(commit=False)
             
-            # Обработка файлов
-            if 'logo' in request.FILES:
-                logo_file = request.FILES['logo']
-                if logo_file.size > 0:
-                    logo_id = str(uuid.uuid4())
-                    file_path = f"specialists/{specialist.specialist_id}/logos/{logo_id}_{logo_file.name}"
-                    default_storage.save(file_path, logo_file)
-                    specialist.logo_urls = [logo_id]
+            # Проверяем были ли изменения
+            has_changes = False
             
-            if 'creatives' in request.FILES:
-                creative_files = request.FILES.getlist('creatives')
-                creative_file_ids = []
-                for creative_file in creative_files:
-                    if creative_file.size > 0:
-                        creative_id = str(uuid.uuid4())
-                        file_path = f"specialists/{specialist.specialist_id}/creatives/{creative_id}_{creative_file.name}"
-                        default_storage.save(file_path, creative_file)
-                        creative_file_ids.append(creative_id)
-                if creative_file_ids:
-                    specialist.creatives_urls = creative_file_ids
+            # Проверяем основные поля
+            if (specialist.title != original_data['title'] or 
+                specialist.short_description != original_data['short_description'] or
+                specialist.description != original_data['description'] or
+                specialist.terms != original_data['terms'] or
+                specialist.additional_info != original_data['additional_info'] or
+                specialist.pitch_deck_url != original_data['pitch_deck_url'] or
+                specialist.planet_image != original_data['planet_image']):
+                has_changes = True
             
-            if 'proofs' in request.FILES:
-                proof_files = request.FILES.getlist('proofs')
-                proof_file_ids = []
-                for proof_file in proof_files:
-                    if proof_file.size > 0:
-                        proof_id = str(uuid.uuid4())
-                        file_path = f"specialists/{specialist.specialist_id}/proofs/{proof_id}_{proof_file.name}"
-                        default_storage.save(file_path, proof_file)
-                        proof_file_ids.append(proof_id)
-                if proof_file_ids:
-                    specialist.proofs_urls = proof_file_ids
+            # Проверяем загружены ли новые файлы
+            if not has_changes:
+                if request.FILES:
+                    has_changes = True
             
-            if 'video' in request.FILES:
-                video_file = request.FILES['video']
-                if video_file.size > 0:
+            # Проверяем удалены ли файлы
+            if not has_changes:
+                deleted_files_json = request.POST.get('deleted_files', '[]')
+                try:
+                    deleted_files = json.loads(deleted_files_json)
+                    if deleted_files:
+                        has_changes = True
+                except json.JSONDecodeError:
+                    pass
+            
+            # Принудительная проверка файлов
+            if request.FILES:
+                has_changes = True
+            
+            # Устанавливаем статус в зависимости от наличия изменений
+            if has_changes and specialist.status == "approved":
+                specialist.status = "pending"
+                specialist.is_edited = True
+                specialist.save(update_fields=['status', 'is_edited'])
+            
+            specialist.updated_at = timezone.now()
+            specialist.save()
+            
+            logo_ids = specialist.logo_urls or []
+            creative_ids = []
+            proofs_ids = []
+            video_ids = []
+            
+            # Обработка логотипа
+            logo = request.FILES.get("logo")
+            if logo and logo.size > 0:
+                logo_id = str(uuid.uuid4())
+                file_path = f"specialists/{specialist.specialist_id}/logos/{logo_id}_{logo.name}"
+                default_storage.save(file_path, logo)
+                logo_ids = [logo_id]
+            
+            # Обработка креативов
+            creatives = request.FILES.getlist("creatives")
+            proofs = request.FILES.getlist("proofs")
+            videos = request.FILES.getlist("video")
+            
+            # Проверка лимитов файлов
+            if len(creatives) > 3:
+                messages.error(request, "Максимально 3 изображения")
+                return render(request, "accounts/edit_specialist.html", {"form": form, "specialist": specialist})
+            
+            if len(proofs) > 15:
+                messages.error(request, "Максимально 15 документов")
+                return render(request, "accounts/edit_specialist.html", {"form": form, "specialist": specialist})
+            
+            if len(videos) > 1:
+                messages.error(request, "Максимально 1 видео")
+                return render(request, "accounts/edit_specialist.html", {"form": form, "specialist": specialist})
+            
+            if creatives:
+                creative_type = FileTypes.objects.get(type_name="creative")
+                entity_type = EntityTypes.objects.get(type_name="specialist")
+                for creative_file in creatives:
+                    if not hasattr(creative_file, "name"):
+                        continue
+                    unique_filename = get_unique_filename(creative_file.name, specialist.specialist_id, "creative")
+                    creative_id = str(uuid.uuid4())
+                    file_path = f"specialists/{specialist.specialist_id}/creatives/{creative_id}_{creative_file.name}"
+                    default_storage.save(file_path, creative_file)
+                    creative_ids.append(creative_id)
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=specialist.specialist_id,
+                        file_type=creative_type,
+                        file_url=creative_id,
+                        uploaded_at=timezone.now(),
+                        startup=specialist,
+                        original_file_name=unique_filename,
+                    )
+            else:
+                creative_ids = specialist.creatives_urls or []
+            
+            if proofs:
+                proof_type = FileTypes.objects.get(type_name="proof")
+                entity_type = EntityTypes.objects.get(type_name="specialist")
+                for proof_file in proofs:
+                    if not hasattr(proof_file, "name"):
+                        continue
+                    unique_filename = get_unique_filename(proof_file.name, specialist.specialist_id, "proof")
+                    proof_id = str(uuid.uuid4())
+                    file_path = f"specialists/{specialist.specialist_id}/proofs/{proof_id}_{proof_file.name}"
+                    default_storage.save(file_path, proof_file)
+                    proofs_ids.append(proof_id)
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=specialist.specialist_id,
+                        file_type=proof_type,
+                        file_url=proof_id,
+                        uploaded_at=timezone.now(),
+                        startup=specialist,
+                        original_file_name=unique_filename,
+                    )
+            else:
+                proofs_ids = specialist.proofs_urls or []
+            
+            if videos:
+                video_type, _ = FileTypes.objects.get_or_create(type_name="video")
+                entity_type = EntityTypes.objects.get(type_name="specialist")
+                for video in videos:
+                    if not hasattr(video, "name"):
+                        continue
+                    unique_filename = get_unique_filename(video.name, specialist.specialist_id, "video")
                     video_id = str(uuid.uuid4())
-                    file_path = f"specialists/{specialist.specialist_id}/videos/{video_id}_{video_file.name}"
-                    default_storage.save(file_path, video_file)
-                    specialist.video_urls = [video_id]
+                    file_path = f"specialists/{specialist.specialist_id}/videos/{video_id}_{video.name}"
+                    default_storage.save(file_path, video)
+                    video_ids.append(video_id)
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=specialist.specialist_id,
+                        file_type=video_type,
+                        file_url=video_id,
+                        uploaded_at=timezone.now(),
+                        startup=specialist,
+                        original_file_name=unique_filename,
+                    )
+            else:
+                video_ids = specialist.video_urls or []
+            
+            specialist.logo_urls = logo_ids
+            
+            # Обновляем URL файлов только если были загружены новые
+            if creative_ids:
+                existing_creatives = specialist.creatives_urls or []
+                new_creatives = [url for url in creative_ids if url not in existing_creatives]
+                specialist.creatives_urls = existing_creatives + new_creatives
+            
+            if proofs_ids:
+                existing_proofs = specialist.proofs_urls or []
+                new_proofs = [url for url in proofs_ids if url not in existing_proofs]
+                specialist.proofs_urls = existing_proofs + new_proofs
+            
+            if video_ids:
+                existing_videos = specialist.video_urls or []
+                new_videos = [url for url in video_ids if url not in existing_videos]
+                specialist.video_urls = existing_videos + new_videos
+            
+            # Обработка удаленных файлов
+            deleted_files_json = request.POST.get('deleted_files', '[]')
+            try:
+                deleted_files = json.loads(deleted_files_json)
+                for deleted_file in deleted_files:
+                    file_id = deleted_file.get('id')
+                    file_type = deleted_file.get('type')
+                    if file_id and file_type:
+                        FileStorage.objects.filter(
+                            startup=specialist,
+                            file_url=file_id
+                        ).delete()
+                        if file_type == 'creative' and specialist.creatives_urls:
+                            specialist.creatives_urls = [url for url in specialist.creatives_urls if url != file_id]
+                        elif file_type == 'proof' and specialist.proofs_urls:
+                            specialist.proofs_urls = [url for url in specialist.proofs_urls if url != file_id]
+                        elif file_type == 'video' and specialist.video_urls:
+                            specialist.video_urls = [url for url in specialist.video_urls if url != file_id]
+            except json.JSONDecodeError:
+                pass
             
             specialist.save()
             
