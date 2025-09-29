@@ -7572,7 +7572,7 @@ def edit_franchise(request, franchise_id):
             
             if creatives:
                 creative_type = FileTypes.objects.get(type_name="creative")
-                entity_type = EntityTypes.objects.get(type_name="franchise")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
                         continue
@@ -7595,7 +7595,7 @@ def edit_franchise(request, franchise_id):
             
             if proofs:
                 proof_type = FileTypes.objects.get(type_name="proof")
-                entity_type = EntityTypes.objects.get(type_name="franchise")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
                         continue
@@ -7618,7 +7618,7 @@ def edit_franchise(request, franchise_id):
             
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
-                entity_type = EntityTypes.objects.get(type_name="franchise")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 for video in videos:
                     if not hasattr(video, "name"):
                         continue
@@ -7801,7 +7801,7 @@ def edit_agency(request, agency_id):
             
             if creatives:
                 creative_type = FileTypes.objects.get(type_name="creative")
-                entity_type = EntityTypes.objects.get(type_name="agency")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
                         continue
@@ -7824,7 +7824,7 @@ def edit_agency(request, agency_id):
             
             if proofs:
                 proof_type = FileTypes.objects.get(type_name="proof")
-                entity_type = EntityTypes.objects.get(type_name="agency")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
                         continue
@@ -7847,7 +7847,7 @@ def edit_agency(request, agency_id):
             
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
-                entity_type = EntityTypes.objects.get(type_name="agency")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
                 for video in videos:
                     if not hasattr(video, "name"):
                         continue
@@ -8032,7 +8032,7 @@ def edit_specialist(request, specialist_id):
             
             if creatives:
                 creative_type = FileTypes.objects.get(type_name="creative")
-                entity_type = EntityTypes.objects.get(type_name="specialist")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
                         continue
@@ -8055,7 +8055,7 @@ def edit_specialist(request, specialist_id):
             
             if proofs:
                 proof_type = FileTypes.objects.get(type_name="proof")
-                entity_type = EntityTypes.objects.get(type_name="specialist")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
                         continue
@@ -8078,7 +8078,7 @@ def edit_specialist(request, specialist_id):
             
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
-                entity_type = EntityTypes.objects.get(type_name="specialist")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 for video in videos:
                     if not hasattr(video, "name"):
                         continue
