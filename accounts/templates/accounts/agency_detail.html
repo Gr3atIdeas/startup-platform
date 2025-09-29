@@ -6,7 +6,7 @@
 {% load humanize %}
 {% load accounts_extras %}
 
-{% block title %}{{ franchise.customization_data.agency_display_title|default:franchise.title|default:"Детали агентства" }}{% endblock %}
+{% block title %}{{ agency.customization_data.agency_display_title|default:agency.title|default:"Детали агентства" }}{% endblock %}
 
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/agency_detail.css' %}">
@@ -16,14 +16,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="franchise-detail-page" 
-     data-franchise-id="{{ franchise.franchise_id }}" 
-     data-franchise-title="{{ franchise.title|escapejs }}"
+<div class="agency-detail-page" 
+     data-agency-id="{{ agency.agency_id }}" 
+     data-agency-title="{{ agency.title|escapejs }}"
      data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
      data-user-has-voted="{{ user_has_voted|yesno:'true,false' }}"
-     data-load-similar-url="{% url 'load_similar_agencies' franchise_id=franchise.franchise_id %}"
-     data-owner-id="{{ franchise.owner.user_id }}"
-     data-investment-size="{{ franchise.investment_size|default:0 }}">
+     data-load-similar-url="{% url 'load_similar_agencies' agency_id=agency.agency_id %}"
+     data-owner-id="{{ agency.owner.user_id }}"
+     data-investment-size="{{ agency.customization_data.successful_projects|default:0 }}">
   <div class="back-link-container">
     <a href="{% url 'agencies_list' %}" class="back-button">
       <i class="fas fa-arrow-left"></i> Назад
@@ -38,23 +38,23 @@
           <form method="post" class="status-form">
             {% csrf_token %}
             <select name="status" class="status-select" onchange="this.form.submit()">
-              <option value="approved" {% if franchise.status == 'approved' %}selected{% endif %}>Approved</option>
-              <option value="blocked" {% if franchise.status == 'blocked' %}selected{% endif %}>Blocked</option>
-              <option value="closed" {% if franchise.status == 'closed' %}selected{% endif %}>Closed</option>
-              <option value="pending" {% if franchise.status == 'pending' %}selected{% endif %}>Pending</option>
-              <option value="rejected" {% if franchise.status == 'rejected' %}selected{% endif %}>Rejected</option>
+              <option value="approved" {% if agency.status == 'approved' %}selected{% endif %}>Approved</option>
+              <option value="blocked" {% if agency.status == 'blocked' %}selected{% endif %}>Blocked</option>
+              <option value="closed" {% if agency.status == 'closed' %}selected{% endif %}>Closed</option>
+              <option value="pending" {% if agency.status == 'pending' %}selected{% endif %}>Pending</option>
+              <option value="rejected" {% if agency.status == 'rejected' %}selected{% endif %}>Rejected</option>
             </select>
           </form>
         {% else %}
-          <div class="status-badge status-{{ franchise.status|default:'unknown' }}">
-             {{ franchise.get_status_display|default:franchise.status|capfirst }}
+          <div class="status-badge status-{{ agency.status|default:'unknown' }}">
+             {{ agency.get_status_display|default:agency.status|capfirst }}
           </div>
         {% endif %}
         
         <div class="planet-display-container">
           <div class="space-background"></div>
-          {% if franchise.planet_image %}
-            <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ franchise.planet_image }}" alt="Планета {{ franchise.title }}" class="planet-image">
+          {% if agency.planet_image %}
+            <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ agency.planet_image }}" alt="Планета {{ agency.title }}" class="planet-image">
           {% else %}
             <img src="{% static 'accounts/images/icons/planet_placeholder.svg' %}" alt="Планета не выбрана" class="planet-placeholder">
           {% endif %}
@@ -66,7 +66,7 @@
       <div class="investment-info-container">
         <div class="investment-size-info">
           <div class="investment-size-label">Успешных проектов</div>
-          <div class="investment-size-value">{{ franchise.successful_projects|default:12 }}</div>
+          <div class="investment-size-value">{{ agency.customization_data.successful_projects|default:12 }}</div>
         </div>
       </div>
       
@@ -74,44 +74,44 @@
         <div class="author-header">Автор</div>
         <div class="author-details">
           <div class="author-avatar">
-            <img src="{% if franchise.owner.get_profile_picture_url %}{{ franchise.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ franchise.owner.username }}" class="author-avatar-img">
+            <img src="{% if agency.owner.get_profile_picture_url %}{{ agency.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ agency.owner.username }}" class="author-avatar-img">
           </div>
           <div class="author-meta">
-            <div class="author-name">{{ franchise.owner.first_name|default:"Автор" }} {{ franchise.owner.last_name }}</div>
+            <div class="author-name">{{ agency.owner.first_name|default:"Автор" }} {{ agency.owner.last_name }}</div>
             <div class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</div>
           </div>
           <button class="action-button write-author-button">Написать</button>
         </div>
-        <div class="creation-date">Создан {{ franchise.created_at|date:"d/m/Y" }}</div>
+        <div class="creation-date">Создан {{ agency.created_at|date:"d/m/Y" }}</div>
         <a href="https://greatideas.ru/support/orders/" class="report-button">Пожаловаться</a>
       </div>
     </div>
     
     <div class="right-column">
       
-      <div class="franchise-header-actions-wrapper"> 
-        <div class="franchise-header">
-            <div class="franchise-header-left">
-            <div class="franchise-title-wrapper">
+      <div class="agency-header-actions-wrapper"> 
+        <div class="agency-header">
+            <div class="agency-header-left">
+            <div class="agency-title-wrapper">
               <div class="logo-display-container">
-                {% if franchise.owner and franchise.owner.get_profile_picture_url %}
-                  <img src="{{ franchise.owner.get_profile_picture_url }}" alt="Аватар автора {{ franchise.owner.username }}" class="logo-image">
-                {% elif franchise.logo_urls %}
-                  {% with logo_file_id=franchise.logo_urls.0 %}
-                    <img src="{% get_file_url_tag logo_file_id franchise.franchise_id 'logo' %}" alt="Логотип {{ franchise.title }}" class="logo-image">
+                {% if agency.owner and agency.owner.get_profile_picture_url %}
+                  <img src="{{ agency.owner.get_profile_picture_url }}" alt="Аватар автора {{ agency.owner.username }}" class="logo-image">
+                {% elif agency.logo_urls %}
+                  {% with logo_file_id=agency.logo_urls.0 %}
+                    <img src="{% get_file_url_tag logo_file_id agency.agency_id 'logo' %}" alt="Логотип {{ agency.title }}" class="logo-image">
                   {% endwith %}
                 {% else %}
                   <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
                 {% endif %}
               </div>
-              <h1 class="franchise-name" title="{{ franchise.customization_data.agency_display_title|default:franchise.title }}">{{ franchise.customization_data.agency_display_title|default:franchise.title }}</h1>
+              <h1 class="agency-name" title="{{ agency.customization_data.agency_display_title|default:agency.title }}">{{ agency.customization_data.agency_display_title|default:agency.title }}</h1>
             </div>
 
             <div class="header-meta">
-              {% with agency_category=franchise.customization_data.agency_category %}
+              {% with agency_category=agency.customization_data.agency_category %}
                 <span class="category-value">{{ agency_category|default:"Без категории" }}</span>
               {% endwith %}
-          <div class="franchise-stats-info"></div>
+          <div class="agency-stats-info"></div>
             </div>
 
             <div class="rating-comments-container">
@@ -134,9 +134,9 @@
         </div>
 
                  <div class="actions-top-right">
-           <div class="franchise-info-badge">Агентство</div>
+           <div class="agency-info-badge">Агентство</div>
            {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-             <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}" class="action-button edit-button">Редактировать</a>
+             <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
              <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
            {% endif %}
          </div>
@@ -158,7 +158,7 @@
               <h2 class="section-title">Вводная</h2> 
               <div class="section-content text-truncate-container" id="intro-section">
                 <div class="text-content" onclick="toggleTextTruncation('intro-section', 3)">
-                  <p>{{ franchise.short_description|default:"Нет вводного описания." }}</p> 
+                  <p>{{ agency.short_description|default:"Нет вводного описания." }}</p> 
                   <span class="text-truncate-toggle">Показать полностью</span>
                 </div>
               </div>
@@ -167,10 +167,10 @@
               <h2 class="section-title">Об агентстве</h2>
               <div class="section-content text-truncate-container" id="about-section">
                 <div class="text-content" onclick="toggleTextTruncation('about-section', 5)">
-                  <p>{{ franchise.description|linebreaksbr|default:"Нет подробного описания." }}</p>
-                  {% if franchise.additional_info %}
+                  <p>{{ agency.description|linebreaksbr|default:"Нет подробного описания." }}</p>
+                  {% if agency.additional_info %}
                     <p><strong>Основные функции:</strong></p>
-                    {{ franchise.additional_info|linebreaksbr }}
+                    {{ agency.additional_info|linebreaksbr }}
                   {% endif %}
                   <span class="text-truncate-toggle">Показать полностью</span>
                 </div>
@@ -185,8 +185,8 @@
                   <img src="{% static 'accounts/images/startups/image.svg' %}" alt="Презентация" class="info-card-icon">
                 </div>
                 <span class="info-card-title">Презентация</span>
-                {% if franchise.pitch_deck_url %}
-                  <a href="{{ franchise.pitch_deck_url }}" target="_blank" class="action-button info-card-button view-button">Смотреть</a>
+                {% if agency.pitch_deck_url %}
+                  <a href="{{ agency.pitch_deck_url }}" target="_blank" class="action-button info-card-button view-button">Смотреть</a>
                 {% else %}
                   <button class="action-button info-card-button view-button" disabled>Смотреть</button>
                 {% endif %}
@@ -213,7 +213,7 @@
                 </div>
                           <span class="info-card-title">Категория</span>
           <div class="info-card-value-button accent-white-bg">
-            {{ franchise.customization_data.agency_category|default:"Не указана" }}
+            {{ agency.customization_data.agency_category|default:"Не указана" }}
           </div>
               </div>
             </div>
@@ -223,7 +223,7 @@
             <h2 class="section-title">Услуги</h2>
             <div class="profit-calculation-wrapper">
               <div class="profit-calculation-content">
-                {{ franchise.additional_info|default:"Описание услуг пока не добавлено."|linebreaksbr }}
+                {{ agency.additional_info|default:"Описание услуг пока не добавлено."|linebreaksbr }}
               </div>
               </div>
           </div>
@@ -233,7 +233,7 @@
             <h2 class="section-title">Кейсы</h2>
             <div class="profit-calculation-wrapper">
                 <div class="profit-calculation-content">
-                    {{ franchise.additional_info|default:"Кейсы пока не добавлены."|linebreaksbr }}
+                    {{ agency.additional_info|default:"Кейсы пока не добавлены."|linebreaksbr }}
                 </div>
             </div>
           </div>
@@ -241,13 +241,13 @@
           
           <div id="documents-section" class="content-section">
             <h2 class="section-title">Документы</h2>
-            {% if franchise_documents %}
+            {% if agency_documents %}
                 <ul class="document-list">
-                    {% for doc in franchise_documents %}
+                    {% for doc in agency_documents %}
                         <li class="document-item">
-                            <a href="{% get_file_url_tag doc.file_url franchise.franchise_id 'proof' %}" target="_blank" class="document-link">
+                            <a href="{% get_file_url_tag doc.file_url agency.agency_id 'proof' %}" target="_blank" class="document-link">
                                 <i class="fas fa-file-alt document-icon"></i>
-                                <span class="document-name">{% get_file_original_name doc.file_url franchise.franchise_id 'proof' %}</span>
+                                <span class="document-name">{% get_file_original_name doc.file_url agency.agency_id 'proof' %}</span>
                             </a>
                             
                         </li>
@@ -261,37 +261,37 @@
           
           <div id="conditions-section" class="content-section">
             <h2 class="section-title">Этапы работ</h2>
-            <p>{{ franchise.terms|linebreaksbr|default:"Этапы работ не указаны." }}</p>
+            <p>{{ agency.terms|linebreaksbr|default:"Этапы работ не указаны." }}</p>
           </div>
         </div> 
       </div> 
     </div> 
   </div> 
 
-  {% if user.is_authenticated and user.role.role_name == 'moderator' and franchise.status == 'pending' %}
+  {% if user.is_authenticated and user.role.role_name == 'moderator' and agency.status == 'pending' %}
       <div class="moderator-review-section card my-4">
           <div class="card-header">
               <h4>Модерация агентства</h4>
           </div>
           <div class="card-body">
-              <form method="post" action="{% url 'approve_franchise' franchise_id=franchise.franchise_id %}">
+              <form method="post" action="{% url 'approve_agency' agency_id=agency.agency_id %}">
                   {% csrf_token %}
                   <div class="mb-3">
                       <label for="moderator_comment_area" class="form-label">Комментарий модератора:</label>
-                      <textarea class="form-control moderator-comment-textarea" id="moderator_comment_area" name="moderator_comment" rows="3">{{ franchise.moderator_comment|default:'' }}</textarea>
+                      <textarea class="form-control moderator-comment-textarea" id="moderator_comment_area" name="moderator_comment" rows="3">{{ agency.moderator_comment|default:'' }}</textarea>
                   </div>
                   <button type="submit" name="action" value="approve" class="btn btn-success me-2">Одобрить</button>
-                  <button type="submit" formaction="{% url 'reject_franchise' franchise_id=franchise.franchise_id %}" name="action" value="reject" class="btn btn-danger">Отклонить</button>
+                  <button type="submit" formaction="{% url 'reject_agency' agency_id=agency.agency_id %}" name="action" value="reject" class="btn btn-danger">Отклонить</button>
               </form>
           </div>
       </div>
-  {% elif show_moderator_comment and franchise.moderator_comment %}
+  {% elif show_moderator_comment and agency.moderator_comment %}
       <div class="moderator-comment-display card my-4">
           <div class="card-header">
               <h5>Комментарий модератора:</h5>
           </div>
           <div class="card-body">
-              <p class="card-text">{{ franchise.moderator_comment }}</p>
+              <p class="card-text">{{ agency.moderator_comment }}</p>
           </div>
       </div>
   {% endif %}
@@ -448,24 +448,24 @@
     </div> 
   </div> 
 
-  <div class="similar-franchises-section">
-    <div class="similar-franchises-container">
+  <div class="similar-agencys-section">
+    <div class="similar-agencys-container">
       <h2 class="similar-title">
         <span class="similar-text">похожие</span>
-        <span class="franchises-text">АГЕНТСТВА</span>
+        <span class="agencys-text">АГЕНТСТВА</span>
       </h2>
       
       <a href="{% url 'agencies_list' %}" class="show-all-button">
         <span>Показать все</span> <i class="fas fa-arrow-right"></i>
       </a>
       
-      {% if has_similar and similar_franchises %}
-        <div class="similar-franchises-grid">
-          {% for similar in similar_franchises|slice:":4" %}
-          <a href="{% url 'agency_detail' similar.franchise_id %}" class="similar-card">
+      {% if has_similar and similar_agencys %}
+        <div class="similar-agencys-grid">
+          {% for similar in similar_agencys|slice:":4" %}
+          <a href="{% url 'agency_detail' similar.agency_id %}" class="similar-card">
             <div class="similar-card-image">
               {% if similar.logo_urls %}
-                <img src="{% get_file_url_tag similar.logo_urls.0 similar.franchise_id 'logo' %}" alt="Логотип">
+                <img src="{% get_file_url_tag similar.logo_urls.0 similar.agency_id 'logo' %}" alt="Логотип">
               {% else %}
                 <div class="planet">
                   <div class="planet-segment segment-top" style="background-color: {{ similar.planet_top_color|default:'#7B61FF' }};"></div>

@@ -1652,9 +1652,25 @@ def agency_detail(request, franchise_id):
     for i in range(1, 6):
         rating_distribution.setdefault(i, 0)
 
+    logo_urls = franchise.logo_urls if isinstance(franchise.logo_urls, list) else []
+    creatives_urls = (
+        franchise.creatives_urls if isinstance(franchise.creatives_urls, list) else []
+    )
+    video_urls = franchise.video_urls if isinstance(franchise.video_urls, list) else []
+    proofs_urls = franchise.proofs_urls if isinstance(franchise.proofs_urls, list) else []
+
+    # Получаем документы из FileStorage
+    try:
+        proof_file_type = FileTypes.objects.get(type_name="proof")
+        agency_documents = FileStorage.objects.filter(
+            startup=franchise, file_type=proof_file_type
+        ).order_by("-uploaded_at")
+    except:
+        agency_documents = FileStorage.objects.none()
+
     context = {
-        "franchise": franchise,
-        "similar_franchises": similar_franchises,
+        "agency": franchise,
+        "similar_agencies": similar_franchises,
         "has_similar": candidates_qs.exists(),
         "comments": comments_with_rating,
         "form": form,
@@ -1662,6 +1678,11 @@ def agency_detail(request, franchise_id):
         "total_votes_count": total_votes,
         "user_has_voted": user_has_voted,
         "rating_distribution": rating_distribution,
+        "logo_urls": logo_urls,
+        "creatives_urls": creatives_urls,
+        "video_urls": video_urls,
+        "proofs_urls": proofs_urls,
+        "agency_documents": agency_documents,
     }
     return render(request, "accounts/agency_detail.html", context)
 
@@ -1768,6 +1789,22 @@ def specialist_detail(request, specialist_id):
     for i in range(1, 6):
         rating_distribution.setdefault(i, 0)
 
+    logo_urls = specialist.logo_urls if isinstance(specialist.logo_urls, list) else []
+    creatives_urls = (
+        specialist.creatives_urls if isinstance(specialist.creatives_urls, list) else []
+    )
+    video_urls = specialist.video_urls if isinstance(specialist.video_urls, list) else []
+    proofs_urls = specialist.proofs_urls if isinstance(specialist.proofs_urls, list) else []
+
+    # Получаем документы из FileStorage
+    try:
+        proof_file_type = FileTypes.objects.get(type_name="proof")
+        specialist_documents = FileStorage.objects.filter(
+            startup=specialist, file_type=proof_file_type
+        ).order_by("-uploaded_at")
+    except:
+        specialist_documents = FileStorage.objects.none()
+
     context = {
         "specialist": specialist,
         "similar_specialists": similar_specialists,
@@ -1778,6 +1815,11 @@ def specialist_detail(request, specialist_id):
         "total_votes_count": total_votes,
         "user_has_voted": user_has_voted,
         "rating_distribution": rating_distribution,
+        "logo_urls": logo_urls,
+        "creatives_urls": creatives_urls,
+        "video_urls": video_urls,
+        "proofs_urls": proofs_urls,
+        "specialist_documents": specialist_documents,
     }
     return render(request, "accounts/specialist_detail.html", context)
 def franchise_detail(request, franchise_id):
@@ -1883,6 +1925,22 @@ def franchise_detail(request, franchise_id):
     for i in range(1, 6):
         rating_distribution.setdefault(i, 0)
 
+    logo_urls = franchise.logo_urls if isinstance(franchise.logo_urls, list) else []
+    creatives_urls = (
+        franchise.creatives_urls if isinstance(franchise.creatives_urls, list) else []
+    )
+    video_urls = franchise.video_urls if isinstance(franchise.video_urls, list) else []
+    proofs_urls = franchise.proofs_urls if isinstance(franchise.proofs_urls, list) else []
+
+    # Получаем документы из FileStorage
+    try:
+        proof_file_type = FileTypes.objects.get(type_name="proof")
+        franchise_documents = FileStorage.objects.filter(
+            startup=franchise, file_type=proof_file_type
+        ).order_by("-uploaded_at")
+    except:
+        franchise_documents = FileStorage.objects.none()
+
     context = {
         "franchise": franchise,
         "similar_franchises": similar_franchises,
@@ -1893,6 +1951,11 @@ def franchise_detail(request, franchise_id):
         "total_votes_count": total_votes,
         "user_has_voted": user_has_voted,
         "rating_distribution": rating_distribution,
+        "logo_urls": logo_urls,
+        "creatives_urls": creatives_urls,
+        "video_urls": video_urls,
+        "proofs_urls": proofs_urls,
+        "franchise_documents": franchise_documents,
     }
     return render(request, "accounts/franchise_detail.html", context)
 
@@ -7587,7 +7650,7 @@ def edit_franchise(request, franchise_id):
                         file_type=creative_type,
                         file_url=creative_id,
                         uploaded_at=timezone.now(),
-                        startup=franchise,
+                        startup=None,
                         original_file_name=unique_filename,
                     )
             else:
@@ -7610,7 +7673,7 @@ def edit_franchise(request, franchise_id):
                         file_type=proof_type,
                         file_url=proof_id,
                         uploaded_at=timezone.now(),
-                        startup=franchise,
+                        startup=None,
                         original_file_name=unique_filename,
                     )
             else:
@@ -7633,7 +7696,7 @@ def edit_franchise(request, franchise_id):
                         file_type=video_type,
                         file_url=video_id,
                         uploaded_at=timezone.now(),
-                        startup=franchise,
+                        startup=None,
                         original_file_name=unique_filename,
                     )
             else:
@@ -7740,6 +7803,12 @@ def edit_agency(request, agency_id):
                 agency.planet_image != original_data['planet_image']):
                 has_changes = True
             
+            # Обрабатываем successful_projects
+            successful_projects = form.cleaned_data.get('successful_projects', 12)
+            if agency.customization_data is None:
+                agency.customization_data = {}
+            agency.customization_data['successful_projects'] = successful_projects
+            
             # Проверяем загружены ли новые файлы
             if not has_changes:
                 if request.FILES:
@@ -7816,7 +7885,7 @@ def edit_agency(request, agency_id):
                         file_type=creative_type,
                         file_url=creative_id,
                         uploaded_at=timezone.now(),
-                        startup=agency,
+                        startup=None,
                         original_file_name=unique_filename,
                     )
             else:
@@ -7839,7 +7908,7 @@ def edit_agency(request, agency_id):
                         file_type=proof_type,
                         file_url=proof_id,
                         uploaded_at=timezone.now(),
-                        startup=agency,
+                        startup=None,
                         original_file_name=unique_filename,
                     )
             else:
@@ -7862,7 +7931,7 @@ def edit_agency(request, agency_id):
                         file_type=video_type,
                         file_url=video_id,
                         uploaded_at=timezone.now(),
-                        startup=agency,
+                        startup=None,
                         original_file_name=unique_filename,
                     )
             else:
@@ -7971,6 +8040,12 @@ def edit_specialist(request, specialist_id):
                 specialist.planet_image != original_data['planet_image']):
                 has_changes = True
             
+            # Обрабатываем successful_projects
+            successful_projects = form.cleaned_data.get('successful_projects', 12)
+            if specialist.customization_data is None:
+                specialist.customization_data = {}
+            specialist.customization_data['successful_projects'] = successful_projects
+            
             # Проверяем загружены ли новые файлы
             if not has_changes:
                 if request.FILES:
@@ -8047,7 +8122,7 @@ def edit_specialist(request, specialist_id):
                         file_type=creative_type,
                         file_url=creative_id,
                         uploaded_at=timezone.now(),
-                        startup=specialist,
+                        startup=None,
                         original_file_name=unique_filename,
                     )
             else:
@@ -8070,7 +8145,7 @@ def edit_specialist(request, specialist_id):
                         file_type=proof_type,
                         file_url=proof_id,
                         uploaded_at=timezone.now(),
-                        startup=specialist,
+                        startup=None,
                         original_file_name=unique_filename,
                     )
             else:
@@ -8093,7 +8168,7 @@ def edit_specialist(request, specialist_id):
                         file_type=video_type,
                         file_url=video_id,
                         uploaded_at=timezone.now(),
-                        startup=specialist,
+                        startup=None,
                         original_file_name=unique_filename,
                     )
             else:

@@ -40,7 +40,7 @@ class LoginForm(forms.Form):
         "tabindex": "-1",
     }))
     captcha_answer = forms.CharField(required=False, label="Ответ на капчу")
-    email = forms.EmailField(label="Email")
+    email = forms.EmailField(label="Электронная почта")
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
 
     def clean(self):
@@ -778,8 +778,8 @@ class UserSearchForm(forms.Form):
         label="Роли",
     )
 class ProfileEditForm(forms.ModelForm):
-    telegram = forms.CharField(max_length=100, required=False, label="Telegram")
-    vk_url = forms.CharField(max_length=255, required=False, label="VK")
+    telegram = forms.CharField(max_length=100, required=False, label="Телеграм")
+    vk_url = forms.CharField(max_length=255, required=False, label="ВКонтакте")
     linkedin_url = forms.CharField(max_length=255, required=False, label="LinkedIn")
     class Meta:
         model = Users
@@ -844,7 +844,7 @@ class ModeratorTicketForm(forms.ModelForm):
 
 class ContactForm(forms.Form):
     name = forms.CharField(max_length=100, label="Ваше имя")
-    email = forms.EmailField(label="Email")
+    email = forms.EmailField(label="Электронная почта")
     subject = forms.ChoiceField(
         choices=[
             ('general_inquiry', 'Общий вопрос'),
@@ -962,13 +962,19 @@ class AgencyEditForm(forms.ModelForm):
         required=False,
         widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
     )
+    successful_projects = forms.IntegerField(
+        label="Успешных проектов",
+        required=False,
+        initial=12,
+        help_text="Количество успешно реализованных проектов"
+    )
 
     class Meta:
         model = Agencies
         fields = [
             "title", "short_description", "description", "terms",
             "pitch_deck_url", "logo", "direction", "stage",
-            "creatives", "proofs", "video", "planet_image"
+            "creatives", "proofs", "video", "planet_image", "successful_projects"
         ]
 
     def __init__(self, *args, **kwargs):
@@ -977,6 +983,11 @@ class AgencyEditForm(forms.ModelForm):
             self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
         except Exception as e:
             self.fields["planet_image"].choices = []
+        
+        # Инициализируем successful_projects из customization_data
+        if self.instance and self.instance.pk:
+            if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
+                self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects', 12)
 
 
 class SpecialistEditForm(forms.ModelForm):
@@ -1024,13 +1035,19 @@ class SpecialistEditForm(forms.ModelForm):
         required=False,
         widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
     )
+    successful_projects = forms.IntegerField(
+        label="Успешных проектов",
+        required=False,
+        initial=12,
+        help_text="Количество успешно реализованных проектов"
+    )
 
     class Meta:
         model = Specialists
         fields = [
             "title", "short_description", "description", "terms", "additional_info",
             "pitch_deck_url", "logo", "direction", "stage",
-            "creatives", "proofs", "video", "planet_image"
+            "creatives", "proofs", "video", "planet_image", "successful_projects"
         ]
 
     def __init__(self, *args, **kwargs):
@@ -1039,3 +1056,8 @@ class SpecialistEditForm(forms.ModelForm):
             self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
         except Exception as e:
             self.fields["planet_image"].choices = []
+        
+        # Инициализируем successful_projects из customization_data
+        if self.instance and self.instance.pk:
+            if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
+                self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects', 12)

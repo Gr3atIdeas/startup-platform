@@ -248,6 +248,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         {% if form.pitch_deck_url.errors %}<span class="error-message">{{ form.pitch_deck_url.errors|first }}</span>{% endif %}
                     </div>
+                    <div class="form-group">
+                        <label for="{{ form.successful_projects.id_for_label }}">{{ form.successful_projects.label }}</label>
+                        <div class="input-wrapper">
+                            {{ form.successful_projects|add_class:"form-control"|attr:"placeholder:12" }}
+                        </div>
+                        <div class="small-text">{{ form.successful_projects.help_text }}</div>
+                        {% if form.successful_projects.errors %}<span class="error-message">{{ form.successful_projects.errors|first }}</span>{% endif %}
+                    </div>
                 </div>
             </div>
 
