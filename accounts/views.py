@@ -1549,9 +1549,9 @@ def specialists_list(request):
             "specialist_categories": specialist_categories,
         }
         return render(request, "accounts/specialists_list.html", context)
-def agency_detail(request, franchise_id):
+def agency_detail(request, agency_id):
     try:
-        franchise = Agencies.objects.get(agency_id=franchise_id)
+        franchise = Agencies.objects.get(agency_id=agency_id)
     except Agencies.DoesNotExist:
         return render(request, "accounts/404.html", status=404)
 
@@ -7305,11 +7305,11 @@ def reject_franchise(request, franchise_id):
     return redirect("moderator_dashboard")
 
 
-def approve_agency(request, franchise_id):
+def approve_agency(request, agency_id):
     if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
-    agency = get_object_or_404(Agencies, agency_id=franchise_id)
+    agency = get_object_or_404(Agencies, agency_id=agency_id)
     if request.method == "POST":
         moderator_comment = request.POST.get("moderator_comment", "")
         agency.moderator_comment = moderator_comment
@@ -7319,11 +7319,11 @@ def approve_agency(request, franchise_id):
     return redirect("moderator_dashboard")
 
 
-def reject_agency(request, franchise_id):
+def reject_agency(request, agency_id):
     if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
-    agency = get_object_or_404(Agencies, agency_id=franchise_id)
+    agency = get_object_or_404(Agencies, agency_id=agency_id)
     if request.method == "POST":
         moderator_comment = request.POST.get("moderator_comment", "")
         agency.moderator_comment = moderator_comment
@@ -7388,10 +7388,10 @@ def vote_franchise(request, franchise_id):
 
 
 @login_required
-def vote_agency(request, franchise_id):
+def vote_agency(request, agency_id):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
-    agency = get_object_or_404(Agencies, agency_id=franchise_id)
+    agency = get_object_or_404(Agencies, agency_id=agency_id)
     rating = int(request.POST.get("rating", 0))
     if not 1 <= rating <= 5:
         return JsonResponse({"success": False, "error": "Недопустимое значение рейтинга"})
@@ -7444,9 +7444,9 @@ def load_similar_franchises(request, franchise_id: int):
         return JsonResponse({"error": "Ошибка при загрузке похожих франшиз"}, status=500)
 
 @login_required
-def load_similar_agencies(request, franchise_id: int):
+def load_similar_agencies(request, agency_id: int):
     try:
-        agency = get_object_or_404(Agencies, agency_id=franchise_id)
+        agency = get_object_or_404(Agencies, agency_id=agency_id)
         if agency.customization_data and "agency_category" in agency.customization_data:
             similar_qs = (
                 Agencies.objects.filter(
