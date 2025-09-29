@@ -55,12 +55,12 @@
         </div>
 
         <div class="investment-size-container-figma">
-          <span class="investment-size-text-figma">Успешных проектов: {{ franchise.successful_projects|default:12 }}</span>
+          <span class="investment-size-text-figma">Успешных проектов: {{ franchise.customization_data.successful_projects|default:12 }}</span>
         </div>
 
         <div class="franchise-short-description">{{ franchise.short_description|default:"Нет описания"|truncatechars:140 }}</div>
 
-        <a href="{% url 'agency_detail' franchise_id=franchise.franchise_id %}" class="detail-link" aria-label="Подробнее об агентстве {{ franchise.title }}"></a>
+        <a href="{% url 'agency_detail' agency_id=franchise.agency_id %}" class="detail-link" aria-label="Подробнее об агентстве {{ franchise.title }}"></a>
     </div>
   </div>
 {% endfor %}

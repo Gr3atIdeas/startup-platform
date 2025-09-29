@@ -136,6 +136,8 @@
            <div class="franchise-info-badge">Специалист</div>
            {% if user.is_authenticated and user == specialist.owner %}
              <a href="{% url 'edit_specialist' specialist_id=specialist.specialist_id %}" class="action-button edit-button">Редактировать</a>
+           {% elif user.is_authenticated and user.role.role_name == 'moderator' %}
+             <a href="{% url 'edit_specialist' specialist_id=specialist.specialist_id %}" class="action-button edit-button">Редактировать</a>
            {% endif %}
          </div>
       </div> 
