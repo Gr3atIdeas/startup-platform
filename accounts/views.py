@@ -1559,7 +1559,7 @@ def agency_detail(request, agency_id):
         if "status" in request.POST:
             if not request.user.is_authenticated or not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
                 messages.error(request, "У вас нет прав для этого действия.")
-                return redirect("agency_detail", franchise_id=franchise.agency_id)
+                return redirect("agency_detail", agency_id=franchise.agency_id)
             new_status = (request.POST.get("status", "") or "").strip().lower()
             allowed_statuses = {"approved", "blocked", "closed", "pending", "rejected"}
             if new_status in allowed_statuses:
@@ -1568,7 +1568,7 @@ def agency_detail(request, agency_id):
                 messages.success(request, "Статус агентства обновлён.")
             else:
                 messages.error(request, "Недопустимый статус.")
-            return redirect("agency_detail", franchise_id=franchise.agency_id)
+            return redirect("agency_detail", agency_id=franchise.agency_id)
         if not request.user.is_authenticated:
             return redirect("login")
         form = AgencyCommentForm(request.POST)
@@ -1601,7 +1601,7 @@ def agency_detail(request, agency_id):
 
             comment.save()
             messages.success(request, "Ваш комментарий был добавлен.")
-            return redirect("agency_detail", franchise_id=franchise.franchise_id)
+            return redirect("agency_detail", agency_id=franchise.agency_id)
         else:
             messages.error(request, "Ошибка при добавлении комментария.")
     else:
@@ -1617,11 +1617,11 @@ def agency_detail(request, agency_id):
         candidates_qs = Agencies.objects.filter(
             customization_data__agency_category=agency_category,
             status="approved",
-        ).exclude(agency_id=franchise_id)
+        ).exclude(agency_id=agency_id)
     else:
         candidates_qs = Agencies.objects.filter(
             status="approved",
-        ).exclude(agency_id=franchise_id)
+        ).exclude(agency_id=agency_id)
     similar_franchises = candidates_qs.order_by("-created_at")[:4]
 
     comments_with_rating = (
