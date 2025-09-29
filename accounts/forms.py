@@ -861,3 +861,181 @@ class ContactForm(forms.Form):
         label="Сообщение"
     )
     captcha_answer = forms.CharField(required=False, label="Ответ на капчу")
+
+
+class FranchiseEditForm(forms.ModelForm):
+    logo = forms.ImageField(
+        label="Логотип",
+        required=False,
+        help_text="Загрузите новый логотип франшизы (изображение)",
+    )
+    creatives = forms.FileField(
+        required=False, help_text="Загрузите новые изображения (до 3 файлов: PNG, JPEG)",
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
+    )
+    proofs = forms.FileField(
+        required=False, help_text="Загрузите новые документы (до 15 файлов: PDF, DOC, TXT)",
+        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
+    )
+    direction = forms.ModelChoiceField(
+        queryset=Directions.objects.filter(
+            direction_name__in=[
+                "Beauty", "Cafe", "Delivery", "Fastfood", "Finance",
+                "Healthcare", "Sport", "Technology",
+            ]
+        ).order_by("direction_name"),
+        label="Категория *", required=True
+    )
+    video = forms.FileField(
+        required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
+        widget=forms.ClearableFileInput(attrs={'accept': 'video/*'})
+    )
+    short_description = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
+    )
+    terms = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 5}), label="Условия *", required=True
+    )
+    planet_image = forms.ChoiceField(
+        choices=[],
+        label="Выберите планету",
+        required=False,
+        widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
+    )
+
+    class Meta:
+        model = Franchises
+        fields = [
+            "title", "short_description", "description", "terms",
+            "investment_size", "franchise_cost", "pitch_deck_url",
+            "logo", "direction", "creatives", "proofs", "video",
+            "planet_image", "profit_calculation"
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
+        except Exception as e:
+            self.fields["planet_image"].choices = []
+
+
+class AgencyEditForm(forms.ModelForm):
+    logo = forms.ImageField(
+        label="Логотип",
+        required=False,
+        help_text="Загрузите новый логотип агентства (изображение)",
+    )
+    creatives = forms.FileField(
+        required=False, help_text="Загрузите новые изображения (до 3 файлов: PNG, JPEG)",
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
+    )
+    proofs = forms.FileField(
+        required=False, help_text="Загрузите новые документы (до 15 файлов: PDF, DOC, TXT)",
+        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
+    )
+    direction = forms.ModelChoiceField(
+        queryset=Directions.objects.filter(
+            direction_name__in=[
+                "Beauty", "Cafe", "Delivery", "Fastfood", "Finance",
+                "Healthcare", "Sport", "Technology",
+            ]
+        ).order_by("direction_name"),
+        label="Категория *", required=True
+    )
+    stage = forms.ModelChoiceField(
+        queryset=StartupStages.objects.all(), label="Стадия *", required=True
+    )
+    video = forms.FileField(
+        required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
+        widget=forms.ClearableFileInput(attrs={'accept': 'video/*'})
+    )
+    short_description = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
+    )
+    terms = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ *", required=True
+    )
+    planet_image = forms.ChoiceField(
+        choices=[],
+        label="Выберите планету",
+        required=False,
+        widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
+    )
+
+    class Meta:
+        model = Agencies
+        fields = [
+            "title", "short_description", "description", "terms",
+            "pitch_deck_url", "logo", "direction", "stage",
+            "creatives", "proofs", "video", "planet_image"
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
+        except Exception as e:
+            self.fields["planet_image"].choices = []
+
+
+class SpecialistEditForm(forms.ModelForm):
+    logo = forms.ImageField(
+        label="Логотип",
+        required=False,
+        help_text="Загрузите новый логотип специалиста (изображение)",
+    )
+    creatives = forms.FileField(
+        required=False, help_text="Загрузите новые изображения (до 3 файлов: PNG, JPEG)",
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
+    )
+    proofs = forms.FileField(
+        required=False, help_text="Загрузите новые документы (до 15 файлов: PDF, DOC, TXT)",
+        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
+    )
+    direction = forms.ModelChoiceField(
+        queryset=Directions.objects.filter(
+            direction_name__in=[
+                "Beauty", "Cafe", "Delivery", "Fastfood", "Finance",
+                "Healthcare", "Sport", "Technology",
+            ]
+        ).order_by("direction_name"),
+        label="Категория *", required=True
+    )
+    stage = forms.ModelChoiceField(
+        queryset=StartupStages.objects.all(), label="Стадия *", required=True
+    )
+    video = forms.FileField(
+        required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
+        widget=forms.ClearableFileInput(attrs={'accept': 'video/*'})
+    )
+    short_description = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
+    )
+    terms = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ *", required=True
+    )
+    additional_info = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 5}), label="Услуги и кейсы", required=False
+    )
+    planet_image = forms.ChoiceField(
+        choices=[],
+        label="Выберите планету",
+        required=False,
+        widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
+    )
+
+    class Meta:
+        model = Specialists
+        fields = [
+            "title", "short_description", "description", "terms", "additional_info",
+            "pitch_deck_url", "logo", "direction", "stage",
+            "creatives", "proofs", "video", "planet_image"
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
+        except Exception as e:
+            self.fields["planet_image"].choices = []

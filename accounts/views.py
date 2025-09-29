@@ -78,8 +78,11 @@ from .forms import (
     StartupForm,
     StartupEditForm,
     FranchiseForm,
+    FranchiseEditForm,
     AgencyForm,
+    AgencyEditForm,
     SpecialistForm,
+    SpecialistEditForm,
     SupportTicketForm,
     UserSearchForm,
 )
@@ -7475,28 +7478,239 @@ def edit_franchise(request, franchise_id):
         return redirect("franchise_detail", franchise_id=franchise_id)
 
     if request.method == "POST":
-        franchise.title = request.POST.get("title", franchise.title)
-        franchise.description = request.POST.get("description", franchise.description)
-        franchise.short_description = request.POST.get("short_description", franchise.short_description)
-        franchise.investment_size = request.POST.get("investment_size", franchise.investment_size)
-        franchise.franchise_cost = request.POST.get("franchise_cost", franchise.franchise_cost)
-        franchise.profit_calculation = request.POST.get("profit_calculation", franchise.profit_calculation)
-        franchise.terms = request.POST.get("terms", franchise.terms)
-        franchise.additional_info = request.POST.get("additional_info", franchise.additional_info)
-        franchise.own_businesses_count = request.POST.get("own_businesses_count", franchise.own_businesses_count)
-        franchise.franchise_businesses_count = request.POST.get("franchise_businesses_count", franchise.franchise_businesses_count)
-
-        if 'logo' in request.FILES:
-            franchise.logo = request.FILES['logo']
-
-        franchise.save()
-        messages.success(request, "Франшиза успешно обновлена.")
-        return redirect("franchise_detail", franchise_id=franchise_id)
-
+        form = FranchiseEditForm(request.POST, request.FILES, instance=franchise)
+        
+        if form.is_valid():
+            franchise = form.save(commit=False)
+            
+            # Обработка файлов
+            if 'logo' in request.FILES:
+                logo_file = request.FILES['logo']
+                if logo_file.size > 0:
+                    logo_id = str(uuid.uuid4())
+                    file_path = f"franchises/{franchise.franchise_id}/logos/{logo_id}_{logo_file.name}"
+                    default_storage.save(file_path, logo_file)
+                    franchise.logo_urls = [logo_id]
+            
+            if 'creatives' in request.FILES:
+                creative_files = request.FILES.getlist('creatives')
+                creative_file_ids = []
+                for creative_file in creative_files:
+                    if creative_file.size > 0:
+                        creative_id = str(uuid.uuid4())
+                        file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{creative_file.name}"
+                        default_storage.save(file_path, creative_file)
+                        creative_file_ids.append(creative_id)
+                if creative_file_ids:
+                    franchise.creatives_urls = creative_file_ids
+            
+            if 'proofs' in request.FILES:
+                proof_files = request.FILES.getlist('proofs')
+                proof_file_ids = []
+                for proof_file in proof_files:
+                    if proof_file.size > 0:
+                        proof_id = str(uuid.uuid4())
+                        file_path = f"franchises/{franchise.franchise_id}/proofs/{proof_id}_{proof_file.name}"
+                        default_storage.save(file_path, proof_file)
+                        proof_file_ids.append(proof_id)
+                if proof_file_ids:
+                    franchise.proofs_urls = proof_file_ids
+            
+            if 'video' in request.FILES:
+                video_file = request.FILES['video']
+                if video_file.size > 0:
+                    video_id = str(uuid.uuid4())
+                    file_path = f"franchises/{franchise.franchise_id}/videos/{video_id}_{video_file.name}"
+                    default_storage.save(file_path, video_file)
+                    franchise.video_urls = [video_id]
+            
+            franchise.save()
+            
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "redirect_url": reverse("franchise_detail", kwargs={"franchise_id": franchise.franchise_id})
+                })
+            messages.success(request, "Франшиза успешно обновлена.")
+            return redirect("franchise_detail", franchise_id=franchise.franchise_id)
+        else:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": False,
+                    "errors": form.errors,
+                    "non_field_errors": form.non_field_errors(),
+                }, status=400)
+            messages.error(request, "Форма содержит ошибки.")
+    else:
+        form = FranchiseEditForm(instance=franchise)
+    
     context = {
+        'form': form,
         'franchise': franchise,
     }
     return render(request, 'accounts/edit_franchise.html', context)
+
+
+@login_required
+def edit_agency(request, agency_id):
+    agency = get_object_or_404(Agencies, agency_id=agency_id)
+    if request.user != agency.owner and request.user.role.role_name != 'moderator':
+        messages.error(request, "У вас нет прав для редактирования этого агентства.")
+        return redirect("agency_detail", agency_id=agency_id)
+
+    if request.method == "POST":
+        form = AgencyEditForm(request.POST, request.FILES, instance=agency)
+        
+        if form.is_valid():
+            agency = form.save(commit=False)
+            
+            # Обработка файлов
+            if 'logo' in request.FILES:
+                logo_file = request.FILES['logo']
+                if logo_file.size > 0:
+                    logo_id = str(uuid.uuid4())
+                    file_path = f"agencies/{agency.agency_id}/logos/{logo_id}_{logo_file.name}"
+                    default_storage.save(file_path, logo_file)
+                    agency.logo_urls = [logo_id]
+            
+            if 'creatives' in request.FILES:
+                creative_files = request.FILES.getlist('creatives')
+                creative_file_ids = []
+                for creative_file in creative_files:
+                    if creative_file.size > 0:
+                        creative_id = str(uuid.uuid4())
+                        file_path = f"agencies/{agency.agency_id}/creatives/{creative_id}_{creative_file.name}"
+                        default_storage.save(file_path, creative_file)
+                        creative_file_ids.append(creative_id)
+                if creative_file_ids:
+                    agency.creatives_urls = creative_file_ids
+            
+            if 'proofs' in request.FILES:
+                proof_files = request.FILES.getlist('proofs')
+                proof_file_ids = []
+                for proof_file in proof_files:
+                    if proof_file.size > 0:
+                        proof_id = str(uuid.uuid4())
+                        file_path = f"agencies/{agency.agency_id}/proofs/{proof_id}_{proof_file.name}"
+                        default_storage.save(file_path, proof_file)
+                        proof_file_ids.append(proof_id)
+                if proof_file_ids:
+                    agency.proofs_urls = proof_file_ids
+            
+            if 'video' in request.FILES:
+                video_file = request.FILES['video']
+                if video_file.size > 0:
+                    video_id = str(uuid.uuid4())
+                    file_path = f"agencies/{agency.agency_id}/videos/{video_id}_{video_file.name}"
+                    default_storage.save(file_path, video_file)
+                    agency.video_urls = [video_id]
+            
+            agency.save()
+            
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "redirect_url": reverse("agency_detail", kwargs={"agency_id": agency.agency_id})
+                })
+            messages.success(request, "Агентство успешно обновлено.")
+            return redirect("agency_detail", agency_id=agency.agency_id)
+        else:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": False,
+                    "errors": form.errors,
+                    "non_field_errors": form.non_field_errors(),
+                }, status=400)
+            messages.error(request, "Форма содержит ошибки.")
+    else:
+        form = AgencyEditForm(instance=agency)
+    
+    context = {
+        'form': form,
+        'agency': agency,
+    }
+    return render(request, 'accounts/edit_agency.html', context)
+
+
+@login_required
+def edit_specialist(request, specialist_id):
+    specialist = get_object_or_404(Specialists, specialist_id=specialist_id)
+    if request.user != specialist.owner and request.user.role.role_name != 'moderator':
+        messages.error(request, "У вас нет прав для редактирования этого специалиста.")
+        return redirect("specialist_detail", specialist_id=specialist_id)
+
+    if request.method == "POST":
+        form = SpecialistEditForm(request.POST, request.FILES, instance=specialist)
+        
+        if form.is_valid():
+            specialist = form.save(commit=False)
+            
+            # Обработка файлов
+            if 'logo' in request.FILES:
+                logo_file = request.FILES['logo']
+                if logo_file.size > 0:
+                    logo_id = str(uuid.uuid4())
+                    file_path = f"specialists/{specialist.specialist_id}/logos/{logo_id}_{logo_file.name}"
+                    default_storage.save(file_path, logo_file)
+                    specialist.logo_urls = [logo_id]
+            
+            if 'creatives' in request.FILES:
+                creative_files = request.FILES.getlist('creatives')
+                creative_file_ids = []
+                for creative_file in creative_files:
+                    if creative_file.size > 0:
+                        creative_id = str(uuid.uuid4())
+                        file_path = f"specialists/{specialist.specialist_id}/creatives/{creative_id}_{creative_file.name}"
+                        default_storage.save(file_path, creative_file)
+                        creative_file_ids.append(creative_id)
+                if creative_file_ids:
+                    specialist.creatives_urls = creative_file_ids
+            
+            if 'proofs' in request.FILES:
+                proof_files = request.FILES.getlist('proofs')
+                proof_file_ids = []
+                for proof_file in proof_files:
+                    if proof_file.size > 0:
+                        proof_id = str(uuid.uuid4())
+                        file_path = f"specialists/{specialist.specialist_id}/proofs/{proof_id}_{proof_file.name}"
+                        default_storage.save(file_path, proof_file)
+                        proof_file_ids.append(proof_id)
+                if proof_file_ids:
+                    specialist.proofs_urls = proof_file_ids
+            
+            if 'video' in request.FILES:
+                video_file = request.FILES['video']
+                if video_file.size > 0:
+                    video_id = str(uuid.uuid4())
+                    file_path = f"specialists/{specialist.specialist_id}/videos/{video_id}_{video_file.name}"
+                    default_storage.save(file_path, video_file)
+                    specialist.video_urls = [video_id]
+            
+            specialist.save()
+            
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "redirect_url": reverse("specialist_detail", kwargs={"specialist_id": specialist.specialist_id})
+                })
+            messages.success(request, "Специалист успешно обновлен.")
+            return redirect("specialist_detail", specialist_id=specialist.specialist_id)
+        else:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": False,
+                    "errors": form.errors,
+                    "non_field_errors": form.non_field_errors(),
+                }, status=400)
+            messages.error(request, "Форма содержит ошибки.")
+    else:
+        form = SpecialistEditForm(instance=specialist)
+    
+    context = {
+        'form': form,
+        'specialist': specialist,
+    }
+    return render(request, 'accounts/edit_specialist.html', context)
 
 
 @login_required
