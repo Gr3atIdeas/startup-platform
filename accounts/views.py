@@ -294,7 +294,11 @@ def get_synced_files(entity, file_type_name, file_urls_field):
         else:
             entity_id_field = f"{entity_class_name}_id"
         
-        entity_id = getattr(entity, entity_id_field)
+        # Специальная обработка для агентств
+        if entity_class_name == 'agencies':
+            entity_id = getattr(entity, 'agency_id')
+        else:
+            entity_id = getattr(entity, entity_id_field)
         
         # Получаем файлы, которые есть и в поле сущности, и в FileStorage
         synced_files = FileStorage.objects.filter(
@@ -307,6 +311,20 @@ def get_synced_files(entity, file_type_name, file_urls_field):
         return synced_files
     except (FileTypes.DoesNotExist, EntityTypes.DoesNotExist, AttributeError):
         return FileStorage.objects.none()
+
+def delete_file_from_s3(file_path):
+    """
+    Удаляет файл из S3 хранилища
+    """
+    try:
+        from storages.backends.s3boto3 import S3Boto3Storage
+        storage = S3Boto3Storage()
+        storage.delete(file_path)
+        logger.info(f"Файл удален из S3: {file_path}")
+        return True
+    except Exception as e:
+        logger.error(f"Ошибка удаления файла из S3 {file_path}: {e}")
+        return False
 
 def get_unique_filename(original_name, startup_id, file_type_name):
     """
@@ -3386,6 +3404,7 @@ def create_startup(request):
                     )
             logo_ids = []
             creatives_ids = []
+            creative_ids = []
             proofs_ids = []
             video_ids = []
             file_save_errors = []
@@ -3471,7 +3490,7 @@ def create_startup(request):
                         if not try_save_file(creative_file, file_path):
                             raise Exception("Не удалось сохранить креатив")
                         logger.info(f"Креатив успешно сохранён по пути: {file_path}")
-                        creative_ids.append(creative_id)
+                        creatives_ids.append(creative_id)
                         safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=startup.startup_id,
@@ -3620,7 +3639,7 @@ def create_franchise(request):
             franchise.planet_image = form.cleaned_data.get("planet_image")
             franchise.save()
 
-            logo_ids, creatives_ids, proofs_ids, video_ids = [], [], [], []
+            logo_ids, creatives_ids, creative_ids, proofs_ids, video_ids = [], [], [], [], []
             logo = form.cleaned_data.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
@@ -3661,7 +3680,7 @@ def create_franchise(request):
                     file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{safe_name}"
                     try:
                         default_storage.save(file_path, creative_file)
-                        creative_ids.append(creative_id)
+                        creatives_ids.append(creative_id)
                         safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=franchise.franchise_id,
@@ -4274,19 +4293,36 @@ def edit_startup(request, startup_id):
                         continue
                     unique_filename = get_unique_filename(proof_file.name, startup.startup_id, "proof")
                     proof_id = str(uuid.uuid4())
-                    file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{proof_file.name}"
-                    default_storage.save(file_path, proof_file)
-                    proofs_ids.append(proof_id)
-                    safe_create_file_storage(
-                        entity_type=entity_type,
-                        entity_id=startup.startup_id,
-                        file_type=proof_type,
-                        file_url=proof_id,
-                        uploaded_at=timezone.now(),
-                        startup=startup,
-                        original_file_name=unique_filename,
+                    base_name = os.path.splitext(proof_file.name)[0]
+                    ext = os.path.splitext(proof_file.name)[1]
+                    safe_base_name = "".join(
+                        c for c in base_name if c.isalnum() or c in ("-", "_")
                     )
-                    logger.info(f"Пруф сохранён с ID: {proof_id}")
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{safe_name}"
+                    
+                    # Проверяем, не существует ли уже файл с таким file_url
+                    existing_file = FileStorage.objects.filter(file_url=proof_id).first()
+                    if existing_file:
+                        logger.warning(f"Файл с ID {proof_id} уже существует, пропускаем создание")
+                        continue
+                    
+                    try:
+                        default_storage.save(file_path, proof_file)
+                        proofs_ids.append(proof_id)
+                        safe_create_file_storage(
+                            entity_type=entity_type,
+                            entity_id=startup.startup_id,
+                            file_type=proof_type,
+                            file_url=proof_id,
+                            uploaded_at=timezone.now(),
+                            startup=startup,
+                            original_file_name=proof_file.name,
+                        )
+                        logger.info(f"Пруф сохранён с ID: {proof_id}")
+                    except Exception as e:
+                        logger.error(f"Ошибка сохранения пруфа {proof_file.name}: {e}")
+                        messages.warning(request, f"Не удалось сохранить документ {proof_file.name}")
                 # proofs_ids будут добавлены в конце функции
             videos = request.FILES.getlist("video")
             if videos:
@@ -4345,10 +4381,33 @@ def edit_startup(request, startup_id):
                     if file_id and file_type:
                         from django.db.models import Q
                         entity_type = EntityTypes.objects.get(type_name="startup")
+                        
+                        # Получаем информацию о файле перед удалением
+                        file_storage = FileStorage.objects.filter(
+                            Q(entity_type=entity_type, entity_id=startup.startup_id) | Q(startup=startup),
+                            file_url=file_id
+                        ).first()
+                        
+                        if file_storage:
+                            # Удаляем файл из S3
+                            if file_type == 'creative':
+                                file_path = f"startups/{startup.startup_id}/creatives/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            elif file_type == 'proof':
+                                file_path = f"startups/{startup.startup_id}/proofs/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            elif file_type == 'video':
+                                file_path = f"startups/{startup.startup_id}/videos/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            else:
+                                file_path = f"startups/{startup.startup_id}/{file_type}s/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            
+                            delete_file_from_s3(file_path)
+                        
+                        # Удаляем запись из базы данных
                         FileStorage.objects.filter(
                             Q(entity_type=entity_type, entity_id=startup.startup_id) | Q(startup=startup),
                             file_url=file_id
                         ).delete()
+                        
+                        # Удаляем из списка URL
                         if file_type == 'creative' and startup.creatives_urls:
                             startup.creatives_urls = [url for url in startup.creatives_urls if url != file_id]
                         elif file_type == 'proof' and startup.proofs_urls:
@@ -7668,7 +7727,7 @@ def edit_franchise(request, franchise_id):
                     file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{safe_name}"
                     try:
                         default_storage.save(file_path, creative_file)
-                        creative_ids.append(creative_id)
+                        creatives_ids.append(creative_id)
                         safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=franchise.franchise_id,
@@ -7750,17 +7809,41 @@ def edit_franchise(request, franchise_id):
                     file_id = deleted_file.get('id')
                     file_type = deleted_file.get('type')
                     if file_id and file_type:
+                        # Получаем информацию о файле перед удалением
+                        file_storage = FileStorage.objects.filter(
+                            entity_type=entity_type,
+                            entity_id=franchise.franchise_id,
+                            file_url=file_id
+                        ).first()
+                        
+                        if file_storage:
+                            # Удаляем файл из S3
+                            if file_type == 'creative':
+                                file_path = f"franchises/{franchise.franchise_id}/creatives/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            elif file_type == 'proof':
+                                file_path = f"franchises/{franchise.franchise_id}/proofs/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            elif file_type == 'video':
+                                file_path = f"franchises/{franchise.franchise_id}/videos/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            else:
+                                file_path = f"franchises/{franchise.franchise_id}/{file_type}s/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            
+                            delete_file_from_s3(file_path)
+                        
+                        # Удаляем запись из базы данных
                         FileStorage.objects.filter(
                             entity_type=entity_type,
                             entity_id=franchise.franchise_id,
                             file_url=file_id
                         ).delete()
+                        
+                        # Удаляем из списка URL
                         if file_type == 'creative' and franchise.creatives_urls:
                             franchise.creatives_urls = [url for url in franchise.creatives_urls if url != file_id]
                         elif file_type == 'proof' and franchise.proofs_urls:
                             franchise.proofs_urls = [url for url in franchise.proofs_urls if url != file_id]
                         elif file_type == 'video' and franchise.video_urls:
                             franchise.video_urls = [url for url in franchise.video_urls if url != file_id]
+                        logger.info(f"Удален файл {file_type}: {file_id}")
             except json.JSONDecodeError:
                 pass
             
@@ -7929,7 +8012,7 @@ def edit_agency(request, agency_id):
                     file_path = f"agencies/{agency.agency_id}/creatives/{creative_id}_{safe_name}"
                     try:
                         default_storage.save(file_path, creative_file)
-                        creative_ids.append(creative_id)
+                        creatives_ids.append(creative_id)
                         safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=agency.agency_id,
@@ -8005,17 +8088,41 @@ def edit_agency(request, agency_id):
                     file_id = deleted_file.get('id')
                     file_type = deleted_file.get('type')
                     if file_id and file_type:
+                        # Получаем информацию о файле перед удалением
+                        file_storage = FileStorage.objects.filter(
+                            entity_type=entity_type,
+                            entity_id=agency.agency_id,
+                            file_url=file_id
+                        ).first()
+                        
+                        if file_storage:
+                            # Удаляем файл из S3
+                            if file_type == 'creative':
+                                file_path = f"agencies/{agency.agency_id}/creatives/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            elif file_type == 'proof':
+                                file_path = f"agencies/{agency.agency_id}/proofs/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            elif file_type == 'video':
+                                file_path = f"agencies/{agency.agency_id}/videos/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            else:
+                                file_path = f"agencies/{agency.agency_id}/{file_type}s/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            
+                            delete_file_from_s3(file_path)
+                        
+                        # Удаляем запись из базы данных
                         FileStorage.objects.filter(
                             entity_type=entity_type,
                             entity_id=agency.agency_id,
                             file_url=file_id
                         ).delete()
+                        
+                        # Удаляем из списка URL
                         if file_type == 'creative' and creative_ids:
                             creative_ids = [url for url in creative_ids if url != file_id]
                         elif file_type == 'proof' and proofs_ids:
                             proofs_ids = [url for url in proofs_ids if url != file_id]
                         elif file_type == 'video' and video_ids:
                             video_ids = [url for url in video_ids if url != file_id]
+                        logger.info(f"Удален файл {file_type}: {file_id}")
             except json.JSONDecodeError:
                 pass
             
@@ -8190,7 +8297,7 @@ def edit_specialist(request, specialist_id):
                     file_path = f"specialists/{specialist.specialist_id}/creatives/{creative_id}_{safe_name}"
                     try:
                         default_storage.save(file_path, creative_file)
-                        creative_ids.append(creative_id)
+                        creatives_ids.append(creative_id)
                         safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=specialist.specialist_id,
@@ -8272,17 +8379,41 @@ def edit_specialist(request, specialist_id):
                     file_id = deleted_file.get('id')
                     file_type = deleted_file.get('type')
                     if file_id and file_type:
+                        # Получаем информацию о файле перед удалением
+                        file_storage = FileStorage.objects.filter(
+                            entity_type=entity_type,
+                            entity_id=specialist.specialist_id,
+                            file_url=file_id
+                        ).first()
+                        
+                        if file_storage:
+                            # Удаляем файл из S3
+                            if file_type == 'creative':
+                                file_path = f"specialists/{specialist.specialist_id}/creatives/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            elif file_type == 'proof':
+                                file_path = f"specialists/{specialist.specialist_id}/proofs/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            elif file_type == 'video':
+                                file_path = f"specialists/{specialist.specialist_id}/videos/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            else:
+                                file_path = f"specialists/{specialist.specialist_id}/{file_type}s/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                            
+                            delete_file_from_s3(file_path)
+                        
+                        # Удаляем запись из базы данных
                         FileStorage.objects.filter(
                             entity_type=entity_type,
                             entity_id=specialist.specialist_id,
                             file_url=file_id
                         ).delete()
+                        
+                        # Удаляем из списка URL
                         if file_type == 'creative' and specialist.creatives_urls:
                             specialist.creatives_urls = [url for url in specialist.creatives_urls if url != file_id]
                         elif file_type == 'proof' and specialist.proofs_urls:
                             specialist.proofs_urls = [url for url in specialist.proofs_urls if url != file_id]
                         elif file_type == 'video' and specialist.video_urls:
                             specialist.video_urls = [url for url in specialist.video_urls if url != file_id]
+                        logger.info(f"Удален файл {file_type}: {file_id}")
             except json.JSONDecodeError:
                 pass
             
