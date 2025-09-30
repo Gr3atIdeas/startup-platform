@@ -1001,9 +1001,6 @@ class AgencyEditForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
                 self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects', 12)
-                self.fields['specialist_category'].initial = self.instance.customization_data.get('specialist_category', '')
-                self.fields['specialist_description'].initial = self.instance.customization_data.get('specialist_description', '')
-                self.fields['specialist_additional_info'].initial = self.instance.customization_data.get('specialist_additional_info', '')
                 self.fields['agency_category'].initial = self.instance.customization_data.get('agency_category', '')
                 self.fields['agency_description'].initial = self.instance.customization_data.get('agency_description', '')
                 self.fields['agency_additional_info'].initial = self.instance.customization_data.get('agency_additional_info', '')
