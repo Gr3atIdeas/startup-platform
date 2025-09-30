@@ -1662,8 +1662,9 @@ def agency_detail(request, agency_id):
     # Получаем документы из FileStorage
     try:
         proof_file_type = FileTypes.objects.get(type_name="proof")
+        entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
         agency_documents = FileStorage.objects.filter(
-            startup=franchise, file_type=proof_file_type
+            entity_type=entity_type, entity_id=franchise.agency_id, file_type=proof_file_type
         ).order_by("-uploaded_at")
     except:
         agency_documents = FileStorage.objects.none()
@@ -1799,8 +1800,9 @@ def specialist_detail(request, specialist_id):
     # Получаем документы из FileStorage
     try:
         proof_file_type = FileTypes.objects.get(type_name="proof")
+        entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
         specialist_documents = FileStorage.objects.filter(
-            startup=specialist, file_type=proof_file_type
+            entity_type=entity_type, entity_id=specialist.specialist_id, file_type=proof_file_type
         ).order_by("-uploaded_at")
     except:
         specialist_documents = FileStorage.objects.none()
@@ -1935,8 +1937,9 @@ def franchise_detail(request, franchise_id):
     # Получаем документы из FileStorage
     try:
         proof_file_type = FileTypes.objects.get(type_name="proof")
+        entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
         franchise_documents = FileStorage.objects.filter(
-            startup=franchise, file_type=proof_file_type
+            entity_type=entity_type, entity_id=franchise.franchise_id, file_type=proof_file_type
         ).order_by("-uploaded_at")
     except:
         franchise_documents = FileStorage.objects.none()

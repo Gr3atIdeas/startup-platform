@@ -102,7 +102,7 @@
                   <img src="{{ franchise.owner.get_profile_picture_url }}" alt="Аватар автора {{ franchise.owner.username }}" class="logo-image">
                 {% elif franchise.logo_urls %}
                   {% with logo_file_id=franchise.logo_urls.0 %}
-                    <img src="{% get_file_url_tag logo_file_id franchise.franchise_id 'logo' %}" alt="Логотип {{ franchise.title }}" class="logo-image">
+                    <img src="{% get_file_url_tag logo_file_id franchise.franchise_id 'logo' 'franchise' %}" alt="Логотип {{ franchise.title }}" class="logo-image">
                   {% endwith %}
                 {% else %}
                   <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
@@ -247,7 +247,7 @@
               <div class="video-grid"> 
                   {% for url in video_urls %}
                       
-                      <a href="{% get_file_url_tag url franchise.franchise_id 'video' %}" 
+                      <a href="{% get_file_url_tag url franchise.franchise_id 'video' 'franchise' %}" 
                          
                          class="gallery-item video-item glightbox" 
                          data-gallery="franchise-gallery">          
@@ -270,10 +270,10 @@
                 
                 {% for url in creatives_urls %}
                   <a 
-                     href="{% get_file_url_tag url franchise.franchise_id 'creative' %}"
+                     href="{% get_file_url_tag url franchise.franchise_id 'creative' 'franchise' %}"
                      class="gallery-item image-item glightbox" 
                      data-gallery="franchise-gallery"> 
-                    <img src="{% get_file_url_tag url franchise.franchise_id 'creative' %}" alt="Креатив {{ forloop.counter }}" />
+                    <img src="{% get_file_url_tag url franchise.franchise_id 'creative' 'franchise' %}" alt="Креатив {{ forloop.counter }}" />
                   </a>
                 {% endfor %}
               </div>
@@ -304,9 +304,9 @@
                 <ul class="document-list">
                     {% for doc in franchise_documents %}
                         <li class="document-item">
-                            <a href="{% get_file_url_tag doc.file_url franchise.franchise_id 'proof' %}" target="_blank" class="document-link">
+                            <a href="{% get_file_url_tag doc.file_url franchise.franchise_id 'proof' 'franchise' %}" target="_blank" class="document-link">
                                 <i class="fas fa-file-alt document-icon"></i>
-                                <span class="document-name">{% get_file_original_name doc.file_url franchise.franchise_id 'proof' %}</span>
+                                <span class="document-name">{% get_file_original_name doc.file_url franchise.franchise_id 'proof' 'franchise' %}</span>
                             </a>
                             
                         </li>
@@ -525,7 +525,7 @@
           <a href="{% url 'franchise_detail' similar.franchise_id %}" class="similar-card">
             <div class="similar-card-image">
               {% if similar.logo_urls %}
-                <img src="{% get_file_url_tag similar.logo_urls.0 similar.franchise_id 'logo' %}" alt="Логотип">
+                <img src="{% get_file_url_tag similar.logo_urls.0 similar.franchise_id 'logo' 'franchise' %}" alt="Логотип">
               {% else %}
                 <div class="planet">
                   <div class="planet-segment segment-top" style="background-color: {{ similar.planet_top_color|default:'#7B61FF' }};"></div>

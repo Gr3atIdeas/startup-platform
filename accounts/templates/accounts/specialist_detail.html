@@ -97,7 +97,7 @@
                   <img src="{{ specialist.owner.get_profile_picture_url }}" alt="Аватар автора {{ specialist.owner.username }}" class="logo-image">
                 {% elif specialist.logo_urls %}
                   {% with logo_file_id=specialist.logo_urls.0 %}
-                    <img src="{% get_file_url_tag logo_file_id specialist.specialist_id 'logo' %}" alt="Логотип {{ specialist.title }}" class="logo-image">
+                    <img src="{% get_file_url_tag logo_file_id specialist.specialist_id 'logo' 'specialist' %}" alt="Логотип {{ specialist.title }}" class="logo-image">
                   {% endwith %}
                 {% else %}
                   <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
@@ -245,9 +245,9 @@
                 <ul class="document-list">
                     {% for doc in specialist_documents %}
                         <li class="document-item">
-                            <a href="{% get_file_url_tag doc.file_url specialist.specialist_id 'proof' %}" target="_blank" class="document-link">
+                            <a href="{% get_file_url_tag doc.file_url specialist.specialist_id 'proof' 'specialist' %}" target="_blank" class="document-link">
                                 <i class="fas fa-file-alt document-icon"></i>
-                                <span class="document-name">{% get_file_original_name doc.file_url specialist.specialist_id 'proof' %}</span>
+                                <span class="document-name">{% get_file_original_name doc.file_url specialist.specialist_id 'proof' 'specialist' %}</span>
                             </a>
                             
                         </li>
@@ -465,7 +465,7 @@
           <a href="{% url 'specialist_detail' similar.specialist_id %}" class="similar-card">
             <div class="similar-card-image">
               {% if similar.logo_urls %}
-                <img src="{% get_file_url_tag similar.logo_urls.0 similar.specialist_id 'logo' %}" alt="Логотип">
+                <img src="{% get_file_url_tag similar.logo_urls.0 similar.specialist_id 'logo' 'specialist' %}" alt="Логотип">
               {% else %}
                 <div class="planet">
                   <div class="planet-segment segment-top" style="background-color: {{ similar.planet_top_color|default:'#7B61FF' }};"></div>

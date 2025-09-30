@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="logo-placeholder" id="logoPlaceholder" {% if logo_file_id %}style="display:none;"{% endif %}>
                             <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon" loading="lazy" decoding="async">
                         </div>
-                        <img src="{% if logo_file_id %}{% get_file_url_tag logo_file_id franchise.franchise_id 'logo' %}{% else %}""{% endif %}" alt="Логотип" class="logo-preview" id="logoPreview" {% if not logo_file_id %}style="display:none;"{% endif %}>
+                        <img src="{% if logo_file_id %}{% get_file_url_tag logo_file_id franchise.franchise_id 'logo' 'franchise' %}{% else %}""{% endif %}" alt="Логотип" class="logo-preview" id="logoPreview" {% if not logo_file_id %}style="display:none;"{% endif %}>
                     {% endwith %}
                     </div>
                     {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"name:logo"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
@@ -217,8 +217,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div id="creativesPreview" class="file-preview-area">
                             {% for creative_url in franchise.creatives_urls %}
                                 <div class="file-preview-item existing-file" data-file-id="{{ creative_url }}">
-                                    <img src="{% get_file_url_tag creative_url franchise.franchise_id 'creative' %}" alt="Креатив" style="max-width: 200px; max-height: 150px;">
-                                    <p>{% get_file_original_name creative_url franchise.franchise_id 'creative' %}</p>
+                                    <img src="{% get_file_url_tag creative_url franchise.franchise_id 'creative' 'franchise' %}" alt="Креатив" style="max-width: 200px; max-height: 150px;">
+                                    <p>{% get_file_original_name creative_url franchise.franchise_id 'creative' 'franchise' %}</p>
                                     <button type="button" class="delete-existing-file-btn" data-file-id="{{ creative_url }}" data-file-type="creative">Удалить</button>
                                 </div>
                             {% endfor %}
@@ -234,8 +234,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div id="videoPreview" class="file-preview-area">
                             {% for video_url in franchise.video_urls %}
                                 <div class="file-preview-item existing-file" data-file-id="{{ video_url }}">
-                                    <video controls src="{% get_file_url_tag video_url franchise.franchise_id 'video' %}" style="max-width: 200px; max-height: 150px;"></video>
-                                    <p>{% get_file_original_name video_url franchise.franchise_id 'video' %}</p>
+                                    <video controls src="{% get_file_url_tag video_url franchise.franchise_id 'video' 'franchise' %}" style="max-width: 200px; max-height: 150px;"></video>
+                                    <p>{% get_file_original_name video_url franchise.franchise_id 'video' 'franchise' %}</p>
                                     <button type="button" class="delete-existing-file-btn" data-file-id="{{ video_url }}" data-file-type="video">Удалить</button>
                                 </div>
                             {% endfor %}
@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         {% for proof_url in franchise.proofs_urls %}
                             <div class="file-preview-item existing-file" data-file-id="{{ proof_url }}">
                                 <img src="{% static 'accounts/images/icons/file_icon.svg' %}" alt="file icon" class="file-icon" style="width: 40px; height: auto;">
-                                <p><a href="{% get_file_url_tag proof_url franchise.franchise_id 'proof' %}" target="_blank">{% get_file_original_name proof_url franchise.franchise_id 'proof' %}</a></p>
+                                <p><a href="{% get_file_url_tag proof_url franchise.franchise_id 'proof' 'franchise' %}" target="_blank">{% get_file_original_name proof_url franchise.franchise_id 'proof' 'franchise' %}</a></p>
                                 <button type="button" class="delete-existing-file-btn" data-file-id="{{ proof_url }}" data-file-type="proof">Удалить</button>
                             </div>
                         {% endfor %}

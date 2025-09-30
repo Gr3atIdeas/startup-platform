@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="logo-placeholder" id="logoPlaceholder" {% if logo_file_id %}style="display:none;"{% endif %}>
                             <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon" loading="lazy" decoding="async">
                         </div>
-                        <img src="{% if logo_file_id %}{% get_file_url_tag logo_file_id agency.agency_id 'logo' %}{% else %}""{% endif %}" alt="Логотип" class="logo-preview" id="logoPreview" {% if not logo_file_id %}style="display:none;"{% endif %}>
+                        <img src="{% if logo_file_id %}{% get_file_url_tag logo_file_id agency.agency_id 'logo' 'agency' %}{% else %}""{% endif %}" alt="Логотип" class="logo-preview" id="logoPreview" {% if not logo_file_id %}style="display:none;"{% endif %}>
                     {% endwith %}
                     </div>
                     {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"name:logo"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
