@@ -734,6 +734,7 @@ a:hover {
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .agency-info-badge {
@@ -744,6 +745,11 @@ a:hover {
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
+}
+
+/* Скрыть кнопки прокрутки на страницах агентств */
+body:has(.agency-detail-page) .scroll-arrow {
+  display: none !important;
 }
 
 

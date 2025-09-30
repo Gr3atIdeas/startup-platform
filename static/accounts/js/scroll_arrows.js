@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Не показывать кнопки прокрутки на страницах агентств
+    if (window.location.pathname.includes('/agencies/') && window.location.pathname !== '/agencies/') {
+        return;
+    }
+
     const scrollArrowUp = document.createElement('button');
     scrollArrowUp.className = 'scroll-arrow scroll-arrow-up';
     scrollArrowUp.innerHTML = `
