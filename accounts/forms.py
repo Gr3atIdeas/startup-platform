@@ -68,7 +68,7 @@ class StartupEditForm(forms.ModelForm):
         queryset=Directions.objects.none(), label="Направление *", required=True
     )
     stage = forms.ModelChoiceField(
-        queryset=StartupStages.objects.all(), label="Стадия *", required=True
+        queryset=StartupStages.objects.all(), label="Стадия", required=False, empty_label="Выберите стадию"
     )
     micro_investment_available = forms.BooleanField(
         required=False, label="Микроинвестиции доступны"
@@ -166,7 +166,7 @@ class StartupForm(forms.ModelForm):
         queryset=Directions.objects.none(), label="Направление *", required=True
     )
     stage = forms.ModelChoiceField(
-        queryset=StartupStages.objects.all(), label="Стадия *", required=True
+        queryset=StartupStages.objects.all(), label="Стадия", required=False, empty_label="Выберите стадию"
     )
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(
@@ -884,7 +884,7 @@ class FranchiseEditForm(forms.ModelForm):
                 "Healthcare", "Sport", "Technology",
             ]
         ).order_by("direction_name"),
-        label="Категория *", required=True
+        label="Категория", required=False, empty_label="Выберите категорию"
     )
     video = forms.FileField(
         required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
@@ -941,10 +941,10 @@ class AgencyEditForm(forms.ModelForm):
                 "Healthcare", "Sport", "Technology",
             ]
         ).order_by("direction_name"),
-        label="Категория *", required=True
+        label="Категория", required=False, empty_label="Выберите категорию"
     )
     stage = forms.ModelChoiceField(
-        queryset=StartupStages.objects.all(), label="Стадия *", required=True
+        queryset=StartupStages.objects.all(), label="Стадия", required=False, empty_label="Выберите стадию"
     )
     video = forms.FileField(
         required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
@@ -1011,10 +1011,10 @@ class SpecialistEditForm(forms.ModelForm):
                 "Healthcare", "Sport", "Technology",
             ]
         ).order_by("direction_name"),
-        label="Категория *", required=True
+        label="Категория", required=False, empty_label="Выберите категорию"
     )
     stage = forms.ModelChoiceField(
-        queryset=StartupStages.objects.all(), label="Стадия *", required=True
+        queryset=StartupStages.objects.all(), label="Стадия", required=False, empty_label="Выберите стадию"
     )
     video = forms.FileField(
         required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
