@@ -1,9 +1,8 @@
-if (typeof document === 'undefined') {
-    console.error('Document is not defined');
-    return;
-}
-
 document.addEventListener('DOMContentLoaded', function() {
+    if (typeof document === 'undefined') {
+        console.error('Document is not defined');
+        return;
+    }
     const headerSearchInput = document.querySelector('.header-search-input');
 
     if (!headerSearchInput) {

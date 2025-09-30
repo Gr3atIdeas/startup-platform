@@ -1636,11 +1636,11 @@
                          categoryButton.textContent = 'Категория ';
                          if (chevron) categoryButton.appendChild(chevron);
                     }
-                    if(searchInput) searchInput.value = '';
                  }
     
                  // Вызываем фильтрацию для "Мои стартапы" (без статуса)
                  const searchInput = document.getElementById('startup-search');
+                 if(searchInput) searchInput.value = '';
                  const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
                  const startupCards = startupGrid.querySelectorAll('.startup-card');
                  const loadMoreBtnSearch = document.getElementById('load-more');
@@ -1759,7 +1759,6 @@
              link.addEventListener('click', function(event) {
                  filterByCategory(event);
                  // Вызываем фильтрацию для "Мои стартапы" (без статуса)
-                 const searchInput = document.getElementById('startup-search');
                  const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
                  const startupCards = startupGrid.querySelectorAll('.startup-card');
                  const loadMoreBtnSearch = document.getElementById('load-more');
