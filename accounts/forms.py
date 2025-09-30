@@ -934,17 +934,29 @@ class AgencyEditForm(forms.ModelForm):
         required=False, help_text="Загрузите новые документы (до 15 файлов: PDF, DOC, TXT)",
         widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
     )
-    direction = forms.ModelChoiceField(
-        queryset=Directions.objects.filter(
-            direction_name__in=[
-                "Beauty", "Cafe", "Delivery", "Fastfood", "Finance",
-                "Healthcare", "Sport", "Technology",
-            ]
-        ).order_by("direction_name"),
+    agency_category = forms.ChoiceField(
+        choices=[
+            ("Веб-разработка", "Веб-разработка"),
+            ("Мобильная разработка", "Мобильная разработка"),
+            ("Дизайн", "Дизайн"),
+            ("Маркетинг", "Маркетинг"),
+            ("ИИ", "ИИ"),
+            ("Брендинг", "Брендинг"),
+            ("Видео и мультимедиа", "Видео и мультимедиа"),
+        ],
         label="Категория", required=False, empty_label="Выберите категорию"
     )
-    stage = forms.ModelChoiceField(
-        queryset=StartupStages.objects.all(), label="Стадия", required=False, empty_label="Выберите стадию"
+    agency_description = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 3}), label="Вводная", required=False
+    )
+    agency_additional_info = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 5}), label="Основные услуги", required=False
+    )
+    agency_services = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 5}), label="Услуги", required=False
+    )
+    agency_pitch_deck_url = forms.URLField(
+        label="Презентация", required=False
     )
     video = forms.FileField(
         required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
@@ -988,6 +1000,11 @@ class AgencyEditForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
                 self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects', 12)
+                self.fields['agency_category'].initial = self.instance.customization_data.get('agency_category', '')
+                self.fields['agency_description'].initial = self.instance.customization_data.get('agency_description', '')
+                self.fields['agency_additional_info'].initial = self.instance.customization_data.get('agency_additional_info', '')
+                self.fields['agency_services'].initial = self.instance.customization_data.get('agency_services', '')
+                self.fields['agency_pitch_deck_url'].initial = self.instance.customization_data.get('agency_pitch_deck_url', '')
 
 
 class SpecialistEditForm(forms.ModelForm):
@@ -1004,17 +1021,23 @@ class SpecialistEditForm(forms.ModelForm):
         required=False, help_text="Загрузите новые документы (до 15 файлов: PDF, DOC, TXT)",
         widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
     )
-    direction = forms.ModelChoiceField(
-        queryset=Directions.objects.filter(
-            direction_name__in=[
-                "Beauty", "Cafe", "Delivery", "Fastfood", "Finance",
-                "Healthcare", "Sport", "Technology",
-            ]
-        ).order_by("direction_name"),
+    specialist_category = forms.ChoiceField(
+        choices=[
+            ("Веб-разработка", "Веб-разработка"),
+            ("Мобильная разработка", "Мобильная разработка"),
+            ("Дизайн", "Дизайн"),
+            ("Маркетинг", "Маркетинг"),
+            ("ИИ", "ИИ"),
+            ("Брендинг", "Брендинг"),
+            ("Видео и мультимедиа", "Видео и мультимедиа"),
+        ],
         label="Категория", required=False, empty_label="Выберите категорию"
     )
-    stage = forms.ModelChoiceField(
-        queryset=StartupStages.objects.all(), label="Стадия", required=False, empty_label="Выберите стадию"
+    specialist_description = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 3}), label="Вводная", required=False
+    )
+    specialist_additional_info = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 5}), label="Основные функции", required=False
     )
     video = forms.FileField(
         required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
