@@ -3482,13 +3482,7 @@ def create_startup(request):
                         continue
                     unique_filename = get_unique_filename(creative_file.name, startup.startup_id, "creative")
                     creative_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(creative_file.name)[0]
-                    ext = os.path.splitext(creative_file.name)[1]
-                    safe_base_name = "".join(
-                        c for c in base_name if c.isalnum() or c in ("-", "_")
-                    )
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{safe_name}"
+                    file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{creative_file.name}"
                     try:
                         logger.info(f"Попытка сохранить креатив по пути: {file_path}")
                         if not try_save_file(creative_file, file_path):
@@ -3519,15 +3513,7 @@ def create_startup(request):
                         continue
                     unique_filename = get_unique_filename(proof_file.name, startup.startup_id, "proof")
                     proof_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(proof_file.name)[0]
-                    ext = os.path.splitext(proof_file.name)[1]
-                    safe_base_name = "".join(
-                        c for c in base_name if c.isalnum() or c in ("-", "_")
-                    )
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = (
-                        f"startups/{startup.startup_id}/proofs/{proof_id}_{safe_name}"
-                    )
+                    file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{proof_file.name}"
                     try:
                         logger.info(f"Попытка сохранить пруф по пути: {file_path}")
                         if not try_save_file(proof_file, file_path):
@@ -3558,13 +3544,7 @@ def create_startup(request):
                         continue
                     unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
                     video_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(video.name)[0]
-                    ext = os.path.splitext(video.name)[1]
-                    safe_base_name = "".join(
-                        c for c in base_name if c.isalnum() or c in ("-", "_")
-                    )
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"startups/{startup.startup_id}/videos/{video_id}_{safe_name}"
+                    file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
                     try:
                         logger.info(f"Попытка сохранить видео по пути: {file_path}")
                         if not try_save_file(video, file_path):
@@ -3677,11 +3657,7 @@ def create_franchise(request):
                     if not hasattr(creative_file, "name"):
                         continue
                     creative_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(creative_file.name)[0]
-                    ext = os.path.splitext(creative_file.name)[1]
-                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{safe_name}"
+                    file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{creative_file.name}"
                     try:
                         default_storage.save(file_path, creative_file)
                         creatives_ids.append(creative_id)
@@ -3705,11 +3681,7 @@ def create_franchise(request):
                     if not hasattr(proof_file, "name"):
                         continue
                     proof_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(proof_file.name)[0]
-                    ext = os.path.splitext(proof_file.name)[1]
-                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"franchises/{franchise.franchise_id}/proofs/{proof_id}_{safe_name}"
+                    file_path = f"franchises/{franchise.franchise_id}/proofs/{proof_id}_{proof_file.name}"
                     try:
                         default_storage.save(file_path, proof_file)
                         proofs_ids.append(proof_id)
@@ -3730,11 +3702,7 @@ def create_franchise(request):
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 video_id = str(uuid.uuid4())
-                base_name = os.path.splitext(video.name)[0]
-                ext = os.path.splitext(video.name)[1]
-                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"franchises/{franchise.franchise_id}/videos/{video_id}_{safe_name}"
+                file_path = f"franchises/{franchise.franchise_id}/videos/{video_id}_{video.name}"
                 try:
                     default_storage.save(file_path, video)
                     video_ids.append(video_id)
@@ -4324,13 +4292,7 @@ def edit_startup(request, startup_id):
                     
                     unique_filename = get_unique_filename(proof_file.name, startup.startup_id, "proof")
                     proof_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(proof_file.name)[0]
-                    ext = os.path.splitext(proof_file.name)[1]
-                    safe_base_name = "".join(
-                        c for c in base_name if c.isalnum() or c in ("-", "_")
-                    )
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{safe_name}"
+                    file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{proof_file.name}"
                     
                     try:
                         default_storage.save(file_path, proof_file)
@@ -4429,19 +4391,11 @@ def edit_startup(request, startup_id):
                         if file_storage:
                             # Удаляем файл из S3 - используем правильный путь
                             if file_type == 'creative':
-                                # Формируем безопасное имя файла как при загрузке
-                                base_name = os.path.splitext(file_storage.original_file_name or 'unknown')[0]
-                                ext = os.path.splitext(file_storage.original_file_name or 'unknown')[1]
-                                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                                safe_name = slugify(safe_base_name) + ext
-                                file_path = f"startups/{startup.startup_id}/creatives/{file_id}_{safe_name}"
+                                # Используем оригинальное имя файла как при загрузке
+                                file_path = f"startups/{startup.startup_id}/creatives/{file_id}_{file_storage.original_file_name or 'unknown'}"
                             elif file_type == 'proof':
-                                # Формируем безопасное имя файла как при загрузке
-                                base_name = os.path.splitext(file_storage.original_file_name or 'unknown')[0]
-                                ext = os.path.splitext(file_storage.original_file_name or 'unknown')[1]
-                                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                                safe_name = slugify(safe_base_name) + ext
-                                file_path = f"startups/{startup.startup_id}/proofs/{file_id}_{safe_name}"
+                                # Используем оригинальное имя файла как при загрузке
+                                file_path = f"startups/{startup.startup_id}/proofs/{file_id}_{file_storage.original_file_name or 'unknown'}"
                             elif file_type == 'video':
                                 file_path = f"startups/{startup.startup_id}/videos/{file_id}_{file_storage.original_file_name or 'unknown'}"
                             else:
@@ -7770,11 +7724,7 @@ def edit_franchise(request, franchise_id):
                     if not hasattr(creative_file, "name"):
                         continue
                     creative_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(creative_file.name)[0]
-                    ext = os.path.splitext(creative_file.name)[1]
-                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{safe_name}"
+                    file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{creative_file.name}"
                     try:
                         default_storage.save(file_path, creative_file)
                         creatives_ids.append(creative_id)
@@ -7797,11 +7747,7 @@ def edit_franchise(request, franchise_id):
                     if not hasattr(proof_file, "name"):
                         continue
                     proof_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(proof_file.name)[0]
-                    ext = os.path.splitext(proof_file.name)[1]
-                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"franchises/{franchise.franchise_id}/proofs/{proof_id}_{safe_name}"
+                    file_path = f"franchises/{franchise.franchise_id}/proofs/{proof_id}_{proof_file.name}"
                     try:
                         default_storage.save(file_path, proof_file)
                         proofs_ids.append(proof_id)
@@ -7824,11 +7770,7 @@ def edit_franchise(request, franchise_id):
                     if not hasattr(video, "name"):
                         continue
                     video_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(video.name)[0]
-                    ext = os.path.splitext(video.name)[1]
-                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"franchises/{franchise.franchise_id}/videos/{video_id}_{safe_name}"
+                    file_path = f"franchises/{franchise.franchise_id}/videos/{video_id}_{video.name}"
                     try:
                         default_storage.save(file_path, video)
                         video_ids.append(video_id)
@@ -8056,11 +7998,7 @@ def edit_agency(request, agency_id):
                     if not hasattr(creative_file, "name"):
                         continue
                     creative_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(creative_file.name)[0]
-                    ext = os.path.splitext(creative_file.name)[1]
-                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"agencies/{agency.agency_id}/creatives/{creative_id}_{safe_name}"
+                    file_path = f"agencies/{agency.agency_id}/creatives/{creative_id}_{creative_file.name}"
                     try:
                         default_storage.save(file_path, creative_file)
                         creatives_ids.append(creative_id)
@@ -8083,11 +8021,7 @@ def edit_agency(request, agency_id):
                     if not hasattr(proof_file, "name"):
                         continue
                     proof_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(proof_file.name)[0]
-                    ext = os.path.splitext(proof_file.name)[1]
-                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"agencies/{agency.agency_id}/proofs/{proof_id}_{safe_name}"
+                    file_path = f"agencies/{agency.agency_id}/proofs/{proof_id}_{proof_file.name}"
                     try:
                         default_storage.save(file_path, proof_file)
                         proofs_ids.append(proof_id)
@@ -8110,11 +8044,7 @@ def edit_agency(request, agency_id):
                     if not hasattr(video, "name"):
                         continue
                     video_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(video.name)[0]
-                    ext = os.path.splitext(video.name)[1]
-                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"agencies/{agency.agency_id}/videos/{video_id}_{safe_name}"
+                    file_path = f"agencies/{agency.agency_id}/videos/{video_id}_{video.name}"
                     try:
                         default_storage.save(file_path, video)
                         video_ids.append(video_id)
@@ -8345,11 +8275,7 @@ def edit_specialist(request, specialist_id):
                     if not hasattr(creative_file, "name"):
                         continue
                     creative_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(creative_file.name)[0]
-                    ext = os.path.splitext(creative_file.name)[1]
-                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"specialists/{specialist.specialist_id}/creatives/{creative_id}_{safe_name}"
+                    file_path = f"specialists/{specialist.specialist_id}/creatives/{creative_id}_{creative_file.name}"
                     try:
                         default_storage.save(file_path, creative_file)
                         creatives_ids.append(creative_id)
@@ -8372,11 +8298,7 @@ def edit_specialist(request, specialist_id):
                     if not hasattr(proof_file, "name"):
                         continue
                     proof_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(proof_file.name)[0]
-                    ext = os.path.splitext(proof_file.name)[1]
-                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"specialists/{specialist.specialist_id}/proofs/{proof_id}_{safe_name}"
+                    file_path = f"specialists/{specialist.specialist_id}/proofs/{proof_id}_{proof_file.name}"
                     try:
                         default_storage.save(file_path, proof_file)
                         proofs_ids.append(proof_id)
@@ -8399,11 +8321,7 @@ def edit_specialist(request, specialist_id):
                     if not hasattr(video, "name"):
                         continue
                     video_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(video.name)[0]
-                    ext = os.path.splitext(video.name)[1]
-                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"specialists/{specialist.specialist_id}/videos/{video_id}_{safe_name}"
+                    file_path = f"specialists/{specialist.specialist_id}/videos/{video_id}_{video.name}"
                     try:
                         default_storage.save(file_path, video)
                         video_ids.append(video_id)
