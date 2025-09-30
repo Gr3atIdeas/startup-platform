@@ -7826,11 +7826,18 @@ def edit_agency(request, agency_id):
                 agency.planet_image != original_data['planet_image']):
                 has_changes = True
             
-            # Обрабатываем successful_projects
+            # Обрабатываем successful_projects и другие поля customization_data
             successful_projects = form.cleaned_data.get('successful_projects', 12)
             if agency.customization_data is None:
                 agency.customization_data = {}
             agency.customization_data['successful_projects'] = successful_projects
+            
+            # Сохраняем новые поля customization_data
+            agency.customization_data['agency_category'] = form.cleaned_data.get('agency_category', '')
+            agency.customization_data['agency_description'] = form.cleaned_data.get('agency_description', '')
+            agency.customization_data['agency_additional_info'] = form.cleaned_data.get('agency_additional_info', '')
+            agency.customization_data['agency_services'] = form.cleaned_data.get('agency_services', '')
+            agency.customization_data['agency_pitch_deck_url'] = form.cleaned_data.get('agency_pitch_deck_url', '')
             
             # Проверяем загружены ли новые файлы
             if not has_changes:
@@ -8082,11 +8089,16 @@ def edit_specialist(request, specialist_id):
                 specialist.planet_image != original_data['planet_image']):
                 has_changes = True
             
-            # Обрабатываем successful_projects
+            # Обрабатываем successful_projects и другие поля customization_data
             successful_projects = form.cleaned_data.get('successful_projects', 12)
             if specialist.customization_data is None:
                 specialist.customization_data = {}
             specialist.customization_data['successful_projects'] = successful_projects
+            
+            # Сохраняем новые поля customization_data
+            specialist.customization_data['specialist_category'] = form.cleaned_data.get('specialist_category', '')
+            specialist.customization_data['specialist_description'] = form.cleaned_data.get('specialist_description', '')
+            specialist.customization_data['specialist_additional_info'] = form.cleaned_data.get('specialist_additional_info', '')
             
             # Проверяем загружены ли новые файлы
             if not has_changes:

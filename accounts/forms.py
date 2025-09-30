@@ -936,6 +936,7 @@ class AgencyEditForm(forms.ModelForm):
     )
     agency_category = forms.ChoiceField(
         choices=[
+            ("", "Выберите категорию"),
             ("Веб-разработка", "Веб-разработка"),
             ("Мобильная разработка", "Мобильная разработка"),
             ("Дизайн", "Дизайн"),
@@ -944,7 +945,7 @@ class AgencyEditForm(forms.ModelForm):
             ("Брендинг", "Брендинг"),
             ("Видео и мультимедиа", "Видео и мультимедиа"),
         ],
-        label="Категория", required=False, empty_label="Выберите категорию"
+        label="Категория", required=False
     )
     agency_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная", required=False
@@ -1023,6 +1024,7 @@ class SpecialistEditForm(forms.ModelForm):
     )
     specialist_category = forms.ChoiceField(
         choices=[
+            ("", "Выберите категорию"),
             ("Веб-разработка", "Веб-разработка"),
             ("Мобильная разработка", "Мобильная разработка"),
             ("Дизайн", "Дизайн"),
@@ -1031,7 +1033,7 @@ class SpecialistEditForm(forms.ModelForm):
             ("Брендинг", "Брендинг"),
             ("Видео и мультимедиа", "Видео и мультимедиа"),
         ],
-        label="Категория", required=False, empty_label="Выберите категорию"
+        label="Категория", required=False
     )
     specialist_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная", required=False

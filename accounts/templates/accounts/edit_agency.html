@@ -164,20 +164,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             {% if form.title.errors %}<span class="error-message">{{ form.title.errors|first }}</span>{% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.direction.id_for_label }}">*{{ form.direction.label|cut:"*" }}</label>
+                            <label for="{{ form.agency_category.id_for_label }}">{{ form.agency_category.label }}</label>
                             <div class="input-wrapper select-wrapper">
-                                {{ form.direction|add_class:"form-control" }}
+                                {{ form.agency_category|add_class:"form-control" }}
                                 <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow" loading="lazy" decoding="async">
                             </div>
-                            {% if form.direction.errors %}<span class="error-message">{{ form.direction.errors|first }}</span>{% endif %}
-                        </div>
-                        <div class="form-group">
-                            <label for="{{ form.stage.id_for_label }}">*{{ form.stage.label|cut:"*" }}</label>
-                            <div class="input-wrapper select-wrapper">
-                                {{ form.stage|add_class:"form-control" }}
-                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow" loading="lazy" decoding="async">
-                            </div>
-                            {% if form.stage.errors %}<span class="error-message">{{ form.stage.errors|first }}</span>{% endif %}
+                            {% if form.agency_category.errors %}<span class="error-message">{{ form.agency_category.errors|first }}</span>{% endif %}
                         </div>
                     </div>
                 </div>
@@ -198,6 +190,30 @@ document.addEventListener('DOMContentLoaded', function() {
                     {{ form.description|add_class:"form-control"|attr:"placeholder:Подробное описание агентства" }}
                     <div class="small-text">Подробное описание вашего агентства. Расскажите о команде, опыте и услугах.</div>
                     {% if form.description.errors %}<span class="error-message">{{ form.description.errors|first }}</span>{% endif %}
+                </div>
+                <div class="form-group full-width">
+                    <label for="{{ form.agency_description.id_for_label }}">{{ form.agency_description.label }}</label>
+                    {{ form.agency_description|add_class:"form-control"|attr:"placeholder:Вводное описание агентства" }}
+                    <div class="small-text">Краткое вводное описание для отображения в деталях.</div>
+                    {% if form.agency_description.errors %}<span class="error-message">{{ form.agency_description.errors|first }}</span>{% endif %}
+                </div>
+                <div class="form-group full-width">
+                    <label for="{{ form.agency_additional_info.id_for_label }}">{{ form.agency_additional_info.label }}</label>
+                    {{ form.agency_additional_info|add_class:"form-control"|attr:"placeholder:Основные услуги агентства" }}
+                    <div class="small-text">Основные услуги и направления работы.</div>
+                    {% if form.agency_additional_info.errors %}<span class="error-message">{{ form.agency_additional_info.errors|first }}</span>{% endif %}
+                </div>
+                <div class="form-group full-width">
+                    <label for="{{ form.agency_services.id_for_label }}">{{ form.agency_services.label }}</label>
+                    {{ form.agency_services|add_class:"form-control"|attr:"placeholder:Подробное описание услуг" }}
+                    <div class="small-text">Подробное описание услуг для отображения в табе "Услуги".</div>
+                    {% if form.agency_services.errors %}<span class="error-message">{{ form.agency_services.errors|first }}</span>{% endif %}
+                </div>
+                <div class="form-group full-width">
+                    <label for="{{ form.agency_pitch_deck_url.id_for_label }}">{{ form.agency_pitch_deck_url.label }}</label>
+                    {{ form.agency_pitch_deck_url|add_class:"form-control"|attr:"placeholder:https://example.com/presentation" }}
+                    <div class="small-text">Ссылка на презентацию агентства.</div>
+                    {% if form.agency_pitch_deck_url.errors %}<span class="error-message">{{ form.agency_pitch_deck_url.errors|first }}</span>{% endif %}
                 </div>
             </div>
 
