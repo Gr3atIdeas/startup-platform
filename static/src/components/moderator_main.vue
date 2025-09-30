@@ -130,6 +130,11 @@ export default {
     overflow: visible;
     background: linear-gradient(180deg, #004e9f 0%, black 100%);
     box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
+    
+    &:hover {
+      transform: none !important;
+      box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25) !important;
+    }
 
     .card-inner {
       position: relative;
@@ -297,5 +302,11 @@ export default {
   line-height: 16px !important;
   height: 40px !important;
   min-width: auto !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  
+  &:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3) !important;
+  }
 }
 </style>
