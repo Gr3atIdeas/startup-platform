@@ -165,22 +165,11 @@
           {% for investment in user_investments|slice:":6" %}
             <div class="startup-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}" data-created="{{ investment.created_at|date:'Y-m-d' }}">
               <div class="startup-card-left">
-                <div class="planet-logo-container">
+                <div class="startup-planet-placeholder" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px; overflow: hidden; position: relative;">
                   {% if investment.startup.planet_image %}
-                    <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='{{ S3_PUBLIC_BASE_URL }}/choosable_planets/0.png'">
-                  {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
+                    <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
                   {% else %}
-                    <div class="planet">
-                      <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
-                      <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
-                      <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
-                    </div>
-                  {% endif %}
-                  {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
-                  {% else %}
-                    <img src="{% static 'accounts/images/logo.png' %}" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
+                    <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" style="width: 100%; height: 100%; object-fit: cover;">
                   {% endif %}
                 </div>
                 <div class="startup-name">
@@ -245,22 +234,11 @@
           {% for startup in user_owned_startups|slice:":6" %}
             <div class="startup-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}">
               <div class="startup-card-left">
-                <div class="planet-logo-container">
+                <div class="startup-planet-placeholder" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px; overflow: hidden; position: relative;">
                   {% if startup.planet_image %}
-                    <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='{{ S3_PUBLIC_BASE_URL }}/choosable_planets/0.png'">
-                  {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
+                    <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
                   {% else %}
-                    <div class="planet">
-                      <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
-                      <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
-                      <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
-                    </div>
-                  {% endif %}
-                  {% if startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
-                  {% else %}
-                    <img src="{% static 'accounts/images/logo.png' %}" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
+                    <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" style="width: 100%; height: 100%; object-fit: cover;">
                   {% endif %}
                 </div>
                 <div class="startup-name">
@@ -324,22 +302,11 @@
           {% for investment in user_investments|slice:"6:" %}
             <div class="startup-card hidden-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}" style="display: none;">
               <div class="startup-card-left">
-                <div class="planet-logo-container">
+                <div class="startup-planet-placeholder" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px; overflow: hidden; position: relative;">
                   {% if investment.startup.planet_image %}
-                    <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='{{ S3_PUBLIC_BASE_URL }}/choosable_planets/0.png'">
-                  {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
+                    <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
                   {% else %}
-                    <div class="planet">
-                      <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
-                      <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
-                      <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
-                    </div>
-                  {% endif %}
-                  {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
-                  {% else %}
-                    <img src="{% static 'accounts/images/logo.png' %}" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
+                    <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" style="width: 100%; height: 100%; object-fit: cover;">
                   {% endif %}
                 </div>
                 <div class="startup-name">
@@ -401,22 +368,11 @@
           {% for startup in user_owned_startups|slice:"6:" %}
             <div class="startup-card hidden-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}" style="display: none;">
               <div class="startup-card-left">
-                <div class="planet-logo-container">
+                <div class="startup-planet-placeholder" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px; overflow: hidden; position: relative;">
                   {% if startup.planet_image %}
-                    <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='{{ S3_PUBLIC_BASE_URL }}/choosable_planets/0.png'">
-                  {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
+                    <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
                   {% else %}
-                    <div class="planet">
-                      <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
-                      <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
-                      <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
-                    </div>
-                  {% endif %}
-                  {% if startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
-                  {% else %}
-                    <img src="{% static 'accounts/images/logo.png' %}" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
+                    <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" style="width: 100%; height: 100%; object-fit: cover;">
                   {% endif %}
                 </div>
                 <div class="startup-name">
@@ -656,7 +612,6 @@
               parsedInvestedData = JSON.parse(investedElement.textContent);
             }
           } catch (e) {
-            console.error("Ошибка парсинга данных для модального окна:", e);
           }
 
           updateRadialChartColors();
@@ -677,6 +632,8 @@
                 const chevron = categoryButton.querySelector('i');
                 categoryButton.textContent = 'Категория ';
                 if (chevron) categoryButton.appendChild(chevron);
+                dropdownContent.classList.remove('show');
+                dropdownButton.setAttribute('aria-expanded', 'false');
               });
               categoryDropdownContent.appendChild(allLink);
 
@@ -713,7 +670,6 @@
                   }
                 }
                 if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
-                  console.warn("Не удалось определить активный фильтр категории для поиска.");
                   activeCategoryFilter = null;
                 } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
                   activeCategoryFilter = null;
@@ -766,6 +722,30 @@
           const allStartupCards = startupGrid.querySelectorAll('.startup-card');
           const loadMoreBtn = document.getElementById('load-more');
           const hideBtn = document.getElementById('hide-startups-btn');
+
+          const dropdownWrapper = document.querySelector('.filter-dropdown-wrapper');
+          const dropdownContent = document.querySelector('.filter-dropdown-content');
+          const dropdownButton = document.querySelector('.filter-btn-dropdown');
+
+          if (dropdownButton && dropdownContent) {
+              dropdownButton.addEventListener('click', function(event) {
+                  event.stopPropagation();
+                  const isVisible = dropdownContent.classList.contains('show');
+                  if (isVisible) {
+                      dropdownContent.classList.remove('show');
+                  } else {
+                      dropdownContent.classList.add('show');
+                  }
+                  this.setAttribute('aria-expanded', !isVisible);
+              });
+
+              document.addEventListener('click', function(event) {
+                  if (!dropdownWrapper.contains(event.target)) {
+                      dropdownContent.classList.remove('show');
+                      dropdownButton.setAttribute('aria-expanded', 'false');
+                  }
+              });
+          }
 
           filterButtons.forEach(button => {
             button.addEventListener('click', function(event) {
@@ -828,7 +808,6 @@
                   }
                 }
                 if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
-                  console.warn("Не удалось определить активный фильтр категории для поиска.");
                   activeCategoryFilter = null;
                 } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
                   activeCategoryFilter = null;
@@ -930,6 +909,8 @@
           document.querySelectorAll('.filter-dropdown-content a').forEach(link => {
             link.addEventListener('click', function(event) {
               filterByCategory(event);
+              dropdownContent.classList.remove('show');
+              dropdownButton.setAttribute('aria-expanded', 'false');
               const searchInput = document.getElementById('startup-search');
               const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
               const startupCards = startupGrid.querySelectorAll('.startup-card');
@@ -947,7 +928,6 @@
                   }
                 }
                 if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
-                  console.warn("Не удалось определить активный фильтр категории для поиска.");
                   activeCategoryFilter = null;
                 } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
                   activeCategoryFilter = null;
@@ -1019,7 +999,6 @@
                 }
               });
             }
-            console.log('Startups object:', startups);
 
             const planets = document.querySelectorAll('.my_startups_planetary-system .planet');
             const infoCard = document.querySelector('.my_startups_planetary-system #info-card');
@@ -1055,7 +1034,6 @@
               const orbit = planet.closest('.orbit');
               const planetOrientation = planet.closest('.planet-orientation');
               if (!orbit || !planetOrientation) {
-                console.error(`Орбита или ориентация не найдены для планеты ${index}.`);
                 return;
               }
 
@@ -1080,7 +1058,6 @@
                 
                 // CSS анимация убрана - используется JavaScript для движения по орбитам
               } else {
-                console.warn(`Радиус орбиты равен нулю для планеты ${index}.`);
               }
 
               // Компенсируем наклон галактики, чтобы планеты оставались плоскими
@@ -1112,7 +1089,6 @@
                       img.src = '{% static "accounts/images/planetary_system/planets_round/" %}' + randomPlanetNum + '.png';
                     }
                     img.onerror = () => {
-                      console.warn(`Не удалось загрузить изображение для стартапа ${id}.`);
                       const fallbackPlanetNum = Math.floor(Math.random() * 15) + 1;
                       img.src = '{% static "accounts/images/planetary_system/planets_round/" %}' + fallbackPlanetNum + '.png';
                     };
@@ -1122,16 +1098,13 @@
               planet.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const id = planet.getAttribute('data-id');
-                console.log('Clicked planet ID:', id);
                 
                 if (!id || id === 'null' || id === null) {
-                  console.error('Некорректный ID планеты:', id);
                   return;
                 }
                 
                 const startup = startups[id];
                 if (!startup) {
-                  console.error('Не найдены данные для стартапа с ID:', id);
                   return;
                 }
 
@@ -1162,7 +1135,6 @@
                   <div class="startup-short-description">${startup.description}</div>`;
 
                 currentStartupID = startup.startup_id;
-                console.log('Current Startup ID:', currentStartupID);
 
                 planets.forEach(p => p.classList.remove('active'));
                 planet.classList.add('active');
@@ -1174,7 +1146,6 @@
             });
 
             closeCard.addEventListener('click', () => {
-              console.log('Close card clicked');
               infoCard.style.display = 'none';
               planets.forEach(p => p.classList.remove('active'));
               if (isPaused) {
@@ -1183,21 +1154,17 @@
                   planetObj.startTime += pauseDuration;
                 });
                 isPaused = false;
-                console.log('Resuming planet rotation');
               }
               lastInteractionTime = Date.now();
             });
 
             moreDetails.addEventListener('click', () => {
-              console.log('More details clicked');
               if (currentStartupID && currentStartupID !== 'null' && currentStartupID !== null && currentStartupID !== 'undefined') {
                 try {
                   window.location.href = `/startups/${currentStartupID}/`;
                 } catch (error) {
-                  console.error('Ошибка при переходе на страницу стартапа:', error);
                 }
               } else {
-                console.error('Startup ID не найден для перехода на страницу стартапа:', currentStartupID);
               }
               infoCard.style.display = 'none';
               planets.forEach(p => p.classList.remove('active'));
@@ -1207,7 +1174,6 @@
                   planetObj.startTime += pauseDuration;
                 });
                 isPaused = false;
-                console.log('Resuming planet rotation after more details');
               }
               lastInteractionTime = Date.now();
             });
@@ -1298,7 +1264,6 @@
                   const elapsedSeconds = (now - planetObj.startTime) / 1000;
                   const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
                   if (!orbitTimeSeconds || orbitTimeSeconds <= 0) {
-                    console.error('Некорректное значение orbitTimeSeconds:', orbitTimeSeconds);
                     return;
                   }
                   
@@ -1308,7 +1273,6 @@
                   const radius = planetObj.orbitSize / 2;
                   
                   if (!radius || radius <= 0) {
-                    console.error('Некорректный радиус:', radius);
                     return;
                   }
 
@@ -1331,7 +1295,6 @@
                   // Компенсируем наклон галактики, чтобы планеты оставались плоскими
                   planetObj.element.style.transform = 'rotateX(-60deg)';
                 } catch (error) {
-                  console.error('Ошибка при обновлении позиции планеты:', error);
                 }
               });
 
@@ -1347,7 +1310,6 @@
           (function() {
             const canvasElement = document.getElementById('monthlyInvestmentChart');
             if (!canvasElement) {
-              console.warn("Элемент canvas #monthlyInvestmentChart не найден.");
               return;
             }
             const ctx = canvasElement.getContext('2d');
@@ -1367,11 +1329,7 @@
               monthlyCategoryData = JSON.parse(monthlyDataEl.textContent);
               categoriesForChart = JSON.parse(categoriesEl.textContent);
 
-              console.log("Chart Labels:", monthLabels);
-              console.log("Chart Categories:", categoriesForChart);
-              console.log("Chart Monthly Category Data:", monthlyCategoryData);
             } catch (e) {
-              console.error("Ошибка парсинга данных для графика:", e);
               if (canvasElement.parentNode) {
                 canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: red;">Ошибка загрузки данных для графика.</p>';
               }
@@ -1379,7 +1337,6 @@
             }
 
             const hasData = monthlyCategoryData && monthlyCategoryData.some(month => Object.keys(month.category_data).length > 0);
-            console.log("Chart has category data:", hasData);
 
             if (hasData && categoriesForChart.length > 0) {
               const datasets = categoriesForChart.map(categoryName => {
@@ -1396,7 +1353,6 @@
                 };
               });
 
-              console.log("Generated Chart Datasets:", datasets);
 
               new Chart(ctx, {
                 type: 'bar',
@@ -1465,7 +1421,6 @@
                 }
               });
             } else {
-              console.log("No category data found for chart, rendering placeholder.");
               if (canvasElement.parentNode) {
                 canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по инвестициям за текущий год для отображения по категориям.</p>';
               }
