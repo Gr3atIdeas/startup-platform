@@ -1402,6 +1402,13 @@
                categoryButton.textContent = translateCategoryName(selectedCategory) + ' ';
                if (chevron) categoryButton.appendChild(chevron);
           }
+
+          const dropdownContent = document.querySelector('.filter-dropdown-content');
+          const dropdownButton = document.querySelector('.filter-btn-dropdown');
+          if (dropdownContent && dropdownButton) {
+              dropdownContent.classList.remove('show');
+              dropdownButton.setAttribute('aria-expanded', 'false');
+          }
     
           let visibleCount = 0;
           startupCards.forEach(card => {
@@ -1472,6 +1479,8 @@
                        const chevron = categoryButton.querySelector('i');
                        categoryButton.textContent = 'Категория ';
                        if (chevron) categoryButton.appendChild(chevron);
+                       dropdownContent.classList.remove('show');
+                       dropdownButton.setAttribute('aria-expanded', 'false');
                    });
                    categoryDropdownContent.appendChild(allLink);
     
@@ -1561,6 +1570,30 @@
           const loadMoreBtn = document.getElementById('load-more');
           const hideBtn = document.getElementById('hide-startups-btn');
     
+          const dropdownWrapper = document.querySelector('.filter-dropdown-wrapper');
+          const dropdownContent = document.querySelector('.filter-dropdown-content');
+          const dropdownButton = document.querySelector('.filter-btn-dropdown');
+
+          if (dropdownButton && dropdownContent) {
+              dropdownButton.addEventListener('click', function(event) {
+                  event.stopPropagation();
+                  const isVisible = dropdownContent.classList.contains('show');
+                  if (isVisible) {
+                      dropdownContent.classList.remove('show');
+                  } else {
+                      dropdownContent.classList.add('show');
+                  }
+                  this.setAttribute('aria-expanded', !isVisible);
+              });
+
+              document.addEventListener('click', function(event) {
+                  if (!dropdownWrapper.contains(event.target)) {
+                      dropdownContent.classList.remove('show');
+                      dropdownButton.setAttribute('aria-expanded', 'false');
+                  }
+              });
+          }
+
           filterButtons.forEach(button => {
               button.addEventListener('click', function(event) {
                   if (this.classList.contains('filter-btn-dropdown')) {

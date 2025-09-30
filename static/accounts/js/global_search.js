@@ -1,3 +1,8 @@
+if (typeof document === 'undefined') {
+    console.error('Document is not defined');
+    return;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const headerSearchInput = document.querySelector('.header-search-input');
 
