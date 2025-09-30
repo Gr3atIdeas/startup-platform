@@ -264,6 +264,34 @@ def safe_create_file_storage(entity_type, entity_id, file_type, file_url, upload
             uploaded_at=uploaded_at,
             startup=startup,
         )
+def get_synced_files(entity, file_type_name, file_urls_field):
+    """
+    Синхронизирует файлы между редактором и деталями
+    Возвращает только те файлы, которые есть и в поле сущности, и в FileStorage
+    """
+    if not hasattr(entity, file_urls_field):
+        return FileStorage.objects.none()
+    
+    file_urls = getattr(entity, file_urls_field) or []
+    if not file_urls:
+        return FileStorage.objects.none()
+    
+    try:
+        file_type = FileTypes.objects.get(type_name=file_type_name)
+        entity_type = EntityTypes.objects.get(type_name=entity.__class__.__name__.lower())
+        
+        # Получаем файлы, которые есть и в поле сущности, и в FileStorage
+        synced_files = FileStorage.objects.filter(
+            file_url__in=file_urls,
+            file_type=file_type,
+            entity_type=entity_type,
+            entity_id=getattr(entity, f"{entity.__class__.__name__.lower()}_id")
+        ).order_by("-uploaded_at")
+        
+        return synced_files
+    except (FileTypes.DoesNotExist, EntityTypes.DoesNotExist):
+        return FileStorage.objects.none()
+
 def get_unique_filename(original_name, startup_id, file_type_name):
     """
     Генерирует уникальное имя файла, добавляя (2), (3) и т.д. если файл с таким именем уже существует
@@ -1627,15 +1655,8 @@ def agency_detail(request, agency_id):
     video_urls = franchise.video_urls if isinstance(franchise.video_urls, list) else []
     proofs_urls = franchise.proofs_urls if isinstance(franchise.proofs_urls, list) else []
 
-    # Получаем документы из FileStorage
-    try:
-        proof_file_type = FileTypes.objects.get(type_name="proof")
-        entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
-        agency_documents = FileStorage.objects.filter(
-            entity_type=entity_type, entity_id=franchise.agency_id, file_type=proof_file_type
-        ).order_by("-uploaded_at")
-    except:
-        agency_documents = FileStorage.objects.none()
+    # Получаем синхронизированные документы (только те, что есть в редакторе)
+    agency_documents = get_synced_files(franchise, "proof", "proofs_urls")
 
     context = {
         "agency": franchise,
@@ -1765,15 +1786,8 @@ def specialist_detail(request, specialist_id):
     video_urls = specialist.video_urls if isinstance(specialist.video_urls, list) else []
     proofs_urls = specialist.proofs_urls if isinstance(specialist.proofs_urls, list) else []
 
-    # Получаем документы из FileStorage
-    try:
-        proof_file_type = FileTypes.objects.get(type_name="proof")
-        entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
-        specialist_documents = FileStorage.objects.filter(
-            entity_type=entity_type, entity_id=specialist.specialist_id, file_type=proof_file_type
-        ).order_by("-uploaded_at")
-    except:
-        specialist_documents = FileStorage.objects.none()
+    # Получаем синхронизированные документы (только те, что есть в редакторе)
+    specialist_documents = get_synced_files(specialist, "proof", "proofs_urls")
 
     context = {
         "specialist": specialist,
@@ -1902,15 +1916,8 @@ def franchise_detail(request, franchise_id):
     video_urls = franchise.video_urls if isinstance(franchise.video_urls, list) else []
     proofs_urls = franchise.proofs_urls if isinstance(franchise.proofs_urls, list) else []
 
-    # Получаем документы из FileStorage
-    try:
-        proof_file_type = FileTypes.objects.get(type_name="proof")
-        entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
-        franchise_documents = FileStorage.objects.filter(
-            entity_type=entity_type, entity_id=franchise.franchise_id, file_type=proof_file_type
-        ).order_by("-uploaded_at")
-    except:
-        franchise_documents = FileStorage.objects.none()
+    # Получаем синхронизированные документы (только те, что есть в редакторе)
+    franchise_documents = get_synced_files(franchise, "proof", "proofs_urls")
 
     context = {
         "franchise": franchise,
@@ -2269,19 +2276,8 @@ def startup_detail(request, startup_id):
     timeline_events = StartupTimeline.objects.filter(startup=startup).order_by(
         "step_number"
     )
-    try:
-        from django.db.models import Q
-        proof_file_type = FileTypes.objects.get(type_name="proof")
-        entity_type = EntityTypes.objects.get(type_name="startup")
-        
-        # Ищем файлы по обоим способам: новому (entity_type + entity_id) и старому (startup)
-        # Используем distinct() чтобы избежать дублирования
-        startup_documents = FileStorage.objects.filter(
-            Q(entity_type=entity_type, entity_id=startup.startup_id) | Q(startup=startup),
-            file_type=proof_file_type
-        ).distinct().order_by("-uploaded_at")
-    except (FileTypes.DoesNotExist, EntityTypes.DoesNotExist):
-        startup_documents = FileStorage.objects.none()
+    # Получаем синхронизированные документы (только те, что есть в редакторе)
+    startup_documents = get_synced_files(startup, "proof", "proofs_urls")
     context = {
         "startup": startup,
         "comments": comments_with_rating,

@@ -44,14 +44,29 @@ class Command(BaseCommand):
         
         dead_files = []
         for file_obj in startup_files:
+            is_dead = False
+            startup = None
+            
             if file_obj.startup:
                 # Старый способ - проверяем по startup
-                if not Startups.objects.filter(startup_id=file_obj.startup.startup_id).exists():
-                    dead_files.append(file_obj)
+                startup = file_obj.startup
+                if not Startups.objects.filter(startup_id=startup.startup_id).exists():
+                    is_dead = True
             elif file_obj.entity_type and file_obj.entity_type.type_name == "startup":
                 # Новый способ - проверяем по entity_id
-                if not Startups.objects.filter(startup_id=file_obj.entity_id).exists():
-                    dead_files.append(file_obj)
+                try:
+                    startup = Startups.objects.get(startup_id=file_obj.entity_id)
+                except Startups.DoesNotExist:
+                    is_dead = True
+            
+            # Дополнительная проверка: файл есть в FileStorage, но нет в proofs_urls стартапа
+            if startup and not is_dead:
+                proofs_urls = startup.proofs_urls or []
+                if file_obj.file_url not in proofs_urls:
+                    is_dead = True
+            
+            if is_dead:
+                dead_files.append(file_obj)
         
         self.stdout.write(f'Найдено {len(dead_files)} мертвых файлов стартапов')
         
