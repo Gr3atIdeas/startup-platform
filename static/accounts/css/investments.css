@@ -1545,3 +1545,134 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   align-items: center;
   justify-content: center;
 }
+
+/* Стили для блока заявок */
+.applications-section {
+  color: #FFFFFF;
+  padding: 40px 0;
+  margin-top: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.applications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
+}
+
+.applications-titles {
+   display: flex;
+   flex-direction: column;
+   line-height: 0.8;
+}
+
+.applications-title-main,
+.applications-title-sub {
+  font-family: 'Blippo Local', sans-serif;
+  font-weight: 400;
+  font-size: 45px;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.applications-title-main { color: #FFFFFF; }
+.applications-title-sub { color: #FFEF2B; }
+
+.applications-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 310.75px);
+  gap: 20px;
+  justify-content: start;
+}
+
+.application-card {
+  background-color: #1A1D2E;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: background-color 0.3s linear, border-color 0.3s linear;
+  width: 310.75px;
+  height: 221px;
+  box-sizing: border-box;
+}
+
+.application-card:hover {
+  background-color: #212538;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.application-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #FFFFFF;
+  margin-bottom: 5px;
+}
+
+.application-status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 100px;
+}
+
+.status-approved { background-color: #28a745; color: #fff; }
+.status-pending { background-color: #ffc107; color: #191919; }
+.status-rejected { background-color: #dc3545; color: #fff; }
+.status-blocked { background-color: #6c757d; color: #fff; }
+.status-closed { background-color: #343a40; color: #fff; }
+
+.application-card a {
+    color: #FFEF2B;
+    text-decoration: none;
+    font-weight: 500;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.application-card a:hover {
+    text-decoration: underline;
+}
+
+.status-filter-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.status-filter-btn {
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: Unbounded, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.status-filter-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.status-filter-btn.active {
+  background-color: #FFEF2B;
+  color: #000;
+  border-color: #FFEF2B;
+}
+
+.status-filter-btn.active:hover {
+  background-color: #FFEF2B;
+  color: #000;
+}

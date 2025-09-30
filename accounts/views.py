@@ -2380,6 +2380,7 @@ def investments(request):
         "invested_category_data": {},
         "user_investments": [],
         "user_owned_startups": [],
+        "startup_applications": [],
         "current_sort": "newest",
         "planetary_investments": [],
         "planetary_investments_json": [],
@@ -2689,6 +2690,14 @@ def investments(request):
             )
             .order_by("-created_at")
         )
+        
+        # Получаем заявки пользователя (стартапы, которые он создал)
+        startup_applications = (
+            Startups.objects.filter(owner_id=request.user.user_id)
+            .select_related("status_id")
+            .order_by("-updated_at")
+        )
+        
         all_directions_qs = Directions.objects.all().order_by("direction_name")
         all_directions_list = list(all_directions_qs.values("pk", "direction_name"))
         context = {
@@ -2704,6 +2713,7 @@ def investments(request):
             "invested_category_data": invested_category_data_dict,
             "user_investments": user_investments,
             "user_owned_startups": user_owned_startups,
+            "startup_applications": startup_applications,
             "current_sort": "newest",
             "planetary_investments": planetary_investments,
             "planetary_investments_json": planetary_investments,
@@ -2782,6 +2792,7 @@ def investments(request):
                 "invested_category_data": invested_category_data_dict,
                 "user_investments": user_investments_qs.order_by("-created_at")[:12],
                 "user_owned_startups": Startups.objects.filter(owner_id=request.user.user_id)[:12],
+                "startup_applications": Startups.objects.filter(owner_id=request.user.user_id).order_by("-updated_at"),
                 "current_sort": "newest",
                 "planetary_investments": [],
                 "planetary_investments_json": [],

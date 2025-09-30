@@ -443,6 +443,44 @@
           </div>
         {% endif %}
       </div>
+
+      
+      <div class="applications-section">
+        <div class="applications-header">
+          <div class="applications-titles">
+            <h2 class="applications-title-main">Заявки</h2>
+            <h2 class="applications-title-sub">на стартапы</h2>
+          </div>
+          <div class="status-filter-buttons">
+            <button class="status-filter-btn active" data-status-filter="all">Все</button>
+            <button class="status-filter-btn" data-status-filter="approved">Одобрены</button>
+            <button class="status-filter-btn" data-status-filter="rejected">Отклонены</button>
+            <button class="status-filter-btn" data-status-filter="blocked">Заблокированы</button>
+            <button class="status-filter-btn" data-status-filter="closed">Закрыты</button>
+        </div>
+        </div>
+
+        <div class="applications-list">
+          {% for app in startup_applications %}
+            <div class="application-card" data-status="{{ app.status|lower|default:'pending' }}">
+              <div class="application-title">{{ app.title|default:"Без названия"|escape }}</div>
+              <div class="application-status status-{{ app.status|lower|default:'pending' }}">
+                {{ app.get_status_display }}
+              </div>
+              {% if app.status == 'pending' or app.status == 'rejected' %}
+                <a href="{% url 'edit_startup' startup_id=app.startup_id|default_if_none:'' %}">Редактировать заявку</a>
+              {% elif app.status == 'approved' or app.status == 'blocked' %}
+                <a href="{% url 'startup_detail' startup_id=app.startup_id|default_if_none:'' %}">Перейти к стартапу</a>
+              {% endif %}
+              <span style="font-size: 12px; color: rgba(255, 255, 255, 0.5); margin-top: 5px;">
+                Обновлено: {{ app.updated_at|date:"d.m.Y H:i"|default:"Дата неизвестна" }}
+              </span>
+            </div>
+          {% empty %}
+            <p style="grid-column: 1 / -1; text-align: center;">У вас пока нет отправленных заявок.</p>
+          {% endfor %}
+        </div>
+      </div>
       
       <div id="allCategoriesModal" class="modal-overlay">
         <div class="modal-content category-modal-content">
@@ -1427,6 +1465,55 @@
             }
           })();
         });
+
+        // Добавляем логику для фильтрации по статусу в разделе "Заявки на стартапы"
+        function applyApplicationFilters() {
+            const activeButton = document.querySelector('.status-filter-btn.active');
+            const statusFilter = activeButton ? activeButton.getAttribute('data-status-filter') : 'all';
+            const applicationCards = document.querySelectorAll('.applications-list .application-card');
+
+            let visibleCount = 0;
+            applicationCards.forEach(card => {
+                const status = card.getAttribute('data-status');
+                const matchesStatus = statusFilter === 'all' || status === statusFilter;
+
+                if (matchesStatus) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Показываем сообщение если нет результатов
+            let noResultsMsg = document.querySelector('.applications-list .no-results-message');
+            if (visibleCount === 0 && statusFilter !== 'all') {
+                if (!noResultsMsg) {
+                    const p = document.createElement('p');
+                    p.textContent = `Нет заявок со статусом "${statusFilter}".`;
+                    p.style.gridColumn = '1 / -1';
+                    p.style.textAlign = 'center';
+                    p.classList.add('no-results-message');
+                    document.querySelector('.applications-list').appendChild(p);
+                }
+            } else {
+                if (noResultsMsg) {
+                    noResultsMsg.remove();
+                }
+            }
+        }
+
+        // Добавляем обработчики для кнопок фильтрации по статусу
+        document.querySelectorAll('.status-filter-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.status-filter-btn').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                applyApplicationFilters();
+            });
+        });
+
+        // Применяем фильтры при загрузке страницы
+        applyApplicationFilters();
       </script>
     {% else %}
       <div class="access-restricted">
