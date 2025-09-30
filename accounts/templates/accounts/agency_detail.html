@@ -6,7 +6,7 @@
 {% load humanize %}
 {% load accounts_extras %}
 
-{% block title %}{{ agency.customization_data.agency_display_title|default:agency.title|default:"Детали агентства" }}{% endblock %}
+{% block title %}{{ agency.title|default:"Детали агентства" }}{% endblock %}
 
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/agency_detail.css' %}">
@@ -21,7 +21,7 @@
      data-agency-title="{{ agency.title|escapejs }}"
      data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
      data-user-has-voted="{{ user_has_voted|yesno:'true,false' }}"
-      data-load-similar-url="{% url 'load_similar_agencies' agency_id=agency.agency_id %}"
+     data-load-similar-url="{% url 'load_similar_agencies' agency_id=agency.agency_id %}"
      data-owner-id="{{ agency.owner.user_id }}"
      data-investment-size="{{ agency.customization_data.successful_projects|default:0 }}">
   <div class="back-link-container">
@@ -66,7 +66,11 @@
       <div class="investment-info-container">
         <div class="investment-size-info">
           <div class="investment-size-label">Успешных проектов</div>
-          <div class="investment-size-value">{{ agency.customization_data.successful_projects|default:12 }}</div>
+          <div class="investment-size-value">{{ agency.customization_data.successful_projects|default:0|floatformat:0|intcomma }}</div>
+        </div>
+        <div class="investment-cost-info">
+          <div class="investment-cost-label">Категория</div>
+          <div class="investment-cost-value">{{ agency.customization_data.agency_category|default:"Не указана" }}</div>
         </div>
       </div>
       
@@ -95,54 +99,56 @@
             <div class="agency-title-wrapper">
               <div class="logo-display-container">
                 {% if agency.owner and agency.owner.get_profile_picture_url %}
-                  <img src="{{ agency.owner.get_profile_picture_url }}" alt="Аватар автора {{ agency.owner.username }}" class="author-avatar-header">
+                  <img src="{{ agency.owner.get_profile_picture_url }}" alt="Аватар автора {{ agency.owner.username }}" class="logo-image">
                 {% elif agency.logo_urls %}
                   {% with logo_file_id=agency.logo_urls.0 %}
                     <img src="{% get_file_url_tag logo_file_id agency.agency_id 'logo' 'agency' %}" alt="Логотип {{ agency.title }}" class="logo-image">
                   {% endwith %}
                 {% else %}
-                  <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="author-avatar-header">
+                  <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
                 {% endif %}
               </div>
               <h1 class="agency-name" title="{{ agency.customization_data.agency_display_title|default:agency.title }}">{{ agency.customization_data.agency_display_title|default:agency.title }}</h1>
             </div>
 
-          <div class="header-meta">
-            {% with agency_category=agency.customization_data.agency_category %}
-              <span class="category-value">{{ agency_category|default:"Без категории" }}</span>
-            {% endwith %}
-            <div class="agency-stats-info"></div>
-          </div>
-
-          <div class="rating-comments-container">
-            <div class="rating-container">
-              <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
-               <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
-                {% for i in "12345" %}
-                  <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
-                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
-                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
-                  </span>
-                {% endfor %}
+            <div class="header-meta">
+              <span class="category-value">{{ agency.customization_data.agency_category|default:"Без категории" }}</span>
+              <div class="agency-stats-info">
+                <div class="agency-stats-item">
+                  <span class="agency-stats-label">Успешных проектов:</span>
+                  <span class="agency-stats-value">{{ agency.customization_data.successful_projects|default:0 }}</span>
+                </div>
               </div>
             </div>
-            <a href="#comments-section" class="comments-link">Комментарии</a>
-          </div>
 
+            <div class="rating-comments-container">
+              <div class="rating-container">
+                <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
+                <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
+                  {% for i in "12345" %}
+                    <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
+                      <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                      <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+                    </span>
+                  {% endfor %}
+                </div>
+              </div>
+              <a href="#comments-section" class="comments-link">Комментарии</a>
+            </div>
           </div>
 
           
         </div>
 
-        <div class="actions-top-right">
-          <div class="agency-info-badge">Агентство</div>
-          {% if user.is_authenticated and user == agency.owner %}
-            <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
-          {% elif user.is_authenticated and user.role.role_name == 'moderator' %}
-            <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
-            <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
-          {% endif %}
-        </div>
+                 <div class="actions-top-right">
+           <div class="agency-info-badge">Агентство</div>
+           {% if user.is_authenticated and user == agency.owner %}
+             <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
+           {% elif user.is_authenticated and user.role.role_name == 'moderator' %}
+             <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
+             <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
+           {% endif %}
+         </div>
       </div> 
 
       <div class="tabbed-content-wrapper">
@@ -150,7 +156,6 @@
           <button class="tab-button active" data-target="info-section"><span>Информация</span></button>
           <button class="tab-button" data-target="gallery-section"><span>Галерея</span></button>
           <button class="tab-button" data-target="services-section"><span>Услуги</span></button>
-          <button class="tab-button" data-target="conditions-section"><span>Этапы работ</span></button>
           <button class="tab-button" data-target="documents-section"><span>Документы</span></button>
         </div>
 
@@ -161,7 +166,7 @@
               <h2 class="section-title">Вводная</h2> 
               <div class="section-content text-truncate-container" id="intro-section">
                 <div class="text-content" onclick="toggleTextTruncation('intro-section', 3)">
-                  <p>{{ agency.short_description|default:"Нет вводного описания." }}</p> 
+                  <p>{{ agency.customization_data.agency_description|default:"Нет вводного описания." }}</p> 
                   <span class="text-truncate-toggle">Показать полностью</span>
                 </div>
               </div>
@@ -171,9 +176,9 @@
               <div class="section-content text-truncate-container" id="about-section">
                 <div class="text-content" onclick="toggleTextTruncation('about-section', 5)">
                   <p>{{ agency.description|linebreaksbr|default:"Нет подробного описания." }}</p>
-                  {% if agency.additional_info %}
-                    <p><strong>Основные функции:</strong></p>
-                    {{ agency.additional_info|linebreaksbr }}
+                  {% if agency.customization_data.agency_additional_info %}
+                    <p><strong>Основные услуги:</strong></p>
+                    {{ agency.customization_data.agency_additional_info|linebreaksbr }}
                   {% endif %}
                   <span class="text-truncate-toggle">Показать полностью</span>
                 </div>
@@ -188,8 +193,8 @@
                   <img src="{% static 'accounts/images/startups/image.svg' %}" alt="Презентация" class="info-card-icon">
                 </div>
                 <span class="info-card-title">Презентация</span>
-                {% if agency.pitch_deck_url %}
-                  <a href="{{ agency.pitch_deck_url }}" target="_blank" class="action-button info-card-button view-button">Смотреть</a>
+                {% if agency.customization_data.agency_pitch_deck_url %}
+                  <a href="{{ agency.customization_data.agency_pitch_deck_url }}" target="_blank" class="action-button info-card-button view-button">Смотреть</a>
                 {% else %}
                   <button class="action-button info-card-button view-button" disabled>Смотреть</button>
                 {% endif %}
@@ -207,7 +212,15 @@
               </div>
 
               
-              
+              <div class="info-card">
+                <div class="info-card-icon-container">
+                  <img src="{% static 'accounts/images/startups/piggy-bank.svg' %}" alt="Успешных проектов" class="info-card-icon">
+                </div>
+                <span class="info-card-title">Успешных проектов</span>
+                <div class="info-card-value-button accent-blue-bg">
+                  {{ agency.customization_data.successful_projects|default:0|floatformat:0|intcomma }}
+                </div>
+              </div>
 
               
               <div class="info-card">
@@ -270,11 +283,15 @@
           
           <div id="services-section" class="content-section">
             <h2 class="section-title">Услуги</h2>
-            <div class="profit-calculation-wrapper">
-                <div class="profit-calculation-content">
-                    {{ agency.additional_info|default:"Описание услуг пока не добавлено."|linebreaksbr }}
+            {% if agency.customization_data.agency_services %}
+            <div class="services-wrapper">
+                <div class="services-content">
+                    {{ agency.customization_data.agency_services|linebreaksbr|default:"Информация об услугах пока не добавлена." }}
                 </div>
             </div>
+            {% else %}
+            <p>Информация об услугах пока не добавлена.</p>
+            {% endif %}
           </div>
 
           
@@ -295,12 +312,6 @@
             {% else %}
                 <p>Документы по агентству пока не загружены.</p>
             {% endif %}
-          </div>
-
-          
-          <div id="conditions-section" class="content-section">
-            <h2 class="section-title">Этапы работ</h2>
-            <p>{{ agency.terms|linebreaksbr|default:"Этапы работ не указаны." }}</p>
           </div>
         </div> 
       </div> 
@@ -487,20 +498,20 @@
     </div> 
   </div> 
 
-  <div class="similar-agencys-section">
-    <div class="similar-agencys-container">
+  <div class="similar-agencies-section">
+    <div class="similar-agencies-container">
       <h2 class="similar-title">
         <span class="similar-text">похожие</span>
-        <span class="agencys-text">АГЕНТСТВА</span>
+        <span class="agencies-text">АГЕНТСТВА</span>
       </h2>
       
       <a href="{% url 'agencies_list' %}" class="show-all-button">
         <span>Показать все</span> <i class="fas fa-arrow-right"></i>
       </a>
       
-      {% if has_similar and similar_agencys %}
-        <div class="similar-agencys-grid">
-          {% for similar in similar_agencys|slice:":4" %}
+      {% if has_similar and similar_agencies %}
+        <div class="similar-agencies-grid">
+          {% for similar in similar_agencies|slice:":4" %}
           <a href="{% url 'agency_detail' similar.agency_id %}" class="similar-card">
             <div class="similar-card-image">
               {% if similar.logo_urls %}
@@ -528,7 +539,7 @@
           </a>
           {% endfor %}
 
-          {% if similar_agencys|length > 4 %}
+          {% if similar_agencies|length > 4 %}
           <div class="similar-card show-more-placeholder">
             <button class="action-button show-more-similar" style="display: inline-flex !important; align-items: center; gap: 8px; padding: 10px 20px; height: auto; border: 1px solid var(--text-primary) !important; border-radius: 25px !important; background: transparent !important; color: var(--text-primary) !important; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.3s ease; width: auto; text-decoration: none !important;">
               <i class="fas fa-redo"></i> Показать еще
@@ -605,7 +616,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>Вы уверены, что хотите сменить владельца стартапа на <strong id="newOwnerName"></strong>?</p>
+          <p>Вы уверены, что хотите сменить владельца агентства на <strong id="newOwnerName"></strong>?</p>
           <input type="hidden" id="newOwnerId">
         </div>
         <div class="modal-footer">

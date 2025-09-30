@@ -19,7 +19,7 @@
 }
 
 
-.franchise-detail-page, body  {
+.agency-detail-page, body  {
   font-family: Unbounded, sans-serif; 
 }
 
@@ -672,14 +672,14 @@ a:hover {
 }
 
 
-.franchise-title-wrapper {
+.agency-title-wrapper {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
 
-.franchise-header .logo-display-container {
+.agency-header .logo-display-container {
   width: 68px;
   height: 68px;
   flex-shrink: 0;
@@ -694,66 +694,23 @@ a:hover {
   overflow: hidden;
 }
 
-.franchise-header .logo-image,
-.franchise-header .logo-placeholder {
+.agency-header .logo-image,
+.agency-header .logo-placeholder {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 12px;
 }
 
-.franchise-header .logo-placeholder {
+.agency-header .logo-placeholder {
   object-fit: contain;
   opacity: 0.5;
   width: 50%;
   height: 50%;
 }
 
-/* Стили для аватара автора в заголовке агентства */
-.author-avatar-header {
-  width: 58px !important;
-  height: 58px !important;
-  object-fit: cover;
-  border-radius: 12px;
-}
 
-/* Стили для блока с кнопками справа от названия */
 .agency-header-actions-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-}
-
-.agency-header-left {
-  flex: 1;
-}
-
-.actions-top-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  margin-left: auto;
-}
-
-.agency-info-badge {
-  background: var(--accent-yellow);
-  color: var(--dark-bg);
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-/* Скрыть кнопки прокрутки на страницах агентств */
-body:has(.agency-detail-page) .scroll-arrow {
-  display: none !important;
-}
-
-
-.franchise-header-actions-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -763,7 +720,7 @@ body:has(.agency-detail-page) .scroll-arrow {
 }
 
 
-.franchise-header {
+.agency-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -772,7 +729,7 @@ body:has(.agency-detail-page) .scroll-arrow {
   min-width: 0; 
 }
 
-.franchise-header-left {
+.agency-header-left {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -801,7 +758,7 @@ body:has(.agency-detail-page) .scroll-arrow {
   align-items: flex-start;
 }
 
-.franchise-name {
+.agency-name {
   font-size: 36px;
   font-weight: 700;
   line-height: 1.2;
@@ -837,14 +794,14 @@ body:has(.agency-detail-page) .scroll-arrow {
   font-weight: 500;
 }
 
-.franchise-stats-info {
+.agency-stats-info {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-top: 10px;
 }
 
-.franchise-stats-item {
+.agency-stats-item {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -852,12 +809,12 @@ body:has(.agency-detail-page) .scroll-arrow {
   color: var(--text-secondary);
 }
 
-.franchise-stats-label {
+.agency-stats-label {
   color: var(--text-secondary);
   font-weight: 400;
 }
 
-.franchise-stats-value {
+.agency-stats-value {
   color: var(--text-primary);
   font-weight: 600;
 }
@@ -932,7 +889,7 @@ body:has(.agency-detail-page) .scroll-arrow {
   min-width: 180px;
 }
 
-.franchise-info-badge {
+.agency-info-badge {
   background-color: rgb(0 8 25 / 60%); 
   backdrop-filter: blur(5px); 
   color: var(--text-primary);
@@ -1817,7 +1774,7 @@ body:has(.agency-detail-page) .scroll-arrow {
 
 
 
-.similar-franchises-section {
+.similar-agencies-section {
   margin-top: 60px;
   padding: 70px 0; 
   background-color: black; 
@@ -1831,7 +1788,7 @@ body:has(.agency-detail-page) .scroll-arrow {
   position: relative;
 }
 
-.similar-franchises-section::before {
+.similar-agencies-section::before {
   content: '';
   position: absolute;
   top: 0;
@@ -1844,7 +1801,7 @@ body:has(.agency-detail-page) .scroll-arrow {
   z-index: 1;
 }
 
-.similar-franchises-container {
+.similar-agencies-container {
   width: 1303px; 
   max-width: 1303px; 
   margin: 0 auto; 
@@ -1863,7 +1820,7 @@ body:has(.agency-detail-page) .scroll-arrow {
 }
 
 .similar-text,
-.franchises-text {
+.agencies-text {
   font-size: clamp(40px, 6vw, 70px);
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -1877,7 +1834,7 @@ body:has(.agency-detail-page) .scroll-arrow {
   text-transform: lowercase;
 }
 
-.franchises-text {
+.agencies-text {
   color: var(--text-primary);
   text-transform: uppercase;
 }
@@ -1914,7 +1871,7 @@ body:has(.agency-detail-page) .scroll-arrow {
 }
 
 
-.similar-franchises-grid {
+.similar-agencies-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
