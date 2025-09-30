@@ -129,18 +129,19 @@
             <a href="#comments-section" class="comments-link">Комментарии</a>
           </div>
 
-          <div class="actions-top-right">
-            <div class="agency-info-badge">Агентство</div>
-            {% if user.is_authenticated and user == agency.owner %}
-              <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
-            {% elif user.is_authenticated and user.role.role_name == 'moderator' %}
-              <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
-              <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
-            {% endif %}
-          </div>
           </div>
 
           
+        </div>
+
+        <div class="actions-top-right">
+          <div class="agency-info-badge">Агентство</div>
+          {% if user.is_authenticated and user == agency.owner %}
+            <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
+          {% elif user.is_authenticated and user.role.role_name == 'moderator' %}
+            <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
+            <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
+          {% endif %}
         </div>
       </div> 
 
@@ -527,11 +528,13 @@
           </a>
           {% endfor %}
 
+          {% if similar_agencys|length > 4 %}
           <div class="similar-card show-more-placeholder">
             <button class="action-button show-more-similar" style="display: inline-flex !important; align-items: center; gap: 8px; padding: 10px 20px; height: auto; border: 1px solid var(--text-primary) !important; border-radius: 25px !important; background: transparent !important; color: var(--text-primary) !important; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.3s ease; width: auto; text-decoration: none !important;">
               <i class="fas fa-redo"></i> Показать еще
             </button>
           </div>
+          {% endif %}
         </div>
       {% else %}
         <p style="margin-top: 10px; color: #fff; opacity: .8;">Похожих агентств пока нет. Мы подберём рекомендации, как только появятся новые агентства в этой категории.</p>

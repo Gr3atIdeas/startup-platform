@@ -718,17 +718,22 @@ a:hover {
 }
 
 /* Стили для блока с кнопками справа от названия */
-.agency-header-left {
+.agency-header-actions-wrapper {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.agency-header-left {
+  flex: 1;
 }
 
 .actions-top-right {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 10px;
+  flex-shrink: 0;
 }
 
 .agency-info-badge {
