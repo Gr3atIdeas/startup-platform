@@ -91,20 +91,21 @@
       
       <div class="agency-header-actions-wrapper"> 
         <div class="agency-header">
-          <div class="agency-title-wrapper">
-            <div class="logo-display-container">
-              {% if agency.owner and agency.owner.get_profile_picture_url %}
-                <img src="{{ agency.owner.get_profile_picture_url }}" alt="Аватар автора {{ agency.owner.username }}" class="logo-image">
-              {% elif agency.logo_urls %}
-                {% with logo_file_id=agency.logo_urls.0 %}
-                  <img src="{% get_file_url_tag logo_file_id agency.agency_id 'logo' 'agency' %}" alt="Логотип {{ agency.title }}" class="logo-image">
-                {% endwith %}
-              {% else %}
-                <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
-              {% endif %}
+            <div class="agency-header-left">
+            <div class="agency-title-wrapper">
+              <div class="logo-display-container">
+                {% if agency.owner and agency.owner.get_profile_picture_url %}
+                  <img src="{{ agency.owner.get_profile_picture_url }}" alt="Аватар автора {{ agency.owner.username }}" class="logo-image">
+                {% elif agency.logo_urls %}
+                  {% with logo_file_id=agency.logo_urls.0 %}
+                    <img src="{% get_file_url_tag logo_file_id agency.agency_id 'logo' 'agency' %}" alt="Логотип {{ agency.title }}" class="logo-image">
+                  {% endwith %}
+                {% else %}
+                  <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
+                {% endif %}
+              </div>
+              <h1 class="agency-name" title="{{ agency.customization_data.agency_display_title|default:agency.title }}">{{ agency.customization_data.agency_display_title|default:agency.title }}</h1>
             </div>
-            <h1 class="agency-name" title="{{ agency.customization_data.agency_display_title|default:agency.title }}">{{ agency.customization_data.agency_display_title|default:agency.title }}</h1>
-          </div>
 
           <div class="header-meta">
             {% with agency_category=agency.customization_data.agency_category %}
@@ -126,6 +127,7 @@
               </div>
             </div>
             <a href="#comments-section" class="comments-link">Комментарии</a>
+          </div>
           </div>
 
           

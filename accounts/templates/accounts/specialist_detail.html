@@ -145,8 +145,8 @@
       <div class="tabbed-content-wrapper">
         <div class="tab-navigation">
           <button class="tab-button active" data-target="info-section"><span>Информация</span></button>
-          <button class="tab-button" data-target="gallery-section"><span>Услуги</span></button>
-          <button class="tab-button" data-target="profit-calculation-section"><span>Кейсы</span></button>
+          <button class="tab-button" data-target="gallery-section"><span>Галерея</span></button>
+          <button class="tab-button" data-target="services-section"><span>Услуги</span></button>
           <button class="tab-button" data-target="conditions-section"><span>Этапы работ</span></button>
           <button class="tab-button" data-target="documents-section"><span>Документы</span></button>
         </div>
@@ -219,21 +219,57 @@
             </div>
           </div>
 
-          <div id="gallery-section" class="content-section">
-            <h2 class="section-title">Услуги</h2>
-            <div class="profit-calculation-wrapper">
-              <div class="profit-calculation-content">
-                {{ specialist.additional_info|default:"Описание услуг пока не добавлено."|linebreaksbr }}
+          <div id="gallery-section" class="content-section media-section">
+            <h2 class="section-title">Галерея</h2>
+
+            
+            {% if video_urls %}
+              <h3 class="section-subtitle" style="margin-bottom: 15px; font-size: 18px; color: var(--accent-yellow);">Видео</h3>
+              <div class="video-grid"> 
+                  {% for url in video_urls %}
+                      
+                      <a href="{% get_file_url_tag url specialist.specialist_id 'video' 'specialist' %}" 
+                         
+                         class="gallery-item video-item glightbox" 
+                         data-gallery="specialist-gallery">          
+                         <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
+                         
+                         <div class="video-placeholder">Смотреть видео {{ forloop.counter }}</div> 
+                      </a>
+                  {% endfor %}
               </div>
+            {% endif %}
+            
+            
+            
+            {% if creatives_urls %}
+              
+              {% if video_urls %}
+              <h3 class="section-subtitle" style="margin-top: 30px; margin-bottom: 15px; font-size: 18px; color: var(--accent-yellow);">Изображения</h3>
+              {% endif %}
+              <div class="gallery-grid">
+                
+                {% for url in creatives_urls %}
+                  <a 
+                     href="{% get_file_url_tag url specialist.specialist_id 'creative' 'specialist' %}"
+                     class="gallery-item image-item glightbox" 
+                     data-gallery="specialist-gallery"> 
+                    <img src="{% get_file_url_tag url specialist.specialist_id 'creative' 'specialist' %}" alt="Креатив {{ forloop.counter }}" />
+                  </a>
+                {% endfor %}
               </div>
+            {% elif not video_urls %}
+              <p>Медиа-материалы отсутствуют.</p>
+            {% endif %}
+            
           </div>
 
           
-          <div id="profit-calculation-section" class="content-section">
-            <h2 class="section-title">Кейсы</h2>
+          <div id="services-section" class="content-section">
+            <h2 class="section-title">Услуги</h2>
             <div class="profit-calculation-wrapper">
                 <div class="profit-calculation-content">
-                    {{ specialist.additional_info|default:"Кейсы пока не добавлены."|linebreaksbr }}
+                    {{ specialist.additional_info|default:"Описание услуг пока не добавлено."|linebreaksbr }}
                 </div>
             </div>
           </div>
