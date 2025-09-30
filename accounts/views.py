@@ -286,6 +286,10 @@ def get_synced_files(entity, file_type_name, file_urls_field):
         else:
             entity_type_name = entity_class_name
         
+        # Специальная обработка для агентств
+        if entity_class_name == 'agencies':
+            entity_type_name = 'agency'
+        
         entity_type = EntityTypes.objects.get(type_name=entity_type_name)
         
         # Исправляем получение entity_id - убираем 's' в конце
