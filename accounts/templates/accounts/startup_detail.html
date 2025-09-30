@@ -356,6 +356,18 @@
           
           <div id="documents-section" class="content-section">
             <h2 class="section-title">Документы</h2>
+            
+            <!-- ОТЛАДОЧНАЯ ИНФОРМАЦИЯ -->
+            <div style="background: #f0f0f0; padding: 10px; margin: 10px 0; border: 1px solid #ccc; font-family: monospace; font-size: 12px;">
+              <strong>ОТЛАДКА ДОКУМЕНТОВ СТАРТАПА:</strong><br>
+              proofs_urls: {{ startup.proofs_urls|default:"НЕТ" }}<br>
+              startup_documents.count: {{ startup_documents.count }}<br>
+              startup_documents: 
+              {% for doc in startup_documents %}
+                <br>- {{ doc.file_url }} ({{ doc.original_file_name|default:"БЕЗ ИМЕНИ" }})
+              {% endfor %}
+            </div>
+            
             {% if startup_documents %}
                 <ul class="document-list">
                     {% for doc in startup_documents %}
