@@ -227,7 +227,14 @@ def _clear_captcha_messages(request):
 def safe_create_file_storage(entity_type, entity_id, file_type, file_url, uploaded_at, startup, original_file_name):
     """
     Безопасно создает объект FileStorage, учитывая наличие/отсутствие поля original_file_name
+    Проверяет на дублирование по file_url перед созданием
     """
+    # Проверяем, не существует ли уже файл с таким file_url
+    existing_file = FileStorage.objects.filter(file_url=file_url).first()
+    if existing_file:
+        logger.warning(f"Файл с ID {file_url} уже существует, пропускаем создание")
+        return existing_file
+    
     if hasattr(FileStorage, 'original_file_name'):
         try:
             return FileStorage.objects.create(
@@ -257,45 +264,6 @@ def safe_create_file_storage(entity_type, entity_id, file_type, file_url, upload
             uploaded_at=uploaded_at,
             startup=startup,
         )
-def safe_create_file_storage_instance(entity_type, entity_id, file_type, file_url, uploaded_at, startup, original_file_name):
-    """
-    Безопасно создает и сохраняет экземпляр FileStorage, учитывая наличие/отсутствие поля original_file_name
-    """
-    if hasattr(FileStorage, 'original_file_name'):
-        try:
-            file_storage = FileStorage(
-                entity_type=entity_type,
-                entity_id=entity_id,
-                file_type=file_type,
-                file_url=file_url,
-                uploaded_at=uploaded_at,
-                startup=startup,
-                original_file_name=original_file_name,
-            )
-            file_storage.save()
-            return file_storage
-        except Exception:
-            file_storage = FileStorage(
-                entity_type=entity_type,
-                entity_id=entity_id,
-                file_type=file_type,
-                file_url=file_url,
-                uploaded_at=uploaded_at,
-                startup=startup,
-            )
-            file_storage.save()
-            return file_storage
-    else:
-        file_storage = FileStorage(
-            entity_type=entity_type,
-            entity_id=entity_id,
-            file_type=file_type,
-            file_url=file_url,
-            uploaded_at=uploaded_at,
-            startup=startup,
-        )
-        file_storage.save()
-        return file_storage
 def get_unique_filename(original_name, startup_id, file_type_name):
     """
     Генерирует уникальное имя файла, добавляя (2), (3) и т.д. если файл с таким именем уже существует
@@ -2307,10 +2275,11 @@ def startup_detail(request, startup_id):
         entity_type = EntityTypes.objects.get(type_name="startup")
         
         # Ищем файлы по обоим способам: новому (entity_type + entity_id) и старому (startup)
+        # Используем distinct() чтобы избежать дублирования
         startup_documents = FileStorage.objects.filter(
             Q(entity_type=entity_type, entity_id=startup.startup_id) | Q(startup=startup),
             file_type=proof_file_type
-        ).order_by("-uploaded_at")
+        ).distinct().order_by("-uploaded_at")
     except (FileTypes.DoesNotExist, EntityTypes.DoesNotExist):
         startup_documents = FileStorage.objects.none()
     context = {
@@ -3452,13 +3421,14 @@ def create_startup(request):
                         raise Exception("Не удалось сохранить логотип")
                     logger.info(f"Логотип успешно сохранён по пути: {file_path}")
                     logo_ids.append(logo_id)
-                    FileStorage.objects.create(
+                    safe_create_file_storage(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=logo_type,
                         file_url=logo_id,
                         uploaded_at=timezone.now(),
                         startup=startup,
+                        original_file_name=logo.name,
                     )
                     logger.info(f"Логотип сохранён: {file_path}")
                 except Exception as e:
@@ -4266,7 +4236,7 @@ def edit_startup(request, startup_id):
                     file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{creative_file.name}"
                     default_storage.save(file_path, creative_file)
                     creative_ids.append(creative_id)
-                    safe_create_file_storage_instance(
+                    safe_create_file_storage(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=creative_type,
@@ -4295,7 +4265,7 @@ def edit_startup(request, startup_id):
                     file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{proof_file.name}"
                     default_storage.save(file_path, proof_file)
                     proofs_ids.append(proof_id)
-                    safe_create_file_storage_instance(
+                    safe_create_file_storage(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=proof_type,
@@ -4319,7 +4289,7 @@ def edit_startup(request, startup_id):
                     file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
                     default_storage.save(file_path, video)
                     video_ids.append(video_id)
-                    safe_create_file_storage_instance(
+                    safe_create_file_storage(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=video_type,
@@ -7642,7 +7612,7 @@ def edit_franchise(request, franchise_id):
                     logo_ids = [logo_id]
                     logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
                     entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
-                    safe_create_file_storage_instance(
+                    safe_create_file_storage(
                         entity_type=entity_type,
                         entity_id=franchise.franchise_id,
                         file_type=logo_type,
@@ -7687,7 +7657,7 @@ def edit_franchise(request, franchise_id):
                     try:
                         default_storage.save(file_path, creative_file)
                         creative_ids.append(creative_id)
-                        safe_create_file_storage_instance(
+                        safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=franchise.franchise_id,
                             file_type=creative_type,
@@ -7714,7 +7684,7 @@ def edit_franchise(request, franchise_id):
                     try:
                         default_storage.save(file_path, proof_file)
                         proofs_ids.append(proof_id)
-                        safe_create_file_storage_instance(
+                        safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=franchise.franchise_id,
                             file_type=proof_type,
@@ -7741,7 +7711,7 @@ def edit_franchise(request, franchise_id):
                     try:
                         default_storage.save(file_path, video)
                         video_ids.append(video_id)
-                        safe_create_file_storage_instance(
+                        safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=franchise.franchise_id,
                             file_type=video_type,
@@ -7903,7 +7873,7 @@ def edit_agency(request, agency_id):
                     logo_ids = [logo_id]
                     logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
                     entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
-                    safe_create_file_storage_instance(
+                    safe_create_file_storage(
                         entity_type=entity_type,
                         entity_id=agency.agency_id,
                         file_type=logo_type,
@@ -7948,7 +7918,7 @@ def edit_agency(request, agency_id):
                     try:
                         default_storage.save(file_path, creative_file)
                         creative_ids.append(creative_id)
-                        safe_create_file_storage_instance(
+                        safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=agency.agency_id,
                             file_type=creative_type,
@@ -7975,7 +7945,7 @@ def edit_agency(request, agency_id):
                     try:
                         default_storage.save(file_path, proof_file)
                         proofs_ids.append(proof_id)
-                        safe_create_file_storage_instance(
+                        safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=agency.agency_id,
                             file_type=proof_type,
@@ -8002,7 +7972,7 @@ def edit_agency(request, agency_id):
                     try:
                         default_storage.save(file_path, video)
                         video_ids.append(video_id)
-                        safe_create_file_storage_instance(
+                        safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=agency.agency_id,
                             file_type=video_type,
@@ -8164,7 +8134,7 @@ def edit_specialist(request, specialist_id):
                     logo_ids = [logo_id]
                     logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
                     entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
-                    safe_create_file_storage_instance(
+                    safe_create_file_storage(
                         entity_type=entity_type,
                         entity_id=specialist.specialist_id,
                         file_type=logo_type,
@@ -8209,7 +8179,7 @@ def edit_specialist(request, specialist_id):
                     try:
                         default_storage.save(file_path, creative_file)
                         creative_ids.append(creative_id)
-                        safe_create_file_storage_instance(
+                        safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=specialist.specialist_id,
                             file_type=creative_type,
@@ -8236,7 +8206,7 @@ def edit_specialist(request, specialist_id):
                     try:
                         default_storage.save(file_path, proof_file)
                         proofs_ids.append(proof_id)
-                        safe_create_file_storage_instance(
+                        safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=specialist.specialist_id,
                             file_type=proof_type,
@@ -8263,7 +8233,7 @@ def edit_specialist(request, specialist_id):
                     try:
                         default_storage.save(file_path, video)
                         video_ids.append(video_id)
-                        safe_create_file_storage_instance(
+                        safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=specialist.specialist_id,
                             file_type=video_type,
