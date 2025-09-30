@@ -283,7 +283,7 @@ def get_synced_files(entity, file_type_name, file_urls_field):
         entity_class_name = entity.__class__.__name__.lower()
         if entity_class_name.endswith('s'):
             entity_type_name = entity_class_name[:-1]  # убираем 's'
-    else:
+        else:
             entity_type_name = entity_class_name
         
         entity_type = EntityTypes.objects.get(type_name=entity_type_name)
@@ -1563,7 +1563,7 @@ def specialists_list(request):
         return render(request, "accounts/specialists_list.html", context)
 def agency_detail(request, agency_id):
     try:
-        franchise = Agencies.objects.get(agency_id=agency_id)
+        agency = Agencies.objects.get(agency_id=agency_id)
     except Agencies.DoesNotExist:
         return render(request, "accounts/404.html", status=404)
 
@@ -1571,49 +1571,49 @@ def agency_detail(request, agency_id):
         if "status" in request.POST:
             if not request.user.is_authenticated or not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
                 messages.error(request, "У вас нет прав для этого действия.")
-                return redirect("agency_detail", agency_id=franchise.agency_id)
+                return redirect("agency_detail", agency_id=agency.agency_id)
             new_status = (request.POST.get("status", "") or "").strip().lower()
             allowed_statuses = {"approved", "blocked", "closed", "pending", "rejected"}
             if new_status in allowed_statuses:
-                franchise.status = new_status
-                franchise.save(update_fields=["status"])
+                agency.status = new_status
+                agency.save(update_fields=["status"])
                 messages.success(request, "Статус агентства обновлён.")
             else:
                 messages.error(request, "Недопустимый статус.")
-            return redirect("agency_detail", agency_id=franchise.agency_id)
+            return redirect("agency_detail", agency_id=agency.agency_id)
         if not request.user.is_authenticated:
             return redirect("login")
         form = AgencyCommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
-            comment.agency = franchise
+            comment.agency = agency
             comment.user = request.user
 
             try:
                 new_rating = int(form.cleaned_data.get("user_rating") or 0)
             except (TypeError, ValueError):
                 new_rating = 0
-            user_vote = AgencyVotes.objects.filter(user=request.user, agency=franchise).first()
+            user_vote = AgencyVotes.objects.filter(user=request.user, agency=agency).first()
             if 1 <= new_rating <= 5:
                 comment.user_rating = new_rating
                 if user_vote:
                     if user_vote.rating != new_rating:
-                        franchise.sum_votes = (franchise.sum_votes or 0) + (new_rating - int(user_vote.rating or 0))
+                        agency.sum_votes = (agency.sum_votes or 0) + (new_rating - int(user_vote.rating or 0))
                         user_vote.rating = new_rating
                         user_vote.save(update_fields=["rating"])
-                        franchise.save(update_fields=["sum_votes"])
+                        agency.save(update_fields=["sum_votes"])
                 else:
-                    AgencyVotes.objects.create(user=request.user, agency=franchise, rating=new_rating)
-                    franchise.total_voters = (franchise.total_voters or 0) + 1
-                    franchise.sum_votes = (franchise.sum_votes or 0) + new_rating
-                    franchise.save(update_fields=["total_voters", "sum_votes"])
+                    AgencyVotes.objects.create(user=request.user, agency=agency, rating=new_rating)
+                    agency.total_voters = (agency.total_voters or 0) + 1
+                    agency.sum_votes = (agency.sum_votes or 0) + new_rating
+                    agency.save(update_fields=["total_voters", "sum_votes"])
             else:
                 if user_vote:
                     comment.user_rating = user_vote.rating
 
             comment.save()
             messages.success(request, "Ваш комментарий был добавлен.")
-            return redirect("agency_detail", agency_id=franchise.agency_id)
+            return redirect("agency_detail", agency_id=agency.agency_id)
         else:
             messages.error(request, "Ошибка при добавлении комментария.")
     else:
@@ -1621,7 +1621,7 @@ def agency_detail(request, agency_id):
 
     agency_category = None
     try:
-        agency_category = (franchise.customization_data or {}).get("agency_category")
+        agency_category = (agency.customization_data or {}).get("agency_category")
     except Exception:
         agency_category = None
 
@@ -1634,28 +1634,28 @@ def agency_detail(request, agency_id):
         candidates_qs = Agencies.objects.filter(
             status="approved",
         ).exclude(agency_id=agency_id)
-    similar_franchises = candidates_qs.order_by("-created_at")[:4]
+    similar_agencies = candidates_qs.order_by("-created_at")[:4]
 
     comments_with_rating = (
-        AgencyComments.objects.filter(agency=franchise, parent_comment__isnull=True)
+        AgencyComments.objects.filter(agency=agency, parent_comment__isnull=True)
         .annotate(
             user_vote_rating=models.Subquery(
                 AgencyVotes.objects.filter(
-                    agency=franchise, user=models.OuterRef("user_id")
+                    agency=agency, user=models.OuterRef("user_id")
                 ).values("rating")[:1]
             )
         )
         .order_by("-created_at")
     )
-    average_rating = franchise.get_average_rating()
-    total_votes = franchise.total_voters
+    average_rating = agency.get_average_rating()
+    total_votes = agency.total_voters
     user_has_voted = False
     if request.user.is_authenticated:
         user_has_voted = AgencyVotes.objects.filter(
-            user=request.user, agency=franchise
+            user=request.user, agency=agency
         ).exists()
     rating_distribution_query = (
-        AgencyVotes.objects.filter(agency=franchise)
+        AgencyVotes.objects.filter(agency=agency)
         .values("rating")
         .annotate(count=Count("rating"))
         .order_by("-rating")
@@ -1664,19 +1664,19 @@ def agency_detail(request, agency_id):
     for i in range(1, 6):
         rating_distribution.setdefault(i, 0)
 
-    logo_urls = franchise.logo_urls if isinstance(franchise.logo_urls, list) else []
+    logo_urls = agency.logo_urls if isinstance(agency.logo_urls, list) else []
     creatives_urls = (
-        franchise.creatives_urls if isinstance(franchise.creatives_urls, list) else []
+        agency.creatives_urls if isinstance(agency.creatives_urls, list) else []
     )
-    video_urls = franchise.video_urls if isinstance(franchise.video_urls, list) else []
-    proofs_urls = franchise.proofs_urls if isinstance(franchise.proofs_urls, list) else []
+    video_urls = agency.video_urls if isinstance(agency.video_urls, list) else []
+    proofs_urls = agency.proofs_urls if isinstance(agency.proofs_urls, list) else []
 
     # Получаем синхронизированные документы (только те, что есть в редакторе)
-    agency_documents = get_synced_files(franchise, "proof", "proofs_urls")
+    agency_documents = get_synced_files(agency, "proof", "proofs_urls")
 
     context = {
-        "agency": franchise,
-        "similar_agencies": similar_franchises,
+        "agency": agency,
+        "similar_agencies": similar_agencies,
         "has_similar": candidates_qs.exists(),
         "comments": comments_with_rating,
         "form": form,
