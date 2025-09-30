@@ -158,7 +158,7 @@
                                         <a href="{% url 'startup_detail' startup.startup_id %}" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
                                     </div>
                                     <img class="profile-main-startup-image" 
-                                         src="{% if startup.logo_urls and startup.logo_urls.0 %}{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}{% else %}{% static 'accounts/images/profile/Rectangle_4196.png' %}{% endif %}" 
+                                         src="{% if startup.logo_urls and startup.logo_urls.0 %}{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' 'startup' %}{% else %}{% static 'accounts/images/profile/Rectangle_4196.png' %}{% endif %}" 
                                          alt="Изображение стартапа" />
                                 </div>
                                 {% if not forloop.last %}

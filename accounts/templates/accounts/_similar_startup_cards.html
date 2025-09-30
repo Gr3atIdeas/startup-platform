@@ -8,7 +8,7 @@
 <a href="{% url 'startup_detail' similar.startup_id %}" class="similar-card">
   <div class="similar-card-image">
     {% if similar.logo_urls %}
-      <img src="{% get_file_url_tag similar.logo_urls.0 similar.startup_id 'logo' %}" alt="Логотип">
+      <img src="{% get_file_url_tag similar.logo_urls.0 similar.startup_id 'logo' 'startup' %}" alt="Логотип">
     {% else %}
       <div class="planet">
         <div class="planet-segment segment-top" style="background-color: {{ similar.planet_top_color|default:'#7B61FF' }};"></div>

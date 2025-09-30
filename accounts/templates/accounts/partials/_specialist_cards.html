@@ -25,7 +25,7 @@
             </div>
           {% elif specialist.logo_urls %}
             <div class="franchise-logo">
-              <img src="{% get_file_url_tag specialist.logo_urls.0 specialist.specialist_id 'logo' %}" alt="Логотип {{ specialist.title }}">
+              <img src="{% get_file_url_tag specialist.logo_urls.0 specialist.specialist_id 'logo' 'specialist' %}" alt="Логотип {{ specialist.title }}">
             </div>
           {% else %}
             <div class="franchise-logo">

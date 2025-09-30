@@ -22,7 +22,7 @@
       <div class="startup-title-container">
         {% if startup.logo_urls %}
           <div class="startup-logo">
-            <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="Логотип {{ startup.title }}">
+            <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' 'startup' %}" alt="Логотип {{ startup.title }}">
           </div>
         {% endif %}
         <h3 class="startup-title">{{ startup.title }}</h3>

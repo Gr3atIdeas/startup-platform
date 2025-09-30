@@ -3710,7 +3710,7 @@ def create_franchise(request):
                             file_url=proof_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=os.path.basename(file_path),
+                            original_file_name=proof_file.name,
                         )
                     except Exception:
                         messages.warning(request, "Не удалось сохранить один из документов, но франшиза создана.")
@@ -3801,7 +3801,7 @@ def create_agency(request):
                             file_url=file_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=os.path.basename(file_path),
+                            original_file_name=f.name,
                         )
                     except Exception:
                         pass
@@ -3875,7 +3875,7 @@ def create_specialist(request):
                             file_url=file_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=os.path.basename(file_path),
+                            original_file_name=f.name,
                         )
                     except Exception:
                         pass
@@ -7714,7 +7714,7 @@ def edit_franchise(request, franchise_id):
                             file_url=proof_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=os.path.basename(file_path),
+                            original_file_name=proof_file.name,
                         )
                     except Exception as e:
                         messages.warning(request, f"Не удалось сохранить документ: {e}")

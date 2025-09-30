@@ -6,7 +6,7 @@
 <a href="{% url 'agency_detail' similar.franchise_id %}" class="similar-card">
   <div class="similar-card-image">
     {% if similar.logo_urls %}
-      <img src="{% get_file_url_tag similar.logo_urls.0 similar.franchise_id 'logo' 'agency' %}" alt="Логотип">
+      <img src="{% get_file_url_tag similar.logo_urls.0 similar.franchise_id 'logo' 'franchise' %}" alt="Логотип">
     {% else %}
       <div class="planet"></div>
     {% endif %}

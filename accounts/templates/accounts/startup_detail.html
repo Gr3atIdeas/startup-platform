@@ -101,7 +101,7 @@
             <div class="logo-display-container">
               {% if startup.logo_urls %}
                 {% with logo_file_id=startup.logo_urls.0 %}
-                  <img src="{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}" alt="Логотип {{ startup.title }}" class="logo-image">
+                  <img src="{% get_file_url_tag logo_file_id startup.startup_id 'logo' 'startup' %}" alt="Логотип {{ startup.title }}" class="logo-image">
                 {% endwith %}
               {% else %}
                 <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
@@ -269,7 +269,7 @@
               <div class="video-grid"> 
                   {% for url in video_urls %}
                       
-                      <a href="{% get_file_url_tag url startup.startup_id 'video' %}" 
+                      <a href="{% get_file_url_tag url startup.startup_id 'video' 'startup' %}" 
                          
                          class="gallery-item video-item glightbox" 
                          data-gallery="startup-gallery">          
@@ -292,10 +292,10 @@
                 
                 {% for url in creatives_urls %}
                   <a 
-                     href="{% get_file_url_tag url startup.startup_id 'creative' %}"
+                     href="{% get_file_url_tag url startup.startup_id 'creative' 'startup' %}"
                      class="gallery-item image-item glightbox" 
                      data-gallery="startup-gallery"> 
-                    <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив {{ forloop.counter }}" />
+                    <img src="{% get_file_url_tag url startup.startup_id 'creative' 'startup' %}" alt="Креатив {{ forloop.counter }}" />
                   </a>
                 {% endfor %}
               </div>
@@ -360,9 +360,9 @@
                 <ul class="document-list">
                     {% for doc in startup_documents %}
                         <li class="document-item">
-                            <a href="{% get_file_url_tag doc.file_url startup.startup_id 'proof' %}" target="_blank" class="document-link">
+                            <a href="{% get_file_url_tag doc.file_url startup.startup_id 'proof' 'startup' %}" target="_blank" class="document-link">
                                 <i class="fas fa-file-alt document-icon"></i>
-                                <span class="document-name">{% get_file_original_name doc.file_url startup.startup_id 'proof' %}</span>
+                                <span class="document-name">{% get_file_original_name doc.file_url startup.startup_id 'proof' 'startup' %}</span>
                             </a>
                             
                         </li>
@@ -581,7 +581,7 @@
         <a href="{% url 'startup_detail' similar.startup_id %}" class="similar-card">
           <div class="similar-card-image">
             {% if similar.logo_urls %}
-              <img src="{% get_file_url_tag similar.logo_urls.0 similar.startup_id 'logo' %}" alt="Логотип">
+              <img src="{% get_file_url_tag similar.logo_urls.0 similar.startup_id 'logo' 'startup' %}" alt="Логотип">
             {% else %}
               <div class="planet">
                 <div class="planet-segment segment-top" style="background-color: {{ similar.planet_top_color|default:'#7B61FF' }};"></div>
