@@ -717,6 +717,30 @@ a:hover {
   border-radius: 12px;
 }
 
+/* Стили для блока с кнопками справа от названия */
+.agency-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.actions-top-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.agency-info-badge {
+  background: var(--accent-yellow);
+  color: var(--dark-bg);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
 
 .franchise-header-actions-wrapper {
   display: flex;

@@ -128,20 +128,20 @@
             </div>
             <a href="#comments-section" class="comments-link">Комментарии</a>
           </div>
+
+          <div class="actions-top-right">
+            <div class="agency-info-badge">Агентство</div>
+            {% if user.is_authenticated and user == agency.owner %}
+              <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
+            {% elif user.is_authenticated and user.role.role_name == 'moderator' %}
+              <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
+              <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
+            {% endif %}
+          </div>
           </div>
 
           
         </div>
-
-                 <div class="actions-top-right">
-           <div class="agency-info-badge">Агентство</div>
-           {% if user.is_authenticated and user == agency.owner %}
-             <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
-           {% elif user.is_authenticated and user.role.role_name == 'moderator' %}
-             <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
-             <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
-           {% endif %}
-         </div>
       </div> 
 
       <div class="tabbed-content-wrapper">
