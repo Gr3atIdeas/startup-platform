@@ -4266,6 +4266,19 @@ def edit_startup(request, startup_id):
                             f"Пропущен креатив, так как это не файл: {creative_file}"
                         )
                         continue
+                    
+                    # Проверяем, не существует ли уже файл с таким именем
+                    existing_file = FileStorage.objects.filter(
+                        entity_type=entity_type,
+                        entity_id=startup.startup_id,
+                        file_type=creative_type,
+                        original_file_name=creative_file.name
+                    ).first()
+                    
+                    if existing_file:
+                        logger.warning(f"Креатив {creative_file.name} уже существует, пропускаем создание")
+                        continue
+                    
                     unique_filename = get_unique_filename(creative_file.name, startup.startup_id, "creative")
                     creative_id = str(uuid.uuid4())
                     file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{creative_file.name}"
@@ -4278,7 +4291,7 @@ def edit_startup(request, startup_id):
                         file_url=creative_id,
                         uploaded_at=timezone.now(),
                         startup=startup,
-                        original_file_name=unique_filename,
+                        original_file_name=creative_file.name,
                     )
                     logger.info(f"Креатив сохранён с ID: {creative_id}")
                 # creatives_ids будут добавлены в конце функции
@@ -4295,6 +4308,20 @@ def edit_startup(request, startup_id):
                             f"Пропущен пруф, так как это не файл: {proof_file}"
                         )
                         continue
+                    
+                    # Проверяем, не существует ли уже файл с таким именем и размером
+                    file_size = proof_file.size
+                    existing_file = FileStorage.objects.filter(
+                        entity_type=entity_type,
+                        entity_id=startup.startup_id,
+                        file_type=proof_type,
+                        original_file_name=proof_file.name
+                    ).first()
+                    
+                    if existing_file:
+                        logger.warning(f"Файл {proof_file.name} уже существует, пропускаем создание")
+                        continue
+                    
                     unique_filename = get_unique_filename(proof_file.name, startup.startup_id, "proof")
                     proof_id = str(uuid.uuid4())
                     base_name = os.path.splitext(proof_file.name)[0]
@@ -4304,12 +4331,6 @@ def edit_startup(request, startup_id):
                     )
                     safe_name = slugify(safe_base_name) + ext
                     file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{safe_name}"
-                    
-                    # Проверяем, не существует ли уже файл с таким file_url
-                    existing_file = FileStorage.objects.filter(file_url=proof_id).first()
-                    if existing_file:
-                        logger.warning(f"Файл с ID {proof_id} уже существует, пропускаем создание")
-                        continue
                     
                     try:
                         default_storage.save(file_path, proof_file)
@@ -4336,6 +4357,19 @@ def edit_startup(request, startup_id):
                     if not hasattr(video, "name"):
                         logger.warning(f"Пропущено видео, так как это не файл: {video}")
                         continue
+                    
+                    # Проверяем, не существует ли уже файл с таким именем
+                    existing_file = FileStorage.objects.filter(
+                        entity_type=entity_type,
+                        entity_id=startup.startup_id,
+                        file_type=video_type,
+                        original_file_name=video.name
+                    ).first()
+                    
+                    if existing_file:
+                        logger.warning(f"Видео {video.name} уже существует, пропускаем создание")
+                        continue
+                    
                     unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
                     video_id = str(uuid.uuid4())
                     file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
@@ -4348,7 +4382,7 @@ def edit_startup(request, startup_id):
                         file_url=video_id,
                         uploaded_at=timezone.now(),
                         startup=startup,
-                        original_file_name=unique_filename,
+                        original_file_name=video.name,
                     )
                     logger.info(f"Видео сохранено с ID: {video_id}")
                 # video_ids будут добавлены в конце функции
@@ -4393,16 +4427,27 @@ def edit_startup(request, startup_id):
                         ).first()
                         
                         if file_storage:
-                            # Удаляем файл из S3
+                            # Удаляем файл из S3 - используем правильный путь
                             if file_type == 'creative':
-                                file_path = f"startups/{startup.startup_id}/creatives/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                                # Формируем безопасное имя файла как при загрузке
+                                base_name = os.path.splitext(file_storage.original_file_name or 'unknown')[0]
+                                ext = os.path.splitext(file_storage.original_file_name or 'unknown')[1]
+                                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                                safe_name = slugify(safe_base_name) + ext
+                                file_path = f"startups/{startup.startup_id}/creatives/{file_id}_{safe_name}"
                             elif file_type == 'proof':
-                                file_path = f"startups/{startup.startup_id}/proofs/{file_id}_{file_storage.original_file_name or 'unknown'}"
+                                # Формируем безопасное имя файла как при загрузке
+                                base_name = os.path.splitext(file_storage.original_file_name or 'unknown')[0]
+                                ext = os.path.splitext(file_storage.original_file_name or 'unknown')[1]
+                                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                                safe_name = slugify(safe_base_name) + ext
+                                file_path = f"startups/{startup.startup_id}/proofs/{file_id}_{safe_name}"
                             elif file_type == 'video':
                                 file_path = f"startups/{startup.startup_id}/videos/{file_id}_{file_storage.original_file_name or 'unknown'}"
                             else:
                                 file_path = f"startups/{startup.startup_id}/{file_type}s/{file_id}_{file_storage.original_file_name or 'unknown'}"
                             
+                            logger.info(f"Попытка удаления файла из S3: {file_path}")
                             delete_file_from_s3(file_path)
                         
                         # Удаляем запись из базы данных
@@ -7669,6 +7714,7 @@ def edit_franchise(request, franchise_id):
             franchise.save()
             
             logo_ids = franchise.logo_urls or []
+            creatives_ids = []
             creative_ids = franchise.creatives_urls or []
             proofs_ids = franchise.proofs_urls or []
             video_ids = franchise.video_urls or []
@@ -7954,6 +8000,7 @@ def edit_agency(request, agency_id):
             agency.save()
             
             logo_ids = agency.logo_urls or []
+            creatives_ids = []
             creative_ids = agency.creatives_urls or []
             proofs_ids = agency.proofs_urls or []
             video_ids = agency.video_urls or []
@@ -8239,6 +8286,7 @@ def edit_specialist(request, specialist_id):
             specialist.save()
             
             logo_ids = specialist.logo_urls or []
+            creatives_ids = []
             creative_ids = specialist.creatives_urls or []
             proofs_ids = specialist.proofs_urls or []
             video_ids = specialist.video_urls or []
@@ -8288,6 +8336,9 @@ def edit_specialist(request, specialist_id):
                 return render(request, "accounts/edit_specialist.html", {"form": form, "specialist": specialist})
             
             if creatives:
+                # Инициализируем creatives_ids если не инициализирован
+                if not 'creatives_ids' in locals():
+                    creatives_ids = []
                 creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 for creative_file in creatives:
