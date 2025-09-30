@@ -7990,12 +7990,6 @@ def edit_agency(request, agency_id):
                     except Exception as e:
                         messages.warning(request, f"Не удалось сохранить видео: {e}")
             
-            # Обновляем URL файлов
-            agency.logo_urls = logo_ids
-            agency.creatives_urls = creative_ids
-            agency.proofs_urls = proofs_ids
-            agency.video_urls = video_ids
-            
             # Обработка удаленных файлов
             deleted_files_json = request.POST.get('deleted_files', '[]')
             try:
@@ -8010,14 +8004,20 @@ def edit_agency(request, agency_id):
                             entity_id=agency.agency_id,
                             file_url=file_id
                         ).delete()
-                        if file_type == 'creative' and agency.creatives_urls:
-                            agency.creatives_urls = [url for url in agency.creatives_urls if url != file_id]
-                        elif file_type == 'proof' and agency.proofs_urls:
-                            agency.proofs_urls = [url for url in agency.proofs_urls if url != file_id]
-                        elif file_type == 'video' and agency.video_urls:
-                            agency.video_urls = [url for url in agency.video_urls if url != file_id]
+                        if file_type == 'creative' and creative_ids:
+                            creative_ids = [url for url in creative_ids if url != file_id]
+                        elif file_type == 'proof' and proofs_ids:
+                            proofs_ids = [url for url in proofs_ids if url != file_id]
+                        elif file_type == 'video' and video_ids:
+                            video_ids = [url for url in video_ids if url != file_id]
             except json.JSONDecodeError:
                 pass
+            
+            # Обновляем URL файлов
+            agency.logo_urls = logo_ids
+            agency.creatives_urls = creative_ids
+            agency.proofs_urls = proofs_ids
+            agency.video_urls = video_ids
             
             agency.save()
             
