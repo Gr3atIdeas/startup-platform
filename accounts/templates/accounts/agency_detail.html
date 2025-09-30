@@ -94,14 +94,12 @@
             <div class="agency-header-left">
             <div class="agency-title-wrapper">
               <div class="logo-display-container">
-                {% if agency.owner and agency.owner.get_profile_picture_url %}
-                  <img src="{{ agency.owner.get_profile_picture_url }}" alt="Аватар автора {{ agency.owner.username }}" class="logo-image">
-                {% elif agency.logo_urls %}
+                {% if agency.logo_urls %}
                   {% with logo_file_id=agency.logo_urls.0 %}
                     <img src="{% get_file_url_tag logo_file_id agency.agency_id 'logo' 'agency' %}" alt="Логотип {{ agency.title }}" class="logo-image">
                   {% endwith %}
                 {% else %}
-                  <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
+                  <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
                 {% endif %}
               </div>
               <h1 class="agency-name" title="{{ agency.customization_data.agency_display_title|default:agency.title }}">{{ agency.customization_data.agency_display_title|default:agency.title }}</h1>
