@@ -13,10 +13,8 @@
 <script>
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔴 EDIT_STARTUP: DOM загружен, инициализация формы');
     const form = document.getElementById('startupForm');
     if (form) {
-        console.log('🔴 EDIT_STARTUP: Форма найдена, начинаем обработку');
         
         // Удаляем дублирующиеся креативы
         removeDuplicateCreatives();
@@ -27,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const input = document.getElementById(inputId);
             if (input) {
                 input.addEventListener('change', function(e) {
-                    console.log(`🔴 EDIT_STARTUP: Файлы изменены для ${inputId}, количество: ${e.target.files.length}`);
                     // Сохраняем файлы в глобальную переменную
                     window.selectedFiles = window.selectedFiles || {};
                     window.selectedFiles[inputId] = e.target.files;
@@ -36,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         form.addEventListener('submit', function(e) {
-            console.log('🔴 EDIT_STARTUP: Форма отправляется!');
             e.preventDefault(); // Предотвращаем обычную отправку формы
             
             // Восстанавливаем файлы из глобальной переменной
@@ -46,14 +42,12 @@ document.addEventListener('DOMContentLoaded', function() {
             fileInputIds.forEach(inputId => {
                 const input = document.getElementById(inputId);
                 if (input && window.selectedFiles && window.selectedFiles[inputId]) {
-                    console.log(`🔴 EDIT_STARTUP: Восстанавливаем файлы для ${inputId}, количество: ${window.selectedFiles[inputId].length}`);
                     // Создаем новый DataTransfer для восстановления файлов
                     const dataTransfer = new DataTransfer();
                     for (let i = 0; i < window.selectedFiles[inputId].length; i++) {
                         dataTransfer.items.add(window.selectedFiles[inputId][i]);
                     }
                     input.files = dataTransfer.files;
-                    console.log(`🔴 EDIT_STARTUP: Файлы восстановлены для ${inputId}, итого: ${input.files.length}`);
                 }
             });
             
@@ -63,22 +57,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const videoInput = document.getElementById('id_video_input');
             const logoInput = document.getElementById('id_logo_input');
             
-            console.log('🔴 EDIT_STARTUP: Проверяем файлы после восстановления:');
-            console.log(`🔴 EDIT_STARTUP: Креативы: ${creativesInput ? creativesInput.files.length : 0}`);
-            console.log(`🔴 EDIT_STARTUP: Документы: ${proofsInput ? proofsInput.files.length : 0}`);
-            console.log(`🔴 EDIT_STARTUP: Видео: ${videoInput ? videoInput.files.length : 0}`);
-            console.log(`🔴 EDIT_STARTUP: Логотип: ${logoInput ? logoInput.files.length : 0}`);
             
             // Проверка лимитов файлов
                    
                    if (creativesInput && creativesInput.files.length > 3) {
-                       console.log('🔴 EDIT_STARTUP: ОШИБКА - слишком много креативов');
                        alert('Максимально 3 изображения');
                        return;
                    }
                    
                    if (proofsInput && proofsInput.files.length > 15) {
-                       console.log('🔴 EDIT_STARTUP: ОШИБКА - слишком много документов');
                        alert('Максимально 15 документов');
                        return;
                    }
@@ -90,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
                    
                    // Создаем FormData после проверки файлов
                    const formData = new FormData(form);
-                   console.log('🔴 EDIT_STARTUP: FormData создан, отправляем AJAX запрос');
                    
             
             
@@ -105,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then(response => {
-                console.log('🔴 EDIT_STARTUP: Получен ответ от сервера:', response.status);
                 if (response.ok) {
                     return response.json();
                 } else {
@@ -115,11 +100,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then(data => {
-                console.log('🔴 EDIT_STARTUP: Данные от сервера:', data);
                 if (data.success) {
-                    console.log('🔴 EDIT_STARTUP: Успешный ответ от сервера');
+                    
                     if (data.redirect_url) {
-                        console.log('🔴 EDIT_STARTUP: Перенаправляем на:', data.redirect_url);
                         window.location.href = data.redirect_url;
                     }
                 } else {

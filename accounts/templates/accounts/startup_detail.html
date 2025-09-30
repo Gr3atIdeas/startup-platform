@@ -356,17 +356,6 @@
           
           <div id="documents-section" class="content-section">
             <h2 class="section-title">Документы</h2>
-            <script>
-              console.log('🔴 STARTUP_DETAIL: Загружаем документы');
-              console.log('🔴 STARTUP_DETAIL: Количество документов:', {{ startup_documents|length }});
-              {% for doc in startup_documents %}
-                console.log('🔴 STARTUP_DETAIL: Документ {{ forloop.counter }}:', {
-                  file_url: '{{ doc.file_url }}',
-                  original_name: '{% get_file_original_name doc.file_url startup.startup_id "proof" "startup" %}',
-                  uploaded_at: '{{ doc.uploaded_at }}'
-                });
-              {% endfor %}
-            </script>
             {% if startup_documents %}
                 <ul class="document-list">
                     {% for doc in startup_documents %}

@@ -283,7 +283,7 @@ def get_synced_files(entity, file_type_name, file_urls_field):
         entity_class_name = entity.__class__.__name__.lower()
         if entity_class_name.endswith('s'):
             entity_type_name = entity_class_name[:-1]  # убираем 's'
-        else:
+    else:
             entity_type_name = entity_class_name
         
         entity_type = EntityTypes.objects.get(type_name=entity_type_name)
