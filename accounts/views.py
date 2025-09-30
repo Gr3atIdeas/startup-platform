@@ -3654,7 +3654,7 @@ def create_franchise(request):
                         file_url=logo_id,
                         uploaded_at=timezone.now(),
                         startup=None,
-                        original_file_name=os.path.basename(file_path),
+                        original_file_name=logo.name,
                     )
                 except Exception:
                     messages.warning(request, "Не удалось сохранить логотип, но франшиза создана.")
@@ -3682,7 +3682,7 @@ def create_franchise(request):
                             file_url=creative_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=os.path.basename(file_path),
+                            original_file_name=proof_file.name,
                         )
                     except Exception:
                         messages.warning(request, "Не удалось сохранить один из креативов, но франшиза создана.")
@@ -3735,7 +3735,7 @@ def create_franchise(request):
                         file_url=video_id,
                         uploaded_at=timezone.now(),
                         startup=None,
-                        original_file_name=os.path.basename(file_path),
+                        original_file_name=video.name,
                     )
                 except Exception:
                     messages.warning(request, "Не удалось сохранить видео, но франшиза создана.")
@@ -7642,7 +7642,7 @@ def edit_franchise(request, franchise_id):
                         file_url=logo_id,
                         uploaded_at=timezone.now(),
                         startup=None,
-                        original_file_name=os.path.basename(file_path),
+                        original_file_name=logo.name,
                     )
                 except Exception as e:
                     messages.warning(request, f"Не удалось сохранить логотип: {e}")
@@ -7687,7 +7687,7 @@ def edit_franchise(request, franchise_id):
                             file_url=creative_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=os.path.basename(file_path),
+                            original_file_name=proof_file.name,
                         )
                     except Exception as e:
                         messages.warning(request, f"Не удалось сохранить креатив: {e}")
@@ -7741,7 +7741,7 @@ def edit_franchise(request, franchise_id):
                             file_url=video_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=os.path.basename(file_path),
+                            original_file_name=proof_file.name,
                         )
                     except Exception as e:
                         messages.warning(request, f"Не удалось сохранить видео: {e}")
@@ -7903,7 +7903,7 @@ def edit_agency(request, agency_id):
                         file_url=logo_id,
                         uploaded_at=timezone.now(),
                         startup=None,
-                        original_file_name=os.path.basename(file_path),
+                        original_file_name=logo.name,
                     )
                 except Exception as e:
                     messages.warning(request, f"Не удалось сохранить логотип: {e}")
@@ -7948,7 +7948,7 @@ def edit_agency(request, agency_id):
                             file_url=creative_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=os.path.basename(file_path),
+                            original_file_name=proof_file.name,
                         )
                     except Exception as e:
                         messages.warning(request, f"Не удалось сохранить креатив: {e}")
@@ -7975,7 +7975,7 @@ def edit_agency(request, agency_id):
                             file_url=proof_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=os.path.basename(file_path),
+                            original_file_name=proof_file.name,
                         )
                     except Exception as e:
                         messages.warning(request, f"Не удалось сохранить документ: {e}")
@@ -8002,7 +8002,7 @@ def edit_agency(request, agency_id):
                             file_url=video_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=os.path.basename(file_path),
+                            original_file_name=proof_file.name,
                         )
                     except Exception as e:
                         messages.warning(request, f"Не удалось сохранить видео: {e}")
@@ -8164,7 +8164,7 @@ def edit_specialist(request, specialist_id):
                         file_url=logo_id,
                         uploaded_at=timezone.now(),
                         startup=None,
-                        original_file_name=os.path.basename(file_path),
+                        original_file_name=logo.name,
                     )
                 except Exception as e:
                     messages.warning(request, f"Не удалось сохранить логотип: {e}")
@@ -8209,7 +8209,7 @@ def edit_specialist(request, specialist_id):
                             file_url=creative_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=os.path.basename(file_path),
+                            original_file_name=proof_file.name,
                         )
                     except Exception as e:
                         messages.warning(request, f"Не удалось сохранить креатив: {e}")
@@ -8236,7 +8236,7 @@ def edit_specialist(request, specialist_id):
                             file_url=proof_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=os.path.basename(file_path),
+                            original_file_name=proof_file.name,
                         )
                     except Exception as e:
                         messages.warning(request, f"Не удалось сохранить документ: {e}")
@@ -8263,7 +8263,7 @@ def edit_specialist(request, specialist_id):
                             file_url=video_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=os.path.basename(file_path),
+                            original_file_name=proof_file.name,
                         )
                     except Exception as e:
                         messages.warning(request, f"Не удалось сохранить видео: {e}")

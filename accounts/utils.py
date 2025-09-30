@@ -44,9 +44,17 @@ def get_file_info(file_id, entity_id, file_type, entity_type: str = "startup"):
 
             url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
             filename = key.split('/')[-1]
-            parts = filename.split('_', 2)
-            if len(parts) >= 3:
-                original_name = parts[2]
+            # Пытаемся извлечь оригинальное имя из S3 пути
+            # Формат: {file_id}_{safe_name}, где safe_name может быть обработанным
+            parts = filename.split('_', 1)
+            if len(parts) >= 2:
+                # Берем все после первого подчеркивания как потенциальное оригинальное имя
+                potential_original = parts[1]
+                # Если это не похоже на UUID (слишком короткое или содержит точки), то это оригинальное имя
+                if len(potential_original) > 8 or '.' in potential_original:
+                    original_name = potential_original
+                else:
+                    original_name = filename
             else:
                 original_name = filename
             logger.debug(f"Найден файл {file_type}: {url}, оригинальное имя: {original_name}")
@@ -64,8 +72,16 @@ def get_file_info(file_id, entity_id, file_type, entity_type: str = "startup"):
 
                     url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
                     filename = key.split('/')[-1]
-                    parts = filename.split('_', 2)
-                    original_name = parts[2] if len(parts) >= 3 else filename
+                    # Пытаемся извлечь оригинальное имя из S3 пути (legacy)
+                    parts = filename.split('_', 1)
+                    if len(parts) >= 2:
+                        potential_original = parts[1]
+                        if len(potential_original) > 8 or '.' in potential_original:
+                            original_name = potential_original
+                        else:
+                            original_name = filename
+                    else:
+                        original_name = filename
                     return { 'url': url, 'original_name': original_name }
             logger.warning(f"Файл не найден: prefix={prefix}")
             return None

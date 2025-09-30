@@ -44,7 +44,11 @@ def get_file_original_name(file_id, entity_id, file_type, entity_type: str = "st
                         return file_storage.original_file_name
                 except EntityTypes.DoesNotExist:
                     pass
-                except Exception:
+                except Exception as e:
+                    # Логируем ошибку для отладки
+                    import logging
+                    logger = logging.getLogger(__name__)
+                    logger.error(f"Ошибка при поиске файла в БД: {e}, entity_type={entity_type}, entity_id={entity_id}, file_id={file_id}")
                     pass
             
             # Старая логика для startup (обратная совместимость)
