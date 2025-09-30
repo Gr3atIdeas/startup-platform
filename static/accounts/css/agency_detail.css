@@ -709,6 +709,14 @@ a:hover {
   height: 50%;
 }
 
+/* Стили для аватара автора в заголовке агентства */
+.author-avatar-header {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
 
 .franchise-header-actions-wrapper {
   display: flex;
