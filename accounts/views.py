@@ -7854,8 +7854,7 @@ def edit_agency(request, agency_id):
             # Устанавливаем статус в зависимости от наличия изменений
             if has_changes and agency.status == "approved":
                 agency.status = "pending"
-                agency.is_edited = True
-                agency.save(update_fields=['status', 'is_edited'])
+                agency.save(update_fields=['status'])
             
             agency.updated_at = timezone.now()
             agency.save()
@@ -8111,8 +8110,7 @@ def edit_specialist(request, specialist_id):
             # Устанавливаем статус в зависимости от наличия изменений
             if has_changes and specialist.status == "approved":
                 specialist.status = "pending"
-                specialist.is_edited = True
-                specialist.save(update_fields=['status', 'is_edited'])
+                specialist.save(update_fields=['status'])
             
             specialist.updated_at = timezone.now()
             specialist.save()
