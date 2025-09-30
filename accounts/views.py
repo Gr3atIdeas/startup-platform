@@ -278,18 +278,34 @@ def get_synced_files(entity, file_type_name, file_urls_field):
     
     try:
         file_type = FileTypes.objects.get(type_name=file_type_name)
-        entity_type = EntityTypes.objects.get(type_name=entity.__class__.__name__.lower())
+        
+        # Исправляем получение entity_type - убираем 's' в конце
+        entity_class_name = entity.__class__.__name__.lower()
+        if entity_class_name.endswith('s'):
+            entity_type_name = entity_class_name[:-1]  # убираем 's'
+        else:
+            entity_type_name = entity_class_name
+        
+        entity_type = EntityTypes.objects.get(type_name=entity_type_name)
+        
+        # Исправляем получение entity_id - убираем 's' в конце
+        if entity_class_name.endswith('s'):
+            entity_id_field = f"{entity_class_name[:-1]}_id"  # убираем 's'
+        else:
+            entity_id_field = f"{entity_class_name}_id"
+        
+        entity_id = getattr(entity, entity_id_field)
         
         # Получаем файлы, которые есть и в поле сущности, и в FileStorage
         synced_files = FileStorage.objects.filter(
             file_url__in=file_urls,
             file_type=file_type,
             entity_type=entity_type,
-            entity_id=getattr(entity, f"{entity.__class__.__name__.lower()}_id")
+            entity_id=entity_id
         ).order_by("-uploaded_at")
         
         return synced_files
-    except (FileTypes.DoesNotExist, EntityTypes.DoesNotExist):
+    except (FileTypes.DoesNotExist, EntityTypes.DoesNotExist, AttributeError):
         return FileStorage.objects.none()
 
 def get_unique_filename(original_name, startup_id, file_type_name):

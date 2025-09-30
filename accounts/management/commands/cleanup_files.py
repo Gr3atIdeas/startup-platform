@@ -60,7 +60,8 @@ class Command(BaseCommand):
                     is_dead = True
             
             # Дополнительная проверка: файл есть в FileStorage, но нет в proofs_urls стартапа
-            if startup and not is_dead:
+            # Но только для файлов типа "proof"
+            if startup and not is_dead and file_obj.file_type.type_name == "proof":
                 proofs_urls = startup.proofs_urls or []
                 if file_obj.file_url not in proofs_urls:
                     is_dead = True
