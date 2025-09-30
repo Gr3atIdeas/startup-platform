@@ -2302,10 +2302,14 @@ def startup_detail(request, startup_id):
         "step_number"
     )
     try:
+        from django.db.models import Q
         proof_file_type = FileTypes.objects.get(type_name="proof")
         entity_type = EntityTypes.objects.get(type_name="startup")
+        
+        # Ищем файлы по обоим способам: новому (entity_type + entity_id) и старому (startup)
         startup_documents = FileStorage.objects.filter(
-            entity_type=entity_type, entity_id=startup.startup_id, file_type=proof_file_type
+            Q(entity_type=entity_type, entity_id=startup.startup_id) | Q(startup=startup),
+            file_type=proof_file_type
         ).order_by("-uploaded_at")
     except (FileTypes.DoesNotExist, EntityTypes.DoesNotExist):
         startup_documents = FileStorage.objects.none()
@@ -4357,10 +4361,10 @@ def edit_startup(request, startup_id):
                     file_id = deleted_file.get('id')
                     file_type = deleted_file.get('type')
                     if file_id and file_type:
+                        from django.db.models import Q
                         entity_type = EntityTypes.objects.get(type_name="startup")
                         FileStorage.objects.filter(
-                            entity_type=entity_type,
-                            entity_id=startup.startup_id,
+                            Q(entity_type=entity_type, entity_id=startup.startup_id) | Q(startup=startup),
                             file_url=file_id
                         ).delete()
                         if file_type == 'creative' and startup.creatives_urls:
