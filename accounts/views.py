@@ -7603,17 +7603,35 @@ def edit_franchise(request, franchise_id):
             franchise.save()
             
             logo_ids = franchise.logo_urls or []
-            creative_ids = []
-            proofs_ids = []
-            video_ids = []
+            creative_ids = franchise.creatives_urls or []
+            proofs_ids = franchise.proofs_urls or []
+            video_ids = franchise.video_urls or []
             
             # Обработка логотипа
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
-                file_path = f"franchises/{franchise.franchise_id}/logos/{logo_id}_{logo.name}"
-                default_storage.save(file_path, logo)
-                logo_ids = [logo_id]
+                base_name = os.path.splitext(logo.name)[0]
+                ext = os.path.splitext(logo.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"franchises/{franchise.franchise_id}/logos/{logo_id}_{safe_name}"
+                try:
+                    default_storage.save(file_path, logo)
+                    logo_ids = [logo_id]
+                    logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
+                    entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=franchise.franchise_id,
+                        file_type=logo_type,
+                        file_url=logo_id,
+                        uploaded_at=timezone.now(),
+                        startup=None,
+                        original_file_name=os.path.basename(file_path),
+                    )
+                except Exception as e:
+                    messages.warning(request, f"Не удалось сохранить логотип: {e}")
             
             # Обработка креативов
             creatives = request.FILES.getlist("creatives")
@@ -7634,50 +7652,58 @@ def edit_franchise(request, franchise_id):
                 return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
             
             if creatives:
-                creative_type = FileTypes.objects.get(type_name="creative")
+                creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
                         continue
-                    unique_filename = get_unique_filename(creative_file.name, franchise.franchise_id, "creative")
                     creative_id = str(uuid.uuid4())
-                    file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{creative_file.name}"
-                    default_storage.save(file_path, creative_file)
-                    creative_ids.append(creative_id)
-                    safe_create_file_storage_instance(
-                        entity_type=entity_type,
-                        entity_id=franchise.franchise_id,
-                        file_type=creative_type,
-                        file_url=creative_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=unique_filename,
-                    )
-            else:
-                creative_ids = franchise.creatives_urls or []
+                    base_name = os.path.splitext(creative_file.name)[0]
+                    ext = os.path.splitext(creative_file.name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{safe_name}"
+                    try:
+                        default_storage.save(file_path, creative_file)
+                        creative_ids.append(creative_id)
+                        safe_create_file_storage_instance(
+                            entity_type=entity_type,
+                            entity_id=franchise.franchise_id,
+                            file_type=creative_type,
+                            file_url=creative_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=os.path.basename(file_path),
+                        )
+                    except Exception as e:
+                        messages.warning(request, f"Не удалось сохранить креатив: {e}")
             
             if proofs:
-                proof_type = FileTypes.objects.get(type_name="proof")
+                proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
                         continue
-                    unique_filename = get_unique_filename(proof_file.name, franchise.franchise_id, "proof")
                     proof_id = str(uuid.uuid4())
-                    file_path = f"franchises/{franchise.franchise_id}/proofs/{proof_id}_{proof_file.name}"
-                    default_storage.save(file_path, proof_file)
-                    proofs_ids.append(proof_id)
-                    safe_create_file_storage_instance(
-                        entity_type=entity_type,
-                        entity_id=franchise.franchise_id,
-                        file_type=proof_type,
-                        file_url=proof_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=unique_filename,
-                    )
-            else:
-                proofs_ids = franchise.proofs_urls or []
+                    base_name = os.path.splitext(proof_file.name)[0]
+                    ext = os.path.splitext(proof_file.name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"franchises/{franchise.franchise_id}/proofs/{proof_id}_{safe_name}"
+                    try:
+                        default_storage.save(file_path, proof_file)
+                        proofs_ids.append(proof_id)
+                        safe_create_file_storage_instance(
+                            entity_type=entity_type,
+                            entity_id=franchise.franchise_id,
+                            file_type=proof_type,
+                            file_url=proof_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=os.path.basename(file_path),
+                        )
+                    except Exception as e:
+                        messages.warning(request, f"Не удалось сохранить документ: {e}")
             
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
@@ -7685,51 +7711,45 @@ def edit_franchise(request, franchise_id):
                 for video in videos:
                     if not hasattr(video, "name"):
                         continue
-                    unique_filename = get_unique_filename(video.name, franchise.franchise_id, "video")
                     video_id = str(uuid.uuid4())
-                    file_path = f"franchises/{franchise.franchise_id}/videos/{video_id}_{video.name}"
-                    default_storage.save(file_path, video)
-                    video_ids.append(video_id)
-                    safe_create_file_storage_instance(
-                        entity_type=entity_type,
-                        entity_id=franchise.franchise_id,
-                        file_type=video_type,
-                        file_url=video_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=unique_filename,
-                    )
-            else:
-                video_ids = franchise.video_urls or []
+                    base_name = os.path.splitext(video.name)[0]
+                    ext = os.path.splitext(video.name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"franchises/{franchise.franchise_id}/videos/{video_id}_{safe_name}"
+                    try:
+                        default_storage.save(file_path, video)
+                        video_ids.append(video_id)
+                        safe_create_file_storage_instance(
+                            entity_type=entity_type,
+                            entity_id=franchise.franchise_id,
+                            file_type=video_type,
+                            file_url=video_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=os.path.basename(file_path),
+                        )
+                    except Exception as e:
+                        messages.warning(request, f"Не удалось сохранить видео: {e}")
             
+            # Обновляем URL файлов
             franchise.logo_urls = logo_ids
-            
-            # Обновляем URL файлов только если были загружены новые
-            if creative_ids:
-                existing_creatives = franchise.creatives_urls or []
-                new_creatives = [url for url in creative_ids if url not in existing_creatives]
-                franchise.creatives_urls = existing_creatives + new_creatives
-            
-            if proofs_ids:
-                existing_proofs = franchise.proofs_urls or []
-                new_proofs = [url for url in proofs_ids if url not in existing_proofs]
-                franchise.proofs_urls = existing_proofs + new_proofs
-            
-            if video_ids:
-                existing_videos = franchise.video_urls or []
-                new_videos = [url for url in video_ids if url not in existing_videos]
-                franchise.video_urls = existing_videos + new_videos
+            franchise.creatives_urls = creative_ids
+            franchise.proofs_urls = proofs_ids
+            franchise.video_urls = video_ids
             
             # Обработка удаленных файлов
             deleted_files_json = request.POST.get('deleted_files', '[]')
             try:
                 deleted_files = json.loads(deleted_files_json)
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 for deleted_file in deleted_files:
                     file_id = deleted_file.get('id')
                     file_type = deleted_file.get('type')
                     if file_id and file_type:
                         FileStorage.objects.filter(
-                            startup=franchise,
+                            entity_type=entity_type,
+                            entity_id=franchise.franchise_id,
                             file_url=file_id
                         ).delete()
                         if file_type == 'creative' and franchise.creatives_urls:
@@ -7838,17 +7858,35 @@ def edit_agency(request, agency_id):
             agency.save()
             
             logo_ids = agency.logo_urls or []
-            creative_ids = []
-            proofs_ids = []
-            video_ids = []
+            creative_ids = agency.creatives_urls or []
+            proofs_ids = agency.proofs_urls or []
+            video_ids = agency.video_urls or []
             
             # Обработка логотипа
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
-                file_path = f"agencies/{agency.agency_id}/logos/{logo_id}_{logo.name}"
-                default_storage.save(file_path, logo)
-                logo_ids = [logo_id]
+                base_name = os.path.splitext(logo.name)[0]
+                ext = os.path.splitext(logo.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"agencies/{agency.agency_id}/logos/{logo_id}_{safe_name}"
+                try:
+                    default_storage.save(file_path, logo)
+                    logo_ids = [logo_id]
+                    logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
+                    entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=agency.agency_id,
+                        file_type=logo_type,
+                        file_url=logo_id,
+                        uploaded_at=timezone.now(),
+                        startup=None,
+                        original_file_name=os.path.basename(file_path),
+                    )
+                except Exception as e:
+                    messages.warning(request, f"Не удалось сохранить логотип: {e}")
             
             # Обработка креативов
             creatives = request.FILES.getlist("creatives")
@@ -7869,50 +7907,58 @@ def edit_agency(request, agency_id):
                 return render(request, "accounts/edit_agency.html", {"form": form, "agency": agency})
             
             if creatives:
-                creative_type = FileTypes.objects.get(type_name="creative")
+                creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
                         continue
-                    unique_filename = get_unique_filename(creative_file.name, agency.agency_id, "creative")
                     creative_id = str(uuid.uuid4())
-                    file_path = f"agencies/{agency.agency_id}/creatives/{creative_id}_{creative_file.name}"
-                    default_storage.save(file_path, creative_file)
-                    creative_ids.append(creative_id)
-                    safe_create_file_storage_instance(
-                        entity_type=entity_type,
-                        entity_id=agency.agency_id,
-                        file_type=creative_type,
-                        file_url=creative_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=unique_filename,
-                    )
-            else:
-                creative_ids = agency.creatives_urls or []
+                    base_name = os.path.splitext(creative_file.name)[0]
+                    ext = os.path.splitext(creative_file.name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"agencies/{agency.agency_id}/creatives/{creative_id}_{safe_name}"
+                    try:
+                        default_storage.save(file_path, creative_file)
+                        creative_ids.append(creative_id)
+                        safe_create_file_storage_instance(
+                            entity_type=entity_type,
+                            entity_id=agency.agency_id,
+                            file_type=creative_type,
+                            file_url=creative_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=os.path.basename(file_path),
+                        )
+                    except Exception as e:
+                        messages.warning(request, f"Не удалось сохранить креатив: {e}")
             
             if proofs:
-                proof_type = FileTypes.objects.get(type_name="proof")
+                proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
                         continue
-                    unique_filename = get_unique_filename(proof_file.name, agency.agency_id, "proof")
                     proof_id = str(uuid.uuid4())
-                    file_path = f"agencies/{agency.agency_id}/proofs/{proof_id}_{proof_file.name}"
-                    default_storage.save(file_path, proof_file)
-                    proofs_ids.append(proof_id)
-                    safe_create_file_storage_instance(
-                        entity_type=entity_type,
-                        entity_id=agency.agency_id,
-                        file_type=proof_type,
-                        file_url=proof_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=unique_filename,
-                    )
-            else:
-                proofs_ids = agency.proofs_urls or []
+                    base_name = os.path.splitext(proof_file.name)[0]
+                    ext = os.path.splitext(proof_file.name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"agencies/{agency.agency_id}/proofs/{proof_id}_{safe_name}"
+                    try:
+                        default_storage.save(file_path, proof_file)
+                        proofs_ids.append(proof_id)
+                        safe_create_file_storage_instance(
+                            entity_type=entity_type,
+                            entity_id=agency.agency_id,
+                            file_type=proof_type,
+                            file_url=proof_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=os.path.basename(file_path),
+                        )
+                    except Exception as e:
+                        messages.warning(request, f"Не удалось сохранить документ: {e}")
             
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
@@ -7920,51 +7966,45 @@ def edit_agency(request, agency_id):
                 for video in videos:
                     if not hasattr(video, "name"):
                         continue
-                    unique_filename = get_unique_filename(video.name, agency.agency_id, "video")
                     video_id = str(uuid.uuid4())
-                    file_path = f"agencies/{agency.agency_id}/videos/{video_id}_{video.name}"
-                    default_storage.save(file_path, video)
-                    video_ids.append(video_id)
-                    safe_create_file_storage_instance(
-                        entity_type=entity_type,
-                        entity_id=agency.agency_id,
-                        file_type=video_type,
-                        file_url=video_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=unique_filename,
-                    )
-            else:
-                video_ids = agency.video_urls or []
+                    base_name = os.path.splitext(video.name)[0]
+                    ext = os.path.splitext(video.name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"agencies/{agency.agency_id}/videos/{video_id}_{safe_name}"
+                    try:
+                        default_storage.save(file_path, video)
+                        video_ids.append(video_id)
+                        safe_create_file_storage_instance(
+                            entity_type=entity_type,
+                            entity_id=agency.agency_id,
+                            file_type=video_type,
+                            file_url=video_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=os.path.basename(file_path),
+                        )
+                    except Exception as e:
+                        messages.warning(request, f"Не удалось сохранить видео: {e}")
             
+            # Обновляем URL файлов
             agency.logo_urls = logo_ids
-            
-            # Обновляем URL файлов только если были загружены новые
-            if creative_ids:
-                existing_creatives = agency.creatives_urls or []
-                new_creatives = [url for url in creative_ids if url not in existing_creatives]
-                agency.creatives_urls = existing_creatives + new_creatives
-            
-            if proofs_ids:
-                existing_proofs = agency.proofs_urls or []
-                new_proofs = [url for url in proofs_ids if url not in existing_proofs]
-                agency.proofs_urls = existing_proofs + new_proofs
-            
-            if video_ids:
-                existing_videos = agency.video_urls or []
-                new_videos = [url for url in video_ids if url not in existing_videos]
-                agency.video_urls = existing_videos + new_videos
+            agency.creatives_urls = creative_ids
+            agency.proofs_urls = proofs_ids
+            agency.video_urls = video_ids
             
             # Обработка удаленных файлов
             deleted_files_json = request.POST.get('deleted_files', '[]')
             try:
                 deleted_files = json.loads(deleted_files_json)
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
                 for deleted_file in deleted_files:
                     file_id = deleted_file.get('id')
                     file_type = deleted_file.get('type')
                     if file_id and file_type:
                         FileStorage.objects.filter(
-                            startup=agency,
+                            entity_type=entity_type,
+                            entity_id=agency.agency_id,
                             file_url=file_id
                         ).delete()
                         if file_type == 'creative' and agency.creatives_urls:
@@ -8075,17 +8115,35 @@ def edit_specialist(request, specialist_id):
             specialist.save()
             
             logo_ids = specialist.logo_urls or []
-            creative_ids = []
-            proofs_ids = []
-            video_ids = []
+            creative_ids = specialist.creatives_urls or []
+            proofs_ids = specialist.proofs_urls or []
+            video_ids = specialist.video_urls or []
             
             # Обработка логотипа
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
-                file_path = f"specialists/{specialist.specialist_id}/logos/{logo_id}_{logo.name}"
-                default_storage.save(file_path, logo)
-                logo_ids = [logo_id]
+                base_name = os.path.splitext(logo.name)[0]
+                ext = os.path.splitext(logo.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"specialists/{specialist.specialist_id}/logos/{logo_id}_{safe_name}"
+                try:
+                    default_storage.save(file_path, logo)
+                    logo_ids = [logo_id]
+                    logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
+                    entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
+                    safe_create_file_storage_instance(
+                        entity_type=entity_type,
+                        entity_id=specialist.specialist_id,
+                        file_type=logo_type,
+                        file_url=logo_id,
+                        uploaded_at=timezone.now(),
+                        startup=None,
+                        original_file_name=os.path.basename(file_path),
+                    )
+                except Exception as e:
+                    messages.warning(request, f"Не удалось сохранить логотип: {e}")
             
             # Обработка креативов
             creatives = request.FILES.getlist("creatives")
@@ -8106,50 +8164,58 @@ def edit_specialist(request, specialist_id):
                 return render(request, "accounts/edit_specialist.html", {"form": form, "specialist": specialist})
             
             if creatives:
-                creative_type = FileTypes.objects.get(type_name="creative")
+                creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
                         continue
-                    unique_filename = get_unique_filename(creative_file.name, specialist.specialist_id, "creative")
                     creative_id = str(uuid.uuid4())
-                    file_path = f"specialists/{specialist.specialist_id}/creatives/{creative_id}_{creative_file.name}"
-                    default_storage.save(file_path, creative_file)
-                    creative_ids.append(creative_id)
-                    safe_create_file_storage_instance(
-                        entity_type=entity_type,
-                        entity_id=specialist.specialist_id,
-                        file_type=creative_type,
-                        file_url=creative_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=unique_filename,
-                    )
-            else:
-                creative_ids = specialist.creatives_urls or []
+                    base_name = os.path.splitext(creative_file.name)[0]
+                    ext = os.path.splitext(creative_file.name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"specialists/{specialist.specialist_id}/creatives/{creative_id}_{safe_name}"
+                    try:
+                        default_storage.save(file_path, creative_file)
+                        creative_ids.append(creative_id)
+                        safe_create_file_storage_instance(
+                            entity_type=entity_type,
+                            entity_id=specialist.specialist_id,
+                            file_type=creative_type,
+                            file_url=creative_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=os.path.basename(file_path),
+                        )
+                    except Exception as e:
+                        messages.warning(request, f"Не удалось сохранить креатив: {e}")
             
             if proofs:
-                proof_type = FileTypes.objects.get(type_name="proof")
+                proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
                         continue
-                    unique_filename = get_unique_filename(proof_file.name, specialist.specialist_id, "proof")
                     proof_id = str(uuid.uuid4())
-                    file_path = f"specialists/{specialist.specialist_id}/proofs/{proof_id}_{proof_file.name}"
-                    default_storage.save(file_path, proof_file)
-                    proofs_ids.append(proof_id)
-                    safe_create_file_storage_instance(
-                        entity_type=entity_type,
-                        entity_id=specialist.specialist_id,
-                        file_type=proof_type,
-                        file_url=proof_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=unique_filename,
-                    )
-            else:
-                proofs_ids = specialist.proofs_urls or []
+                    base_name = os.path.splitext(proof_file.name)[0]
+                    ext = os.path.splitext(proof_file.name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"specialists/{specialist.specialist_id}/proofs/{proof_id}_{safe_name}"
+                    try:
+                        default_storage.save(file_path, proof_file)
+                        proofs_ids.append(proof_id)
+                        safe_create_file_storage_instance(
+                            entity_type=entity_type,
+                            entity_id=specialist.specialist_id,
+                            file_type=proof_type,
+                            file_url=proof_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=os.path.basename(file_path),
+                        )
+                    except Exception as e:
+                        messages.warning(request, f"Не удалось сохранить документ: {e}")
             
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
@@ -8157,51 +8223,45 @@ def edit_specialist(request, specialist_id):
                 for video in videos:
                     if not hasattr(video, "name"):
                         continue
-                    unique_filename = get_unique_filename(video.name, specialist.specialist_id, "video")
                     video_id = str(uuid.uuid4())
-                    file_path = f"specialists/{specialist.specialist_id}/videos/{video_id}_{video.name}"
-                    default_storage.save(file_path, video)
-                    video_ids.append(video_id)
-                    safe_create_file_storage_instance(
-                        entity_type=entity_type,
-                        entity_id=specialist.specialist_id,
-                        file_type=video_type,
-                        file_url=video_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=unique_filename,
-                    )
-            else:
-                video_ids = specialist.video_urls or []
+                    base_name = os.path.splitext(video.name)[0]
+                    ext = os.path.splitext(video.name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"specialists/{specialist.specialist_id}/videos/{video_id}_{safe_name}"
+                    try:
+                        default_storage.save(file_path, video)
+                        video_ids.append(video_id)
+                        safe_create_file_storage_instance(
+                            entity_type=entity_type,
+                            entity_id=specialist.specialist_id,
+                            file_type=video_type,
+                            file_url=video_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=os.path.basename(file_path),
+                        )
+                    except Exception as e:
+                        messages.warning(request, f"Не удалось сохранить видео: {e}")
             
+            # Обновляем URL файлов
             specialist.logo_urls = logo_ids
-            
-            # Обновляем URL файлов только если были загружены новые
-            if creative_ids:
-                existing_creatives = specialist.creatives_urls or []
-                new_creatives = [url for url in creative_ids if url not in existing_creatives]
-                specialist.creatives_urls = existing_creatives + new_creatives
-            
-            if proofs_ids:
-                existing_proofs = specialist.proofs_urls or []
-                new_proofs = [url for url in proofs_ids if url not in existing_proofs]
-                specialist.proofs_urls = existing_proofs + new_proofs
-            
-            if video_ids:
-                existing_videos = specialist.video_urls or []
-                new_videos = [url for url in video_ids if url not in existing_videos]
-                specialist.video_urls = existing_videos + new_videos
+            specialist.creatives_urls = creative_ids
+            specialist.proofs_urls = proofs_ids
+            specialist.video_urls = video_ids
             
             # Обработка удаленных файлов
             deleted_files_json = request.POST.get('deleted_files', '[]')
             try:
                 deleted_files = json.loads(deleted_files_json)
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 for deleted_file in deleted_files:
                     file_id = deleted_file.get('id')
                     file_type = deleted_file.get('type')
                     if file_id and file_type:
                         FileStorage.objects.filter(
-                            startup=specialist,
+                            entity_type=entity_type,
+                            entity_id=specialist.specialist_id,
                             file_url=file_id
                         ).delete()
                         if file_type == 'creative' and specialist.creatives_urls:
