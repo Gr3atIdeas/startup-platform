@@ -91,43 +91,41 @@
       
       <div class="agency-header-actions-wrapper"> 
         <div class="agency-header">
-            <div class="agency-header-left">
-            <div class="agency-title-wrapper">
-              <div class="logo-display-container">
-                {% if agency.owner and agency.owner.get_profile_picture_url %}
-                  <img src="{{ agency.owner.get_profile_picture_url }}" alt="Аватар автора {{ agency.owner.username }}" class="logo-image">
-                {% elif agency.logo_urls %}
-                  {% with logo_file_id=agency.logo_urls.0 %}
-                    <img src="{% get_file_url_tag logo_file_id agency.agency_id 'logo' 'agency' %}" alt="Логотип {{ agency.title }}" class="logo-image">
-                  {% endwith %}
-                {% else %}
-                  <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
-                {% endif %}
-              </div>
-              <h1 class="agency-name" title="{{ agency.customization_data.agency_display_title|default:agency.title }}">{{ agency.customization_data.agency_display_title|default:agency.title }}</h1>
+          <div class="agency-title-wrapper">
+            <div class="logo-display-container">
+              {% if agency.owner and agency.owner.get_profile_picture_url %}
+                <img src="{{ agency.owner.get_profile_picture_url }}" alt="Аватар автора {{ agency.owner.username }}" class="logo-image">
+              {% elif agency.logo_urls %}
+                {% with logo_file_id=agency.logo_urls.0 %}
+                  <img src="{% get_file_url_tag logo_file_id agency.agency_id 'logo' 'agency' %}" alt="Логотип {{ agency.title }}" class="logo-image">
+                {% endwith %}
+              {% else %}
+                <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
+              {% endif %}
             </div>
+            <h1 class="agency-name" title="{{ agency.customization_data.agency_display_title|default:agency.title }}">{{ agency.customization_data.agency_display_title|default:agency.title }}</h1>
+          </div>
 
-            <div class="header-meta">
-              {% with agency_category=agency.customization_data.agency_category %}
-                <span class="category-value">{{ agency_category|default:"Без категории" }}</span>
-              {% endwith %}
-          <div class="agency-stats-info"></div>
-            </div>
+          <div class="header-meta">
+            {% with agency_category=agency.customization_data.agency_category %}
+              <span class="category-value">{{ agency_category|default:"Без категории" }}</span>
+            {% endwith %}
+            <div class="agency-stats-info"></div>
+          </div>
 
-            <div class="rating-comments-container">
-              <div class="rating-container">
-                <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
-                 <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
-                  {% for i in "12345" %}
-                    <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
-                      <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
-                      <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
-                    </span>
-                  {% endfor %}
-                </div>
+          <div class="rating-comments-container">
+            <div class="rating-container">
+              <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
+               <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
+                {% for i in "12345" %}
+                  <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
+                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+                  </span>
+                {% endfor %}
               </div>
-              <a href="#comments-section" class="comments-link">Комментарии</a>
             </div>
+            <a href="#comments-section" class="comments-link">Комментарии</a>
           </div>
 
           
@@ -147,8 +145,8 @@
       <div class="tabbed-content-wrapper">
         <div class="tab-navigation">
           <button class="tab-button active" data-target="info-section"><span>Информация</span></button>
-          <button class="tab-button" data-target="gallery-section"><span>Услуги</span></button>
-          <button class="tab-button" data-target="profit-calculation-section"><span>Кейсы</span></button>
+          <button class="tab-button" data-target="gallery-section"><span>Галерея</span></button>
+          <button class="tab-button" data-target="services-section"><span>Услуги</span></button>
           <button class="tab-button" data-target="conditions-section"><span>Этапы работ</span></button>
           <button class="tab-button" data-target="documents-section"><span>Документы</span></button>
         </div>
@@ -221,21 +219,57 @@
             </div>
           </div>
 
-          <div id="gallery-section" class="content-section">
-            <h2 class="section-title">Услуги</h2>
-            <div class="profit-calculation-wrapper">
-              <div class="profit-calculation-content">
-                {{ agency.additional_info|default:"Описание услуг пока не добавлено."|linebreaksbr }}
+          <div id="gallery-section" class="content-section media-section">
+            <h2 class="section-title">Галерея</h2>
+
+            
+            {% if video_urls %}
+              <h3 class="section-subtitle" style="margin-bottom: 15px; font-size: 18px; color: var(--accent-yellow);">Видео</h3>
+              <div class="video-grid"> 
+                  {% for url in video_urls %}
+                      
+                      <a href="{% get_file_url_tag url agency.agency_id 'video' 'agency' %}" 
+                         
+                         class="gallery-item video-item glightbox" 
+                         data-gallery="agency-gallery">          
+                         <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
+                         
+                         <div class="video-placeholder">Смотреть видео {{ forloop.counter }}</div> 
+                      </a>
+                  {% endfor %}
               </div>
+            {% endif %}
+            
+            
+            
+            {% if creatives_urls %}
+              
+              {% if video_urls %}
+              <h3 class="section-subtitle" style="margin-top: 30px; margin-bottom: 15px; font-size: 18px; color: var(--accent-yellow);">Изображения</h3>
+              {% endif %}
+              <div class="gallery-grid">
+                
+                {% for url in creatives_urls %}
+                  <a 
+                     href="{% get_file_url_tag url agency.agency_id 'creative' 'agency' %}"
+                     class="gallery-item image-item glightbox" 
+                     data-gallery="agency-gallery"> 
+                    <img src="{% get_file_url_tag url agency.agency_id 'creative' 'agency' %}" alt="Креатив {{ forloop.counter }}" />
+                  </a>
+                {% endfor %}
               </div>
+            {% elif not video_urls %}
+              <p>Медиа-материалы отсутствуют.</p>
+            {% endif %}
+            
           </div>
 
           
-          <div id="profit-calculation-section" class="content-section">
-            <h2 class="section-title">Кейсы</h2>
+          <div id="services-section" class="content-section">
+            <h2 class="section-title">Услуги</h2>
             <div class="profit-calculation-wrapper">
                 <div class="profit-calculation-content">
-                    {{ agency.additional_info|default:"Кейсы пока не добавлены."|linebreaksbr }}
+                    {{ agency.additional_info|default:"Описание услуг пока не добавлено."|linebreaksbr }}
                 </div>
             </div>
           </div>

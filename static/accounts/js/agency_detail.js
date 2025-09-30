@@ -32,7 +32,7 @@ function toggleTextTruncation(sectionId, maxLines) {
 window.toggleTextTruncation = toggleTextTruncation;
 
 document.addEventListener('DOMContentLoaded', function () {
-  const root = document.querySelector('.franchise-detail-page')
+  const root = document.querySelector('.agency-detail-page')
   if (!root) return
   const franchiseId = root.dataset.franchiseId
   const csrfTokenInput = document.querySelector('input[name="csrfmiddlewaretoken"]')
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!showMoreButton) return;
     showMoreButton.addEventListener('click', (e) => {
       e.preventDefault();
-      const loadSimilarUrl = document.querySelector('.franchise-detail-page').dataset.loadSimilarUrl;
+      const loadSimilarUrl = document.querySelector('.agency-detail-page').dataset.loadSimilarUrl;
       if (!loadSimilarUrl) return;
       showMoreButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Загрузка...';
       showMoreButton.disabled = true;
@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (writeButton) {
       writeButton.addEventListener('click', (e) => {
         e.preventDefault();
-        const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
+        const ownerId = document.querySelector('.agency-detail-page').dataset.ownerId;
         if (!ownerId) {
           alert('Ошибка: не удалось определить автора агентства');
           return;
