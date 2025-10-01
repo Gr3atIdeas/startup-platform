@@ -323,9 +323,15 @@ def delete_file_from_s3(file_path):
     try:
         from storages.backends.s3boto3 import S3Boto3Storage
         storage = S3Boto3Storage()
-        storage.delete(file_path)
-        logger.info(f"Файл удален из S3: {file_path}")
-        return True
+        
+        # Проверяем, существует ли файл перед удалением
+        if storage.exists(file_path):
+            storage.delete(file_path)
+            logger.info(f"Файл успешно удален из S3: {file_path}")
+            return True
+        else:
+            logger.warning(f"Файл не найден в S3: {file_path}")
+            return False
     except Exception as e:
         logger.error(f"Ошибка удаления файла из S3 {file_path}: {e}")
         return False
@@ -4227,6 +4233,7 @@ def edit_startup(request, startup_id):
                 print(f"КРЕАТИВЫ НАЙДЕНЫ: {len(creatives)} файлов")
                 creative_type = FileTypes.objects.get(type_name="creative")
                 entity_type = EntityTypes.objects.get(type_name="startup")
+                creative_ids = []  # Инициализируем список для новых файлов
                 # Не очищаем существующие файлы, добавляем новые
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
@@ -4269,6 +4276,7 @@ def edit_startup(request, startup_id):
             if proofs:
                 proof_type = FileTypes.objects.get(type_name="proof")
                 entity_type = EntityTypes.objects.get(type_name="startup")
+                proofs_ids = []  # Инициализируем список для новых файлов
                 # Не очищаем существующие файлы, добавляем новые
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
@@ -4315,6 +4323,7 @@ def edit_startup(request, startup_id):
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
                 entity_type = EntityTypes.objects.get(type_name="startup")
+                video_ids = []  # Инициализируем список для новых файлов
                 for video in videos:
                     if not hasattr(video, "name"):
                         logger.warning(f"Пропущено видео, так как это не файл: {video}")
@@ -4350,21 +4359,21 @@ def edit_startup(request, startup_id):
                 # video_ids будут добавлены в конце функции
             startup.logo_urls = logo_ids
             # Обновляем URL файлов только если были загружены новые
-            if creative_ids:
+            if 'creative_ids' in locals() and creative_ids:
                 # Удаляем дубликаты из существующих URL
                 existing_creatives = startup.creatives_urls or []
                 # Добавляем только новые URL, которых еще нет
                 new_creatives = [url for url in creative_ids if url not in existing_creatives]
                 startup.creatives_urls = existing_creatives + new_creatives
                 logger.info(f"Добавлено {len(new_creatives)} новых креативов (было {len(existing_creatives)}, дубликатов пропущено: {len(creative_ids) - len(new_creatives)})")
-            if proofs_ids:
+            if 'proofs_ids' in locals() and proofs_ids:
                 # Удаляем дубликаты из существующих URL
                 existing_proofs = startup.proofs_urls or []
                 # Добавляем только новые URL, которых еще нет
                 new_proofs = [url for url in proofs_ids if url not in existing_proofs]
                 startup.proofs_urls = existing_proofs + new_proofs
                 logger.info(f"Добавлено {len(new_proofs)} новых документов (было {len(existing_proofs)}, дубликатов пропущено: {len(proofs_ids) - len(new_proofs)})")
-            if video_ids:
+            if 'video_ids' in locals() and video_ids:
                 # Удаляем дубликаты из существующих URL
                 existing_videos = startup.video_urls or []
                 # Добавляем только новые URL, которых еще нет

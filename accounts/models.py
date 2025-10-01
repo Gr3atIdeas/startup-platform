@@ -799,7 +799,7 @@ class FranchiseDirections(models.Model):
 
 
 class Agencies(models.Model):
-    agency_id = models.AutoField(primary_key=True, db_column="startup_id")
+    agency_id = models.AutoField(primary_key=True, db_column="agency_id")
     owner = models.ForeignKey(
         "Users", models.DO_NOTHING, blank=True, null=True, db_column="owner_id"
     )
@@ -844,7 +844,7 @@ class Agencies(models.Model):
 
 
 class Specialists(models.Model):
-    specialist_id = models.AutoField(primary_key=True, db_column="startup_id")
+    specialist_id = models.AutoField(primary_key=True, db_column="specialist_id")
     owner = models.ForeignKey("Users", models.DO_NOTHING, blank=True, null=True, db_column="owner_id")
     title = models.CharField(max_length=255)
     short_description = models.TextField(blank=True, null=True)
