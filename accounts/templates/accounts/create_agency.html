@@ -542,7 +542,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const customButton = dropArea.querySelector('.custom-file-upload-button');
         if (customButton) {
             customButton.addEventListener('click', () => {
-                console.log(`Clearing fileInput.value for ${inputId} before click.`);
                 fileInput.value = null;
             });
         }
@@ -554,7 +553,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             if (!e.target.closest('.custom-file-upload-button')) {
-                console.log(`Clearing fileInput.value for ${inputId} via dropArea click.`);
                 fileInput.value = null;
                 fileInput.click();
             }

@@ -3949,42 +3949,6 @@ def edit_startup(request, startup_id):
     logger.debug(f"Request method: {request.method}")
     logger.debug(f"Request POST: {request.POST}")
     logger.debug(f"Request FILES: {dict(request.FILES)}")
-    print(f"=== DEBUG EDIT STARTUP ===")
-    print(f"Request method: {request.method}")
-    print(f"Request POST keys: {list(request.POST.keys())}")
-    print(f"Request FILES keys: {list(request.FILES.keys())}")
-    for key, value in request.FILES.items():
-        print(f"File {key}: {value}")
-    
-    # Детальная информация о файлах
-    if request.FILES:
-        print("=== ДЕТАЛЬНАЯ ИНФОРМАЦИЯ О ФАЙЛАХ ===")
-        for key, file_list in request.FILES.lists():
-            print(f"Поле {key}: {len(file_list)} файлов")
-            for i, file_obj in enumerate(file_list):
-                print(f"  Файл {i}: {file_obj.name} ({file_obj.size} байт)")
-        print("=== КОНЕЦ ДЕТАЛЬНОЙ ИНФОРМАЦИИ ===")
-    else:
-        print("ФАЙЛЫ НЕ НАЙДЕНЫ В REQUEST.FILES")
-    
-    # Проверяем, есть ли файлы в POST данных
-    print("=== ПРОВЕРКА POST ДАННЫХ ===")
-    for key, value in request.POST.items():
-        if 'file' in key.lower() or 'creative' in key.lower() or 'proof' in key.lower() or 'video' in key.lower():
-            print(f"POST {key}: {value}")
-    print("=== КОНЕЦ ПРОВЕРКИ POST ===")
-    
-    print(f"=== END DEBUG ===")
-    
-    # Также записываем в файл для отладки
-    with open('/tmp/debug_edit_startup.log', 'a') as f:
-        f.write(f"=== DEBUG EDIT STARTUP {timezone.now()} ===\n")
-        f.write(f"Request method: {request.method}\n")
-        f.write(f"Request POST keys: {list(request.POST.keys())}\n")
-        f.write(f"Request FILES keys: {list(request.FILES.keys())}\n")
-        for key, value in request.FILES.items():
-            f.write(f"File {key}: {value}\n")
-        f.write(f"=== END DEBUG ===\n\n")
     startup = get_object_or_404(Startups, startup_id=startup_id)
     
     # Очищаем дубликаты в базе данных
@@ -3994,7 +3958,6 @@ def edit_startup(request, startup_id):
         startup.creatives_urls = list(dict.fromkeys(startup.creatives_urls))  # Удаляет дубликаты, сохраняя порядок
         if len(startup.creatives_urls) != original_count:
             logger.info(f"Очищено {original_count - len(startup.creatives_urls)} дубликатов из creatives_urls")
-            print(f"Очищено {original_count - len(startup.creatives_urls)} дубликатов из creatives_urls")
             startup.save(update_fields=['creatives_urls'])
     
     if startup.proofs_urls:
@@ -4003,7 +3966,6 @@ def edit_startup(request, startup_id):
         startup.proofs_urls = list(dict.fromkeys(startup.proofs_urls))
         if len(startup.proofs_urls) != original_count:
             logger.info(f"Очищено {original_count - len(startup.proofs_urls)} дубликатов из proofs_urls")
-            print(f"Очищено {original_count - len(startup.proofs_urls)} дубликатов из proofs_urls")
             startup.save(update_fields=['proofs_urls'])
     
     if startup.video_urls:
@@ -4012,7 +3974,6 @@ def edit_startup(request, startup_id):
         startup.video_urls = list(dict.fromkeys(startup.video_urls))
         if len(startup.video_urls) != original_count:
             logger.info(f"Очищено {original_count - len(startup.video_urls)} дубликатов из video_urls")
-            print(f"Очищено {original_count - len(startup.video_urls)} дубликатов из video_urls")
             startup.save(update_fields=['video_urls'])
     
     if not (
@@ -4135,26 +4096,9 @@ def edit_startup(request, startup_id):
             if request.FILES:
                 has_changes = True
                 logger.info("ПРИНУДИТЕЛЬНО установлен has_changes = True из-за наличия файлов в request.FILES")
-                print("ПРИНУДИТЕЛЬНО: has_changes = True (файлы в request.FILES)")
-                print(f"Количество файлов: {len(request.FILES)}")
-                for key, file_list in request.FILES.lists():
-                    print(f"  {key}: {len(file_list)} файлов")
-                    for i, file_obj in enumerate(file_list):
-                        print(f"    Файл {i}: {file_obj.name} ({file_obj.size} байт)")
             
             # Устанавливаем статус в зависимости от наличия изменений
             logger.info(f"has_changes: {has_changes}")
-            print(f"=== ФИНАЛЬНАЯ ПРОВЕРКА ===")
-            print(f"has_changes: {has_changes}")
-            print(f"form.cleaned_data.get('logo'): {form.cleaned_data.get('logo')}")
-            print(f"form.cleaned_data.get('creatives'): {form.cleaned_data.get('creatives')}")
-            print(f"form.cleaned_data.get('proofs'): {form.cleaned_data.get('proofs')}")
-            print(f"form.cleaned_data.get('video'): {form.cleaned_data.get('video')}")
-            print(f"request.FILES.get('logo'): {request.FILES.get('logo')}")
-            print(f"request.FILES.getlist('creatives'): {request.FILES.getlist('creatives')}")
-            print(f"request.FILES.getlist('proofs'): {request.FILES.getlist('proofs')}")
-            print(f"request.FILES.getlist('video'): {request.FILES.getlist('video')}")
-            print(f"=== КОНЕЦ ПРОВЕРКИ ===")
             
             # Логика изменения статуса: только approved -> pending
             if has_changes and startup.status == "approved":
@@ -4162,15 +4106,12 @@ def edit_startup(request, startup_id):
                 startup.is_edited = True
                 startup.save(update_fields=['status', 'is_edited'])
                 logger.info("Статус изменен: approved -> pending")
-                print("СТАТУС: APPROVED -> PENDING")
             elif not has_changes and startup.status == "pending":
                 # Если нет изменений, но статус pending - оставляем как есть
                 logger.info("Статус остается: pending (изменений нет)")
-                print("СТАТУС: PENDING (без изменений)")
             else:
                 # Для всех остальных случаев (approved без изменений, другие статусы)
                 logger.info(f"Статус остается: {startup.status}")
-                print(f"СТАТУС: {startup.status.upper()} (без изменений)")
             
             startup.updated_at = timezone.now()
             if "step_number" in request.POST:
@@ -4207,10 +4148,8 @@ def edit_startup(request, startup_id):
                 # Заменяем логотип (не добавляем)
                 logo_ids = [logo_id]
                 logger.info(f"Логотип сохранён с ID: {logo_id}")
-                print(f"ЛОГОТИП СОХРАНЕН: {logo.name} ({logo.size} байт)")
             else:
                 logo_ids = startup.logo_urls or []
-                print("ЛОГОТИП НЕ НАЙДЕН")
             # Обработка креативов
             creatives = request.FILES.getlist("creatives")
             proofs = request.FILES.getlist("proofs")
@@ -4230,7 +4169,6 @@ def edit_startup(request, startup_id):
                 return render(request, "accounts/edit_startup.html", {"form": form, "startup": startup, "timeline_steps": timeline_steps})
             
             if creatives:
-                print(f"КРЕАТИВЫ НАЙДЕНЫ: {len(creatives)} файлов")
                 creative_type = FileTypes.objects.get(type_name="creative")
                 entity_type = EntityTypes.objects.get(type_name="startup")
                 creative_ids = []  # Инициализируем список для новых файлов
@@ -4272,7 +4210,6 @@ def edit_startup(request, startup_id):
                 # creatives_ids будут добавлены в конце функции
             else:
                 creative_ids = startup.creatives_urls or []
-                print("КРЕАТИВЫ НЕ НАЙДЕНЫ")
             if proofs:
                 proof_type = FileTypes.objects.get(type_name="proof")
                 entity_type = EntityTypes.objects.get(type_name="startup")
@@ -4796,7 +4733,6 @@ def startuper_main(request):
     """
     directions_data_json = FIXED_CATEGORIES.copy()
     selected_direction_name = request.GET.get("direction", "All")
-    print(f"🔍 STARTUPPER_MAIN: Запрошено направление: '{selected_direction_name}'")
     startups_query = Startups.objects.filter(status="approved").annotate(
         rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
         voters_count=Count("uservotes", distinct=True),
@@ -4806,33 +4742,17 @@ def startuper_main(request):
         ),
         comment_count=Count("comments", distinct=True),
     )
-    print(f"🔍 STARTUPPER_MAIN: Всего одобренных стартапов: {startups_query.count()}")
-
     from accounts.models import Directions
     all_directions = Directions.objects.all()
-    print(f"🔍 STARTUPPER_MAIN: Все направления в БД:")
-    for direction in all_directions:
-        print(f"🔍   - {direction.direction_name}")
 
     if selected_direction_name != "All" and selected_direction_name != "Все":
         from django.db.models import Q
         direction_filter = Q()
-        print(f"🔍 STARTUPPER_MAIN: Ищем направление '{selected_direction_name}'")
         for category in FIXED_CATEGORIES:
             if category['original_name'] == selected_direction_name or category['direction_name'] == selected_direction_name:
                 direction_filter |= Q(direction__direction_name=category['direction_name'])
-                print(f"🔍 STARTUPPER_MAIN: Найдено соответствие: {category['original_name']} -> {category['direction_name']}")
         if direction_filter:
             startups_query = startups_query.filter(direction_filter)
-            print(f"🔍 STARTUPPER_MAIN: Применен фильтр, найдено стартапов: {startups_query.count()}")
-        else:
-            print(f"🔍 STARTUPPER_MAIN: Фильтр не найден для '{selected_direction_name}'")
-
-    all_startups = Startups.objects.filter(status="approved").select_related("direction")
-    print(f"🔍 STARTUPPER_MAIN: Все одобренные стартапы:")
-    for startup in all_startups[:5]:
-        direction_name = startup.direction.direction_name if startup.direction else "Нет направления"
-        print(f"🔍   - {startup.title} -> {direction_name}")
 
     startups_filtered = startups_query.annotate(
         progress=Case(
@@ -5115,15 +5035,6 @@ def startuper_main(request):
         "random_startupers": random_startupers_data,
     }
 
-    print(f"🔍 STARTUPPER_MAIN: Передаем в шаблон:")
-    print(f"🔍   - directions: {directions_data_json}")
-    print(f"🔍   - selected_galaxy: {selected_direction_name}")
-    print(f"🔍   - planets_data_json: {len(planets_data_json)} элементов")
-    print(f"🔍   - all_startups_data_json: {len(all_startups_data)} элементов")
-
-    print(f"🔍 STARTUPPER_MAIN: Первые 3 стартапа из all_startups_data:")
-    for i, startup in enumerate(all_startups_data[:3]):
-        print(f"🔍   {i+1}. {startup.get('name', 'Нет названия')} -> direction: {startup.get('direction', 'Нет направления')}")
 
     return render(request, "accounts/startuper_main.html", context)
 def moderator_dashboard(request):
@@ -6181,13 +6092,6 @@ def planetary_system(request):
         if direction_filter:
             startups_query = startups_query.filter(direction_filter)
     startups_list = list(startups_query)
-    print(f"🚀 ПЛАНЕТАРНАЯ СИСТЕМА DEBUG:")
-    print(f"🚀 Выбрано направление: '{selected_direction_name}'")
-    print(f"🚀 Всего одобренных стартапов в БД: {Startups.objects.filter(status='approved').count()}")
-    print(f"🚀 Загружено стартапов после фильтрации: {len(startups_list)}")
-    if startups_list:
-        for i, startup in enumerate(startups_list[:3]):
-            print(f"🚀   {i+1}. {startup.title} - направление: {startup.direction.direction_name if startup.direction else 'Нет'}")
     logger.info(f"🪐 Загружено стартапов: {len(startups_list)}")
     selected_startups = []
     if len(startups_list) > 0:
@@ -6276,13 +6180,6 @@ def planetary_system(request):
     logo_data = {
         "image": "/static/accounts/images/logo.png"
     }
-    print(f"🚀 ПЕРЕДАЕТСЯ В ШАБЛОН:")
-    print(f"🚀 Планет для отображения: {len(planets_data)}")
-    print(f"🚀 Всех стартапов для фильтрации: {len(all_startups_data)}")
-    print(f"🚀 Направлений: {len(directions_data)}")
-    print(f"🚀 Выбранная галактика: '{selected_direction_name}'")
-    print(f"🚀 Первые 3 планеты: {[p.get('name', 'Нет названия') for p in planets_data[:3]]}")
-    print(f"🚀 Переводы направлений: {[(d.get('original_name'), d.get('direction_name')) for d in directions_data[:5]]}")
     context = {
         "planets_data_json": json.dumps(planets_data, ensure_ascii=False),
         "directions_data_json": json.dumps(directions_data, ensure_ascii=False),
@@ -6479,7 +6376,6 @@ def my_startups(request):
             region_name=settings.AWS_S3_REGION_NAME,
         )
         planetary_startups = []
-        print(f"🚀 DEBUG: approved_startups_annotated count: {len(approved_startups_annotated)}")
         for idx, startup in enumerate(approved_startups_annotated, start=1):
             orbit_size = (idx * 100) + 150
             orbit_time = (idx * 10) + 40
@@ -6506,8 +6402,6 @@ def my_startups(request):
                 "planet_size": planet_size,
             }
             planetary_startups.append(planet_data)
-            print(f"🚀 DEBUG: Added planet data for startup {startup.startup_id}: {startup.title}")
-        print(f"🚀 DEBUG: Total planetary_startups: {len(planetary_startups)}")
     except Exception as e:
         logger.error(f"Критическая ошибка в my_startups view: {e}", exc_info=True)
         messages.error(
@@ -6931,7 +6825,6 @@ def support_ticket_detail(request, ticket_id):
                 messages.success(request, "Заявка успешно обновлена.")
                 return redirect("support_ticket_detail", ticket_id=ticket.ticket_id)
             else:
-                print(f"DEBUG: Форма невалидна: {form.errors}")
         else:
             form = ModeratorTicketForm(instance=ticket)
 

@@ -298,16 +298,6 @@
           <div id="documents-section" class="content-section">
             <h2 class="section-title">Документы</h2>
             
-            <!-- ОТЛАДОЧНАЯ ИНФОРМАЦИЯ -->
-            <div style="background: #f0f0f0; padding: 10px; margin: 10px 0; border: 1px solid #ccc; font-family: monospace; font-size: 12px;">
-              <strong>ОТЛАДКА ДОКУМЕНТОВ:</strong><br>
-              proofs_urls: {{ agency.proofs_urls|default:"НЕТ" }}<br>
-              agency_documents.count: {{ agency_documents.count }}<br>
-              agency_documents: 
-              {% for doc in agency_documents %}
-                <br>- {{ doc.file_url }} ({{ doc.original_file_name|default:"БЕЗ ИМЕНИ" }})
-              {% endfor %}
-            </div>
             
             {% if agency_documents %}
                 <ul class="document-list">
