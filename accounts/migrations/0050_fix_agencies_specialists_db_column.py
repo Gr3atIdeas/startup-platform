@@ -3,7 +3,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("accounts", "0049_fix_specialists_pk_default"),
+        ("accounts", "0049_update_telegram_social_app"),
     ]
 
     operations = [
