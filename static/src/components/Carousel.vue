@@ -16,7 +16,7 @@
       <div class="carousel-container-wrapper">
         <div
           class="carousel-container"
-          :style="{ transform: `translateX(-${currentSlide * (630 + 39)}px)` }"
+          :style="{ transform: `translateX(-${currentSlide * (801 + 39)}px)` }"
         >
           <div class="carousel-card" v-for="startup in carouselData" :key="startup.startup_id">
             <img
@@ -136,15 +136,16 @@ export default {
 }
 
 .carousel-section {
-  padding: 45px 0px 10px 20px;
+  padding: 45px 0px 10px 71px;
   margin-top: 0;
-  width: 100vw;
-  max-width: 100vw;
+  width: 1445px;
+  max-width: 1445px;
   position: relative;
   left: 0;
   transform: none;
   overflow: hidden;
-  margin-left: calc(-50vw + 50%);
+  margin-left: auto;
+  margin-right: auto;
   .carousel-title-container {
     max-width: 1303px;
     margin: 0 auto 20px auto;
@@ -167,11 +168,11 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
-  width: 100vw;
-  max-width: 100vw;
+  width: 1445px;
+  max-width: 1445px;
   box-sizing: border-box;
   overflow: hidden;
-  margin-left: calc(-50vw + 50%);
+  margin: 0 auto;
 
   .carousel-arrow {
     background: transparent;
@@ -191,11 +192,11 @@ export default {
     }
 
     &.left {
-      left: 20px;
+      left: 0;
     }
 
     &.right {
-      right: calc(50vw - 50% + 20px);
+      right: 0;
     }
     img {
       width: 50px;
@@ -206,17 +207,17 @@ export default {
 }
 
 .carousel-container-wrapper {
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 10px;
-  backdrop-filter: blur(10px);
-  padding: 54px 20px;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 32px;
+  backdrop-filter: blur(20px);
+  padding: 54px 45px;
   overflow: hidden;
   flex: 1;
   box-sizing: border-box;
-  width: 900px;
-  max-width: 900px;
+  width: 1436px;
+  max-width: 1436px;
   position: relative;
-  height: 609px;
+  height: 779px;
   margin: 0 auto;
 }
 
@@ -228,7 +229,7 @@ export default {
 }
 
 .carousel-card {
-  flex: 0 0 630px;
+  flex: 0 0 801px;
   height: 609px;
   position: relative;
   background-image:
