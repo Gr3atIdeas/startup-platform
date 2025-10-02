@@ -239,7 +239,17 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="filter-bar">
                 <div class="filter-search">
                     <img src="{% static 'accounts/images/search.svg' %}" alt="Поиск">
-                    <input type="text" placeholder="Поиск">
+                    <form method="GET" style="display: flex; align-items: center; gap: 10px;">
+                        <input type="text" name="search" placeholder="Поиск" value="{{ search_query|default:'' }}">
+                        {% if selected_category_name %}
+                            <input type="hidden" name="category" value="{{ selected_category_name }}">
+                            <input type="hidden" name="category_type" value="{{ selected_category_type }}">
+                        {% endif %}
+                        {% if current_sort_order %}
+                            <input type="hidden" name="sort" value="{{ current_sort_order }}">
+                        {% endif %}
+                        <button type="submit" style="display: none;"></button>
+                    </form>
                 </div>
                 <a href="?filter=all" class="filter-button" data-filter-type="all" id="allFilterButton">Все</a>
                 <div class="filter-button-group">

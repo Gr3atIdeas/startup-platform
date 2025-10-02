@@ -5152,11 +5152,27 @@ def moderator_dashboard(request):
     pending_agencies_list = Agencies.objects.filter(status="pending")
     pending_specialists_list = Specialists.objects.filter(status="pending")
     
-    # Получаем все категории для разных типов заявок
-    startup_categories = Directions.objects.all().order_by("direction_name")
-    franchise_categories = FranchiseDirections.objects.all().order_by("direction_name")
+    # Получаем категории как в каталогах
+    # Стартапы - только определенные категории
+    startup_categories = Directions.objects.filter(
+        direction_name__in=[
+            'Technology', 'Healthcare', 'Finance', 'Education', 'Entertainment',
+            'Fashion', 'Food', 'Gaming', 'Real Estate', 'Travel', 'Agriculture',
+            'Energy', 'Environment', 'Social', 'Medicine', 'Auto', 'Delivery',
+            'Cafe', 'Fastfood', 'Health', 'Beauty', 'Transport', 'Sport',
+            'Psychology', 'AI', 'IT', 'Retail'
+        ]
+    ).order_by('direction_name')
     
-    # Категории для агентств и специалистов (из customization_data)
+    # Франшизы - только существующие направления
+    existing_dir_ids = (
+        Franchises.objects.filter(status="approved", direction__isnull=False)
+        .values_list("direction_id", flat=True)
+        .distinct()
+    )
+    franchise_categories = Directions.objects.filter(direction_id__in=existing_dir_ids).order_by("direction_name")
+    
+    # Категории для агентств и специалистов (как в каталогах)
     agency_categories = [
         "Веб-разработка", "Мобильная разработка", "Дизайн", "Маркетинг", 
         "ИИ", "Брендинг", "Видео и мультимедиа"
@@ -5181,11 +5197,28 @@ def moderator_dashboard(request):
     selected_category_type = request.GET.get("category_type", "startup")
     sort_order = request.GET.get("sort")
     filter_type = request.GET.get("filter")
+    search_query = request.GET.get("search", "").strip()
     
     if filter_type == "all":
         selected_category_name = None
         selected_category_type = None
         sort_order = None
+        search_query = ""
+    
+    # Применяем поиск
+    if search_query:
+        pending_startups_list = pending_startups_list.filter(
+            Q(title__icontains=search_query) | Q(description__icontains=search_query)
+        )
+        pending_franchises_list = pending_franchises_list.filter(
+            Q(title__icontains=search_query) | Q(description__icontains=search_query)
+        )
+        pending_agencies_list = pending_agencies_list.filter(
+            Q(title__icontains=search_query) | Q(description__icontains=search_query)
+        )
+        pending_specialists_list = pending_specialists_list.filter(
+            Q(title__icontains=search_query) | Q(description__icontains=search_query)
+        )
     
     # Применяем фильтры по категориям
     if selected_category_name:
@@ -5240,6 +5273,7 @@ def moderator_dashboard(request):
         "selected_category_type": selected_category_type,
         "current_sort_order": sort_order,
         "filter_type": filter_type,
+        "search_query": search_query,
     }
     return render(request, "accounts/moderator_dashboard.html", context)
 def approve_startup(request, startup_id):
