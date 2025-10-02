@@ -213,10 +213,11 @@ export default {
   overflow: hidden;
   flex: 1;
   box-sizing: border-box;
-  width: 800px;
-  max-width: 800px;
+  width: 900px;
+  max-width: 900px;
   position: relative;
   height: 609px;
+  margin: 0 auto;
 }
 
 .carousel-container {
