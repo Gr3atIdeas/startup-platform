@@ -4576,51 +4576,103 @@ def main_page_moderator(request):
     if not getattr(request.user, "role", None) or (request.user.role.role_name or "").lower() != "moderator":
         return redirect("home")
     
-    # Создаем простые заглушечные данные для карусели
-    carousel_data = [
-        {
-            "startup_id": 1,
-            "name": "Тестовый стартап",
-            "logo_url": "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
-            "total_investors": 5,
-            "total_amount": 1500000,
-            "updates": [
-                "User 12345 инвестировал 50 000 ₽",
-                "User 67890 понравился комментарий User 11111",
-                "Вышло обновления новости по стартапу"
-            ],
-            "chat_url": "/cosmochat/",
-            "startup_url": "/startups/"
-        },
-        {
-            "startup_id": 2,
-            "name": "Инновационный проект",
-            "logo_url": "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
-            "total_investors": 3,
-            "total_amount": 750000,
-            "updates": [
-                "User 22222 инвестировал 25 000 ₽",
-                "Новый участник присоединился к чату",
-                "Обновлен статус проекта"
-            ],
-            "chat_url": "/cosmochat/",
-            "startup_url": "/startups/"
-        },
-        {
-            "startup_id": 3,
-            "name": "Стартап будущего",
-            "logo_url": "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
-            "total_investors": 8,
-            "total_amount": 2500000,
-            "updates": [
-                "User 33333 инвестировал 100 000 ₽",
-                "Модератор одобрил новую заявку",
-                "Проект готов к следующему этапу"
-            ],
-            "chat_url": "/cosmochat/",
-            "startup_url": "/startups/"
-        }
-    ]
+    # Получаем реальные данные для карусели
+    carousel_data = []
+    
+    try:
+        # Сначала попробуем получить стартапы с инвестициями
+        startups_with_investments = Startups.objects.filter(
+            status="approved"
+        ).annotate(
+            total_investors=Count("investmenttransactions", distinct=True),
+            total_amount=Sum("investmenttransactions__amount")
+        ).order_by("-startup_id")[:6]
+        
+        for startup in startups_with_investments:
+            # Получаем последние инвестиции для обновлений
+            recent_investments = InvestmentTransactions.objects.filter(
+                startup=startup
+            ).select_related("investor").order_by("-created_at")[:3]
+            
+            updates = []
+            for investment in recent_investments:
+                if investment.investor:
+                    updates.append(f"{investment.investor.get_full_name()} инвестировал {investment.amount:,.0f} ₽".replace(",", " "))
+            
+            if not updates:
+                updates = [
+                    "Стартап готов к инвестициям",
+                    "Ожидаются первые инвесторы", 
+                    "Проект в активной разработке"
+                ]
+            
+            carousel_data.append({
+                "startup_id": startup.startup_id,
+                "name": startup.title,
+                "logo_url": startup.get_logo_url() or "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
+                "total_investors": startup.total_investors or 0,
+                "total_amount": float(startup.total_amount or 0),
+                "updates": updates,
+                "chat_url": f"/cosmochat/?startup_id={startup.startup_id}",
+                "startup_url": f"/startup/{startup.startup_id}/"
+            })
+        
+        # Если нет стартапов с инвестициями, показываем просто одобренные стартапы
+        if not carousel_data:
+            approved_startups = Startups.objects.filter(status="approved").order_by("-startup_id")[:6]
+            for startup in approved_startups:
+                carousel_data.append({
+                    "startup_id": startup.startup_id,
+                    "name": startup.title,
+                    "logo_url": startup.get_logo_url() or "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
+                    "total_investors": 0,
+                    "total_amount": 0,
+                    "updates": [
+                        "Стартап готов к инвестициям",
+                        "Ожидаются первые инвесторы",
+                        "Проект в активной разработке"
+                    ],
+                    "chat_url": f"/cosmochat/?startup_id={startup.startup_id}",
+                    "startup_url": f"/startup/{startup.startup_id}/"
+                })
+        
+        # Если все еще нет данных, показываем заглушки
+        if not carousel_data:
+            carousel_data = [
+                {
+                    "startup_id": 1,
+                    "name": "Нет активных стартапов",
+                    "logo_url": "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
+                    "total_investors": 0,
+                    "total_amount": 0,
+                    "updates": [
+                        "Ожидаются новые проекты",
+                        "Модератор готов к работе",
+                        "Система работает"
+                    ],
+                    "chat_url": "/cosmochat/",
+                    "startup_url": "/startups/"
+                }
+            ]
+            
+    except Exception as e:
+        # В случае ошибки показываем заглушки
+        carousel_data = [
+            {
+                "startup_id": 1,
+                "name": "Ошибка загрузки",
+                "logo_url": "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
+                "total_investors": 0,
+                "total_amount": 0,
+                "updates": [
+                    "Данные загружаются",
+                    "Пожалуйста, подождите",
+                    "Система работает"
+                ],
+                "chat_url": "/cosmochat/",
+                "startup_url": "/startups/"
+            }
+        ]
     
     import json
     context = {

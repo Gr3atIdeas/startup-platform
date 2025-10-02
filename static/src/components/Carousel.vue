@@ -136,8 +136,8 @@ export default {
   margin-top: 45px;
   width: 100vw;
   position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  transform: none;
   overflow: hidden;
   .carousel-title-container {
     max-width: 1303px;
@@ -161,7 +161,6 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
-  padding-left: calc((100vw - 1303px) / 2);
   width: 100%;
   box-sizing: border-box;
   overflow: visible;
@@ -184,11 +183,11 @@ export default {
     }
 
     &.left {
-      left: calc(((100vw - 1303px) / 2) + 60px);
+      left: 60px;
     }
 
     &.right {
-      right: calc(((100vw - 1303px) / 2) + 40px);
+      right: 40px;
     }
     img {
       width: 50px;
@@ -200,13 +199,13 @@ export default {
 
 .carousel-container-wrapper {
   background: rgba(0, 0, 0, 0.18);
-  border-radius: 32px 0 0 32px;
+  border-radius: 0;
   backdrop-filter: blur(10px);
   padding: 54px 0 54px 54px;
   overflow: visible;
   flex: 1;
   box-sizing: border-box;
-  width: calc(100% - 200px);
+  width: 100%;
 }
 
 .carousel-container {

@@ -4,7 +4,6 @@ import '../scss/global.scss'
 
 // Получаем данные карусели из Django
 const carouselData = window.carouselData || []
-console.log('Vue app carousel data:', carouselData)
 
 createApp(ModeratorMainPage, {
   carouselData: carouselData
