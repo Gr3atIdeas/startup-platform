@@ -16,7 +16,7 @@
       <div class="carousel-container-wrapper">
         <div
           class="carousel-container"
-          :style="{ transform: `translateX(-${currentSlide * (801 + 39)}px)` }"
+          :style="{ transform: `translateX(-${currentSlide * (630 + 39)}px)` }"
         >
           <div class="carousel-card" v-for="startup in carouselData" :key="startup.startup_id">
             <img
@@ -214,6 +214,9 @@ export default {
   flex: 1;
   box-sizing: border-box;
   width: 100%;
+  max-width: 1303px;
+  position: relative;
+  height: 609px;
 }
 
 .carousel-container {
