@@ -16,7 +16,7 @@
       <div class="carousel-container-wrapper">
         <div
           class="carousel-container"
-          :style="{ transform: `translateX(-${currentSlide * (cardWidth + cardGap)}px)` }"
+          :style="{ transform: `translateX(-${currentSlide * (cardWidth + cardGap) + containerPadding}px)` }"
         >
           <div class="carousel-card" v-for="startup in carouselData" :key="startup.startup_id">
             <img
@@ -86,6 +86,7 @@ export default {
       currentSlide: 0,
       cardWidth: 801,
       cardGap: 39,
+      containerPadding: 40,
     }
   },
   computed: {
@@ -205,11 +206,11 @@ export default {
     }
 
     &.left {
-      left: 0;
+      left: 20px;
     }
 
     &.right {
-      right: 0;
+      right: 20px;
     }
     img {
       width: 50px;
@@ -223,8 +224,8 @@ export default {
   background: rgba(0, 0, 0, 0.18);
   border-radius: 32px;
   backdrop-filter: blur(20px);
-  padding: 54px 20px;
-  overflow: hidden;
+  padding: 54px 80px;
+  overflow: visible;
   flex: 1;
   box-sizing: border-box;
   width: 100%;
@@ -239,7 +240,7 @@ export default {
   display: flex;
   gap: 39px;
   transition: transform 0.5s ease-in-out;
-  padding-left: 0;
+  padding: 0 40px;
   width: max-content;
 }
 
