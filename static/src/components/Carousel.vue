@@ -271,6 +271,9 @@ export default {
   font-weight: 300;
   color: white;
   backdrop-filter: blur(5px);
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
 }
 
 .startup-carousel-card-update:last-child {
