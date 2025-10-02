@@ -133,7 +133,7 @@
 }
 
 .footer-app-links-section {
-  display: flex;
+  display: none;
   gap: 23px;
   align-items: center;
   flex-wrap: wrap;
