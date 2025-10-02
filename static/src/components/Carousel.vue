@@ -138,14 +138,13 @@ export default {
 .carousel-section {
   padding: 45px 0px 10px 0px;
   margin-top: 0;
-  width: 1303px;
-  max-width: 1303px;
+  width: 100vw;
+  max-width: 100vw;
   position: relative;
   left: 0;
   transform: none;
   overflow: hidden;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: calc(-50vw + 50%);
   .carousel-title-container {
     max-width: 1303px;
     margin: 0 auto 20px auto;
@@ -168,11 +167,11 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
-  width: 1303px;
-  max-width: 1303px;
+  width: 100vw;
+  max-width: 100vw;
   box-sizing: border-box;
   overflow: hidden;
-  margin: 0 auto;
+  margin-left: calc(-50vw + 50%);
 
   .carousel-arrow {
     background: transparent;
@@ -196,7 +195,7 @@ export default {
     }
 
     &.right {
-      right: 20px;
+      right: calc(50vw - 50% + 20px);
     }
     img {
       width: 50px;
@@ -225,7 +224,7 @@ export default {
 }
 
 .carousel-card {
-  flex: 0 0 630px;
+  flex: 0 0 400px;
   height: 609px;
   position: relative;
   background-image:
