@@ -5226,18 +5226,34 @@ def moderator_dashboard(request):
             pending_startups_list = pending_startups_list.filter(
                 direction__direction_name__iexact=selected_category_name
             )
+            # Скрываем все остальные типы заявок
+            pending_franchises_list = pending_franchises_list.none()
+            pending_agencies_list = pending_agencies_list.none()
+            pending_specialists_list = pending_specialists_list.none()
         elif selected_category_type == "franchise":
             pending_franchises_list = pending_franchises_list.filter(
                 direction__direction_name__iexact=selected_category_name
             )
+            # Скрываем все остальные типы заявок
+            pending_startups_list = pending_startups_list.none()
+            pending_agencies_list = pending_agencies_list.none()
+            pending_specialists_list = pending_specialists_list.none()
         elif selected_category_type == "agency":
             pending_agencies_list = pending_agencies_list.filter(
                 customization_data__agency_category__iexact=selected_category_name
             )
+            # Скрываем все остальные типы заявок
+            pending_startups_list = pending_startups_list.none()
+            pending_franchises_list = pending_franchises_list.none()
+            pending_specialists_list = pending_specialists_list.none()
         elif selected_category_type == "specialist":
             pending_specialists_list = pending_specialists_list.filter(
                 customization_data__specialist_category__iexact=selected_category_name
             )
+            # Скрываем все остальные типы заявок
+            pending_startups_list = pending_startups_list.none()
+            pending_franchises_list = pending_franchises_list.none()
+            pending_agencies_list = pending_agencies_list.none()
     
     # Применяем сортировку
     if sort_order == "newest":

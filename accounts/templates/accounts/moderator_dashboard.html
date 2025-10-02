@@ -42,7 +42,7 @@
         color: black;
         border: 1px solid #004E9F;
         padding: 8px 16px;
-        border-radius: 6px;
+        border-radius: 12px;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -72,13 +72,16 @@
         left: 0;
         background: white;
         border: 1px solid #ddd;
-        border-radius: 6px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
         z-index: 1000;
         display: none;
-        min-width: 200px;
-        max-height: 300px;
+        min-width: 250px;
+        max-width: 300px;
+        max-height: 400px;
         overflow-y: auto;
+        overflow-x: hidden;
+        margin-top: 4px;
     }
     
     .moderator-catalog-dropdown.show {
@@ -86,17 +89,47 @@
     }
     
     .moderator-catalog-dropdown a {
-        color: black;
-        padding: 10px 16px;
+        color: #333;
+        padding: 12px 16px;
         text-decoration: none;
         display: block;
         font-size: 14px;
         white-space: nowrap;
         transition: background-color 0.2s ease;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .moderator-catalog-dropdown a:last-child {
+        border-bottom: none;
     }
     
     .moderator-catalog-dropdown a:hover {
-        background-color: #e9e9e9;
+        background-color: #f8f9fa;
+        color: #004E9F;
+    }
+    
+    .moderator-catalog-dropdown .category-section {
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+    }
+    
+    .moderator-catalog-dropdown .category-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .moderator-catalog-dropdown .category-section-title {
+        font-weight: 600;
+        color: #004E9F;
+        padding: 12px 16px 8px 16px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        background-color: #f8f9fa;
+        margin: 0;
+        border-radius: 8px 8px 0 0;
     }
     /* Стиль для выделения активной кнопки */
     .filter-button.active {
