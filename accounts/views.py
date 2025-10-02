@@ -4576,128 +4576,51 @@ def main_page_moderator(request):
     if not getattr(request.user, "role", None) or (request.user.role.role_name or "").lower() != "moderator":
         return redirect("home")
     
-    # Получаем стартапы с активными чатами для модератора
-    # Сначала попробуем найти чаты стартапов
-    try:
-        from accounts.models import ChatConversations, Messages
-        
-        # Ищем чаты стартапов где модератор участвует
-        moderator_chats = ChatConversations.objects.filter(
-            chatparticipants__user=request.user,
-            startup__isnull=False
-        ).select_related('startup').distinct().order_by('-updated_at')[:6]
-        
-        carousel_data = []
-        
-        if moderator_chats.exists():
-            for chat in moderator_chats:
-                startup = chat.startup
-                
-                # Получаем последние сообщения
-                recent_messages = Messages.objects.filter(
-                    conversation=chat
-                ).select_related('sender').order_by('-created_at')[:3]
-                
-                updates = []
-                for message in recent_messages:
-                    if message.sender:
-                        updates.append(f"{message.sender.get_full_name()}: {message.message_text[:50]}...")
-                    else:
-                        updates.append(f"Система: {message.message_text[:50]}...")
-                
-                if not updates:
-                    updates = ["Чат активен", "Ожидаются сообщения", "Модератор онлайн"]
-                
-                # Информация об инвестициях
-                total_investments = InvestmentTransactions.objects.filter(
-                    startup=startup
-                ).aggregate(
-                    total_amount=Sum('amount'),
-                    total_investors=Count('investor', distinct=True)
-                )
-                
-                carousel_data.append({
-                    "startup_id": startup.startup_id,
-                    "name": startup.title,
-                    "logo_url": startup.get_logo_url() or "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
-                    "total_investors": total_investments['total_investors'] or 0,
-                    "total_amount": float(total_investments['total_amount'] or 0),
-                    "updates": updates,
-                    "chat_url": f"/cosmochat/{chat.conversation_id}/",
-                    "startup_url": f"/startup/{startup.startup_id}/"
-                })
-        
-        # Если нет чатов, показываем стартапы с инвестициями
-        if not carousel_data:
-            startups_with_investments = Startups.objects.filter(
-                status="approved",
-                investmenttransactions__isnull=False
-            ).annotate(
-                total_investors=Count("investmenttransactions", distinct=True),
-                total_amount=Sum("investmenttransactions__amount")
-            ).order_by("-startup_id")[:6]
-            
-            for startup in startups_with_investments:
-                recent_investments = InvestmentTransactions.objects.filter(
-                    startup=startup
-                ).select_related("investor").order_by("-created_at")[:3]
-                
-                updates = []
-                for investment in recent_investments:
-                    if investment.investor:
-                        updates.append(f"{investment.investor.get_full_name()} инвестировал {investment.amount:,.0f} ₽".replace(",", " "))
-                
-                if not updates:
-                    updates = ["Стартап готов к инвестициям", "Ожидаются инвесторы", "Проект активен"]
-                
-                carousel_data.append({
-                    "startup_id": startup.startup_id,
-                    "name": startup.title,
-                    "logo_url": startup.get_logo_url() or "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
-                    "total_investors": startup.total_investors,
-                    "total_amount": float(startup.total_amount or 0),
-                    "updates": updates,
-                    "chat_url": f"/cosmochat/?startup_id={startup.startup_id}",
-                    "startup_url": f"/startup/{startup.startup_id}/"
-                })
-        
-        # Если все еще нет данных, создаем заглушки
-        if not carousel_data:
-            carousel_data = [
-                {
-                    "startup_id": 1,
-                    "name": "Пример стартапа",
-                    "logo_url": "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
-                    "total_investors": 0,
-                    "total_amount": 0,
-                    "updates": [
-                        "Нет активных чатов",
-                        "Ожидаются новые проекты", 
-                        "Модератор готов к работе"
-                    ],
-                    "chat_url": "/cosmochat/",
-                    "startup_url": "/startups/"
-                }
-            ]
-            
-    except Exception as e:
-        # В случае ошибки показываем заглушки
-        carousel_data = [
-            {
-                "startup_id": 1,
-                "name": "Загрузка...",
-                "logo_url": "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
-                "total_investors": 0,
-                "total_amount": 0,
-                "updates": [
-                    "Данные загружаются",
-                    "Пожалуйста, подождите",
-                    "Система работает"
-                ],
-                "chat_url": "/cosmochat/",
-                "startup_url": "/startups/"
-            }
-        ]
+    # Создаем простые заглушечные данные для карусели
+    carousel_data = [
+        {
+            "startup_id": 1,
+            "name": "Тестовый стартап",
+            "logo_url": "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
+            "total_investors": 5,
+            "total_amount": 1500000,
+            "updates": [
+                "User 12345 инвестировал 50 000 ₽",
+                "User 67890 понравился комментарий User 11111",
+                "Вышло обновления новости по стартапу"
+            ],
+            "chat_url": "/cosmochat/",
+            "startup_url": "/startups/"
+        },
+        {
+            "startup_id": 2,
+            "name": "Инновационный проект",
+            "logo_url": "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
+            "total_investors": 3,
+            "total_amount": 750000,
+            "updates": [
+                "User 22222 инвестировал 25 000 ₽",
+                "Новый участник присоединился к чату",
+                "Обновлен статус проекта"
+            ],
+            "chat_url": "/cosmochat/",
+            "startup_url": "/startups/"
+        },
+        {
+            "startup_id": 3,
+            "name": "Стартап будущего",
+            "logo_url": "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
+            "total_investors": 8,
+            "total_amount": 2500000,
+            "updates": [
+                "User 33333 инвестировал 100 000 ₽",
+                "Модератор одобрил новую заявку",
+                "Проект готов к следующему этапу"
+            ],
+            "chat_url": "/cosmochat/",
+            "startup_url": "/startups/"
+        }
+    ]
     
     import json
     context = {
