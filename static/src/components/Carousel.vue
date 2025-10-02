@@ -166,9 +166,11 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
-  width: 100%;
+  width: 100vw;
+  max-width: 100vw;
   box-sizing: border-box;
-  overflow: visible;
+  overflow: hidden;
+  margin-left: calc(-50vw + 50%);
 
   .carousel-arrow {
     background: transparent;
@@ -188,7 +190,7 @@ export default {
     }
 
     &.left {
-      left: 60px;
+      left: 20px;
     }
 
     &.right {
@@ -207,7 +209,7 @@ export default {
   border-radius: 10px;
   backdrop-filter: blur(10px);
   padding: 54px 0 54px 54px;
-  overflow: visible;
+  overflow: hidden;
   flex: 1;
   box-sizing: border-box;
   width: 100%;
@@ -221,7 +223,7 @@ export default {
 }
 
 .carousel-card {
-  flex: 0 0 801px;
+  flex: 0 0 900px;
   height: 609px;
   position: relative;
   background-image:
