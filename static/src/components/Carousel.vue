@@ -16,7 +16,7 @@
       <div class="carousel-container-wrapper">
         <div
           class="carousel-container"
-          :style="{ transform: `translateX(-${currentSlide * (801 + 39)}px)` }"
+          :style="{ transform: `translateX(-${currentSlide * (cardWidth + cardGap)}px)` }"
         >
           <div class="carousel-card" v-for="startup in carouselData" :key="startup.startup_id">
             <img
@@ -84,6 +84,8 @@ export default {
   data() {
     return {
       currentSlide: 0,
+      cardWidth: 801,
+      cardGap: 39,
     }
   },
   computed: {
@@ -105,7 +107,23 @@ export default {
     },
     formatAmount(amount) {
       return new Intl.NumberFormat('ru-RU').format(amount)
+    },
+    updateCardDimensions() {
+      this.$nextTick(() => {
+        const card = this.$el.querySelector('.carousel-card')
+        if (card) {
+          const rect = card.getBoundingClientRect()
+          this.cardWidth = rect.width
+        }
+      })
     }
+  },
+  mounted() {
+    this.updateCardDimensions()
+    window.addEventListener('resize', this.updateCardDimensions)
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.updateCardDimensions)
   },
 }
 </script>
@@ -138,13 +156,11 @@ export default {
 .carousel-section {
   padding: 45px 0px 10px 20px;
   margin-top: 0;
-  width: 100vw;
-  max-width: 100vw;
+  width: 100%;
   position: relative;
   left: 0;
   transform: none;
-  overflow: hidden;
-  margin-left: calc(-50vw + 50%);
+  overflow: visible;
   .carousel-title-container {
     max-width: 1303px;
     margin: 0 auto 20px auto;
@@ -167,11 +183,9 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
-  width: 100vw;
-  max-width: 100vw;
+  width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
-  margin-left: calc(-50vw + 50%);
+  overflow: visible;
 
   .carousel-arrow {
     background: transparent;
@@ -213,8 +227,7 @@ export default {
   overflow: hidden;
   flex: 1;
   box-sizing: border-box;
-  width: calc(801px + 39px + 200px);
-  max-width: calc(801px + 39px + 200px);
+  width: 100%;
   position: relative;
   height: 779px;
   margin: 0;
@@ -232,6 +245,7 @@ export default {
 
 .carousel-card {
   flex: 0 0 801px;
+  width: 801px;
   height: 609px;
   position: relative;
   background-image:
@@ -247,6 +261,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-sizing: border-box;
 
   &:last-child {
     margin-right: 0;
