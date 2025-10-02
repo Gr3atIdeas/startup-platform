@@ -4609,8 +4609,9 @@ def main_page_moderator(request):
             "startup_url": f"/startup/{startup.startup_id}/"
         })
     
+    import json
     context = {
-        "carousel_data": carousel_data
+        "carousel_data": json.dumps(carousel_data, ensure_ascii=False)
     }
     
     return render(request, "accounts/moderator_main.html", context)

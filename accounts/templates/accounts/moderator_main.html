@@ -1,7 +1,6 @@
 {% extends "accounts/base.html" %}
 {% load static %}
 {% load django_vite %}
-{% load json %}
 
 {% block title %}Главная страница | Модератор{% endblock %}
 
@@ -18,6 +17,6 @@
 
 {% block scripts %}
 <script>
-  window.carouselData = {{ carousel_data|json }};
+  window.carouselData = {{ carousel_data|safe }};
 </script>
 {% endblock %}
