@@ -32,9 +32,71 @@
     .category-dropdown-menu a:hover {
         background-color: #e9e9e9; /* Чуть темнее при наведении */
     }
-    .filter-button-group { /* Обертка для кнопки и выпадающего списка */
+    .moderator-catalog-wrapper { /* Обертка для каталога модератора */
         position: relative;
         display: inline-block;
+    }
+    
+    .moderator-catalog-trigger {
+        background: white;
+        color: black;
+        border: 1px solid #004E9F;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-family: inherit;
+        transition: all 0.2s ease;
+    }
+    
+    .moderator-catalog-trigger:hover {
+        background: #f0f0f0;
+    }
+    
+    .moderator-catalog-trigger.active {
+        background: #004E9F;
+        color: white;
+        border-color: #004E9F;
+    }
+    
+    .moderator-catalog-trigger.active .moderator-catalog-icon {
+        filter: brightness(0) invert(1);
+    }
+    
+    .moderator-catalog-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+        display: none;
+        min-width: 200px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .moderator-catalog-dropdown.show {
+        display: block;
+    }
+    
+    .moderator-catalog-dropdown a {
+        color: black;
+        padding: 10px 16px;
+        text-decoration: none;
+        display: block;
+        font-size: 14px;
+        white-space: nowrap;
+        transition: background-color 0.2s ease;
+    }
+    
+    .moderator-catalog-dropdown a:hover {
+        background-color: #e9e9e9;
     }
     /* Стиль для выделения активной кнопки */
     .filter-button.active {
@@ -102,22 +164,22 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    const categoryFilterButton = document.getElementById('categoryFilterButton');
-    const categoryDropdownMenu = document.getElementById('categoryDropdownMenu');
-    const categoryButtonText = categoryFilterButton ? categoryFilterButton.querySelector('.category-button-text') : null;
+    // Новая логика каталога модератора
+    const moderatorCatalogTrigger = document.getElementById('moderatorCatalogTrigger');
+    const moderatorCatalogDropdown = document.getElementById('moderatorCatalogDropdown');
+    const moderatorCatalogText = moderatorCatalogTrigger ? moderatorCatalogTrigger.querySelector('.moderator-catalog-text') : null;
 
-    if (currentCategory && categoryButtonText) {
-        // Попробуем найти элемент в списке категорий с таким значением, чтобы получить его текстовое представление
+    if (currentCategory && moderatorCatalogText) {
+        // Находим текст категории для отображения
         let foundCategoryText = currentCategory;
-        const categoryLink = categoryDropdownMenu.querySelector(`a[data-category-value="${currentCategory}"][data-category-type="${currentCategoryType}"]`);
+        const categoryLink = moderatorCatalogDropdown.querySelector(`a[data-category-value="${currentCategory}"][data-category-type="${currentCategoryType}"]`);
         if (categoryLink) {
             foundCategoryText = categoryLink.textContent.trim();
         }
-        categoryButtonText.textContent = foundCategoryText;
-        categoryFilterButton.classList.remove('inactive');
-        categoryFilterButton.classList.add('active'); 
-    } else if (categoryButtonText) {
-        categoryButtonText.textContent = 'Категории'; // Текст по умолчанию
+        moderatorCatalogText.textContent = foundCategoryText;
+        moderatorCatalogTrigger.classList.add('active');
+    } else if (moderatorCatalogText) {
+        moderatorCatalogText.textContent = 'Категории';
     }
     
     // Если активна категория, сортировка или поиск, кнопка "Все" не должна быть активной
@@ -154,17 +216,35 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    if (categoryFilterButton && categoryDropdownMenu) {
-        categoryFilterButton.addEventListener('click', function(event) {
+    // Обработчики событий для каталога модератора
+    if (moderatorCatalogTrigger && moderatorCatalogDropdown) {
+        moderatorCatalogTrigger.addEventListener('click', function(event) {
             event.preventDefault();
-            categoryDropdownMenu.style.display = categoryDropdownMenu.style.display === 'block' ? 'none' : 'block';
+            event.stopPropagation();
+            
+            // Переключаем видимость dropdown
+            if (moderatorCatalogDropdown.classList.contains('show')) {
+                moderatorCatalogDropdown.classList.remove('show');
+            } else {
+                moderatorCatalogDropdown.classList.add('show');
+            }
+        });
+        
+        // Обработка кликов по ссылкам категорий
+        moderatorCatalogDropdown.addEventListener('click', function(event) {
+            const categoryLink = event.target.closest('a[data-category-value]');
+            if (categoryLink) {
+                // Ссылка уже ведет на правильный URL, просто закрываем dropdown
+                moderatorCatalogDropdown.classList.remove('show');
+            }
         });
     }
 
+    // Закрытие dropdown при клике вне его
     document.addEventListener('click', function(event) {
-        if (categoryFilterButton && categoryDropdownMenu) {
-            if (!categoryFilterButton.contains(event.target) && !categoryDropdownMenu.contains(event.target)) {
-                categoryDropdownMenu.style.display = 'none';
+        if (moderatorCatalogTrigger && moderatorCatalogDropdown) {
+            if (!moderatorCatalogTrigger.contains(event.target) && !moderatorCatalogDropdown.contains(event.target)) {
+                moderatorCatalogDropdown.classList.remove('show');
             }
         }
     });
@@ -275,12 +355,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     </form>
                 </div>
                 <a href="?" class="filter-button" data-filter-type="all" id="allFilterButton">Все</a>
-                <div class="filter-button-group">
-                    <a href="#" class="filter-button" id="categoryFilterButton" data-filter-type="category_trigger">
-                        <span class="category-button-text">Категории</span>
-                        <img src="{% static 'accounts/images/icons/expand_more.svg' %}" alt="Категории" class="filter-icon">
-                    </a>
-                    <div class="category-dropdown-menu" id="categoryDropdownMenu">
+                <div class="moderator-catalog-wrapper">
+                    <button type="button" class="moderator-catalog-trigger" id="moderatorCatalogTrigger">
+                        <span class="moderator-catalog-text">Категории</span>
+                        <img src="{% static 'accounts/images/icons/expand_more.svg' %}" alt="Категории" class="moderator-catalog-icon">
+                    </button>
+                    <div class="moderator-catalog-dropdown" id="moderatorCatalogDropdown">
                         {% if all_categories %}
                             <div class="category-section">
                                 <div class="category-section-title">Стартапы</div>
