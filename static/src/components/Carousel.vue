@@ -136,7 +136,7 @@ export default {
 }
 
 .carousel-section {
-  padding: 45px 0px 10px 0px;
+  padding: 45px 0px 10px 20px;
   margin-top: 0;
   width: 100vw;
   max-width: 100vw;
@@ -224,7 +224,7 @@ export default {
 }
 
 .carousel-card {
-  flex: 0 0 400px;
+  flex: 0 0 630px;
   height: 609px;
   position: relative;
   background-image:
