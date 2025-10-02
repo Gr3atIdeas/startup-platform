@@ -1169,11 +1169,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
         if (!ownerId) {
-          alert('Ошибка: не удалось определить автора стартапа');
+          alert('Ошибка: не удалось определить автора франшизы');
           return;
         }
 
-        window.location.href = `/cosmochat/`;
+        startChatWithUser(ownerId);
       });
     } else {
       console.error('Chat button not found');

@@ -1170,7 +1170,7 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
 
-        window.location.href = `/cosmochat/`;
+        startChatWithUser(ownerId);
       });
     } else {
       console.error('Chat button not found');

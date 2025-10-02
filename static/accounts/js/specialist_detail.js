@@ -326,11 +326,24 @@ function setupSimilarSpecialistsShowMore() {
   }
 
   function setupActionButtons() {
+    const chatButton = document.querySelector('.chat-button');
+    if (chatButton) {
+      chatButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
+        if (!ownerId) {
+          alert('Ошибка: не удалось определить автора специалиста');
+          return;
+        }
+        startChatWithUser(ownerId);
+      });
+    }
+
     const writeButton = document.querySelector('.write-author-button');
     if (writeButton) {
       writeButton.addEventListener('click', (e) => {
         e.preventDefault();
-        const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
+        const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
         if (!ownerId) {
           alert('Ошибка: не удалось определить автора специалиста');
           return;

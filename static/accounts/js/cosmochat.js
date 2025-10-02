@@ -59,6 +59,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const newChatId = urlParams.get('open_chat_id');
         loadChat(newChatId);
     }
+    else if (urlParams.get('start_chat_with')) {
+        const userId = urlParams.get('start_chat_with');
+        startChatWithUser(userId);
+        // Убираем параметр из URL
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.delete('start_chat_with');
+        window.history.replaceState({}, '', newUrl);
+    }
     else if (urlParams.get('chat_id')) {
         const chatId = urlParams.get('chat_id');
         console.log('Opening chat from URL parameter:', chatId);

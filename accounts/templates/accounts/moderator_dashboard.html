@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="filter-search">
                     <img src="{% static 'accounts/images/search.svg' %}" alt="Поиск">
                     <form method="GET" style="display: flex; align-items: center; gap: 10px;">
-                        <input type="text" name="search" placeholder="Поиск" value="{{ search_query|default:'' }}">
+                        <input type="text" name="search" placeholder="Поиск" value="{{ search_query|default:'' }}" onkeypress="if(event.key==='Enter') this.form.submit()">
                         {% if selected_category_name %}
                             <input type="hidden" name="category" value="{{ selected_category_name }}">
                             <input type="hidden" name="category_type" value="{{ selected_category_type }}">

@@ -4640,7 +4640,7 @@ def main_page_moderator(request):
             updates = get_startup_updates(startup)
             
             # Всегда ведем на создание чата, проверка будет в космочате
-            chat_url = f"/cosmochat/start-chat/{startup.owner.user_id}/" if startup.owner else "/cosmochat/"
+            chat_url = f"/cosmochat/?start_chat_with={startup.owner.user_id}" if startup.owner else "/cosmochat/"
             
             carousel_data.append({
                 "startup_id": startup.startup_id,
@@ -4660,7 +4660,7 @@ def main_page_moderator(request):
                 updates = get_startup_updates(startup)
                 
                 # Всегда ведем на создание чата, проверка будет в космочате
-                chat_url = f"/cosmochat/start-chat/{startup.owner.user_id}/" if startup.owner else "/cosmochat/"
+                chat_url = f"/cosmochat/?start_chat_with={startup.owner.user_id}" if startup.owner else "/cosmochat/"
                 
                 carousel_data.append({
                     "startup_id": startup.startup_id,
