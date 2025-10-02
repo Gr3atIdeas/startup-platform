@@ -213,8 +213,8 @@ export default {
   overflow: hidden;
   flex: 1;
   box-sizing: border-box;
-  width: 100vw;
-  max-width: 100vw;
+  width: calc(801px + 39px + 200px);
+  max-width: calc(801px + 39px + 200px);
   position: relative;
   height: 779px;
   margin: 0;
