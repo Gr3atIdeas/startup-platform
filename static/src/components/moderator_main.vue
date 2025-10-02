@@ -117,7 +117,6 @@ export default {
   color: white;
   font-family: 'Unbounded', sans-serif;
   width: 100%;
-  overflow-x: hidden;
 }
 
 .dashboard-grid {
