@@ -4646,7 +4646,7 @@ def main_page_moderator(request):
                 "total_investors": startup.total_investors or 0,
                 "total_amount": float(startup.total_amount or 0),
                 "updates": updates,
-                "chat_url": f"/cosmochat/?startup_id={startup.startup_id}",
+                "chat_url": f"/start-chat/{startup.owner.user_id}/" if startup.owner else "/cosmochat/",
                 "startup_url": f"/startup/{startup.startup_id}/"
             })
         
@@ -4662,7 +4662,7 @@ def main_page_moderator(request):
                     "total_investors": 0,
                     "total_amount": 0,
                     "updates": updates,
-                    "chat_url": f"/cosmochat/?startup_id={startup.startup_id}",
+                    "chat_url": f"/start-chat/{startup.owner.user_id}/" if startup.owner else "/cosmochat/",
                     "startup_url": f"/startup/{startup.startup_id}/"
                 })
         

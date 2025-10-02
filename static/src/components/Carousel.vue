@@ -138,7 +138,8 @@ export default {
 .carousel-section {
   padding: 0;
   margin-top: 45px;
-  width: 100vw;
+  width: 100%;
+  max-width: 100vw;
   position: relative;
   left: 0;
   transform: none;
@@ -191,7 +192,7 @@ export default {
     }
 
     &.right {
-      right: 40px;
+      right: 20px;
     }
     img {
       width: 50px;
@@ -202,8 +203,8 @@ export default {
 }
 
 .carousel-container-wrapper {
-  background: rgba(0, 0, 0, 0.18);
-  border-radius: 0;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
   backdrop-filter: blur(10px);
   padding: 54px 0 54px 54px;
   overflow: visible;
@@ -230,7 +231,7 @@ export default {
   background-position: center;
   box-shadow: 6px 6px 10px rgba(123, 97, 255, 0.25);
   border-radius: 10px;
-  outline: 1px #c6bbfe solid;
+  border: 1px solid #c6bbfe;
   overflow: hidden;
   padding: 32px;
   display: flex;
