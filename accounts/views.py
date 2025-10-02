@@ -5159,31 +5159,85 @@ def moderator_dashboard(request):
     pending_franchises_list = Franchises.objects.filter(status="pending")
     pending_agencies_list = Agencies.objects.filter(status="pending")
     pending_specialists_list = Specialists.objects.filter(status="pending")
-    all_categories = Directions.objects.all().order_by("direction_name")
+    
+    # Получаем все категории для разных типов заявок
+    startup_categories = Directions.objects.all().order_by("direction_name")
+    franchise_categories = FranchiseDirections.objects.all().order_by("direction_name")
+    
+    # Категории для агентств и специалистов (из customization_data)
+    agency_categories = [
+        "Веб-разработка", "Мобильная разработка", "Дизайн", "Маркетинг", 
+        "ИИ", "Брендинг", "Видео и мультимедиа"
+    ]
+    specialist_categories = [
+        "Веб-разработка", "Мобильная разработка", "Дизайн", "Маркетинг", 
+        "ИИ", "Брендинг", "Видео и мультимедиа"
+    ]
+    
+    # Объединяем все категории для фильтра
+    all_categories = []
+    for cat in startup_categories:
+        all_categories.append({"name": cat.direction_name, "type": "startup"})
+    for cat in franchise_categories:
+        all_categories.append({"name": cat.direction_name, "type": "franchise"})
+    for cat in agency_categories:
+        all_categories.append({"name": cat, "type": "agency"})
+    for cat in specialist_categories:
+        all_categories.append({"name": cat, "type": "specialist"})
+    
     selected_category_name = request.GET.get("category")
+    selected_category_type = request.GET.get("category_type", "startup")
     sort_order = request.GET.get("sort")
     filter_type = request.GET.get("filter")
+    
     if filter_type == "all":
         selected_category_name = None
+        selected_category_type = None
         sort_order = None
+    
+    # Применяем фильтры по категориям
     if selected_category_name:
-        pending_startups_list = pending_startups_list.filter(
-            direction__direction_name__iexact=selected_category_name
-        )
+        if selected_category_type == "startup":
+            pending_startups_list = pending_startups_list.filter(
+                direction__direction_name__iexact=selected_category_name
+            )
+        elif selected_category_type == "franchise":
+            pending_franchises_list = pending_franchises_list.filter(
+                direction__direction_name__iexact=selected_category_name
+            )
+        elif selected_category_type == "agency":
+            pending_agencies_list = pending_agencies_list.filter(
+                customization_data__agency_category__iexact=selected_category_name
+            )
+        elif selected_category_type == "specialist":
+            pending_specialists_list = pending_specialists_list.filter(
+                customization_data__specialist_category__iexact=selected_category_name
+            )
+    
+    # Применяем сортировку
     if sort_order == "newest":
         if hasattr(Startups, "created_at"):
             pending_startups_list = pending_startups_list.order_by("-created_at")
-        else:
-            pending_startups_list = pending_startups_list.order_by(
-                "-startup_id"
-            )
-    else:
-        if hasattr(Startups, "created_at"):
-            pending_startups_list = pending_startups_list.order_by(
-                "-created_at"
-            )
+            pending_franchises_list = pending_franchises_list.order_by("-created_at")
+            pending_agencies_list = pending_agencies_list.order_by("-created_at")
+            pending_specialists_list = pending_specialists_list.order_by("-created_at")
         else:
             pending_startups_list = pending_startups_list.order_by("-startup_id")
+            pending_franchises_list = pending_franchises_list.order_by("-franchise_id")
+            pending_agencies_list = pending_agencies_list.order_by("-agency_id")
+            pending_specialists_list = pending_specialists_list.order_by("-specialist_id")
+    else:
+        if hasattr(Startups, "created_at"):
+            pending_startups_list = pending_startups_list.order_by("-created_at")
+            pending_franchises_list = pending_franchises_list.order_by("-created_at")
+            pending_agencies_list = pending_agencies_list.order_by("-created_at")
+            pending_specialists_list = pending_specialists_list.order_by("-created_at")
+        else:
+            pending_startups_list = pending_startups_list.order_by("-startup_id")
+            pending_franchises_list = pending_franchises_list.order_by("-franchise_id")
+            pending_agencies_list = pending_agencies_list.order_by("-agency_id")
+            pending_specialists_list = pending_specialists_list.order_by("-specialist_id")
+    
     context = {
         "pending_startups": pending_startups_list,
         "pending_franchises": pending_franchises_list,
@@ -5191,6 +5245,7 @@ def moderator_dashboard(request):
         "pending_specialists": pending_specialists_list,
         "all_categories": all_categories,
         "selected_category_name": selected_category_name,
+        "selected_category_type": selected_category_type,
         "current_sort_order": sort_order,
         "filter_type": filter_type,
     }

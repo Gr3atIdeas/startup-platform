@@ -53,12 +53,35 @@
     .filter-button.inactive img.filter-icon {
         filter: none;
     }
+    
+    .category-section {
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+    }
+    
+    .category-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+    
+    .category-section-title {
+        font-weight: bold;
+        color: #333;
+        padding: 8px 16px 4px 16px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        background-color: #f5f5f5;
+        margin: 0 -5px 5px -5px;
+    }
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const filterButtons = document.querySelectorAll('.filter-button');
     const currentUrlParams = new URLSearchParams(window.location.search);
     const currentCategory = decodeURIComponent(currentUrlParams.get('category') || '');
+    const currentCategoryType = currentUrlParams.get('category_type') || 'startup';
     const currentSort = currentUrlParams.get('sort');
     const currentFilter = currentUrlParams.get('filter');
 
@@ -85,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (currentCategory && categoryButtonText) {
         // Попробуем найти элемент в списке категорий с таким значением, чтобы получить его текстовое представление
         let foundCategoryText = currentCategory;
-        const categoryLink = categoryDropdownMenu.querySelector(`a[href*="category=${encodeURIComponent(currentCategory)}"]`);
+        const categoryLink = categoryDropdownMenu.querySelector(`a[data-category-value="${currentCategory}"][data-category-type="${currentCategoryType}"]`);
         if (categoryLink) {
             foundCategoryText = categoryLink.textContent.trim();
         }
@@ -226,35 +249,76 @@ document.addEventListener('DOMContentLoaded', function () {
                     </a>
                     <div class="category-dropdown-menu" id="categoryDropdownMenu">
                         {% if all_categories %}
-                            {% for category_obj in all_categories %} 
-                                <a href="?category={{ category_obj.direction_name|urlencode }}{% if current_sort_order %}&sort={{ current_sort_order }}{% endif %}" 
-                                   data-category-value="{{ category_obj.direction_name }}">
-                                    {% with original_name=category_obj.direction_name|lower %}
-                                        {% if original_name == "medicine" %}Медицина
-                                        {% elif original_name == "auto" %}Автомобили
-                                        {% elif original_name == "delivery" %}Доставка
-                                        {% elif original_name == "cafe" or original_name == "кафе/рестораны" %}Кафе/рестораны
-                                        {% elif original_name == "fastfood" %}Фастфуд
-                                        {% elif original_name == "health" %}Здоровье
-                                        {% elif original_name == "beauty" %}Красота
-                                        {% elif original_name == "transport" %}Транспорт
-                                        {% elif original_name == "sport" %}Спорт
-                                        {% elif original_name == "psychology" %}Психология
-                                        {% elif original_name == "ai" or original_name == "ии" %}ИИ
-                                        {% elif original_name == "finance" %}Финансы
-                                        {% elif original_name == "healthcare" %}Здравоохранение
-                                        {% elif original_name == "technology" %}Технологии
-                                        {% else %}{{ category_obj.direction_name|capfirst }}
-                                        {% endif %}
-                                    {% endwith %}
-                                </a>
-                            {% endfor %}
+                            <div class="category-section">
+                                <div class="category-section-title">Стартапы</div>
+                                {% for category in all_categories %}
+                                    {% if category.type == "startup" %}
+                                        <a href="?category={{ category.name|urlencode }}&category_type=startup{% if current_sort_order %}&sort={{ current_sort_order }}{% endif %}" 
+                                           data-category-value="{{ category.name }}" data-category-type="startup">
+                                            {% with original_name=category.name|lower %}
+                                                {% if original_name == "medicine" %}Медицина
+                                                {% elif original_name == "auto" %}Автомобили
+                                                {% elif original_name == "delivery" %}Доставка
+                                                {% elif original_name == "cafe" or original_name == "кафе/рестораны" %}Кафе/рестораны
+                                                {% elif original_name == "fastfood" %}Фастфуд
+                                                {% elif original_name == "health" %}Здоровье
+                                                {% elif original_name == "beauty" %}Красота
+                                                {% elif original_name == "transport" %}Транспорт
+                                                {% elif original_name == "sport" %}Спорт
+                                                {% elif original_name == "psychology" %}Психология
+                                                {% elif original_name == "ai" or original_name == "ии" %}ИИ
+                                                {% elif original_name == "finance" %}Финансы
+                                                {% elif original_name == "healthcare" %}Здравоохранение
+                                                {% elif original_name == "technology" %}Технологии
+                                                {% else %}{{ category.name|capfirst }}
+                                                {% endif %}
+                                            {% endwith %}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="category-section">
+                                <div class="category-section-title">Франшизы</div>
+                                {% for category in all_categories %}
+                                    {% if category.type == "franchise" %}
+                                        <a href="?category={{ category.name|urlencode }}&category_type=franchise{% if current_sort_order %}&sort={{ current_sort_order }}{% endif %}" 
+                                           data-category-value="{{ category.name }}" data-category-type="franchise">
+                                            {{ category.name|capfirst }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="category-section">
+                                <div class="category-section-title">Агентства</div>
+                                {% for category in all_categories %}
+                                    {% if category.type == "agency" %}
+                                        <a href="?category={{ category.name|urlencode }}&category_type=agency{% if current_sort_order %}&sort={{ current_sort_order }}{% endif %}" 
+                                           data-category-value="{{ category.name }}" data-category-type="agency">
+                                            {{ category.name }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="category-section">
+                                <div class="category-section-title">Специалисты</div>
+                                {% for category in all_categories %}
+                                    {% if category.type == "specialist" %}
+                                        <a href="?category={{ category.name|urlencode }}&category_type=specialist{% if current_sort_order %}&sort={{ current_sort_order }}{% endif %}" 
+                                           data-category-value="{{ category.name }}" data-category-type="specialist">
+                                            {{ category.name }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         {% else %}
                             <span style="padding: 10px 16px; display: block; color: #555; font-size: 14px;">Категорий нет</span>
                         {% endif %}
                     </div>
                 </div>
-                <a href="#" class="filter-button" id="newFilterButton" data-filter-type="new" data-sort-value="newest">
+                <a href="?sort=newest{% if selected_category_name %}&category={{ selected_category_name|urlencode }}&category_type={{ selected_category_type }}{% endif %}" class="filter-button" id="newFilterButton" data-filter-type="new" data-sort-value="newest">
                     <img src="{% static 'accounts/images/icons/swap-vertical-outline.svg' %}" alt="Новые" class="filter-icon">
                     Новые
                 </a>
