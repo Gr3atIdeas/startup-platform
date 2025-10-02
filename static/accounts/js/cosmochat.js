@@ -54,15 +54,6 @@ document.addEventListener('DOMContentLoaded', function () {
         messageFormNew.addEventListener('submit', handleSendMessage);
     }
     
-    // Проверяем наличие ошибки self_chat
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('error') === 'self_chat') {
-        alert('Нельзя создать чат с самим собой');
-        // Убираем параметр error из URL
-        const newUrl = new URL(window.location);
-        newUrl.searchParams.delete('error');
-        window.history.replaceState({}, '', newUrl);
-    }
     
     if (urlParams.get('new_chat') === 'true' && urlParams.get('open_chat_id')) {
         const newChatId = urlParams.get('open_chat_id');
@@ -1171,7 +1162,12 @@ function startChat() {
         }
         closeProfileModal()
       } else {
-        alert(data.error || 'Ошибка при создании чата')
+        // Проверяем специальную ошибку о попытке создать чат с самим собой
+        if (data.error && data.error.includes('самим собой')) {
+          alert('Нельзя создать чат с самим собой')
+        } else {
+          alert(data.error || 'Ошибка при создании чата')
+        }
       }
       const startChatButtonEl2 = document.getElementById('startChatBtn');
       if (startChatButtonEl2) startChatButtonEl2.disabled = false;
@@ -1675,7 +1671,12 @@ function startChatWithUser(userId) {
           .querySelector('.main-chat-area-new')
           .scrollIntoView({ behavior: 'smooth', block: 'start' })
       } else {
-        alert(`Не удалось начать чат: ${data.error || 'Неизвестная ошибка'}`)
+        // Проверяем специальную ошибку о попытке создать чат с самим собой
+        if (data.error && data.error.includes('самим собой')) {
+          alert('Нельзя создать чат с самим собой')
+        } else {
+          alert(`Не удалось начать чат: ${data.error || 'Неизвестная ошибка'}`)
+        }
       }
     })
     .catch((error) => {

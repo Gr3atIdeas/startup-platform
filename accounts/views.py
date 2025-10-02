@@ -4639,12 +4639,8 @@ def main_page_moderator(request):
             # Получаем обновления для стартапа
             updates = get_startup_updates(startup)
             
-            # Проверяем, не является ли владелец стартапа тем же модератором
-            chat_url = "/cosmochat/"
-            if startup.owner and startup.owner != request.user:
-                chat_url = f"/cosmochat/start-chat/{startup.owner.user_id}/"
-            elif startup.owner == request.user:
-                chat_url = "/cosmochat/?error=self_chat"
+            # Всегда ведем на создание чата, проверка будет в космочате
+            chat_url = f"/cosmochat/start-chat/{startup.owner.user_id}/" if startup.owner else "/cosmochat/"
             
             carousel_data.append({
                 "startup_id": startup.startup_id,
@@ -4663,12 +4659,8 @@ def main_page_moderator(request):
             for startup in approved_startups:
                 updates = get_startup_updates(startup)
                 
-                # Проверяем, не является ли владелец стартапа тем же модератором
-                chat_url = "/cosmochat/"
-                if startup.owner and startup.owner != request.user:
-                    chat_url = f"/cosmochat/start-chat/{startup.owner.user_id}/"
-                elif startup.owner == request.user:
-                    chat_url = "/cosmochat/?error=self_chat"
+                # Всегда ведем на создание чата, проверка будет в космочате
+                chat_url = f"/cosmochat/start-chat/{startup.owner.user_id}/" if startup.owner else "/cosmochat/"
                 
                 carousel_data.append({
                     "startup_id": startup.startup_id,
