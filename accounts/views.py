@@ -4575,7 +4575,45 @@ def main_page_moderator(request):
     """
     if not getattr(request.user, "role", None) or (request.user.role.role_name or "").lower() != "moderator":
         return redirect("home")
-    return render(request, "accounts/moderator_main.html")
+    
+    # Получаем стартапы с активными инвестициями для карусели
+    startups_with_investments = Startups.objects.filter(
+        status="approved",
+        investmenttransactions__isnull=False
+    ).annotate(
+        total_investors=Count("investmenttransactions", distinct=True),
+        total_amount=Sum("investmenttransactions__amount"),
+        latest_investment=Max("investmenttransactions__created_at")
+    ).order_by("-latest_investment")[:6]
+    
+    carousel_data = []
+    for startup in startups_with_investments:
+        # Получаем последние инвестиции для отображения обновлений
+        recent_investments = InvestmentTransactions.objects.filter(
+            startup=startup
+        ).select_related("investor").order_by("-created_at")[:3]
+        
+        updates = []
+        for investment in recent_investments:
+            if investment.investor:
+                updates.append(f"{investment.investor.get_full_name()} инвестировал {investment.amount:,.0f} ₽".replace(",", " "))
+        
+        carousel_data.append({
+            "startup_id": startup.startup_id,
+            "name": startup.title,
+            "logo_url": startup.get_logo_url() or "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
+            "total_investors": startup.total_investors,
+            "total_amount": float(startup.total_amount or 0),
+            "updates": updates,
+            "chat_url": f"/cosmochat/?startup_id={startup.startup_id}",
+            "startup_url": f"/startup/{startup.startup_id}/"
+        })
+    
+    context = {
+        "carousel_data": carousel_data
+    }
+    
+    return render(request, "accounts/moderator_main.html", context)
 @login_required
 def investor_main(request):
     """
@@ -6824,7 +6862,6 @@ def support_ticket_detail(request, ticket_id):
                 ticket.refresh_from_db()
                 messages.success(request, "Заявка успешно обновлена.")
                 return redirect("support_ticket_detail", ticket_id=ticket.ticket_id)
-            else:
         else:
             form = ModeratorTicketForm(instance=ticket)
 

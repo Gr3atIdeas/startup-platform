@@ -18,28 +18,27 @@
           class="carousel-container"
           :style="{ transform: `translateX(-${currentSlide * (801 + 39)}px)` }"
         >
-          <div class="carousel-card" v-for="i in 3" :key="i">
+          <div class="carousel-card" v-for="startup in carouselData" :key="startup.startup_id">
             <img
-              src="/static/accounts/images/main_page_moderator/planet_logo_carusel.webp"
+              :src="startup.logo_url"
               class="carousel-avatar"
-              alt="Planet Logo"
+              :alt="startup.name"
             />
             <div class="carousel-card-header">
-              <span class="startup-name">Ромашка</span>
+              <span class="startup-name">{{ startup.name }}</span>
               <div class="investment-info">
-                <span>Вы инвестировали</span>
-                <span class="amount">3 675 998 ₽</span>
+                <span>Всего инвестировано</span>
+                <span class="amount">{{ formatAmount(startup.total_amount) }} ₽</span>
               </div>
             </div>
             <div class="carousel-card-footer">
               <div class="updates">
-                <p>User 67346 инвестировал 7 899 ₽</p>
-                <p>User 67346 понравился комментарий user 74839</p>
-                <p>Вышло обновления новости по стартапу</p>
+                <p v-for="update in startup.updates" :key="update">{{ update }}</p>
+                <p v-if="startup.updates.length === 0">Нет недавних инвестиций</p>
               </div>
               <div class="actions">
                 <div class="chat-action">
-                  <a href="/cosmochat/" class="btn-chat">
+                  <a :href="startup.chat_url" class="btn-chat">
                     <img
                       src="/static/accounts/images/main_page_moderator/chatbubbles-outline.svg"
                       alt="Чат"
@@ -47,7 +46,7 @@
                     <span>Чат</span>
                   </a>
                 </div>
-                <a href="/cosmochat/" class="btn-primary">К стартапу</a>
+                <a :href="startup.startup_url" class="btn-primary">К стартапу</a>
               </div>
             </div>
           </div>
@@ -76,10 +75,20 @@
 <script>
 export default {
   name: 'Carousel',
+  props: {
+    carouselData: {
+      type: Array,
+      default: () => []
+    }
+  },
   data() {
     return {
       currentSlide: 0,
-      totalSlides: 3,
+    }
+  },
+  computed: {
+    totalSlides() {
+      return this.carouselData.length || 1
     }
   },
   methods: {
@@ -90,6 +99,9 @@ export default {
       this.currentSlide =
         (this.currentSlide - 1 + this.totalSlides) % this.totalSlides
     },
+    formatAmount(amount) {
+      return new Intl.NumberFormat('ru-RU').format(amount)
+    }
   },
 }
 </script>
@@ -152,7 +164,7 @@ export default {
   padding-left: calc((100vw - 1303px) / 2);
   width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
 
   .carousel-arrow {
     background: transparent;
@@ -191,9 +203,10 @@ export default {
   border-radius: 32px 0 0 32px;
   backdrop-filter: blur(10px);
   padding: 54px 0 54px 54px;
-  overflow: hidden;
+  overflow: visible;
   flex: 1;
   box-sizing: border-box;
+  width: calc(100% - 200px);
 }
 
 .carousel-container {

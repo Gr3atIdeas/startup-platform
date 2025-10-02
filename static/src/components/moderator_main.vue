@@ -80,7 +80,7 @@
       </div>
     </div>
 
-    <Carousel />
+    <Carousel :carousel-data="carouselData" />
   </div>
 </template>
 
@@ -92,6 +92,12 @@ export default {
   components: {
     Carousel,
   },
+  props: {
+    carouselData: {
+      type: Array,
+      default: () => []
+    }
+  }
 }
 </script>
 
