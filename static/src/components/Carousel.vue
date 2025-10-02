@@ -1,5 +1,5 @@
 <template>
-  <div class="carousel-section">
+  <div class="carousel-section" v-if="carouselData.length > 0">
     <div class="carousel-title-container">
       <h2>
         Чат<br />
@@ -34,7 +34,7 @@
             <div class="carousel-card-footer">
               <div class="updates">
                 <p v-for="update in startup.updates" :key="update">{{ update }}</p>
-                <p v-if="startup.updates.length === 0">Нет недавних инвестиций</p>
+                <p v-if="startup.updates.length === 0">Нет недавних обновлений</p>
               </div>
               <div class="actions">
                 <div class="chat-action">
@@ -88,16 +88,20 @@ export default {
   },
   computed: {
     totalSlides() {
-      return this.carouselData.length || 1
+      return this.carouselData.length
     }
   },
   methods: {
     nextSlide() {
-      this.currentSlide = (this.currentSlide + 1) % this.totalSlides
+      if (this.totalSlides > 0) {
+        this.currentSlide = (this.currentSlide + 1) % this.totalSlides
+      }
     },
     prevSlide() {
-      this.currentSlide =
-        (this.currentSlide - 1 + this.totalSlides) % this.totalSlides
+      if (this.totalSlides > 0) {
+        this.currentSlide =
+          (this.currentSlide - 1 + this.totalSlides) % this.totalSlides
+      }
     },
     formatAmount(amount) {
       return new Intl.NumberFormat('ru-RU').format(amount)

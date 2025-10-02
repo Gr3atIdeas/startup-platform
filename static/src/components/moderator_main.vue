@@ -14,7 +14,6 @@
             <a href="/deals/" class="btn-primary">Перейти</a>
           </div>
         </div>
-        <div class="notification-badge">1</div>
       </div>
       <div class="card applications-card">
         <div class="card-inner">
@@ -29,7 +28,6 @@
             <a href="/moderator-dashboard/" class="btn-primary">Перейти</a>
           </div>
         </div>
-        <div class="notification-badge">2</div>
       </div>
       <div class="card image-card-tall">
         <div class="card-inner">
@@ -61,7 +59,6 @@
             alt="Новости"
           />
         </div>
-        <div class="notification-badge">4</div>
       </div>
       <div class="card support-card">
         <div class="card-inner">
@@ -76,7 +73,6 @@
             <a href="/support/" class="btn-primary">Перейти</a>
           </div>
         </div>
-        <div class="notification-badge">3</div>
       </div>
     </div>
 
@@ -275,23 +271,6 @@ export default {
     height: 180px;
   }
 
-  .notification-badge {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    background: #ff1b1b;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    font-weight: 400;
-    z-index: 5;
-    top: -8px;
-    right: -8px;
-    border: 2px solid #0f0f2d;
-    color: #fff;
-  }
 }
 
 .btn-primary {

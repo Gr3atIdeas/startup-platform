@@ -4568,6 +4568,53 @@ def edit_startup(request, startup_id):
             "timeline_steps": timeline_steps,
         },
     )
+def get_startup_updates(startup):
+    """
+    Получает обновления для стартапа (инвестиции и комментарии)
+    """
+    updates = []
+    
+    try:
+        # Получаем последние инвестиции
+        recent_investments = InvestmentTransactions.objects.filter(
+            startup=startup
+        ).select_related("investor").order_by("-created_at")[:3]
+        
+        for investment in recent_investments:
+            if investment.investor:
+                updates.append({
+                    "text": f"{investment.investor.get_full_name()} инвестировал {investment.amount:,.0f} ₽".replace(",", " "),
+                    "timestamp": investment.created_at,
+                    "type": "investment"
+                })
+        
+        # Получаем последние комментарии
+        recent_comments = Comments.objects.filter(
+            startup_id=startup
+        ).select_related("user_id").order_by("-created_at")[:3]
+        
+        for comment in recent_comments:
+            if comment.user_id:
+                updates.append({
+                    "text": f"{comment.user_id.get_full_name()} оставил комментарий",
+                    "timestamp": comment.created_at,
+                    "type": "comment"
+                })
+        
+        # Сортируем по времени (новые сверху)
+        updates.sort(key=lambda x: x["timestamp"] if x["timestamp"] else datetime.min, reverse=True)
+        
+        # Берем только первые 3 обновления
+        updates = updates[:3]
+        
+        # Возвращаем только тексты для простоты
+        return [update["text"] for update in updates]
+        
+    except Exception as e:
+        # В случае ошибки возвращаем пустой массив
+        return []
+
+
 @login_required
 def main_page_moderator(request):
     """
@@ -4589,22 +4636,8 @@ def main_page_moderator(request):
         ).order_by("-startup_id")[:6]
         
         for startup in startups_with_investments:
-            # Получаем последние инвестиции для обновлений
-            recent_investments = InvestmentTransactions.objects.filter(
-                startup=startup
-            ).select_related("investor").order_by("-created_at")[:3]
-            
-            updates = []
-            for investment in recent_investments:
-                if investment.investor:
-                    updates.append(f"{investment.investor.get_full_name()} инвестировал {investment.amount:,.0f} ₽".replace(",", " "))
-            
-            if not updates:
-                updates = [
-                    "Стартап готов к инвестициям",
-                    "Ожидаются первые инвесторы", 
-                    "Проект в активной разработке"
-                ]
+            # Получаем обновления для стартапа
+            updates = get_startup_updates(startup)
             
             carousel_data.append({
                 "startup_id": startup.startup_id,
@@ -4621,58 +4654,23 @@ def main_page_moderator(request):
         if not carousel_data:
             approved_startups = Startups.objects.filter(status="approved").order_by("-startup_id")[:6]
             for startup in approved_startups:
+                updates = get_startup_updates(startup)
                 carousel_data.append({
                     "startup_id": startup.startup_id,
                     "name": startup.title,
                     "logo_url": startup.get_logo_url() or "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
                     "total_investors": 0,
                     "total_amount": 0,
-                    "updates": [
-                        "Стартап готов к инвестициям",
-                        "Ожидаются первые инвесторы",
-                        "Проект в активной разработке"
-                    ],
+                    "updates": updates,
                     "chat_url": f"/cosmochat/?startup_id={startup.startup_id}",
                     "startup_url": f"/startup/{startup.startup_id}/"
                 })
         
-        # Если все еще нет данных, показываем заглушки
-        if not carousel_data:
-            carousel_data = [
-                {
-                    "startup_id": 1,
-                    "name": "Нет активных стартапов",
-                    "logo_url": "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
-                    "total_investors": 0,
-                    "total_amount": 0,
-                    "updates": [
-                        "Ожидаются новые проекты",
-                        "Модератор готов к работе",
-                        "Система работает"
-                    ],
-                    "chat_url": "/cosmochat/",
-                    "startup_url": "/startups/"
-                }
-            ]
+        # Если нет данных, оставляем пустой массив
             
     except Exception as e:
-        # В случае ошибки показываем заглушки
-        carousel_data = [
-            {
-                "startup_id": 1,
-                "name": "Ошибка загрузки",
-                "logo_url": "/static/accounts/images/main_page_moderator/planet_logo_carusel.webp",
-                "total_investors": 0,
-                "total_amount": 0,
-                "updates": [
-                    "Данные загружаются",
-                    "Пожалуйста, подождите",
-                    "Система работает"
-                ],
-                "chat_url": "/cosmochat/",
-                "startup_url": "/startups/"
-            }
-        ]
+        # В случае ошибки оставляем пустой массив
+        carousel_data = []
     
     import json
     context = {
