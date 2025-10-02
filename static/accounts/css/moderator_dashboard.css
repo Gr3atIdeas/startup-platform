@@ -161,12 +161,11 @@ div.moderator-page-container
   justify-content: flex-start; 
   align-items: stretch; 
   gap: 20px;
-  display: flex; 
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .startup-card-item {
-  width: calc(50% - 10px); 
   max-width: none; 
   padding: 20px;
   background: white;
@@ -239,14 +238,13 @@ div.moderator-page-container
   display: flex;
 }
 
-.detail-label {
-  align-self: stretch;
-  color: rgb(0 0 0 / 32%);
-  font-size: 12px;
+.application-type {
+  color: #7b61ff;
+  font-size: 14px;
   font-family: Unbounded, sans-serif;
-  font-weight: 300;
-  letter-spacing: 0.12px;
-  word-wrap: break-word;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .author-info {

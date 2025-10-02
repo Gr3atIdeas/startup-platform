@@ -53,7 +53,17 @@ document.addEventListener('DOMContentLoaded', function () {
         messageFormNew.dataset.eventListener = 'true';
         messageFormNew.addEventListener('submit', handleSendMessage);
     }
+    
+    // Проверяем наличие ошибки self_chat
     const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('error') === 'self_chat') {
+        alert('Нельзя создать чат с самим собой');
+        // Убираем параметр error из URL
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.delete('error');
+        window.history.replaceState({}, '', newUrl);
+    }
+    
     if (urlParams.get('new_chat') === 'true' && urlParams.get('open_chat_id')) {
         const newChatId = urlParams.get('open_chat_id');
         loadChat(newChatId);

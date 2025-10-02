@@ -4639,6 +4639,13 @@ def main_page_moderator(request):
             # Получаем обновления для стартапа
             updates = get_startup_updates(startup)
             
+            # Проверяем, не является ли владелец стартапа тем же модератором
+            chat_url = "/cosmochat/"
+            if startup.owner and startup.owner != request.user:
+                chat_url = f"/cosmochat/start-chat/{startup.owner.user_id}/"
+            elif startup.owner == request.user:
+                chat_url = "/cosmochat/?error=self_chat"
+            
             carousel_data.append({
                 "startup_id": startup.startup_id,
                 "name": startup.title,
@@ -4646,7 +4653,7 @@ def main_page_moderator(request):
                 "total_investors": startup.total_investors or 0,
                 "total_amount": float(startup.total_amount or 0),
                 "updates": updates,
-                "chat_url": f"/cosmochat/start-chat/{startup.owner.user_id}/" if startup.owner else "/cosmochat/",
+                "chat_url": chat_url,
                 "startup_url": f"/startups/{startup.startup_id}/"
             })
         
@@ -4655,6 +4662,14 @@ def main_page_moderator(request):
             approved_startups = Startups.objects.filter(status="approved").order_by("-startup_id")[:6]
             for startup in approved_startups:
                 updates = get_startup_updates(startup)
+                
+                # Проверяем, не является ли владелец стартапа тем же модератором
+                chat_url = "/cosmochat/"
+                if startup.owner and startup.owner != request.user:
+                    chat_url = f"/cosmochat/start-chat/{startup.owner.user_id}/"
+                elif startup.owner == request.user:
+                    chat_url = "/cosmochat/?error=self_chat"
+                
                 carousel_data.append({
                     "startup_id": startup.startup_id,
                     "name": startup.title,
@@ -4662,7 +4677,7 @@ def main_page_moderator(request):
                     "total_investors": 0,
                     "total_amount": 0,
                     "updates": updates,
-                    "chat_url": f"/cosmochat/start-chat/{startup.owner.user_id}/" if startup.owner else "/cosmochat/",
+                    "chat_url": chat_url,
                     "startup_url": f"/startups/{startup.startup_id}/"
                 })
         
