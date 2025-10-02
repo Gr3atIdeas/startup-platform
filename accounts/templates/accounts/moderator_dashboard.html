@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentCategoryType = currentUrlParams.get('category_type') || 'startup';
     const currentSort = currentUrlParams.get('sort');
     const currentFilter = currentUrlParams.get('filter');
+    const search_query = currentUrlParams.get('search') || '';
 
     filterButtons.forEach(button => {
         button.classList.remove('active');
@@ -92,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const buttonFilterType = button.dataset.filterType;
         const buttonSortValue = button.dataset.sortValue;
 
-        if (buttonFilterType === 'all' && !currentCategory && !currentSort && (!currentFilter || currentFilter === 'all')) {
+        if (buttonFilterType === 'all' && !currentCategory && !currentSort && !search_query) {
             button.classList.add('active');
             button.classList.remove('inactive');
         } else if (buttonFilterType === 'new' && currentSort === 'newest') {
@@ -119,16 +120,38 @@ document.addEventListener('DOMContentLoaded', function () {
         categoryButtonText.textContent = 'Категории'; // Текст по умолчанию
     }
     
-    // Если активна категория или сортировка, кнопка "Все" не должна быть активной
+    // Если активна категория, сортировка или поиск, кнопка "Все" не должна быть активной
     const allButton = document.getElementById('allFilterButton');
     if (allButton) {
-        if (currentCategory || currentSort) {
+        if (currentCategory || currentSort || search_query) {
             allButton.classList.remove('active');
             allButton.classList.add('inactive');
         } else {
             allButton.classList.add('active');
             allButton.classList.remove('inactive');
         }
+    }
+
+    // Обработка клика по кнопке "Новые" - переключатель
+    const newButton = document.getElementById('newFilterButton');
+    if (newButton) {
+        newButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentSort = urlParams.get('sort');
+            
+            // Если сейчас сортировка по новым, убираем её
+            if (currentSort === 'newest') {
+                urlParams.delete('sort');
+            } else {
+                // Если нет сортировки, добавляем сортировку по новым
+                urlParams.set('sort', 'newest');
+            }
+            
+            // Переходим на новую страницу
+            window.location.href = '?' + urlParams.toString();
+        });
     }
 
     if (categoryFilterButton && categoryDropdownMenu) {
@@ -251,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <button type="submit" style="display: none;"></button>
                     </form>
                 </div>
-                <a href="?filter=all" class="filter-button" data-filter-type="all" id="allFilterButton">Все</a>
+                <a href="?" class="filter-button" data-filter-type="all" id="allFilterButton">Все</a>
                 <div class="filter-button-group">
                     <a href="#" class="filter-button" id="categoryFilterButton" data-filter-type="category_trigger">
                         <span class="category-button-text">Категории</span>
@@ -328,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         {% endif %}
                     </div>
                 </div>
-                <a href="?sort=newest{% if selected_category_name %}&category={{ selected_category_name|urlencode }}&category_type={{ selected_category_type }}{% endif %}" class="filter-button" id="newFilterButton" data-filter-type="new" data-sort-value="newest">
+                <a href="{% if current_sort_order == 'newest' %}?{% if selected_category_name %}category={{ selected_category_name|urlencode }}&category_type={{ selected_category_type }}{% endif %}{% else %}?sort=newest{% if selected_category_name %}&category={{ selected_category_name|urlencode }}&category_type={{ selected_category_type }}{% endif %}{% endif %}" class="filter-button" id="newFilterButton" data-filter-type="new" data-sort-value="newest">
                     <img src="{% static 'accounts/images/icons/swap-vertical-outline.svg' %}" alt="Новые" class="filter-icon">
                     Новые
                 </a>

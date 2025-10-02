@@ -5252,16 +5252,11 @@ def moderator_dashboard(request):
             pending_agencies_list = pending_agencies_list.order_by("-agency_id")
             pending_specialists_list = pending_specialists_list.order_by("-specialist_id")
     else:
-        if hasattr(Startups, "created_at"):
-            pending_startups_list = pending_startups_list.order_by("-created_at")
-            pending_franchises_list = pending_franchises_list.order_by("-created_at")
-            pending_agencies_list = pending_agencies_list.order_by("-created_at")
-            pending_specialists_list = pending_specialists_list.order_by("-created_at")
-        else:
-            pending_startups_list = pending_startups_list.order_by("-startup_id")
-            pending_franchises_list = pending_franchises_list.order_by("-franchise_id")
-            pending_agencies_list = pending_agencies_list.order_by("-agency_id")
-            pending_specialists_list = pending_specialists_list.order_by("-specialist_id")
+        # Дефолтная сортировка - по ID (старые сверху)
+        pending_startups_list = pending_startups_list.order_by("startup_id")
+        pending_franchises_list = pending_franchises_list.order_by("franchise_id")
+        pending_agencies_list = pending_agencies_list.order_by("agency_id")
+        pending_specialists_list = pending_specialists_list.order_by("specialist_id")
     
     context = {
         "pending_startups": pending_startups_list,

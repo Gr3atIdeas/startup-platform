@@ -330,7 +330,7 @@ function setupSimilarSpecialistsShowMore() {
     if (chatButton) {
       chatButton.addEventListener('click', (e) => {
         e.preventDefault();
-        const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
+        const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
         if (!ownerId) {
           alert('Ошибка: не удалось определить автора специалиста');
           return;
@@ -343,7 +343,7 @@ function setupSimilarSpecialistsShowMore() {
     if (writeButton) {
       writeButton.addEventListener('click', (e) => {
         e.preventDefault();
-        const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
+        const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
         if (!ownerId) {
           alert('Ошибка: не удалось определить автора специалиста');
           return;
