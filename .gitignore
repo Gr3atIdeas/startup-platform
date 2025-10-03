@@ -9,6 +9,9 @@ env/
 __pycache__/
 
 # IDE / Editor specific
+tests/
+.pytest_cache/
+pytest.ini
 .idea/
 .vscode/*
 !.vscode/settings.json
