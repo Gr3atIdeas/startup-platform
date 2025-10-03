@@ -47,7 +47,7 @@
           />
         </div>
       </div>
-      <div class="card news-card">
+      <div v-if="isDebug" class="card news-card">
         <div class="card-inner">
           <div class="card-content left-align">
             <h3>Новости</h3>
@@ -92,6 +92,11 @@ export default {
     carouselData: {
       type: Array,
       default: () => []
+    }
+  },
+  computed: {
+    isDebug() {
+      return window.DEBUG || false
     }
   }
 }
