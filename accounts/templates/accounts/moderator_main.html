@@ -18,5 +18,6 @@
 {% block scripts %}
 <script>
   window.carouselData = {{ carousel_data|safe }};
+  window.DEBUG = {{ DEBUG|yesno:"true,false" }};
 </script>
 {% endblock %}
