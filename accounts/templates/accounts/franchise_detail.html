@@ -33,33 +33,34 @@
   <div class="top-section">
     <div class="left-column">
       <div class="franchise-detail-media-container">
-        <div class="franchise-detail-main-media-display">
-          {% if creatives_urls %}
-            <div class="franchise-detail-carousel-container">
-              <div class="franchise-detail-carousel-wrapper">
-                <div class="franchise-detail-carousel-track" id="mediaCarousel">
-                  {% for url in creatives_urls %}
-                    <div class="franchise-detail-carousel-slide {% if forloop.first %}active{% endif %}">
-                      <img src="{% get_file_url_tag url franchise.franchise_id 'creative' 'franchise' %}" 
-                           alt="Изображение {{ forloop.counter }}" 
-                           class="franchise-detail-carousel-image">
-                    </div>
-                  {% endfor %}
-                </div>
-                <div class="franchise-detail-carousel-indicators">
-                  {% for url in creatives_urls %}
-                    <span class="franchise-detail-indicator {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
-                  {% endfor %}
-                </div>
-                <button class="franchise-detail-carousel-prev" aria-label="Предыдущее изображение">
-                  <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="franchise-detail-carousel-next" aria-label="Следующее изображение">
-                  <i class="fas fa-chevron-right"></i>
-                </button>
+        {% if creatives_urls %}
+          <div class="franchise-detail-carousel-track" id="mediaCarousel">
+            {% for url in creatives_urls %}
+              <div class="franchise-detail-carousel-slide {% if forloop.first %}active{% endif %}">
+                <img src="{% get_file_url_tag url franchise.franchise_id 'creative' 'franchise' %}" 
+                     alt="Изображение {{ forloop.counter }}" 
+                     class="franchise-detail-carousel-image">
               </div>
-            </div>
-          {% else %}
+            {% endfor %}
+          </div>
+          <div class="franchise-detail-carousel-indicators">
+            {% for url in creatives_urls %}
+              <span class="franchise-detail-indicator {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
+            {% endfor %}
+          </div>
+          <button class="franchise-detail-carousel-prev" aria-label="Предыдущее изображение">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="franchise-detail-carousel-next" aria-label="Следующее изображение">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        {% endif %}
+        
+        <div class="author-avatar">
+          <img src="{% if franchise.owner.get_profile_picture_url %}{{ franchise.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ franchise.owner.username }}" class="author-avatar-img">
+        </div>
+        
+        {% if not creatives_urls %}
             <div class="franchise-detail-default-planet-display">
               <div class="space-background"></div>
               {% if franchise.planet_image %}
@@ -134,9 +135,6 @@
       <div class="author-info-left">
         <div class="author-header">Автор</div>
         <div class="author-details">
-          <div class="author-avatar">
-            <img src="{% if franchise.owner.get_profile_picture_url %}{{ franchise.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ franchise.owner.username }}" class="author-avatar-img">
-          </div>
           <div class="author-meta">
             <div class="author-name">{{ franchise.owner.first_name|default:"Автор" }} {{ franchise.owner.last_name }}</div>
             <div class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</div>
