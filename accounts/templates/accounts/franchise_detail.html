@@ -72,7 +72,7 @@
           {% endif %}
         </div>
         
-             <div class="franchise-detail-planet-sidebar">
+        <div class="franchise-detail-planet-sidebar">
           {% if user.is_authenticated and user.role.role_name == 'moderator' %}
             <form method="post" class="status-form">
               {% csrf_token %}
@@ -92,7 +92,6 @@
           
           <button class="action-button chat-button">Чат</button>
         </div>
-      </div>
       
       <div class="action-buttons-container">
         <button class="action-button primary-button">Выкупить</button>
@@ -105,40 +104,21 @@
         </div>
       </div>
       
-      <div class="investment-info-container">
-        <div class="investment-size-info">
-          <div class="investment-size-label">Размер инвестиций</div>
-          <div class="investment-size-value">{{ franchise.investment_size|default:0|floatformat:0|intcomma }} ₽</div>
+      <div class="franchise-detail-ai-rating-info">
+        <h3 class="franchise-detail-ai-rating-title">Оценка</h3>
+        <div class="franchise-detail-ai-rating-container">
+          <div class="franchise-detail-ai-rating-icon">
+            <span class="franchise-detail-ai-label">AI</span>
+          </div>
+          <span class="franchise-detail-ai-rating-value">5 из 10</span>
         </div>
-        <div class="investment-cost-info">
-          <div class="investment-cost-label">Стоимость франшизы</div>
-          <div class="investment-cost-value">{{ franchise.franchise_cost|default:0|floatformat:0|intcomma }} ₽</div>
-        </div>
+        <span class="franchise-detail-ai-rating-date">Создан {{ franchise.created_at|date:"d/m/Y" }}</span>
       </div>
-      
-            <div class="franchise-detail-ai-rating-info">
-              <h3 class="franchise-detail-ai-rating-title">Оценка</h3>
-              <div class="franchise-detail-ai-rating-container">
-                <div class="franchise-detail-ai-rating-icon">
-                  <span class="franchise-detail-ai-label">AI</span>
-                </div>
-                <span class="franchise-detail-ai-rating-value">5 из 10</span>
-              </div>
-              <span class="franchise-detail-ai-rating-date">Создан {{ franchise.created_at|date:"d/m/Y" }}</span>
-            </div>
-            
-            <div class="franchise-detail-raised-amount-info">
-              <span class="franchise-detail-raised-amount-label">Собранная сумма</span>
-              <span class="franchise-detail-raised-amount-value">{{ franchise.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
-            </div>
       
       <div class="author-info-left">
         <div class="author-header">Автор</div>
         <div class="author-details">
           <div class="author-meta">
-            <div class="author-avatar-small">
-              <img src="{% if franchise.owner.get_profile_picture_url %}{{ franchise.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ franchise.owner.username }}" class="author-avatar-small-img">
-            </div>
             <div class="author-info">
               <div class="author-name">{{ franchise.owner.first_name|default:"Автор" }} {{ franchise.owner.last_name }}</div>
               <div class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</div>
@@ -183,6 +163,11 @@
                   <span class="franchise-stats-value">{{ franchise.franchise_businesses_count|default:0 }}</span>
                 </div>
               </div>
+              
+              <div class="franchise-detail-raised-amount-info">
+                <span class="franchise-detail-raised-amount-label">Собранная сумма</span>
+                <span class="franchise-detail-raised-amount-value">{{ franchise.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
+              </div>
             </div>
 
             <div class="rating-comments-container">
@@ -198,6 +183,19 @@
                 </div>
               </div>
               <a href="#comments-section" class="comments-link">Комментарии</a>
+            </div>
+          </div>
+          
+          <div class="progress-container">
+            <div class="progress-bar-visual">
+              <div class="progress-animation-container" style="width: {{ progress_percentage|default:0 }}%;">
+                <div class="progress-planets"></div>
+              </div>
+              <span class="progress-percentage">{{ progress_percentage|default:0|floatformat:0 }}%</span>
+            </div>
+            <div class="progress-backers-info">
+              <i class="fas fa-users"></i>
+              <span id="investor-count-display">({{ investors_count }})</span>
             </div>
           </div>
 
