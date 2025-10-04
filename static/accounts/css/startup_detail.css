@@ -268,10 +268,10 @@ a:hover {
   display: flex;
   justify-content: space-between;
   gap: 31px;
-  width: 1445px;
-  max-width: 1445px;
+  width: 1303px;
+  max-width: 100%;
   margin: 0 auto 40px;
-  padding: 45px 0px 20px 71px;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -869,9 +869,29 @@ a:hover {
 
 .author-meta {
   display: flex;
-  flex-direction: column;
-  gap: 3px;
+  align-items: center;
+  gap: 11px;
   flex-grow: 1;
+}
+
+.author-avatar-small {
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.author-avatar-small-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
 
 .author-name {
@@ -932,12 +952,12 @@ a:hover {
 
   
   flex-grow: 0;
-  width: 821px; 
+  width: 799px; 
   flex-shrink: 0; 
   min-width: 0; 
   flex-direction: column;
   align-items: flex-start;
-  gap: 23px;
+  gap: 35px;
 }
 
 
