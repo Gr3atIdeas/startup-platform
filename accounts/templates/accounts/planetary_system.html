@@ -15,7 +15,7 @@
 <script id="planetary-system-data" type="application/json">
 {
   "isAuthenticated": {{ user.is_authenticated|yesno:"true,false" }},
-  "isStartuper": {{ user.is_authenticated and user.role.role_name == "startuper"|yesno:"true,false" }},
+  "isStartuper": {% if user.is_authenticated and user.role.role_name == "startuper" %}true{% else %}false{% endif %},
   "planetsData": {{ planets_data_json|safe }},
   "directionsData": {{ directions_data_json|safe }},
   "selectedGalaxy": "{{ selected_galaxy|escapejs }}",
