@@ -264,7 +264,7 @@ def send_telegram_support_message(ticket):
     safe_tg = escape_markdown_v2(telegram_handle)
 
     message_text = (
-        "🚨 *Новая заявка в техподдержку\!* 🚨\n\n"
+        "🚨 *Новая заявка в техподдержку!* 🚨\n\n"
         f"📝 *Тема:* {safe_subject}\n\n"
         f"📄 *Сообщение:*\n{safe_message}\n\n"
         f"— Техническая информация —\n"
@@ -359,7 +359,7 @@ def send_telegram_contact_form_message(name, email, subject, message):
     translated_subject = subject_translations.get(safe_subject.lower(), safe_subject)
 
     message_text = (
-        "🌐 *Новое сообщение с сайта\!* 🌐\n\n"
+        "🌐 *Новое сообщение с сайта!* 🌐\n\n"
         f"👤 *Имя:* {safe_name}\n"
         f"✉️ *Email:* `{safe_email}`\n"
         f"📝 *Тема:* {translated_subject}\n\n"

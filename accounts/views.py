@@ -3905,6 +3905,149 @@ def delete_message(request, message_id):
         status=403,
     )
 @login_required
+def reorder_files(request, entity_type, entity_id):
+    """
+    AJAX view для изменения порядка файлов (креативов)
+    """
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Only POST method allowed'}, status=405)
+    
+    try:
+        # Получаем данные из запроса
+        data = json.loads(request.body)
+        file_type = data.get('file_type')  # 'creative', 'proof', 'video'
+        new_order = data.get('new_order')  # список file_id в новом порядке
+        
+        if not file_type or not new_order:
+            return JsonResponse({'success': False, 'error': 'Missing file_type or new_order'}, status=400)
+        
+        # Получаем сущность
+        if entity_type == 'startup':
+            entity = get_object_or_404(Startups, startup_id=entity_id)
+            if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
+                return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
+        elif entity_type == 'franchise':
+            entity = get_object_or_404(Franchises, franchise_id=entity_id)
+            if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
+                return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
+        elif entity_type == 'agency':
+            entity = get_object_or_404(Agencies, agency_id=entity_id)
+            if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
+                return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
+        elif entity_type == 'specialist':
+            entity = get_object_or_404(Specialists, specialist_id=entity_id)
+            if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
+                return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid entity type'}, status=400)
+        
+        # Обновляем порядок файлов
+        if file_type == 'creative':
+            entity.creatives_urls = new_order
+        elif file_type == 'proof':
+            entity.proofs_urls = new_order
+        elif file_type == 'video':
+            entity.video_urls = new_order
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid file type'}, status=400)
+        
+        entity.save()
+        
+        return JsonResponse({'success': True, 'message': 'File order updated successfully'})
+        
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        logger.error(f"Error reordering files: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': 'Internal server error'}, status=500)
+
+
+@login_required
+def delete_file(request, entity_type, entity_id):
+    """
+    AJAX view для удаления отдельного файла
+    """
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Only POST method allowed'}, status=405)
+    
+    try:
+        # Получаем данные из запроса
+        data = json.loads(request.body)
+        file_id = data.get('file_id')
+        file_type = data.get('file_type')  # 'creative', 'proof', 'video'
+        
+        if not file_id or not file_type:
+            return JsonResponse({'success': False, 'error': 'Missing file_id or file_type'}, status=400)
+        
+        # Получаем сущность
+        if entity_type == 'startup':
+            entity = get_object_or_404(Startups, startup_id=entity_id)
+            if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
+                return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
+        elif entity_type == 'franchise':
+            entity = get_object_or_404(Franchises, franchise_id=entity_id)
+            if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
+                return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
+        elif entity_type == 'agency':
+            entity = get_object_or_404(Agencies, agency_id=entity_id)
+            if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
+                return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
+        elif entity_type == 'specialist':
+            entity = get_object_or_404(Specialists, specialist_id=entity_id)
+            if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
+                return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid entity type'}, status=400)
+        
+        # Получаем информацию о файле
+        entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name=entity_type)
+        file_storage = FileStorage.objects.filter(
+            entity_type=entity_type_obj,
+            entity_id=entity_id,
+            file_url=file_id
+        ).first()
+        
+        if not file_storage:
+            return JsonResponse({'success': False, 'error': 'File not found'}, status=404)
+        
+        # Удаляем файл из S3
+        if file_type == 'creative':
+            file_path = f"{entity_type}s/{entity_id}/creatives/{file_id}_{file_storage.original_file_name or 'unknown'}"
+        elif file_type == 'proof':
+            file_path = f"{entity_type}s/{entity_id}/proofs/{file_id}_{file_storage.original_file_name or 'unknown'}"
+        elif file_type == 'video':
+            file_path = f"{entity_type}s/{entity_id}/videos/{file_id}_{file_storage.original_file_name or 'unknown'}"
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid file type'}, status=400)
+        
+        try:
+            delete_file_from_s3(file_path)
+        except Exception as e:
+            logger.warning(f"Failed to delete file from S3: {e}")
+        
+        # Удаляем запись из базы данных
+        file_storage.delete()
+        
+        # Удаляем из списка URL
+        if file_type == 'creative' and entity.creatives_urls:
+            entity.creatives_urls = [url for url in entity.creatives_urls if url != file_id]
+        elif file_type == 'proof' and entity.proofs_urls:
+            entity.proofs_urls = [url for url in entity.proofs_urls if url != file_id]
+        elif file_type == 'video' and entity.video_urls:
+            entity.video_urls = [url for url in entity.video_urls if url != file_id]
+        
+        entity.save()
+        
+        return JsonResponse({'success': True, 'message': 'File deleted successfully'})
+        
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        logger.error(f"Error deleting file: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': 'Internal server error'}, status=500)
+
+
+@login_required
 def remove_participant(request, chat_id):
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
     if not chat.chatparticipants_set.filter(user=request.user).exists():

@@ -891,6 +891,82 @@ document.addEventListener('DOMContentLoaded', function () {
 
   setupTabNavigation();
 
+  function initializeCarousel() {
+    const carousel = document.getElementById('mediaCarousel');
+    if (!carousel) return;
+
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const indicators = document.querySelectorAll('.indicator');
+    const prevBtn = document.querySelector('.carousel-prev');
+    const nextBtn = document.querySelector('.carousel-next');
+    
+    let currentSlide = 0;
+    let autoSlideInterval;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+      
+      indicators.forEach((indicator, i) => {
+        indicator.classList.toggle('active', i === index);
+      });
+      
+      currentSlide = index;
+    }
+
+    function nextSlide() {
+      const nextIndex = (currentSlide + 1) % slides.length;
+      showSlide(nextIndex);
+    }
+
+    function prevSlide() {
+      const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(prevIndex);
+    }
+
+    function startAutoSlide() {
+      autoSlideInterval = setInterval(nextSlide, 5000);
+    }
+
+    function stopAutoSlide() {
+      clearInterval(autoSlideInterval);
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        nextSlide();
+        stopAutoSlide();
+        startAutoSlide();
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        prevSlide();
+        stopAutoSlide();
+        startAutoSlide();
+      });
+    }
+
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        showSlide(index);
+        stopAutoSlide();
+        startAutoSlide();
+      });
+    });
+
+    carousel.addEventListener('mouseenter', stopAutoSlide);
+    carousel.addEventListener('mouseleave', startAutoSlide);
+
+    if (slides.length > 1) {
+      startAutoSlide();
+    }
+  }
+
+  initializeCarousel();
+
   function setupActionButtons() {
     console.log('Setting up action buttons...');
 

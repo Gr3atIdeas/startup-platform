@@ -38,6 +38,80 @@ function toggleTextTruncation(sectionId, maxLines) {
 
 window.toggleTextTruncation = toggleTextTruncation;
 
+function initializeCarousel() {
+  const carousel = document.getElementById('mediaCarousel');
+  if (!carousel) return;
+
+  const slides = carousel.querySelectorAll('.carousel-slide');
+  const indicators = document.querySelectorAll('.indicator');
+  const prevBtn = document.querySelector('.carousel-prev');
+  const nextBtn = document.querySelector('.carousel-next');
+  
+  let currentSlide = 0;
+  let autoSlideInterval;
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+    
+    indicators.forEach((indicator, i) => {
+      indicator.classList.toggle('active', i === index);
+    });
+    
+    currentSlide = index;
+  }
+
+  function nextSlide() {
+    const nextIndex = (currentSlide + 1) % slides.length;
+    showSlide(nextIndex);
+  }
+
+  function prevSlide() {
+    const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+    showSlide(prevIndex);
+  }
+
+  function startAutoSlide() {
+    autoSlideInterval = setInterval(nextSlide, 5000);
+  }
+
+  function stopAutoSlide() {
+    clearInterval(autoSlideInterval);
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      nextSlide();
+      stopAutoSlide();
+      startAutoSlide();
+    });
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      prevSlide();
+      stopAutoSlide();
+      startAutoSlide();
+    });
+  }
+
+  indicators.forEach((indicator, index) => {
+    indicator.addEventListener('click', () => {
+      showSlide(index);
+      stopAutoSlide();
+      startAutoSlide();
+    });
+  });
+
+  carousel.addEventListener('mouseenter', stopAutoSlide);
+  carousel.addEventListener('mouseleave', startAutoSlide);
+
+  if (slides.length > 1) {
+    startAutoSlide();
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   const pageDataElement = document.querySelector('.startup-detail-page')
   if (!pageDataElement) {
@@ -47,6 +121,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const startupId = pageDataElement.dataset.startupId
   const csrfTokenInput = document.querySelector('input[name="csrfmiddlewaretoken"]')
   const csrfToken = csrfTokenInput ? csrfTokenInput.value : getCookie('csrftoken')
+
+  initializeCarousel()
 
   console.log('CSRF Token found:', !!csrfToken);
   console.log('Startup ID found:', startupId);
@@ -1207,6 +1283,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   setupActionButtons();
+  setupImageManager();
 
   function setupTimelineSteps() {
     console.log('Setting up timeline steps...');
@@ -1281,3 +1358,309 @@ document.addEventListener('DOMContentLoaded', function () {
       });
   }
 });
+
+// Глобальные переменные для управления изображениями
+let currentEntityType = null;
+let currentEntityId = null;
+let imageOrderChanged = false;
+
+function setupImageManager() {
+  // Настройка drag and drop для загрузки файлов
+  const uploadArea = document.getElementById('uploadArea');
+  const fileInput = document.getElementById('fileInput');
+  
+  if (uploadArea && fileInput) {
+    uploadArea.addEventListener('click', () => fileInput.click());
+    
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      handleFileUpload(files);
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+      handleFileUpload(e.target.files);
+    });
+  }
+}
+
+function openImageManager(entityType, entityId) {
+  currentEntityType = entityType;
+  currentEntityId = entityId;
+  imageOrderChanged = false;
+  
+  const modal = document.getElementById('imageManagerModal');
+  modal.style.display = 'block';
+  
+  // Загружаем текущие изображения
+  loadCurrentImages();
+  
+  // Переключаемся на вкладку изображений
+  switchTab('creatives');
+}
+
+function closeImageManager() {
+  const modal = document.getElementById('imageManagerModal');
+  modal.style.display = 'none';
+  
+  // Сбрасываем состояние
+  currentEntityType = null;
+  currentEntityId = null;
+  imageOrderChanged = false;
+  
+  // Очищаем форму загрузки
+  const fileInput = document.getElementById('fileInput');
+  if (fileInput) fileInput.value = '';
+  
+  const uploadProgress = document.getElementById('uploadProgress');
+  if (uploadProgress) uploadProgress.style.display = 'none';
+}
+
+function switchTab(tabName) {
+  // Переключаем кнопки табов
+  document.querySelectorAll('.image-manager-tabs .image-manager-tab-button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+  
+  // Переключаем контент табов
+  document.querySelectorAll('.image-manager-tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  document.getElementById(`${tabName}-tab`).classList.add('active');
+}
+
+function loadCurrentImages() {
+  const imageList = document.getElementById('imageList');
+  if (!imageList) return;
+  
+  // Получаем текущие изображения из карусели
+  const carouselImages = document.querySelectorAll('.carousel-image');
+  const imageUrls = Array.from(carouselImages).map(img => {
+    const src = img.src;
+    // Извлекаем file_id из URL
+    const match = src.match(/\/creatives\/([^\/]+)_/);
+    return match ? match[1] : null;
+  }).filter(Boolean);
+  
+  if (imageUrls.length === 0) {
+    imageList.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">Изображения не загружены</p>';
+    return;
+  }
+  
+  // Создаем элементы изображений
+  imageList.innerHTML = imageUrls.map((fileId, index) => `
+    <div class="image-manager-item" data-file-id="${fileId}" draggable="true">
+      <img src="{% get_file_url_tag '${fileId}' ${currentEntityId} 'creative' '${currentEntityType}' %}" alt="Изображение ${index + 1}">
+      <div class="image-manager-order">${index + 1}</div>
+      <div class="image-manager-controls">
+        <button onclick="deleteImage('${fileId}')" title="Удалить">×</button>
+      </div>
+    </div>
+  `).join('');
+  
+  // Настраиваем drag and drop для изменения порядка
+  setupImageDragAndDrop();
+}
+
+function setupImageDragAndDrop() {
+  const imageItems = document.querySelectorAll('.image-manager-item');
+  
+  imageItems.forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', e.target.outerHTML);
+      item.style.opacity = '0.5';
+    });
+    
+    item.addEventListener('dragend', (e) => {
+      item.style.opacity = '1';
+    });
+    
+    item.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    });
+    
+    item.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const draggedItem = document.querySelector('.image-manager-item[style*="opacity: 0.5"]');
+      if (draggedItem && draggedItem !== item) {
+        const parent = item.parentNode;
+        const nextSibling = item.nextSibling;
+        parent.insertBefore(draggedItem, nextSibling);
+        updateImageOrder();
+        imageOrderChanged = true;
+        document.getElementById('saveOrderBtn').style.display = 'inline-block';
+      }
+    });
+  });
+}
+
+function updateImageOrder() {
+  const imageItems = document.querySelectorAll('.image-manager-item');
+  imageItems.forEach((item, index) => {
+    const orderElement = item.querySelector('.image-manager-order');
+    if (orderElement) {
+      orderElement.textContent = index + 1;
+    }
+  });
+}
+
+function deleteImage(fileId) {
+  if (!confirm('Вы уверены, что хотите удалить это изображение?')) {
+    return;
+  }
+  
+  fetch(`/delete-file/${currentEntityType}/${currentEntityId}/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken'),
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    body: JSON.stringify({
+      file_type: 'creative',
+      file_id: fileId
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Удаляем элемент из DOM
+      const imageItem = document.querySelector(`[data-file-id="${fileId}"]`);
+      if (imageItem) {
+        imageItem.remove();
+        updateImageOrder();
+        imageOrderChanged = true;
+        document.getElementById('saveOrderBtn').style.display = 'inline-block';
+      }
+      
+      // Обновляем карусель на странице
+      location.reload();
+    } else {
+      alert('Ошибка при удалении изображения: ' + (data.error || 'Неизвестная ошибка'));
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Ошибка при удалении изображения');
+  });
+}
+
+function saveImageOrder() {
+  const imageItems = document.querySelectorAll('.image-manager-item');
+  const newOrder = Array.from(imageItems).map(item => item.dataset.fileId);
+  
+  fetch(`/reorder-files/${currentEntityType}/${currentEntityId}/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken'),
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    body: JSON.stringify({
+      file_type: 'creative',
+      new_order: newOrder
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      imageOrderChanged = false;
+      document.getElementById('saveOrderBtn').style.display = 'none';
+      alert('Порядок изображений сохранен!');
+      
+      // Обновляем карусель на странице
+      location.reload();
+    } else {
+      alert('Ошибка при сохранении порядка: ' + (data.error || 'Неизвестная ошибка'));
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Ошибка при сохранении порядка изображений');
+  });
+}
+
+function handleFileUpload(files) {
+  if (!files || files.length === 0) return;
+  
+  // Проверяем лимиты
+  if (files.length > 3) {
+    alert('Максимально можно загрузить 3 изображения');
+    return;
+  }
+  
+  for (let file of files) {
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      alert(`Файл ${file.name} слишком большой. Максимальный размер: 5MB`);
+      return;
+    }
+    
+    if (!file.type.startsWith('image/')) {
+      alert(`Файл ${file.name} не является изображением`);
+      return;
+    }
+  }
+  
+  // Показываем прогресс
+  const uploadProgress = document.getElementById('uploadProgress');
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('image-manager-progress-text');
+  
+  uploadProgress.style.display = 'block';
+  
+  // Загружаем файлы
+  const formData = new FormData();
+  Array.from(files).forEach(file => {
+    formData.append('creatives', file);
+  });
+  
+  // Отправляем на страницу редактирования
+  fetch(`/edit-startup/${currentEntityId}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': getCookie('csrftoken'),
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      progressFill.style.width = '100%';
+      progressText.textContent = '100%';
+      
+      setTimeout(() => {
+        uploadProgress.style.display = 'none';
+        progressFill.style.width = '0%';
+        progressText.textContent = '0%';
+        
+        // Обновляем список изображений
+        loadCurrentImages();
+        
+        // Обновляем карусель на странице
+        location.reload();
+      }, 1000);
+    } else {
+      alert('Ошибка при загрузке файлов: ' + (data.error || 'Неизвестная ошибка'));
+      uploadProgress.style.display = 'none';
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Ошибка при загрузке файлов');
+    uploadProgress.style.display = 'none';
+  });
+}

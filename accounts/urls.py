@@ -163,6 +163,8 @@ urlpatterns = [
     path("delete-comment/franchise/<int:comment_id>/", views.delete_franchise_comment, name="delete_franchise_comment"),
     path("delete-comment/agency/<int:comment_id>/", views.delete_agency_comment, name="delete_agency_comment"),
     path("delete-comment/specialist/<int:comment_id>/", views.delete_specialist_comment, name="delete_specialist_comment"),
+    path("reorder-files/<str:entity_type>/<int:entity_id>/", views.reorder_files, name="reorder_files"),
+    path("delete-file/<str:entity_type>/<int:entity_id>/", views.delete_file, name="delete_file"),
     path(
         "remove-participant/<int:chat_id>/",
         views.remove_participant,
