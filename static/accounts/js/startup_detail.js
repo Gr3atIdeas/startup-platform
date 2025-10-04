@@ -42,10 +42,10 @@ function initializeCarousel() {
   const carousel = document.getElementById('mediaCarousel');
   if (!carousel) return;
 
-  const slides = carousel.querySelectorAll('.carousel-slide');
-  const indicators = document.querySelectorAll('.indicator');
-  const prevBtn = document.querySelector('.carousel-prev');
-  const nextBtn = document.querySelector('.carousel-next');
+  const slides = carousel.querySelectorAll('.startup-detail-carousel-slide');
+  const indicators = document.querySelectorAll('.startup-detail-indicator');
+  const prevBtn = document.querySelector('.startup-detail-carousel-prev');
+  const nextBtn = document.querySelector('.startup-detail-carousel-next');
   
   let currentSlide = 0;
   let autoSlideInterval;
@@ -1445,7 +1445,7 @@ function loadCurrentImages() {
   if (!imageList) return;
   
   // Получаем текущие изображения из карусели
-  const carouselImages = document.querySelectorAll('.carousel-image');
+  const carouselImages = document.querySelectorAll('.startup-detail-carousel-image');
   const imageUrls = Array.from(carouselImages).map(img => {
     const src = img.src;
     // Извлекаем file_id из URL

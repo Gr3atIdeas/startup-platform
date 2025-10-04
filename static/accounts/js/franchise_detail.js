@@ -1155,14 +1155,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   setupTabNavigation();
 
-  function initializeCarousel() {
-    const carousel = document.getElementById('mediaCarousel');
-    if (!carousel) return;
+function initializeCarousel() {
+  const carousel = document.getElementById('mediaCarousel');
+  if (!carousel) return;
 
-    const slides = carousel.querySelectorAll('.carousel-slide');
-    const indicators = document.querySelectorAll('.indicator');
-    const prevBtn = document.querySelector('.carousel-prev');
-    const nextBtn = document.querySelector('.carousel-next');
+  const slides = carousel.querySelectorAll('.franchise-detail-carousel-slide');
+  const indicators = document.querySelectorAll('.franchise-detail-indicator');
+  const prevBtn = document.querySelector('.franchise-detail-carousel-prev');
+  const nextBtn = document.querySelector('.franchise-detail-carousel-next');
     
     let currentSlide = 0;
     let autoSlideInterval;

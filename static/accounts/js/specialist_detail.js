@@ -403,10 +403,10 @@ function initializeCarousel() {
   const carousel = document.getElementById('mediaCarousel');
   if (!carousel) return;
 
-  const slides = carousel.querySelectorAll('.carousel-slide');
-  const indicators = document.querySelectorAll('.indicator');
-  const prevBtn = document.querySelector('.carousel-prev');
-  const nextBtn = document.querySelector('.carousel-next');
+  const slides = carousel.querySelectorAll('.specialist-detail-carousel-slide');
+  const indicators = document.querySelectorAll('.specialist-detail-indicator');
+  const prevBtn = document.querySelector('.specialist-detail-carousel-prev');
+  const nextBtn = document.querySelector('.specialist-detail-carousel-next');
   
   let currentSlide = 0;
   let autoSlideInterval;

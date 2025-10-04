@@ -271,26 +271,13 @@ a:hover {
 
 .top-section {
   display: flex;
-
-  
-
-  
-  gap: 53px;
-
-  
-
-  
+  justify-content: space-between;
+  gap: 31px;
   width: 1303px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 40px;
-
-  
-
-  
+  max-width: 100%;
+  margin: 0 auto 40px;
   padding: 0;
   box-sizing: border-box;
-  margin: 0 auto 40px; 
 }
 
 
@@ -299,21 +286,21 @@ a:hover {
 
 
 .left-column {
+  width: 451px;
+  height: 976px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  max-width: 451px;
+  justify-content: space-between;
+  gap: 53px;
   flex-shrink: 0;
 }
 
-.media-container {
-  width: 100%;
-  max-width: 451px;
-  height: 510px;
+.specialist-detail-media-container {
+  width: 451px;
+  height: 449px;
   flex-shrink: 0;
   border-radius: 10px;
-  border: 2px solid #353945;
+  border: 2px solid rgba(201, 201, 201, 0.26);
   background-color: var(--dark-card-bg);
   display: flex;
   flex-direction: column;
@@ -321,61 +308,60 @@ a:hover {
   overflow: hidden;
 }
 
-.main-media-display {
+.specialist-detail-main-media-display {
   flex: 1;
   position: relative;
   overflow: hidden;
 }
 
-.carousel-container {
+.specialist-detail-carousel-container {
   width: 100%;
   height: 100%;
   position: relative;
 }
 
-.carousel-wrapper {
+.specialist-detail-carousel-wrapper {
   width: 100%;
   height: 100%;
   position: relative;
   overflow: hidden;
 }
 
-.carousel-track {
+.specialist-detail-carousel-track {
   display: flex;
   width: 100%;
   height: 100%;
   transition: transform 0.5s ease-in-out;
 }
 
-.carousel-slide {
+.specialist-detail-carousel-slide {
   min-width: 100%;
   height: 100%;
   position: relative;
   display: none;
 }
 
-.carousel-slide.active {
+.specialist-detail-carousel-slide.active {
   display: block;
 }
 
-.carousel-image {
+.specialist-detail-carousel-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 8px;
 }
 
-.carousel-indicators {
+.specialist-detail-carousel-indicators {
   position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 194px;
+  bottom: 31px;
   display: flex;
-  gap: 8px;
+  gap: 6px;
   z-index: 10;
 }
 
-.indicator {
+.specialist-detail-indicator {
   width: 11px;
   height: 11px;
   border-radius: 50%;
@@ -384,12 +370,12 @@ a:hover {
   transition: background-color 0.3s ease;
 }
 
-.indicator.active {
+.specialist-detail-indicator.active {
   background-color: #FFEF2B;
 }
 
-.carousel-prev,
-.carousel-next {
+.specialist-detail-carousel-prev,
+.specialist-detail-carousel-next {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -408,20 +394,20 @@ a:hover {
   z-index: 10;
 }
 
-.carousel-prev:hover,
-.carousel-next:hover {
+.specialist-detail-carousel-prev:hover,
+.specialist-detail-carousel-next:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
-.carousel-prev {
+.specialist-detail-carousel-prev {
   left: 20px;
 }
 
-.carousel-next {
+.specialist-detail-carousel-next {
   right: 20px;
 }
 
-.default-planet-display {
+.specialist-detail-default-planet-display {
   width: 100%;
   height: 100%;
   position: relative;
@@ -430,17 +416,17 @@ a:hover {
   justify-content: center;
 }
 
-.planet-sidebar {
+.specialist-detail-planet-sidebar {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 361px;
+  right: 24px;
   display: flex;
   flex-direction: column;
   gap: 15px;
   z-index: 10;
 }
 
-.planet-sidebar .status-badge {
+.specialist-detail-planet-sidebar .status-badge {
   background: rgba(255, 255, 255, 0.1);
   padding: 8px 16px;
   border-radius: 20px;
@@ -449,20 +435,27 @@ a:hover {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.planet-sidebar .chat-button {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
+.specialist-detail-planet-sidebar .chat-button {
+  width: 68px;
+  height: 68px;
+  background: #FFFFFF;
+  border: none;
+  border-radius: 55px;
+  color: #000000;
   font-size: 14px;
+  font-weight: 300;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 7px 0;
   transition: all 0.3s ease;
 }
 
-.planet-sidebar .chat-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: white;
+.specialist-detail-planet-sidebar .chat-button:hover {
+  background: rgba(255, 255, 255, 0.9);
 }
 
 
@@ -688,23 +681,32 @@ a:hover {
   color: var(--accent-yellow);
 }
 
-.ai-rating-info {
+.specialist-detail-ai-rating-info {
+  width: 451px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  background: var(--button-blue);
-  padding: 9px 26px;
-  border-radius: 10px;
-  align-items: center;
+  gap: 24px;
 }
 
-.ai-rating-container {
+.specialist-detail-ai-rating-title {
+  width: 129px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #FFEF2B;
+  margin: 0;
+}
+
+.specialist-detail-ai-rating-container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 19px;
+  background: #2353D9;
+  padding: 9px 26px;
+  border-radius: 10px;
 }
 
-.ai-rating-icon {
+.specialist-detail-ai-rating-icon {
   width: 34px;
   height: 34px;
   background: white;
@@ -714,37 +716,37 @@ a:hover {
   justify-content: center;
 }
 
-.ai-label {
+.specialist-detail-ai-label {
   font-size: 16px;
   font-weight: 400;
-  color: var(--text-primary);
+  color: #000000;
 }
 
-.ai-rating-value {
+.specialist-detail-ai-rating-value {
   font-size: 12px;
   color: white;
   font-weight: 300;
 }
 
-.ai-rating-date {
+.specialist-detail-ai-rating-date {
   font-size: 12px;
   color: #A9A9A9;
   font-weight: 300;
 }
 
-.raised-amount-info {
+.specialist-detail-raised-amount-info {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.raised-amount-label {
+.specialist-detail-raised-amount-label {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.44);
   font-weight: 300;
 }
 
-.raised-amount-value {
+.specialist-detail-raised-amount-value {
   font-size: 20px;
   color: white;
   font-weight: 400;
@@ -1272,8 +1274,8 @@ a:hover {
   font-weight: 600;
 }
 
-.project-description img,
-.additional-info img {
+.specialist-detail-project-description img,
+.specialist-detail-additional-info img {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
@@ -1281,8 +1283,8 @@ a:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.project-description video,
-.additional-info video {
+.specialist-detail-project-description video,
+.specialist-detail-additional-info video {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
@@ -1290,8 +1292,8 @@ a:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.project-description p,
-.additional-info p {
+.specialist-detail-project-description p,
+.specialist-detail-additional-info p {
   margin-bottom: 15px;
   line-height: 1.6;
 }
@@ -3396,7 +3398,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
     max-width: 1200px;
   }
   
-  .media-container {
+  .specialist-detail-media-container {
     width: 350px;
     height: 350px;
   }
@@ -3539,7 +3541,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 @media (max-width: 992px) and (min-height: 700px) {
-  .media-container {
+  .specialist-detail-media-container {
     width: 350px;
     height: 350px;
   }

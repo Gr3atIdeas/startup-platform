@@ -271,26 +271,13 @@ a:hover {
 
 .top-section {
   display: flex;
-
-  
-
-  
-  gap: 53px;
-
-  
-
-  
+  justify-content: space-between;
+  gap: 31px;
   width: 1303px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 40px;
-
-  
-
-  
+  max-width: 100%;
+  margin: 0 auto 40px;
   padding: 0;
   box-sizing: border-box;
-  margin: 0 auto 40px; 
 }
 
 
@@ -299,20 +286,21 @@ a:hover {
 
 
 .left-column {
+  width: 451px;
+  height: 976px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  width: 451px;
+  justify-content: space-between;
+  gap: 53px;
   flex-shrink: 0;
 }
 
-.media-container {
-  width: 100%;
-  max-width: 451px;
-  height: 510px;
+.startup-detail-media-container {
+  width: 451px;
+  height: 449px;
   flex-shrink: 0;
   border-radius: 10px;
-  border: 2px solid #353945;
+  border: 2px solid rgba(201, 201, 201, 0.26);
   background-color: var(--dark-card-bg);
   display: flex;
   flex-direction: column;
@@ -320,61 +308,60 @@ a:hover {
   overflow: hidden;
 }
 
-.main-media-display {
+.startup-detail-main-media-display {
   flex: 1;
   position: relative;
   overflow: hidden;
 }
 
-.carousel-container {
+.startup-detail-carousel-container {
   width: 100%;
   height: 100%;
   position: relative;
 }
 
-.carousel-wrapper {
+.startup-detail-carousel-wrapper {
   width: 100%;
   height: 100%;
   position: relative;
   overflow: hidden;
 }
 
-.carousel-track {
+.startup-detail-carousel-track {
   display: flex;
   width: 100%;
   height: 100%;
   transition: transform 0.5s ease-in-out;
 }
 
-.carousel-slide {
+.startup-detail-carousel-slide {
   min-width: 100%;
   height: 100%;
   position: relative;
   display: none;
 }
 
-.carousel-slide.active {
+.startup-detail-carousel-slide.active {
   display: block;
 }
 
-.carousel-image {
+.startup-detail-carousel-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 8px;
 }
 
-.carousel-indicators {
+.startup-detail-carousel-indicators {
   position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 194px;
+  bottom: 31px;
   display: flex;
-  gap: 8px;
+  gap: 6px;
   z-index: 10;
 }
 
-.indicator {
+.startup-detail-indicator {
   width: 11px;
   height: 11px;
   border-radius: 50%;
@@ -383,12 +370,12 @@ a:hover {
   transition: background-color 0.3s ease;
 }
 
-.indicator.active {
+.startup-detail-indicator.active {
   background-color: #FFEF2B;
 }
 
-.carousel-prev,
-.carousel-next {
+.startup-detail-carousel-prev,
+.startup-detail-carousel-next {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -407,20 +394,20 @@ a:hover {
   z-index: 10;
 }
 
-.carousel-prev:hover,
-.carousel-next:hover {
+.startup-detail-carousel-prev:hover,
+.startup-detail-carousel-next:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
-.carousel-prev {
+.startup-detail-carousel-prev {
   left: 20px;
 }
 
-.carousel-next {
+.startup-detail-carousel-next {
   right: 20px;
 }
 
-.default-planet-display {
+.startup-detail-default-planet-display {
   width: 100%;
   height: 100%;
   position: relative;
@@ -429,17 +416,17 @@ a:hover {
   justify-content: center;
 }
 
-.planet-sidebar {
+.startup-detail-planet-sidebar {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 361px;
+  right: 24px;
   display: flex;
   flex-direction: column;
   gap: 15px;
   z-index: 10;
 }
 
-.planet-sidebar .status-badge {
+.startup-detail-planet-sidebar .status-badge {
   background: rgba(255, 255, 255, 0.1);
   padding: 8px 16px;
   border-radius: 20px;
@@ -448,20 +435,27 @@ a:hover {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.planet-sidebar .chat-button {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
+.startup-detail-planet-sidebar .chat-button {
+  width: 68px;
+  height: 68px;
+  background: #FFFFFF;
+  border: none;
+  border-radius: 55px;
+  color: #000000;
   font-size: 14px;
+  font-weight: 300;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 7px 0;
   transition: all 0.3s ease;
 }
 
-.planet-sidebar .chat-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: white;
+.startup-detail-planet-sidebar .chat-button:hover {
+  background: rgba(255, 255, 255, 0.9);
 }
 
 
@@ -785,39 +779,36 @@ a:hover {
 
 
 .author-info-left {
-  display: flex;
   width: 451px;
-  height: 257px;
-  padding: 15px 30px;
+  height: 152px;
+  display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 23px;
-  flex-shrink: 0;
+  justify-content: center;
+  gap: 21px;
+  padding: 10px 26px 30px;
+  background: rgba(0, 0, 0, 0.11);
   border-radius: 10px;
-  background: rgb(0 0 0 / 27%);
-  box-shadow: 6px 6px 10px 0 rgb(0 0 0 / 25%);
-  backdrop-filter: blur(10px);
+  box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(20px);
   box-sizing: border-box;
 }
 
 .author-header {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--accent-yellow);
-  margin-bottom: 5px;
+  width: 134px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #FFEF2B;
+  margin: 0;
 }
 
 .author-details {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 15px;
+  gap: 3px;
 }
 
 .author-avatar {
-  width: 50px;
-  height: 50px;
+  width: 39px;
+  height: 39px;
   border-radius: 50%;
   background-color: #e0e0e0;
   flex-shrink: 0;
@@ -3225,23 +3216,32 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   font-weight: 600;
 }
 
-.ai-rating-info {
+.startup-detail-ai-rating-info {
+  width: 451px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  background: var(--button-blue);
-  padding: 9px 26px;
-  border-radius: 10px;
-  align-items: center;
+  gap: 24px;
 }
 
-.ai-rating-container {
+.startup-detail-ai-rating-title {
+  width: 129px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #FFEF2B;
+  margin: 0;
+}
+
+.startup-detail-ai-rating-container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 19px;
+  background: #2353D9;
+  padding: 9px 26px;
+  border-radius: 10px;
 }
 
-.ai-rating-icon {
+.startup-detail-ai-rating-icon {
   width: 34px;
   height: 34px;
   background: white;
@@ -3251,37 +3251,37 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   justify-content: center;
 }
 
-.ai-label {
+.startup-detail-ai-label {
   font-size: 16px;
   font-weight: 400;
-  color: var(--text-primary);
+  color: #000000;
 }
 
-.ai-rating-value {
+.startup-detail-ai-rating-value {
   font-size: 12px;
   color: white;
   font-weight: 300;
 }
 
-.ai-rating-date {
+.startup-detail-ai-rating-date {
   font-size: 12px;
   color: #A9A9A9;
   font-weight: 300;
 }
 
-.raised-amount-info {
+.startup-detail-raised-amount-info {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.raised-amount-label {
+.startup-detail-raised-amount-label {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.44);
   font-weight: 300;
 }
 
-.raised-amount-value {
+.startup-detail-raised-amount-value {
   font-size: 20px;
   color: white;
   font-weight: 400;
@@ -3380,7 +3380,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
     max-width: 1200px;
   }
   
-  .media-container {
+  .startup-detail-media-container {
     width: 350px;
     height: 350px;
   }
@@ -3523,7 +3523,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 @media (max-width: 992px) and (min-height: 700px) {
-  .media-container {
+  .startup-detail-media-container {
     width: 350px;
     height: 350px;
   }
@@ -3679,8 +3679,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   color: var(--text-primary);
 }
 
-.project-description img,
-.additional-info img {
+.startup-detail-project-description img,
+.startup-detail-additional-info img {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
@@ -3688,8 +3688,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.project-description video,
-.additional-info video {
+.startup-detail-project-description video,
+.startup-detail-additional-info video {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
@@ -3697,8 +3697,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.project-description p,
-.additional-info p {
+.startup-detail-project-description p,
+.startup-detail-additional-info p {
   margin-bottom: 15px;
   line-height: 1.6;
 }

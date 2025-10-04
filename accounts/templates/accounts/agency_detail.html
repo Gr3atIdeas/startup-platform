@@ -32,35 +32,35 @@
 
   <div class="top-section">
     <div class="left-column">
-      <div class="media-container">
-        <div class="main-media-display">
+      <div class="agency-detail-media-container">
+        <div class="agency-detail-main-media-display">
           {% if creatives_urls %}
-            <div class="carousel-container">
-              <div class="carousel-wrapper">
-                <div class="carousel-track" id="mediaCarousel">
+            <div class="agency-detail-carousel-container">
+              <div class="agency-detail-carousel-wrapper">
+                <div class="agency-detail-carousel-track" id="mediaCarousel">
                   {% for url in creatives_urls %}
-                    <div class="carousel-slide {% if forloop.first %}active{% endif %}">
+                    <div class="agency-detail-carousel-slide {% if forloop.first %}active{% endif %}">
                       <img src="{% get_file_url_tag url agency.agency_id 'creative' 'agency' %}" 
                            alt="Изображение {{ forloop.counter }}" 
-                           class="carousel-image">
+                           class="agency-detail-carousel-image">
                     </div>
                   {% endfor %}
                 </div>
-                <div class="carousel-indicators">
+                <div class="agency-detail-carousel-indicators">
                   {% for url in creatives_urls %}
-                    <span class="indicator {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
+                    <span class="agency-detail-indicator {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
                   {% endfor %}
                 </div>
-                <button class="carousel-prev" aria-label="Предыдущее изображение">
+                <button class="agency-detail-carousel-prev" aria-label="Предыдущее изображение">
                   <i class="fas fa-chevron-left"></i>
                 </button>
-                <button class="carousel-next" aria-label="Следующее изображение">
+                <button class="agency-detail-carousel-next" aria-label="Следующее изображение">
                   <i class="fas fa-chevron-right"></i>
                 </button>
               </div>
             </div>
           {% else %}
-            <div class="default-planet-display">
+            <div class="agency-detail-default-planet-display">
               <div class="space-background"></div>
               {% if agency.planet_image %}
                 <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ agency.planet_image }}" alt="Планета {{ agency.title }}" class="planet-image">
@@ -71,7 +71,7 @@
           {% endif %}
         </div>
         
-        <div class="planet-sidebar">
+             <div class="agency-detail-planet-sidebar">
           {% if user.is_authenticated and user.role.role_name == 'moderator' %}
             <form method="post" class="status-form">
               {% csrf_token %}
@@ -104,20 +104,21 @@
         </div>
       </div>
       
-      <div class="ai-rating-info">
-        <div class="ai-rating-container">
-          <div class="ai-rating-icon">
-            <span class="ai-label">AI</span>
-          </div>
-          <span class="ai-rating-value">5 из 10</span>
-        </div>
-        <span class="ai-rating-date">Создан {{ agency.created_at|date:"d/m/Y" }}</span>
-      </div>
-      
-      <div class="raised-amount-info">
-        <span class="raised-amount-label">Собранная сумма</span>
-        <span class="raised-amount-value">{{ agency.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
-      </div>
+            <div class="agency-detail-ai-rating-info">
+              <h3 class="agency-detail-ai-rating-title">Оценка</h3>
+              <div class="agency-detail-ai-rating-container">
+                <div class="agency-detail-ai-rating-icon">
+                  <span class="agency-detail-ai-label">AI</span>
+                </div>
+                <span class="agency-detail-ai-rating-value">5 из 10</span>
+              </div>
+              <span class="agency-detail-ai-rating-date">Создан {{ agency.created_at|date:"d/m/Y" }}</span>
+            </div>
+            
+            <div class="agency-detail-raised-amount-info">
+              <span class="agency-detail-raised-amount-label">Собранная сумма</span>
+              <span class="agency-detail-raised-amount-value">{{ agency.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
+            </div>
       
       <div class="author-info-left">
         <div class="author-header">Автор</div>
@@ -220,11 +221,11 @@
               <h2 class="section-title">Об агентстве</h2>
               <div class="section-content text-truncate-container" id="about-section">
                 <div class="text-content" onclick="toggleTextTruncation('about-section', 8)">
-                  <div class="project-description">
+                  <div class="agency-detail-project-description">
                     {{ agency.description|safe|default:"Нет подробного описания." }}
                   </div>
                   {% if agency.customization_data.agency_additional_info %}
-                    <div class="additional-info">
+                    <div class="agency-detail-additional-info">
                       <p><strong>Основные услуги:</strong></p>
                       {{ agency.customization_data.agency_additional_info|safe }}
                     </div>
