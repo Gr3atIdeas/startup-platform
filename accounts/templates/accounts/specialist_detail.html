@@ -72,27 +72,27 @@
         </div>
         
              <div class="specialist-detail-planet-sidebar">
-          {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-            <form method="post" class="status-form">
-              {% csrf_token %}
-              <select name="status" class="status-select" onchange="this.form.submit()">
-                <option value="approved" {% if specialist.status == 'approved' %}selected{% endif %}>Approved</option>
-                <option value="blocked" {% if specialist.status == 'blocked' %}selected{% endif %}>Blocked</option>
-                <option value="closed" {% if specialist.status == 'closed' %}selected{% endif %}>Closed</option>
-                <option value="pending" {% if specialist.status == 'pending' %}selected{% endif %}>Pending</option>
-                <option value="rejected" {% if specialist.status == 'rejected' %}selected{% endif %}>Rejected</option>
-              </select>
-            </form>
-          {% else %}
-            <div class="status-badge status-{{ specialist.status|default:'unknown' }}">
-               {{ specialist.status|default:'unknown'|capfirst }}
-            </div>
-          {% endif %}
-          
+        {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+          <form method="post" class="status-form">
+            {% csrf_token %}
+            <select name="status" class="status-select" onchange="this.form.submit()">
+              <option value="approved" {% if specialist.status == 'approved' %}selected{% endif %}>Approved</option>
+              <option value="blocked" {% if specialist.status == 'blocked' %}selected{% endif %}>Blocked</option>
+              <option value="closed" {% if specialist.status == 'closed' %}selected{% endif %}>Closed</option>
+              <option value="pending" {% if specialist.status == 'pending' %}selected{% endif %}>Pending</option>
+              <option value="rejected" {% if specialist.status == 'rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+          </form>
+        {% else %}
+          <div class="status-badge status-{{ specialist.status|default:'unknown' }}">
+             {{ specialist.status|default:'unknown'|capfirst }}
+          </div>
+        {% endif %}
+        
           <button class="action-button chat-button">Чат</button>
         </div>
-      </div>
-      
+        </div>
+        
       <div class="action-buttons-container">
         <button class="action-button primary-button">Выкупить</button>
         <div class="secondary-actions">
@@ -125,7 +125,7 @@
             <div class="specialist-detail-raised-amount-info">
               <span class="specialist-detail-raised-amount-label">Собранная сумма</span>
               <span class="specialist-detail-raised-amount-value">{{ specialist.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
-            </div>
+      </div>
       
       <div class="author-info-left">
         <div class="author-header">Автор</div>
@@ -227,7 +227,7 @@
                   </div>
                   {% if specialist.additional_info %}
                     <div class="specialist-detail-additional-info">
-                      <p><strong>Основные функции:</strong></p>
+                    <p><strong>Основные функции:</strong></p>
                       {{ specialist.additional_info|safe }}
                     </div>
                   {% endif %}
