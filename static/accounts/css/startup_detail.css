@@ -95,10 +95,14 @@ a:hover {
   font-weight: 400;
   text-decoration: none;
   transition: color 0.3s ease;
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+  padding: 0 !important;
 }
 
 .management-top-button:hover {
-  color: var(--accent-purple);
+  color: #FFFFFF;
 }
 
 
@@ -106,8 +110,8 @@ a:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
-  border-radius: 10px; 
+  padding: 11px 32px;
+  border-radius: 21px; 
   border: none;
   font-family: Unbounded, sans-serif; 
   font-size: 16px;
@@ -295,7 +299,7 @@ a:hover {
 
 .startup-detail-media-container {
   width: 407px;
-  height: 404px;
+  height: 405px;
   border-radius: 9px;
   border: 2px solid rgba(201, 201, 201, 0.26);
   background-color: var(--dark-card-bg);
@@ -444,14 +448,14 @@ a:hover {
 
 .author-info-left-unique {
   display: flex;
-  width: 451px;
-  height: 152px;
-  padding: 10px 26px 30px;
+  width: 407px;
+  height: 137px;
+  padding: 9px 23px 27px;
   flex-direction: column;
   align-items: flex-start;
-  gap: 21px;
+  gap: 19px;
   flex-shrink: 0;
-  border-radius: 10px;
+  border-radius: 9px;
   background: rgba(0, 0, 0, 0.11);
   box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(20px);
@@ -471,20 +475,20 @@ a:hover {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  gap: 23px;
+  gap: 21px;
   width: 100%;
 }
 
 .author-main-info-unique {
   display: flex;
   flex-direction: row;
-  gap: 11px;
+  gap: 10px;
   align-items: center;
 }
 
 .author-avatar-circle-unique {
-  width: 39px;
-  height: 39px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
@@ -499,7 +503,7 @@ a:hover {
 .author-text-info-unique {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 6px;
 }
 
 .author-name-unique {
@@ -528,9 +532,9 @@ a:hover {
 
 .write-author-button-unique {
   height: 40px;
-  padding: 12px 35px;
+  padding: 11px 32px;
   border: 0.5px solid rgba(255, 255, 255, 0.5);
-  border-radius: 15px;
+  border-radius: 14px;
   background: transparent;
   color: #F5F5F5;
   font-size: 14px;
@@ -596,7 +600,7 @@ a:hover {
 }
 
 .action-buttons-container {
-  width: 403px;
+  width: 304px;
   display: flex;
   flex-direction: column;
   align-items: center;
