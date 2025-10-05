@@ -105,6 +105,29 @@ def is_buyout_investor(user, startup):
 
 
 
+@register.filter(name="get_timeline_event_by_step")
+def get_timeline_event_by_step(timeline_events, step_number):
+    """
+    Извлекает объект события таймлайна по номеру шага.
+    Args:
+        timeline_events: QuerySet или список объектов StartupTimeline.
+        step_number: Номер шага (int).
+    Returns:
+        Объект StartupTimeline или None, если этап не найден.
+    """
+    try:
+        step_number = int(step_number)
+        for event in timeline_events:
+            if event.step_number == step_number:
+                return event
+        return None
+    except (
+        ValueError,
+        AttributeError,
+        TypeError,
+    ):
+        return None
+
 @register.filter(name="translate_stage")
 def translate_stage(stage_name):
     """Переводит название стадии стартапа на русский язык"""

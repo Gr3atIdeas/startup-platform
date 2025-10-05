@@ -485,7 +485,7 @@ a:hover {
 }
 
 .action-buttons-container {
-  width: 304px;
+  width: 403px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -916,18 +916,19 @@ a:hover {
 
 .author-info-left {
   display: flex;
-  width: 450px;
-  height: 152px;
-  padding: 12px 30px;
+  width: 407px;
+  height: 137px;
+  padding: 9px 23px 27px;
   flex-direction: column;
   align-items: flex-start;
-  gap: 23px;
+  gap: 19px;
   flex-shrink: 0;
-  border-radius: 10px;
-  background: rgb(0 0 0 / 27%);
-  box-shadow: 6px 6px 10px 0 rgb(0 0 0 / 25%);
-  backdrop-filter: blur(10px);
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.11);
+  box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(20px);
   box-sizing: border-box;
+  margin: -20px;
 }
 
 .author-header {
