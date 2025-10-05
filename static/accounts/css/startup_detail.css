@@ -289,10 +289,12 @@ a:hover {
 
 .left-column {
   width: 407px;
-  height: 880px;
+  height: auto;
+  min-height: 880px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 20px;
   flex-shrink: 0;
 }
 
