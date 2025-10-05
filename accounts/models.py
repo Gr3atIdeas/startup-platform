@@ -730,7 +730,7 @@ class Franchises(models.Model):
 
     def get_investors_count(self):
         return InvestmentTransactions.objects.filter(
-            franchise_id=self.franchise_id
+            franchise=self.franchise_id
         ).values("investor").distinct().count()
 
     def get_status_display(self):
