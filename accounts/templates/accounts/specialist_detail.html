@@ -4,7 +4,7 @@
 {% load file_tags %}
 {% load timeline_filters %}
 {% load humanize %}
-{% load startup_filters %}
+{% load accounts_extras %}
 
 {% block title %}{{ specialist.customization_data.specialist_display_title|default:specialist.title|default:"Детали специалиста" }}{% endblock %}
 

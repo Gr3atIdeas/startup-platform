@@ -105,6 +105,20 @@ def is_buyout_investor(user, startup):
 
 
 
+@register.filter(name="translate_stage")
+def translate_stage(stage_name):
+    """Переводит название стадии стартапа на русский язык"""
+    if not stage_name:
+        return "Не указана"
+    
+    stage_mapping = {
+        'idea': 'Идея',
+        'MVP': 'Разработка продукта', 
+        'Growth': 'Развивающийся стартап'
+    }
+    
+    return stage_mapping.get(stage_name, stage_name)
+
 @register.filter(name="get_item")
 def get_item(dictionary, key):
     """Позволяет получить значение из словаря по ключу в шаблоне Django."""
