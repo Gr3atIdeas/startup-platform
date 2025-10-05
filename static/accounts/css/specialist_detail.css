@@ -4181,9 +4181,11 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   height: 24px;
 }
 
-.carousel-chat-button-unique span {
-  font-size: 12px;
-  line-height: 1;
+.carousel-chat-button-unique {
+  background: #FFFFFF !important;
+  border: none !important;
+  border-radius: 55px !important;
+  padding: 7px 0 !important;
 }
 
 .carousel-planet-thumbnail {
@@ -4218,14 +4220,13 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(20px);
   box-sizing: border-box;
-  margin: -20px;
 }
 
-.author-header-unique {
+.author-section-title {
+  color: #FFEF2B;
   font-size: 16px;
   font-weight: 400;
-  color: #FFEF2B;
-  line-height: 1em;
+  margin-bottom: 10px;
 }
 
 .author-content-row-unique {
@@ -4299,6 +4300,9 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   font-weight: 300;
   flex-shrink: 0;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .write-author-button-unique:hover {

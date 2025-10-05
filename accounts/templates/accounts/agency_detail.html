@@ -78,7 +78,7 @@
           <button class="agency-detail-carousel-next" aria-label="Следующее изображение">
             <i class="fas fa-chevron-right"></i>
           </button>
-          <button class="action-button carousel-chat-button-unique">
+          <button class="carousel-chat-button-unique">
             <img src="{% static 'accounts/images/icons/chat-icon.svg' %}" alt="Чат" class="chat-icon">
             <span>Чат</span>
           </button>
@@ -137,20 +137,22 @@
               </div>
             </div>
             
-      <div class="author-info-left-unique">
-        <div class="author-header-unique">Автор</div>
-        <div class="author-content-row-unique">
-          <div class="author-main-info-unique">
-            <div class="author-avatar-circle-unique">
-              <img src="{% if agency.owner.get_profile_picture_url %}{{ agency.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ agency.owner.username }}" class="author-avatar-img-unique">
+      <div class="author-info-section">
+        <h3 class="author-section-title">Автор</h3>
+        <div class="author-info-left-unique">
+          <div class="author-content-row-unique">
+            <div class="author-main-info-unique">
+              <div class="author-avatar-circle-unique">
+                <img src="{% if agency.owner.get_profile_picture_url %}{{ agency.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ agency.owner.username }}" class="author-avatar-img-unique">
+              </div>
+              <div class="author-text-info-unique">
+                <div class="author-name-unique">{{ agency.owner.first_name|default:"Автор" }} {{ agency.owner.last_name }}</div>
+                <div class="author-rating-unique">Рейтинг: {{ average_rating|floatformat:"1" }}/5</div>
+                <a href="#comments-section" class="author-reviews-link-unique">Отзывы</a>
+              </div>
             </div>
-            <div class="author-text-info-unique">
-              <div class="author-name-unique">{{ agency.owner.first_name|default:"Автор" }} {{ agency.owner.last_name }}</div>
-              <div class="author-rating-unique">Рейтинг: {{ average_rating|floatformat:"1" }}/5</div>
-              <a href="#comments-section" class="author-reviews-link-unique">Отзывы</a>
-            </div>
+            <button class="write-author-button-unique">Написать</button>
           </div>
-          <button class="write-author-button-unique">Написать</button>
         </div>
       </div>
     </div>

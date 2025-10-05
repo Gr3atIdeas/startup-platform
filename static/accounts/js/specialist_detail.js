@@ -330,7 +330,7 @@ function setupSimilarSpecialistsShowMore() {
     if (chatButton) {
       chatButton.addEventListener('click', (e) => {
         e.preventDefault();
-        const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
+        const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
         if (!ownerId) {
           alert('Ошибка: не удалось определить автора специалиста');
           return;
@@ -343,7 +343,7 @@ function setupSimilarSpecialistsShowMore() {
     if (writeButton) {
       writeButton.addEventListener('click', (e) => {
         e.preventDefault();
-        const ownerId = document.querySelector('.franchise-detail-page').dataset.ownerId;
+        const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
         if (!ownerId) {
           alert('Ошибка: не удалось определить автора специалиста');
           return;
@@ -399,7 +399,73 @@ function setupSimilarSpecialistsShowMore() {
   initializeCarousel();
 });
 
-function initializeCarousel() {
+// Функции для кнопок чата и написания
+function setupActionButtons() {
+  console.log('Setting up action buttons...');
+
+  const chatButton = document.querySelector('.carousel-chat-button-unique');
+  console.log('Chat button found:', !!chatButton);
+  if (chatButton) {
+    console.log('Chat button text:', chatButton.textContent.trim());
+    console.log('Chat button classes:', chatButton.className);
+    chatButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      console.log('Chat button clicked');
+
+      const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
+      if (!ownerId) {
+        alert('Ошибка: не удалось определить автора специалиста');
+        return;
+      }
+
+      startChatWithUser(ownerId);
+    });
+  } else {
+    console.error('Chat button not found');
+  }
+
+  const writeButton = document.querySelector('.write-author-button-unique');
+  if (writeButton) {
+    writeButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
+      if (!ownerId) {
+        alert('Ошибка: не удалось определить автора специалиста');
+        return;
+      }
+      startChatWithUser(ownerId);
+    });
+  }
+}
+
+function startChatWithUser(userId) {
+  console.log('Starting chat with user:', userId);
+  
+  fetch(`/cosmochat/start-chat/${userId}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': getCookie('csrftoken'),
+      'Content-Type': 'application/json',
+    },
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      window.location.href = `/cosmochat/?chat_id=${data.chat_id}`;
+    } else {
+      alert('Ошибка при создании чата: ' + (data.error || 'Неизвестная ошибка'));
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Ошибка при создании чата');
+  });
+}
+
+// Вызов функции при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+  setupActionButtons();
+});function initializeCarousel() {
   const carousel = document.getElementById('mediaCarousel');
   if (!carousel) return;
 
@@ -465,7 +531,73 @@ function initializeCarousel() {
     });
   });
 
-  carousel.addEventListener('mouseenter', stopAutoSlide);
+// Функции для кнопок чата и написания
+function setupActionButtons() {
+  console.log('Setting up action buttons...');
+
+  const chatButton = document.querySelector('.carousel-chat-button-unique');
+  console.log('Chat button found:', !!chatButton);
+  if (chatButton) {
+    console.log('Chat button text:', chatButton.textContent.trim());
+    console.log('Chat button classes:', chatButton.className);
+    chatButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      console.log('Chat button clicked');
+
+      const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
+      if (!ownerId) {
+        alert('Ошибка: не удалось определить автора специалиста');
+        return;
+      }
+
+      startChatWithUser(ownerId);
+    });
+  } else {
+    console.error('Chat button not found');
+  }
+
+  const writeButton = document.querySelector('.write-author-button-unique');
+  if (writeButton) {
+    writeButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
+      if (!ownerId) {
+        alert('Ошибка: не удалось определить автора специалиста');
+        return;
+      }
+      startChatWithUser(ownerId);
+    });
+  }
+}
+
+function startChatWithUser(userId) {
+  console.log('Starting chat with user:', userId);
+  
+  fetch(`/cosmochat/start-chat/${userId}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': getCookie('csrftoken'),
+      'Content-Type': 'application/json',
+    },
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      window.location.href = `/cosmochat/?chat_id=${data.chat_id}`;
+    } else {
+      alert('Ошибка при создании чата: ' + (data.error || 'Неизвестная ошибка'));
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Ошибка при создании чата');
+  });
+}
+
+// Вызов функции при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+  setupActionButtons();
+});  carousel.addEventListener('mouseenter', stopAutoSlide);
   carousel.addEventListener('mouseleave', startAutoSlide);
 
   if (slides.length > 1) {
@@ -524,4 +656,70 @@ document.addEventListener('click', function(event) {
   }
 });
 
+// Функции для кнопок чата и написания
+function setupActionButtons() {
+  console.log('Setting up action buttons...');
 
+  const chatButton = document.querySelector('.carousel-chat-button-unique');
+  console.log('Chat button found:', !!chatButton);
+  if (chatButton) {
+    console.log('Chat button text:', chatButton.textContent.trim());
+    console.log('Chat button classes:', chatButton.className);
+    chatButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      console.log('Chat button clicked');
+
+      const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
+      if (!ownerId) {
+        alert('Ошибка: не удалось определить автора специалиста');
+        return;
+      }
+
+      startChatWithUser(ownerId);
+    });
+  } else {
+    console.error('Chat button not found');
+  }
+
+  const writeButton = document.querySelector('.write-author-button-unique');
+  if (writeButton) {
+    writeButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
+      if (!ownerId) {
+        alert('Ошибка: не удалось определить автора специалиста');
+        return;
+      }
+      startChatWithUser(ownerId);
+    });
+  }
+}
+
+function startChatWithUser(userId) {
+  console.log('Starting chat with user:', userId);
+  
+  fetch(`/cosmochat/start-chat/${userId}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': getCookie('csrftoken'),
+      'Content-Type': 'application/json',
+    },
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      window.location.href = `/cosmochat/?chat_id=${data.chat_id}`;
+    } else {
+      alert('Ошибка при создании чата: ' + (data.error || 'Неизвестная ошибка'));
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Ошибка при создании чата');
+  });
+}
+
+// Вызов функции при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+  setupActionButtons();
+});

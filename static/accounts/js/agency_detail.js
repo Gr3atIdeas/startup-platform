@@ -970,7 +970,7 @@ function initializeCarousel() {
   function setupActionButtons() {
     console.log('Setting up action buttons...');
 
-    const chatButton = document.querySelector('.chat-button');
+    const chatButton = document.querySelector('.carousel-chat-button-unique');
     console.log('Chat button found:', !!chatButton);
     if (chatButton) {
       console.log('Chat button text:', chatButton.textContent.trim());
@@ -991,7 +991,7 @@ function initializeCarousel() {
       console.error('Chat button not found');
     }
 
-    const writeButton = document.querySelector('.write-author-button');
+    const writeButton = document.querySelector('.write-author-button-unique');
     console.log('Write button found:', !!writeButton);
     if (writeButton) {
       console.log('Write button text:', writeButton.textContent.trim());
