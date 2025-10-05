@@ -470,6 +470,7 @@ a:hover {
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 10px;
+  padding-left: 27px;
 }
 
 .author-content-row-unique {
@@ -3859,6 +3860,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   font-weight: 400;
   color: #FFEF2B;
   margin: 0;
+  padding-left: 27px;
 }
 
 .startup-detail-ai-rating-container {

@@ -115,16 +115,6 @@
         </div>
       </div>
       
-      <div class="investment-info-container">
-        <div class="investment-size-info">
-          <div class="investment-size-label">Успешных проектов</div>
-          <div class="investment-size-value">{{ agency.customization_data.successful_projects|default:0|floatformat:0|intcomma }}</div>
-        </div>
-        <div class="investment-cost-info">
-          <div class="investment-cost-label">Категория</div>
-          <div class="investment-cost-value">{{ agency.customization_data.agency_category|default:"Не указана" }}</div>
-        </div>
-      </div>
       
             <div class="agency-detail-ai-rating-info">
               <h3 class="agency-detail-ai-rating-title">Оценка</h3>
@@ -138,8 +128,8 @@
             </div>
             
       <div class="author-info-section">
-        <h3 class="author-section-title">Автор</h3>
         <div class="author-info-left-unique">
+          <h3 class="author-section-title">Автор</h3>
           <div class="author-content-row-unique">
             <div class="author-main-info-unique">
               <div class="author-avatar-circle-unique">

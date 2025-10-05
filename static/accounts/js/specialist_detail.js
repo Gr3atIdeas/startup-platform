@@ -32,9 +32,9 @@ function toggleTextTruncation(sectionId, maxLines) {
 window.toggleTextTruncation = toggleTextTruncation;
 
 document.addEventListener('DOMContentLoaded', function () {
-  const root = document.querySelector('.franchise-detail-page')
+  const root = document.querySelector('.specialist-detail-page')
   if (!root) return
-  const franchiseId = root.dataset.franchiseId
+  const specialistId = root.dataset.specialistId
   const csrfTokenInput = document.querySelector('input[name="csrfmiddlewaretoken"]')
   const csrfToken = csrfTokenInput ? csrfTokenInput.value : getCookie('csrftoken')
 
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
       alert('Ошибка безопасности. Перезагрузите страницу.');
       return;
     }
-    fetch(`/vote-specialist/${franchiseId}/`, {
+    fetch(`/vote-specialist/${specialistId}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -189,7 +189,7 @@ function setupSimilarSpecialistsShowMore() {
   if (!showMoreButton) return;
   showMoreButton.addEventListener('click', (e) => {
     e.preventDefault();
-    const root = document.querySelector('.franchise-detail-page');
+    const root = document.querySelector('.specialist-detail-page');
     if (!root) return;
     const url = root.dataset.loadSimilarUrl;
     if (!url) return;
@@ -198,7 +198,7 @@ function setupSimilarSpecialistsShowMore() {
     fetch(url)
       .then(r => r.text())
       .then(html => {
-        const grid = document.querySelector('.similar-franchises-grid');
+        const grid = document.querySelector('.similar-specialists-grid');
         if (!grid) return;
         if (!html || html.trim() === '') {
           grid.innerHTML = '<p style="margin-top:10px;color:#fff;opacity:.8;">Похожих специалистов пока нет.</p>';
@@ -280,7 +280,7 @@ function setupSimilarSpecialistsShowMore() {
     const ratingContainer = document.createElement('div');
     ratingContainer.className = 'comment-rating-input';
     ratingContainer.innerHTML = `
-      <div class="rating-input-label">Оцените агентство:</div>
+      <div class="rating-input-label">Оцените специалиста:</div>
       <div class="rating-input-stars" data-rating="0">
         ${[1,2,3,4,5].map(v => `
           <span class=\"rating-icon-container rating-input-icon\" data-value=\"${v}\">
@@ -325,34 +325,6 @@ function setupSimilarSpecialistsShowMore() {
     });
   }
 
-  function setupActionButtons() {
-    const chatButton = document.querySelector('.chat-button');
-    if (chatButton) {
-      chatButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
-        if (!ownerId) {
-          alert('Ошибка: не удалось определить автора специалиста');
-          return;
-        }
-        startChatWithUser(ownerId);
-      });
-    }
-
-    const writeButton = document.querySelector('.write-author-button');
-    if (writeButton) {
-      writeButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
-        if (!ownerId) {
-          alert('Ошибка: не удалось определить автора специалиста');
-          return;
-        }
-        startChatWithUser(ownerId);
-      });
-    }
-  }
-
   function startChatWithUser(userId) {
     fetch(`/cosmochat/start-chat/${userId}/`, {
       method: 'POST',
@@ -386,6 +358,143 @@ function setupSimilarSpecialistsShowMore() {
       });
   }
 
+  function setupActionButtons() {
+    console.log('Setting up action buttons...');
+
+    const chatButton = document.querySelector('.carousel-chat-button-unique');
+    console.log('Chat button found:', !!chatButton);
+    if (chatButton) {
+      console.log('Chat button text:', chatButton.textContent.trim());
+      console.log('Chat button classes:', chatButton.className);
+      chatButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Chat button clicked');
+
+        const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
+        if (!ownerId) {
+          alert('Ошибка: не удалось определить автора специалиста');
+          return;
+        }
+
+        startChatWithUser(ownerId);
+      });
+    } else {
+      console.error('Chat button not found');
+    }
+
+    const writeButton = document.querySelector('.write-author-button-unique');
+    if (writeButton) {
+      writeButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
+        if (!ownerId) {
+          alert('Ошибка: не удалось определить автора специалиста');
+          return;
+        }
+        startChatWithUser(ownerId);
+      });
+    }
+  }
+
+  function initializeCarousel() {
+    const carousel = document.getElementById('mediaCarousel');
+    if (!carousel) return;
+
+    const slides = carousel.querySelectorAll('.specialist-detail-carousel-slide');
+    const indicators = document.querySelectorAll('.specialist-detail-indicator');
+    const prevBtn = document.querySelector('.specialist-detail-carousel-prev');
+    const nextBtn = document.querySelector('.specialist-detail-carousel-next');
+    
+    let currentSlide = 0;
+    let autoSlideInterval;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+      
+      indicators.forEach((indicator, i) => {
+        indicator.classList.toggle('active', i === index);
+      });
+      
+      currentSlide = index;
+    }
+
+    function nextSlide() {
+      const nextIndex = (currentSlide + 1) % slides.length;
+      showSlide(nextIndex);
+    }
+
+    function prevSlide() {
+      const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(prevIndex);
+    }
+
+    function startAutoSlide() {
+      autoSlideInterval = setInterval(nextSlide, 5000);
+    }
+
+    function stopAutoSlide() {
+      clearInterval(autoSlideInterval);
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        nextSlide();
+        stopAutoSlide();
+        startAutoSlide();
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        prevSlide();
+        stopAutoSlide();
+        startAutoSlide();
+      });
+    }
+
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        showSlide(index);
+        stopAutoSlide();
+        startAutoSlide();
+      });
+    });
+
+    carousel.addEventListener('mouseenter', stopAutoSlide);
+    carousel.addEventListener('mouseleave', startAutoSlide);
+
+    if (slides.length > 1) {
+      startAutoSlide();
+    }
+  }
+
+  function setupModeratorDelete() {
+    const container = document.querySelector('.comments-list');
+    if (!container) return;
+    const csrf = getCookie('csrftoken');
+    container.addEventListener('click', function (e) {
+      const btn = e.target.closest('.comment-delete-btn');
+      if (!btn) return;
+      const card = btn.closest('.comment-card');
+      if (!card) return;
+      const commentId = card.getAttribute('data-comment-id');
+      if (!commentId) return;
+      if (!csrf) { alert('Ошибка безопасности. Перезагрузите страницу.'); return; }
+      fetch(`/delete-comment/specialist/${commentId}/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrf, 'X-Requested-With': 'XMLHttpRequest' }
+      }).then(r => r.json()).then(data => {
+        if (data && data.success) {
+          card.remove();
+        } else {
+          alert((data && data.error) || 'Не удалось удалить комментарий');
+        }
+      }).catch(() => alert('Сетевая ошибка при удалении'));
+    });
+  }
+
   setupRatingStars();
   setupCommentRatings();
   setupCommentRatingInput();
@@ -398,237 +507,6 @@ function setupSimilarSpecialistsShowMore() {
   setupActionButtons();
   initializeCarousel();
 });
-
-// Функции для кнопок чата и написания
-function setupActionButtons() {
-  console.log('Setting up action buttons...');
-
-  const chatButton = document.querySelector('.carousel-chat-button-unique');
-  console.log('Chat button found:', !!chatButton);
-  if (chatButton) {
-    console.log('Chat button text:', chatButton.textContent.trim());
-    console.log('Chat button classes:', chatButton.className);
-    chatButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      console.log('Chat button clicked');
-
-      const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
-      if (!ownerId) {
-        alert('Ошибка: не удалось определить автора специалиста');
-        return;
-      }
-
-      startChatWithUser(ownerId);
-    });
-  } else {
-    console.error('Chat button not found');
-  }
-
-  const writeButton = document.querySelector('.write-author-button-unique');
-  if (writeButton) {
-    writeButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
-      if (!ownerId) {
-        alert('Ошибка: не удалось определить автора специалиста');
-        return;
-      }
-      startChatWithUser(ownerId);
-    });
-  }
-}
-
-function startChatWithUser(userId) {
-  console.log('Starting chat with user:', userId);
-  
-  fetch(`/cosmochat/start-chat/${userId}/`, {
-    method: 'POST',
-    headers: {
-      'X-CSRFToken': getCookie('csrftoken'),
-      'Content-Type': 'application/json',
-    },
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      window.location.href = `/cosmochat/?chat_id=${data.chat_id}`;
-    } else {
-      alert('Ошибка при создании чата: ' + (data.error || 'Неизвестная ошибка'));
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Ошибка при создании чата');
-  });
-}
-
-// Вызов функции при загрузке страницы
-document.addEventListener('DOMContentLoaded', function() {
-  setupActionButtons();
-});function initializeCarousel() {
-  const carousel = document.getElementById('mediaCarousel');
-  if (!carousel) return;
-
-  const slides = carousel.querySelectorAll('.specialist-detail-carousel-slide');
-  const indicators = document.querySelectorAll('.specialist-detail-indicator');
-  const prevBtn = document.querySelector('.specialist-detail-carousel-prev');
-  const nextBtn = document.querySelector('.specialist-detail-carousel-next');
-  
-  let currentSlide = 0;
-  let autoSlideInterval;
-
-  function showSlide(index) {
-    slides.forEach((slide, i) => {
-      slide.classList.toggle('active', i === index);
-    });
-    
-    indicators.forEach((indicator, i) => {
-      indicator.classList.toggle('active', i === index);
-    });
-    
-    currentSlide = index;
-  }
-
-  function nextSlide() {
-    const nextIndex = (currentSlide + 1) % slides.length;
-    showSlide(nextIndex);
-  }
-
-  function prevSlide() {
-    const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
-    showSlide(prevIndex);
-  }
-
-  function startAutoSlide() {
-    autoSlideInterval = setInterval(nextSlide, 5000);
-  }
-
-  function stopAutoSlide() {
-    clearInterval(autoSlideInterval);
-  }
-
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      nextSlide();
-      stopAutoSlide();
-      startAutoSlide();
-    });
-  }
-
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      prevSlide();
-      stopAutoSlide();
-      startAutoSlide();
-    });
-  }
-
-  indicators.forEach((indicator, index) => {
-    indicator.addEventListener('click', () => {
-      showSlide(index);
-      stopAutoSlide();
-      startAutoSlide();
-    });
-  });
-
-// Функции для кнопок чата и написания
-function setupActionButtons() {
-  console.log('Setting up action buttons...');
-
-  const chatButton = document.querySelector('.carousel-chat-button-unique');
-  console.log('Chat button found:', !!chatButton);
-  if (chatButton) {
-    console.log('Chat button text:', chatButton.textContent.trim());
-    console.log('Chat button classes:', chatButton.className);
-    chatButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      console.log('Chat button clicked');
-
-      const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
-      if (!ownerId) {
-        alert('Ошибка: не удалось определить автора специалиста');
-        return;
-      }
-
-      startChatWithUser(ownerId);
-    });
-  } else {
-    console.error('Chat button not found');
-  }
-
-  const writeButton = document.querySelector('.write-author-button-unique');
-  if (writeButton) {
-    writeButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
-      if (!ownerId) {
-        alert('Ошибка: не удалось определить автора специалиста');
-        return;
-      }
-      startChatWithUser(ownerId);
-    });
-  }
-}
-
-function startChatWithUser(userId) {
-  console.log('Starting chat with user:', userId);
-  
-  fetch(`/cosmochat/start-chat/${userId}/`, {
-    method: 'POST',
-    headers: {
-      'X-CSRFToken': getCookie('csrftoken'),
-      'Content-Type': 'application/json',
-    },
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      window.location.href = `/cosmochat/?chat_id=${data.chat_id}`;
-    } else {
-      alert('Ошибка при создании чата: ' + (data.error || 'Неизвестная ошибка'));
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Ошибка при создании чата');
-  });
-}
-
-// Вызов функции при загрузке страницы
-document.addEventListener('DOMContentLoaded', function() {
-  setupActionButtons();
-});  carousel.addEventListener('mouseenter', stopAutoSlide);
-  carousel.addEventListener('mouseleave', startAutoSlide);
-
-  if (slides.length > 1) {
-    startAutoSlide();
-  }
-}
-
-function setupModeratorDelete() {
-  const container = document.querySelector('.comments-list');
-  if (!container) return;
-  const csrf = getCookie('csrftoken');
-  container.addEventListener('click', function (e) {
-    const btn = e.target.closest('.comment-delete-btn');
-    if (!btn) return;
-    const card = btn.closest('.comment-card');
-    if (!card) return;
-    const commentId = card.getAttribute('data-comment-id');
-    if (!commentId) return;
-    if (!csrf) { alert('Ошибка безопасности. Перезагрузите страницу.'); return; }
-    fetch(`/delete-comment/specialist/${commentId}/`, {
-      method: 'POST',
-      headers: { 'X-CSRFToken': csrf, 'X-Requested-With': 'XMLHttpRequest' }
-    }).then(r => r.json()).then(data => {
-      if (data && data.success) {
-        card.remove();
-      } else {
-        alert((data && data.error) || 'Не удалось удалить комментарий');
-      }
-    }).catch(() => alert('Сетевая ошибка при удалении'));
-  });
-}
 
 // Функции для управления выпадающим меню
 function toggleManagementDropdown() {
@@ -654,72 +532,4 @@ document.addEventListener('click', function(event) {
   if (dropdown && button && !button.contains(event.target) && !dropdown.contains(event.target)) {
     dropdown.classList.remove('show');
   }
-});
-
-// Функции для кнопок чата и написания
-function setupActionButtons() {
-  console.log('Setting up action buttons...');
-
-  const chatButton = document.querySelector('.carousel-chat-button-unique');
-  console.log('Chat button found:', !!chatButton);
-  if (chatButton) {
-    console.log('Chat button text:', chatButton.textContent.trim());
-    console.log('Chat button classes:', chatButton.className);
-    chatButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      console.log('Chat button clicked');
-
-      const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
-      if (!ownerId) {
-        alert('Ошибка: не удалось определить автора специалиста');
-        return;
-      }
-
-      startChatWithUser(ownerId);
-    });
-  } else {
-    console.error('Chat button not found');
-  }
-
-  const writeButton = document.querySelector('.write-author-button-unique');
-  if (writeButton) {
-    writeButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
-      if (!ownerId) {
-        alert('Ошибка: не удалось определить автора специалиста');
-        return;
-      }
-      startChatWithUser(ownerId);
-    });
-  }
-}
-
-function startChatWithUser(userId) {
-  console.log('Starting chat with user:', userId);
-  
-  fetch(`/cosmochat/start-chat/${userId}/`, {
-    method: 'POST',
-    headers: {
-      'X-CSRFToken': getCookie('csrftoken'),
-      'Content-Type': 'application/json',
-    },
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      window.location.href = `/cosmochat/?chat_id=${data.chat_id}`;
-    } else {
-      alert('Ошибка при создании чата: ' + (data.error || 'Неизвестная ошибка'));
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Ошибка при создании чата');
-  });
-}
-
-// Вызов функции при загрузке страницы
-document.addEventListener('DOMContentLoaded', function() {
-  setupActionButtons();
 });

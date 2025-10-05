@@ -806,7 +806,7 @@ a:hover {
 }
 
 .franchise-detail-ai-rating-info {
-  width: 450px;
+  width: 407px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -818,6 +818,7 @@ a:hover {
   font-weight: 400;
   color: #FFEF2B;
   margin: 0;
+  padding-left: 27px;
 }
 
 .franchise-detail-ai-rating-container {
@@ -4240,6 +4241,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 10px;
+  padding-left: 27px;
 }
 
 .author-content-row-unique {
