@@ -336,14 +336,15 @@ a:hover {
 .agency-detail-carousel-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 0;
+  background-color: var(--dark-card-bg);
 }
 
 
 .agency-detail-carousel-indicators {
   position: absolute;
-  left: 194px;
+  left: 180px;
   bottom: 31px;
   display: flex;
   gap: 6px;
@@ -4229,8 +4230,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   color: #FFEF2B;
   font-size: 16px;
   font-weight: 400;
-  margin-bottom: 10px;
-  padding-left: 27px;
+  margin-bottom: 18px;
+  padding-left: 3px;
 }
 
 .author-content-row-unique {
