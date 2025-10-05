@@ -1692,7 +1692,7 @@ function openAddInvestorModal() {
 // Закрытие выпадающего меню при клике вне его
 document.addEventListener('click', function(event) {
   const dropdown = document.getElementById('managementDropdown');
-  const button = document.querySelector('.management-button');
+  const button = document.querySelector('.management-top-button');
   
   if (dropdown && button && !button.contains(event.target) && !dropdown.contains(event.target)) {
     dropdown.classList.remove('show');
