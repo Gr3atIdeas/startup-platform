@@ -498,4 +498,30 @@ function setupModeratorDelete() {
   });
 }
 
+// Функции для управления выпадающим меню
+function toggleManagementDropdown() {
+  const dropdown = document.getElementById('managementDropdown');
+  if (dropdown) {
+    dropdown.classList.toggle('show');
+  }
+}
+
+function openChangeOwnerModal() {
+  const modal = document.getElementById('changeOwnerModal');
+  if (modal) {
+    const bsModal = new bootstrap.Modal(modal);
+    bsModal.show();
+  }
+}
+
+// Закрытие выпадающего меню при клике вне его
+document.addEventListener('click', function(event) {
+  const dropdown = document.getElementById('managementDropdown');
+  const button = document.querySelector('.management-top-button');
+  
+  if (dropdown && button && !button.contains(event.target) && !dropdown.contains(event.target)) {
+    dropdown.classList.remove('show');
+  }
+});
+
 
