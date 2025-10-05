@@ -35,6 +35,36 @@ def get_item(dictionary, key):
     return dictionary.get(key, "")
 
 @register.filter
+def translate_category(category_name):
+    """Переводит название категории на русский язык"""
+    if not category_name:
+        return "Без категории"
+    
+    category_mapping = {
+        'Technology': 'Технологии',
+        'Healthcare': 'Здравоохранение',
+        'Finance': 'Финансы',
+        'Education': 'Образование',
+        'E-commerce': 'Электронная коммерция',
+        'Real Estate': 'Недвижимость',
+        'Transportation': 'Транспорт',
+        'Entertainment': 'Развлечения',
+        'Food & Beverage': 'Еда и напитки',
+        'Fashion': 'Мода',
+        'Sports': 'Спорт',
+        'Travel': 'Путешествия',
+        'Media': 'Медиа',
+        'Manufacturing': 'Производство',
+        'Agriculture': 'Сельское хозяйство',
+        'Energy': 'Энергетика',
+        'Environment': 'Экология',
+        'Social': 'Социальные проекты',
+        'Other': 'Другое'
+    }
+    
+    return category_mapping.get(category_name, category_name)
+
+@register.filter
 def translate_stage(stage_name):
     """Переводит название стадии стартапа на русский язык"""
     if not stage_name:
