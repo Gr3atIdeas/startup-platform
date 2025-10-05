@@ -4223,8 +4223,9 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .author-info-left-unique {
   display: flex;
   width: 407px;
-  height: 137px;
-  padding: 18px 23px;
+  height: auto;
+  min-height: 137px;
+  padding: 18px 23px 38px;
   flex-direction: column;
   align-items: flex-start;
   gap: 19px;
