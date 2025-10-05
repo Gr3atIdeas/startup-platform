@@ -329,8 +329,64 @@ a:hover {
 .franchise-detail-carousel-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 8px;
+}
+
+.franchise-detail-carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.carousel-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 2;
+}
+
+.planet-thumbnail {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 8, 25, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.planet-thumbnail .planet-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.chat-button {
+  background: rgba(0, 8, 25, 0.7);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: Unbounded, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.chat-button:hover {
+  background: rgba(0, 8, 25, 0.9);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .franchise-detail-carousel-indicators {
@@ -634,6 +690,7 @@ a:hover {
 .management-dropdown {
   position: relative;
   width: 337px;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 
@@ -3883,4 +3940,107 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .rating-input-hidden {
   display: none;
+}
+
+.content-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  margin-top: 25px;
+}
+
+.content-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 34px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 15px;
+  padding: 50px 0 38px 50px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.block-image {
+  width: 191px;
+  height: 168.63px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.block-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.block-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.block-title {
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.59;
+  letter-spacing: -2%;
+  color: #FFEF2B;
+  margin: 0;
+}
+
+.block-button {
+  background: #2353D9;
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  padding: 12px;
+  font-family: Unbounded, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  cursor: pointer;
+  box-shadow: 1px 1px 5px 1px rgba(10, 42, 75, 0.41);
+  transition: all 0.3s ease;
+}
+
+.block-button:hover {
+  background: #1a42b8;
+}
+
+.block-button:disabled {
+  background: #666;
+  cursor: not-allowed;
+}
+
+.block-value {
+  padding: 9px 13px;
+  border-radius: 10px;
+  font-family: Unbounded, sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.24;
+  letter-spacing: 1%;
+  color: #fff;
+  display: inline-block;
+}
+
+.accent-yellow-bg {
+  background: #FFEF2B;
+  color: #000;
+}
+
+.accent-blue-bg {
+  background: #2353D9;
+}
+
+.accent-white-bg {
+  background: #fff;
+  color: #000;
 }

@@ -66,6 +66,13 @@
           <button class="specialist-detail-carousel-next" aria-label="Следующее изображение">
             <i class="fas fa-chevron-right"></i>
           </button>
+          
+          <div class="carousel-controls">
+            <div class="planet-thumbnail">
+              <img src="{% static 'accounts/images/planets/' %}{{ specialist.owner.planet }}.svg" alt="Планета {{ specialist.owner.planet }}" class="planet-icon">
+            </div>
+            <button class="action-button chat-button">Чат</button>
+          </div>
         {% endif %}
         
         <div class="author-avatar">
@@ -85,7 +92,6 @@
         </div>
         
         <div class="specialist-detail-planet-sidebar">
-          <button class="action-button chat-button">Чат</button>
         </div>
       
         {% if user.is_authenticated and user.role.role_name == 'moderator' %}
@@ -199,15 +205,6 @@
 
           
         </div>
-
-                 <div class="actions-top-right">
-           <div class="franchise-info-badge">Специалист</div>
-           {% if user.is_authenticated and user == specialist.owner %}
-             <a href="{% url 'edit_specialist' specialist_id=specialist.specialist_id %}" class="action-button edit-button">Редактировать</a>
-           {% elif user.is_authenticated and user.role.role_name == 'moderator' %}
-             <a href="{% url 'edit_specialist' specialist_id=specialist.specialist_id %}" class="action-button edit-button">Редактировать</a>
-           {% endif %}
-         </div>
       </div> 
 
       <div class="tabbed-content-wrapper">
@@ -250,43 +247,44 @@
             </div>
 
             
-            <div class="info-card-grid">
+            <div class="content-blocks">
               
-              <div class="info-card">
-                <div class="info-card-icon-container">
-                  <img src="{% static 'accounts/images/startups/image.svg' %}" alt="Презентация" class="info-card-icon">
+              <div class="content-block">
+                <div class="block-image">
+                  <img src="{% static 'accounts/images/startups/image.svg' %}" alt="Презентация" class="block-icon">
                 </div>
-                <span class="info-card-title">Презентация</span>
-                {% if specialist.pitch_deck_url %}
-                  <a href="{{ specialist.pitch_deck_url }}" target="_blank" class="action-button info-card-button view-button">Смотреть</a>
-                {% else %}
-                  <button class="action-button info-card-button view-button" disabled>Смотреть</button>
-                {% endif %}
-              </div>
-
-              
-              <div class="info-card">
-                <div class="info-card-icon-container">
-                  <img src="{% static 'accounts/images/startups/award.svg' %}" alt="Оценка" class="info-card-icon">
-                </div>
-                <span class="info-card-title">Оценка</span>
-                <div class="info-card-value-button accent-yellow-bg">
-                  {{ average_rating|default:0|floatformat:"1" }}
+                <div class="block-content">
+                  <h3 class="block-title">Презентация</h3>
+                  {% if specialist.pitch_deck_url %}
+                    <a href="{{ specialist.pitch_deck_url }}" target="_blank" class="action-button block-button">Смотреть</a>
+                  {% else %}
+                    <button class="action-button block-button" disabled>Смотреть</button>
+                  {% endif %}
                 </div>
               </div>
 
-              
-              
-
-              
-              <div class="info-card">
-                <div class="info-card-icon-container">
-                  <img src="{% static 'accounts/images/startups/boxes.svg' %}" alt="Категория" class="info-card-icon">
+              <div class="content-block">
+                <div class="block-image">
+                  <img src="{% static 'accounts/images/startups/award.svg' %}" alt="Оценка" class="block-icon">
                 </div>
-                          <span class="info-card-title">Категория</span>
-          <div class="info-card-value-button accent-white-bg">
-            {{ specialist.customization_data.specialist_category|default:"Не указана" }}
-          </div>
+                <div class="block-content">
+                  <h3 class="block-title">Оценка</h3>
+                  <div class="block-value accent-yellow-bg">
+                    {{ average_rating|default:0|floatformat:"1" }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="content-block">
+                <div class="block-image">
+                  <img src="{% static 'accounts/images/startups/boxes.svg' %}" alt="Категория" class="block-icon">
+                </div>
+                <div class="block-content">
+                  <h3 class="block-title">Категория</h3>
+                  <div class="block-value accent-white-bg">
+                    {{ specialist.customization_data.specialist_category|default:"Не указана" }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
