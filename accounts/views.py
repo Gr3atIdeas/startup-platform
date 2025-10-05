@@ -7734,11 +7734,11 @@ def vote_franchise(request, franchise_id):
         return JsonResponse(
             {"success": False, "error": "Недопустимое значение рейтинга"}
         )
-    if UserVotes.objects.filter(user=request.user, franchise=franchise).exists():
+    if FranchiseVotes.objects.filter(user=request.user, franchise=franchise).exists():
         return JsonResponse(
             {"success": False, "error": "Вы уже голосовали за эту франшизу"}
         )
-    UserVotes.objects.create(
+    FranchiseVotes.objects.create(
         user=request.user, franchise=franchise, rating=rating, created_at=timezone.now()
     )
     franchise.total_voters += 1

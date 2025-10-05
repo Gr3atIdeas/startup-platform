@@ -220,9 +220,6 @@ class UserVotes(models.Model):
     startup = models.ForeignKey(
         "Startups", on_delete=models.CASCADE, db_column="startup_id", blank=True, null=True
     )
-    franchise = models.ForeignKey(
-        "Franchises", on_delete=models.CASCADE, db_column="franchise_id", blank=True, null=True
-    )
     rating = models.IntegerField(db_column="vote_value")
     created_at = models.DateTimeField(blank=True, null=True)
     class Meta:
