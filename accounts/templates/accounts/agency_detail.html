@@ -28,6 +28,11 @@
     <a href="{% url 'agencies_list' %}" class="back-button">
       <i class="fas fa-arrow-left"></i> Назад
     </a>
+    {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+      <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="management-top-button">
+        Управление <i class="fas fa-chevron-down"></i>
+      </a>
+    {% endif %}
   </div>
 
   <div class="top-section">
@@ -89,16 +94,6 @@
         <div class="agency-detail-planet-sidebar">
         </div>
       
-        {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-          <div class="management-dropdown">
-            <button class="action-button management-button" onclick="toggleManagementDropdown()">
-              Управление <i class="fas fa-chevron-down"></i>
-            </button>
-            <div class="management-dropdown-content" id="managementDropdown">
-              <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="management-item">Редактировать</a>
-              <button class="management-item" onclick="openChangeOwnerModal()">Сменить владельца</button>
-            </div>
-          </div>
         {% endif %}
       
       <div class="action-buttons-container">

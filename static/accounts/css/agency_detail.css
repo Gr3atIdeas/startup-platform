@@ -72,6 +72,9 @@ a:hover {
   padding: 0 12px;
   box-sizing: border-box;
   margin: 0 auto 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .back-button {
@@ -81,6 +84,21 @@ a:hover {
   color: var(--text-secondary);
   font-size: 16px;
   font-weight: 400; 
+}
+
+.management-top-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.management-top-button:hover {
+  color: var(--accent-purple);
 }
 
 
@@ -287,19 +305,19 @@ a:hover {
 
 
 .left-column {
-  width: 450px;
-  height: 976px;
+  width: 407px;
+  height: 880px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 53px;
+  gap: 48px;
   flex-shrink: 0;
 }
 
 .agency-detail-media-container {
-  width: 450px;
-  height: 448px;
-  border-radius: 10px;
+  width: 407px;
+  height: 404px;
+  border-radius: 9px;
   border: 2px solid rgba(201, 201, 201, 0.26);
   background-color: var(--dark-card-bg);
   position: relative;
@@ -467,18 +485,18 @@ a:hover {
 }
 
 .action-buttons-container {
-  width: 336px;
+  width: 304px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 27px;
+  gap: 24px;
 }
 
 .action-button {
-  width: 337px;
-  height: 54px;
-  border-radius: 23px;
-  padding: 12px 35px;
+  width: 304px;
+  height: 49px;
+  border-radius: 21px;
+  padding: 11px 32px;
   box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
   font-size: 16px;
   font-weight: 400;
@@ -661,6 +679,11 @@ a:hover {
   position: relative;
   width: 337px;
   margin-bottom: 20px;
+  display: none;
+}
+
+.management-dropdown.show {
+  display: block;
 }
 
 .management-button {

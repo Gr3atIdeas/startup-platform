@@ -72,6 +72,9 @@ a:hover {
   padding: 0 12px;
   box-sizing: border-box;
   margin: 0 auto 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .back-button {
@@ -81,6 +84,21 @@ a:hover {
   color: var(--text-secondary);
   font-size: 16px;
   font-weight: 400; 
+}
+
+.management-top-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.management-top-button:hover {
+  color: var(--accent-purple);
 }
 
 
@@ -281,19 +299,19 @@ a:hover {
 
 
 .left-column {
-  width: 450px;
-  height: 976px;
+  width: 407px;
+  height: 880px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 53px;
+  gap: 48px;
   flex-shrink: 0;
 }
 
 .startup-detail-media-container {
-  width: 450px;
-  height: 448px;
-  border-radius: 10px;
+  width: 407px;
+  height: 404px;
+  border-radius: 9px;
   border: 2px solid rgba(201, 201, 201, 0.26);
   background-color: var(--dark-card-bg);
   position: relative;
@@ -384,13 +402,13 @@ a:hover {
 
 .carousel-chat-positioned {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 68px;
-  height: 68px;
+  bottom: 18px;
+  right: 18px;
+  width: 61px;
+  height: 61px;
   background: #FFFFFF;
   border: none;
-  border-radius: 55px;
+  border-radius: 50px;
   color: #000000;
   font-size: 14px;
   font-weight: 300;
@@ -400,7 +418,7 @@ a:hover {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 7px 0;
+  padding: 6px 0;
   transition: all 0.3s ease;
   z-index: 10;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -463,18 +481,18 @@ a:hover {
 }
 
 .action-buttons-container {
-  width: 336px;
+  width: 304px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 27px;
+  gap: 24px;
 }
 
 .action-button {
-  width: 337px;
-  height: 54px;
-  border-radius: 23px;
-  padding: 12px 35px;
+  width: 304px;
+  height: 49px;
+  border-radius: 21px;
+  padding: 11px 32px;
   box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
   font-size: 16px;
   font-weight: 400;
@@ -656,6 +674,11 @@ a:hover {
   position: relative;
   width: 337px;
   margin-bottom: 20px;
+  display: none;
+}
+
+.management-dropdown.show {
+  display: block;
 }
 
 .management-button {
@@ -914,17 +937,17 @@ a:hover {
 
 
 .author-info-left {
-  width: 450px;
-  height: 137px;
+  width: 407px;
+  height: 124px;
   background: rgba(0, 0, 0, 0.11);
-  border-radius: 10px;
+  border-radius: 9px;
   box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(20px);
-  padding: 9px 23px 27px;
+  padding: 8px 21px 24px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 19px;
+  gap: 17px;
   box-sizing: border-box;
 }
 
@@ -3713,14 +3736,14 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .startup-detail-ai-rating-info {
-  width: 450px;
+  width: 407px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 22px;
 }
 
 .startup-detail-ai-rating-title {
-  width: 129px;
+  width: 116px;
   font-size: 16px;
   font-weight: 400;
   color: #FFEF2B;
@@ -3731,10 +3754,10 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 19px;
+  gap: 17px;
   background: #2353D9;
-  padding: 9px 26px;
-  border-radius: 10px;
+  padding: 8px 23px;
+  border-radius: 9px;
 }
 
 .startup-detail-ai-rating-icon {
