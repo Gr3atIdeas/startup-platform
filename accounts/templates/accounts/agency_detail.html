@@ -48,7 +48,7 @@
           
           {% if slider_images %}
           <div class="agency-detail-carousel-track" id="mediaCarousel">
-            {% for url in slider_images %}
+            {% for url in slider_images|slice:":4" %}
               <div class="agency-detail-carousel-slide {% if forloop.first %}active{% endif %}">
                 <img src="{% get_file_url_tag url agency.agency_id 'creative' 'agency' %}" 
                      alt="Изображение {{ forloop.counter }}" 
@@ -57,7 +57,7 @@
             {% endfor %}
           </div>
           <div class="agency-detail-carousel-indicators">
-            {% for url in slider_images %}
+            {% for url in slider_images|slice:":4" %}
               <span class="agency-detail-indicator {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
             {% endfor %}
           </div>
@@ -67,13 +67,7 @@
           <button class="agency-detail-carousel-next" aria-label="Следующее изображение">
             <i class="fas fa-chevron-right"></i>
           </button>
-          
-          <div class="carousel-controls">
-            <div class="planet-thumbnail">
-              <img src="{% static 'accounts/images/planets/' %}{{ agency.owner.planet }}.svg" alt="Планета {{ agency.owner.planet }}" class="planet-icon">
-            </div>
-            <button class="action-button chat-button">Чат</button>
-          </div>
+          <button class="action-button chat-button carousel-chat-button">Чат</button>
         {% endif %}
         
         <div class="author-avatar">
@@ -93,6 +87,7 @@
         </div>
         
         <div class="agency-detail-planet-sidebar">
+          <button class="action-button chat-button">Чат</button>
         </div>
       
         {% if user.is_authenticated and user.role.role_name == 'moderator' %}
@@ -221,6 +216,29 @@
 
           
         </div>
+
+        <div class="progress-container">
+          <div class="progress-bar-visual">
+            <div class="progress-animation-container" style="width: {{ progress_percentage|default:0 }}%;">
+              <div class="progress-planets"></div>
+            </div>
+            <span class="progress-percentage">{{ progress_percentage|default:0|floatformat:0 }}%</span>
+          </div>
+          <div class="progress-backers-info">
+            <i class="fas fa-users"></i>
+            <span id="investor-count-display">({{ investors_count }})</span>
+          </div>
+        </div>
+
+        <div class="actions-top-right">
+           <div class="agency-info-badge">Агентство</div>
+           {% if user.is_authenticated and user == agency.owner %}
+             <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
+           {% elif user.is_authenticated and user.role.role_name == 'moderator' %}
+             <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
+             <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
+           {% endif %}
+         </div>
       </div> 
 
       <div class="tabbed-content-wrapper">
@@ -262,55 +280,19 @@
             </div>
 
             
-            <div class="content-blocks">
+            <div class="info-blocks-container">
               
-              <div class="content-block">
-                <div class="block-image">
-                  <img src="{% static 'accounts/images/startups/image.svg' %}" alt="Презентация" class="block-icon">
+              <div class="info-block presentation-block">
+                <div class="info-block-image">
+                  <img src="{% static 'accounts/images/figma_assets/presentation_image.png' %}" alt="Презентация" class="presentation-image">
                 </div>
-                <div class="block-content">
-                  <h3 class="block-title">Презентация</h3>
+                <div class="info-block-content">
+                  <h3 class="info-block-title">Презентация</h3>
                   {% if agency.customization_data.agency_pitch_deck_url %}
-                    <a href="{{ agency.customization_data.agency_pitch_deck_url }}" target="_blank" class="action-button block-button">Смотреть</a>
+                    <a href="{{ agency.customization_data.agency_pitch_deck_url }}" target="_blank" class="action-button info-block-button">Смотреть</a>
                   {% else %}
-                    <button class="action-button block-button" disabled>Смотреть</button>
+                    <button class="action-button info-block-button" disabled>Смотреть</button>
                   {% endif %}
-                </div>
-              </div>
-
-              <div class="content-block">
-                <div class="block-image">
-                  <img src="{% static 'accounts/images/startups/award.svg' %}" alt="Оценка" class="block-icon">
-                </div>
-                <div class="block-content">
-                  <h3 class="block-title">Оценка</h3>
-                  <div class="block-value accent-yellow-bg">
-                    {{ average_rating|default:0|floatformat:"1" }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="content-block">
-                <div class="block-image">
-                  <img src="{% static 'accounts/images/startups/piggy-bank.svg' %}" alt="Успешных проектов" class="block-icon">
-                </div>
-                <div class="block-content">
-                  <h3 class="block-title">Успешных проектов</h3>
-                  <div class="block-value accent-blue-bg">
-                    {{ agency.customization_data.successful_projects|default:0|floatformat:0|intcomma }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="content-block">
-                <div class="block-image">
-                  <img src="{% static 'accounts/images/startups/boxes.svg' %}" alt="Категория" class="block-icon">
-                </div>
-                <div class="block-content">
-                  <h3 class="block-title">Категория</h3>
-                  <div class="block-value accent-white-bg">
-                    {{ agency.customization_data.agency_category|default:"Не указана" }}
-                  </div>
                 </div>
               </div>
             </div>

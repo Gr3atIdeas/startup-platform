@@ -48,7 +48,7 @@
           
           {% if slider_images %}
           <div class="franchise-detail-carousel-track" id="mediaCarousel">
-            {% for url in slider_images %}
+            {% for url in slider_images|slice:":4" %}
               <div class="franchise-detail-carousel-slide {% if forloop.first %}active{% endif %}">
                 <img src="{% get_file_url_tag url franchise.franchise_id 'creative' 'franchise' %}" 
                      alt="Изображение {{ forloop.counter }}" 
@@ -57,7 +57,7 @@
             {% endfor %}
           </div>
           <div class="franchise-detail-carousel-indicators">
-            {% for url in slider_images %}
+            {% for url in slider_images|slice:":4" %}
               <span class="franchise-detail-indicator {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
             {% endfor %}
           </div>
@@ -67,13 +67,7 @@
           <button class="franchise-detail-carousel-next" aria-label="Следующее изображение">
             <i class="fas fa-chevron-right"></i>
           </button>
-          
-          <div class="carousel-controls">
-            <div class="planet-thumbnail">
-              <img src="{% static 'accounts/images/planets/' %}{{ franchise.owner.planet }}.svg" alt="Планета {{ franchise.owner.planet }}" class="planet-icon">
-            </div>
-            <button class="action-button chat-button">Чат</button>
-          </div>
+          <button class="action-button chat-button carousel-chat-button">Чат</button>
         {% endif %}
         
         <div class="author-avatar">
@@ -93,6 +87,7 @@
         </div>
         
         <div class="franchise-detail-planet-sidebar">
+          <button class="action-button chat-button">Чат</button>
         </div>
       
         {% if user.is_authenticated and user.role.role_name == 'moderator' %}
@@ -214,6 +209,14 @@
 
           
         </div>
+
+                 <div class="actions-top-right">
+           <div class="franchise-info-badge">Франшиза</div>
+           {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+             <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}" class="action-button edit-button">Редактировать</a>
+             <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
+           {% endif %}
+         </div>
       </div> 
 
       <div class="tabbed-content-wrapper">
@@ -256,55 +259,19 @@
             </div>
 
             
-            <div class="content-blocks">
+            <div class="info-blocks-container">
               
-              <div class="content-block">
-                <div class="block-image">
-                  <img src="{% static 'accounts/images/startups/image.svg' %}" alt="Презентация" class="block-icon">
+              <div class="info-block presentation-block">
+                <div class="info-block-image">
+                  <img src="{% static 'accounts/images/figma_assets/presentation_image.png' %}" alt="Презентация" class="presentation-image">
                 </div>
-                <div class="block-content">
-                  <h3 class="block-title">Презентация</h3>
+                <div class="info-block-content">
+                  <h3 class="info-block-title">Презентация</h3>
                   {% if franchise.pitch_deck_url %}
-                    <a href="{{ franchise.pitch_deck_url }}" target="_blank" class="action-button block-button">Смотреть</a>
+                    <a href="{{ franchise.pitch_deck_url }}" target="_blank" class="action-button info-block-button">Смотреть</a>
                   {% else %}
-                    <button class="action-button block-button" disabled>Смотреть</button>
+                    <button class="action-button info-block-button" disabled>Смотреть</button>
                   {% endif %}
-                </div>
-              </div>
-
-              <div class="content-block">
-                <div class="block-image">
-                  <img src="{% static 'accounts/images/startups/award.svg' %}" alt="Оценка" class="block-icon">
-                </div>
-                <div class="block-content">
-                  <h3 class="block-title">Оценка</h3>
-                  <div class="block-value accent-yellow-bg">
-                    {{ average_rating|default:0|floatformat:"1" }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="content-block">
-                <div class="block-image">
-                  <img src="{% static 'accounts/images/startups/piggy-bank.svg' %}" alt="Размер инвестиций" class="block-icon">
-                </div>
-                <div class="block-content">
-                  <h3 class="block-title">Размер инвестиций</h3>
-                  <div class="block-value accent-blue-bg">
-                    {{ franchise.investment_size|default:0|floatformat:0|intcomma }} ₽
-                  </div>
-                </div>
-              </div>
-
-              <div class="content-block">
-                <div class="block-image">
-                  <img src="{% static 'accounts/images/startups/boxes.svg' %}" alt="Категория" class="block-icon">
-                </div>
-                <div class="block-content">
-                  <h3 class="block-title">Категория</h3>
-                  <div class="block-value accent-white-bg">
-                    {{ franchise.direction.direction_name|translate_category|default:"Не указана" }}
-                  </div>
                 </div>
               </div>
             </div>
