@@ -895,17 +895,16 @@ a:hover {
 .author-info-left {
   display: flex;
   width: 450px;
-  height: 152px;
-  padding: 12px 30px;
+  height: 137px;
+  padding: 9px 23px 27px;
   flex-direction: column;
   align-items: flex-start;
-  gap: 23px;
+  gap: 19px;
   flex-shrink: 0;
   border-radius: 10px;
-  background: rgb(0 0 0 / 27%);
-  box-shadow: 6px 6px 10px 0 rgb(0 0 0 / 25%);
-  backdrop-filter: blur(10px);
-  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.11);
+  box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(20px);
 }
 
 .author-header {
@@ -1618,11 +1617,23 @@ a:hover {
   justify-content: center;
 }
 
-.presentation-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.stage-icon-container {
+  width: 46px;
+  height: 46px;
+  border-radius: 50px;
+  border: 1px solid #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.presentation-image-container {
+  width: 60px;
+  height: 60px;
   border-radius: 10px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .info-block-content {
@@ -3119,6 +3130,77 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   position: relative;
   margin-bottom: 30px; 
   padding: 0 10px; 
+}
+
+.progress-container {
+  width: 100%;
+  height: 50px;
+  flex-shrink: 0;
+  border-radius: 25px;
+  background-color: rgb(11 26 63 / 80%);
+  border: 1px solid rgb(43 237 255 / 50%);
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+  max-width: 1303px;
+}
+
+.progress-bar-visual {
+  flex-grow: 1; 
+  flex-shrink: 1; 
+  height: 100%; 
+  background: linear-gradient(90deg, #2BEDFF 0%, #00D4FF 100%);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-animation-container {
+  height: 100%;
+  position: relative;
+  transition: width 0.3s ease;
+}
+
+.progress-planets {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #2BEDFF 0%, #00D4FF 100%);
+  border-radius: 20px;
+}
+
+.progress-percentage {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 2;
+}
+
+.progress-backers-info {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 2;
+}
+
+.progress-backers-info i {
+  font-size: 14px;
 }
 
 .timeline-progress-container {

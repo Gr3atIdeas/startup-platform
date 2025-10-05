@@ -106,10 +106,6 @@
         <button class="action-button primary-button">Выкупить</button>
         <div class="secondary-actions">
           <button class="action-button secondary-button">Инвестировать</button>
-          <div class="verification-badge">
-            <i class="fas fa-check-circle"></i>
-            <span>Проверено</span>
-          </div>
         </div>
       </div>
       
@@ -131,8 +127,8 @@
                   <span class="agency-detail-ai-label">AI</span>
                 </div>
                 <span class="agency-detail-ai-rating-value">5 из 10</span>
+                <span class="agency-detail-ai-rating-date">Создан {{ agency.created_at|date:"d/m/Y" }}</span>
               </div>
-              <span class="agency-detail-ai-rating-date">Создан {{ agency.created_at|date:"d/m/Y" }}</span>
             </div>
             
       <div class="author-info-left">
@@ -141,12 +137,12 @@
           <div class="author-meta">
             <div class="author-info">
               <div class="author-name">{{ agency.owner.first_name|default:"Автор" }} {{ agency.owner.last_name }}</div>
-              <div class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</div>
+              <div class="author-rating">Рейтинг: {{ average_rating|floatformat:"1" }}/5</div>
+              <a href="#comments-section" class="author-reviews-link">Отзывы</a>
             </div>
           </div>
           <button class="action-button write-author-button">Написать</button>
         </div>
-        <div class="creation-date">Создан {{ agency.created_at|date:"d/m/Y" }}</div>
       </div>
     </div>
     
@@ -229,16 +225,6 @@
             <span id="investor-count-display">({{ investors_count }})</span>
           </div>
         </div>
-
-        <div class="actions-top-right">
-           <div class="agency-info-badge">Агентство</div>
-           {% if user.is_authenticated and user == agency.owner %}
-             <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
-           {% elif user.is_authenticated and user.role.role_name == 'moderator' %}
-             <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="action-button edit-button">Редактировать</a>
-             <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">Сменить владельца</button>
-           {% endif %}
-         </div>
       </div> 
 
       <div class="tabbed-content-wrapper">
@@ -284,7 +270,9 @@
               
               <div class="info-block presentation-block">
                 <div class="info-block-image">
-                  <img src="{% static 'accounts/images/figma_assets/presentation_image.png' %}" alt="Презентация" class="presentation-image">
+                  <div class="presentation-image-container">
+                    <img src="{% static 'accounts/images/figma_assets/presentation_image.png' %}" alt="Презентация" class="presentation-image">
+                  </div>
                 </div>
                 <div class="info-block-content">
                   <h3 class="info-block-title">Презентация</h3>
