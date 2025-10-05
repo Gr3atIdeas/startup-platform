@@ -93,6 +93,18 @@
           <button class="action-button chat-button">Чат</button>
         </div>
       
+        {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+          <div class="management-dropdown">
+            <button class="action-button management-button" onclick="toggleManagementDropdown()">
+              Управление <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="management-dropdown-content" id="managementDropdown">
+              <a href="{% url 'edit_agency' agency_id=agency.agency_id %}" class="management-item">Редактировать</a>
+              <button class="management-item" onclick="openChangeOwnerModal()">Сменить владельца</button>
+            </div>
+          </div>
+        {% endif %}
+      
       <div class="action-buttons-container">
         <button class="action-button primary-button">Выкупить</button>
         <div class="secondary-actions">
@@ -138,7 +150,6 @@
           <button class="action-button write-author-button">Написать</button>
         </div>
         <div class="creation-date">Создан {{ agency.created_at|date:"d/m/Y" }}</div>
-        <a href="https://greatideas.ru/support/orders/" class="report-button">Пожаловаться</a>
       </div>
     </div>
     

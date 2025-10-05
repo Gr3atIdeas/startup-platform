@@ -91,16 +91,35 @@
           {% endif %}
           
           {% if user.is_authenticated and user == startup.owner %}
-            <button class="action-button manage-images-button" onclick="openImageManager('startup', {{ startup.startup_id }})">Управление изображениями</button>
           {% endif %}
           
           <button class="action-button chat-button">Чат</button>
         </div>
       
+        {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+          <div class="management-dropdown">
+            <button class="action-button management-button" onclick="toggleManagementDropdown()">
+              Управление <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="management-dropdown-content" id="managementDropdown">
+              <a href="{% url 'edit_startup' startup_id=startup.startup_id %}" class="management-item">Редактировать</a>
+              <button class="management-item" onclick="openChangeOwnerModal()">Сменить владельца</button>
+              {% if startup.both_mode or startup.only_invest %}
+              <button class="management-item" onclick="openAddInvestorModal()">Добавить инвестора</button>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      
       <div class="action-buttons-container">
         <button class="action-button primary-button">Выкупить</button>
         <div class="secondary-actions">
           <button class="action-button secondary-button">Инвестировать</button>
+          {% if startup.only_invest or startup.both_mode %}
+          <div class="microinvestment-badge">
+            <i class="fas fa-check-circle"></i> Микроинвестиции
+          </div>
+          {% endif %}
           <div class="verification-badge">
             <i class="fas fa-check-circle"></i>
             <span>Проверено</span>
@@ -131,7 +150,6 @@
           <button class="action-button write-author-button">Написать</button>
         </div>
         <div class="creation-date">Создан {{ startup.created_at|date:"d/m/Y" }}</div>
-        <a href="https://greatideas.ru/support/orders/" class="report-button">Пожаловаться</a>
       </div>
     </div>
     
@@ -165,11 +183,6 @@
               <span class="startup-detail-raised-amount-value">{{ startup.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
             </div>
             
-            {% if startup.only_invest or startup.both_mode %}
-            <div class="microinvestment-badge">
-              <i class="fas fa-check-circle"></i> Микроинвестиции
-            </div>
-            {% endif %}
           </div>
           
           <div class="rating-comments-container">
@@ -698,40 +711,6 @@
 
   
   
-  <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="reportModalLabel">Пожаловаться на стартап</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="reportForm">
-            <div class="mb-3">
-              <label for="reportReason" class="form-label">Причина жалобы:</label>
-              <select class="form-select" id="reportReason" name="reason">
-                <option selected>Выберите причину...</option>
-                <option value="spam">Спам</option>
-                <option value="fraud">Мошенничество</option>
-                <option value="offensive">Оскорбительный контент</option>
-                <option value="other">Другое</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="reportComment" class="form-label">Комментарий:</label>
-              <textarea class="form-control" id="reportComment" name="comment" rows="4" placeholder="Опишите вашу жалобу"></textarea>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
-          <button type="button" class="action-button action-button-danger" id="submitReport">Отправить</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  
   <div class="modal fade" id="changeOwnerModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -844,49 +823,6 @@
   <script src="{% static 'accounts/js/startup_detail.js' %}" defer></script>
 </div> 
 
-
-<!-- Модальное окно для управления изображениями -->
-<div id="imageManagerModal" class="image-manager-modal" style="display: none;">
-  <div class="image-manager-modal-content">
-    <div class="image-manager-modal-header">
-      <h3>Управление изображениями</h3>
-      <span class="image-manager-close" onclick="closeImageManager()">&times;</span>
-    </div>
-    <div class="image-manager-modal-body">
-      <div class="image-manager-tabs">
-        <button class="image-manager-tab-button active" onclick="switchTab('creatives')">Изображения</button>
-        <button class="image-manager-tab-button" onclick="switchTab('upload')">Загрузить</button>
-      </div>
-      
-      <div id="creatives-tab" class="image-manager-tab-content active">
-        <div class="image-manager-list" id="imageList">
-          <!-- Список изображений будет загружен динамически -->
-        </div>
-      </div>
-      
-      <div id="upload-tab" class="image-manager-tab-content">
-        <div class="image-manager-upload-area" id="uploadArea">
-          <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
-          <div class="image-manager-upload-placeholder">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <p>Перетащите изображения сюда или нажмите для выбора</p>
-            <p class="image-manager-upload-hint">Максимум 3 изображения, до 5MB каждое</p>
-          </div>
-        </div>
-        <div class="image-manager-upload-progress" id="uploadProgress" style="display: none;">
-          <div class="image-manager-progress-bar">
-            <div class="image-manager-progress-fill" id="progressFill"></div>
-          </div>
-          <span id="image-manager-progress-text">0%</span>
-        </div>
-      </div>
-    </div>
-    <div class="image-manager-modal-footer">
-      <button class="image-manager-btn image-manager-btn-secondary" onclick="closeImageManager()">Закрыть</button>
-      <button class="image-manager-btn image-manager-btn-primary" onclick="saveImageOrder()" id="saveOrderBtn" style="display: none;">Сохранить порядок</button>
-    </div>
-  </div>
-</div>
 
 {% endblock %}
 
