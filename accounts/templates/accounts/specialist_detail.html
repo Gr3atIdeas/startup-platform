@@ -31,8 +31,21 @@
 
   <div class="top-section">
     <div class="left-column">
-      <div class="specialist-detail-media-container">
-        {% if slider_images %}
+        <div class="specialist-detail-media-container">
+          {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+            <form method="post" class="status-form">
+              {% csrf_token %}
+              <select name="status" class="status-select" onchange="this.form.submit()">
+                <option value="approved" {% if specialist.status == 'approved' %}selected{% endif %}>Approved</option>
+                <option value="blocked" {% if specialist.status == 'blocked' %}selected{% endif %}>Blocked</option>
+                <option value="closed" {% if specialist.status == 'closed' %}selected{% endif %}>Closed</option>
+                <option value="pending" {% if specialist.status == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="rejected" {% if specialist.status == 'rejected' %}selected{% endif %}>Rejected</option>
+              </select>
+            </form>
+          {% endif %}
+          
+          {% if slider_images %}
           <div class="specialist-detail-carousel-track" id="mediaCarousel">
             {% for url in slider_images %}
               <div class="specialist-detail-carousel-slide {% if forloop.first %}active{% endif %}">
@@ -72,23 +85,6 @@
         </div>
         
         <div class="specialist-detail-planet-sidebar">
-          {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-            <form method="post" class="status-form">
-              {% csrf_token %}
-              <select name="status" class="status-select" onchange="this.form.submit()">
-                <option value="approved" {% if specialist.status == 'approved' %}selected{% endif %}>Approved</option>
-                <option value="blocked" {% if specialist.status == 'blocked' %}selected{% endif %}>Blocked</option>
-                <option value="closed" {% if specialist.status == 'closed' %}selected{% endif %}>Closed</option>
-                <option value="pending" {% if specialist.status == 'pending' %}selected{% endif %}>Pending</option>
-                <option value="rejected" {% if specialist.status == 'rejected' %}selected{% endif %}>Rejected</option>
-              </select>
-            </form>
-          {% else %}
-            <div class="status-badge status-{{ specialist.status|default:'unknown' }}">
-               {{ specialist.status|default:'unknown'|capfirst }}
-            </div>
-          {% endif %}
-          
           <button class="action-button chat-button">Чат</button>
         </div>
       
