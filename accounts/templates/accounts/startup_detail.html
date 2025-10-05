@@ -4,7 +4,7 @@
 {% load file_tags %}
 {% load timeline_filters %}
 {% load humanize %}
-{% load accounts_extras %}
+{% load startup_filters %}
 
 {% block title %}{{ startup.title|default:"Детали стартапа" }}{% endblock %}
 
@@ -67,7 +67,7 @@
           <button class="startup-detail-carousel-next" aria-label="Следующее изображение">
             <i class="fas fa-chevron-right"></i>
           </button>
-          <button class="action-button chat-button carousel-chat-button">Чат</button>
+          <button class="action-button chat-button carousel-chat-positioned">Чат</button>
         {% endif %}
         
         <div class="author-avatar">
@@ -221,34 +221,6 @@
         <div class="tab-content-container">
           <div id="info-section" class="content-section active">
             
-            <div class="about-section">
-              <h2 class="section-title">Вводная</h2> 
-              <div class="section-content text-truncate-container" id="intro-section">
-                <div class="text-content" onclick="toggleTextTruncation('intro-section', 3)">
-                  <p>{{ startup.short_description|default:"Нет вводного описания." }}</p> 
-                  <span class="text-truncate-toggle">Показать полностью</span>
-                </div>
-              </div>
-            </div>
-            <div class="about-section"> 
-              <h2 class="section-title">О проекте</h2>
-              <div class="section-content text-truncate-container" id="about-section">
-                <div class="text-content" onclick="toggleTextTruncation('about-section', 8)">
-                  <div class="startup-detail-project-description">
-                    {{ startup.description|safe|default:"Нет подробного описания." }}
-                  </div>
-                  {% if startup.additional_info %}
-                    <div class="startup-detail-additional-info">
-                      <p><strong>Основные функции:</strong></p>
-                      {{ startup.additional_info|safe }}
-                    </div>
-                  {% endif %}
-                  <span class="text-truncate-toggle">Читать далее</span>
-                </div>
-              </div>
-            </div>
-
-            
             <div class="info-blocks-container">
               
               <div class="info-block presentation-block">
@@ -272,7 +244,32 @@
                   <img src="{% static 'accounts/images/figma_assets/stage_icon.png' %}" alt="Стадия" class="stage-icon">
                   <span class="info-block-title">Стадия</span>
                 </div>
-                <div class="info-block-value">{{ startup.stage.stage_name|default:"Не указана" }}</div>
+                <div class="info-block-value">{{ startup.stage.stage_name|translate_stage }}</div>
+              </div>
+
+              <div class="info-block about-block">
+                <div class="about-section-with-author">
+                  <div class="author-avatar-inline">
+                    <img src="{% if startup.owner.get_profile_picture_url %}{{ startup.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ startup.owner.username }}" class="author-avatar-img-inline">
+                  </div>
+                  <div class="about-content">
+                    <h3 class="info-block-title">О проекте</h3>
+                    <div class="section-content text-truncate-container" id="about-section">
+                      <div class="text-content" onclick="toggleTextTruncation('about-section', 8)">
+                        <div class="startup-detail-project-description">
+                          {{ startup.description|safe|default:"Нет подробного описания." }}
+                        </div>
+                        {% if startup.additional_info %}
+                          <div class="startup-detail-additional-info">
+                            <p><strong>Основные функции:</strong></p>
+                            {{ startup.additional_info|safe }}
+                          </div>
+                        {% endif %}
+                        <span class="text-truncate-toggle">Читать далее</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

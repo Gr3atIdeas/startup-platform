@@ -33,3 +33,17 @@ def get_item(dictionary, key):
         Значение по ключу или пустая строка, если ключ не найден.
     """
     return dictionary.get(key, "")
+
+@register.filter
+def translate_stage(stage_name):
+    """Переводит название стадии стартапа на русский язык"""
+    if not stage_name:
+        return "Не указана"
+    
+    stage_mapping = {
+        'idea': 'Идея',
+        'MVP': 'Разработка продукта', 
+        'Growth': 'Развивающийся стартап'
+    }
+    
+    return stage_mapping.get(stage_name, stage_name)

@@ -4,7 +4,7 @@
 {% load file_tags %}
 {% load timeline_filters %}
 {% load humanize %}
-{% load accounts_extras %}
+{% load startup_filters %}
 
 {% block title %}{{ specialist.customization_data.specialist_display_title|default:specialist.title|default:"Детали специалиста" }}{% endblock %}
 
@@ -66,7 +66,7 @@
           <button class="specialist-detail-carousel-next" aria-label="Следующее изображение">
             <i class="fas fa-chevron-right"></i>
           </button>
-          <button class="action-button chat-button carousel-chat-button">Чат</button>
+          <button class="action-button chat-button carousel-chat-positioned">Чат</button>
         {% endif %}
         
         <div class="author-avatar">
@@ -86,7 +86,6 @@
         </div>
         
         <div class="specialist-detail-planet-sidebar">
-          <button class="action-button chat-button">Чат</button>
         </div>
       
         {% if user.is_authenticated and user.role.role_name == 'moderator' %}
@@ -181,35 +180,21 @@
             </div>
           </div>
           
-          <div class="progress-container">
-            <div class="progress-bar-visual">
-              <div class="progress-animation-container" style="width: {{ progress_percentage|default:0 }}%;">
-                <div class="progress-planets"></div>
-              </div>
-              <span class="progress-percentage">{{ progress_percentage|default:0|floatformat:0 }}%</span>
-            </div>
-            <div class="progress-backers-info">
-              <i class="fas fa-users"></i>
-              <span id="investor-count-display">({{ investors_count }})</span>
-            </div>
-          </div>
-
-          
-        </div>
-
-        <div class="progress-container">
-          <div class="progress-bar-visual">
-            <div class="progress-animation-container" style="width: {{ progress_percentage|default:0 }}%;">
-              <div class="progress-planets"></div>
-            </div>
-            <span class="progress-percentage">{{ progress_percentage|default:0|floatformat:0 }}%</span>
-          </div>
-          <div class="progress-backers-info">
-            <i class="fas fa-users"></i>
-            <span id="investor-count-display">({{ investors_count }})</span>
-          </div>
         </div>
       </div> 
+
+      <div class="progress-container">
+        <div class="progress-bar-visual">
+          <div class="progress-animation-container" style="width: {{ progress_percentage|default:0 }}%;">
+            <div class="progress-planets"></div>
+          </div>
+          <span class="progress-percentage">{{ progress_percentage|default:0|floatformat:0 }}%</span>
+        </div>
+        <div class="progress-backers-info">
+          <i class="fas fa-users"></i>
+          <span id="investor-count-display">({{ investors_count }})</span>
+        </div>
+      </div>
 
       <div class="tabbed-content-wrapper">
         <div class="tab-navigation">
@@ -222,34 +207,6 @@
 
         <div class="tab-content-container">
           <div id="info-section" class="content-section active">
-            
-            <div class="about-section">
-              <h2 class="section-title">Вводная</h2> 
-              <div class="section-content text-truncate-container" id="intro-section">
-                <div class="text-content" onclick="toggleTextTruncation('intro-section', 3)">
-                  <p>{{ specialist.short_description|default:"Нет вводного описания." }}</p>
-                  <span class="text-truncate-toggle">Показать полностью</span>
-                </div>
-              </div>
-            </div>
-            <div class="about-section"> 
-              <h2 class="section-title">О специалисте</h2>
-              <div class="section-content text-truncate-container" id="about-section">
-                <div class="text-content" onclick="toggleTextTruncation('about-section', 8)">
-                  <div class="specialist-detail-project-description">
-                    {{ specialist.description|safe|default:"Нет подробного описания." }}
-                  </div>
-                  {% if specialist.additional_info %}
-                    <div class="specialist-detail-additional-info">
-                    <p><strong>Основные функции:</strong></p>
-                      {{ specialist.additional_info|safe }}
-                    </div>
-                  {% endif %}
-                  <span class="text-truncate-toggle">Читать далее</span>
-                </div>
-              </div>
-            </div>
-
             
             <div class="info-blocks-container">
               
@@ -266,6 +223,31 @@
                   {% else %}
                     <button class="action-button info-block-button" disabled>Смотреть</button>
                   {% endif %}
+                </div>
+              </div>
+
+              <div class="info-block about-block">
+                <div class="about-section-with-author">
+                  <div class="author-avatar-inline">
+                    <img src="{% if specialist.owner.get_profile_picture_url %}{{ specialist.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ specialist.owner.username }}" class="author-avatar-img-inline">
+                  </div>
+                  <div class="about-content">
+                    <h3 class="info-block-title">О специалисте</h3>
+                    <div class="section-content text-truncate-container" id="about-section">
+                      <div class="text-content" onclick="toggleTextTruncation('about-section', 8)">
+                        <div class="specialist-detail-project-description">
+                          {{ specialist.description|safe|default:"Нет подробного описания." }}
+                        </div>
+                        {% if specialist.additional_info %}
+                          <div class="specialist-detail-additional-info">
+                            <p><strong>Основные функции:</strong></p>
+                            {{ specialist.additional_info|safe }}
+                          </div>
+                        {% endif %}
+                        <span class="text-truncate-toggle">Читать далее</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
