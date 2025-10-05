@@ -300,7 +300,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 20px;
+  gap: 30px;
   flex-shrink: 0;
 }
 
@@ -821,7 +821,7 @@ a:hover {
   font-weight: 400;
   color: #FFEF2B;
   margin: 0;
-  padding-left: 27px;
+  padding-left: 24px;
 }
 
 .specialist-detail-ai-rating-container {

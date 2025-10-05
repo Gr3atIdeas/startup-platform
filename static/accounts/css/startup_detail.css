@@ -294,7 +294,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 20px;
+  gap: 30px;
   flex-shrink: 0;
 }
 
@@ -3864,7 +3864,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   font-weight: 400;
   color: #FFEF2B;
   margin: 0;
-  padding-left: 27px;
+  padding-left: 24px;
 }
 
 .startup-detail-ai-rating-container {
