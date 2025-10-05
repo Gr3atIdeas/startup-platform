@@ -29,9 +29,16 @@
       <i class="fas fa-arrow-left"></i> Назад
     </a>
     {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-      <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}" class="management-top-button">
+      <button onclick="toggleManagementDropdown()" class="management-top-button">
         Управление <i class="fas fa-chevron-down"></i>
-      </a>
+      </button>
+      <div id="managementDropdown" class="management-dropdown">
+        <div class="management-dropdown-content">
+          <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}" class="management-item">Редактировать</a>
+          <button onclick="openChangeOwnerModal()" class="management-item">Сменить владельца</button>
+          <button onclick="openAddInvestorModal()" class="management-item">Добавить инвестора</button>
+        </div>
+      </div>
     {% endif %}
   </div>
 
@@ -86,9 +93,6 @@
           </div>
         {% endif %}
         
-        <div class="author-avatar">
-          <img src="{% if franchise.owner.get_profile_picture_url %}{{ franchise.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ franchise.owner.username }}" class="author-avatar-img">
-        </div>
         
         {% if not slider_images %}
             <div class="franchise-detail-default-planet-display">
@@ -125,15 +129,18 @@
       
       <div class="author-info-left-unique">
         <div class="author-header-unique">Автор</div>
-        <div class="author-details-unique">
-          <div class="author-meta-unique">
-            <div class="author-info-unique">
+        <div class="author-content-row-unique">
+          <div class="author-main-info-unique">
+            <div class="author-avatar-circle-unique">
+              <img src="{% if franchise.owner.get_profile_picture_url %}{{ franchise.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ franchise.owner.username }}" class="author-avatar-img-unique">
+            </div>
+            <div class="author-text-info-unique">
               <div class="author-name-unique">{{ franchise.owner.first_name|default:"Автор" }} {{ franchise.owner.last_name }}</div>
               <div class="author-rating-unique">Рейтинг: {{ average_rating|floatformat:"1" }}/5</div>
               <a href="#comments-section" class="author-reviews-link-unique">Отзывы</a>
             </div>
           </div>
-          <button class="action-button write-author-button-unique">Написать</button>
+          <button class="write-author-button-unique">Написать</button>
         </div>
       </div>
     </div>

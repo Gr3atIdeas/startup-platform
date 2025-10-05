@@ -4145,13 +4145,13 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 /* Новые стили для уникальных классов */
 .carousel-chat-button-unique {
   position: absolute;
-  bottom: 18px;
-  right: 18px;
-  width: 61px;
-  height: 61px;
+  bottom: 20px;
+  right: 20px;
+  width: 68px;
+  height: 68px;
   background: #FFFFFF;
   border: none;
-  border-radius: 50px;
+  border-radius: 55px;
   color: #000000;
   font-size: 14px;
   font-weight: 300;
@@ -4161,7 +4161,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 6px 0;
+  padding: 7px 0;
   transition: all 0.3s ease;
   z-index: 10;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -4184,10 +4184,10 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .carousel-planet-thumbnail {
   position: absolute;
-  bottom: 18px;
-  left: 18px;
-  width: 61px;
-  height: 61px;
+  bottom: 20px;
+  left: 20px;
+  width: 68px;
+  height: 68px;
   border-radius: 50px;
   overflow: hidden;
   z-index: 10;
@@ -4202,14 +4202,14 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .author-info-left-unique {
   display: flex;
-  width: 407px;
-  height: 137px;
-  padding: 9px 23px 27px;
+  width: 451px;
+  height: 152px;
+  padding: 10px 26px 30px;
   flex-direction: column;
   align-items: flex-start;
-  gap: 19px;
+  gap: 21px;
   flex-shrink: 0;
-  border-radius: 9px;
+  border-radius: 10px;
   background: rgba(0, 0, 0, 0.11);
   box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(20px);
@@ -4224,7 +4224,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   line-height: 1em;
 }
 
-.author-details-unique {
+.author-content-row-unique {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -4233,13 +4233,28 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   width: 100%;
 }
 
-.author-meta-unique {
+.author-main-info-unique {
   display: flex;
   flex-direction: row;
   gap: 11px;
+  align-items: center;
 }
 
-.author-info-unique {
+.author-avatar-circle-unique {
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.author-avatar-img-unique {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.author-text-info-unique {
   display: flex;
   flex-direction: column;
   gap: 7px;
