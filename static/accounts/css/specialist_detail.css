@@ -311,6 +311,7 @@ a:hover {
   background-color: var(--dark-card-bg);
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .specialist-detail-carousel-track {
@@ -337,7 +338,7 @@ a:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 0;
 }
 
 
@@ -453,6 +454,7 @@ a:hover {
   flex-direction: column;
   align-items: center;
   gap: 24px;
+  margin: 0 auto;
 }
 
 .action-button {
@@ -684,7 +686,7 @@ a:hover {
   margin-top: 5px;
 }
 
-.management-dropdown-content.show {
+.management-dropdown.show .management-dropdown-content {
   display: block;
 }
 
@@ -4210,7 +4212,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   display: flex;
   width: 407px;
   height: 137px;
-  padding: 9px 23px 27px;
+  padding: 18px 23px;
   flex-direction: column;
   align-items: flex-start;
   gap: 19px;
@@ -4220,6 +4222,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(20px);
   box-sizing: border-box;
+  justify-content: center;
 }
 
 .author-section-title {
