@@ -6,6 +6,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'accounts/css/startup_form.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/css/slider_checkbox.css' %}">
 
 <div class="startup-form-container">
     <div class="form-navigation-header">
@@ -139,9 +140,10 @@
                     
                     <div class="form-group upload-box" id="creativesDropArea">
                         <label>*Изображения</label>
+                        <div class="small-text" style="margin-bottom: 10px; color: var(--accent-yellow);">Выберите до 4х изображений для отображения в слайдере</div>
                         {{ form.creatives|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_creatives_input" }}
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_creatives_input').click()">Выбрать файл</div>
-                        <div class="small-text">Допустимый формат PNG, JPEG (до 3 файлов)</div>
+                        <div class="small-text">Допустимый формат PNG, JPEG (до 10 файлов)</div>
                         <div id="creativesPreview" class="file-preview-area"></div>
                         {% if form.creatives.errors %}<span class="error-message">{{ form.creatives.errors|first }}</span>{% endif %}
                     </div>
@@ -311,4 +313,6 @@ window.STARTUP_FORM_CONFIG = {
     </div>
   </div>
 </div>
+
+<script src="{% static 'accounts/js/slider_checkbox.js' %}"></script>
 {% endblock %}

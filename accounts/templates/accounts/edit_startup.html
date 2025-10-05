@@ -8,6 +8,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'accounts/css/startup_form.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/css/slider_checkbox.css' %}">
 
 
 <script>
@@ -261,14 +262,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-group upload-box" id="creativesDropArea">
                         <label for="id_creatives_input">*Изображения (новые или для замены)</label>
+                        <div class="small-text" style="margin-bottom: 10px; color: var(--accent-yellow);">Выберите до 4х изображений для отображения в слайдере</div>
                         {{ form.creatives|attr:"multiple:true"|attr:"id:id_creatives_input"|attr:"name:creatives"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_creatives_input').click()">Выбрать файлы</div>
-                        <div class="small-text">Допустимый формат PNG, JPEG (до 3 файлов)</div>
+                        <div class="small-text">Допустимый формат PNG, JPEG (до 10 файлов)</div>
                                             <div id="creativesPreview" class="file-preview-area">
                                                  {% for creative_url in startup.creatives_urls %}
                              <div class="file-preview-item existing-file" data-file-id="{{ creative_url }}">
                                  <img src="{% get_file_url_tag creative_url startup.startup_id 'creative' 'startup' %}" alt="Креатив" style="max-width: 200px; max-height: 150px;">
                                  <p>{% get_file_original_name creative_url startup.startup_id 'creative' 'startup' %}</p>
+                                 <div class="slider-checkbox-container">
+                                     <input type="checkbox" 
+                                            id="slider_{{ creative_url }}" 
+                                            name="slider_images" 
+                                            value="{{ creative_url }}"
+                                            {% if creative_url in startup.slider_images %}checked{% endif %}
+                                            class="slider-checkbox">
+                                     <label for="slider_{{ creative_url }}" class="slider-checkbox-label">Показать в слайдере</label>
+                                 </div>
                                  <button type="button" class="delete-existing-file-btn" data-file-id="{{ creative_url }}" data-file-type="creative">Удалить</button>
                              </div>
                          {% endfor %}
@@ -468,4 +479,5 @@ function removeDuplicateCreatives() {
 
 </script>
 
+<script src="{% static 'accounts/js/slider_checkbox.js' %}"></script>
 {% endblock %}

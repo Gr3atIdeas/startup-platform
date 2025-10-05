@@ -1696,6 +1696,8 @@ def agency_detail(request, agency_id):
     creatives_urls = (
         agency.creatives_urls if isinstance(agency.creatives_urls, list) else []
     )
+    slider_images = agency.slider_images if isinstance(agency.slider_images, list) else []
+    all_creatives = creatives_urls
     video_urls = agency.video_urls if isinstance(agency.video_urls, list) else []
     proofs_urls = agency.proofs_urls if isinstance(agency.proofs_urls, list) else []
 
@@ -1714,6 +1716,8 @@ def agency_detail(request, agency_id):
         "rating_distribution": rating_distribution,
         "logo_urls": logo_urls,
         "creatives_urls": creatives_urls,
+        "slider_images": slider_images,
+        "all_creatives": all_creatives,
         "video_urls": video_urls,
         "proofs_urls": proofs_urls,
         "agency_documents": agency_documents,
@@ -1827,6 +1831,8 @@ def specialist_detail(request, specialist_id):
     creatives_urls = (
         specialist.creatives_urls if isinstance(specialist.creatives_urls, list) else []
     )
+    slider_images = specialist.slider_images if isinstance(specialist.slider_images, list) else []
+    all_creatives = creatives_urls
     video_urls = specialist.video_urls if isinstance(specialist.video_urls, list) else []
     proofs_urls = specialist.proofs_urls if isinstance(specialist.proofs_urls, list) else []
 
@@ -1845,6 +1851,8 @@ def specialist_detail(request, specialist_id):
         "rating_distribution": rating_distribution,
         "logo_urls": logo_urls,
         "creatives_urls": creatives_urls,
+        "slider_images": slider_images,
+        "all_creatives": all_creatives,
         "video_urls": video_urls,
         "proofs_urls": proofs_urls,
         "specialist_documents": specialist_documents,
@@ -1957,6 +1965,8 @@ def franchise_detail(request, franchise_id):
     creatives_urls = (
         franchise.creatives_urls if isinstance(franchise.creatives_urls, list) else []
     )
+    slider_images = franchise.slider_images if isinstance(franchise.slider_images, list) else []
+    all_creatives = creatives_urls
     video_urls = franchise.video_urls if isinstance(franchise.video_urls, list) else []
     proofs_urls = franchise.proofs_urls if isinstance(franchise.proofs_urls, list) else []
 
@@ -1975,6 +1985,8 @@ def franchise_detail(request, franchise_id):
         "rating_distribution": rating_distribution,
         "logo_urls": logo_urls,
         "creatives_urls": creatives_urls,
+        "slider_images": slider_images,
+        "all_creatives": all_creatives,
         "video_urls": video_urls,
         "proofs_urls": proofs_urls,
         "franchise_documents": franchise_documents,
@@ -2297,6 +2309,8 @@ def startup_detail(request, startup_id):
     creatives_urls = (
         startup.creatives_urls if isinstance(startup.creatives_urls, list) else []
     )
+    slider_images = startup.slider_images if isinstance(startup.slider_images, list) else []
+    all_creatives = creatives_urls
     video_urls = startup.video_urls if isinstance(startup.video_urls, list) else []
     show_moderator_comment = False
     if startup.moderator_comment and (
@@ -2333,6 +2347,8 @@ def startup_detail(request, startup_id):
         "similar_startups": similar_startups,
         "logo_urls": logo_urls,
         "creatives_urls": creatives_urls,
+        "slider_images": slider_images,
+        "all_creatives": all_creatives,
         "video_urls": video_urls,
         "show_moderator_comment": show_moderator_comment,
         "progress_percentage": progress_percentage,
@@ -3575,6 +3591,12 @@ def create_startup(request):
             startup.creatives_urls = creatives_ids
             startup.proofs_urls = proofs_ids
             startup.video_urls = video_ids
+            
+            slider_images = request.POST.getlist("slider_images")
+            if len(slider_images) > 4:
+                slider_images = slider_images[:4]
+            startup.slider_images = slider_images
+            
             startup.save()
             logger.info(
                 f"Стартап создан: ID={startup.startup_id}, Planet={startup.planet_image}"
@@ -3728,6 +3750,12 @@ def create_franchise(request):
             franchise.creatives_urls = creatives_ids
             franchise.proofs_urls = proofs_ids
             franchise.video_urls = video_ids
+            
+            slider_images = request.POST.getlist("slider_images")
+            if len(slider_images) > 4:
+                slider_images = slider_images[:4]
+            franchise.slider_images = slider_images
+            
             franchise.save()
             messages.success(request, f'Франшиза "{franchise.title}" успешно создана и отправлена на модерацию!')
             return redirect("franchises_list")
@@ -3803,6 +3831,12 @@ def create_agency(request):
             agency.creatives_urls = creatives_ids
             agency.proofs_urls = proofs_ids
             agency.video_urls = video_ids
+            
+            slider_images = request.POST.getlist("slider_images")
+            if len(slider_images) > 4:
+                slider_images = slider_images[:4]
+            agency.slider_images = slider_images
+            
             agency.save()
             messages.success(request, f'Агентство "{agency.title}" успешно создано и отправлено на модерацию!')
             return redirect("agencies_list")
@@ -3876,6 +3910,12 @@ def create_specialist(request):
             spec.creatives_urls = creatives_ids
             spec.proofs_urls = proofs_ids
             spec.video_urls = video_ids
+            
+            slider_images = request.POST.getlist("slider_images")
+            if len(slider_images) > 4:
+                slider_images = slider_images[:4]
+            spec.slider_images = slider_images
+            
             spec.save()
             messages.success(request, f'Профиль специалиста "{spec.title}" успешно создан и отправлен на модерацию!')
             return redirect("specialists_list")
@@ -4299,8 +4339,8 @@ def edit_startup(request, startup_id):
             videos = request.FILES.getlist("video")
             
             # Проверка лимитов файлов
-            if len(creatives) > 3:
-                messages.error(request, "Максимально 3 изображения")
+            if len(creatives) > 10:
+                messages.error(request, "Максимально 10 изображений")
                 return render(request, "accounts/edit_startup.html", {"form": form, "startup": startup, "timeline_steps": timeline_steps})
             
             if len(proofs) > 15:
@@ -4522,6 +4562,11 @@ def edit_startup(request, startup_id):
                     if not created and timeline_entry.description != description:
                         timeline_entry.description = description
                         timeline_entry.save()
+            
+            slider_images = request.POST.getlist("slider_images")
+            if len(slider_images) > 4:
+                slider_images = slider_images[:4]
+            startup.slider_images = slider_images
             
             logger.info("=== ФИНАЛЬНОЕ СОХРАНЕНИЕ ===")
             startup.save()
@@ -8092,6 +8137,11 @@ def edit_franchise(request, franchise_id):
             except json.JSONDecodeError:
                 pass
             
+            slider_images = request.POST.getlist("slider_images")
+            if len(slider_images) > 4:
+                slider_images = slider_images[:4]
+            franchise.slider_images = slider_images
+            
             franchise.save()
             
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
@@ -8365,6 +8415,11 @@ def edit_agency(request, agency_id):
             agency.creatives_urls = creative_ids
             agency.proofs_urls = proofs_ids
             agency.video_urls = video_ids
+            
+            slider_images = request.POST.getlist("slider_images")
+            if len(slider_images) > 4:
+                slider_images = slider_images[:4]
+            agency.slider_images = slider_images
             
             agency.save()
             
@@ -8642,6 +8697,11 @@ def edit_specialist(request, specialist_id):
                         logger.info(f"Удален файл {file_type}: {file_id}")
             except json.JSONDecodeError:
                 pass
+            
+            slider_images = request.POST.getlist("slider_images")
+            if len(slider_images) > 4:
+                slider_images = slider_images[:4]
+            specialist.slider_images = slider_images
             
             specialist.save()
             

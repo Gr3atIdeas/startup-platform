@@ -33,9 +33,9 @@
   <div class="top-section">
     <div class="left-column">
       <div class="startup-detail-media-container">
-        {% if creatives_urls %}
+        {% if slider_images %}
           <div class="startup-detail-carousel-track" id="mediaCarousel">
-            {% for url in creatives_urls %}
+            {% for url in slider_images %}
               <div class="startup-detail-carousel-slide {% if forloop.first %}active{% endif %}">
                 <img src="{% get_file_url_tag url startup.startup_id 'creative' 'startup' %}" 
                      alt="Изображение {{ forloop.counter }}" 
@@ -44,7 +44,7 @@
             {% endfor %}
           </div>
           <div class="startup-detail-carousel-indicators">
-            {% for url in creatives_urls %}
+            {% for url in slider_images %}
               <span class="startup-detail-indicator {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
             {% endfor %}
           </div>
@@ -60,7 +60,7 @@
           <img src="{% if startup.owner.get_profile_picture_url %}{{ startup.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ startup.owner.username }}" class="author-avatar-img">
         </div>
         
-        {% if not creatives_urls %}
+        {% if not slider_images %}
             <div class="startup-detail-default-planet-display">
               <div class="space-background"></div>
               {% if startup.planet_image %}
@@ -347,14 +347,14 @@
             
             
             
-            {% if creatives_urls %}
+            {% if all_creatives %}
               
               {% if video_urls %}
               <h3 class="section-subtitle" style="margin-top: 30px; margin-bottom: 15px; font-size: 18px; color: var(--accent-yellow);">Изображения</h3>
               {% endif %}
               <div class="gallery-grid">
                 
-                {% for url in creatives_urls %}
+                {% for url in all_creatives %}
                   <a 
                      href="{% get_file_url_tag url startup.startup_id 'creative' 'startup' %}"
                      class="gallery-item image-item glightbox" 

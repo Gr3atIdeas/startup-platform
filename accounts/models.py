@@ -367,6 +367,7 @@ class Startups(models.Model):
     proofs_urls = models.JSONField(blank=True, null=True, default=list)
     video_urls = models.JSONField(blank=True, null=True, default=list)
     planet_image = models.CharField(max_length=50, blank=True, null=True)
+    slider_images = models.JSONField(blank=True, null=True, default=list)
     class Meta:
         managed = True
         db_table = "startups"
@@ -712,6 +713,7 @@ class Franchises(models.Model):
     proofs_urls = models.JSONField(blank=True, null=True, default=list)
     video_urls = models.JSONField(blank=True, null=True, default=list)
     planet_image = models.CharField(max_length=50, blank=True, null=True)
+    slider_images = models.JSONField(blank=True, null=True, default=list)
     franchise_cost = models.DecimalField(max_digits=19, decimal_places=4, blank=True, null=True)
     profit_calculation = models.TextField(blank=True, null=True)
 
@@ -825,6 +827,7 @@ class Agencies(models.Model):
     proofs_urls = models.JSONField(blank=True, null=True, default=list)
     video_urls = models.JSONField(blank=True, null=True, default=list)
     planet_image = models.CharField(max_length=50, blank=True, null=True)
+    slider_images = models.JSONField(blank=True, null=True, default=list)
 
     class Meta:
         managed = True
@@ -864,6 +867,7 @@ class Specialists(models.Model):
     proofs_urls = models.JSONField(blank=True, null=True, default=list)
     video_urls = models.JSONField(blank=True, null=True, default=list)
     planet_image = models.CharField(max_length=50, blank=True, null=True)
+    slider_images = models.JSONField(blank=True, null=True, default=list)
     additional_info = models.TextField(blank=True, null=True)
 
     class Meta:

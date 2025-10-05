@@ -33,9 +33,9 @@
   <div class="top-section">
     <div class="left-column">
       <div class="franchise-detail-media-container">
-        {% if creatives_urls %}
+        {% if slider_images %}
           <div class="franchise-detail-carousel-track" id="mediaCarousel">
-            {% for url in creatives_urls %}
+            {% for url in slider_images %}
               <div class="franchise-detail-carousel-slide {% if forloop.first %}active{% endif %}">
                 <img src="{% get_file_url_tag url franchise.franchise_id 'creative' 'franchise' %}" 
                      alt="Изображение {{ forloop.counter }}" 
@@ -44,7 +44,7 @@
             {% endfor %}
           </div>
           <div class="franchise-detail-carousel-indicators">
-            {% for url in creatives_urls %}
+            {% for url in slider_images %}
               <span class="franchise-detail-indicator {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
             {% endfor %}
           </div>
@@ -60,7 +60,7 @@
           <img src="{% if franchise.owner.get_profile_picture_url %}{{ franchise.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ franchise.owner.username }}" class="author-avatar-img">
         </div>
         
-        {% if not creatives_urls %}
+        {% if not slider_images %}
             <div class="franchise-detail-default-planet-display">
               <div class="space-background"></div>
               {% if franchise.planet_image %}
@@ -323,14 +323,14 @@
             
             
             
-            {% if creatives_urls %}
+            {% if all_creatives %}
               
               {% if video_urls %}
               <h3 class="section-subtitle" style="margin-top: 30px; margin-bottom: 15px; font-size: 18px; color: var(--accent-yellow);">Изображения</h3>
               {% endif %}
               <div class="gallery-grid">
                 
-                {% for url in creatives_urls %}
+                {% for url in all_creatives %}
                   <a 
                      href="{% get_file_url_tag url franchise.franchise_id 'creative' 'franchise' %}"
                      class="gallery-item image-item glightbox" 

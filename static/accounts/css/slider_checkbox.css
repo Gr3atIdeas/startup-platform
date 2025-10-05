@@ -1,0 +1,126 @@
+/* Стили для чекбоксов выбора слайдера */
+
+.slider-checkbox-container {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.slider-checkbox-container:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.slider-checkbox {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-yellow);
+    cursor: pointer;
+}
+
+.slider-checkbox:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.slider-checkbox-label {
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    flex: 1;
+}
+
+.slider-checkbox-container:has(.slider-checkbox:checked) {
+    background: rgba(255, 193, 7, 0.1);
+    border-color: var(--accent-yellow);
+}
+
+.slider-checkbox-container:has(.slider-checkbox:checked) .slider-checkbox-label {
+    color: var(--accent-yellow);
+}
+
+.slider-checkbox-container:has(.slider-checkbox:disabled) {
+    opacity: 0.6;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.slider-checkbox-container:has(.slider-checkbox:disabled) .slider-checkbox-label {
+    color: var(--text-secondary);
+}
+
+/* Счетчик выбранных изображений */
+.slider-counter {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 4px 8px;
+    background: var(--accent-yellow);
+    color: var(--bg-primary);
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+}
+
+.slider-counter.max-reached {
+    background: var(--accent-red);
+}
+
+/* Визуальная индикация выбранных изображений */
+.file-preview-item:has(.slider-checkbox:checked) {
+    border: 2px solid var(--accent-yellow);
+    background: rgba(255, 193, 7, 0.05);
+}
+
+.file-preview-item:has(.slider-checkbox:checked)::before {
+    content: "✓";
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--accent-yellow);
+    color: var(--bg-primary);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 10;
+}
+
+/* Анимация для чекбоксов */
+.slider-checkbox {
+    transition: all 0.2s ease;
+}
+
+.slider-checkbox:focus {
+    outline: 2px solid var(--accent-yellow);
+    outline-offset: 2px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .slider-checkbox-container {
+        padding: 6px 10px;
+        margin: 8px 0;
+    }
+    
+    .slider-checkbox {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .slider-checkbox-label {
+        font-size: 13px;
+    }
+}
