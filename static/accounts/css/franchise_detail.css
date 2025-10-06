@@ -4523,6 +4523,102 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   font-weight: 600;
 }
 
+/* Изображения и видео в описании */
+.description-image-small {
+  max-width: 200px;
+  height: auto;
+  border-radius: 8px;
+  margin: 10px;
+  display: block;
+}
+
+.description-image-large {
+  max-width: 400px;
+  height: auto;
+  border-radius: 8px;
+  margin: 15px auto;
+  display: block;
+}
+
+.description-image-left {
+  float: left;
+  margin: 10px 15px 10px 0;
+  max-width: 250px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.description-image-right {
+  float: right;
+  margin: 10px 0 10px 15px;
+  max-width: 250px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.description-image-center {
+  display: block;
+  margin: 15px auto;
+  max-width: 350px;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Видео в описании */
+.description-video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 15px 0;
+  display: block;
+}
+
+.description-video-small {
+  max-width: 300px;
+  height: auto;
+  border-radius: 8px;
+  margin: 15px auto;
+  display: block;
+}
+
+.description-video-large {
+  max-width: 500px;
+  height: auto;
+  border-radius: 8px;
+  margin: 20px auto;
+  display: block;
+}
+
+/* Очистка float для текста с изображениями */
+.about-text::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .description-image-left,
+  .description-image-right {
+    float: none;
+    display: block;
+    margin: 10px auto;
+    max-width: 100%;
+  }
+  
+  .description-image-small,
+  .description-image-large,
+  .description-image-center {
+    max-width: 100%;
+  }
+  
+  .description-video,
+  .description-video-small,
+  .description-video-large {
+    max-width: 100%;
+  }
+}
+
 .detail-info-section-presentation-card {
   width: 172px;
   flex-shrink: 0;
