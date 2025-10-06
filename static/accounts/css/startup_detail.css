@@ -1205,7 +1205,7 @@ a:hover {
 
   
   flex-grow: 0;
-  width: 741px; 
+  width: 865px; 
   flex-shrink: 0; 
   min-width: 0; 
   flex-direction: column;
@@ -1403,6 +1403,12 @@ a:hover {
   width: 100%;
   box-sizing: border-box;
   margin-bottom: 30px;
+}
+
+.tab-content-container {
+  display: block;
+  width: 100%;
+  min-height: auto;
 }
 
 

@@ -1007,12 +1007,12 @@ a:hover {
 
   
   flex-grow: 0;
-  width: 822px; 
+  width: 865px; 
   flex-shrink: 0; 
   min-width: 0; 
   flex-direction: column;
   align-items: flex-start;
-  gap: 35px;
+  gap: 31px;
 }
 
 
@@ -1342,8 +1342,9 @@ a:hover {
 
 
 .tab-content-container {
-  
-  
+  display: block;
+  width: 100%;
+  min-height: auto;
 }
 
 .content-section {
