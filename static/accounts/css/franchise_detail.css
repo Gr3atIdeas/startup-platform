@@ -1723,7 +1723,7 @@ a:hover {
 }
 
 .stage-icon-container {
-  width: 46px;
+  width: 150px;
   height: 46px;
   border-radius: 50px;
   border: 1px solid #FFFFFF;
@@ -4382,7 +4382,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .franchise-financial-info {
   display: flex;
-  gap: 21px;
+  flex-direction: column;
+  gap: 19px;
   width: 663px;
 }
 

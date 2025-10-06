@@ -4371,7 +4371,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .agency-financial-info {
   display: flex;
-  gap: 21px;
+  flex-direction: column;
+  gap: 19px;
   width: 663px;
 }
 
