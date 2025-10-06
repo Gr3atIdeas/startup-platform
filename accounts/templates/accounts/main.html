@@ -20,17 +20,12 @@
             <div class="div7">будущее</div>
             <div class="div5">
                 <span class="txt">
-                    <span>Маркетплейс</span>
-                    <span class="span">, где стартаперы находят финансирование, а инвесторы — перспективные идеи</span>
+                    <span>Социальная сеть для бизнеса, где каждый получит пользу</span>
                 </span>
             </div>
             <div class="header-buttons">
                 <a href="{% url 'login' %}?next={% url 'create_startup' %}" class="hero-button hero-button--register">
-                    <span>Зарегистрировать стартап</span>
-                    <img class="icon" src="{% static 'accounts/images/main_page/rightarrow.svg' %}" alt="Arrow">
-                </a>
-                <a href="{% url 'startups_list' %}" class="hero-button hero-button--find">
-                    <span>Найти стартап</span>
+                    <span>Перейти на платформу</span>
                     <img class="icon" src="{% static 'accounts/images/main_page/rightarrow.svg' %}" alt="Arrow">
                 </a>
             </div>
@@ -48,8 +43,8 @@
     <div class="featured1">
         <div class="heading">
             <div class="parent3">
-                <div class="div16">Почему</div>
-                <div class="div17">выбирают нас?</div>
+                <div class="div16">Для кого</div>
+                <div class="div17">наш сервис?</div>
             </div>
             <div class="wrap">
                 <div class="button3 arrow-left-control">
@@ -63,103 +58,26 @@
         <div class="featured-parent features-carousel-wrapper">
             <div class="featured2 features-carousel">
                 <div class="container feature-card">
-                    <div class="div8">Геймификация</div>
-                    <div class="div9">Создавайте планеты и запускайте ракеты — инвестиции как приключение</div>
+                    <div class="div8">Для франшиз</div>
+                    <div class="div9">Выпустите свои франшизы в каталог и привлекайте новых франчайзи!</div>
                     <img class="rectangle-icon" alt="Placeholder" src="{% static 'accounts/images/main_page/game_rocket.webp' %}">
                 </div>
                 <div class="container feature-card">
-                    <div class="div8">Сообщество</div>
-                    <div class="div11">Объединяем визионеров и инвесторов со всей России</div>
+                    <div class="div8">Для агентств</div>
+                    <div class="div11">Разместите свою компанию и получайте запросы на работы от бизнеса!</div>
                     <img class="rectangle-icon" alt="Placeholder" src="{% static 'accounts/images/main_page/community_astronauts.webp' %}">
                 </div>
                 <div class="container feature-card">
-                    <div class="div8">Прозрачность</div>
-                    <div class="div11">Проверенные стартапы и безопасные сделки</div>
+                    <div class="div8">Для стартапов</div>
+                    <div class="div11">Разместите свои идеи для стартапа и получите финансирование от крупных инвесторов</div>
                     <img class="rectangle-icon" alt="Placeholder" src="{% static 'accounts/images/main_page/planets_transparent.webp' %}">
                 </div>
                 <div class="container feature-card">
-                    <div class="div8">Поддержка</div>
-                    <div class="div11">Инструменты для роста стартапов и аналитика для инвесторов</div>
+                    <div class="div8">Для стартапов</div>
+                    <div class="div11">Разместите свои идеи для стартапа и получите финансирование от крупных инвесторов</div>
                     <img class="rectangle-icon" alt="Placeholder" src="{% static 'accounts/images/main_page/support_planet.webp' %}">
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="featured3">
-        <div class="frame-parent">
-            <img class="icon9" alt="Стартаперы создают планету" src="{% static 'accounts/images/main_page/3rd_block_main.webp' %}">
-            <div class="parent4">
-                <div class="gradient-overlay"></div>
-                <div class="heading1">
-                    <div class="div18">
-                        <span class="txt">
-                            <span>Стартаперы,</span>
-                            <span class="span1"> создайте свою планету!</span>
-                        </span>
-                    </div>
-                    <div class="frame-group">
-                        <div class="chevron-forward-circle-outline-parent">
-                            <img class="frame-icon" alt="Найти финансирование" src="{% static 'accounts/images/main_page/rocket.svg' %}">
-                            <div class="faq">Найти финансирование</div>
-                        </div>
-                        <div class="chevron-forward-circle-outline-parent">
-                            <img class="frame-icon" alt="Получить экспертную поддержку" src="{% static 'accounts/images/main_page/view.svg' %}">
-                            <div class="div20">
-                                <span class="txt">
-                                    <span>Получить экспертную поддержку </span>
-                                    <span class="span2">(менторство, аналитика)</span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="frame-parent2">
-                            <img class="frame-icon" alt="Продать идею или масштабировать бизнес" src="{% static 'accounts/images/main_page/wheat.svg' %}">
-                            <div class="div20">Продать идею или масштабировать бизнес</div>
-                        </div>
-                    </div>
-                    <a href="{% url 'create_startup' %}" class="btn btn--yellow-gradient" style="text-decoration: none;">
-                        <span>Создать стартап</span>
-                        <img class="icon" src="{% static 'accounts/images/main_page/add-circle-outline.svg' %}" alt="Add">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="featured4">
-        <div class="frame-parent3">
-            <div class="parent6">
-                <div class="div23">
-                    <span class="txt">
-                        <span>Инвесторы,</span>
-                        <span class="span3">найдите свою звезду!</span>
-                    </span>
-                </div>
-                <div class="group-parent">
-                    <div class="group-div">
-                        <img class="card-icon" src="{% static 'accounts/images/main_page/planet_4th_main.webp' %}" alt="Доступ к проверенным стартапам">
-                        <div class="wrapper">
-                            <div class="div24">Доступ к проверенным стартапам</div>
-                        </div>
-                    </div>
-                    <div class="group-div">
-                        <img class="card-icon" src="{% static 'accounts/images/main_page/case_main_4th.webp' %}" alt="Диверсификация портфеля">
-                        <div class="wrapper">
-                            <div class="div25">Диверсификация портфеля</div>
-                        </div>
-                    </div>
-                    <div class="frame-parent5 group-div">
-                        <img class="card-icon" src="{% static 'accounts/images/main_page/rocket_main_4th.webp' %}" alt="Удобная аналитика">
-                        <div class="wrapper1">
-                            <div class="div26">Удобная аналитика и фильтры для выбора проектов</div>
-                        </div>
-                    </div>
-                </div>
-                <a href="{% url 'startups_list' %}" class="btn btn--yellow-gradient">
-                    <span>Посмотреть стартапы</span>
-                    <img class="icon" alt="Eye" src="{% static 'accounts/images/main_page/button_eye.svg' %}">
-                </a>
-            </div>
-            <img class="icon10" alt="Инвесторы находят звезду" src="{% static 'accounts/images/main_page/4th_block_main_background.webp' %}">
         </div>
     </div>
 
@@ -345,6 +263,83 @@
             </div>
         </div>
     </div>
+
+    <div class="featured3">
+        <div class="frame-parent">
+            <img class="icon9" alt="Стартаперы создают планету" src="{% static 'accounts/images/main_page/3rd_block_main.webp' %}">
+            <div class="parent4">
+                <div class="gradient-overlay"></div>
+                <div class="heading1">
+                    <div class="div18">
+                        <span class="txt">
+                            <span>Стартаперы,</span>
+                            <span class="span1"> создайте свою планету!</span>
+                        </span>
+                    </div>
+                    <div class="frame-group">
+                        <div class="chevron-forward-circle-outline-parent">
+                            <img class="frame-icon" alt="Найти финансирование" src="{% static 'accounts/images/main_page/rocket.svg' %}">
+                            <div class="faq">Найти финансирование</div>
+                        </div>
+                        <div class="chevron-forward-circle-outline-parent">
+                            <img class="frame-icon" alt="Получить экспертную поддержку" src="{% static 'accounts/images/main_page/view.svg' %}">
+                            <div class="div20">
+                                <span class="txt">
+                                    <span>Получить экспертную поддержку </span>
+                                    <span class="span2">(менторство, аналитика)</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="frame-parent2">
+                            <img class="frame-icon" alt="Продать идею или масштабировать бизнес" src="{% static 'accounts/images/main_page/wheat.svg' %}">
+                            <div class="div20">Продать идею или масштабировать бизнес</div>
+                        </div>
+                    </div>
+                    <a href="{% url 'create_startup' %}" class="btn btn--yellow-gradient" style="text-decoration: none;">
+                        <span>Создать стартап</span>
+                        <img class="icon" src="{% static 'accounts/images/main_page/add-circle-outline.svg' %}" alt="Add">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="featured4">
+        <div class="frame-parent3">
+            <div class="parent6">
+                <div class="div23">
+                    <span class="txt">
+                        <span>Инвесторы,</span>
+                        <span class="span3">найдите свою звезду!</span>
+                    </span>
+                </div>
+                <div class="group-parent">
+                    <div class="group-div">
+                        <img class="card-icon" src="{% static 'accounts/images/main_page/planet_4th_main.webp' %}" alt="Доступ к проверенным стартапам">
+                        <div class="wrapper">
+                            <div class="div24">Доступ к проверенным стартапам</div>
+                        </div>
+                    </div>
+                    <div class="group-div">
+                        <img class="card-icon" src="{% static 'accounts/images/main_page/case_main_4th.webp' %}" alt="Диверсификация портфеля">
+                        <div class="wrapper">
+                            <div class="div25">Диверсификация портфеля</div>
+                        </div>
+                    </div>
+                    <div class="frame-parent5 group-div">
+                        <img class="card-icon" src="{% static 'accounts/images/main_page/rocket_main_4th.webp' %}" alt="Удобная аналитика">
+                        <div class="wrapper1">
+                            <div class="div26">Удобная аналитика и фильтры для выбора проектов</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="{% url 'startups_list' %}" class="btn btn--yellow-gradient">
+                    <span>Посмотреть стартапы</span>
+                    <img class="icon" alt="Eye" src="{% static 'accounts/images/main_page/button_eye.svg' %}">
+                </a>
+            </div>
+            <img class="icon10" alt="Инвесторы находят звезду" src="{% static 'accounts/images/main_page/4th_block_main_background.webp' %}">
+        </div>
+    </div>
     <div class="featured6 galaxy-carousel-wrapper">
         <div class="frame-parent18">
             <div class="parent18">
@@ -353,32 +348,32 @@
             </div>
             <div class="galaxy-carousel">
                 <div class="galaxy-step-card">
-                    <span class="galaxy-step-data" data-step-title="Регистрация стартапа" data-step-number="1"></span>
+                    <span class="galaxy-step-data" data-step-title="Регистрация компании" data-step-number="1"></span>
                     <video class="frame-child12" alt="Регистрация стартапа" autoplay muted loop playsinline>
                         <source src="{% static 'accounts/images/main_page/1_step.mp4' %}" type="video/mp4">
                     </video>
                 </div>
                 <div class="galaxy-step-card">
-                    <span class="galaxy-step-data" data-step-title="Выбирает стартап для изучения" data-step-number="2"></span>
+                    <span class="galaxy-step-data" data-step-title="Верификация проекта" data-step-number="2"></span>
                     <video class="frame-child12" alt="Заполнение профиля и модерация" autoplay muted loop playsinline>
                         <source src="{% static 'accounts/images/main_page/2_step.mp4' %}" type="video/mp4">
                     </video>
                 </div>
                 <div class="galaxy-step-card">
-                    <span class="galaxy-step-data" data-step-title="Платформа помогает заключить сделку между инвестором и стартапером" data-step-number="3"></span>
+                    <span class="galaxy-step-data" data-step-title="Поиск партнеров, инвесторов, клиентов и специалистов для развития бизнеса" data-step-number="3"></span>
                     <video class="frame-child12" alt="Поиск инвесторов и запуск ракеты!" autoplay muted loop playsinline>
                         <source src="{% static 'accounts/images/main_page/3_step.mp4' %}" type="video/mp4">
                     </video>
                 </div>
                 <div class="galaxy-step-card">
-                    <span class="galaxy-step-data" data-step-title="Стартап растет- инвестор получает прибыль" data-step-number="4"></span>
+                    <span class="galaxy-step-data" data-step-title="Все в плюсе!" data-step-number="4"></span>
                     <video class="frame-child12" alt="Заключение сделки и рост" autoplay muted loop playsinline>
                         <source src="{% static 'accounts/images/main_page/4_step.mp4' %}" type="video/mp4">
                     </video>
                 </div>
             </div>
             <div class="galaxy-step-indicator">
-                <span class="galaxy-step-current-title">Регистрация стартапа</span>
+                <span class="galaxy-step-current-title">Регистрация компании</span>
             </div>
             <div class="galaxy-navigation">
                 <img class="galaxy-arrow-left" alt="Prev" src="{% static 'accounts/images/main_page/chevron-forward-circle-outline.svg' %}">
@@ -398,16 +393,6 @@
                 </div>
             </div>
             <div class="frame-parent21">
-                <div class="frame-parent22 card-gamification">
-                    <div class="parent19">
-                        <div class="div57">Геймификация бизнеса</div>
-                        <div class="div58">Удобное приложение для инвестирования и открытия стартапа. Предлагай идеи для бизнеса и инвестируй в будущее </div>
-                    </div>
-                    <div class="app-store-buttons">
-                        <a href="#" class="app-store-btn"><img src="{% static 'accounts/images/main_page/7blockapple.webp' %}" alt="App Store"></a>
-                        <a href="#" class="app-store-btn"><img src="{% static 'accounts/images/main_page/7blockgoogle.webp' %}" alt="Google Play"></a>
-                    </div>
-                </div>
                 <div class="frame-parent22 card-industry">
                     <div class="parent20">
                         <div class="div57">Стартапы, меняющие индустрию</div>
@@ -683,7 +668,6 @@
     
             <div class="subscription-bonus">
                 <div class="bonus-text-content">
-                    <div class="bonus-title">Бонус</div>
                     <div class="bonus-description">Получите чек-лист для стартапов за подписку</div>
                 </div>
                 <div class="bonus-image-placeholder">
@@ -869,12 +853,8 @@
         </div>
         <div class="final-cta-buttons">
             <a href="{% url 'login' %}?next={% url 'create_startup' %}" class="btn btn-cta-create">
-                <span>Создать стартап</span>
-                <img class="icon" src="{% static 'accounts/images/main_page/add-circle-outline.svg' %}" alt="Создать стартап">
-            </a>
-            <a href="{% url 'startups_list' %}" class="btn btn-cta-invest">
-                <span>Инвестировать</span>
-                <img class="icon" src="{% static 'accounts/images/main_page/invest_button_icon.svg' %}" alt="Инвестировать">
+                <span>Перейти на платформу</span>
+                <img class="icon" src="{% static 'accounts/images/main_page/add-circle-outline.svg' %}" alt="Перейти на платформу">
             </a>
         </div>
     </div>
