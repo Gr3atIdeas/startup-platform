@@ -1205,12 +1205,12 @@ a:hover {
 
   
   flex-grow: 0;
-  width: 822px; 
+  width: 741px; 
   flex-shrink: 0; 
   min-width: 0; 
   flex-direction: column;
   align-items: flex-start;
-  gap: 35px;
+  gap: 31px;
 }
 
 
@@ -1222,10 +1222,10 @@ a:hover {
 
 
 .startup-header .logo-display-container {
-  width: 68px;
-  height: 68px;
+  width: 50px;
+  height: 50px;
   flex-shrink: 0;
-  border-radius: 16px;
+  border-radius: 14px;
   border: 1px solid var(--border-color);
   background-color: var(--secondary-blue);
   padding: 4px;
@@ -1241,7 +1241,7 @@ a:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
 .startup-header .logo-placeholder {
@@ -1271,7 +1271,7 @@ a:hover {
 }
 
 .startup-name {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 700;
   line-height: 1.2;
   margin: 0;
@@ -4671,4 +4671,249 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .manage-images-button:hover {
   background: #6b51df;
   transform: translateY(-1px);
+}
+
+/* Новые стили для реструктурированной правой колонки */
+
+.startup-intro-description {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.29;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.startup-category-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.category-label {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1.24;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.category-value {
+  background: #031A30;
+  color: #FFEF2B;
+  padding: 9px 14px;
+  border-radius: 10px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1.24;
+  letter-spacing: 0.01em;
+}
+
+.startup-financial-info {
+  display: flex;
+  gap: 21px;
+  width: 663px;
+}
+
+.financial-goal,
+.financial-raised {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.financial-label {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1.24;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.44);
+}
+
+.financial-value {
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  font-size: 27px;
+  line-height: 1.17;
+  letter-spacing: -0.02em;
+  color: #FFEF2B;
+}
+
+.financial-raised .financial-value {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.75;
+  color: var(--text-primary);
+}
+
+/* Стили для таба "Информация" */
+
+.detail-info-section-container {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  width: 100%;
+}
+
+.detail-info-section-stage-block {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 9px 27px;
+  border: 1px solid #FFFFFF;
+  border-radius: 50px;
+  width: fit-content;
+}
+
+.stage-icon-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stage-icon {
+  width: 25px;
+  height: 25px;
+  object-fit: cover;
+}
+
+.stage-label {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1.24;
+  letter-spacing: 0.01em;
+  color: #FFFFFF;
+}
+
+.stage-value {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1.24;
+  letter-spacing: 0.01em;
+  color: #FFFFFF;
+  background: #2353D9;
+  padding: 9px 13px;
+  border-radius: 10px;
+}
+
+.detail-info-section-about-block {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  width: 423px;
+}
+
+.about-title {
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.59;
+  letter-spacing: -0.02em;
+  color: #FFEF2B;
+  margin: 0;
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.about-text {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.29;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+}
+
+.additional-info {
+  margin-top: 13px;
+}
+
+.additional-info p {
+  margin: 0 0 8px 0;
+}
+
+.additional-info strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.detail-info-section-presentation-card {
+  float: right;
+  width: 172px;
+  margin-left: 23px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.presentation-image-container {
+  width: 100%;
+  height: 152px;
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.presentation-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.presentation-title {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.29;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.32);
+  text-align: center;
+  margin: 0;
+}
+
+.presentation-button {
+  width: 100%;
+  height: auto;
+  padding: 12px;
+  background: #2353D9;
+  border: none;
+  border-radius: 15px;
+  color: #FFFFFF;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1em;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 1px 1px 5px 1px rgba(10, 42, 75, 0.41);
+  transition: background-color 0.3s ease;
+}
+
+.presentation-button:hover {
+  background: #2a4ecc;
+}
+
+.presentation-button:disabled {
+  background: var(--button-grey);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Очистка float для обтекания */
+.detail-info-section-about-block::after {
+  content: "";
+  display: table;
+  clear: both;
 }
