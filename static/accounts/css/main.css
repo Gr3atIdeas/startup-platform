@@ -1060,12 +1060,6 @@ body > main.content::after {
   background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
   overflow: visible;
   border-radius: 10px;
-  transition: transform 0.3s ease;
-  cursor: pointer;
-}
-
-.featured4 .group-div:hover {
-  transform: translateY(-10px);
 }
 
 .featured4 .group-div .card-icon {
@@ -1276,11 +1270,10 @@ body > main.content::after {
 }
 
 .featured5 .frame-parent9 {
-  
-  width: 28%; 
+  width: 40%; 
   display: flex;
   flex-direction: column;
-  gap: 49px;
+  gap: 30px;
 }
 
 .featured5 .frame-wrapper {
@@ -1367,15 +1360,11 @@ body > main.content::after {
   color: #e6e8ec;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
-
-  
-
-  
   overflow: visible;
   text-overflow: initial;
-  width: 175px;
-  font-size: 8px;
-  line-height: 9px;
+  width: 340px;
+  font-size: 14px;
+  line-height: 19px;
 }
 
 .featured5 .button5 {
@@ -1773,7 +1762,8 @@ body > main.content::after {
 .featured7 .card-industry {
   background-color: black;
   padding: 61px 67px;
-  flex: 6.5;
+  width: 1303px;
+  height: 474.8px;
 }
 
 .featured7 .card-industry .parent20 {
@@ -2524,7 +2514,7 @@ body > main.content::after {
   align-self: stretch;
   text-align: right;
   color: white;
-  font-size: 12px;
+  font-size: 16px;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
