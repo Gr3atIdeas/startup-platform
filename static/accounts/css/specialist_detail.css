@@ -4422,9 +4422,17 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .detail-info-section-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 23px;
   width: 100%;
+  align-items: flex-start;
+}
+
+.detail-info-section-left-content {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  flex: 1;
 }
 
 .detail-info-section-stage-block {
@@ -4489,9 +4497,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .about-content {
   display: flex;
-  flex-direction: row;
-  gap: 23px;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 13px;
 }
 
 .about-text {
@@ -4501,7 +4508,6 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   line-height: 1.29;
   letter-spacing: -0.02em;
   color: #FFFFFF;
-  flex: 1;
 }
 
 .additional-info {
@@ -4524,6 +4530,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   flex-direction: column;
   align-items: center;
   gap: 14px;
+  margin-left: auto;
 }
 
 .presentation-image-container {
