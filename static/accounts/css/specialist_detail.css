@@ -1016,18 +1016,20 @@ a:hover {
 }
 
 
-.franchise-title-wrapper {
+.specialist-title-wrapper {
   display: flex;
   align-items: center;
   gap: 20px;
+  width: 100%;
+  justify-content: space-between;
 }
 
 
-.franchise-header .logo-display-container {
-  width: 68px;
-  height: 68px;
+.specialist-header .logo-display-container {
+  width: 50px;
+  height: 50px;
   flex-shrink: 0;
-  border-radius: 16px;
+  border-radius: 14px;
   border: 1px solid var(--border-color);
   background-color: var(--secondary-blue);
   padding: 4px;
@@ -1038,15 +1040,34 @@ a:hover {
   overflow: hidden;
 }
 
-.franchise-header .logo-image,
-.franchise-header .logo-placeholder {
+.specialist-title-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.specialist-name {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--text-primary);
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
+  display: block;
+  flex: 1;
+}
+
+.specialist-header .logo-image,
+.specialist-header .logo-placeholder {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
-.franchise-header .logo-placeholder {
+.specialist-header .logo-placeholder {
   object-fit: contain;
   opacity: 0.5;
   width: 50%;
@@ -1054,7 +1075,7 @@ a:hover {
 }
 
 
-.franchise-header-actions-wrapper {
+.specialist-header-actions-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -1064,16 +1085,16 @@ a:hover {
 }
 
 
-.franchise-header {
+.specialist-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 20px;
   flex-grow: 1;
-  min-width: 0; 
+  min-width: 0;
 }
 
-.franchise-header-left {
+.specialist-header-left {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1185,15 +1206,16 @@ a:hover {
 .rating-comments-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 5px;
-  margin-top: 10px;
+  margin-left: auto;
+  margin-top: 0;
 }
 
 .rating-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 5px;
 }
 
@@ -4452,7 +4474,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   display: flex;
   flex-direction: column;
   gap: 23px;
-  width: 423px;
+  width: 100%;
 }
 
 .about-title {
@@ -4467,8 +4489,9 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .about-content {
   display: flex;
-  flex-direction: column;
-  gap: 13px;
+  flex-direction: row;
+  gap: 23px;
+  align-items: flex-start;
 }
 
 .about-text {
@@ -4478,6 +4501,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   line-height: 1.29;
   letter-spacing: -0.02em;
   color: #FFFFFF;
+  flex: 1;
 }
 
 .additional-info {
@@ -4494,9 +4518,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .detail-info-section-presentation-card {
-  float: right;
   width: 172px;
-  margin-left: 23px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;

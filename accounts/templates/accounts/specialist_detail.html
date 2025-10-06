@@ -150,32 +150,26 @@
       <div class="specialist-header-actions-wrapper"> 
         <div class="specialist-header">
           <div class="specialist-title-wrapper">
-            <div class="logo-display-container">
-              {% if specialist.owner and specialist.owner.get_profile_picture_url %}
-                <img src="{{ specialist.owner.get_profile_picture_url }}" alt="Аватар автора {{ specialist.owner.username }}" class="logo-image">
-              {% elif specialist.logo_urls %}
-                {% with logo_file_id=specialist.logo_urls.0 %}
-                  <img src="{% get_file_url_tag logo_file_id specialist.specialist_id 'logo' 'specialist' %}" alt="Логотип {{ specialist.title }}" class="logo-image">
-                {% endwith %}
-              {% else %}
-                <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар по умолчанию" class="logo-image">
-              {% endif %}
-            </div>
-            <h1 class="specialist-name" title="{{ specialist.customization_data.specialist_display_title|default:specialist.title }}">{{ specialist.customization_data.specialist_display_title|default:specialist.title }}</h1>
-          </div>
-          <div class="rating-comments-container">
-            <div class="rating-container">
-              <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
-              <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
-                {% for i in "12345" %}
-                  <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
-                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
-                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
-                  </span>
-                {% endfor %}
+            <div class="specialist-title-content">
+              <div class="logo-display-container">
+                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
               </div>
+              <h1 class="specialist-name" title="{{ specialist.customization_data.specialist_display_title|default:specialist.title }}">{{ specialist.customization_data.specialist_display_title|default:specialist.title }}</h1>
             </div>
-            <a href="#comments-section" class="comments-link">Комментарии ({{ total_votes_count|default:0 }})</a>
+            <div class="rating-comments-container">
+              <div class="rating-container">
+                <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
+                <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
+                  {% for i in "12345" %}
+                    <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
+                      <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                      <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+                    </span>
+                  {% endfor %}
+                </div>
+              </div>
+              <a href="#comments-section" class="comments-link">Комментарии ({{ total_votes_count|default:0 }})</a>
+            </div>
           </div>
         </div>
       </div>
@@ -245,19 +239,19 @@
                       </div>
                     {% endif %}
                   </div>
+                  
+                  <div class="detail-info-section-presentation-card">
+                    <div class="presentation-image-container">
+                      <img src="{% static 'accounts/images/figma_assets/presentation_image.png' %}" alt="Презентация" class="presentation-image">
+                    </div>
+                    <h3 class="presentation-title">Презентация</h3>
+                    {% if specialist.pitch_deck_url %}
+                      <a href="{{ specialist.pitch_deck_url }}" target="_blank" class="presentation-button">Смотреть</a>
+                    {% else %}
+                      <button class="presentation-button" disabled>Смотреть</button>
+                    {% endif %}
+                  </div>
                 </div>
-              </div>
-
-              <div class="detail-info-section-presentation-card">
-                <div class="presentation-image-container">
-                  <img src="{% static 'accounts/images/figma_assets/presentation_image.png' %}" alt="Презентация" class="presentation-image">
-                </div>
-                <h3 class="presentation-title">Презентация</h3>
-                {% if specialist.pitch_deck_url %}
-                  <a href="{{ specialist.pitch_deck_url }}" target="_blank" class="presentation-button">Смотреть</a>
-                {% else %}
-                  <button class="presentation-button" disabled>Смотреть</button>
-                {% endif %}
               </div>
             </div>
           </div>

@@ -1218,6 +1218,8 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 20px;
+  width: 100%;
+  justify-content: space-between;
 }
 
 
@@ -1234,6 +1236,13 @@ a:hover {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+
+.startup-title-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
 }
 
 .startup-header .logo-image,
@@ -1285,6 +1294,7 @@ a:hover {
   word-wrap: break-word; 
   overflow-wrap: break-word; 
   display: block;
+  flex: 1;
 
   
 
@@ -1328,15 +1338,16 @@ a:hover {
 .rating-comments-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 5px;
-  margin-top: 10px;
+  margin-left: auto;
+  margin-top: 0;
 }
 
 .rating-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 5px;
 }
 
@@ -4813,7 +4824,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   display: flex;
   flex-direction: column;
   gap: 23px;
-  width: 423px;
+  width: 100%;
 }
 
 .about-title {
@@ -4828,8 +4839,9 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .about-content {
   display: flex;
-  flex-direction: column;
-  gap: 13px;
+  flex-direction: row;
+  gap: 23px;
+  align-items: flex-start;
 }
 
 .about-text {
@@ -4839,6 +4851,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   line-height: 1.29;
   letter-spacing: -0.02em;
   color: #FFFFFF;
+  flex: 1;
 }
 
 .additional-info {
@@ -4855,9 +4868,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .detail-info-section-presentation-card {
-  float: right;
   width: 172px;
-  margin-left: 23px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -4917,9 +4929,3 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   cursor: not-allowed;
 }
 
-/* Очистка float для обтекания */
-.detail-info-section-about-block::after {
-  content: "";
-  display: table;
-  clear: both;
-}
