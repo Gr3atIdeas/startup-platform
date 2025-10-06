@@ -1060,6 +1060,12 @@ body > main.content::after {
   background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
   overflow: visible;
   border-radius: 10px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.featured4 .group-div:hover {
+  transform: translateY(-10px);
 }
 
 .featured4 .group-div .card-icon {
@@ -1393,7 +1399,11 @@ body > main.content::after {
 }
 
 .featured5 .creators {
-  display: none;
+  
+  width: 22%; 
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .featured5 .div31 {
@@ -1655,7 +1665,6 @@ body > main.content::after {
 
 
 .featured7 {
-  display: none;
   width: 100%;
   max-width: 1445px;
   padding: 60px 71px;
@@ -1801,13 +1810,13 @@ body > main.content::after {
 
 
 .featured8.success-stories-carousel-outer {
-  display: none;
   width: 100%;
   max-width: 1303px; 
   margin-left: auto; 
   margin-right: auto; 
   padding: 45px 0;
   box-sizing: border-box;
+  display: flex;
   flex-direction: column;
   align-items: center; 
   gap: 40px;
@@ -2025,7 +2034,6 @@ body > main.content::after {
 
 
 .featured9 {
-  display: none;
   width: 100%;
   max-width: 1445px;
   padding: 60px 71px;
@@ -2263,13 +2271,13 @@ body > main.content::after {
 
 
 .featured10 {
-  display: none;
   padding: 45px 71px 55px;
   justify-content: flex-start;
   margin: 60px auto 0;
   max-width: 1445px;
   box-sizing: border-box;
   overflow: hidden;
+  display: flex;
   align-items: center;
 }
 
@@ -2516,12 +2524,10 @@ body > main.content::after {
   align-self: stretch;
   text-align: right;
   color: white;
-  font-size: 16px;
+  font-size: 12px;
   font-family: Unbounded, sans-serif;
-  font-weight: 400;
+  font-weight: 300;
   letter-spacing: 0.12px;
-  width: 100%;
-  max-width: 300px;
 }
 
 .bonus-image-placeholder {
