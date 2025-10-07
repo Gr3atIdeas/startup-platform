@@ -397,809 +397,6 @@ body {
   font-family: Unbounded;
   font-weight: 300;
   letter-spacing: 0.08px;
-  width: 100%;
-  text-align: left;
-  margin-top: 15px;
-}
-
-.micro-investment-label-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.micro-label {
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-  font-size: 12px;
-  letter-spacing: 0.12px;
-  color: black;
-}
-
-.help-icon {
-  cursor: pointer;
-  width: 14px;
-  height: 14px;
-  background: #d9d9d9;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 8px;
-  font-family: Circe, sans-serif;
-  font-weight: 400;
-  line-height: 1;
-  padding-bottom: 1px;
-  box-sizing: border-box;
-}
-
-.toggle-switch {
-  width: 40px;
-  height: 24px;
-  background-color: #ccc;
-  border-radius: 9999px;
-  position: relative;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  flex-shrink: 0;
-}
-
-.toggle-switch.active {
-  background-color: #004e9f;
-}
-
-.toggle-handle {
-  width: 18px;
-  height: 18px;
-  background-color: #f5f5f5;
-  border-radius: 50%;
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  transition: transform 0.3s ease;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
-}
-
-.toggle-switch.active .toggle-handle {
-  transform: translateX(16px);
-}
-
-.franchises-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 55px 20px;
-  justify-content: flex-start;
-  width: 100%;
-  max-width: 1032px;
-  padding: 0;
-  box-sizing: border-box;
-  margin-top: 35px;
-}
-
-.franchise-card {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 4px 4px 6px rgb(0 0 0 / 25%);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  text-decoration: none;
-  color: inherit;
-  width: 328px;
-  height: 448px;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-  box-sizing: border-box;
-  overflow: visible;
-}
-
-.franchise-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 6px 8px 12px rgb(0 0 0 / 30%);
-}
-
-.franchise-card-inner {
-  padding: 0 18px 20px;
-  display: flex;
-  flex-direction: column;
-  color: #191919;
-  position: static;
-  gap: 13px;
-  height: 100%;
-  margin-top: 104px;
-  align-items: center;
-}
-
-.franchise-image {
-  width: 111px;
-  height: 111px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  position: absolute;
-  top: -28px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #e9ecef;
-  z-index: 2;
-  border-radius: 50%;
-  border: 1px solid rgb(0 0 0 / 5%);
-  box-shadow: 0 2px 4px rgb(0 0 0 / 15%);
-}
-
-.franchise-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.franchise-image-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 36px;
-  color: #adb5bd;
-  font-weight: bold;
-}
-
-.franchise-title {
-  font-family: Unbounded, sans-serif;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 18px;
-  margin: 0;
-  color: #000;
-  text-align: center;
-  width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.franchise-rating-comments {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-family: Unbounded, sans-serif;
-  gap: 13px;
-  width: 100%;
-}
-
-.rating-text {
-  color: #004e9f;
-  font-size: 12px;
-  font-weight: 300;
-  letter-spacing: 0.12px;
-  word-wrap: break-word;
-  margin: 0;
-}
-
-.comments-count {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #004e9f;
-}
-
-.comments-count i,
-.comments-count svg {
-  width: 16px;
-  height: 15px;
-  fill: #004e9f;
-  stroke: #004e9f;
-  stroke-width: 1;
-}
-
-.comments-count span {
-  font-size: 14px;
-  font-family: Circe, sans-serif;
-  font-weight: 400;
-  line-height: 18px;
-  word-wrap: break-word;
-  color: #004e9f;
-}
-
-.franchise-category-row {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 2px;
-}
-
-.category-tag-figma {
-  background: #050505;
-  color: white;
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-  font-size: 12px;
-  padding: 9px 17px;
-  border-radius: 5px;
-  white-space: nowrap;
-  line-height: 1;
-  letter-spacing: 0.12px;
-  text-align: center;
-  flex-shrink: 0;
-}
-
-.category-tag-placeholder {
-  background-color: #e0e0e0;
-  color: #757575;
-}
-
-
-.progress-container {
-  width: 100%;
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.progress-bar-visual {
-  
-  flex-grow: 1;
-  height: 30px; 
-  position: relative;
-  background-color: #0b1a3f; 
-  border-radius: 10px;
-  overflow: hidden;
-  border: 2px solid #1d3059; 
-
-  
-  padding: 2px; 
-  box-sizing: border-box; 
-}
-
-.progress-animation-container {
-  
-  position: absolute;
-  top: 2px; 
-  left: 2px; 
-  bottom: 2px; 
-
-  
-  background: linear-gradient(
-    90deg,
-    #08e5cf 0%,
-    #345dff 100%
-  ); 
-  border-radius: 6px; 
-  overflow: hidden;
-  transition: width 0.5s ease-in-out;
-}
-
-
-.progress-planets {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.progress-planets::before,
-.progress-planets::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  border-radius: 50%;
-
-  
-  background-color: rgb(
-    255 255 255 / 70%
-  ); 
-
-  
-  box-shadow: 0 0 8px rgb(255 255 255 / 80%); 
-  animation: movePlanets 8s linear infinite;
-}
-
-.progress-planets::before {
-  width: 10px; 
-  height: 10px;
-  margin-top: -5px;
-  left: 10%;
-  animation-delay: 0s;
-}
-
-.progress-planets::after {
-  width: 6px; 
-  height: 6px;
-  margin-top: -3px;
-  left: 60%;
-  animation-delay: -4s;
-}
-
-.progress-animation-container::before {
-  
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 30%;
-  width: 8px;
-  height: 8px;
-  margin-top: -4px;
-  border-radius: 50%;
-
-  
-  background-color: rgb(
-    255 255 255 / 60%
-  ); 
-
-  
-  box-shadow: 0 0 6px rgb(255 255 255 / 70%); 
-  animation: movePlanets 10s linear infinite alternate;
-  animation-delay: -2s;
-}
-
-
-@keyframes movePlanets {
-  0% {
-    transform: translateX(0) translateY(-1px) scale(1);
-    opacity: 0.6;
-  } 
-  25% {
-    transform: translateX(15px) translateY(1px) scale(1.05);
-    opacity: 0.8;
-  } 
-  50% {
-    transform: translateX(-8px) translateY(0) scale(1);
-    opacity: 0.7;
-  } 
-  75% {
-    transform: translateX(12px) translateY(-2px) scale(0.95);
-    opacity: 0.9;
-  } 
-  100% {
-    transform: translateX(0) translateY(-1px) scale(1);
-    opacity: 0.6;
-  } 
-}
-
-
-
-.progress-percentage {
-  
-  position: absolute; 
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  font-family: Unbounded, sans-serif;
-  font-size: 12px; 
-  font-weight: 700;
-  line-height: 1;
-  white-space: nowrap;
-  z-index: 3; 
-  text-shadow: none;
-  padding: 0 5px;
-  box-sizing: border-box;
-
-  
-}
-
-
-
-
-
-
-
-.investment-size-container-figma {
-  background: #ebebeb;
-  border-radius: 5px;
-  padding: 12px;
-  width: 100%;
-  box-sizing: border-box;
-  text-align: center;
-}
-
-.investment-size-text-figma {
-  color: black;
-  font-size: 12px;
-  font-family: Unbounded;
-  font-weight: 300;
-  letter-spacing: 0.12px;
-  word-wrap: break-word;
-  line-height: 1;
-}
-
-.businesses-container-figma {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-}
-
-.business-icon-figma {
-  width: 16px;
-  height: 16px;
-  color: #4e4f51;
-  font-size: 16px;
-  flex-shrink: 0;
-}
-
-.businesses-text-figma {
-  color: #4e4f51;
-  font-size: 12px;
-  font-family: Unbounded;
-  font-weight: 300;
-  letter-spacing: 0.12px;
-  word-wrap: break-word;
-  line-height: 1;
-}
-
-.franchise-businesses-container-figma {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-}
-
-.franchise-icon-figma {
-  width: 16px;
-  height: 16px;
-  color: #4e4f51;
-  font-size: 16px;
-  flex-shrink: 0;
-}
-
-.franchise-businesses-text-figma {
-  color: #4e4f51;
-  font-size: 12px;
-  font-family: Unbounded;
-  font-weight: 300;
-  letter-spacing: 0.12px;
-  word-wrap: break-word;
-  line-height: 1;
-}
-
-.funding-goal-container-figma {
-  background: #ebebeb;
-  border-radius: 5px;
-  padding: 12px;
-  width: 100%;
-  box-sizing: border-box;
-  text-align: center;
-}
-
-.funding-goal-text-figma {
-  color: black;
-  font-size: 12px;
-  font-family: Unbounded;
-  font-weight: 300;
-  letter-spacing: 0.12px;
-  word-wrap: break-word;
-  line-height: 1;
-}
-
-.investor-count-container-figma {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-}
-
-.investor-icon-figma {
-  width: 16px;
-  height: 16px;
-  color: #4e4f51;
-  font-size: 16px;
-  flex-shrink: 0;
-}
-
-.investor-count-text-figma {
-  color: #4e4f51;
-  font-size: 12px;
-  font-family: Unbounded;
-  font-weight: 300;
-  letter-spacing: 0.12px;
-  word-wrap: break-word;
-  line-height: 1;
-}
-
-.franchise-short-description {
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-  font-size: 12px;
-  color: black;
-  line-height: 1.4;
-  text-align: left;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-  letter-spacing: 0.12px;
-}
-
-.detail-link-text-figma {
-  display: none;
-}
-
-.detail-link {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  font-size: 0;
-  color: transparent;
-  background-color: transparent;
-  border: none;
-  z-index: 3;
-  cursor: pointer;
-  border-radius: 10px;
-}
-
-.no-franchises {
-  text-align: center;
-  padding: 40px;
-  color: #777;
-  grid-column: 1 / -1;
-  width: 100%;
-}
-
-.no-franchises p {
-  font-weight: 300;
-  font-size: 16px;
-  margin: 0;
-}
-
-@media (width <= 1320px) {
-  body {
-    padding: 20px;
-  }
-
-  .catalog-container {
-    max-width: 100%;
-    grid-template-columns: 220px 1fr;
-    gap: 15px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  .sidebar {
-    width: 220px;
-    padding: 30px 20px 40px 20px;
-    height: auto;
-  }
-
-  .franchises-grid {
-    gap: 15px;
-    justify-content: center;
-  }
-
-  .franchise-card {
-    width: 328px;
-    max-width: 328px;
-    height: auto;
-    padding-top: 0;
-  }
-
-  .franchise-card-inner {
-    margin-top: 80px;
-    padding: 0 15px 15px;
-    gap: 10px;
-  }
-
-  .franchise-image {
-    width: 100px;
-    height: 100px;
-    top: -25px;
-  }
-
-  .progress-bar-container-figma {
-    width: 100%;
-  }
-
-  .catalog-search {
-    height: 38px;
-  }
-
-  .catalog-search-input {
-    height: 30px;
-  }
-}
-
-@media (width <= 960px) {
-  .catalog-container {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-
-  .sidebar {
-    width: 100%;
-    margin-right: 0;
-    margin-bottom: 0;
-    padding: 20px 20px 30px 20px;
-    height: auto;
-  }
-
-  .franchises-content {
-    width: 100%;
-    align-items: center;
-  }
-
-  .franchises-grid {
-    justify-content: center;
-  }
-
-  .franchise-card {
-    width: calc(50% - 10px);
-    margin-bottom: 35px;
-  }
-}
-
-@media (width <= 740px) {
-  body {
-    padding: 15px;
-  }
-
-  .catalog-container {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
-  .franchises-grid {
-    justify-content: center;
-    gap: 15px;
-  }
-
-  .franchise-card {
-    width: 100%;
-    max-width: 350px;
-    height: auto;
-    margin-bottom: 40px;
-  }
-
-  .catalog-title {
-    font-size: 24px;
-  }
-
-  .catalog-subtitle {
-    font-size: 13px;
-  }
-
-  .franchise-card-inner {
-    padding: 0 15px 15px;
-    margin-top: 90px;
-    gap: 8px;
-  }
-
-  .franchise-image {
-    width: 100px;
-    height: 100px;
-    top: -25px;
-  }
-
-  .franchise-title {
-    font-size: 18px;
-    line-height: 1.3;
-  }
-  .rating-text {
-    font-size: 11px;
-  }
-  .comments-count span {
-    font-size: 12px;
-  }
-  .comments-count svg {
-    width: 14px;
-    height: 13px;
-  }
-  .category-tag-figma {
-    font-size: 11px;
-    padding: 7px 12px;
-  }
-  .progress-bar-container-figma {
-    height: 24px;
-  }
-  .progress-percentage-figma {
-    font-size: 11px;
-  }
-  .investment-type {
-    font-size: 11px;
-    padding: 4px 10px;
-  }
-  .funding-goal-text-figma {
-    font-size: 11px;
-  }
-  .investor-count-text-figma {
-    font-size: 11px;
-  }
-  .franchise-short-description {
-    font-size: 12px;
-    -webkit-line-clamp: 2;
-  }
-  .detail-link-text-figma {
-    font-size: 11px;
-  }
-
-  .catalog-search {
-    height: 36px;
-  }
-  .catalog-search-input {
-    height: 28px;
-    font-size: 13px;
-  }
-  .catalog-search-input::placeholder {
-    font-size: 13px;
-  }
-  .catalog-search-btn {
-    width: 24px;
-    height: 24px;
-  }
-  .catalog-search-btn svg {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-@media (width <= 400px) {
-  body {
-    padding: 10px;
-  }
-
-  .catalog-container {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  .franchises-grid {
-    gap: 10px;
-    margin-top: 25px;
-  }
-
-  .franchise-card {
-    max-width: 100%;
-    margin-bottom: 30px;
-  }
-  .sidebar {
-    padding: 15px 15px 25px 15px;
-  }
-  #filterForm {
-    gap: 20px;
-  }
-  .sort-dropdown select {
-    height: 36px;
-    font-size: 13px;
-  }
-  .category-name {
-    font-size: 11px;
-  }
-  .rating-value-display {
-    font-size: 13px;
-  }
-  .toggle-switch {
-    width: 36px;
-    height: 20px;
-  }
-  .toggle-handle {
-    width: 16px;
-    height: 16px;
-    top: 2px;
-    left: 2px;
-  }
-  .toggle-switch.active .toggle-handle {
-    transform: translateX(16px);
-  }
-  .show-button {
-    height: 36px;
-    font-size: 14px;
-    line-height: 14px;
-    padding: 10px 25px;
-  }
-  .franchise-title {
-    font-size: 16px;
-  }
 }
 
 .pagination-controls {
@@ -1328,6 +525,173 @@ body {
   letter-spacing: 0.12px;
 }
 
+.no-franchises {
+  text-align: center;
+  padding: 40px;
+  color: #777;
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.no-franchises p {
+  font-weight: 300;
+  font-size: 16px;
+  margin: 0;
+}
+
+@media (width <= 1320px) {
+  body {
+    padding: 20px;
+  }
+
+  .catalog-container {
+    max-width: 100%;
+    grid-template-columns: 220px 1fr;
+    gap: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .sidebar {
+    width: 220px;
+    padding: 30px 20px 40px 20px;
+    height: auto;
+  }
+
+  .franchises-grid {
+    gap: 15px;
+    justify-content: center;
+  }
+
+  .catalog-search {
+    height: 38px;
+  }
+
+  .catalog-search-input {
+    height: 30px;
+  }
+}
+
+@media (width <= 960px) {
+  .catalog-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 0;
+    padding: 20px 20px 30px 20px;
+    height: auto;
+  }
+
+  .franchises-content {
+    width: 100%;
+    align-items: center;
+  }
+
+  .franchises-grid {
+    justify-content: center;
+  }
+}
+
+@media (width <= 740px) {
+  body {
+    padding: 15px;
+  }
+
+  .catalog-container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .franchises-grid {
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .catalog-title {
+    font-size: 24px;
+  }
+
+  .catalog-subtitle {
+    font-size: 13px;
+  }
+
+  .catalog-search {
+    height: 36px;
+  }
+  .catalog-search-input {
+    height: 28px;
+    font-size: 13px;
+  }
+  .catalog-search-input::placeholder {
+    font-size: 13px;
+  }
+  .catalog-search-btn {
+    width: 24px;
+    height: 24px;
+  }
+  .catalog-search-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (width <= 400px) {
+  body {
+    padding: 10px;
+  }
+
+  .catalog-container {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .franchises-grid {
+    gap: 10px;
+    margin-top: 25px;
+  }
+  .sidebar {
+    padding: 15px 15px 25px 15px;
+  }
+  #filterForm {
+    gap: 20px;
+  }
+  .sort-dropdown select {
+    height: 36px;
+    font-size: 13px;
+  }
+  .category-name {
+    font-size: 11px;
+  }
+  .rating-value-display {
+    font-size: 13px;
+  }
+  .toggle-switch {
+    width: 36px;
+    height: 20px;
+  }
+  .toggle-handle {
+    width: 16px;
+    height: 16px;
+    top: 2px;
+    left: 2px;
+  }
+  .toggle-switch.active .toggle-handle {
+    transform: translateX(16px);
+  }
+  .show-button {
+    height: 36px;
+    font-size: 14px;
+    line-height: 14px;
+    padding: 10px 25px;
+  }
+}
+
 .rating-filter .noUi-target {
   background: #ebebeb;
   height: 4px;
@@ -1370,289 +734,69 @@ body {
   margin-top: 15px;
 }
 
-.payback-period-filter .noUi-target {
-  background: #ebebeb;
-  height: 4px;
-  margin-bottom: 5px;
-  box-shadow: none;
-  border: none;
-  border-radius: 9999px;
-}
-
-.payback-period-filter .noUi-connect {
-  background: #004e9f;
-  box-shadow: none;
-  border-radius: 9999px;
-}
-
-.payback-period-filter .noUi-handle {
-  width: 16px;
-  height: 16px;
-  border-radius: 9999px;
-  background: #004e9f;
-  border: none;
-  box-shadow: none;
-  cursor: pointer;
-  top: -6px;
-  right: -8px;
-}
-
-.payback-period-filter .noUi-handle:focus {
-  outline: none;
-}
-
-.investment-size-filter .noUi-target {
-  background: #ebebeb;
-  height: 4px;
-  margin-bottom: 5px;
-  box-shadow: none;
-  border: none;
-  border-radius: 9999px;
-}
-
-.investment-size-filter .noUi-connect {
-  background: #004e9f;
-  box-shadow: none;
-  border-radius: 9999px;
-}
-
-.investment-size-filter .noUi-handle {
-  width: 16px;
-  height: 16px;
-  border-radius: 9999px;
-  background: #004e9f;
-  border: none;
-  box-shadow: none;
-  cursor: pointer;
-  top: -6px;
-  right: -8px;
-}
-
-.investment-size-filter .noUi-handle:focus {
-  outline: none;
-}
-
-
-.franchise-title-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 10px 0;
-  width: 100%;
-  justify-content: center;
-}
-
-
-.franchise-logo {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 1px solid rgb(0 0 0 / 5%); 
-  flex-shrink: 0;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 15%); 
-}
-
-.franchise-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.franchise-default-avatar {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  background: #0b1730;
-}
-
-
-.franchise-image .planet-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.franchise-detail-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.franchise-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.franchise-header h1 {
-  font-family: Unbounded, sans-serif;
-  font-size: 32px;
-  font-weight: 700;
-  color: #000;
-  margin-bottom: 10px;
-}
-
-.franchise-rating {
-  font-family: Unbounded, sans-serif;
-  font-size: 16px;
-  color: #004e9f;
-}
-
-.franchise-info {
-  background: #fff;
-  border-radius: 10px;
-  padding: 30px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 15%);
-}
-
-.franchise-description h2,
-.franchise-terms h2 {
-  font-family: Unbounded, sans-serif;
-  font-size: 24px;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 15px;
-}
-
-.franchise-description p,
-.franchise-terms p {
-  font-family: Unbounded, sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
-  color: #333;
-}
-
-.franchise-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin: 30px 0;
-}
-
-.stat-item {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
-}
-
-.stat-label {
-  display: block;
-  font-family: Unbounded, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  color: #666;
-  margin-bottom: 5px;
-}
-
-.stat-value {
-  display: block;
-  font-family: Unbounded, sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: #004e9f;
-}
-
-/* Стили для карточек франшиз */
+/* Новые стили карточек франшиз */
 .franchise-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
   position: relative;
-  text-decoration: none;
-  color: inherit;
-  width: 330px;
-  height: 480px;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-  box-sizing: border-box;
+  width: 297px;
+  height: 442px;
+  background: #FFFFFF;
+  border-radius: 9px;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .franchise-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 6px 8px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
-/* Шапка карточки с широкоформатным изображением */
 .franchise-card-header {
   position: relative;
   width: 100%;
-  height: 158px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-radius: 12px 12px 0 0;
+  height: 142px;
   overflow: hidden;
 }
 
 .franchise-header-image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
 }
 
 .franchise-header-placeholder {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: #F5F5F5;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #adb5bd;
-  font-size: 14px;
 }
 
-/* Миниатюра планетки */
-.franchise-planet-miniature {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 2px solid #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  z-index: 2;
-}
-
-.franchise-card-inner {
-  padding: 20px 18px 20px;
+.franchise-card-content {
+  padding: 10px;
+  height: 243px;
   display: flex;
   flex-direction: column;
-  color: #191919;
-  position: relative;
-  gap: 12px;
-  height: calc(100% - 158px);
-  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
 }
 
-.franchise-title-container {
+.franchise-title-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 0 0 8px 0;
-  width: 100%;
-  justify-content: flex-start;
 }
 
 .franchise-logo {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid #e9ecef;
-  background: #f8f9fa;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6c757d;
+  border: 1px solid #000000;
+  background: #FFFFFF;
   flex-shrink: 0;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .franchise-logo img {
@@ -1664,55 +808,135 @@ body {
 .franchise-logo .logo-placeholder {
   width: 100%;
   height: 100%;
+  background: #F5F5F5;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.franchise-logo .logo-placeholder svg {
-  width: 20px;
-  height: 20px;
-}
-
 .franchise-title {
-  font-family: Unbounded, sans-serif;
-  font-weight: 600;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
   font-size: 18px;
-  line-height: 1.2;
+  line-height: 0.9em;
+  letter-spacing: -0.02em;
+  color: #000000;
   margin: 0;
-  color: #000;
-  text-align: left;
   flex: 1;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* Описание (3 строки с обрезкой) */
+.franchise-category-row {
+  display: flex;
+  align-items: center;
+}
+
+.franchise-description-row {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+}
+
 .franchise-description {
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  line-height: 1.4;
-  color: #6c757d;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  line-height: 1.24em;
+  letter-spacing: 0.01em;
+  color: #000000;
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 60px;
 }
 
-/* Собранная сумма */
-.franchise-funding-amount {
+.franchise-amount-row {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin: 8px 0;
+  gap: 9px;
 }
 
-/* Прогресс-бар */
 .franchise-progress-container {
+  position: relative;
+  width: 278px;
+  height: 46px;
+}
+
+.progress-bar-bg {
+  position: relative;
   width: 100%;
-  margin: 8px 0;
+  height: 100%;
+  background: #082047;
+  border: 2px solid #4B7C80;
+  border-radius: 27px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 0px;
+  height: 39px;
+  background: linear-gradient(90deg, rgba(158, 247, 249, 1) 0%, rgba(73, 209, 255, 1) 48%, rgba(220, 253, 161, 1) 100%);
+  border-radius: 23px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.3s ease;
+}
+
+.progress-investors {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 9px;
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 99px;
+  height: 30px;
+}
+
+.investors-icon {
+  width: 14px;
+  height: 14px;
+  color: #000000;
+}
+
+.investors-count {
+  font-family: 'Circe', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.71em;
+  color: rgba(255, 255, 255, 0.97);
+}
+
+.progress-percentage {
+  position: absolute;
+  top: 19px;
+  right: 36px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.29em;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+}
+
+@media (max-width: 768px) {
+  .franchise-card {
+    width: 100%;
+    max-width: 297px;
+  }
+  
+  .franchise-card-content {
+    padding: 8px;
+  }
+  
+  .franchise-progress-container {
+    width: 100%;
+  }
 }

@@ -5,10 +5,7 @@
 
 {% for specialist in page_obj %}
   <div class="specialist-card" data-specialist-id="{{ specialist.specialist_id }}">
-    
-    <span class="specialist-tag">Специалист</span>
-    
-    <!-- Шапка с широкоформатным изображением -->
+    <!-- Шапка с изображением -->
     <div class="specialist-card-header">
       {% if specialist.get_catalog_card_image_url %}
         <img src="{{ specialist.get_catalog_card_image_url }}" alt="Изображение {{ specialist.title }}" class="specialist-header-image">
@@ -16,28 +13,23 @@
         <div class="specialist-header-placeholder"></div>
       {% endif %}
       
-      <!-- Миниатюра планетки справа -->
+      <!-- Планетка -->
       {% if specialist.planet_image %}
-        <div class="specialist-planet-miniature">
+        <div class="planet-miniature-container">
           <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ specialist.planet_image }}" alt="Планета {{ specialist.title }}" class="planet-miniature">
         </div>
       {% endif %}
     </div>
 
-    <div class="specialist-card-inner">
-      
-      <div class="specialist-title-container">
-        <!-- Логотип -->
+    <!-- Контентная часть -->
+    <div class="specialist-card-content">
+      <!-- Логотип и название -->
+      <div class="specialist-title-row">
         <div class="specialist-logo">
           {% if specialist.logo_urls %}
             <img src="{% get_file_url_tag specialist.logo_urls.0 specialist.specialist_id 'logo' 'specialist' %}" alt="Логотип {{ specialist.title }}">
           {% else %}
-            <div class="logo-placeholder">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
+            <div class="logo-placeholder"></div>
           {% endif %}
         </div>
         <h3 class="specialist-title">{{ specialist.title }}</h3>
@@ -46,46 +38,42 @@
       <!-- Категория -->
       <div class="specialist-category-row">
         {% if specialist.customization_data and specialist.customization_data.specialist_category %}
-          <span class="category-tag-figma">{{ specialist.customization_data.specialist_category }}</span>
+          <span class="category-tag">{{ specialist.customization_data.specialist_category }}</span>
         {% else %}
-          <span class="category-tag-figma category-tag-placeholder">Категория не указана</span>
+          <span class="category-tag">Другое</span>
         {% endif %}
       </div>
 
-      <!-- Вводная (3 строки с обрезкой) -->
-      <div class="specialist-description">
-        {{ specialist.short_description|default:"Нет описания"|truncatechars:140 }}
+      <!-- Описание -->
+      <div class="specialist-description-row">
+        <p class="specialist-description">{{ specialist.short_description|default:"Описание не указано" }}</p>
       </div>
 
-      <!-- Собранная сумма (0 для специалистов) -->
-      <div class="specialist-funding-amount">
-        <span class="funding-label">Собранная сумма</span>
-        <span class="funding-value">0 ₽</span>
+      <!-- Собранная сумма -->
+      <div class="specialist-amount-row">
+        <span class="amount-label">Собранная сумма</span>
+        <span class="amount-value">0 ₽</span>
       </div>
 
-      <!-- Прогресс-бар с нулевыми значениями -->
+      <!-- Прогресс-бар -->
       <div class="specialist-progress-container">
-        <div class="progress-bar-background">
-          <div class="progress-bar-fill" style="width: 0%;">
-            <div class="progress-planets">
-              <div class="planet-dot"></div>
-              <div class="planet-dot"></div>
-              <div class="planet-dot"></div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 0%"></div>
+          <div class="progress-investors">
+            <div class="investors-icon">
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 8C10.2091 8 12 6.20914 12 4C12 1.79086 10.2091 0 8 0C5.79086 0 4 1.79086 4 4C4 6.20914 5.79086 8 8 8Z" fill="currentColor"/>
+                <path d="M8 9C5.79086 9 4 10.7909 4 13V16H12V13C12 10.7909 10.2091 9 8 9Z" fill="currentColor"/>
+              </svg>
             </div>
+            <span class="investors-count">(0)</span>
           </div>
         </div>
-        <div class="progress-info">
-          <span class="progress-percentage">0%</span>
-          <div class="investor-count">
-            <svg class="investor-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 8c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zM8 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
-            </svg>
-            <span class="investor-count-text">(0)</span>
-          </div>
-        </div>
+        <div class="progress-percentage">0%</div>
       </div>
-
-      <a href="{% url 'specialist_detail' specialist_id=specialist.specialist_id %}" class="detail-link" aria-label="Подробнее о {{ specialist.title }}"></a>
     </div>
+
+    <!-- Ссылка на детали -->
+    <a href="{% url 'specialist_detail' specialist_id=specialist.specialist_id %}" class="detail-link" aria-label="Подробнее о {{ specialist.title }}"></a>
   </div>
 {% endfor %}

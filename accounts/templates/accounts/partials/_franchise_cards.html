@@ -5,10 +5,7 @@
 
 {% for franchise in page_obj %}
   <div class="franchise-card" data-franchise-id="{{ franchise.franchise_id }}">
-    
-    <span class="franchise-tag">Франшиза</span>
-    
-    <!-- Шапка с широкоформатным изображением -->
+    <!-- Шапка с изображением -->
     <div class="franchise-card-header">
       {% if franchise.get_catalog_card_image_url %}
         <img src="{{ franchise.get_catalog_card_image_url }}" alt="Изображение {{ franchise.title }}" class="franchise-header-image">
@@ -16,28 +13,23 @@
         <div class="franchise-header-placeholder"></div>
       {% endif %}
       
-      <!-- Миниатюра планетки справа -->
+      <!-- Планетка -->
       {% if franchise.planet_image %}
-        <div class="franchise-planet-miniature">
+        <div class="planet-miniature-container">
           <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ franchise.planet_image }}" alt="Планета {{ franchise.title }}" class="planet-miniature">
         </div>
       {% endif %}
     </div>
 
-    <div class="franchise-card-inner">
-      
-      <div class="franchise-title-container">
-        <!-- Логотип -->
+    <!-- Контентная часть -->
+    <div class="franchise-card-content">
+      <!-- Логотип и название -->
+      <div class="franchise-title-row">
         <div class="franchise-logo">
           {% if franchise.logo_urls %}
             <img src="{% get_file_url_tag franchise.logo_urls.0 franchise.franchise_id 'logo' 'franchise' %}" alt="Логотип {{ franchise.title }}">
           {% else %}
-            <div class="logo-placeholder">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
+            <div class="logo-placeholder"></div>
           {% endif %}
         </div>
         <h3 class="franchise-title">{{ franchise.title }}</h3>
@@ -46,46 +38,42 @@
       <!-- Категория -->
       <div class="franchise-category-row">
         {% if franchise.direction and franchise.direction.direction_name %}
-          <span class="category-tag-figma">{{ franchise.direction.direction_name|translate_category }}</span>
+          <span class="category-tag">{{ franchise.direction.direction_name|translate_category }}</span>
         {% else %}
-          <span class="category-tag-figma category-tag-placeholder">Категория не указана</span>
+          <span class="category-tag">Другое</span>
         {% endif %}
       </div>
 
-      <!-- Вводная (3 строки с обрезкой) -->
-      <div class="franchise-description">
-        {{ franchise.short_description|default:"Нет описания"|truncatechars:140 }}
+      <!-- Описание -->
+      <div class="franchise-description-row">
+        <p class="franchise-description">{{ franchise.short_description|default:"Описание не указано" }}</p>
       </div>
 
-      <!-- Собранная сумма (0 для франшиз) -->
-      <div class="franchise-funding-amount">
-        <span class="funding-label">Собранная сумма</span>
-        <span class="funding-value">0 ₽</span>
+      <!-- Собранная сумма -->
+      <div class="franchise-amount-row">
+        <span class="amount-label">Собранная сумма</span>
+        <span class="amount-value">0 ₽</span>
       </div>
 
-      <!-- Прогресс-бар с нулевыми значениями -->
+      <!-- Прогресс-бар -->
       <div class="franchise-progress-container">
-        <div class="progress-bar-background">
-          <div class="progress-bar-fill" style="width: 0%;">
-            <div class="progress-planets">
-              <div class="planet-dot"></div>
-              <div class="planet-dot"></div>
-              <div class="planet-dot"></div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 0%"></div>
+          <div class="progress-investors">
+            <div class="investors-icon">
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 8C10.2091 8 12 6.20914 12 4C12 1.79086 10.2091 0 8 0C5.79086 0 4 1.79086 4 4C4 6.20914 5.79086 8 8 8Z" fill="currentColor"/>
+                <path d="M8 9C5.79086 9 4 10.7909 4 13V16H12V13C12 10.7909 10.2091 9 8 9Z" fill="currentColor"/>
+              </svg>
             </div>
+            <span class="investors-count">(0)</span>
           </div>
         </div>
-        <div class="progress-info">
-          <span class="progress-percentage">0%</span>
-          <div class="investor-count">
-            <svg class="investor-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 8c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zM8 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
-            </svg>
-            <span class="investor-count-text">(0)</span>
-          </div>
-        </div>
+        <div class="progress-percentage">0%</div>
       </div>
-
-      <a href="{% url 'franchise_detail' franchise_id=franchise.franchise_id %}" class="detail-link" aria-label="Подробнее о {{ franchise.title }}"></a>
     </div>
+
+    <!-- Ссылка на детали -->
+    <a href="{% url 'franchise_detail' franchise_id=franchise.franchise_id %}" class="detail-link" aria-label="Подробнее о {{ franchise.title }}"></a>
   </div>
 {% endfor %}

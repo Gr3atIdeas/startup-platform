@@ -5,10 +5,7 @@
 
 {% for startup in page_obj %}
   <div class="startup-card" data-startup-id="{{ startup.startup_id }}">
-    
-    <span class="startup-franchise-tag">Стартап</span>
-    
-    <!-- Шапка с широкоформатным изображением -->
+    <!-- Шапка с изображением -->
     <div class="startup-card-header">
       {% if startup.get_catalog_card_image_url %}
         <img src="{{ startup.get_catalog_card_image_url }}" alt="Изображение {{ startup.title }}" class="startup-header-image">
@@ -16,77 +13,67 @@
         <div class="startup-header-placeholder"></div>
       {% endif %}
       
-      <!-- Миниатюра планетки справа -->
+      <!-- Планетка -->
       {% if startup.planet_image %}
-        <div class="startup-planet-miniature">
+        <div class="planet-miniature-container">
           <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ startup.planet_image }}" alt="Планета {{ startup.title }}" class="planet-miniature">
         </div>
       {% endif %}
     </div>
 
-    <div class="startup-card-inner">
-      
-      <div class="startup-title-container">
-        <!-- Логотип -->
+    <!-- Контентная часть -->
+    <div class="startup-card-content">
+      <!-- Логотип и название -->
+      <div class="startup-title-row">
         <div class="startup-logo">
           {% if startup.logo_urls %}
             <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' 'startup' %}" alt="Логотип {{ startup.title }}">
           {% else %}
-            <div class="logo-placeholder">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
+            <div class="logo-placeholder"></div>
           {% endif %}
         </div>
         <h3 class="startup-title">{{ startup.title }}</h3>
       </div>
+
       <!-- Категория -->
       <div class="startup-category-row">
         {% if startup.direction and startup.direction.direction_name %}
-          <span class="category-tag-figma">{{ startup.direction.direction_name|translate_category }}</span>
+          <span class="category-tag">{{ startup.direction.direction_name|translate_category }}</span>
         {% else %}
-          <span class="category-tag-figma category-tag-placeholder">Категория не указана</span>
+          <span class="category-tag">Другое</span>
         {% endif %}
       </div>
 
-      <!-- Вводная (3 строки с обрезкой) -->
-      <div class="startup-description">
-        {{ startup.short_description|default:"Нет описания"|truncatechars:140 }}
+      <!-- Описание -->
+      <div class="startup-description-row">
+        <p class="startup-description">{{ startup.short_description|default:"Описание не указано" }}</p>
       </div>
 
       <!-- Собранная сумма -->
-      <div class="startup-funding-amount">
-        <span class="funding-label">Собранная сумма</span>
-        <span class="funding-value">{{ startup.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
+      <div class="startup-amount-row">
+        <span class="amount-label">Собранная сумма</span>
+        <span class="amount-value">{{ startup.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
       </div>
 
-      <!-- Прогресс-бар с процентами и количеством инвестировавших -->
-      {% with progress=startup.get_progress_percentage|default:0 %}
+      <!-- Прогресс-бар -->
       <div class="startup-progress-container">
-        <div class="progress-bar-background">
-          <div class="progress-bar-fill" style="width: {{ progress }}%;">
-            <div class="progress-planets">
-              <div class="planet-dot"></div>
-              <div class="planet-dot"></div>
-              <div class="planet-dot"></div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: {{ startup.get_progress_percentage|default:0 }}%"></div>
+          <div class="progress-investors">
+            <div class="investors-icon">
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 8C10.2091 8 12 6.20914 12 4C12 1.79086 10.2091 0 8 0C5.79086 0 4 1.79086 4 4C4 6.20914 5.79086 8 8 8Z" fill="currentColor"/>
+                <path d="M8 9C5.79086 9 4 10.7909 4 13V16H12V13C12 10.7909 10.2091 9 8 9Z" fill="currentColor"/>
+              </svg>
             </div>
+            <span class="investors-count">({{ startup.get_investors_count|default:0 }})</span>
           </div>
         </div>
-        <div class="progress-info">
-          <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
-          <div class="investor-count">
-            <svg class="investor-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 8c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zM8 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
-            </svg>
-            <span class="investor-count-text">({{ startup.get_investors_count|default:0 }})</span>
-          </div>
-        </div>
+        <div class="progress-percentage">{{ startup.get_progress_percentage|default:0|floatformat:0 }}%</div>
       </div>
-      {% endwith %}
-
-      <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link" aria-label="Подробнее о {{ startup.title }}"></a>
     </div>
+
+    <!-- Ссылка на детали -->
+    <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link" aria-label="Подробнее о {{ startup.title }}"></a>
   </div>
 {% endfor %}
