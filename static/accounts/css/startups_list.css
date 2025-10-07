@@ -791,7 +791,7 @@ body {
 
 .planet-miniature-container {
   position: absolute;
-  top: 148px;
+  top: 110px;
   right: 10px;
   width: 70px;
   height: 71px;
@@ -993,7 +993,6 @@ body {
 .investors-counter .investors-icon {
   width: 16px;
   height: 16px;
-  color: #004E9F;
 }
 
 .investors-counter .investors-count {
