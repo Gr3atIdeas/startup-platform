@@ -543,6 +543,18 @@ body {
   margin: 0;
 }
 
+.agencies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(329px, 1fr));
+  gap: 19px;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 1032px;
+  padding: 0;
+  box-sizing: border-box;
+  margin-top: 35px;
+}
+
 @media (width <= 1320px) {
   body {
     padding: 20px;
@@ -741,8 +753,8 @@ body {
 /* Новые стили карточек агентств */
 .agency-card {
   position: relative;
-  width: 297px;
-  height: 442px;
+  width: 329px;
+  height: 490px;
   background: #FFFFFF;
   border-radius: 9px;
   overflow: hidden;
@@ -758,7 +770,7 @@ body {
 .agency-card-header {
   position: relative;
   width: 100%;
-  height: 142px;
+  height: 158px;
   overflow: hidden;
 }
 
@@ -776,15 +788,136 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.agency-header-placeholder::before {
+  content: 'GI';
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  color: rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .agency-card-content {
   padding: 10px;
-  height: 243px;
+  height: 332px;
+  position: relative;
+}
+
+.agency-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  height: 35px;
+}
+
+.agency-category-row {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 55px;
+  left: 10px;
+  right: 10px;
+  height: 27px;
+}
+
+.agency-description-row {
+  position: absolute;
+  top: 92px;
+  left: 10px;
+  right: 10px;
+  height: 60px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.agency-amount-row {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 18px;
+  gap: 10px;
+  position: absolute;
+  top: 162px;
+  left: 10px;
+  right: 10px;
+  height: 60px;
+}
+
+.agency-progress-container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  width: 308px;
+  height: 51px;
+}
+
+.planet-miniature-container {
+  position: absolute;
+  top: 110px;
+  right: 10px;
+  width: 70px;
+  height: 71px;
+  z-index: 10;
+}
+
+.planet-miniature {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.agency-category-row {
+  display: flex;
+  align-items: center;
+}
+
+.category-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 17px;
+  background: #050505;
+  color: #FFFFFF;
+  border-radius: 5px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1.24em;
+  letter-spacing: 0.01em;
+  height: 27px;
+}
+
+.amount-label {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1.24em;
+  color: rgba(0, 0, 0, 0.44);
+}
+
+.amount-value {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 1.09em;
+  letter-spacing: -0.02em;
+  color: #2353D9;
+  width: 192px;
 }
 
 .agency-title-row {
@@ -794,8 +927,8 @@ body {
 }
 
 .agency-logo {
-  width: 32px;
-  height: 32px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   overflow: hidden;
   border: 1px solid #000000;
@@ -821,7 +954,7 @@ body {
 .agency-title {
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 0.9em;
   letter-spacing: -0.02em;
   color: #000000;
@@ -846,7 +979,7 @@ body {
 .agency-description {
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.24em;
   letter-spacing: 0.01em;
   color: #000000;
@@ -861,13 +994,13 @@ body {
 .agency-amount-row {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 10px;
 }
 
 .agency-progress-container {
   position: relative;
-  width: 278px;
-  height: 46px;
+  width: 308px;
+  height: 51px;
 }
 
 .progress-bar-bg {
@@ -876,7 +1009,7 @@ body {
   height: 100%;
   background: #082047;
   border: 2px solid #4B7C80;
-  border-radius: 27px;
+  border-radius: 30px;
   overflow: hidden;
 }
 
@@ -884,10 +1017,10 @@ body {
   position: absolute;
   top: 4px;
   left: 4px;
-  width: 0px;
-  height: 39px;
+  width: 0%;
+  height: 43px;
   background: linear-gradient(90deg, rgba(158, 247, 249, 1) 0%, rgba(73, 209, 255, 1) 48%, rgba(220, 253, 161, 1) 100%);
-  border-radius: 23px;
+  border-radius: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -895,27 +1028,31 @@ body {
 }
 
 .progress-investors {
+  position: absolute;
+  top: 10px;
+  right: 10px;
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 7px 9px;
+  gap: 8px;
+  padding: 8px 10px;
   background: rgba(255, 255, 255, 0.97);
   border-radius: 99px;
   height: 30px;
+  z-index: 3;
 }
 
 .investors-icon {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   color: #000000;
 }
 
 .investors-count {
   font-family: 'Circe', sans-serif;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.71em;
-  color: rgba(255, 255, 255, 0.97);
+  color: #000000;
 }
 
 .progress-percentage {
@@ -924,10 +1061,19 @@ body {
   right: 36px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.29em;
   letter-spacing: -0.02em;
   color: #FFFFFF;
+  z-index: 2;
+}
+
+.progress-bar-fill .progress-percentage {
+  color: #082047;
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 19px;
 }
 
 @media (max-width: 768px) {

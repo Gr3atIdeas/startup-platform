@@ -386,9 +386,9 @@ body {
 }
 
 .startups-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 55px 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(329px, 1fr));
+  gap: 19px;
   justify-content: flex-start;
   width: 100%;
   max-width: 1032px;
@@ -735,8 +735,8 @@ body {
 /* Новые стили карточек на основе макета Figma */
 .startup-card {
   position: relative;
-  width: 297px;
-  height: 442px;
+  width: 329px;
+  height: 490px;
   background: #FFFFFF;
   border-radius: 9px;
   overflow: hidden;
@@ -752,7 +752,7 @@ body {
 .startup-card-header {
   position: relative;
   width: 100%;
-  height: 142px;
+  height: 158px;
   overflow: hidden;
 }
 
@@ -770,15 +770,31 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.startup-header-placeholder::before {
+  content: 'GI';
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  color: rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .planet-miniature-container {
   position: absolute;
-  top: 99px;
+  top: 110px;
   right: 10px;
   width: 70px;
   height: 71px;
-  z-index: 2;
+  z-index: 10;
 }
 
 .planet-miniature {
@@ -792,22 +808,24 @@ body {
 
 .startup-card-content {
   padding: 10px;
-  height: 243px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 18px;
+  height: 332px;
+  position: relative;
 }
 
 .startup-title-row {
   display: flex;
   align-items: center;
   gap: 12px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  height: 35px;
 }
 
 .startup-logo {
-  width: 32px;
-  height: 32px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   overflow: hidden;
   border: 1px solid #000000;
@@ -833,7 +851,7 @@ body {
 .startup-title {
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 0.9em;
   letter-spacing: -0.02em;
   color: #000000;
@@ -847,26 +865,35 @@ body {
 .startup-category-row {
   display: flex;
   align-items: center;
+  position: absolute;
+  top: 55px;
+  left: 10px;
+  right: 10px;
+  height: 27px;
 }
 
 .category-tag {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 15px;
+  padding: 9px 17px;
   background: #050505;
   color: #FFFFFF;
   border-radius: 5px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.24em;
   letter-spacing: 0.01em;
-  height: 24px;
+  height: 27px;
 }
 
 .startup-description-row {
-  flex: 1;
+  position: absolute;
+  top: 92px;
+  left: 10px;
+  right: 10px;
+  height: 60px;
   display: flex;
   align-items: flex-start;
 }
@@ -874,7 +901,7 @@ body {
 .startup-description {
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.24em;
   letter-spacing: 0.01em;
   color: #000000;
@@ -889,13 +916,18 @@ body {
 .startup-amount-row {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 10px;
+  position: absolute;
+  top: 162px;
+  left: 10px;
+  right: 10px;
+  height: 60px;
 }
 
 .amount-label {
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.24em;
   color: rgba(0, 0, 0, 0.44);
 }
@@ -903,17 +935,20 @@ body {
 .amount-value {
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
-  font-size: 29px;
+  font-size: 32px;
   line-height: 1.09em;
   letter-spacing: -0.02em;
   color: #2353D9;
-  width: 173px;
+  width: 192px;
 }
 
 .startup-progress-container {
-  position: relative;
-  width: 278px;
-  height: 46px;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  width: 308px;
+  height: 51px;
 }
 
 .progress-bar-bg {
@@ -922,7 +957,7 @@ body {
   height: 100%;
   background: #082047;
   border: 2px solid #4B7C80;
-  border-radius: 27px;
+  border-radius: 30px;
   overflow: hidden;
 }
 
@@ -930,10 +965,10 @@ body {
   position: absolute;
   top: 4px;
   left: 4px;
-  width: 105px;
-  height: 39px;
+  width: 30%;
+  height: 43px;
   background: linear-gradient(90deg, rgba(158, 247, 249, 1) 0%, rgba(73, 209, 255, 1) 48%, rgba(220, 253, 161, 1) 100%);
-  border-radius: 23px;
+  border-radius: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -941,27 +976,31 @@ body {
 }
 
 .progress-investors {
+  position: absolute;
+  top: 10px;
+  right: 10px;
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 7px 9px;
+  gap: 8px;
+  padding: 8px 10px;
   background: rgba(255, 255, 255, 0.97);
   border-radius: 99px;
   height: 30px;
+  z-index: 3;
 }
 
 .investors-icon {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   color: #000000;
 }
 
 .investors-count {
   font-family: 'Circe', sans-serif;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.71em;
-  color: rgba(255, 255, 255, 0.97);
+  color: #000000;
 }
 
 .progress-percentage {
@@ -970,10 +1009,19 @@ body {
   right: 36px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.29em;
   letter-spacing: -0.02em;
   color: #FFFFFF;
+  z-index: 2;
+}
+
+.progress-bar-fill .progress-percentage {
+  color: #082047;
+  right: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 19px;
 }
 
 .detail-link {
