@@ -80,7 +80,7 @@
       </div>
 
       
-      <div class="franchises-grid" id="franchisesGrid">
+      <div class="specialists-grid" id="specialistsGrid">
         {% if page_obj %} 
           
           {% include 'accounts/partials/_specialist_cards.html' with page_obj=page_obj %}
@@ -264,7 +264,7 @@
     }
 
     // Инициализируем прогресс-бары при загрузке для текущей сетки
-    const initialGrid = document.getElementById('franchisesGrid');
+    const initialGrid = document.getElementById('specialistsGrid');
     updateAnimatedProgressBars(initialGrid); // Вызываем обновленную функцию
     // --- Конец инициализации прогресс-баров --- 
 

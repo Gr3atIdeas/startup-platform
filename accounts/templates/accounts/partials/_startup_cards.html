@@ -12,14 +12,14 @@
       {% else %}
         <div class="startup-header-placeholder"></div>
       {% endif %}
-      
-      <!-- Планетка -->
-      {% if startup.planet_image %}
-        <div class="planet-miniature-container">
-          <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ startup.planet_image }}" alt="Планета {{ startup.title }}" class="planet-miniature">
-        </div>
-      {% endif %}
     </div>
+
+    <!-- Планетка -->
+    {% if startup.planet_image %}
+      <div class="planet-miniature-container">
+        <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ startup.planet_image }}" alt="Планета {{ startup.title }}" class="planet-miniature">
+      </div>
+    {% endif %}
 
     <!-- Контентная часть -->
     <div class="startup-card-content">

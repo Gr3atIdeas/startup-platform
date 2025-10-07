@@ -797,8 +797,8 @@ body {
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
   font-size: 24px;
-  color: rgba(0, 0, 0, 0.5);
-  border: 2px solid rgba(0, 0, 0, 0.3);
+  color: rgba(128, 128, 128, 0.6);
+  border: 2px solid rgba(128, 128, 128, 0.4);
   border-radius: 50%;
   width: 48px;
   height: 48px;
@@ -864,13 +864,6 @@ body {
   height: 51px;
 }
 
-.investors-counter {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-  color: #004E9F;
-}
 
 .investors-counter .investors-icon {
   width: 16px;
@@ -1052,23 +1045,41 @@ body {
 
 .progress-percentage {
   position: absolute;
-  top: 19px;
-  right: 36px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Circe', sans-serif;
+  font-weight: 700;
   font-size: 14px;
-  line-height: 1.29em;
-  letter-spacing: -0.02em;
-  color: #FFFFFF;
+  line-height: 1.71em;
+  color: #000000;
   z-index: 2;
 }
 
 .progress-bar-fill .progress-percentage {
-  color: #082047;
-  right: auto;
+  color: #FFFFFF;
+}
+
+.investors-counter {
+  position: absolute;
+  top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  top: 19px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: #004E9F;
+  z-index: 3;
+}
+
+.planet-miniature-container {
+  position: absolute;
+  top: 148px;
+  right: 10px;
+  width: 70px;
+  height: 71px;
+  z-index: 20;
 }
 
 @media (max-width: 768px) {

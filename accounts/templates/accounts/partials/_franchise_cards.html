@@ -12,14 +12,14 @@
       {% else %}
         <div class="franchise-header-placeholder"></div>
       {% endif %}
-      
-      <!-- Планетка -->
-      {% if franchise.planet_image %}
-        <div class="planet-miniature-container">
-          <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ franchise.planet_image }}" alt="Планета {{ franchise.title }}" class="planet-miniature">
-        </div>
-      {% endif %}
     </div>
+
+    <!-- Планетка -->
+    {% if franchise.planet_image %}
+      <div class="planet-miniature-container">
+        <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ franchise.planet_image }}" alt="Планета {{ franchise.title }}" class="planet-miniature">
+      </div>
+    {% endif %}
 
     <!-- Контентная часть -->
     <div class="franchise-card-content">
