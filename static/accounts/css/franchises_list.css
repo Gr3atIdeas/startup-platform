@@ -753,7 +753,7 @@ body {
   height: 490px;
   background: #FFFFFF;
   border-radius: 9px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -768,6 +768,7 @@ body {
   width: 100%;
   height: 158px;
   overflow: hidden;
+  border-radius: 9px 9px 0 0;
 }
 
 .franchise-header-image {
@@ -870,17 +871,35 @@ body {
 
 .franchise-progress-container {
   position: absolute;
-  bottom: 10px;
+  bottom: 50px;
   left: 10px;
   right: 10px;
   width: 308px;
   height: 51px;
 }
 
-.franchise-category-row {
+.investors-counter {
   display: flex;
   align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: #004E9F;
 }
+
+.investors-counter .investors-icon {
+  width: 16px;
+  height: 16px;
+  color: #004E9F;
+}
+
+.investors-counter .investors-count {
+  font-family: 'Circe', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.71em;
+  color: #004E9F;
+}
+
 
 .category-tag {
   display: inline-flex;
@@ -916,11 +935,6 @@ body {
   width: 192px;
 }
 
-.franchise-title-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
 
 .franchise-logo {
   width: 35px;
@@ -961,16 +975,7 @@ body {
   white-space: nowrap;
 }
 
-.franchise-category-row {
-  display: flex;
-  align-items: center;
-}
 
-.franchise-description-row {
-  flex: 1;
-  display: flex;
-  align-items: flex-start;
-}
 
 .franchise-description {
   font-family: 'Unbounded', sans-serif;
@@ -987,17 +992,7 @@ body {
   text-overflow: ellipsis;
 }
 
-.franchise-amount-row {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
 
-.franchise-progress-container {
-  position: relative;
-  width: 308px;
-  height: 51px;
-}
 
 .progress-bar-bg {
   position: relative;
