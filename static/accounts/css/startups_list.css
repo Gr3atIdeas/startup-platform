@@ -399,20 +399,20 @@ body {
 
 .startup-card {
   background: #fff;
-  border-radius: 10px;
-  box-shadow: 4px 4px 6px rgb(0 0 0 / 25%);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   position: relative;
   text-decoration: none;
   color: inherit;
-  width: 328px;
-  height: 448px;
+  width: 330px;
+  height: 480px;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
   box-sizing: border-box;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .startup-card:hover {
@@ -420,16 +420,63 @@ body {
   box-shadow: 6px 8px 12px rgb(0 0 0 / 30%);
 }
 
+/* Шапка карточки с широкоформатным изображением */
+.startup-card-header {
+  position: relative;
+  width: 100%;
+  height: 158px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+}
+
+.startup-header-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.startup-header-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #adb5bd;
+  font-size: 14px;
+}
+
+/* Миниатюра планетки */
+.startup-planet-miniature {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+
+.planet-miniature {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .startup-card-inner {
-  padding: 0 18px 20px;
+  padding: 20px 18px 20px;
   display: flex;
   flex-direction: column;
   color: #191919;
-  position: static;
-  gap: 13px;
-  height: 100%;
-  margin-top: 104px;
-  align-items: center;
+  position: relative;
+  gap: 12px;
+  height: calc(100% - 158px);
+  align-items: flex-start;
 }
 
 .startup-image {
@@ -469,16 +516,126 @@ body {
 
 .startup-title {
   font-family: Unbounded, sans-serif;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 18px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.2;
   margin: 0;
   color: #000;
-  text-align: center;
-  width: 100%;
+  text-align: left;
+  flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Описание (3 строки с обрезкой) */
+.startup-description {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #6c757d;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 60px;
+}
+
+/* Собранная сумма */
+.startup-funding-amount {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.funding-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.funding-value {
+  font-family: Unbounded, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #000;
+}
+
+/* Прогресс-бар */
+.startup-progress-container {
+  width: 100%;
+  margin: 8px 0;
+}
+
+.progress-bar-background {
+  width: 100%;
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+  border-radius: 4px;
+  position: relative;
+  transition: width 0.3s ease;
+}
+
+.progress-planets {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 2px;
+}
+
+.planet-dot {
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.progress-percentage {
+  font-family: Unbounded, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #007bff;
+}
+
+.investor-count {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.investor-icon {
+  width: 16px;
+  height: 16px;
+  color: #6c757d;
+}
+
+.investor-count-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #6c757d;
+  font-weight: 500;
 }
 
 .startup-rating-comments {
@@ -1244,27 +1401,44 @@ body {
 .startup-title-container {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 10px 0;
+  gap: 12px;
+  margin: 0 0 8px 0;
   width: 100%;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
-
 .startup-logo {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   overflow: hidden;
-  border: 1px solid rgb(0 0 0 / 5%); 
+  border: 2px solid #e9ecef;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
   flex-shrink: 0;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 15%); 
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .startup-logo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.startup-logo .logo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.startup-logo .logo-placeholder svg {
+  width: 20px;
+  height: 20px;
 }
 
 

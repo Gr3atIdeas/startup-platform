@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
+from django.conf import settings
 from accounts.utils import get_file_url, is_uuid
 logger = logging.getLogger(__name__)
 class Actions(models.Model):
@@ -365,6 +366,7 @@ class Startups(models.Model):
     video_urls = models.JSONField(blank=True, null=True, default=list)
     planet_image = models.CharField(max_length=50, blank=True, null=True)
     slider_images = models.JSONField(blank=True, null=True, default=list)
+    catalog_card_image = models.CharField(max_length=255, blank=True, null=True)
     class Meta:
         managed = True
         db_table = "startups"
@@ -379,6 +381,11 @@ class Startups(models.Model):
             and len(self.logo_urls) > 0
         ):
             return get_file_url(self.logo_urls[0], self.startup_id, "logo")
+        return None
+    
+    def get_catalog_card_image_url(self):
+        if self.catalog_card_image:
+            return f"{settings.AWS_S3_PUBLIC_BASE_URL}/catalog_cards/{self.catalog_card_image}"
         return None
     def get_investors_count(self):
         return (
@@ -711,6 +718,7 @@ class Franchises(models.Model):
     video_urls = models.JSONField(blank=True, null=True, default=list)
     planet_image = models.CharField(max_length=50, blank=True, null=True)
     slider_images = models.JSONField(blank=True, null=True, default=list)
+    catalog_card_image = models.CharField(max_length=255, blank=True, null=True)
     franchise_cost = models.DecimalField(max_digits=19, decimal_places=4, blank=True, null=True)
     profit_calculation = models.TextField(blank=True, null=True)
 
@@ -726,6 +734,11 @@ class Franchises(models.Model):
     def get_logo_url(self):
         if self.logo_urls and len(self.logo_urls) > 0:
             return self.logo_urls[0]
+        return None
+    
+    def get_catalog_card_image_url(self):
+        if self.catalog_card_image:
+            return f"{settings.AWS_S3_PUBLIC_BASE_URL}/catalog_cards/{self.catalog_card_image}"
         return None
 
     def get_investors_count(self):
@@ -825,6 +838,7 @@ class Agencies(models.Model):
     video_urls = models.JSONField(blank=True, null=True, default=list)
     planet_image = models.CharField(max_length=50, blank=True, null=True)
     slider_images = models.JSONField(blank=True, null=True, default=list)
+    catalog_card_image = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = True
@@ -838,6 +852,11 @@ class Agencies(models.Model):
         if self.total_voters > 0:
             return self.sum_votes / self.total_voters
         return 0
+    
+    def get_catalog_card_image_url(self):
+        if self.catalog_card_image:
+            return f"{settings.AWS_S3_PUBLIC_BASE_URL}/catalog_cards/{self.catalog_card_image}"
+        return None
 
     def __str__(self):
         return self.title
@@ -865,6 +884,7 @@ class Specialists(models.Model):
     video_urls = models.JSONField(blank=True, null=True, default=list)
     planet_image = models.CharField(max_length=50, blank=True, null=True)
     slider_images = models.JSONField(blank=True, null=True, default=list)
+    catalog_card_image = models.CharField(max_length=255, blank=True, null=True)
     additional_info = models.TextField(blank=True, null=True)
 
     class Meta:
@@ -875,6 +895,11 @@ class Specialists(models.Model):
         if self.total_voters > 0:
             return self.sum_votes / self.total_voters
         return 0
+    
+    def get_catalog_card_image_url(self):
+        if self.catalog_card_image:
+            return f"{settings.AWS_S3_PUBLIC_BASE_URL}/catalog_cards/{self.catalog_card_image}"
+        return None
 
     def __str__(self):
         return self.title

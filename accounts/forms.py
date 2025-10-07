@@ -75,6 +75,12 @@ class StartupEditForm(forms.ModelForm):
     )
     video = forms.FileField(required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
         widget=forms.ClearableFileInput(attrs={'accept': 'video/*'}))
+    catalog_card_image = forms.ImageField(
+        label="Изображение для карточки в каталоге",
+        required=False,
+        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)",
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
+    )
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
@@ -139,6 +145,7 @@ class StartupEditForm(forms.ModelForm):
             "amount_raised",
             "funding_goal",
             "terms",
+            "catalog_card_image",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -176,6 +183,11 @@ class StartupForm(forms.ModelForm):
         required=False, label="Микроинвестиции доступны"
     )
     video = forms.FileField(required=True, help_text="Загрузите видео (1 файл: MP4, MOV)")
+    catalog_card_image = forms.ImageField(
+        label="Изображение для карточки в каталоге",
+        required=False,
+        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)"
+    )
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
@@ -279,6 +291,7 @@ class StartupForm(forms.ModelForm):
             "proofs",
             "video",
             "planet_image",
+            "catalog_card_image",
         ]
         widgets = {
             "title": forms.TextInput(
@@ -438,6 +451,11 @@ class FranchiseForm(forms.ModelForm):
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
     video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
+    catalog_card_image = forms.ImageField(
+        label="Изображение для карточки в каталоге",
+        required=False,
+        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)"
+    )
     short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Условия *", required=True)
     planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
@@ -470,6 +488,7 @@ class FranchiseForm(forms.ModelForm):
             "proofs",
             "video",
             "planet_image",
+            "catalog_card_image",
             "profit_calculation",
         ]
         widgets = {
@@ -539,6 +558,11 @@ class AgencyForm(forms.ModelForm):
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
     video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
+    catalog_card_image = forms.ImageField(
+        label="Изображение для карточки в каталоге",
+        required=False,
+        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)"
+    )
     short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ *", required=True)
     planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
@@ -568,6 +592,7 @@ class AgencyForm(forms.ModelForm):
             "proofs",
             "video",
             "planet_image",
+            "catalog_card_image",
         ]
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Название агентства"}),
@@ -629,6 +654,11 @@ class SpecialistForm(forms.ModelForm):
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
     video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
+    catalog_card_image = forms.ImageField(
+        label="Изображение для карточки в каталоге",
+        required=False,
+        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)"
+    )
     short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ *", required=True)
     additional_info = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Услуги и кейсы", required=False)
@@ -659,6 +689,7 @@ class SpecialistForm(forms.ModelForm):
             "proofs",
             "video",
             "planet_image",
+            "catalog_card_image",
         ]
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Имя/бренд специалиста"}),
@@ -890,6 +921,12 @@ class FranchiseEditForm(forms.ModelForm):
         required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
         widget=forms.ClearableFileInput(attrs={'accept': 'video/*'})
     )
+    catalog_card_image = forms.ImageField(
+        label="Изображение для карточки в каталоге",
+        required=False,
+        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)",
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
+    )
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
@@ -909,7 +946,7 @@ class FranchiseEditForm(forms.ModelForm):
             "title", "short_description", "description", "terms",
             "investment_size", "franchise_cost", "pitch_deck_url",
             "logo", "direction", "creatives", "proofs", "video",
-            "planet_image", "profit_calculation"
+            "planet_image", "catalog_card_image", "profit_calculation"
         ]
 
     def __init__(self, *args, **kwargs):
@@ -963,6 +1000,12 @@ class AgencyEditForm(forms.ModelForm):
         required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
         widget=forms.ClearableFileInput(attrs={'accept': 'video/*'})
     )
+    catalog_card_image = forms.ImageField(
+        label="Изображение для карточки в каталоге",
+        required=False,
+        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)",
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
+    )
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
@@ -987,7 +1030,7 @@ class AgencyEditForm(forms.ModelForm):
         fields = [
             "title", "short_description", "description", "terms",
             "pitch_deck_url", "logo", "direction", "stage",
-            "creatives", "proofs", "video", "planet_image", "successful_projects"
+            "creatives", "proofs", "video", "planet_image", "catalog_card_image", "successful_projects"
         ]
 
     def __init__(self, *args, **kwargs):
@@ -1045,6 +1088,12 @@ class SpecialistEditForm(forms.ModelForm):
         required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
         widget=forms.ClearableFileInput(attrs={'accept': 'video/*'})
     )
+    catalog_card_image = forms.ImageField(
+        label="Изображение для карточки в каталоге",
+        required=False,
+        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)",
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
+    )
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
@@ -1072,7 +1121,7 @@ class SpecialistEditForm(forms.ModelForm):
         fields = [
             "title", "short_description", "description", "terms", "additional_info",
             "pitch_deck_url", "logo", "direction", "stage",
-            "creatives", "proofs", "video", "planet_image", "successful_projects"
+            "creatives", "proofs", "video", "planet_image", "catalog_card_image", "successful_projects"
         ]
 
     def __init__(self, *args, **kwargs):

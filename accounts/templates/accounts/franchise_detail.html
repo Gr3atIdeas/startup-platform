@@ -154,7 +154,11 @@
           <div class="franchise-title-wrapper">
             <div class="franchise-title-content">
               <div class="logo-display-container">
-                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
+                {% if franchise.logo_urls %}
+                  <img src="{% get_file_url_tag franchise.logo_urls.0 franchise.franchise_id 'logo' 'franchise' %}" alt="Логотип {{ franchise.title }}" class="franchise-logo">
+                {% else %}
+                  <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
+                {% endif %}
               </div>
               <h1 class="franchise-name" title="{{ franchise.title }}">{{ franchise.title }}</h1>
             </div>

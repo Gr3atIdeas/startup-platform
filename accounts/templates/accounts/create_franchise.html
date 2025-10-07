@@ -52,6 +52,20 @@
                     <span class="error-message">{{ form.logo.errors|first }}</span>
                     {% endif %}
                 </div>
+                <div class="form-group catalog-card-image-group">
+                    <label for="{{ form.catalog_card_image.id_for_label }}" class="catalog-card-image-label">
+                        <div class="catalog-card-image-placeholder" id="catalogCardImagePlaceholder">
+                            <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Card Image Icon">
+                            <span>{{ form.catalog_card_image.label }}</span>
+                        </div>
+                        <img src="" alt="Изображение карточки" class="catalog-card-image-preview" id="catalogCardImagePreview" style="display:none;">
+                    </label>
+                    {{ form.catalog_card_image|add_class:"form-control-file"|attr:"id:id_catalog_card_image_input"|attr:"style:display:none;" }}
+                    <div class="help-text">{{ form.catalog_card_image.help_text }}</div>
+                    {% if form.catalog_card_image.errors %}
+                    <span class="error-message">{{ form.catalog_card_image.errors|first }}</span>
+                    {% endif %}
+                </div>
                 <div class="form-fields-left">
                         <div class="form-group">
                             <label for="{{ form.title.id_for_label }}">*{{ form.title.label }}</label>

@@ -3492,6 +3492,31 @@ def create_startup(request):
                     logger.error(f"Ошибка сохранения логотипа: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить логотип, но стартап создан.")
                     file_save_errors.append({"field": "logo", "error": str(e)})
+            
+            # Сохранение catalog_card_image
+            catalog_card_image = form.cleaned_data.get("catalog_card_image")
+            if catalog_card_image:
+                catalog_card_id = str(uuid.uuid4())
+                base_name = os.path.splitext(catalog_card_image.name)[0]
+                ext = os.path.splitext(catalog_card_image.name)[1]
+                safe_base_name = "".join(
+                    c for c in base_name if c.isalnum() or c in ("-", "_")
+                )
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                try:
+                    logger.info(f"Попытка сохранить изображение карточки по пути: {file_path}")
+                    if not try_save_file(catalog_card_image, file_path):
+                        raise Exception("Не удалось сохранить изображение карточки")
+                    logger.info(f"Изображение карточки успешно сохранено по пути: {file_path}")
+                    startup.catalog_card_image = catalog_card_id
+                    startup.save(update_fields=['catalog_card_image'])
+                    logger.info(f"Изображение карточки сохранено: {file_path}")
+                except Exception as e:
+                    logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
+                    messages.warning(request, "Не удалось сохранить изображение для карточки, но стартап создан.")
+                    file_save_errors.append({"field": "catalog_card_image", "error": str(e)})
+            
             creatives = form.cleaned_data.get("creatives", [])
             if not creatives:
                 creatives = request.FILES.getlist("creatives")
@@ -3677,6 +3702,22 @@ def create_franchise(request):
                 except Exception:
                     messages.warning(request, "Не удалось сохранить логотип, но франшиза создана.")
 
+            # Сохранение catalog_card_image
+            catalog_card_image = form.cleaned_data.get("catalog_card_image")
+            if catalog_card_image:
+                catalog_card_id = str(uuid.uuid4())
+                base_name = os.path.splitext(catalog_card_image.name)[0]
+                ext = os.path.splitext(catalog_card_image.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                try:
+                    default_storage.save(file_path, catalog_card_image)
+                    franchise.catalog_card_image = catalog_card_id
+                    franchise.save(update_fields=['catalog_card_image'])
+                except Exception:
+                    messages.warning(request, "Не удалось сохранить изображение для карточки, но франшиза создана.")
+
             creatives = form.cleaned_data.get("creatives", [])
             if creatives:
                 creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
@@ -3832,6 +3873,21 @@ def create_agency(request):
             agency.proofs_urls = proofs_ids
             agency.video_urls = video_ids
             
+            # Сохранение catalog_card_image
+            catalog_card_image = form.cleaned_data.get("catalog_card_image")
+            if catalog_card_image:
+                catalog_card_id = str(uuid.uuid4())
+                base_name = os.path.splitext(catalog_card_image.name)[0]
+                ext = os.path.splitext(catalog_card_image.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                try:
+                    default_storage.save(file_path, catalog_card_image)
+                    agency.catalog_card_image = catalog_card_id
+                except Exception:
+                    pass
+            
             slider_images = request.POST.getlist("slider_images")
             if len(slider_images) > 4:
                 slider_images = slider_images[:4]
@@ -3910,6 +3966,21 @@ def create_specialist(request):
             spec.creatives_urls = creatives_ids
             spec.proofs_urls = proofs_ids
             spec.video_urls = video_ids
+            
+            # Сохранение catalog_card_image
+            catalog_card_image = form.cleaned_data.get("catalog_card_image")
+            if catalog_card_image:
+                catalog_card_id = str(uuid.uuid4())
+                base_name = os.path.splitext(catalog_card_image.name)[0]
+                ext = os.path.splitext(catalog_card_image.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                try:
+                    default_storage.save(file_path, catalog_card_image)
+                    spec.catalog_card_image = catalog_card_id
+                except Exception:
+                    pass
             
             slider_images = request.POST.getlist("slider_images")
             if len(slider_images) > 4:

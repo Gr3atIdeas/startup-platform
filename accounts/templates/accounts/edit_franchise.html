@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
         removeDuplicateCreatives();
         
-        const fileInputs = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input'];
+        const fileInputs = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input', 'id_catalog_card_image_input'];
         fileInputs.forEach(inputId => {
             const input = document.getElementById(inputId);
             if (input) {
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const fileInputIds = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input'];
+            const fileInputIds = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input', 'id_catalog_card_image_input'];
             fileInputIds.forEach(inputId => {
                 const input = document.getElementById(inputId);
                 if (input && window.selectedFiles && window.selectedFiles[inputId]) {
@@ -152,6 +152,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="custom-file-upload-button" id="logoUploadButton">*Выбрать логотип</div>
                     {% if form.logo.errors %}
                     <span class="error-message">{{ form.logo.errors|first }}</span>
+                    {% endif %}
+                </div>
+                </div>
+                <div class="form-group catalog-card-image-group">
+                    <div class="catalog-card-image-label">
+                        {% with catalog_card_image_id=franchise.catalog_card_image %}
+                            <div class="catalog-card-image-placeholder" id="catalogCardImagePlaceholder" {% if catalog_card_image_id %}style="display:none;"{% endif %}>
+                                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Card Image Icon" loading="lazy" decoding="async">
+                            </div>
+                            <img src="{% if catalog_card_image_id %}{{ franchise.get_catalog_card_image_url }}{% else %}""{% endif %}" alt="Изображение карточки" class="catalog-card-image-preview" id="catalogCardImagePreview" {% if not catalog_card_image_id %}style="display:none;"{% endif %}>
+                        {% endwith %}
+                    </div>
+                    {{ form.catalog_card_image|add_class:"form-control-file"|attr:"id:id_catalog_card_image_input"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
+                    <div class="custom-file-upload-button" id="catalogCardImageUploadButton">{{ form.catalog_card_image.label }}</div>
+                    <div class="help-text">{{ form.catalog_card_image.help_text }}</div>
+                    {% if form.catalog_card_image.errors %}
+                    <span class="error-message">{{ form.catalog_card_image.errors|first }}</span>
                     {% endif %}
                 </div>
                 </div>

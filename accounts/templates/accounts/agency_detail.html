@@ -154,7 +154,11 @@
           <div class="agency-title-wrapper">
             <div class="agency-title-content">
               <div class="logo-display-container">
-                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
+                {% if agency.logo_urls %}
+                  <img src="{% get_file_url_tag agency.logo_urls.0 agency.agency_id 'logo' 'agency' %}" alt="Логотип {{ agency.title }}" class="agency-logo">
+                {% else %}
+                  <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
+                {% endif %}
               </div>
               <h1 class="agency-name" title="{{ agency.customization_data.agency_display_title|default:agency.title }}">{{ agency.customization_data.agency_display_title|default:agency.title }}</h1>
             </div>

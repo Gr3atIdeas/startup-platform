@@ -152,7 +152,11 @@
           <div class="specialist-title-wrapper">
             <div class="specialist-title-content">
               <div class="logo-display-container">
-                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
+                {% if specialist.logo_urls %}
+                  <img src="{% get_file_url_tag specialist.logo_urls.0 specialist.specialist_id 'logo' 'specialist' %}" alt="Логотип {{ specialist.title }}" class="specialist-logo">
+                {% else %}
+                  <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
+                {% endif %}
               </div>
               <h1 class="specialist-name" title="{{ specialist.customization_data.specialist_display_title|default:specialist.title }}">{{ specialist.customization_data.specialist_display_title|default:specialist.title }}</h1>
             </div>

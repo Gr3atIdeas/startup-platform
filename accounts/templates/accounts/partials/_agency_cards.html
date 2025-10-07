@@ -3,64 +3,89 @@
 {% load humanize %}
 {% load accounts_extras %}
 
-{% for franchise in page_obj %}
-  <div class="franchise-card" data-franchise-id="{{ franchise.franchise_id }}">
-    <span class="franchise-tag">Агентство</span>
-          <div class="franchise-image">
-        {% if franchise.planet_image %}
-          <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ franchise.planet_image }}" alt="Планета {{ franchise.title }}" class="planet-image">
+{% for agency in page_obj %}
+  <div class="agency-card" data-agency-id="{{ agency.agency_id }}">
+    
+    <span class="agency-tag">Агентство</span>
+    
+    <!-- Шапка с широкоформатным изображением -->
+    <div class="agency-card-header">
+      {% if agency.get_catalog_card_image_url %}
+        <img src="{{ agency.get_catalog_card_image_url }}" alt="Изображение {{ agency.title }}" class="agency-header-image">
+      {% else %}
+        <div class="agency-header-placeholder"></div>
+      {% endif %}
+      
+      <!-- Миниатюра планетки справа -->
+      {% if agency.planet_image %}
+        <div class="agency-planet-miniature">
+          <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ agency.planet_image }}" alt="Планета {{ agency.title }}" class="planet-miniature">
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="agency-card-inner">
+      
+      <div class="agency-title-container">
+        <!-- Логотип -->
+        <div class="agency-logo">
+          {% if agency.logo_urls %}
+            <img src="{% get_file_url_tag agency.logo_urls.0 agency.agency_id 'logo' 'agency' %}" alt="Логотип {{ agency.title }}">
+          {% else %}
+            <div class="logo-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+        <h3 class="agency-title">{{ agency.title }}</h3>
+      </div>
+
+      <!-- Категория -->
+      <div class="agency-category-row">
+        {% if agency.customization_data and agency.customization_data.agency_category %}
+          <span class="category-tag-figma">{{ agency.customization_data.agency_category }}</span>
         {% else %}
-          <div class="franchise-image-placeholder">
-            {{ franchise.title|make_list|first|upper }}
-          </div>
+          <span class="category-tag-figma category-tag-placeholder">Категория не указана</span>
         {% endif %}
       </div>
 
-      <div class="franchise-card-inner">
-        
-        <div class="franchise-title-container">
-          {% if franchise.owner and franchise.owner.get_profile_picture_url %}
-            <div class="franchise-logo">
-              <img src="{{ franchise.owner.get_profile_picture_url }}" alt="Аватар автора {{ franchise.owner.username }}" class="franchise-default-avatar">
+      <!-- Вводная (3 строки с обрезкой) -->
+      <div class="agency-description">
+        {{ agency.short_description|default:"Нет описания"|truncatechars:140 }}
+      </div>
+
+      <!-- Собранная сумма (0 для агентств) -->
+      <div class="agency-funding-amount">
+        <span class="funding-label">Собранная сумма</span>
+        <span class="funding-value">0 ₽</span>
+      </div>
+
+      <!-- Прогресс-бар с нулевыми значениями -->
+      <div class="agency-progress-container">
+        <div class="progress-bar-background">
+          <div class="progress-bar-fill" style="width: 0%;">
+            <div class="progress-planets">
+              <div class="planet-dot"></div>
+              <div class="planet-dot"></div>
+              <div class="planet-dot"></div>
             </div>
-          {% elif franchise.logo_urls %}
-            <div class="franchise-logo">
-              <img src="{% get_file_url_tag franchise.logo_urls.0 franchise.franchise_id 'logo' 'franchise' %}" alt="Логотип {{ franchise.title }}">
-            </div>
-          {% else %}
-            <div class="franchise-logo">
-              <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар франшизы" class="franchise-default-avatar">
-            </div>
-          {% endif %}
-          <h3 class="franchise-title">{{ franchise.customization_data.agency_display_title|default:franchise.title }}</h3>
+          </div>
         </div>
-        <div class="franchise-rating-comments">
-          <span class="rating-text">Рейтинг {{ franchise.get_average_rating|floatformat:1 }}/5 ({{ franchise.total_voters }})</span>
-          <span class="comments-count">
-            <svg class="comment-icon" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M14.222 0H1.778C0.796 0 0 .734 0 1.64v8.197c0 .906.796 1.64 1.778 1.64h9.778l3.556 3.28V11.477h.888c.982 0 1.778-.734 1.778-1.64V1.64C16 .734 15.204 0 14.222 0z" fill="currentColor"/>
+        <div class="progress-info">
+          <span class="progress-percentage">0%</span>
+          <div class="investor-count">
+            <svg class="investor-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 8c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zM8 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
             </svg>
-            <span>{{ franchise.comments.count|default:0 }}</span>
-          </span>
+            <span class="investor-count-text">(0)</span>
+          </div>
         </div>
+      </div>
 
-        <div class="franchise-category-row">
-          {% with agency_category=franchise.customization_data.agency_category %}
-            {% if agency_category %}
-              <span class="category-tag-figma">{{ agency_category }}</span>
-            {% else %}
-              <span class="category-tag-figma category-tag-placeholder">Категория не указана</span>
-            {% endif %}
-          {% endwith %}
-        </div>
-
-        <div class="investment-size-container-figma">
-          <span class="investment-size-text-figma">Успешных проектов: {{ franchise.customization_data.successful_projects|default:12 }}</span>
-        </div>
-
-        <div class="franchise-short-description">{{ franchise.short_description|default:"Нет описания"|truncatechars:140 }}</div>
-
-        <a href="{% url 'agency_detail' agency_id=franchise.agency_id %}" class="detail-link" aria-label="Подробнее об агентстве {{ franchise.title }}"></a>
+      <a href="{% url 'agency_detail' agency_id=agency.agency_id %}" class="detail-link" aria-label="Подробнее о {{ agency.title }}"></a>
     </div>
   </div>
 {% endfor %}
