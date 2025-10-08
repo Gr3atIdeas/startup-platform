@@ -1,6 +1,7 @@
 import bleach
 from django.conf import settings
 from urllib.parse import urlparse
+from bs4 import BeautifulSoup
 
 
 def sanitize_description_html(html_content):
@@ -34,7 +35,6 @@ def sanitize_description_html(html_content):
         html_content,
         tags=allowed_tags,
         attributes=allowed_attributes,
-        css_sanitizer=bleach.CSSSanitizer(allowed_css_properties=allowed_styles),
         strip=True
     )
     
@@ -48,7 +48,6 @@ def validate_media_urls(html_content):
     """
     Проверяет, что все URL в src атрибутах ведут на разрешенные домены.
     """
-    from bs4 import BeautifulSoup
     
     try:
         soup = BeautifulSoup(html_content, 'html.parser')
@@ -83,7 +82,6 @@ def extract_media_urls(html_content):
     """
     Извлекает все URL медиа-файлов из HTML контента.
     """
-    from bs4 import BeautifulSoup
     
     urls = []
     try:

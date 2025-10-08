@@ -322,7 +322,7 @@ class DescriptionMediaModal {
                 this.updateSaveButton();
             }
         } catch (error) {
-            console.error('Error loading existing files:', error);
+            // Ошибка загрузки файлов - не критично
         }
     }
     

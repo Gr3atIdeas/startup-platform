@@ -5050,7 +5050,6 @@ def main_page_moderator(request):
         # В случае ошибки оставляем пустой массив
         carousel_data = []
     
-    import json
     context = {
         "carousel_data": json.dumps(carousel_data, ensure_ascii=False)
     }
@@ -7455,7 +7454,6 @@ def update_ticket_status(request, ticket_id):
         return JsonResponse({"success": False, "error": "У вас нет прав для изменения статуса"}, status=403)
 
     try:
-        import json
         data = json.loads(request.body)
         new_status = data.get('status')
 
