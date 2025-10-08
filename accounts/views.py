@@ -4836,6 +4836,40 @@ def edit_startup(request, startup_id):
                 slider_images = slider_images[:4]
             startup.slider_images = slider_images
             
+            # Обработка catalog_card_image
+            catalog_card_image = form.cleaned_data.get("catalog_card_image") or request.FILES.get("catalog_card_image")
+            if catalog_card_image:
+                catalog_card_id = str(uuid.uuid4())
+                base_name = os.path.splitext(catalog_card_image.name)[0]
+                ext = os.path.splitext(catalog_card_image.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                try:
+                    logger.info(f"Попытка сохранить изображение карточки по пути: {file_path}")
+                    # Используем boto3 напрямую с ACL='public-read'
+                    s3 = boto3.client(
+                        's3',
+                        endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+                        aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+                        aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+                        region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                        config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
+                    )
+                    bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+                    content_type = getattr(catalog_card_image, 'content_type', 'application/octet-stream')
+                    body_bytes = catalog_card_image.read()
+                    try:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
+                    except Exception:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
+                    logger.info(f"Изображение карточки успешно сохранено по пути: {file_path}")
+                    startup.catalog_card_image = catalog_card_id
+                    logger.info(f"Изображение карточки сохранено с ID: {catalog_card_id}")
+                except Exception as e:
+                    logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
+                    messages.warning(request, "Не удалось сохранить изображение для карточки.")
+            
             logger.info("=== ФИНАЛЬНОЕ СОХРАНЕНИЕ ===")
             startup.save()
             logger.info("Стартап финально сохранен")
@@ -8408,6 +8442,36 @@ def edit_franchise(request, franchise_id):
                 slider_images = slider_images[:4]
             franchise.slider_images = slider_images
             
+            # Обработка catalog_card_image
+            catalog_card_image = form.cleaned_data.get("catalog_card_image") or request.FILES.get("catalog_card_image")
+            if catalog_card_image:
+                catalog_card_id = str(uuid.uuid4())
+                base_name = os.path.splitext(catalog_card_image.name)[0]
+                ext = os.path.splitext(catalog_card_image.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                try:
+                    s3 = boto3.client(
+                        's3',
+                        endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+                        aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+                        aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+                        region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                        config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
+                    )
+                    bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+                    content_type = getattr(catalog_card_image, 'content_type', 'application/octet-stream')
+                    body_bytes = catalog_card_image.read()
+                    try:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
+                    except Exception:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
+                    franchise.catalog_card_image = catalog_card_id
+                except Exception as e:
+                    logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
+                    messages.warning(request, "Не удалось сохранить изображение для карточки.")
+            
             franchise.save()
             
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
@@ -8686,6 +8750,36 @@ def edit_agency(request, agency_id):
             if len(slider_images) > 4:
                 slider_images = slider_images[:4]
             agency.slider_images = slider_images
+            
+            # Обработка catalog_card_image
+            catalog_card_image = form.cleaned_data.get("catalog_card_image") or request.FILES.get("catalog_card_image")
+            if catalog_card_image:
+                catalog_card_id = str(uuid.uuid4())
+                base_name = os.path.splitext(catalog_card_image.name)[0]
+                ext = os.path.splitext(catalog_card_image.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                try:
+                    s3 = boto3.client(
+                        's3',
+                        endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+                        aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+                        aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+                        region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                        config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
+                    )
+                    bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+                    content_type = getattr(catalog_card_image, 'content_type', 'application/octet-stream')
+                    body_bytes = catalog_card_image.read()
+                    try:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
+                    except Exception:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
+                    agency.catalog_card_image = catalog_card_id
+                except Exception as e:
+                    logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
+                    messages.warning(request, "Не удалось сохранить изображение для карточки.")
             
             agency.save()
             
@@ -8968,6 +9062,36 @@ def edit_specialist(request, specialist_id):
             if len(slider_images) > 4:
                 slider_images = slider_images[:4]
             specialist.slider_images = slider_images
+            
+            # Обработка catalog_card_image
+            catalog_card_image = form.cleaned_data.get("catalog_card_image") or request.FILES.get("catalog_card_image")
+            if catalog_card_image:
+                catalog_card_id = str(uuid.uuid4())
+                base_name = os.path.splitext(catalog_card_image.name)[0]
+                ext = os.path.splitext(catalog_card_image.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                try:
+                    s3 = boto3.client(
+                        's3',
+                        endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+                        aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+                        aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+                        region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                        config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
+                    )
+                    bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+                    content_type = getattr(catalog_card_image, 'content_type', 'application/octet-stream')
+                    body_bytes = catalog_card_image.read()
+                    try:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
+                    except Exception:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
+                    specialist.catalog_card_image = catalog_card_id
+                except Exception as e:
+                    logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
+                    messages.warning(request, "Не удалось сохранить изображение для карточки.")
             
             specialist.save()
             
