@@ -172,6 +172,7 @@ DJANGO_VITE = {
     }
 }
 S3_PUBLIC_BASE_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.storage.yandexcloud.net"
+AWS_S3_PUBLIC_BASE_URL = S3_PUBLIC_BASE_URL  # Алиас для совместимости
 MEDIA_URL = f"{S3_PUBLIC_BASE_URL}/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "accounts.Users"
