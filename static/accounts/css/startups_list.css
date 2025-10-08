@@ -922,6 +922,7 @@ body {
   top: 162px;
   left: 10px;
   right: 10px;
+  text-wrap: nowrap;
   height: 60px;
 }
 
