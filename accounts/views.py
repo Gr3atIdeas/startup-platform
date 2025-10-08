@@ -3537,7 +3537,7 @@ def create_startup(request):
                     if not try_save_file(catalog_card_image, file_path):
                         raise Exception("Не удалось сохранить изображение карточки")
                     logger.info(f"Изображение карточки успешно сохранено по пути: {file_path}")
-                    startup.catalog_card_image = catalog_card_id
+                    startup.catalog_card_image = f"{catalog_card_id}_{safe_name}"
                     startup.save(update_fields=['catalog_card_image'])
                     logger.info(f"Изображение карточки сохранено: {file_path}")
                 except Exception as e:
@@ -3797,7 +3797,7 @@ def create_franchise(request):
                 try:
                     if not try_save_file(catalog_card_image, file_path):
                         raise Exception("Не удалось сохранить изображение карточки")
-                    franchise.catalog_card_image = catalog_card_id
+                    franchise.catalog_card_image = f"{catalog_card_id}_{safe_name}"
                     franchise.save(update_fields=['catalog_card_image'])
                 except Exception as e:
                     logger.error(f"Ошибка сохранения изображения карточки франшизы: {e}", exc_info=True)
@@ -4025,7 +4025,7 @@ def create_agency(request):
                 try:
                     if not try_save_file(catalog_card_image, file_path):
                         raise Exception("Не удалось сохранить изображение карточки")
-                    agency.catalog_card_image = catalog_card_id
+                    agency.catalog_card_image = f"{catalog_card_id}_{safe_name}"
                 except Exception as e:
                     logger.error(f"Ошибка сохранения изображения карточки агентства: {e}", exc_info=True)
             
@@ -4175,7 +4175,7 @@ def create_specialist(request):
                 try:
                     if not try_save_file(catalog_card_image, file_path):
                         raise Exception("Не удалось сохранить изображение карточки")
-                    spec.catalog_card_image = catalog_card_id
+                    spec.catalog_card_image = f"{catalog_card_id}_{safe_name}"
                 except Exception as e:
                     logger.error(f"Ошибка сохранения изображения карточки специалиста: {e}", exc_info=True)
             
@@ -4864,7 +4864,7 @@ def edit_startup(request, startup_id):
                     except Exception:
                         s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
                     logger.info(f"Изображение карточки успешно сохранено по пути: {file_path}")
-                    startup.catalog_card_image = catalog_card_id
+                    startup.catalog_card_image = f"{catalog_card_id}_{safe_name}"
                     logger.info(f"Изображение карточки сохранено с ID: {catalog_card_id}")
                 except Exception as e:
                     logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
@@ -8467,7 +8467,7 @@ def edit_franchise(request, franchise_id):
                         s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
                     except Exception:
                         s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
-                    franchise.catalog_card_image = catalog_card_id
+                    franchise.catalog_card_image = f"{catalog_card_id}_{safe_name}"
                 except Exception as e:
                     logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки.")
@@ -8776,7 +8776,7 @@ def edit_agency(request, agency_id):
                         s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
                     except Exception:
                         s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
-                    agency.catalog_card_image = catalog_card_id
+                    agency.catalog_card_image = f"{catalog_card_id}_{safe_name}"
                 except Exception as e:
                     logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки.")
@@ -9088,7 +9088,7 @@ def edit_specialist(request, specialist_id):
                         s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
                     except Exception:
                         s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
-                    specialist.catalog_card_image = catalog_card_id
+                    specialist.catalog_card_image = f"{catalog_card_id}_{safe_name}"
                 except Exception as e:
                     logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки.")
