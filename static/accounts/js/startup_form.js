@@ -178,6 +178,25 @@ document.addEventListener('DOMContentLoaded', function () {
       reader.readAsDataURL(file)
     })
   }
+
+  // Обработчик для изображения карточки каталога
+  var catalogCardImageInput = document.getElementById('id_catalog_card_image_input')
+  var catalogCardImagePreview = document.getElementById('catalogCardImagePreview')
+  var catalogCardImagePlaceholder = document.getElementById('catalogCardImagePlaceholder')
+  
+  if (catalogCardImageInput && catalogCardImagePreview && catalogCardImagePlaceholder) {
+    catalogCardImageInput.addEventListener('change', function () {
+      var file = catalogCardImageInput.files && catalogCardImageInput.files[0]
+      if (!file) return
+      var reader = new FileReader()
+      reader.onload = function (e) {
+        catalogCardImagePreview.src = e.target.result
+        catalogCardImagePreview.style.display = 'block'
+        catalogCardImagePlaceholder.style.display = 'none'
+      }
+      reader.readAsDataURL(file)
+    })
+  }
   bindInputWithDropArea('id_creatives_input', 'creativesDropArea', 'creativesPreview', { kind: 'image', mimePrefix: 'image/', maxCount: 3 })
   bindInputWithDropArea('id_video_input', 'videoDropArea', 'videoPreview', { kind: 'video', mimePrefix: 'video/', maxCount: 3 })
   bindInputWithDropArea('id_proofs_input', 'proofsDropArea', 'proofsPreview', { kind: 'file', allowedExts: ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx'], maxCount: 10 })
@@ -551,6 +570,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // доп. клик по самой плитке логотипа
     var label=document.querySelector('.logo-upload-label')
     if(label && input){ label.addEventListener('click', function(e){ e.preventDefault(); input.click() }) }
+  })()
+
+  // Кнопка выбора изображения карточки каталога — триггерит скрытый input
+  ;(function(){
+    var btn=document.getElementById('catalogCardImageUploadButton')
+    var input=document.getElementById('id_catalog_card_image_input')
+    if(btn && input){ 
+      btn.addEventListener('click', function(){ input.click() }) 
+    }
+    // доп. клик по самой плитке изображения карточки
+    var label=document.querySelector('.catalog-card-image-label')
+    if(label && input){ 
+      label.addEventListener('click', function(e){ e.preventDefault(); input.click() }) 
+    }
   })()
 
   // Кнопки выбора файлов уже имеют inline onclick в шаблоне — дублирующее навешивание убрано

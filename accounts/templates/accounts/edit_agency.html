@@ -155,7 +155,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span class="error-message">{{ form.logo.errors|first }}</span>
                     {% endif %}
                 </div>
-                </div>
                 <div class="form-group catalog-card-image-group">
                     <div class="catalog-card-image-label">
                         {% with catalog_card_image_id=agency.catalog_card_image %}
@@ -171,6 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     {% if form.catalog_card_image.errors %}
                     <span class="error-message">{{ form.catalog_card_image.errors|first }}</span>
                     {% endif %}
+                </div>
                 </div>
                 </div>
                 <div class="form-top-right">
@@ -415,6 +415,42 @@ document.addEventListener('DOMContentLoaded', function() {
         const entityId = getMediaLinkBtn.getAttribute('data-entity-id');
         getMediaLinkBtn.addEventListener('click', function() {
             window.openDescriptionMediaModal('agency', entityId);
+        });
+    }
+
+    // Обработчик для изображения карточки каталога
+    const catalogCardImageInput = document.getElementById('id_catalog_card_image_input');
+    const catalogCardImagePreview = document.getElementById('catalogCardImagePreview');
+    const catalogCardImagePlaceholder = document.getElementById('catalogCardImagePlaceholder');
+    const catalogCardImageUploadButton = document.getElementById('catalogCardImageUploadButton');
+    const catalogCardImageLabel = document.querySelector('.catalog-card-image-label');
+    
+    if (catalogCardImageInput && catalogCardImagePreview && catalogCardImagePlaceholder) {
+        catalogCardImageInput.addEventListener('change', function () {
+            const file = catalogCardImageInput.files && catalogCardImageInput.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                catalogCardImagePreview.src = e.target.result;
+                catalogCardImagePreview.style.display = 'block';
+                catalogCardImagePlaceholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+    
+    // Кнопка выбора изображения карточки каталога
+    if (catalogCardImageUploadButton && catalogCardImageInput) {
+        catalogCardImageUploadButton.addEventListener('click', function() {
+            catalogCardImageInput.click();
+        });
+    }
+    
+    // Клик по самой плитке изображения карточки
+    if (catalogCardImageLabel && catalogCardImageInput) {
+        catalogCardImageLabel.addEventListener('click', function(e) {
+            e.preventDefault();
+            catalogCardImageInput.click();
         });
     }
 });

@@ -127,6 +127,44 @@ body {
   border-radius: 5px;
 }
 
+.catalog-card-image-group {
+  margin-top: 16px;
+}
+
+.catalog-card-image-group .catalog-card-image-label {
+  display: block;
+  width: 144px; 
+  height: 72px;
+  border-radius: 5px;
+  background-color: #333;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.catalog-card-image-group .catalog-card-image-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: #a9a9a9;
+}
+
+.catalog-card-image-group .catalog-card-image-placeholder img {
+  width: 30px; 
+  height: 30px;
+  margin-bottom: 5px;
+}
+
+.catalog-card-image-group .catalog-card-image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  border-radius: 5px;
+}
+
 .form-fields-left {
   display: flex;
   flex-direction: column;
@@ -1561,6 +1599,11 @@ body,
     height: 75px;
   }
   
+  .catalog-card-image-group .catalog-card-image-label {
+    width: 150px;
+    height: 75px;
+  }
+  
   .form-control {
     font-size: 13px;
     padding: 8px 12px;
@@ -1600,6 +1643,11 @@ body,
   }
   
   .logo-upload-group .logo-upload-label {
+    width: 120px;
+    height: 60px;
+  }
+  
+  .catalog-card-image-group .catalog-card-image-label {
     width: 120px;
     height: 60px;
   }
@@ -1653,6 +1701,11 @@ body,
   }
   
   .logo-upload-group .logo-upload-label {
+    width: 100px;
+    height: 50px;
+  }
+  
+  .catalog-card-image-group .catalog-card-image-label {
     width: 100px;
     height: 50px;
   }

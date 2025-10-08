@@ -392,6 +392,49 @@ html, body { overflow-x: hidden; }
 
 .logo-upload-group { margin-top: 32px; }
 .logo-upload-group #logoUploadButton { margin-top: 12px; pointer-events: auto; position: relative; z-index: 2; }
+
+.catalog-card-image-group {
+  margin-top: 16px;
+}
+
+.catalog-card-image-group .catalog-card-image-label {
+  display: block;
+  width: 361px; 
+  height: 90px;
+  border-radius: 5px;
+  background-color: #333;
+  position: relative;
+  overflow: hidden;
+}
+
+.catalog-card-image-group .catalog-card-image-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: #a9a9a9;
+}
+
+.catalog-card-image-group .catalog-card-image-placeholder img {
+  width: 30px; 
+  height: 30px;
+  margin-bottom: 5px;
+}
+
+.catalog-card-image-group .catalog-card-image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.catalog-card-image-group #catalogCardImageUploadButton { 
+  margin-top: 8px; 
+  pointer-events: auto; 
+  position: relative; 
+  z-index: 2; 
+}
 .custom-file-upload-button { position: relative; z-index: 2; }
 .micro-investment-label-new { pointer-events: auto; position: relative; z-index: 2; cursor: pointer; }
 .agreement-section .custom-checkbox-label { pointer-events: auto; position: relative; z-index: 5; cursor: pointer; }

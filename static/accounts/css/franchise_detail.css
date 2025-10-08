@@ -181,12 +181,6 @@ a:hover {
 
 
 
-.planet-container .action-button.chat-button span,
-.planet-container .action-button.chat-button .wave-effect,
-.planet-container .action-button.chat-button::before,
-.planet-container .action-button.chat-button::after {
-  
-}
 
 
 .planet-container .action-button.chat-button > span {
@@ -1779,14 +1773,10 @@ a:hover {
 }
 
 
-.content-section#gallery-section {
-  
-}
 
 
 .gallery-grid,
 .video-grid {
-  
   display: grid;
 
   
@@ -2787,13 +2777,7 @@ a:hover {
     font-size: 24px;
   }
 
-  .header-meta {
-    
-  }
 
-  .rating-comments-container {
-    
-  }
 
   .info-blocks {
     grid-template-columns: 1fr;

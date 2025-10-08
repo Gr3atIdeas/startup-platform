@@ -178,7 +178,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span class="error-message">{{ form.logo.errors|first }}</span>
                     {% endif %}
                 </div>
-                </div>
                 <div class="form-group catalog-card-image-group">
                     <div class="catalog-card-image-label">
                         {% with catalog_card_image_id=startup.catalog_card_image %}
@@ -515,6 +514,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.openDescriptionMediaModal('startup', entityId);
         });
     }
+
 });
 </script>
 {% endblock %}
