@@ -34,7 +34,7 @@ def sanitize_description_html(html_content):
         html_content,
         tags=allowed_tags,
         attributes=allowed_attributes,
-        styles=allowed_styles,
+        css_sanitizer=bleach.CSSSanitizer(allowed_css_properties=allowed_styles),
         strip=True
     )
     
