@@ -175,4 +175,6 @@ urlpatterns = [
         views.get_chat_messages,
         name="get_chat_messages_dynamic",
     ),
+    path("upload-description-media/<str:entity_type>/<int:entity_id>/", views.upload_description_media, name="upload_description_media"),
+    path("get-description-media/<str:entity_type>/<int:entity_id>/", views.get_description_media, name="get_description_media"),
 ]

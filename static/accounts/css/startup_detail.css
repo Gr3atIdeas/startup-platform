@@ -5033,3 +5033,47 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   cursor: not-allowed;
 }
 
+/* Стили для медиа-элементов в описании */
+.about-text img,
+.about-text video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 16px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: block;
+}
+
+.about-text img {
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.about-text video {
+  max-height: 500px;
+  background: #000;
+}
+
+.about-text img:hover,
+.about-text video:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
+}
+
+/* Адаптивность для медиа */
+@media (max-width: 768px) {
+  .about-text img,
+  .about-text video {
+    margin: 12px 0;
+    border-radius: 6px;
+  }
+  
+  .about-text img {
+    max-height: 300px;
+  }
+  
+  .about-text video {
+    max-height: 350px;
+  }
+}
+

@@ -5,6 +5,7 @@
 {% load timeline_filters %}
 {% load humanize %}
 {% load accounts_extras %}
+{% load html_sanitizer %}
 
 {% block title %}{{ agency.title|default:"Детали агентства" }}{% endblock %}
 
@@ -237,7 +238,7 @@
                   <h3 class="about-title">Об агентстве</h3>
                   <div class="about-content">
                     <div class="about-text">
-                      {{ agency.description|safe|default:"Нет подробного описания." }}
+                      {{ agency.description|sanitize_html|default:"Нет подробного описания." }}
                       {% if agency.customization_data.agency_additional_info %}
                         <div class="additional-info">
                           <p><strong>Основные услуги:</strong></p>

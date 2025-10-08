@@ -3419,6 +3419,34 @@ def create_startup(request):
                     "accounts/create_startup.html",
                     {"form": form, "timeline_steps": request.POST},
                 )
+            
+            # Обработка временных медиа-файлов из localStorage
+            temp_media_data = request.POST.get('temp_media_data', '')
+            if temp_media_data:
+                try:
+                    temp_files = json.loads(temp_media_data)
+                    logger.info(f"Обработка {len(temp_files)} временных медиа-файлов")
+                    
+                    uploaded_content_type, _ = FileTypes.objects.get_or_create(type_name='uploaded_content')
+                    entity_type, _ = EntityTypes.objects.get_or_create(type_name='startup')
+                    
+                    for temp_file in temp_files:
+                        # Создаем запись в FileStorage для временного файла
+                        file_id = str(uuid.uuid4())
+                        safe_create_file_storage(
+                            entity_type=entity_type,
+                            entity_id=startup.startup_id,
+                            file_type=uploaded_content_type,
+                            file_url=file_id,
+                            uploaded_at=timezone.now(),
+                            startup=startup,
+                            original_file_name=temp_file.get('name', 'temp_file'),
+                        )
+                        logger.info(f"Создана запись для временного файла: {temp_file.get('name')}")
+                        
+                except Exception as e:
+                    logger.error(f"Ошибка обработки временных медиа-файлов: {e}", exc_info=True)
+                    messages.warning(request, "Не удалось обработать временные медиа-файлы.")
             for i in range(1, 6):
                 description = request.POST.get(f"step_description_{i}", "").strip()
                 if description:
@@ -3675,6 +3703,34 @@ def create_franchise(request):
                 return render(request, "accounts/create_franchise.html", {"form": form})
             franchise.planet_image = form.cleaned_data.get("planet_image")
             franchise.save()
+            
+            # Обработка временных медиа-файлов из localStorage
+            temp_media_data = request.POST.get('temp_media_data', '')
+            if temp_media_data:
+                try:
+                    temp_files = json.loads(temp_media_data)
+                    logger.info(f"Обработка {len(temp_files)} временных медиа-файлов для франшизы")
+                    
+                    uploaded_content_type, _ = FileTypes.objects.get_or_create(type_name='uploaded_content')
+                    entity_type, _ = EntityTypes.objects.get_or_create(type_name='franchise')
+                    
+                    for temp_file in temp_files:
+                        # Создаем запись в FileStorage для временного файла
+                        file_id = str(uuid.uuid4())
+                        safe_create_file_storage(
+                            entity_type=entity_type,
+                            entity_id=franchise.franchise_id,
+                            file_type=uploaded_content_type,
+                            file_url=file_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=temp_file.get('name', 'temp_file'),
+                        )
+                        logger.info(f"Создана запись для временного файла франшизы: {temp_file.get('name')}")
+                        
+                except Exception as e:
+                    logger.error(f"Ошибка обработки временных медиа-файлов франшизы: {e}", exc_info=True)
+                    messages.warning(request, "Не удалось обработать временные медиа-файлы.")
 
             logo_ids, creatives_ids, creative_ids, proofs_ids, video_ids = [], [], [], [], []
             logo = form.cleaned_data.get("logo")
@@ -3829,6 +3885,34 @@ def create_agency(request):
                 data["agency_category"] = cat
                 agency.customization_data = data
                 agency.save(update_fields=["customization_data"])
+            
+            # Обработка временных медиа-файлов из localStorage
+            temp_media_data = request.POST.get('temp_media_data', '')
+            if temp_media_data:
+                try:
+                    temp_files = json.loads(temp_media_data)
+                    logger.info(f"Обработка {len(temp_files)} временных медиа-файлов для агентства")
+                    
+                    uploaded_content_type, _ = FileTypes.objects.get_or_create(type_name='uploaded_content')
+                    entity_type, _ = EntityTypes.objects.get_or_create(type_name='agency')
+                    
+                    for temp_file in temp_files:
+                        # Создаем запись в FileStorage для временного файла
+                        file_id = str(uuid.uuid4())
+                        safe_create_file_storage(
+                            entity_type=entity_type,
+                            entity_id=agency.agency_id,
+                            file_type=uploaded_content_type,
+                            file_url=file_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=temp_file.get('name', 'temp_file'),
+                        )
+                        logger.info(f"Создана запись для временного файла агентства: {temp_file.get('name')}")
+                        
+                except Exception as e:
+                    logger.error(f"Ошибка обработки временных медиа-файлов агентства: {e}", exc_info=True)
+                    messages.warning(request, "Не удалось обработать временные медиа-файлы.")
 
             logo_ids, creatives_ids, proofs_ids, video_ids = [], [], [], []
 
@@ -3925,6 +4009,34 @@ def create_specialist(request):
                 data["specialist_category"] = cat
                 spec.customization_data = data
                 spec.save(update_fields=["customization_data"])
+            
+            # Обработка временных медиа-файлов из localStorage
+            temp_media_data = request.POST.get('temp_media_data', '')
+            if temp_media_data:
+                try:
+                    temp_files = json.loads(temp_media_data)
+                    logger.info(f"Обработка {len(temp_files)} временных медиа-файлов для специалиста")
+                    
+                    uploaded_content_type, _ = FileTypes.objects.get_or_create(type_name='uploaded_content')
+                    entity_type, _ = EntityTypes.objects.get_or_create(type_name='specialist')
+                    
+                    for temp_file in temp_files:
+                        # Создаем запись в FileStorage для временного файла
+                        file_id = str(uuid.uuid4())
+                        safe_create_file_storage(
+                            entity_type=entity_type,
+                            entity_id=spec.specialist_id,
+                            file_type=uploaded_content_type,
+                            file_url=file_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=temp_file.get('name', 'temp_file'),
+                        )
+                        logger.info(f"Создана запись для временного файла специалиста: {temp_file.get('name')}")
+                        
+                except Exception as e:
+                    logger.error(f"Ошибка обработки временных медиа-файлов специалиста: {e}", exc_info=True)
+                    messages.warning(request, "Не удалось обработать временные медиа-файлы.")
 
             logo_ids, creatives_ids, proofs_ids, video_ids = [], [], [], []
             def save_file_set(files, type_name, subdir, ids_collector):
@@ -8936,5 +9048,205 @@ def delete_investment_franchise(request, franchise_id, user_id):
     except Exception as e:
         logger.error(f"Ошибка при удалении инвестиции франшизы: {e}")
         return JsonResponse({'success': False, 'error': 'Ошибка при удалении'})
+
+
+@login_required
+def upload_description_media(request, entity_type, entity_id):
+    """
+    API endpoint для загрузки медиа-контента в описание
+    """
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Only POST method allowed'}, status=405)
+    
+    try:
+        # Проверяем тип сущности
+        valid_entity_types = ['startup', 'franchise', 'agency', 'specialist']
+        if entity_type not in valid_entity_types:
+            return JsonResponse({'success': False, 'error': 'Invalid entity type'}, status=400)
+        
+        # Получаем сущность
+        if entity_type == 'startup':
+            entity = get_object_or_404(Startups, startup_id=entity_id)
+        elif entity_type == 'franchise':
+            entity = get_object_or_404(Franchises, franchise_id=entity_id)
+        elif entity_type == 'agency':
+            entity = get_object_or_404(Agencies, agency_id=entity_id)
+        elif entity_type == 'specialist':
+            entity = get_object_or_404(Specialists, specialist_id=entity_id)
+        
+        # Проверяем права доступа
+        if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
+            return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
+        
+        # Получаем файлы
+        files = request.FILES.getlist('files')
+        if not files:
+            return JsonResponse({'success': False, 'error': 'No files provided'}, status=400)
+        
+        # Валидация файлов
+        allowed_image_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+        allowed_video_types = ['video/mp4', 'video/quicktime', 'video/x-msvideo']
+        max_image_size = 5 * 1024 * 1024  # 5MB
+        max_video_size = 50 * 1024 * 1024  # 50MB
+        max_files = 20
+        
+        # Проверяем количество файлов
+        existing_files = FileStorage.objects.filter(
+            entity_type__type_name=entity_type,
+            entity_id=entity_id,
+            file_type__type_name='uploaded_content'
+        ).count()
+        
+        if existing_files + len(files) > max_files:
+            return JsonResponse({
+                'success': False, 
+                'error': f'Maximum {max_files} files allowed. Currently have {existing_files} files.'
+            }, status=400)
+        
+        uploaded_files = []
+        
+        for file in files:
+            # Валидация типа файла
+            file_type = file.content_type
+            is_image = file_type in allowed_image_types
+            is_video = file_type in allowed_video_types
+            
+            if not (is_image or is_video):
+                return JsonResponse({
+                    'success': False, 
+                    'error': f'File {file.name} has unsupported type. Allowed: images (jpg, jpeg, png, gif, webp) and videos (mp4, mov, avi)'
+                }, status=400)
+            
+            # Валидация размера
+            max_size = max_image_size if is_image else max_video_size
+            if file.size > max_size:
+                size_mb = max_size / (1024 * 1024)
+                return JsonResponse({
+                    'success': False, 
+                    'error': f'File {file.name} is too large. Maximum size: {size_mb}MB'
+                }, status=400)
+            
+            # Генерируем UUID для файла
+            file_id = str(uuid.uuid4())
+            
+            # Создаем путь для файла
+            base_name = os.path.splitext(file.name)[0]
+            ext = os.path.splitext(file.name)[1]
+            safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+            safe_name = slugify(safe_base_name) + ext
+            file_path = f"{entity_type}/{entity_id}/uploaded_content/{file_id}_{safe_name}"
+            
+            # Сохраняем файл
+            try:
+                default_storage.save(file_path, file)
+                
+                # Создаем запись в FileStorage
+                file_type_obj, _ = FileTypes.objects.get_or_create(type_name='uploaded_content')
+                entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name=entity_type)
+                
+                safe_create_file_storage(
+                    entity_type=entity_type_obj,
+                    entity_id=entity_id,
+                    file_type=file_type_obj,
+                    file_url=file_id,
+                    uploaded_at=timezone.now(),
+                    startup=entity if entity_type == 'startup' else None,
+                    original_file_name=file.name,
+                )
+                
+                # Получаем URL файла
+                file_url = f"{settings.S3_PUBLIC_BASE_URL}/{file_path}"
+                
+                uploaded_files.append({
+                    'file_id': file_id,
+                    'file_url': file_url,
+                    'file_type': 'image' if is_image else 'video',
+                    'file_name': file.name
+                })
+                
+            except Exception as e:
+                logger.error(f"Error saving file {file.name}: {e}")
+                return JsonResponse({
+                    'success': False, 
+                    'error': f'Error saving file {file.name}'
+                }, status=500)
+        
+        return JsonResponse({
+            'success': True,
+            'files': uploaded_files
+        })
+        
+    except Exception as e:
+        logger.error(f"Error in upload_description_media: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': 'Internal server error'}, status=500)
+
+
+@login_required
+def get_description_media(request, entity_type, entity_id):
+    """
+    API endpoint для получения списка загруженных медиа-файлов
+    """
+    if request.method != 'GET':
+        return JsonResponse({'success': False, 'error': 'Only GET method allowed'}, status=405)
+    
+    try:
+        # Проверяем тип сущности
+        valid_entity_types = ['startup', 'franchise', 'agency', 'specialist']
+        if entity_type not in valid_entity_types:
+            return JsonResponse({'success': False, 'error': 'Invalid entity type'}, status=400)
+        
+        # Получаем сущность
+        if entity_type == 'startup':
+            entity = get_object_or_404(Startups, startup_id=entity_id)
+        elif entity_type == 'franchise':
+            entity = get_object_or_404(Franchises, franchise_id=entity_id)
+        elif entity_type == 'agency':
+            entity = get_object_or_404(Agencies, agency_id=entity_id)
+        elif entity_type == 'specialist':
+            entity = get_object_or_404(Specialists, specialist_id=entity_id)
+        
+        # Проверяем права доступа
+        if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
+            return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
+        
+        # Получаем все файлы типа 'uploaded_content'
+        entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name=entity_type)
+        file_storages = FileStorage.objects.filter(
+            entity_type=entity_type_obj,
+            entity_id=entity_id,
+            file_type__type_name='uploaded_content'
+        ).order_by('-uploaded_at')
+        
+        files = []
+        for file_storage in file_storages:
+            file_url = f"{settings.S3_PUBLIC_BASE_URL}/{entity_type}/{entity_id}/uploaded_content/{file_storage.file_url}"
+            
+            # Определяем тип файла по расширению
+            original_name = getattr(file_storage, 'original_file_name', '')
+            file_ext = os.path.splitext(original_name)[1].lower()
+            
+            if file_ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp']:
+                file_type = 'image'
+            elif file_ext in ['.mp4', '.mov', '.avi']:
+                file_type = 'video'
+            else:
+                file_type = 'unknown'
+            
+            files.append({
+                'id': file_storage.file_url,
+                'url': file_url,
+                'type': file_type,
+                'name': original_name,
+                'uploaded_at': file_storage.uploaded_at.isoformat() if file_storage.uploaded_at else None
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'files': files
+        })
+        
+    except Exception as e:
+        logger.error(f"Error in get_description_media: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': 'Internal server error'}, status=500)
 
 

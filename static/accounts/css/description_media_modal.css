@@ -1,0 +1,343 @@
+/* Модальное окно для управления медиа-контентом */
+
+.media-modal-dialog {
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.media-upload-section {
+    margin-bottom: 20px;
+}
+
+.upload-area {
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafafa;
+}
+
+.upload-area:hover {
+    border-color: #007bff;
+    background: #f0f8ff;
+}
+
+.upload-area.dragover {
+    border-color: #007bff;
+    background: #e3f2fd;
+    transform: scale(1.02);
+}
+
+.upload-placeholder {
+    pointer-events: none;
+}
+
+.upload-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    opacity: 0.6;
+}
+
+.upload-placeholder p {
+    margin: 8px 0;
+    color: #666;
+}
+
+.upload-hint {
+    font-size: 12px;
+    color: #999;
+    line-height: 1.4;
+}
+
+.upload-progress {
+    margin-top: 16px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.media-gallery {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.gallery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.gallery-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.gallery-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-clear-all {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.3s ease;
+}
+
+.btn-clear-all:hover {
+    background: #c82333;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.gallery-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+
+.gallery-item {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.file-preview-container {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+}
+
+.file-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-preview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    color: #666;
+}
+
+.video-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.video-name {
+    font-size: 12px;
+    text-align: center;
+    padding: 0 8px;
+    word-break: break-word;
+}
+
+.file-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover .file-overlay {
+    opacity: 1;
+}
+
+.btn-copy-url,
+.btn-remove-file {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.3s ease;
+}
+
+.btn-copy-url {
+    color: #007bff;
+}
+
+.btn-copy-url:hover {
+    background: white;
+}
+
+.btn-remove-file {
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 4px 8px;
+    line-height: 1;
+}
+
+.btn-remove-file:hover {
+    background: white;
+}
+
+.file-info {
+    padding: 8px;
+    background: white;
+}
+
+.file-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-type {
+    font-size: 11px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .media-modal-dialog {
+        width: 95%;
+        max-height: 95vh;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+    }
+    
+    .upload-area {
+        padding: 30px 15px;
+    }
+    
+    .upload-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .gallery-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .gallery-header h3 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+    }
+    
+    .file-overlay {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .btn-copy-url,
+    .btn-remove-file {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.gallery-item {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Скроллбар для галереи */
+.gallery-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.gallery-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.gallery-grid::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.gallery-grid::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

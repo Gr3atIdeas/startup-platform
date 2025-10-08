@@ -1766,3 +1766,65 @@ input[type=number] {
 
 /* Keep currency label inline */
 .presentation-finance-group .form-group label span.currency-note { white-space: nowrap; }
+
+/* Стили для кнопки "Получить ссылку" */
+.description-field-wrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.description-field-wrapper .form-control {
+    flex: 1;
+    min-height: 120px;
+    resize: vertical;
+}
+
+.btn-get-link {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.btn-get-link:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.btn-get-link:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+.btn-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.9;
+}
+
+/* Адаптивность для кнопки */
+@media (max-width: 768px) {
+    .description-field-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-get-link {
+        align-self: flex-start;
+        margin-top: 8px;
+    }
+}

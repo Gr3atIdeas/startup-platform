@@ -9,6 +9,7 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'accounts/css/startup_form.css' %}">
 <link rel="stylesheet" href="{% static 'accounts/css/slider_checkbox.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/css/description_media_modal.css' %}">
 
 
 <script>
@@ -267,8 +268,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="form-group full-width">
                     <label for="{{ form.description.id_for_label }}">*{{ form.description.label|cut:"*" }}</label>
-                    {{ form.description|add_class:"form-control"|attr:"placeholder:Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ..." }}
-                    <div class="small-text">Подробное описание вашего стартапа. Расскажите о проблеме, решении, команде и т.д.</div>
+                    <div class="description-field-wrapper">
+                        {{ form.description|add_class:"form-control"|attr:"placeholder:Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ..." }}
+                        <button type="button" class="btn-get-link" id="getMediaLinkBtn" data-entity-type="startup" data-entity-id="{{ startup.startup_id }}">
+                            <img src="{% static 'accounts/images/icons/link.svg' %}" alt="Link" class="btn-icon">
+                            Получить ссылку
+                        </button>
+                    </div>
+                    <div class="small-text">Подробное описание вашего стартапа. Расскажите о проблеме, решении, команде и т.д. Поддерживаются теги &lt;img&gt; и &lt;video&gt;.</div>
                     {% if form.description.errors %}<span class="error-message">{{ form.description.errors|first }}</span>{% endif %}
                 </div>
             </div>
@@ -497,4 +504,17 @@ function removeDuplicateCreatives() {
 </script>
 
 <script src="{% static 'accounts/js/slider_checkbox.js' %}"></script>
+<script src="{% static 'accounts/js/description_media_modal.js' %}"></script>
+<script>
+// Инициализация модального окна для медиа
+document.addEventListener('DOMContentLoaded', function() {
+    const getMediaLinkBtn = document.getElementById('getMediaLinkBtn');
+    if (getMediaLinkBtn) {
+        const entityId = getMediaLinkBtn.getAttribute('data-entity-id');
+        getMediaLinkBtn.addEventListener('click', function() {
+            window.openDescriptionMediaModal('startup', entityId);
+        });
+    }
+});
+</script>
 {% endblock %}

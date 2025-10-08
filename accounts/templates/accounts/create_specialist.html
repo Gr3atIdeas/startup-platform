@@ -7,6 +7,7 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'accounts/css/specialist_form.css' %}">
 <link rel="stylesheet" href="{% static 'accounts/css/slider_checkbox.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/css/description_media_modal.css' %}">
 
 <div class="specialist-form-container">
     <div class="form-navigation-header">
@@ -102,7 +103,14 @@
                 </div>
                 <div class="form-group full-width">
                     <label for="{{ form.description.id_for_label }}">*{{ form.description.label }}</label>
-                    {{ form.description|add_class:"form-control"|attr:"placeholder:Описание услуг, компетенций, кейсов" }}
+                    <div class="description-field-wrapper">
+                        {{ form.description|add_class:"form-control"|attr:"placeholder:Описание услуг, компетенций, кейсов" }}
+                        <button type="button" class="btn-get-link" id="getMediaLinkBtn" data-entity-type="specialist">
+                            <img src="{% static 'accounts/images/icons/link.svg' %}" alt="Link" class="btn-icon">
+                            Получить ссылку
+                        </button>
+                    </div>
+                    <div class="small-text">Подробное описание ваших услуг, компетенций и кейсов. Поддерживаются теги &lt;img&gt; и &lt;video&gt;.</div>
                     {% if form.description.errors %}<span class="error-message">{{ form.description.errors|first }}</span>{% endif %}
                 </div>
             </div>
@@ -920,4 +928,16 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script src="{% static 'accounts/js/slider_checkbox.js' %}"></script>
+<script src="{% static 'accounts/js/description_media_modal.js' %}"></script>
+<script>
+// Инициализация модального окна для медиа
+document.addEventListener('DOMContentLoaded', function() {
+    const getMediaLinkBtn = document.getElementById('getMediaLinkBtn');
+    if (getMediaLinkBtn) {
+        getMediaLinkBtn.addEventListener('click', function() {
+            window.openDescriptionMediaModal('specialist', null);
+        });
+    }
+});
+</script>
 {% endblock %}
