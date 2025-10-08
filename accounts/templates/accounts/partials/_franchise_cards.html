@@ -8,9 +8,16 @@
     <!-- Шапка с изображением -->
     <div class="franchise-card-header">
       {% if franchise.get_catalog_card_image_url %}
-        <img src="{{ franchise.get_catalog_card_image_url }}" alt="Изображение {{ franchise.title }}" class="franchise-header-image">
+        <img src="{{ franchise.get_catalog_card_image_url }}" alt="Изображение {{ franchise.title }}" class="franchise-header-image" onerror="console.log('Image failed to load:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';" onload="console.log('Image loaded successfully:', this.src);">
+        <div class="franchise-header-placeholder" style="display:none;">
+          <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">
+          <span style="color: #a9a9a9; font-size: 12px; margin-top: 8px;">Изображение недоступно</span>
+        </div>
       {% else %}
-        <div class="franchise-header-placeholder"></div>
+        <div class="franchise-header-placeholder">
+          <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">
+          <span style="color: #a9a9a9; font-size: 12px; margin-top: 8px;">Нет изображения</span>
+        </div>
       {% endif %}
     </div>
 

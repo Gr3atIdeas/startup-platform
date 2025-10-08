@@ -3481,9 +3481,9 @@ def create_startup(request):
                         content_type = getattr(file_obj, 'content_type', 'application/octet-stream')
                         body_bytes = file_obj.read()
                         try:
-                            s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type)
+                            s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
                         except Exception:
-                            s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes)
+                            s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
                         return True
                     except Exception as e2:
                         logger.error(f"Ошибка прямой загрузки в S3 для {file_path}: {e2}", exc_info=True)
@@ -3704,6 +3704,33 @@ def create_franchise(request):
             franchise.planet_image = form.cleaned_data.get("planet_image")
             franchise.save()
             
+            def try_save_file(file_obj, file_path):
+                try:
+                    default_storage.save(file_path, file_obj)
+                    return True
+                except Exception as e:
+                    logger.error(f"Ошибка default_storage.save для {file_path}: {e}", exc_info=True)
+                    try:
+                        s3 = boto3.client(
+                            's3',
+                            endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+                            aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+                            aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+                            region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                            config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
+                        )
+                        bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+                        content_type = getattr(file_obj, 'content_type', 'application/octet-stream')
+                        body_bytes = file_obj.read()
+                        try:
+                            s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
+                        except Exception:
+                            s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
+                        return True
+                    except Exception as e2:
+                        logger.error(f"Ошибка прямой загрузки в S3 для {file_path}: {e2}", exc_info=True)
+                        return False
+            
             # Обработка временных медиа-файлов из localStorage
             temp_media_data = request.POST.get('temp_media_data', '')
             if temp_media_data:
@@ -3768,10 +3795,12 @@ def create_franchise(request):
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
                 try:
-                    default_storage.save(file_path, catalog_card_image)
+                    if not try_save_file(catalog_card_image, file_path):
+                        raise Exception("Не удалось сохранить изображение карточки")
                     franchise.catalog_card_image = catalog_card_id
                     franchise.save(update_fields=['catalog_card_image'])
-                except Exception:
+                except Exception as e:
+                    logger.error(f"Ошибка сохранения изображения карточки франшизы: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но франшиза создана.")
 
             creatives = form.cleaned_data.get("creatives", [])
@@ -3886,6 +3915,33 @@ def create_agency(request):
                 agency.customization_data = data
                 agency.save(update_fields=["customization_data"])
             
+            def try_save_file(file_obj, file_path):
+                try:
+                    default_storage.save(file_path, file_obj)
+                    return True
+                except Exception as e:
+                    logger.error(f"Ошибка default_storage.save для {file_path}: {e}", exc_info=True)
+                    try:
+                        s3 = boto3.client(
+                            's3',
+                            endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+                            aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+                            aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+                            region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                            config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
+                        )
+                        bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+                        content_type = getattr(file_obj, 'content_type', 'application/octet-stream')
+                        body_bytes = file_obj.read()
+                        try:
+                            s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
+                        except Exception:
+                            s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
+                        return True
+                    except Exception as e2:
+                        logger.error(f"Ошибка прямой загрузки в S3 для {file_path}: {e2}", exc_info=True)
+                        return False
+            
             # Обработка временных медиа-файлов из localStorage
             temp_media_data = request.POST.get('temp_media_data', '')
             if temp_media_data:
@@ -3967,10 +4023,11 @@ def create_agency(request):
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
                 try:
-                    default_storage.save(file_path, catalog_card_image)
+                    if not try_save_file(catalog_card_image, file_path):
+                        raise Exception("Не удалось сохранить изображение карточки")
                     agency.catalog_card_image = catalog_card_id
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.error(f"Ошибка сохранения изображения карточки агентства: {e}", exc_info=True)
             
             slider_images = request.POST.getlist("slider_images")
             if len(slider_images) > 4:
@@ -4009,6 +4066,33 @@ def create_specialist(request):
                 data["specialist_category"] = cat
                 spec.customization_data = data
                 spec.save(update_fields=["customization_data"])
+            
+            def try_save_file(file_obj, file_path):
+                try:
+                    default_storage.save(file_path, file_obj)
+                    return True
+                except Exception as e:
+                    logger.error(f"Ошибка default_storage.save для {file_path}: {e}", exc_info=True)
+                    try:
+                        s3 = boto3.client(
+                            's3',
+                            endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+                            aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+                            aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+                            region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                            config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
+                        )
+                        bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+                        content_type = getattr(file_obj, 'content_type', 'application/octet-stream')
+                        body_bytes = file_obj.read()
+                        try:
+                            s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
+                        except Exception:
+                            s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
+                        return True
+                    except Exception as e2:
+                        logger.error(f"Ошибка прямой загрузки в S3 для {file_path}: {e2}", exc_info=True)
+                        return False
             
             # Обработка временных медиа-файлов из localStorage
             temp_media_data = request.POST.get('temp_media_data', '')
@@ -4089,10 +4173,11 @@ def create_specialist(request):
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
                 try:
-                    default_storage.save(file_path, catalog_card_image)
+                    if not try_save_file(catalog_card_image, file_path):
+                        raise Exception("Не удалось сохранить изображение карточки")
                     spec.catalog_card_image = catalog_card_id
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.error(f"Ошибка сохранения изображения карточки специалиста: {e}", exc_info=True)
             
             slider_images = request.POST.getlist("slider_images")
             if len(slider_images) > 4:
