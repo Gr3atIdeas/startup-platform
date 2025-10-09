@@ -35,15 +35,15 @@ class DescriptionMediaModal {
         }
         
         const modalHTML = `
-            <div id="descriptionMediaModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; padding: 20px; overflow-y: auto;">
-                <div class="modal-dialog media-modal-dialog" style="background: white; border-radius: 8px; max-width: 800px; margin: 50px auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3); position: relative;">
+            <div id="descriptionMediaModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; padding: 20px; overflow-y: auto; pointer-events: auto;">
+                <div class="modal-dialog media-modal-dialog" style="background: white; border-radius: 8px; max-width: 800px; margin: 50px auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3); position: relative; pointer-events: auto;">
                     <div class="modal-header" style="padding: 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
                         <div class="modal-title" style="font-size: 20px; font-weight: 600; color: #333;">Управление медиа-контентом</div>
                         <button type="button" class="modal-close-btn" id="mediaModalCloseBtn" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #999;">×</button>
                     </div>
                     <div class="modal-body" style="padding: 20px;">
                         <div class="media-upload-section" style="padding: 15px; text-align: center; background: #f8f9fa; border-radius: 5px; margin-bottom: 20px;">
-                            <input type="file" id="mediaFileInput" multiple accept="image/*,video/*" style="display: none;">
+                                <input type="file" id="mediaFileInput" multiple accept="image/*,video/*" style="display: none;">
                             <button type="button" class="btn-upload-file" id="uploadFileBtn" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">
                                 Выбрать файлы
                             </button>
@@ -216,7 +216,7 @@ class DescriptionMediaModal {
             console.log('Creating item for file:', file);
             const fileItem = this.createFileItem(file, index);
             if (fileItem) {
-                galleryGrid.appendChild(fileItem);
+            galleryGrid.appendChild(fileItem);
             }
         });
         
@@ -266,6 +266,7 @@ class DescriptionMediaModal {
         }
         
         console.log('Preview HTML:', preview.substring(0, 100));
+        console.log('File URL for image:', fileUrl);
         
         const removeButtonHtml = (this.isCreateMode || file.isGallery) ? '' : '<button type="button" class="btn-remove-file" data-index="' + index + '" style="position: absolute; top: 5px; right: 5px; background: rgba(220,53,69,0.9); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 16px; line-height: 1; z-index: 10;">×</button>';
         const sourceLabel = file.isGallery ? '<span class="file-source-label" style="color: #28a745; font-size: 11px; font-weight: 600;">из галереи</span>' : '';
@@ -277,7 +278,7 @@ class DescriptionMediaModal {
             <div class="file-preview-container" style="position: relative; width: 100%; height: 150px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                 ${preview}
                 ${removeButtonHtml}
-            </div>
+                </div>
             <div class="file-info" style="padding: 10px; background: white;">
                 <div class="file-name" style="font-size: 12px; font-weight: 500; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapedName}">${escapedName}</div>
                 <div class="file-type" style="font-size: 11px; color: #666; margin-top: 4px;">${isImage ? 'Изображение' : 'Видео'} ${sourceLabel}</div>
@@ -451,10 +452,10 @@ class DescriptionMediaModal {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 await navigator.clipboard.writeText(text);
                 console.log('Copied to clipboard via navigator.clipboard:', text);
-            } else {
-                // Fallback для старых браузеров
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
+        } else {
+            // Fallback для старых браузеров
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
                 textArea.style.position = 'fixed';
                 textArea.style.left = '-9999px';
                 document.body.appendChild(textArea);
@@ -471,10 +472,10 @@ class DescriptionMediaModal {
                 textArea.value = text;
                 textArea.style.position = 'fixed';
                 textArea.style.left = '-9999px';
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
                 console.log('Copied to clipboard via fallback');
             } catch (e) {
                 console.error('All copy methods failed:', e);
@@ -576,7 +577,7 @@ class DescriptionMediaModal {
         if (!saveBtn) return;
         
         if (this.isCreateMode) {
-            saveBtn.disabled = this.files.length === 0;
+        saveBtn.disabled = this.files.length === 0;
         } else {
             const hasNewFiles = this.files.some(file => !file.isExisting);
             saveBtn.disabled = false;
@@ -747,7 +748,7 @@ class DescriptionMediaModal {
     
     close() {
         if (this.modal) {
-            this.modal.style.display = 'none';
+        this.modal.style.display = 'none';
         }
         document.body.style.overflow = '';
         this.revokeBlobUrls();

@@ -9440,11 +9440,8 @@ def get_description_media(request, entity_type, entity_id):
             safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
             safe_name_slugified = slugify(safe_base_name)
             
-            # Если slugify вернул пустую строку (русские символы), используем safe_base_name
-            if not safe_name_slugified:
-                safe_name = safe_base_name + file_ext
-            else:
-                safe_name = safe_name_slugified + file_ext
+            # Формируем safe_name точно так же, как при загрузке файла
+            safe_name = safe_name_slugified + file_ext
             
             file_url = f"{settings.S3_PUBLIC_BASE_URL}/{entity_type}/{entity_id}/creatives/{file_storage.file_url}_{safe_name}"
             
@@ -9472,11 +9469,8 @@ def get_description_media(request, entity_type, entity_id):
             safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
             safe_name_slugified = slugify(safe_base_name)
             
-            # Если slugify вернул пустую строку (русские символы), используем safe_base_name
-            if not safe_name_slugified:
-                safe_name = safe_base_name + file_ext
-            else:
-                safe_name = safe_name_slugified + file_ext
+            # Формируем safe_name точно так же, как при загрузке файла
+            safe_name = safe_name_slugified + file_ext
             
             file_url = f"{settings.S3_PUBLIC_BASE_URL}/{entity_type}/{entity_id}/uploaded_content/{file_storage.file_url}_{safe_name}"
             
@@ -9542,11 +9536,8 @@ def delete_description_media(request, entity_type, entity_id, file_id):
         safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
         safe_name_slugified = slugify(safe_base_name)
         
-        # Если slugify вернул пустую строку (русские символы), используем safe_base_name
-        if not safe_name_slugified:
-            safe_name = safe_base_name + ext
-        else:
-            safe_name = safe_name_slugified + ext
+        # Формируем safe_name точно так же, как при загрузке файла
+        safe_name = safe_name_slugified + ext
             
         file_path = f"{entity_type}/{entity_id}/uploaded_content/{file_id}_{safe_name}"
         
