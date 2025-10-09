@@ -23,11 +23,9 @@ class DescriptionMediaModal {
     }
     
     init() {
+        console.log('Modal init, isCreateMode:', this.isCreateMode, 'entityId:', this.entityId, 'entityType:', this.entityType);
         this.createModal();
         this.bindEvents();
-        if (!this.isCreateMode) {
-            this.loadExistingFiles();
-        }
     }
     
     createModal() {
@@ -86,11 +84,17 @@ class DescriptionMediaModal {
         const saveBtn = document.getElementById('mediaModalSaveBtn');
         
         if (closeBtn) {
-            closeBtn.addEventListener('click', () => this.close());
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.close();
+            });
         }
         
         if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => this.close());
+            cancelBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.close();
+            });
         }
         
         if (this.modal) {
@@ -102,16 +106,25 @@ class DescriptionMediaModal {
         }
         
         if (uploadBtn && fileInput) {
-            uploadBtn.addEventListener('click', () => fileInput.click());
+            uploadBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                fileInput.click();
+            });
             fileInput.addEventListener('change', (e) => this.handleFileSelect(e.target.files));
         }
         
         if (clearAllBtn) {
-            clearAllBtn.addEventListener('click', () => this.clearAllFiles());
+            clearAllBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.clearAllFiles();
+            });
         }
         
         if (saveBtn) {
-            saveBtn.addEventListener('click', () => this.saveFiles());
+            saveBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.saveFiles();
+            });
         }
     }
     
@@ -246,18 +259,20 @@ class DescriptionMediaModal {
         }
         
         const copyButtonHtml = this.isCreateMode ? '' : '<button type="button" class="btn-copy-url" data-index="' + index + '">Копировать URL</button>';
+        const removeButtonHtml = (this.isCreateMode || file.isGallery) ? '' : '<button type="button" class="btn-remove-file" data-index="' + index + '">×</button>';
+        const sourceLabel = file.isGallery ? '<span class="file-source-label" style="color: #28a745; font-size: 11px;">из галереи</span>' : '';
         
         fileItem.innerHTML = `
             <div class="file-preview-container">
                 ${preview}
                 <div class="file-overlay">
                     ${copyButtonHtml}
-                    <button type="button" class="btn-remove-file" data-index="${index}">×</button>
+                    ${removeButtonHtml}
                 </div>
             </div>
             <div class="file-info">
                 <div class="file-name">${escapedName}</div>
-                <div class="file-type">${isImage ? 'Изображение' : 'Видео'}</div>
+                <div class="file-type">${isImage ? 'Изображение' : 'Видео'} ${sourceLabel}</div>
             </div>
         `;
         
@@ -272,11 +287,14 @@ class DescriptionMediaModal {
             }
         }
         
-        fileItem.querySelector('.btn-remove-file').addEventListener('click', (e) => {
-            e.stopPropagation();
-            const currentIndex = parseInt(e.target.dataset.index, 10);
-            this.removeFile(currentIndex);
-        });
+        const removeBtn = fileItem.querySelector('.btn-remove-file');
+        if (removeBtn) {
+            removeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const currentIndex = parseInt(e.target.dataset.index, 10);
+                this.removeFile(currentIndex);
+            });
+        }
         
         return fileItem;
     }
@@ -380,7 +398,12 @@ class DescriptionMediaModal {
     async removeFile(index) {
         const file = this.files[index];
         
-        if (file.isExisting && !this.isCreateMode) {
+        if (file.isGallery) {
+            this.showNotification('Файлы из галереи нельзя удалить здесь', 'warning');
+            return;
+        }
+        
+        if (file.isExisting && !this.isCreateMode && file.source === 'uploaded') {
             try {
                 const response = await fetch(`/delete-description-media/${this.entityType}/${this.entityId}/${file.id}/`, {
                     method: 'DELETE',
@@ -415,15 +438,23 @@ class DescriptionMediaModal {
     }
     
     async clearAllFiles() {
-        const existingFiles = this.files.filter(file => file.isExisting);
+        const uploadedFiles = this.files.filter(file => file.source === 'uploaded' && file.isExisting);
         const newFiles = this.files.filter(file => !file.isExisting);
+        const galleryFiles = this.files.filter(file => file.isGallery);
         
-        if (existingFiles.length > 0 && !this.isCreateMode) {
-            if (!confirm(`Вы уверены, что хотите удалить все ${this.files.length} файлов? Это действие необратимо.`)) {
-                return;
-            }
-            
-            const deletePromises = existingFiles.map(async file => {
+        const filesToDelete = uploadedFiles.length + newFiles.length;
+        
+        if (filesToDelete === 0) {
+            this.showNotification('Нет файлов для удаления', 'info');
+            return;
+        }
+        
+        if (!confirm(`Вы уверены, что хотите удалить ${filesToDelete} файлов? Файлы из галереи не будут удалены.`)) {
+            return;
+        }
+        
+        if (uploadedFiles.length > 0 && !this.isCreateMode) {
+            const deletePromises = uploadedFiles.map(async file => {
                 const response = await fetch(`/delete-description-media/${this.entityType}/${this.entityId}/${file.id}/`, {
                     method: 'DELETE',
                     headers: {
@@ -440,14 +471,14 @@ class DescriptionMediaModal {
             
             try {
                 const results = await Promise.all(deletePromises);
-                this.showNotification('Все файлы удалены', 'success');
+                this.showNotification('Файлы удалены', 'success');
             } catch (error) {
                 this.showNotification('Ошибка удаления некоторых файлов', 'error');
                 return;
             }
         }
         
-        this.files = [];
+        this.files = galleryFiles;
         this.updateGallery();
         this.updateSaveButton();
     }
@@ -466,6 +497,11 @@ class DescriptionMediaModal {
     }
     
     async loadExistingFiles() {
+        if (this.isCreateMode) {
+            console.log('Skipping file load in create mode');
+            return;
+        }
+        
         try {
             console.log(`Loading existing files for ${this.entityType} with ID ${this.entityId}`);
             const response = await fetch(`/get-description-media/${this.entityType}/${this.entityId}/`);
@@ -484,10 +520,13 @@ class DescriptionMediaModal {
                     name: fileData.name,
                     type: fileData.type === 'image' ? 'image/jpeg' : 'video/mp4',
                     url: fileData.url,
-                    isExisting: true
+                    isExisting: true,
+                    source: fileData.source || 'gallery',
+                    isGallery: fileData.source === 'gallery'
                 }));
                 
                 console.log('Mapped files:', this.files);
+                console.log('Calling updateGallery...');
                 this.updateGallery();
                 this.updateSaveButton();
             } else {
@@ -612,6 +651,8 @@ class DescriptionMediaModal {
             
             const saveBtn = this.modal.querySelector('#mediaModalSaveBtn');
             if (saveBtn) saveBtn.style.display = 'inline-block';
+            
+            this.loadExistingFiles();
         }
     }
     
@@ -621,6 +662,10 @@ class DescriptionMediaModal {
         }
         document.body.style.overflow = '';
         this.revokeBlobUrls();
+        
+        if (!this.isCreateMode) {
+            this.files = [];
+        }
     }
     
     getCSRFToken() {
