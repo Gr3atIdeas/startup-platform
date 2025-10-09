@@ -31,6 +31,11 @@ class DescriptionMediaModal {
     }
     
     createModal() {
+        const existingModal = document.getElementById('descriptionMediaModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
         const modalHTML = `
             <div id="descriptionMediaModal" class="modal-overlay" style="display: none;">
                 <div class="modal-dialog media-modal-dialog">
@@ -39,21 +44,12 @@ class DescriptionMediaModal {
                         <button type="button" class="modal-close-btn" id="mediaModalCloseBtn">×</button>
                     </div>
                     <div class="modal-body">
-                        <div class="media-upload-section">
-                            <div class="upload-area" id="mediaUploadArea">
-                                <div class="upload-placeholder">
-                                    <img src="/static/accounts/images/icons/image_placeholder.svg" alt="Upload" class="upload-icon">
-                                    <p>Перетащите файлы сюда или нажмите для выбора</p>
-                                    <p class="upload-hint">Изображения: JPG, PNG, GIF, WEBP (до 5MB)<br>Видео: MP4, MOV, AVI (до 50MB)</p>
-                                </div>
-                                <input type="file" id="mediaFileInput" multiple accept="image/*,video/*" style="display: none;">
-                            </div>
-                            <div class="upload-progress" id="uploadProgress" style="display: none;">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" id="progressFill"></div>
-                                </div>
-                                <div class="progress-text" id="progressText">0%</div>
-                            </div>
+                        <div class="media-upload-section" style="padding: 15px; text-align: center;">
+                            <input type="file" id="mediaFileInput" multiple accept="image/*,video/*" style="display: none;">
+                            <button type="button" class="btn-upload-file" id="uploadFileBtn" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">
+                                Выбрать файлы
+                            </button>
+                            <p style="margin-top: 10px; font-size: 12px; color: #666;">Изображения: JPG, PNG, GIF, WEBP (до 5MB) • Видео: MP4, MOV, AVI (до 50MB)</p>
                         </div>
                         <div class="media-gallery" id="mediaGallery">
                             <div class="gallery-header">
@@ -82,66 +78,73 @@ class DescriptionMediaModal {
     }
     
     bindEvents() {
-        // Закрытие модального окна
-        document.getElementById('mediaModalCloseBtn').addEventListener('click', () => this.close());
-        document.getElementById('mediaModalCancelBtn').addEventListener('click', () => this.close());
-        
-        // Клик по фону для закрытия
-        this.modal.addEventListener('click', (e) => {
-            if (e.target === this.modal) {
-                this.close();
-            }
-        });
-        
-        // Загрузка файлов
-        const uploadArea = document.getElementById('mediaUploadArea');
+        const closeBtn = document.getElementById('mediaModalCloseBtn');
+        const cancelBtn = document.getElementById('mediaModalCancelBtn');
+        const uploadBtn = document.getElementById('uploadFileBtn');
         const fileInput = document.getElementById('mediaFileInput');
+        const clearAllBtn = document.getElementById('clearAllBtn');
+        const saveBtn = document.getElementById('mediaModalSaveBtn');
         
-        uploadArea.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', (e) => this.handleFileSelect(e.target.files));
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => this.close());
+        }
         
-        // Drag & Drop
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => this.close());
+        }
         
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
+        if (this.modal) {
+            this.modal.addEventListener('click', (e) => {
+                if (e.target === this.modal) {
+                    this.close();
+                }
+            });
+        }
         
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            this.handleFileSelect(e.dataTransfer.files);
-        });
+        if (uploadBtn && fileInput) {
+            uploadBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', (e) => this.handleFileSelect(e.target.files));
+        }
         
-        // Кнопки действий
-        document.getElementById('clearAllBtn').addEventListener('click', () => this.clearAllFiles());
-        document.getElementById('mediaModalSaveBtn').addEventListener('click', () => this.saveFiles());
+        if (clearAllBtn) {
+            clearAllBtn.addEventListener('click', () => this.clearAllFiles());
+        }
+        
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => this.saveFiles());
+        }
     }
     
     handleFileSelect(files) {
         const fileArray = Array.from(files);
         
-        // Валидация файлов
+        if (fileArray.length === 0) return;
+        
         for (const file of fileArray) {
             if (!this.validateFile(file)) {
+                this.resetFileInput();
                 return;
             }
         }
         
-        // Проверка лимита файлов
         const totalFiles = this.files.length + fileArray.length;
         if (totalFiles > this.maxFiles) {
             this.showNotification(`Максимум ${this.maxFiles} файлов. У вас уже ${this.files.length} файлов.`, 'error');
+            this.resetFileInput();
             return;
         }
         
-        // Добавляем файлы
         this.files.push(...fileArray);
         this.updateGallery();
         this.updateSaveButton();
+        this.resetFileInput();
+    }
+    
+    resetFileInput() {
+        const fileInput = document.getElementById('mediaFileInput');
+        if (fileInput) {
+            fileInput.value = '';
+        }
     }
     
     validateFile(file) {
@@ -168,24 +171,33 @@ class DescriptionMediaModal {
         const galleryEmpty = document.getElementById('galleryEmpty');
         const clearAllBtn = document.getElementById('clearAllBtn');
         
+        if (!galleryGrid) return;
+        
+        console.log('updateGallery called, files count:', this.files.length);
+        
         if (this.files.length === 0) {
-            galleryEmpty.style.display = 'block';
-            clearAllBtn.style.display = 'none';
+            if (galleryEmpty) galleryEmpty.style.display = 'block';
+            if (clearAllBtn) clearAllBtn.style.display = 'none';
             this.revokeBlobUrls();
             return;
         }
         
-        galleryEmpty.style.display = 'none';
-        clearAllBtn.style.display = 'block';
+        if (galleryEmpty) galleryEmpty.style.display = 'none';
+        if (clearAllBtn) clearAllBtn.style.display = 'block';
         
         this.revokeBlobUrls();
         
         galleryGrid.innerHTML = '';
         
         this.files.forEach((file, index) => {
+            console.log('Creating item for file:', file);
             const fileItem = this.createFileItem(file, index);
-            galleryGrid.appendChild(fileItem);
+            if (fileItem) {
+                galleryGrid.appendChild(fileItem);
+            }
         });
+        
+        console.log('Gallery updated with', this.files.length, 'files');
     }
     
     revokeBlobUrls() {
@@ -442,6 +454,8 @@ class DescriptionMediaModal {
     
     updateSaveButton() {
         const saveBtn = document.getElementById('mediaModalSaveBtn');
+        if (!saveBtn) return;
+        
         if (this.isCreateMode) {
             saveBtn.disabled = this.files.length === 0;
         } else {
@@ -453,6 +467,7 @@ class DescriptionMediaModal {
     
     async loadExistingFiles() {
         try {
+            console.log(`Loading existing files for ${this.entityType} with ID ${this.entityId}`);
             const response = await fetch(`/get-description-media/${this.entityType}/${this.entityId}/`);
             
             if (!response.ok) {
@@ -461,6 +476,7 @@ class DescriptionMediaModal {
             }
             
             const result = await response.json();
+            console.log('Loaded files from server:', result);
             
             if (result.success && Array.isArray(result.files)) {
                 this.files = result.files.map(fileData => ({
@@ -471,8 +487,11 @@ class DescriptionMediaModal {
                     isExisting: true
                 }));
                 
+                console.log('Mapped files:', this.files);
                 this.updateGallery();
                 this.updateSaveButton();
+            } else {
+                console.log('No files found or invalid response');
             }
         } catch (error) {
             console.error('Error loading existing files:', error);
@@ -558,24 +577,36 @@ class DescriptionMediaModal {
     }
     
     show() {
+        if (!this.modal) return;
+        
         this.modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
         
         if (this.isCreateMode) {
             const modalBody = this.modal.querySelector('.modal-body');
+            if (!modalBody) return;
+            
             let warning = modalBody.querySelector('.create-mode-warning');
             
             if (!warning) {
                 warning = document.createElement('div');
                 warning.className = 'create-mode-warning';
                 warning.style.cssText = 'background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 10px; margin-bottom: 15px; border-radius: 4px; font-size: 14px;';
-                warning.innerHTML = '<strong>Внимание:</strong> Для получения ссылок на файлы сначала сохраните сущность. После создания вы сможете редактировать её и загружать файлы для получения ссылок.';
+                warning.innerHTML = '<strong>Внимание:</strong> Сначала создайте сущность, затем вы сможете загрузить файлы и получить ссылки для вставки в описание.';
                 modalBody.insertBefore(warning, modalBody.firstChild);
             }
             
-            this.modal.querySelector('.media-upload-section').style.display = 'none';
-            this.modal.querySelector('#mediaModalSaveBtn').style.display = 'none';
+            const uploadSection = this.modal.querySelector('.media-upload-section');
+            const saveBtn = this.modal.querySelector('#mediaModalSaveBtn');
+            const clearBtn = this.modal.querySelector('#clearAllBtn');
+            
+            if (uploadSection) uploadSection.style.display = 'none';
+            if (saveBtn) saveBtn.style.display = 'none';
+            if (clearBtn) clearBtn.style.display = 'none';
         } else {
+            const warning = this.modal.querySelector('.create-mode-warning');
+            if (warning) warning.remove();
+            
             const uploadSection = this.modal.querySelector('.media-upload-section');
             if (uploadSection) uploadSection.style.display = 'block';
             
@@ -585,7 +616,9 @@ class DescriptionMediaModal {
     }
     
     close() {
-        this.modal.style.display = 'none';
+        if (this.modal) {
+            this.modal.style.display = 'none';
+        }
         document.body.style.overflow = '';
         this.revokeBlobUrls();
     }
