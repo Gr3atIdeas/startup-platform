@@ -15,7 +15,9 @@ class DescriptionMediaModal {
         
         this.modal = null;
         this.files = [];
-        this.tempFiles = []; // Для режима создания
+        this.tempFiles = [];
+        this.uploadingFiles = new Set();
+        this.blobUrls = new Map();
         
         this.init();
     }
@@ -169,20 +171,32 @@ class DescriptionMediaModal {
         if (this.files.length === 0) {
             galleryEmpty.style.display = 'block';
             clearAllBtn.style.display = 'none';
+            this.revokeBlobUrls();
             return;
         }
         
         galleryEmpty.style.display = 'none';
         clearAllBtn.style.display = 'block';
         
-        // Очищаем галерею
+        this.revokeBlobUrls();
+        
         galleryGrid.innerHTML = '';
         
-        // Добавляем файлы
         this.files.forEach((file, index) => {
             const fileItem = this.createFileItem(file, index);
             galleryGrid.appendChild(fileItem);
         });
+    }
+    
+    revokeBlobUrls() {
+        this.blobUrls.forEach(url => URL.revokeObjectURL(url));
+        this.blobUrls.clear();
+    }
+    
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
     
     createFileItem(file, index) {
@@ -191,36 +205,65 @@ class DescriptionMediaModal {
         fileItem.className = 'gallery-item';
         fileItem.dataset.index = index;
         
-        const preview = isImage ? 
-            `<img src="${URL.createObjectURL(file)}" alt="${file.name}" class="file-preview">` :
-            `<div class="video-preview">
-                <div class="video-icon">▶</div>
-                <div class="video-name">${file.name}</div>
-             </div>`;
+        const escapedName = this.escapeHtml(file.name);
+        let escapedUrl;
+        
+        if (file.isExisting) {
+            escapedUrl = this.escapeHtml(file.url);
+        } else {
+            const blobUrl = URL.createObjectURL(file);
+            this.blobUrls.set(index, blobUrl);
+            escapedUrl = blobUrl;
+        }
+        
+        let preview;
+        if (file.isExisting) {
+            preview = isImage ? 
+                `<img src="${escapedUrl}" alt="${escapedName}" class="file-preview">` :
+                `<div class="video-preview">
+                    <div class="video-icon">▶</div>
+                    <div class="video-name">${escapedName}</div>
+                 </div>`;
+        } else {
+            preview = isImage ? 
+                `<img src="${escapedUrl}" alt="${escapedName}" class="file-preview">` :
+                `<div class="video-preview">
+                    <div class="video-icon">▶</div>
+                    <div class="video-name">${escapedName}</div>
+                 </div>`;
+        }
+        
+        const copyButtonHtml = this.isCreateMode ? '' : '<button type="button" class="btn-copy-url" data-index="' + index + '">Копировать URL</button>';
         
         fileItem.innerHTML = `
             <div class="file-preview-container">
                 ${preview}
                 <div class="file-overlay">
-                    <button type="button" class="btn-copy-url" data-index="${index}">Копировать URL</button>
+                    ${copyButtonHtml}
                     <button type="button" class="btn-remove-file" data-index="${index}">×</button>
                 </div>
             </div>
             <div class="file-info">
-                <div class="file-name">${file.name}</div>
+                <div class="file-name">${escapedName}</div>
                 <div class="file-type">${isImage ? 'Изображение' : 'Видео'}</div>
             </div>
         `;
         
-        // Обработчики событий
-        fileItem.querySelector('.btn-copy-url').addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.copyFileUrl(index);
-        });
+        if (!this.isCreateMode) {
+            const copyBtn = fileItem.querySelector('.btn-copy-url');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const currentIndex = parseInt(e.target.dataset.index, 10);
+                    this.copyFileUrl(currentIndex);
+                });
+            }
+        }
         
         fileItem.querySelector('.btn-remove-file').addEventListener('click', (e) => {
             e.stopPropagation();
-            this.removeFile(index);
+            const currentIndex = parseInt(e.target.dataset.index, 10);
+            this.removeFile(currentIndex);
         });
         
         return fileItem;
@@ -230,27 +273,57 @@ class DescriptionMediaModal {
         const file = this.files[index];
         if (!file) return;
         
-        // Для режима создания генерируем временный URL
-        if (this.isCreateMode) {
-            const tempUrl = URL.createObjectURL(file);
-            this.copyToClipboard(tempUrl);
-            this.showNotification('URL скопирован в буфер обмена', 'success');
+        if (file.isExisting) {
+            const isImage = file.type.startsWith('image/');
+            const tag = isImage ? 
+                `<img src="${file.url}" alt="${file.name}">` :
+                `<video src="${file.url}" controls></video>`;
+            
+            this.copyToClipboard(tag);
+            this.showNotification('HTML тег скопирован в буфер обмена', 'success');
             return;
         }
         
-        // Для режима редактирования загружаем файл и получаем URL
+        const fileKey = `${file.name}_${file.size}_${file.lastModified || Date.now()}`;
+        
+        if (this.uploadingFiles.has(fileKey)) {
+            this.showNotification('Файл уже загружается, подождите...', 'warning');
+            return;
+        }
+        
+        this.uploadingFiles.add(fileKey);
+        
         this.uploadFile(file).then(result => {
+            this.uploadingFiles.delete(fileKey);
+            
             if (result.success) {
                 const fileData = result.files[0];
                 const tag = fileData.file_type === 'image' ? 
                     `<img src="${fileData.file_url}" alt="${fileData.file_name}">` :
                     `<video src="${fileData.file_url}" controls></video>`;
                 
+                const currentIndex = this.files.indexOf(file);
+                if (currentIndex !== -1) {
+                    this.files[currentIndex] = {
+                        id: fileData.file_id,
+                        name: fileData.file_name,
+                        type: fileData.file_type === 'image' ? 'image/jpeg' : 'video/mp4',
+                        url: fileData.file_url,
+                        isExisting: true
+                    };
+                }
+                
+                this.updateGallery();
+                this.updateSaveButton();
+                
                 this.copyToClipboard(tag);
                 this.showNotification('HTML тег скопирован в буфер обмена', 'success');
             } else {
                 this.showNotification('Ошибка загрузки файла: ' + result.error, 'error');
             }
+        }).catch(error => {
+            this.uploadingFiles.delete(fileKey);
+            this.showNotification('Ошибка загрузки файла', 'error');
         });
     }
     
@@ -266,6 +339,11 @@ class DescriptionMediaModal {
                 },
                 body: formData
             });
+            
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+                return { success: false, error: errorData.error || 'Server error' };
+            }
             
             return await response.json();
         } catch (error) {
@@ -287,13 +365,76 @@ class DescriptionMediaModal {
         }
     }
     
-    removeFile(index) {
+    async removeFile(index) {
+        const file = this.files[index];
+        
+        if (file.isExisting && !this.isCreateMode) {
+            try {
+                const response = await fetch(`/delete-description-media/${this.entityType}/${this.entityId}/${file.id}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': this.getCSRFToken()
+                    }
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+                    this.showNotification('Ошибка удаления файла: ' + (errorData.error || 'Server error'), 'error');
+                    return;
+                }
+                
+                const result = await response.json();
+                
+                if (!result.success) {
+                    this.showNotification('Ошибка удаления файла', 'error');
+                    return;
+                }
+                
+                this.showNotification('Файл удален', 'success');
+            } catch (error) {
+                this.showNotification('Ошибка удаления файла', 'error');
+                return;
+            }
+        }
+        
         this.files.splice(index, 1);
         this.updateGallery();
         this.updateSaveButton();
     }
     
-    clearAllFiles() {
+    async clearAllFiles() {
+        const existingFiles = this.files.filter(file => file.isExisting);
+        const newFiles = this.files.filter(file => !file.isExisting);
+        
+        if (existingFiles.length > 0 && !this.isCreateMode) {
+            if (!confirm(`Вы уверены, что хотите удалить все ${this.files.length} файлов? Это действие необратимо.`)) {
+                return;
+            }
+            
+            const deletePromises = existingFiles.map(async file => {
+                const response = await fetch(`/delete-description-media/${this.entityType}/${this.entityId}/${file.id}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': this.getCSRFToken()
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to delete ${file.name}`);
+                }
+                
+                return response.json();
+            });
+            
+            try {
+                const results = await Promise.all(deletePromises);
+                this.showNotification('Все файлы удалены', 'success');
+            } catch (error) {
+                this.showNotification('Ошибка удаления некоторых файлов', 'error');
+                return;
+            }
+        }
+        
         this.files = [];
         this.updateGallery();
         this.updateSaveButton();
@@ -301,17 +442,29 @@ class DescriptionMediaModal {
     
     updateSaveButton() {
         const saveBtn = document.getElementById('mediaModalSaveBtn');
-        saveBtn.disabled = this.files.length === 0;
+        if (this.isCreateMode) {
+            saveBtn.disabled = this.files.length === 0;
+        } else {
+            const hasNewFiles = this.files.some(file => !file.isExisting);
+            saveBtn.disabled = false;
+            saveBtn.textContent = hasNewFiles ? 'Загрузить' : 'Закрыть';
+        }
     }
     
     async loadExistingFiles() {
         try {
             const response = await fetch(`/get-description-media/${this.entityType}/${this.entityId}/`);
+            
+            if (!response.ok) {
+                console.error('Failed to load existing files:', response.status);
+                return;
+            }
+            
             const result = await response.json();
             
-            if (result.success) {
-                // Конвертируем существующие файлы в формат для отображения
+            if (result.success && Array.isArray(result.files)) {
                 this.files = result.files.map(fileData => ({
+                    id: fileData.id,
                     name: fileData.name,
                     type: fileData.type === 'image' ? 'image/jpeg' : 'video/mp4',
                     url: fileData.url,
@@ -322,16 +475,36 @@ class DescriptionMediaModal {
                 this.updateSaveButton();
             }
         } catch (error) {
-            // Ошибка загрузки файлов - не критично
+            console.error('Error loading existing files:', error);
         }
     }
     
-    saveFiles() {
+    async saveFiles() {
         if (this.isCreateMode) {
-            // В режиме создания сохраняем файлы в сессию
             this.saveToSession();
         } else {
-            // В режиме редактирования файлы уже загружены
+            const newFiles = this.files.filter(file => !file.isExisting);
+            
+            if (newFiles.length > 0) {
+                const uploadPromises = newFiles.map(file => this.uploadFile(file));
+                
+                try {
+                    const results = await Promise.all(uploadPromises);
+                    const failedUploads = results.filter(r => !r.success);
+                    
+                    if (failedUploads.length > 0) {
+                        this.showNotification('Некоторые файлы не удалось загрузить', 'error');
+                        return;
+                    }
+                    
+                    this.showNotification('Файлы успешно загружены', 'success');
+                    await this.loadExistingFiles();
+                } catch (error) {
+                    this.showNotification('Ошибка загрузки файлов', 'error');
+                    return;
+                }
+            }
+            
             this.close();
         }
     }
@@ -387,11 +560,34 @@ class DescriptionMediaModal {
     show() {
         this.modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+        
+        if (this.isCreateMode) {
+            const modalBody = this.modal.querySelector('.modal-body');
+            let warning = modalBody.querySelector('.create-mode-warning');
+            
+            if (!warning) {
+                warning = document.createElement('div');
+                warning.className = 'create-mode-warning';
+                warning.style.cssText = 'background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 10px; margin-bottom: 15px; border-radius: 4px; font-size: 14px;';
+                warning.innerHTML = '<strong>Внимание:</strong> Для получения ссылок на файлы сначала сохраните сущность. После создания вы сможете редактировать её и загружать файлы для получения ссылок.';
+                modalBody.insertBefore(warning, modalBody.firstChild);
+            }
+            
+            this.modal.querySelector('.media-upload-section').style.display = 'none';
+            this.modal.querySelector('#mediaModalSaveBtn').style.display = 'none';
+        } else {
+            const uploadSection = this.modal.querySelector('.media-upload-section');
+            if (uploadSection) uploadSection.style.display = 'block';
+            
+            const saveBtn = this.modal.querySelector('#mediaModalSaveBtn');
+            if (saveBtn) saveBtn.style.display = 'inline-block';
+        }
     }
     
     close() {
         this.modal.style.display = 'none';
         document.body.style.overflow = '';
+        this.revokeBlobUrls();
     }
     
     getCSRFToken() {

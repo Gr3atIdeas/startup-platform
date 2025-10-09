@@ -177,4 +177,5 @@ urlpatterns = [
     ),
     path("upload-description-media/<str:entity_type>/<int:entity_id>/", views.upload_description_media, name="upload_description_media"),
     path("get-description-media/<str:entity_type>/<int:entity_id>/", views.get_description_media, name="get_description_media"),
+    path("delete-description-media/<str:entity_type>/<int:entity_id>/<str:file_id>/", views.delete_description_media, name="delete_description_media"),
 ]

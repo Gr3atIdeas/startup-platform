@@ -9426,11 +9426,14 @@ def get_description_media(request, entity_type, entity_id):
         
         files = []
         for file_storage in file_storages:
-            file_url = f"{settings.S3_PUBLIC_BASE_URL}/{entity_type}/{entity_id}/uploaded_content/{file_storage.file_url}"
-            
-            # Определяем тип файла по расширению
             original_name = getattr(file_storage, 'original_file_name', '')
             file_ext = os.path.splitext(original_name)[1].lower()
+            
+            base_name = os.path.splitext(original_name)[0]
+            safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+            safe_name = slugify(safe_base_name) + file_ext
+            
+            file_url = f"{settings.S3_PUBLIC_BASE_URL}/{entity_type}/{entity_id}/uploaded_content/{file_storage.file_url}_{safe_name}"
             
             if file_ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp']:
                 file_type = 'image'
@@ -9454,6 +9457,58 @@ def get_description_media(request, entity_type, entity_id):
         
     except Exception as e:
         logger.error(f"Error in get_description_media: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': 'Internal server error'}, status=500)
+
+
+@login_required
+def delete_description_media(request, entity_type, entity_id, file_id):
+    if request.method != 'DELETE':
+        return JsonResponse({'success': False, 'error': 'Only DELETE method allowed'}, status=405)
+    
+    try:
+        valid_entity_types = ['startup', 'franchise', 'agency', 'specialist']
+        if entity_type not in valid_entity_types:
+            return JsonResponse({'success': False, 'error': 'Invalid entity type'}, status=400)
+        
+        if entity_type == 'startup':
+            entity = get_object_or_404(Startups, startup_id=entity_id)
+        elif entity_type == 'franchise':
+            entity = get_object_or_404(Franchises, franchise_id=entity_id)
+        elif entity_type == 'agency':
+            entity = get_object_or_404(Agencies, agency_id=entity_id)
+        elif entity_type == 'specialist':
+            entity = get_object_or_404(Specialists, specialist_id=entity_id)
+        
+        if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
+            return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
+        
+        entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name=entity_type)
+        file_storage = get_object_or_404(
+            FileStorage,
+            entity_type=entity_type_obj,
+            entity_id=entity_id,
+            file_type__type_name='uploaded_content',
+            file_url=file_id
+        )
+        
+        base_name = os.path.splitext(file_storage.original_file_name)[0]
+        ext = os.path.splitext(file_storage.original_file_name)[1]
+        safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+        safe_name = slugify(safe_base_name) + ext
+        file_path = f"{entity_type}/{entity_id}/uploaded_content/{file_id}_{safe_name}"
+        
+        try:
+            if default_storage.exists(file_path):
+                default_storage.delete(file_path)
+        except Exception as e:
+            logger.warning(f"Could not delete file from storage: {e}")
+        
+        file_storage.delete()
+        
+        return JsonResponse({'success': True})
+        
+    except Exception as e:
+        logger.error(f"Error in delete_description_media: {e}", exc_info=True)
         return JsonResponse({'success': False, 'error': 'Internal server error'}, status=500)
 
 
