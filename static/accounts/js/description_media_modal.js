@@ -35,8 +35,8 @@ class DescriptionMediaModal {
         }
         
         const modalHTML = `
-            <div id="descriptionMediaModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); align-items: center; justify-content: center; z-index: 9999;">
-                <div class="modal-dialog media-modal-dialog" style="background: white; border-radius: 8px; max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin: 20px;">
+            <div id="descriptionMediaModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; padding: 20px; overflow-y: auto;">
+                <div class="modal-dialog media-modal-dialog" style="background: white; border-radius: 8px; max-width: 800px; margin: 50px auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3); position: relative;">
                     <div class="modal-header" style="padding: 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
                         <div class="modal-title" style="font-size: 20px; font-weight: 600; color: #333;">Управление медиа-контентом</div>
                         <button type="button" class="modal-close-btn" id="mediaModalCloseBtn" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #999;">×</button>
@@ -97,8 +97,20 @@ class DescriptionMediaModal {
         
         if (this.modal) {
             this.modal.addEventListener('click', (e) => {
-                // Закрывать только если кликнули НЕПОСРЕДСТВЕННО на overlay (фон), а не на dialog внутри
-                if (e.target === e.currentTarget) {
+                // Закрывать ТОЛЬКО если кликнули на сам overlay, а НЕ на modal-dialog или его содержимое
+                const clickedElement = e.target;
+                const isOverlay = clickedElement.id === 'descriptionMediaModal' || clickedElement.classList.contains('modal-overlay');
+                const isDialog = clickedElement.classList.contains('modal-dialog') || clickedElement.closest('.modal-dialog');
+                
+                console.log('Click detected:', {
+                    clickedElement: clickedElement.className || clickedElement.tagName,
+                    isOverlay: isOverlay,
+                    isDialog: isDialog,
+                    target: e.target,
+                    currentTarget: e.currentTarget
+                });
+                
+                if (isOverlay && !isDialog) {
                     console.log('Clicked on overlay background, closing modal');
                     this.close();
                 } else {
@@ -246,13 +258,15 @@ class DescriptionMediaModal {
         
         let preview;
         if (isImage) {
-            preview = `<img src="${fileUrl}" alt="${escapedName}" style="width: 100%; height: 100%; object-fit: cover;">`;
+            preview = `<img src="${fileUrl}" alt="${escapedName}" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="console.error('Failed to load image:', this.src)">`;
         } else {
-            preview = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #666; height: 100%;">
+            preview = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #666; height: 100%; width: 100%;">
                     <div style="font-size: 40px; margin-bottom: 8px;">▶</div>
                     <div style="font-size: 12px; text-align: center; padding: 0 10px; word-break: break-word;">Видео</div>
                  </div>`;
         }
+        
+        console.log('Preview HTML:', preview.substring(0, 100));
         
         const removeButtonHtml = (this.isCreateMode || file.isGallery) ? '' : '<button type="button" class="btn-remove-file" data-index="' + index + '" style="position: absolute; top: 5px; right: 5px; background: rgba(220,53,69,0.9); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 16px; line-height: 1; z-index: 10;">×</button>';
         const sourceLabel = file.isGallery ? '<span class="file-source-label" style="color: #28a745; font-size: 11px; font-weight: 600;">из галереи</span>' : '';
@@ -272,8 +286,16 @@ class DescriptionMediaModal {
         `;
         
         if (!this.isCreateMode) {
+            console.log('Adding click listener to fileItem, index:', index);
+            
             fileItem.addEventListener('click', (e) => {
-                console.log('File item clicked, target:', e.target, 'index:', index);
+                e.stopPropagation(); // ВАЖНО! Останавливаем всплытие до overlay
+                console.log('File item clicked!', {
+                    target: e.target.className || e.target.tagName,
+                    index: index,
+                    isRemoveButton: e.target.classList.contains('btn-remove-file')
+                });
+                
                 if (!e.target.classList.contains('btn-remove-file')) {
                     console.log('Not remove button, calling copyFileUrlAndClose');
                     this.copyFileUrlAndClose(index);
@@ -283,6 +305,7 @@ class DescriptionMediaModal {
             });
             
             fileItem.addEventListener('mouseenter', () => {
+                console.log('Mouse entered fileItem');
                 fileItem.style.borderColor = '#007bff';
                 fileItem.style.boxShadow = '0 2px 8px rgba(0,123,255,0.3)';
             });
@@ -684,8 +707,9 @@ class DescriptionMediaModal {
     show() {
         if (!this.modal) return;
         
-        this.modal.style.display = 'flex';
+        this.modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
+        console.log('Modal shown, display set to block');
         
         if (this.isCreateMode) {
             const modalBody = this.modal.querySelector('.modal-body');
