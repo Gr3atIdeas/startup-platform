@@ -84,13 +84,15 @@ class DescriptionMediaModal {
         const saveBtn = document.getElementById('mediaModalSaveBtn');
         
         if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 this.close();
             });
         }
         
         if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => {
+            cancelBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 this.close();
             });
         }
@@ -119,20 +121,23 @@ class DescriptionMediaModal {
         }
         
         if (uploadBtn && fileInput) {
-            uploadBtn.addEventListener('click', () => {
+            uploadBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 fileInput.click();
             });
             fileInput.addEventListener('change', (e) => this.handleFileSelect(e.target.files));
         }
         
         if (clearAllBtn) {
-            clearAllBtn.addEventListener('click', () => {
+            clearAllBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 this.clearAllFiles();
             });
         }
         
         if (saveBtn) {
-            saveBtn.addEventListener('click', () => {
+            saveBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 this.saveFiles();
             });
         }
@@ -255,24 +260,9 @@ class DescriptionMediaModal {
             console.log('Created blob URL:', blobUrl);
         }
         
-        // Для существующих файлов попробуем несколько вариантов URL
-        let fallbackUrl = null;
-        if (file.isExisting) {
-            // Попробуем вариант без подчеркивания перед расширением (для всех расширений)
-            // Замена _. на . (например: {uuid}_.png -> {uuid}.png)
-            const urlWithoutUnderscore = fileUrl.replace(/(_)(\.[^.]+)$/, '$2');
-            if (urlWithoutUnderscore !== fileUrl) {
-                fallbackUrl = urlWithoutUnderscore;
-                console.log('Fallback URL generated:', fallbackUrl);
-            }
-        }
-        
         let preview;
         if (isImage) {
-            const onerrorHandler = fallbackUrl 
-                ? `onerror="console.error('Failed:', this.src); if(this.src !== '${fallbackUrl}') { this.src='${fallbackUrl}'; } else { this.style.display='none'; this.nextElementSibling.style.display='flex'; }"` 
-                : `onerror="console.error('Failed:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';"`;
-            preview = `<img src="${fileUrl}" alt="${escapedName}" style="width: 100%; height: 100%; object-fit: cover; display: block;" ${onerrorHandler}>
+            preview = `<img src="${fileUrl}" alt="${escapedName}" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="console.error('Failed to load:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';">
                        <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: #f0f0f0; color: #666; font-size: 12px; text-align: center; padding: 10px; box-sizing: border-box;">
                            <div>
                                <div style="font-size: 40px; margin-bottom: 8px;">🖼️</div>
