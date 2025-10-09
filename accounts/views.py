@@ -9258,13 +9258,15 @@ def delete_investment_franchise(request, franchise_id, user_id):
 
 
 @login_required
-@require_POST
 def upload_description_media(request, entity_type, entity_id):
     """
     API endpoint для загрузки медиа-контента в описание
     """
-    print(f"[UPLOAD] Request received: user={request.user.username}, entity_type={entity_type}, entity_id={entity_id}")
+    print(f"[UPLOAD] Request received: user={request.user.username}, entity_type={entity_type}, entity_id={entity_id}, method={request.method}")
     from accounts.utils import get_file_url as utils_get_file_url
+    
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Only POST method allowed'}, status=405)
     
     try:
         # Проверяем тип сущности
@@ -9415,6 +9417,7 @@ def get_description_media(request, entity_type, entity_id):
     """
     API endpoint для получения списка загруженных медиа-файлов
     """
+    print(f"[GET_MEDIA] Request received: entity_type={entity_type}, entity_id={entity_id}, method={request.method}")
     if request.method != 'GET':
         return JsonResponse({'success': False, 'error': 'Only GET method allowed'}, status=405)
     
@@ -9464,7 +9467,11 @@ def get_description_media(request, entity_type, entity_id):
             original_name = getattr(file_storage, 'original_file_name', '')
             file_ext = os.path.splitext(original_name)[1].lower()
             
-            file_url = f"{settings.AWS_S3_ENDPOINT_URL.rstrip('/')}/{settings.AWS_STORAGE_BUCKET_NAME}/{file_storage.file_path}"
+            if hasattr(file_storage, 'file_path') and file_storage.file_path:
+                file_url = f"{settings.AWS_S3_ENDPOINT_URL.rstrip('/')}/{settings.AWS_STORAGE_BUCKET_NAME}/{file_storage.file_path}"
+            else:
+                logger.warning(f"file_storage.file_path is empty for {file_storage.file_url}, skipping")
+                continue
             
             if file_ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']:
                 file_type = 'image'
@@ -9486,7 +9493,11 @@ def get_description_media(request, entity_type, entity_id):
             original_name = getattr(file_storage, 'original_file_name', '')
             file_ext = os.path.splitext(original_name)[1].lower()
             
-            file_url = f"{settings.AWS_S3_ENDPOINT_URL.rstrip('/')}/{settings.AWS_STORAGE_BUCKET_NAME}/{file_storage.file_path}"
+            if hasattr(file_storage, 'file_path') and file_storage.file_path:
+                file_url = f"{settings.AWS_S3_ENDPOINT_URL.rstrip('/')}/{settings.AWS_STORAGE_BUCKET_NAME}/{file_storage.file_path}"
+            else:
+                logger.warning(f"file_storage.file_path is empty for {file_storage.file_url}, skipping")
+                continue
             
             if file_ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']:
                 file_type = 'image'
@@ -9510,8 +9521,11 @@ def get_description_media(request, entity_type, entity_id):
         })
         
     except Exception as e:
+        import traceback
+        print(f"[ERROR] get_description_media failed: {e}")
+        print(traceback.format_exc())
         logger.error(f"Error in get_description_media: {e}", exc_info=True)
-        return JsonResponse({'success': False, 'error': 'Internal server error'}, status=500)
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
 @login_required
