@@ -9262,6 +9262,8 @@ def upload_description_media(request, entity_type, entity_id):
     """
     API endpoint для загрузки медиа-контента в описание
     """
+    from accounts.utils import get_file_url as utils_get_file_url
+    
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'Only POST method allowed'}, status=405)
     
@@ -9282,11 +9284,12 @@ def upload_description_media(request, entity_type, entity_id):
             entity = get_object_or_404(Specialists, specialist_id=entity_id)
         
         # Проверяем права доступа
-        is_owner = request.user == entity.owner
+        is_owner = entity.owner and request.user == entity.owner
         has_role = hasattr(request.user, 'role') and request.user.role
         is_moderator = has_role and request.user.role.role_name == 'moderator' if has_role else False
         
-        logger.info(f"Upload access check: user={request.user.id}, owner={entity.owner.id}, is_owner={is_owner}, has_role={has_role}, is_moderator={is_moderator}")
+        owner_id = entity.owner.id if entity.owner else 'None'
+        logger.info(f"Upload access check: user={request.user.id}, owner={owner_id}, is_owner={is_owner}, has_role={has_role}, is_moderator={is_moderator}")
         
         if not (is_owner or is_moderator):
             logger.warning(f"Upload permission denied for user {request.user.id} on {entity_type} {entity_id}")
@@ -9372,7 +9375,6 @@ def upload_description_media(request, entity_type, entity_id):
                 )
                 
                 # Получаем URL файла через get_file_url (правильно обрабатывает все имена файлов)
-                from accounts.utils import get_file_url as utils_get_file_url
                 file_url = utils_get_file_url(
                     file_id=file_id,
                     entity_id=entity_id,
@@ -9436,7 +9438,11 @@ def get_description_media(request, entity_type, entity_id):
             entity = get_object_or_404(Specialists, specialist_id=entity_id)
         
         # Проверяем права доступа
-        if not (request.user == entity.owner or (hasattr(request.user, 'role') and request.user.role and request.user.role.role_name == 'moderator')):
+        is_owner = entity.owner and request.user == entity.owner
+        has_role = hasattr(request.user, 'role') and request.user.role
+        is_moderator = has_role and request.user.role.role_name == 'moderator' if has_role else False
+        
+        if not (is_owner or is_moderator):
             return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
         
         entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name=entity_type)
@@ -9546,7 +9552,12 @@ def delete_description_media(request, entity_type, entity_id, file_id):
         elif entity_type == 'specialist':
             entity = get_object_or_404(Specialists, specialist_id=entity_id)
         
-        if not (request.user == entity.owner or (hasattr(request.user, 'role') and request.user.role and request.user.role.role_name == 'moderator')):
+        # Проверяем права доступа
+        is_owner = entity.owner and request.user == entity.owner
+        has_role = hasattr(request.user, 'role') and request.user.role
+        is_moderator = has_role and request.user.role.role_name == 'moderator' if has_role else False
+        
+        if not (is_owner or is_moderator):
             return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
         
         entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name=entity_type)

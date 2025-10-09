@@ -254,7 +254,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             {% for creative_url in agency.creatives_urls %}
                                 <div class="file-preview-item existing-file" data-file-id="{{ creative_url }}">
                                     <img src="{% get_file_url_tag creative_url agency.agency_id 'creative' 'agency' %}" alt="Креатив" style="max-width: 200px; max-height: 150px;">
-                                    <p>{% get_file_original_name creative_url agency.agency_id 'creative' 'agency' %}</p>
                                     <div class="slider-checkbox-container">
                                         <input type="checkbox" 
                                                id="slider_{{ creative_url }}" 
