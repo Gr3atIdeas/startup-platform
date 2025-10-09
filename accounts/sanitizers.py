@@ -56,6 +56,8 @@ def validate_media_urls(html_content):
         allowed_domains = [
             getattr(settings, 'AWS_S3_PUBLIC_BASE_URL', ''),
             getattr(settings, 'S3_PUBLIC_BASE_URL', ''),
+            'storage.yandexcloud.net',
+            getattr(settings, 'AWS_S3_ENDPOINT_URL', ''),
         ]
         # Убираем пустые строки
         allowed_domains = [domain for domain in allowed_domains if domain]

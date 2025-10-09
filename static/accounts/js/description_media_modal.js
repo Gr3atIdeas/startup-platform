@@ -349,6 +349,53 @@ class DescriptionMediaModal {
             return;
         }
         
+        // Если файл еще не загружен на сервер, сначала загружаем
+        if (!file.isExisting) {
+            console.log('File not uploaded yet, uploading first...');
+            this.showNotification('Загрузка файла на сервер...', 'info');
+            
+            try {
+                const result = await this.uploadFile(file);
+                
+                if (result.success && result.files && result.files.length > 0) {
+                    const uploadedFile = result.files[0];
+                    
+                    // Обновляем файл в массиве
+                    this.files[index] = {
+                        id: uploadedFile.file_id,
+                        name: uploadedFile.file_name,
+                        type: uploadedFile.file_type === 'image' ? 'image/jpeg' : 'video/mp4',
+                        url: uploadedFile.file_url,
+                        isExisting: true,
+                        source: 'uploaded',
+                        isGallery: false
+                    };
+                    
+                    this.updateGallery();
+                    
+                    // Теперь копируем с правильным URL
+                    const isImage = uploadedFile.file_type === 'image';
+                    const tag = isImage ? 
+                        `<img src="${uploadedFile.file_url}" alt="${uploadedFile.file_name}">` :
+                        `<video src="${uploadedFile.file_url}" controls></video>`;
+                    
+                    await this.copyToClipboard(tag);
+                    this.showNotification('HTML тег скопирован в буфер обмена', 'success');
+                    
+                    setTimeout(() => {
+                        this.close();
+                    }, 500);
+                } else {
+                    this.showNotification('Ошибка загрузки файла: ' + (result.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                this.showNotification('Ошибка загрузки файла', 'error');
+            }
+            return;
+        }
+        
+        // Файл уже загружен, просто копируем тег
         const isImage = file.type.startsWith('image/');
         const tag = isImage ? 
             `<img src="${file.url}" alt="${file.name}">` :

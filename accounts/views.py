@@ -9282,8 +9282,18 @@ def upload_description_media(request, entity_type, entity_id):
             entity = get_object_or_404(Specialists, specialist_id=entity_id)
         
         # Проверяем права доступа
-        if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
-            return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
+        is_owner = request.user == entity.owner
+        has_role = hasattr(request.user, 'role') and request.user.role
+        is_moderator = has_role and request.user.role.role_name == 'moderator' if has_role else False
+        
+        logger.info(f"Upload access check: user={request.user.id}, owner={entity.owner.id}, is_owner={is_owner}, has_role={has_role}, is_moderator={is_moderator}")
+        
+        if not (is_owner or is_moderator):
+            logger.warning(f"Upload permission denied for user {request.user.id} on {entity_type} {entity_id}")
+            return JsonResponse({
+                'success': False, 
+                'error': f'Permission denied. You are not the owner of this {entity_type}.'
+            }, status=403)
         
         # Получаем файлы
         files = request.FILES.getlist('files')
@@ -9426,7 +9436,7 @@ def get_description_media(request, entity_type, entity_id):
             entity = get_object_or_404(Specialists, specialist_id=entity_id)
         
         # Проверяем права доступа
-        if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
+        if not (request.user == entity.owner or (hasattr(request.user, 'role') and request.user.role and request.user.role.role_name == 'moderator')):
             return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
         
         entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name=entity_type)
@@ -9536,7 +9546,7 @@ def delete_description_media(request, entity_type, entity_id, file_id):
         elif entity_type == 'specialist':
             entity = get_object_or_404(Specialists, specialist_id=entity_id)
         
-        if not (request.user == entity.owner or request.user.role.role_name == 'moderator'):
+        if not (request.user == entity.owner or (hasattr(request.user, 'role') and request.user.role and request.user.role.role_name == 'moderator')):
             return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
         
         entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name=entity_type)
