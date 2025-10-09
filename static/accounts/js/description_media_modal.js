@@ -36,13 +36,13 @@ class DescriptionMediaModal {
         
         const modalHTML = `
             <div id="descriptionMediaModal" class="modal-overlay" style="display: none;">
-                <div class="modal-dialog media-modal-dialog">
-                    <div class="modal-header">
-                        <div class="modal-title">Управление медиа-контентом</div>
-                        <button type="button" class="modal-close-btn" id="mediaModalCloseBtn">×</button>
+                <div class="modal-dialog media-modal-dialog" style="background: white; border-radius: 8px; max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                    <div class="modal-header" style="padding: 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="modal-title" style="font-size: 20px; font-weight: 600; color: #333;">Управление медиа-контентом</div>
+                        <button type="button" class="modal-close-btn" id="mediaModalCloseBtn" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #999;">×</button>
                     </div>
-                    <div class="modal-body">
-                        <div class="media-upload-section" style="padding: 15px; text-align: center;">
+                    <div class="modal-body" style="padding: 20px;">
+                        <div class="media-upload-section" style="padding: 15px; text-align: center; background: #f8f9fa; border-radius: 5px; margin-bottom: 20px;">
                             <input type="file" id="mediaFileInput" multiple accept="image/*,video/*" style="display: none;">
                             <button type="button" class="btn-upload-file" id="uploadFileBtn" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">
                                 Выбрать файлы
@@ -50,22 +50,22 @@ class DescriptionMediaModal {
                             <p style="margin-top: 10px; font-size: 12px; color: #666;">Изображения: JPG, PNG, GIF, WEBP (до 5MB) • Видео: MP4, MOV, AVI (до 50MB)</p>
                         </div>
                         <div class="media-gallery" id="mediaGallery">
-                            <div class="gallery-header">
-                                <h3>Загруженные файлы</h3>
+                            <div class="gallery-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h3 style="margin: 0; font-size: 16px; color: #333;">Загруженные файлы</h3>
                                 <div class="gallery-actions">
-                                    <button type="button" class="btn-clear-all" id="clearAllBtn" style="display: none;">Очистить все</button>
+                                    <button type="button" class="btn-clear-all" id="clearAllBtn" style="display: none; padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Очистить все</button>
                                 </div>
                             </div>
-                            <div class="gallery-grid" id="galleryGrid">
-                                <div class="gallery-empty" id="galleryEmpty">
+                            <div class="gallery-grid" id="galleryGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
+                                <div class="gallery-empty" id="galleryEmpty" style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999;">
                                     <p>Нет загруженных файлов</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn-secondary" id="mediaModalCancelBtn">Отмена</button>
-                        <button type="button" class="btn-primary" id="mediaModalSaveBtn" disabled>Сохранить</button>
+                    <div class="modal-footer" style="padding: 15px 20px; border-top: 1px solid #ddd; display: flex; justify-content: flex-end; gap: 10px;">
+                        <button type="button" class="btn-secondary" id="mediaModalCancelBtn" style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Отмена</button>
+                        <button type="button" class="btn-primary" id="mediaModalSaveBtn" disabled style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Сохранить</button>
                     </div>
                 </div>
             </div>
@@ -103,6 +103,13 @@ class DescriptionMediaModal {
                     this.close();
                 }
             });
+            
+            const dialog = this.modal.querySelector('.modal-dialog');
+            if (dialog) {
+                dialog.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            }
         }
         
         if (uploadBtn && fileInput) {
@@ -242,49 +249,48 @@ class DescriptionMediaModal {
         }
         
         let preview;
-        if (file.isExisting) {
-            preview = isImage ? 
-                `<img src="${escapedUrl}" alt="${escapedName}" class="file-preview">` :
-                `<div class="video-preview">
-                    <div class="video-icon">▶</div>
-                    <div class="video-name">${escapedName}</div>
-                 </div>`;
+        if (isImage) {
+            preview = `<img src="${escapedUrl}" alt="${escapedName}" style="width: 100%; height: 100%; object-fit: cover;">`;
         } else {
-            preview = isImage ? 
-                `<img src="${escapedUrl}" alt="${escapedName}" class="file-preview">` :
-                `<div class="video-preview">
-                    <div class="video-icon">▶</div>
-                    <div class="video-name">${escapedName}</div>
+            preview = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #666;">
+                    <div style="font-size: 40px; margin-bottom: 8px;">▶</div>
+                    <div style="font-size: 12px; text-align: center; padding: 0 10px; word-break: break-word;">Видео</div>
                  </div>`;
         }
         
-        const copyButtonHtml = this.isCreateMode ? '' : '<button type="button" class="btn-copy-url" data-index="' + index + '">Копировать URL</button>';
-        const removeButtonHtml = (this.isCreateMode || file.isGallery) ? '' : '<button type="button" class="btn-remove-file" data-index="' + index + '">×</button>';
-        const sourceLabel = file.isGallery ? '<span class="file-source-label" style="color: #28a745; font-size: 11px;">из галереи</span>' : '';
+        const removeButtonHtml = (this.isCreateMode || file.isGallery) ? '' : '<button type="button" class="btn-remove-file" data-index="' + index + '" style="position: absolute; top: 5px; right: 5px; background: rgba(220,53,69,0.9); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 16px; line-height: 1; z-index: 10;">×</button>';
+        const sourceLabel = file.isGallery ? '<span class="file-source-label" style="color: #28a745; font-size: 11px; font-weight: 600;">из галереи</span>' : '';
+        
+        fileItem.style.cssText = 'position: relative; border: 2px solid #ddd; border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.2s; background: white;';
+        fileItem.setAttribute('title', 'Нажмите для копирования ссылки');
         
         fileItem.innerHTML = `
-            <div class="file-preview-container">
+            <div class="file-preview-container" style="position: relative; width: 100%; height: 150px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                 ${preview}
-                <div class="file-overlay">
-                    ${copyButtonHtml}
-                    ${removeButtonHtml}
-                </div>
+                ${removeButtonHtml}
             </div>
-            <div class="file-info">
-                <div class="file-name">${escapedName}</div>
-                <div class="file-type">${isImage ? 'Изображение' : 'Видео'} ${sourceLabel}</div>
+            <div class="file-info" style="padding: 10px; background: white;">
+                <div class="file-name" style="font-size: 12px; font-weight: 500; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapedName}">${escapedName}</div>
+                <div class="file-type" style="font-size: 11px; color: #666; margin-top: 4px;">${isImage ? 'Изображение' : 'Видео'} ${sourceLabel}</div>
             </div>
         `;
         
         if (!this.isCreateMode) {
-            const copyBtn = fileItem.querySelector('.btn-copy-url');
-            if (copyBtn) {
-                copyBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const currentIndex = parseInt(e.target.dataset.index, 10);
-                    this.copyFileUrl(currentIndex);
-                });
-            }
+            fileItem.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('btn-remove-file')) {
+                    this.copyFileUrlAndClose(index);
+                }
+            });
+            
+            fileItem.addEventListener('mouseenter', () => {
+                fileItem.style.borderColor = '#007bff';
+                fileItem.style.boxShadow = '0 2px 8px rgba(0,123,255,0.3)';
+            });
+            
+            fileItem.addEventListener('mouseleave', () => {
+                fileItem.style.borderColor = '#ddd';
+                fileItem.style.boxShadow = 'none';
+            });
         }
         
         const removeBtn = fileItem.querySelector('.btn-remove-file');
@@ -297,6 +303,23 @@ class DescriptionMediaModal {
         }
         
         return fileItem;
+    }
+    
+    copyFileUrlAndClose(index) {
+        const file = this.files[index];
+        if (!file) return;
+        
+        const isImage = file.type.startsWith('image/');
+        const tag = isImage ? 
+            `<img src="${file.url}" alt="${file.name}">` :
+            `<video src="${file.url}" controls></video>`;
+        
+        this.copyToClipboard(tag);
+        this.showNotification('HTML тег скопирован в буфер обмена', 'success');
+        
+        setTimeout(() => {
+            this.close();
+        }, 500);
     }
     
     copyFileUrl(index) {
