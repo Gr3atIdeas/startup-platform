@@ -492,7 +492,8 @@ class DescriptionMediaModal {
             const response = await fetch(`/upload-description-media/${this.entityType}/${this.entityId}/`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': csrfToken
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: formData
             });
@@ -564,7 +565,8 @@ class DescriptionMediaModal {
                 const response = await fetch(`/delete-description-media/${this.entityType}/${this.entityId}/${file.id}/`, {
                     method: 'DELETE',
                     headers: {
-                        'X-CSRFToken': this.getCSRFToken()
+                        'X-CSRFToken': this.getCSRFToken(),
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 });
                 
@@ -614,7 +616,8 @@ class DescriptionMediaModal {
                 const response = await fetch(`/delete-description-media/${this.entityType}/${this.entityId}/${file.id}/`, {
                     method: 'DELETE',
                     headers: {
-                        'X-CSRFToken': this.getCSRFToken()
+                        'X-CSRFToken': this.getCSRFToken(),
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 });
                 

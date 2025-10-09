@@ -9258,14 +9258,13 @@ def delete_investment_franchise(request, franchise_id, user_id):
 
 
 @login_required
+@require_POST
 def upload_description_media(request, entity_type, entity_id):
     """
     API endpoint для загрузки медиа-контента в описание
     """
+    print(f"[UPLOAD] Request received: user={request.user.username}, entity_type={entity_type}, entity_id={entity_id}")
     from accounts.utils import get_file_url as utils_get_file_url
-    
-    if request.method != 'POST':
-        return JsonResponse({'success': False, 'error': 'Only POST method allowed'}, status=405)
     
     try:
         # Проверяем тип сущности
@@ -9416,8 +9415,6 @@ def get_description_media(request, entity_type, entity_id):
     """
     API endpoint для получения списка загруженных медиа-файлов
     """
-    from accounts.utils import get_file_url as utils_get_file_url
-    
     if request.method != 'GET':
         return JsonResponse({'success': False, 'error': 'Only GET method allowed'}, status=405)
     
@@ -9467,16 +9464,7 @@ def get_description_media(request, entity_type, entity_id):
             original_name = getattr(file_storage, 'original_file_name', '')
             file_ext = os.path.splitext(original_name)[1].lower()
             
-            file_url = utils_get_file_url(
-                file_id=file_storage.file_url,
-                entity_id=entity_id,
-                file_type='creative',
-                entity_type=entity_type
-            )
-            
-            if not file_url:
-                logger.warning(f"Не удалось получить URL для файла {file_storage.file_url}")
-                continue
+            file_url = f"{settings.AWS_S3_ENDPOINT_URL.rstrip('/')}/{settings.AWS_STORAGE_BUCKET_NAME}/{file_storage.file_path}"
             
             if file_ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']:
                 file_type = 'image'
@@ -9498,16 +9486,7 @@ def get_description_media(request, entity_type, entity_id):
             original_name = getattr(file_storage, 'original_file_name', '')
             file_ext = os.path.splitext(original_name)[1].lower()
             
-            file_url = utils_get_file_url(
-                file_id=file_storage.file_url,
-                entity_id=entity_id,
-                file_type='uploaded_content',
-                entity_type=entity_type
-            )
-            
-            if not file_url:
-                logger.warning(f"Не удалось получить URL для файла {file_storage.file_url}")
-                continue
+            file_url = f"{settings.AWS_S3_ENDPOINT_URL.rstrip('/')}/{settings.AWS_STORAGE_BUCKET_NAME}/{file_storage.file_path}"
             
             if file_ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']:
                 file_type = 'image'
