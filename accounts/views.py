@@ -3523,7 +3523,7 @@ def create_startup(request):
             
             # Сохранение catalog_card_image
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
-            if catalog_card_image:
+            if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 base_name = os.path.splitext(catalog_card_image.name)[0]
                 ext = os.path.splitext(catalog_card_image.name)[1]
@@ -3787,7 +3787,7 @@ def create_franchise(request):
 
             # Сохранение catalog_card_image
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
-            if catalog_card_image:
+            if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 base_name = os.path.splitext(catalog_card_image.name)[0]
                 ext = os.path.splitext(catalog_card_image.name)[1]
@@ -4015,7 +4015,7 @@ def create_agency(request):
             
             # Сохранение catalog_card_image
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
-            if catalog_card_image:
+            if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 base_name = os.path.splitext(catalog_card_image.name)[0]
                 ext = os.path.splitext(catalog_card_image.name)[1]
@@ -4165,7 +4165,7 @@ def create_specialist(request):
             
             # Сохранение catalog_card_image
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
-            if catalog_card_image:
+            if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 base_name = os.path.splitext(catalog_card_image.name)[0]
                 ext = os.path.splitext(catalog_card_image.name)[1]
@@ -4838,7 +4838,7 @@ def edit_startup(request, startup_id):
             
             # Обработка catalog_card_image
             catalog_card_image = form.cleaned_data.get("catalog_card_image") or request.FILES.get("catalog_card_image")
-            if catalog_card_image:
+            if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 base_name = os.path.splitext(catalog_card_image.name)[0]
                 ext = os.path.splitext(catalog_card_image.name)[1]
@@ -8444,7 +8444,7 @@ def edit_franchise(request, franchise_id):
             
             # Обработка catalog_card_image
             catalog_card_image = form.cleaned_data.get("catalog_card_image") or request.FILES.get("catalog_card_image")
-            if catalog_card_image:
+            if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 base_name = os.path.splitext(catalog_card_image.name)[0]
                 ext = os.path.splitext(catalog_card_image.name)[1]
@@ -8753,7 +8753,7 @@ def edit_agency(request, agency_id):
             
             # Обработка catalog_card_image
             catalog_card_image = form.cleaned_data.get("catalog_card_image") or request.FILES.get("catalog_card_image")
-            if catalog_card_image:
+            if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 base_name = os.path.splitext(catalog_card_image.name)[0]
                 ext = os.path.splitext(catalog_card_image.name)[1]
@@ -9065,7 +9065,7 @@ def edit_specialist(request, specialist_id):
             
             # Обработка catalog_card_image
             catalog_card_image = form.cleaned_data.get("catalog_card_image") or request.FILES.get("catalog_card_image")
-            if catalog_card_image:
+            if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 base_name = os.path.splitext(catalog_card_image.name)[0]
                 ext = os.path.splitext(catalog_card_image.name)[1]

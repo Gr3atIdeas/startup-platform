@@ -485,22 +485,31 @@ class DescriptionMediaModal {
         const formData = new FormData();
         formData.append('files', file);
         
+        const csrfToken = this.getCSRFToken();
+        console.log(`[UPLOAD] Uploading file: ${file.name}, CSRF: ${csrfToken}, URL: /upload-description-media/${this.entityType}/${this.entityId}/`);
+        
         try {
             const response = await fetch(`/upload-description-media/${this.entityType}/${this.entityId}/`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': this.getCSRFToken()
+                    'X-CSRFToken': csrfToken
                 },
                 body: formData
             });
             
+            console.log(`[UPLOAD] Response status: ${response.status} ${response.statusText}`);
+            
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+                console.error(`[UPLOAD] Error response:`, errorData);
                 return { success: false, error: errorData.error || 'Server error' };
             }
             
-            return await response.json();
+            const result = await response.json();
+            console.log(`[UPLOAD] Success:`, result);
+            return result;
         } catch (error) {
+            console.error(`[UPLOAD] Network error:`, error);
             return { success: false, error: 'Ошибка сети' };
         }
     }
