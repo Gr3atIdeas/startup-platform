@@ -273,7 +273,7 @@ class DescriptionMediaModal {
             preview = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #666; height: 100%; width: 100%;">
                     <div style="font-size: 40px; margin-bottom: 8px;">▶</div>
                     <div style="font-size: 12px; text-align: center; padding: 0 10px; word-break: break-word;">Видео</div>
-                 </div>`;
+             </div>`;
         }
         
         console.log('Preview HTML:', preview.substring(0, 100));

@@ -9289,9 +9289,11 @@ def upload_description_media(request, entity_type, entity_id):
         is_moderator = has_role and request.user.role.role_name == 'moderator' if has_role else False
         
         owner_id = entity.owner.id if entity.owner else 'None'
+        print(f"[UPLOAD] user={request.user.id} ({request.user.username}), owner={owner_id}, is_owner={is_owner}, has_role={has_role}, is_moderator={is_moderator}")
         logger.info(f"Upload access check: user={request.user.id}, owner={owner_id}, is_owner={is_owner}, has_role={has_role}, is_moderator={is_moderator}")
         
         if not (is_owner or is_moderator):
+            print(f"[UPLOAD] PERMISSION DENIED for user {request.user.id} on {entity_type} {entity_id}")
             logger.warning(f"Upload permission denied for user {request.user.id} on {entity_type} {entity_id}")
             return JsonResponse({
                 'success': False, 
