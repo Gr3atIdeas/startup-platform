@@ -35,8 +35,8 @@ class DescriptionMediaModal {
         }
         
         const modalHTML = `
-            <div id="descriptionMediaModal" class="modal-overlay" style="display: none;">
-                <div class="modal-dialog media-modal-dialog" style="background: white; border-radius: 8px; max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <div id="descriptionMediaModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); align-items: center; justify-content: center; z-index: 9999;">
+                <div class="modal-dialog media-modal-dialog" style="background: white; border-radius: 8px; max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin: 20px;">
                     <div class="modal-header" style="padding: 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
                         <div class="modal-title" style="font-size: 20px; font-weight: 600; color: #333;">Управление медиа-контентом</div>
                         <button type="button" class="modal-close-btn" id="mediaModalCloseBtn" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #999;">×</button>
@@ -84,52 +84,40 @@ class DescriptionMediaModal {
         const saveBtn = document.getElementById('mediaModalSaveBtn');
         
         if (closeBtn) {
-            closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
+            closeBtn.addEventListener('click', () => {
                 this.close();
             });
         }
         
         if (cancelBtn) {
-            cancelBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
+            cancelBtn.addEventListener('click', () => {
                 this.close();
             });
         }
         
         if (this.modal) {
             this.modal.addEventListener('click', (e) => {
-                if (e.target === this.modal) {
+                if (e.target.classList.contains('modal-overlay')) {
                     this.close();
                 }
             });
-            
-            const dialog = this.modal.querySelector('.modal-dialog');
-            if (dialog) {
-                dialog.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
-            }
         }
         
         if (uploadBtn && fileInput) {
-            uploadBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
+            uploadBtn.addEventListener('click', () => {
                 fileInput.click();
             });
             fileInput.addEventListener('change', (e) => this.handleFileSelect(e.target.files));
         }
         
         if (clearAllBtn) {
-            clearAllBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
+            clearAllBtn.addEventListener('click', () => {
                 this.clearAllFiles();
             });
         }
         
         if (saveBtn) {
-            saveBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
+            saveBtn.addEventListener('click', () => {
                 this.saveFiles();
             });
         }
@@ -232,27 +220,31 @@ class DescriptionMediaModal {
     }
     
     createFileItem(file, index) {
+        console.log('createFileItem called for:', file.name, 'isImage:', file.type.startsWith('image/'));
+        
         const isImage = file.type.startsWith('image/');
         const fileItem = document.createElement('div');
         fileItem.className = 'gallery-item';
         fileItem.dataset.index = index;
         
         const escapedName = this.escapeHtml(file.name);
-        let escapedUrl;
+        let fileUrl;
         
         if (file.isExisting) {
-            escapedUrl = this.escapeHtml(file.url);
+            fileUrl = file.url;
+            console.log('Using existing URL:', fileUrl);
         } else {
             const blobUrl = URL.createObjectURL(file);
             this.blobUrls.set(index, blobUrl);
-            escapedUrl = blobUrl;
+            fileUrl = blobUrl;
+            console.log('Created blob URL:', blobUrl);
         }
         
         let preview;
         if (isImage) {
-            preview = `<img src="${escapedUrl}" alt="${escapedName}" style="width: 100%; height: 100%; object-fit: cover;">`;
+            preview = `<img src="${fileUrl}" alt="${escapedName}" style="width: 100%; height: 100%; object-fit: cover;">`;
         } else {
-            preview = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #666;">
+            preview = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #666; height: 100%;">
                     <div style="font-size: 40px; margin-bottom: 8px;">▶</div>
                     <div style="font-size: 12px; text-align: center; padding: 0 10px; word-break: break-word;">Видео</div>
                  </div>`;
@@ -277,8 +269,12 @@ class DescriptionMediaModal {
         
         if (!this.isCreateMode) {
             fileItem.addEventListener('click', (e) => {
+                console.log('File item clicked, target:', e.target, 'index:', index);
                 if (!e.target.classList.contains('btn-remove-file')) {
+                    console.log('Not remove button, calling copyFileUrlAndClose');
                     this.copyFileUrlAndClose(index);
+                } else {
+                    console.log('Remove button clicked, ignoring');
                 }
             });
             
@@ -291,6 +287,8 @@ class DescriptionMediaModal {
                 fileItem.style.borderColor = '#ddd';
                 fileItem.style.boxShadow = 'none';
             });
+        } else {
+            console.log('Create mode, not adding click listener');
         }
         
         const removeBtn = fileItem.querySelector('.btn-remove-file');
@@ -306,14 +304,19 @@ class DescriptionMediaModal {
     }
     
     copyFileUrlAndClose(index) {
+        console.log('copyFileUrlAndClose called for index:', index);
         const file = this.files[index];
-        if (!file) return;
+        if (!file) {
+            console.error('File not found at index:', index);
+            return;
+        }
         
         const isImage = file.type.startsWith('image/');
         const tag = isImage ? 
             `<img src="${file.url}" alt="${file.name}">` :
             `<video src="${file.url}" controls></video>`;
         
+        console.log('Generated tag:', tag);
         this.copyToClipboard(tag);
         this.showNotification('HTML тег скопирован в буфер обмена', 'success');
         
