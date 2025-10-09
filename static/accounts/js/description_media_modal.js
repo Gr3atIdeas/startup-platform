@@ -97,8 +97,12 @@ class DescriptionMediaModal {
         
         if (this.modal) {
             this.modal.addEventListener('click', (e) => {
-                if (e.target.classList.contains('modal-overlay')) {
+                // Закрывать только если кликнули НЕПОСРЕДСТВЕННО на overlay (фон), а не на dialog внутри
+                if (e.target === e.currentTarget) {
+                    console.log('Clicked on overlay background, closing modal');
                     this.close();
+                } else {
+                    console.log('Clicked inside modal dialog, not closing');
                 }
             });
         }
@@ -303,7 +307,7 @@ class DescriptionMediaModal {
         return fileItem;
     }
     
-    copyFileUrlAndClose(index) {
+    async copyFileUrlAndClose(index) {
         console.log('copyFileUrlAndClose called for index:', index);
         const file = this.files[index];
         if (!file) {
@@ -317,15 +321,21 @@ class DescriptionMediaModal {
             `<video src="${file.url}" controls></video>`;
         
         console.log('Generated tag:', tag);
-        this.copyToClipboard(tag);
-        this.showNotification('HTML тег скопирован в буфер обмена', 'success');
         
-        setTimeout(() => {
-            this.close();
-        }, 500);
+        try {
+            await this.copyToClipboard(tag);
+            this.showNotification('HTML тег скопирован в буфер обмена', 'success');
+            
+            setTimeout(() => {
+                this.close();
+            }, 500);
+        } catch (error) {
+            console.error('Failed to copy:', error);
+            this.showNotification('Ошибка копирования в буфер обмена', 'error');
+        }
     }
     
-    copyFileUrl(index) {
+    async copyFileUrl(index) {
         const file = this.files[index];
         if (!file) return;
         
@@ -335,8 +345,12 @@ class DescriptionMediaModal {
                 `<img src="${file.url}" alt="${file.name}">` :
                 `<video src="${file.url}" controls></video>`;
             
-            this.copyToClipboard(tag);
-            this.showNotification('HTML тег скопирован в буфер обмена', 'success');
+            try {
+                await this.copyToClipboard(tag);
+                this.showNotification('HTML тег скопирован в буфер обмена', 'success');
+            } catch (error) {
+                this.showNotification('Ошибка копирования в буфер обмена', 'error');
+            }
             return;
         }
         
@@ -349,7 +363,8 @@ class DescriptionMediaModal {
         
         this.uploadingFiles.add(fileKey);
         
-        this.uploadFile(file).then(result => {
+        try {
+            const result = await this.uploadFile(file);
             this.uploadingFiles.delete(fileKey);
             
             if (result.success) {
@@ -365,22 +380,24 @@ class DescriptionMediaModal {
                         name: fileData.file_name,
                         type: fileData.file_type === 'image' ? 'image/jpeg' : 'video/mp4',
                         url: fileData.file_url,
-                        isExisting: true
+                        isExisting: true,
+                        source: 'uploaded',
+                        isGallery: false
                     };
                 }
                 
                 this.updateGallery();
                 this.updateSaveButton();
                 
-                this.copyToClipboard(tag);
+                await this.copyToClipboard(tag);
                 this.showNotification('HTML тег скопирован в буфер обмена', 'success');
             } else {
                 this.showNotification('Ошибка загрузки файла: ' + result.error, 'error');
             }
-        }).catch(error => {
+        } catch (error) {
             this.uploadingFiles.delete(fileKey);
             this.showNotification('Ошибка загрузки файла', 'error');
-        });
+        }
     }
     
     async uploadFile(file) {
@@ -407,17 +424,40 @@ class DescriptionMediaModal {
         }
     }
     
-    copyToClipboard(text) {
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(text);
-        } else {
-            // Fallback для старых браузеров
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
+    async copyToClipboard(text) {
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(text);
+                console.log('Copied to clipboard via navigator.clipboard:', text);
+            } else {
+                // Fallback для старых браузеров
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                const success = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                console.log('Copied to clipboard via execCommand:', success, text);
+            }
+        } catch (error) {
+            console.error('Failed to copy to clipboard:', error);
+            // Пробуем fallback
+            try {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                console.log('Copied to clipboard via fallback');
+            } catch (e) {
+                console.error('All copy methods failed:', e);
+                throw e;
+            }
         }
     }
     
@@ -715,12 +755,27 @@ class DescriptionMediaModal {
     }
 }
 
+// Singleton instance
+let descriptionMediaModalInstance = null;
+
 // Глобальная функция для открытия модального окна
 window.openDescriptionMediaModal = function(entityType, entityId = null) {
-    const modal = new DescriptionMediaModal({
+    // Если модалка уже существует, закрываем её и удаляем
+    if (descriptionMediaModalInstance) {
+        console.log('Closing existing modal instance');
+        descriptionMediaModalInstance.close();
+        if (descriptionMediaModalInstance.modal) {
+            descriptionMediaModalInstance.modal.remove();
+        }
+        descriptionMediaModalInstance = null;
+    }
+    
+    // Создаем новый экземпляр
+    console.log('Creating new modal instance for', entityType, entityId);
+    descriptionMediaModalInstance = new DescriptionMediaModal({
         entityType: entityType,
         entityId: entityId
     });
-    modal.show();
-    return modal;
+    descriptionMediaModalInstance.show();
+    return descriptionMediaModalInstance;
 };
