@@ -247,7 +247,7 @@
                   <h3 class="about-title">О проекте</h3>
                   <div class="about-content">
                     <div class="about-text">
-                      {{ startup.description|sanitize_html|default:"Нет подробного описания." }}
+                      {{ startup.description|sanitize_html|safe|default:"Нет подробного описания." }}
                       {% if startup.additional_info %}
                         <div class="additional-info">
                           <p><strong>Основные функции:</strong></p>

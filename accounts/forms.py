@@ -125,6 +125,11 @@ class StartupEditForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "Введите сумму"}),
     )
 
+    def clean_description(self):
+        """Разрешаем HTML теги в описании для вставки изображений/видео"""
+        description = self.cleaned_data.get('description', '')
+        return description  # Возвращаем как есть, без экранирования
+    
     class Meta:
         model = Startups
         fields = [
@@ -468,6 +473,10 @@ class FranchiseForm(forms.ModelForm):
             print(f"Error fetching planet URLs: {e}")
             self.fields["planet_image"].choices = []
 
+    def clean_description(self):
+        """Разрешаем HTML теги в описании для вставки изображений/видео"""
+        description = self.cleaned_data.get('description', '')
+        return description  # Возвращаем как есть, без экранирования
 
     class Meta:
         model = Franchises
@@ -575,6 +584,10 @@ class AgencyForm(forms.ModelForm):
             print(f"Error fetching planet URLs: {e}")
             self.fields["planet_image"].choices = []
 
+    def clean_description(self):
+        """Разрешаем HTML теги в описании для вставки изображений/видео"""
+        description = self.cleaned_data.get('description', '')
+        return description  # Возвращаем как есть, без экранирования
 
     class Meta:
         model = Agencies
@@ -671,6 +684,11 @@ class SpecialistForm(forms.ModelForm):
         except Exception as e:
             print(f"Error fetching planet URLs: {e}")
             self.fields["planet_image"].choices = []
+
+    def clean_description(self):
+        """Разрешаем HTML теги в описании для вставки изображений/видео"""
+        description = self.cleaned_data.get('description', '')
+        return description  # Возвращаем как есть, без экранирования
 
     class Meta:
         model = Specialists

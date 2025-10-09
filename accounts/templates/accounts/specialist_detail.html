@@ -237,7 +237,7 @@
                   <h3 class="about-title">О специалисте</h3>
                   <div class="about-content">
                     <div class="about-text">
-                      {{ specialist.description|sanitize_html|default:"Нет подробного описания." }}
+                      {{ specialist.description|sanitize_html|safe|default:"Нет подробного описания." }}
                       {% if specialist.additional_info %}
                         <div class="additional-info">
                           <p><strong>Основные функции:</strong></p>

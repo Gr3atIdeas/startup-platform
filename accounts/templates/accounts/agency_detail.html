@@ -238,7 +238,7 @@
                   <h3 class="about-title">Об агентстве</h3>
                   <div class="about-content">
                     <div class="about-text">
-                      {{ agency.description|sanitize_html|default:"Нет подробного описания." }}
+                      {{ agency.description|sanitize_html|safe|default:"Нет подробного описания." }}
                       {% if agency.customization_data.agency_additional_info %}
                         <div class="additional-info">
                           <p><strong>Основные услуги:</strong></p>

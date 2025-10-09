@@ -9388,13 +9388,15 @@ def upload_description_media(request, entity_type, entity_id):
         return JsonResponse({'success': False, 'error': 'Internal server error'}, status=500)
 
 
-@login_required
+@login_required  
 def get_description_media(request, entity_type, entity_id):
     """
     API endpoint для получения списка загруженных медиа-файлов
     """
     if request.method != 'GET':
         return JsonResponse({'success': False, 'error': 'Only GET method allowed'}, status=405)
+    
+    logger.info(f"get_description_media called for {entity_type} {entity_id}")
     
     try:
         # Проверяем тип сущности

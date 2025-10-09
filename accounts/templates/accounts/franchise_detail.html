@@ -239,7 +239,7 @@
                   <h3 class="about-title">О франшизе</h3>
                   <div class="about-content">
                     <div class="about-text">
-                      {{ franchise.description|sanitize_html|default:"Нет подробного описания." }}
+                      {{ franchise.description|sanitize_html|safe|default:"Нет подробного описания." }}
                       {% if franchise.additional_info %}
                         <div class="additional-info">
                           <p><strong>Основные функции:</strong></p>
