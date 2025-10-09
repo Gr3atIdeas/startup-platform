@@ -256,20 +256,29 @@ class DescriptionMediaModal {
         }
         
         // Для существующих файлов попробуем несколько вариантов URL
-        let imageUrls = [fileUrl];
-        if (file.isExisting && fileUrl.includes('_.png')) {
-            // Попробуем вариант без подчеркивания перед расширением
-            imageUrls.push(fileUrl.replace('_.png', '.png'));
-            imageUrls.push(fileUrl.replace('_.jpg', '.jpg'));
-            imageUrls.push(fileUrl.replace('_.jpeg', '.jpeg'));
-            imageUrls.push(fileUrl.replace('_.webp', '.webp'));
+        let fallbackUrl = null;
+        if (file.isExisting) {
+            // Попробуем вариант без подчеркивания перед расширением (для всех расширений)
+            // Замена _. на . (например: {uuid}_.png -> {uuid}.png)
+            const urlWithoutUnderscore = fileUrl.replace(/(_)(\.[^.]+)$/, '$2');
+            if (urlWithoutUnderscore !== fileUrl) {
+                fallbackUrl = urlWithoutUnderscore;
+                console.log('Fallback URL generated:', fallbackUrl);
+            }
         }
         
         let preview;
         if (isImage) {
-            const fallbackUrls = imageUrls.slice(1).map(url => `this.src='${url}'`).join('; ');
-            const onerrorHandler = fallbackUrls ? `onerror="console.error('Failed:', this.src); ${fallbackUrls}; if(!this.src.includes('data:')) this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22%23999%22%3E${escapedName}%3C/text%3E%3C/svg%3E'"` : `onerror="console.error('Failed to load:', this.src)"`;
-            preview = `<img src="${fileUrl}" alt="${escapedName}" style="width: 100%; height: 100%; object-fit: cover; display: block;" ${onerrorHandler}>`;
+            const onerrorHandler = fallbackUrl 
+                ? `onerror="console.error('Failed:', this.src); if(this.src !== '${fallbackUrl}') { this.src='${fallbackUrl}'; } else { this.style.display='none'; this.nextElementSibling.style.display='flex'; }"` 
+                : `onerror="console.error('Failed:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';"`;
+            preview = `<img src="${fileUrl}" alt="${escapedName}" style="width: 100%; height: 100%; object-fit: cover; display: block;" ${onerrorHandler}>
+                       <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: #f0f0f0; color: #666; font-size: 12px; text-align: center; padding: 10px; box-sizing: border-box;">
+                           <div>
+                               <div style="font-size: 40px; margin-bottom: 8px;">🖼️</div>
+                               <div style="word-break: break-word;">${escapedName}</div>
+                           </div>
+                       </div>`;
         } else {
             preview = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #666; height: 100%; width: 100%;">
                     <div style="font-size: 40px; margin-bottom: 8px;">▶</div>

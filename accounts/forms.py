@@ -974,6 +974,11 @@ class FranchiseEditForm(forms.ModelForm):
         except Exception as e:
             self.fields["planet_image"].choices = []
 
+    def clean_description(self):
+        """Разрешаем HTML теги в описании для вставки изображений/видео"""
+        description = self.cleaned_data.get('description', '')
+        return description  # Возвращаем как есть, без экранирования
+
 
 class AgencyEditForm(forms.ModelForm):
     logo = forms.ImageField(
@@ -1068,6 +1073,11 @@ class AgencyEditForm(forms.ModelForm):
                 self.fields['agency_services'].initial = self.instance.customization_data.get('agency_services', '')
                 self.fields['agency_pitch_deck_url'].initial = self.instance.customization_data.get('agency_pitch_deck_url', '')
 
+    def clean_description(self):
+        """Разрешаем HTML теги в описании для вставки изображений/видео"""
+        description = self.cleaned_data.get('description', '')
+        return description  # Возвращаем как есть, без экранирования
+
 
 class SpecialistEditForm(forms.ModelForm):
     logo = forms.ImageField(
@@ -1156,3 +1166,8 @@ class SpecialistEditForm(forms.ModelForm):
                 self.fields['specialist_category'].initial = self.instance.customization_data.get('specialist_category', '')
                 self.fields['specialist_description'].initial = self.instance.customization_data.get('specialist_description', '')
                 self.fields['specialist_additional_info'].initial = self.instance.customization_data.get('specialist_additional_info', '')
+
+    def clean_description(self):
+        """Разрешаем HTML теги в описании для вставки изображений/видео"""
+        description = self.cleaned_data.get('description', '')
+        return description  # Возвращаем как есть, без экранирования
