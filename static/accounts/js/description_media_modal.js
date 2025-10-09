@@ -96,25 +96,24 @@ class DescriptionMediaModal {
         }
         
         if (this.modal) {
+            const modalDialog = this.modal.querySelector('.modal-dialog');
+            
             this.modal.addEventListener('click', (e) => {
-                // Закрывать ТОЛЬКО если кликнули на сам overlay, а НЕ на modal-dialog или его содержимое
-                const clickedElement = e.target;
-                const isOverlay = clickedElement.id === 'descriptionMediaModal' || clickedElement.classList.contains('modal-overlay');
-                const isDialog = clickedElement.classList.contains('modal-dialog') || clickedElement.closest('.modal-dialog');
+                // Закрывать ТОЛЬКО если кликнули НЕПОСРЕДСТВЕННО на overlay, НЕ на dialog
+                const clickedOnOverlay = e.target === this.modal;
                 
                 console.log('Click detected:', {
-                    clickedElement: clickedElement.className || clickedElement.tagName,
-                    isOverlay: isOverlay,
-                    isDialog: isDialog,
-                    target: e.target,
-                    currentTarget: e.currentTarget
+                    clickedElement: e.target.className || e.target.tagName,
+                    clickedOnOverlay: clickedOnOverlay,
+                    targetIsModal: e.target === this.modal,
+                    targetIsDialog: e.target === modalDialog
                 });
                 
-                if (isOverlay && !isDialog) {
-                    console.log('Clicked on overlay background, closing modal');
+                if (clickedOnOverlay) {
+                    console.log('Clicked directly on overlay background, closing modal');
                     this.close();
                 } else {
-                    console.log('Clicked inside modal dialog, not closing');
+                    console.log('Clicked inside modal content, NOT closing');
                 }
             });
         }
