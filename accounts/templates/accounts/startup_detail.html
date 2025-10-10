@@ -114,13 +114,17 @@
         </div>
       
       <div class="action-buttons-container">
+        {% if startup.only_buy or startup.both_mode %}
         <button class="action-button primary-button">Выкупить</button>
+        {% endif %}
         <div class="secondary-actions">
-          <button class="action-button secondary-button">Инвестировать</button>
           {% if startup.only_invest or startup.both_mode %}
+          <button class="action-button secondary-button">Инвестировать</button>
+          {% if startup.microinvestment_enabled %}
           <div class="microinvestment-badge">
             <i class="fas fa-check-circle"></i> Микроинвестиции
           </div>
+          {% endif %}
           {% endif %}
         </div>
       </div>
@@ -190,7 +194,7 @@
       </div>
 
       <div class="startup-intro-description">
-        {{ startup.short_description|default:startup.description|truncatewords:30|safe }}
+        {{ startup.short_description|default:startup.description|striptags|truncatewords:30 }}
       </div>
 
       <div class="startup-category-badge">

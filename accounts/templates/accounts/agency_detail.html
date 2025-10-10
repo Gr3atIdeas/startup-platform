@@ -110,9 +110,18 @@
         </div>
       
       <div class="action-buttons-container">
+        {% if agency.only_buy or agency.both_mode %}
         <button class="action-button primary-button">Выкупить</button>
+        {% endif %}
         <div class="secondary-actions">
+          {% if agency.only_invest or agency.both_mode %}
           <button class="action-button secondary-button">Инвестировать</button>
+          {% if agency.microinvestment_enabled %}
+          <div class="microinvestment-badge">
+            <i class="fas fa-check-circle"></i> Микроинвестиции
+          </div>
+          {% endif %}
+          {% endif %}
         </div>
       </div>
       
@@ -182,7 +191,7 @@
       </div>
 
       <div class="agency-intro-description">
-        {{ agency.customization_data.agency_short_description|default:agency.description|truncatewords:30|safe }}
+        {{ agency.customization_data.agency_short_description|default:agency.description|striptags|truncatewords:30 }}
       </div>
 
       <div class="agency-category-badge">

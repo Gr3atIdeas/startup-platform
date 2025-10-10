@@ -3,6 +3,7 @@
 .slider-checkbox-container {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     margin: 10px 0;
     padding: 8px 12px;
     background: rgba(255, 255, 255, 0.05);
@@ -30,12 +31,12 @@
 }
 
 .slider-checkbox-label {
-    color: var(--text-primary);
+    color: #000;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     user-select: none;
-    flex: 1;
+    white-space: nowrap;
 }
 
 .slider-checkbox-container:has(.slider-checkbox:checked) {

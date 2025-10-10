@@ -111,9 +111,18 @@
         </div>
       
       <div class="action-buttons-container">
+        {% if franchise.only_buy or franchise.both_mode %}
         <button class="action-button primary-button">Выкупить</button>
+        {% endif %}
         <div class="secondary-actions">
+          {% if franchise.only_invest or franchise.both_mode %}
           <button class="action-button secondary-button">Инвестировать</button>
+          {% if franchise.microinvestment_enabled %}
+          <div class="microinvestment-badge">
+            <i class="fas fa-check-circle"></i> Микроинвестиции
+          </div>
+          {% endif %}
+          {% endif %}
         </div>
       </div>
       
@@ -182,7 +191,7 @@
       </div>
 
       <div class="franchise-intro-description">
-        {{ franchise.short_description|default:franchise.description|truncatewords:30|safe }}
+        {{ franchise.short_description|default:franchise.description|striptags|truncatewords:30 }}
       </div>
 
       <div class="franchise-category-badge">

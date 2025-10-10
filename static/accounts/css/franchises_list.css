@@ -996,10 +996,10 @@ body {
 
 .progress-bar-fill {
   position: absolute;
-  top: 4px;
-  left: 4px;
+  top: 0;
+  left: 0;
   width: 0%;
-  height: 43px;
+  height: 100%;
   background: linear-gradient(90deg, rgba(158, 247, 249, 1) 0%, rgba(73, 209, 255, 1) 48%, rgba(220, 253, 161, 1) 100%);
   border-radius: 26px;
   display: flex;
