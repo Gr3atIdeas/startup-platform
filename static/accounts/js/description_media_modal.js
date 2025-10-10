@@ -11,7 +11,7 @@ class DescriptionMediaModal {
         this.maxImageSize = 5 * 1024 * 1024; // 5MB
         this.maxVideoSize = 50 * 1024 * 1024; // 50MB
         this.allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-        this.allowedVideoTypes = ['video/mp4', 'video/quicktime', 'video/x-msvideo'];
+        this.allowedVideoTypes = ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/webm'];
         
         this.modal = null;
         this.files = [];
@@ -43,11 +43,11 @@ class DescriptionMediaModal {
                     </div>
                     <div class="modal-body" style="padding: 20px;">
                         <div class="media-upload-section" style="padding: 15px; text-align: center; background: #f8f9fa; border-radius: 5px; margin-bottom: 20px;">
-                                <input type="file" id="mediaFileInput" multiple accept="image/*,video/*" style="display: none;">
+                                <input type="file" id="mediaFileInput" multiple accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/quicktime,video/x-msvideo,video/webm" style="display: none;">
                             <button type="button" class="btn-upload-file" id="uploadFileBtn" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">
                                 Выбрать файлы
                             </button>
-                            <p style="margin-top: 10px; font-size: 12px; color: #666;">Изображения: JPG, PNG, GIF, WEBP (до 5MB) • Видео: MP4, MOV, AVI (до 50MB)</p>
+                            <p style="margin-top: 10px; font-size: 12px; color: #666;">Изображения: JPG, PNG, GIF, WEBP (до 5MB, макс 10) • Видео: MP4, MOV, AVI, WEBM (до 50MB, макс 2)</p>
                         </div>
                         <div class="media-gallery" id="mediaGallery">
                             <div class="gallery-loader" id="galleryLoader" style="display: none; text-align: center; padding: 40px;">
@@ -165,9 +165,25 @@ class DescriptionMediaModal {
             }
         }
         
-        const totalFiles = this.files.length + fileArray.length;
-        if (totalFiles > this.maxFiles) {
-            this.showNotification(`Максимум ${this.maxFiles} файлов. У вас уже ${this.files.length} файлов.`, 'error');
+        // Подсчитываем текущие файлы по типам
+        const currentImages = this.files.filter(f => this.allowedImageTypes.includes(f.type)).length;
+        const currentVideos = this.files.filter(f => this.allowedVideoTypes.includes(f.type)).length;
+        
+        // Подсчитываем новые файлы по типам
+        const newImages = fileArray.filter(f => this.allowedImageTypes.includes(f.type)).length;
+        const newVideos = fileArray.filter(f => this.allowedVideoTypes.includes(f.type)).length;
+        
+        const maxImages = 10;
+        const maxVideos = 2;
+        
+        if (currentImages + newImages > maxImages) {
+            this.showNotification(`Максимум ${maxImages} изображений. У вас уже ${currentImages} изображений.`, 'error');
+            this.resetFileInput();
+            return;
+        }
+        
+        if (currentVideos + newVideos > maxVideos) {
+            this.showNotification(`Максимум ${maxVideos} видео. У вас уже ${currentVideos} видео.`, 'error');
             this.resetFileInput();
             return;
         }

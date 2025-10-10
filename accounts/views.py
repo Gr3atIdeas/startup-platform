@@ -9257,8 +9257,8 @@ def delete_investment_franchise(request, franchise_id, user_id):
         return JsonResponse({'success': False, 'error': 'Ошибка при удалении'})
 
 
-@csrf_exempt
 @login_required
+@csrf_exempt
 def upload_description_media(request, entity_type, entity_id):
     """
     API endpoint для загрузки медиа-контента в описание
@@ -9309,22 +9309,46 @@ def upload_description_media(request, entity_type, entity_id):
         
         # Валидация файлов
         allowed_image_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
-        allowed_video_types = ['video/mp4', 'video/quicktime', 'video/x-msvideo']
+        allowed_video_types = ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/webm']
         max_image_size = 5 * 1024 * 1024  # 5MB
         max_video_size = 50 * 1024 * 1024  # 50MB
-        max_files = 20
+        max_images = 10
+        max_videos = 2
         
-        # Проверяем количество файлов
-        existing_files = FileStorage.objects.filter(
-            entity_type__type_name=entity_type,
+        # Проверяем количество файлов по типам
+        entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name=entity_type)
+        file_type_obj, _ = FileTypes.objects.get_or_create(type_name='uploaded_content')
+        
+        existing_images = FileStorage.objects.filter(
+            entity_type=entity_type_obj,
             entity_id=entity_id,
-            file_type__type_name='uploaded_content'
+            file_type=file_type_obj,
+            file_path__icontains='/modal_download/',
+            file_path__regex=r'\.(jpg|jpeg|png|gif|webp)$'
         ).count()
         
-        if existing_files + len(files) > max_files:
+        existing_videos = FileStorage.objects.filter(
+            entity_type=entity_type_obj,
+            entity_id=entity_id,
+            file_type=file_type_obj,
+            file_path__icontains='/modal_download/',
+            file_path__regex=r'\.(mp4|mov|avi|webm)$'
+        ).count()
+        
+        # Подсчитываем новые файлы
+        new_images = sum(1 for f in files if f.content_type in allowed_image_types)
+        new_videos = sum(1 for f in files if f.content_type in allowed_video_types)
+        
+        if existing_images + new_images > max_images:
             return JsonResponse({
                 'success': False, 
-                'error': f'Maximum {max_files} files allowed. Currently have {existing_files} files.'
+                'error': f'Максимум {max_images} изображений. Уже загружено: {existing_images}'
+            }, status=400)
+            
+        if existing_videos + new_videos > max_videos:
+            return JsonResponse({
+                'success': False, 
+                'error': f'Максимум {max_videos} видео. Уже загружено: {existing_videos}'
             }, status=400)
         
         uploaded_files = []
@@ -9353,12 +9377,12 @@ def upload_description_media(request, entity_type, entity_id):
             # Генерируем UUID для файла
             file_id = str(uuid.uuid4())
             
-            # Создаем путь для файла
+            # Создаем путь для файла  
             base_name = os.path.splitext(file.name)[0]
             ext = os.path.splitext(file.name)[1]
             safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
             safe_name = slugify(safe_base_name) + ext
-            file_path = f"{entity_type}/{entity_id}/uploaded_content/{file_id}_{safe_name}"
+            file_path = f"{entity_type}s/{entity_id}/modal_download/{file_id}_{safe_name}"
             
             # Сохраняем файл
             try:
@@ -9373,6 +9397,7 @@ def upload_description_media(request, entity_type, entity_id):
                     entity_id=entity_id,
                     file_type=file_type_obj,
                     file_url=file_id,
+                    file_path=file_path,
                     uploaded_at=timezone.now(),
                     startup=entity if entity_type == 'startup' else None,
                     original_file_name=file.name,
