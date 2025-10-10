@@ -41,7 +41,7 @@ class DescriptionMediaModal {
                         <div class="modal-title" style="font-size: 20px; font-weight: 600; color: #333;">Управление медиа-контентом</div>
                         <button type="button" class="modal-close-btn" id="mediaModalCloseBtn" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #999;">×</button>
                     </div>
-                    <div class="modal-body" style="padding: 20px;">
+                    <div class="modal-body" style="padding: 20px; max-height: 60vh; overflow-y: auto;">
                         <div class="media-upload-section" style="padding: 15px; text-align: center; background: #f8f9fa; border-radius: 5px; margin-bottom: 20px;">
                                 <input type="file" id="mediaFileInput" multiple accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/quicktime,video/x-msvideo,video/webm" style="display: none;">
                             <button type="button" class="btn-upload-file" id="uploadFileBtn" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">

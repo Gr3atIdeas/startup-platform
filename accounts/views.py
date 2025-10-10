@@ -9584,7 +9584,10 @@ def get_description_media(request, entity_type, entity_id):
 
 
 @login_required
+@csrf_exempt
 def delete_description_media(request, entity_type, entity_id, file_id):
+    print(f"[DELETE] Request received: user={request.user.username}, entity_type={entity_type}, entity_id={entity_id}, file_id={file_id}")
+    
     if request.method != 'DELETE':
         return JsonResponse({'success': False, 'error': 'Only DELETE method allowed'}, status=405)
     
@@ -9624,18 +9627,23 @@ def delete_description_media(request, entity_type, entity_id, file_id):
         safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
         safe_name_slugified = slugify(safe_base_name)
         
-        # Формируем safe_name точно так же, как при загрузке файла
         safe_name = safe_name_slugified + ext
-            
-        file_path = f"{entity_type}/{entity_id}/uploaded_content/{file_id}_{safe_name}"
+        file_path = f"{entity_type}s/{entity_id}/modal_download/{file_id}_{safe_name}"
+        
+        print(f"[DELETE] Attempting to delete file from S3: {file_path}")
         
         try:
             if default_storage.exists(file_path):
                 default_storage.delete(file_path)
+                print(f"[DELETE] File deleted from S3: {file_path}")
+            else:
+                print(f"[DELETE] File not found in S3: {file_path}")
         except Exception as e:
             logger.warning(f"Could not delete file from storage: {e}")
+            print(f"[DELETE] Error deleting from S3: {e}")
         
         file_storage.delete()
+        print(f"[DELETE] FileStorage record deleted for file_id: {file_id}")
         
         return JsonResponse({'success': True})
         
