@@ -50,6 +50,16 @@ class DescriptionMediaModal {
                             <p style="margin-top: 10px; font-size: 12px; color: #666;">Изображения: JPG, PNG, GIF, WEBP (до 5MB) • Видео: MP4, MOV, AVI (до 50MB)</p>
                         </div>
                         <div class="media-gallery" id="mediaGallery">
+                            <div class="gallery-loader" id="galleryLoader" style="display: none; text-align: center; padding: 40px;">
+                                <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                                <p style="margin-top: 15px; color: #666; font-size: 14px;">Загрузка файлов...</p>
+                                <style>
+                                    @keyframes spin {
+                                        0% { transform: rotate(0deg); }
+                                        100% { transform: rotate(360deg); }
+                                    }
+                                </style>
+                            </div>
                             <div class="gallery-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                                 <h3 style="margin: 0; font-size: 16px; color: #333;">Загруженные файлы</h3>
                                 <div class="gallery-actions">
@@ -661,38 +671,56 @@ class DescriptionMediaModal {
             return;
         }
         
+        const loader = document.getElementById('galleryLoader');
+        const galleryGrid = document.getElementById('galleryGrid');
+        
+        if (loader) loader.style.display = 'block';
+        if (galleryGrid) galleryGrid.style.display = 'none';
+        
         try {
             console.log(`Loading existing files for ${this.entityType} with ID ${this.entityId}`);
             const response = await fetch(`/get-description-media/${this.entityType}/${this.entityId}/`);
             
             if (!response.ok) {
                 console.error('Failed to load existing files:', response.status);
+                if (loader) loader.style.display = 'none';
+                if (galleryGrid) galleryGrid.style.display = 'grid';
                 return;
             }
             
             const result = await response.json();
             console.log('Loaded files from server:', result);
+            console.log('result.success:', result.success);
+            console.log('result.files:', result.files);
+            console.log('Is result.files array?', Array.isArray(result.files));
             
             if (result.success && Array.isArray(result.files)) {
-                this.files = result.files.map(fileData => ({
-                    id: fileData.id,
-                    name: fileData.name,
-                    type: fileData.type === 'image' ? 'image/jpeg' : 'video/mp4',
-                    url: fileData.url,
-                    isExisting: true,
-                    source: fileData.source || 'gallery',
-                    isGallery: fileData.source === 'gallery'
-                }));
+                console.log(`Mapping ${result.files.length} files...`);
+                this.files = result.files.map((fileData, index) => {
+                    console.log(`Mapping file ${index}:`, fileData);
+                    return {
+                        id: fileData.id,
+                        name: fileData.name,
+                        type: fileData.type === 'image' ? 'image/jpeg' : 'video/mp4',
+                        url: fileData.url,
+                        isExisting: true,
+                        source: fileData.source || 'gallery',
+                        isGallery: fileData.source === 'gallery'
+                    };
+                });
                 
                 console.log('Mapped files:', this.files);
                 console.log('Calling updateGallery...');
                 this.updateGallery();
                 this.updateSaveButton();
             } else {
-                console.log('No files found or invalid response');
+                console.log('No files found or invalid response. result.success:', result.success, 'isArray:', Array.isArray(result.files));
             }
         } catch (error) {
             console.error('Error loading existing files:', error);
+        } finally {
+            if (loader) loader.style.display = 'none';
+            if (galleryGrid) galleryGrid.style.display = 'grid';
         }
     }
     
