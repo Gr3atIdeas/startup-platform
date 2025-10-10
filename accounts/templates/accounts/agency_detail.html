@@ -111,11 +111,11 @@
       
       <div class="action-buttons-container">
         {% if agency.only_buy or agency.both_mode %}
-        <button class="action-button primary-button" onclick="window.location.href='{% url 'invest_agency' agency.agency_id %}'">Выкупить</button>
+        <button class="action-button primary-button">Выкупить</button>
         {% endif %}
         <div class="secondary-actions">
           {% if agency.only_invest or agency.both_mode %}
-          <button class="action-button secondary-button" onclick="window.location.href='{% url 'invest_agency' agency.agency_id %}'">Инвестировать</button>
+          <button class="action-button secondary-button">Инвестировать</button>
           {% endif %}
         </div>
       </div>
