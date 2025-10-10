@@ -115,12 +115,12 @@
       
       <div class="action-buttons-container">
         {% if startup.only_buy or startup.both_mode %}
-        <button class="action-button primary-button">Выкупить</button>
+        <button class="action-button primary-button" onclick="window.location.href='{% url 'invest_startup' startup.startup_id %}'">Выкупить</button>
         {% endif %}
         <div class="secondary-actions">
           {% if startup.only_invest or startup.both_mode %}
-          <button class="action-button secondary-button">Инвестировать</button>
-          {% if startup.microinvestment_enabled %}
+          <button class="action-button secondary-button" onclick="window.location.href='{% url 'invest_startup' startup.startup_id %}'">Инвестировать</button>
+          {% if startup.micro_investment_available %}
           <div class="microinvestment-badge">
             <i class="fas fa-check-circle"></i> Микроинвестиции
           </div>

@@ -110,16 +110,11 @@
         
       <div class="action-buttons-container">
         {% if specialist.only_buy or specialist.both_mode %}
-        <button class="action-button primary-button">Выкупить</button>
+        <button class="action-button primary-button" onclick="window.location.href='{% url 'invest_specialist' specialist.specialist_id %}'">Выкупить</button>
         {% endif %}
         <div class="secondary-actions">
           {% if specialist.only_invest or specialist.both_mode %}
-          <button class="action-button secondary-button">Инвестировать</button>
-          {% if specialist.microinvestment_enabled %}
-          <div class="microinvestment-badge">
-            <i class="fas fa-check-circle"></i> Микроинвестиции
-          </div>
-          {% endif %}
+          <button class="action-button secondary-button" onclick="window.location.href='{% url 'invest_specialist' specialist.specialist_id %}'">Инвестировать</button>
           {% endif %}
         </div>
       </div>

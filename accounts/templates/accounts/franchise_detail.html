@@ -112,16 +112,11 @@
       
       <div class="action-buttons-container">
         {% if franchise.only_buy or franchise.both_mode %}
-        <button class="action-button primary-button">Выкупить</button>
+        <button class="action-button primary-button" onclick="window.location.href='{% url 'invest_franchise' franchise.franchise_id %}'">Выкупить</button>
         {% endif %}
         <div class="secondary-actions">
           {% if franchise.only_invest or franchise.both_mode %}
-          <button class="action-button secondary-button">Инвестировать</button>
-          {% if franchise.microinvestment_enabled %}
-          <div class="microinvestment-badge">
-            <i class="fas fa-check-circle"></i> Микроинвестиции
-          </div>
-          {% endif %}
+          <button class="action-button secondary-button" onclick="window.location.href='{% url 'invest_franchise' franchise.franchise_id %}'">Инвестировать</button>
           {% endif %}
         </div>
       </div>
