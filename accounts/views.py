@@ -9489,13 +9489,19 @@ def get_description_media(request, entity_type, entity_id):
             file_type__type_name='creative'
         ).order_by('-uploaded_at')
         
+        video_storages = FileStorage.objects.filter(
+            entity_type=entity_type_obj,
+            entity_id=entity_id,
+            file_type__type_name='video'
+        ).order_by('-uploaded_at')
+        
         uploaded_storages = FileStorage.objects.filter(
             entity_type=entity_type_obj,
             entity_id=entity_id,
             file_type__type_name='uploaded_content'
         ).order_by('-uploaded_at')
         
-        print(f"[GET_MEDIA] Found {creative_storages.count()} creative files, {uploaded_storages.count()} uploaded files")
+        print(f"[GET_MEDIA] Found {creative_storages.count()} creative files, {video_storages.count()} video files, {uploaded_storages.count()} uploaded files")
         
         files = []
         
@@ -9530,6 +9536,30 @@ def get_description_media(request, entity_type, entity_id):
                 'id': file_storage.file_url,
                 'url': file_url,
                 'type': file_type,
+                'name': original_name,
+                'uploaded_at': file_storage.uploaded_at.isoformat() if file_storage.uploaded_at else None,
+                'source': 'gallery'
+            })
+        
+        # Обрабатываем видео из галереи
+        for file_storage in video_storages:
+            original_name = getattr(file_storage, 'original_file_name', '')
+            
+            file_url = utils_get_file_url(
+                file_id=file_storage.file_url,
+                entity_id=entity_id,
+                file_type='video',
+                entity_type=entity_type
+            )
+            
+            if not file_url:
+                logger.warning(f"Could not get URL for video file {file_storage.file_url}")
+                continue
+            
+            files.append({
+                'id': file_storage.file_url,
+                'url': file_url,
+                'type': 'video',
                 'name': original_name,
                 'uploaded_at': file_storage.uploaded_at.isoformat() if file_storage.uploaded_at else None,
                 'source': 'gallery'

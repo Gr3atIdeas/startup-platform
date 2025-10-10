@@ -200,6 +200,13 @@ class DescriptionMediaModal {
             return;
         }
         
+        // Добавляем свойства для новых файлов
+        fileArray.forEach(file => {
+            file.source = 'uploaded';
+            file.isExisting = false;
+            file.isGallery = false;
+        });
+        
         this.files.push(...fileArray);
         this.updateGallery();
         this.updateSaveButton();
