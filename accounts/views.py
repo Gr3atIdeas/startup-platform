@@ -9434,8 +9434,11 @@ def upload_description_media(request, entity_type, entity_id):
         })
         
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"[UPLOAD ERROR] {error_details}")
         logger.error(f"Error in upload_description_media: {e}", exc_info=True)
-        return JsonResponse({'success': False, 'error': 'Internal server error'}, status=500)
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
 @login_required  
