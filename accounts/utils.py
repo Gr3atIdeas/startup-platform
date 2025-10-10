@@ -11,6 +11,14 @@ logger = logging.getLogger(__name__)
 def _prefix_for(entity_type: str, entity_id: int, file_type: str) -> str:
     if file_type == "avatar":
         return f"users/{entity_id}/avatar/"
+    if file_type == "uploaded_content":
+        entity_root = {
+            "startup": "startups",
+            "franchise": "franchises",
+            "agency": "agencies",
+            "specialist": "specialists",
+        }.get(entity_type or "startup", "startups")
+        return f"{entity_root}/{entity_id}/modal_download/"
     entity_root = {
         "startup": "startups",
         "franchise": "franchises",

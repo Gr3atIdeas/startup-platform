@@ -9325,12 +9325,18 @@ def upload_description_media(request, entity_type, entity_id):
             file_type=file_type_obj
         )
         
+        print(f"[UPLOAD] Found {uploaded_files_qs.count()} existing uploaded_content files for {entity_type} {entity_id}")
+        
         existing_images = sum(1 for f in uploaded_files_qs if f.original_file_name and any(f.original_file_name.lower().endswith(ext) for ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp']))
         existing_videos = sum(1 for f in uploaded_files_qs if f.original_file_name and any(f.original_file_name.lower().endswith(ext) for ext in ['.mp4', '.mov', '.avi', '.webm']))
+        
+        print(f"[UPLOAD] Existing: {existing_images} images, {existing_videos} videos")
         
         # Подсчитываем новые файлы
         new_images = sum(1 for f in files if f.content_type in allowed_image_types)
         new_videos = sum(1 for f in files if f.content_type in allowed_video_types)
+        
+        print(f"[UPLOAD] New files to upload: {new_images} images, {new_videos} videos")
         
         if existing_images + new_images > max_images:
             return JsonResponse({
@@ -9395,6 +9401,8 @@ def upload_description_media(request, entity_type, entity_id):
                     original_file_name=file.name,
                 )
                 
+                print(f"[UPLOAD] File saved to S3: {file_path}, FileStorage created with ID: {file_id}")
+                
                 # Получаем URL файла через get_file_url (правильно обрабатывает все имена файлов)
                 file_url = utils_get_file_url(
                     file_id=file_id,
@@ -9403,8 +9411,11 @@ def upload_description_media(request, entity_type, entity_id):
                     entity_type=entity_type
                 )
                 
+                print(f"[UPLOAD] Generated URL for file {file_id}: {file_url}")
+                
                 if not file_url:
                     file_url = f"{settings.S3_PUBLIC_BASE_URL}/{file_path}"
+                    print(f"[UPLOAD] Fallback URL used: {file_url}")
                 
                 uploaded_files.append({
                     'file_id': file_id,
