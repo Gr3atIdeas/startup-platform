@@ -9484,11 +9484,25 @@ def get_description_media(request, entity_type, entity_id):
             file_type__type_name='uploaded_content'
         ).order_by('-uploaded_at')
         
+        print(f"[GET_MEDIA] Found {creative_storages.count()} creative files, {uploaded_storages.count()} uploaded files")
+        
         files = []
         
         for file_storage in creative_storages:
             original_name = getattr(file_storage, 'original_file_name', '')
             file_ext = os.path.splitext(original_name)[1].lower()
+            
+            # Определяем тип файла
+            if file_ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']:
+                file_type = 'image'
+            elif file_ext in ['.mp4', '.mov', '.avi', '.webm']:
+                file_type = 'video'
+            else:
+                file_type = 'unknown'
+            
+            # Пропускаем неизвестные типы
+            if file_type == 'unknown':
+                continue
             
             file_url = utils_get_file_url(
                 file_id=file_storage.file_url,
@@ -9500,13 +9514,6 @@ def get_description_media(request, entity_type, entity_id):
             if not file_url:
                 logger.warning(f"Could not get URL for file {file_storage.file_url}")
                 continue
-            
-            if file_ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']:
-                file_type = 'image'
-            elif file_ext in ['.mp4', '.mov', '.avi', '.webm']:
-                file_type = 'video'
-            else:
-                file_type = 'unknown'
             
             files.append({
                 'id': file_storage.file_url,
@@ -9521,12 +9528,16 @@ def get_description_media(request, entity_type, entity_id):
             original_name = getattr(file_storage, 'original_file_name', '')
             file_ext = os.path.splitext(original_name)[1].lower()
             
+            print(f"[GET_MEDIA] Processing uploaded file: {original_name}, id: {file_storage.file_url}")
+            
             file_url = utils_get_file_url(
                 file_id=file_storage.file_url,
                 entity_id=entity_id,
                 file_type='uploaded_content',
                 entity_type=entity_type
             )
+            
+            print(f"[GET_MEDIA] Generated URL: {file_url}")
             
             if not file_url:
                 logger.warning(f"Could not get URL for file {file_storage.file_url}")

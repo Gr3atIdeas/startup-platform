@@ -60,15 +60,27 @@ class DescriptionMediaModal {
                                     }
                                 </style>
                             </div>
-                            <div class="gallery-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                <h3 style="margin: 0; font-size: 16px; color: #333;">Загруженные файлы</h3>
-                                <div class="gallery-actions">
-                                    <button type="button" class="btn-clear-all" id="clearAllBtn" style="display: none; padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Очистить все</button>
+                            
+                            <!-- Галерея (креативы) -->
+                            <div class="gallery-section" style="margin-bottom: 20px;">
+                                <h3 style="margin: 0 0 15px 0; font-size: 16px; color: #333;">Галерея</h3>
+                                <div class="gallery-grid" id="galleryGridCreatives" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
+                                    <div class="gallery-empty" style="grid-column: 1/-1; text-align: center; padding: 20px; color: #999; font-size: 14px;">
+                                        <p>Нет файлов в галерее</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="gallery-grid" id="galleryGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
-                                <div class="gallery-empty" id="galleryEmpty" style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999;">
-                                    <p>Нет загруженных файлов</p>
+                            
+                            <!-- Загрузки через модалку -->
+                            <div class="uploads-section">
+                                <div class="uploads-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                    <h3 style="margin: 0; font-size: 16px; color: #333;">Загрузки</h3>
+                                    <button type="button" class="btn-clear-all" id="clearAllBtn" style="display: none; padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Очистить все</button>
+                                </div>
+                                <div class="gallery-grid" id="galleryGridUploads" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
+                                    <div class="gallery-empty" id="galleryEmpty" style="grid-column: 1/-1; text-align: center; padding: 20px; color: #999; font-size: 14px;">
+                                        <p>Нет загруженных файлов</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -221,37 +233,51 @@ class DescriptionMediaModal {
     }
     
     updateGallery() {
-        const galleryGrid = document.getElementById('galleryGrid');
-        const galleryEmpty = document.getElementById('galleryEmpty');
+        const galleryGridCreatives = document.getElementById('galleryGridCreatives');
+        const galleryGridUploads = document.getElementById('galleryGridUploads');
         const clearAllBtn = document.getElementById('clearAllBtn');
         
-        if (!galleryGrid) return;
+        if (!galleryGridCreatives || !galleryGridUploads) return;
         
         console.log('updateGallery called, files count:', this.files.length);
         
-        if (this.files.length === 0) {
-            if (galleryEmpty) galleryEmpty.style.display = 'block';
-            if (clearAllBtn) clearAllBtn.style.display = 'none';
-            this.revokeBlobUrls();
-            return;
-        }
-        
-        if (galleryEmpty) galleryEmpty.style.display = 'none';
-        if (clearAllBtn) clearAllBtn.style.display = 'block';
-        
         this.revokeBlobUrls();
         
-        galleryGrid.innerHTML = '';
+        // Разделяем файлы по источникам
+        const galleryFiles = this.files.filter(f => f.source === 'gallery' || f.isGallery);
+        const uploadedFiles = this.files.filter(f => f.source === 'uploaded' && !f.isGallery);
         
-        this.files.forEach((file, index) => {
-            console.log('Creating item for file:', file);
-            const fileItem = this.createFileItem(file, index);
-            if (fileItem) {
-            galleryGrid.appendChild(fileItem);
-            }
-        });
+        // Обновляем секцию "Галерея"
+        galleryGridCreatives.innerHTML = '';
+        if (galleryFiles.length === 0) {
+            galleryGridCreatives.innerHTML = '<div class="gallery-empty" style="grid-column: 1/-1; text-align: center; padding: 20px; color: #999; font-size: 14px;"><p>Нет файлов в галерее</p></div>';
+        } else {
+            galleryFiles.forEach((file, originalIndex) => {
+                const fileIndex = this.files.indexOf(file);
+                const fileItem = this.createFileItem(file, fileIndex);
+                if (fileItem) {
+                    galleryGridCreatives.appendChild(fileItem);
+                }
+            });
+        }
         
-        console.log('Gallery updated with', this.files.length, 'files');
+        // Обновляем секцию "Загрузки"
+        galleryGridUploads.innerHTML = '';
+        if (uploadedFiles.length === 0) {
+            galleryGridUploads.innerHTML = '<div class="gallery-empty" style="grid-column: 1/-1; text-align: center; padding: 20px; color: #999; font-size: 14px;"><p>Нет загруженных файлов</p></div>';
+            if (clearAllBtn) clearAllBtn.style.display = 'none';
+        } else {
+            uploadedFiles.forEach((file, originalIndex) => {
+                const fileIndex = this.files.indexOf(file);
+                const fileItem = this.createFileItem(file, fileIndex);
+                if (fileItem) {
+                    galleryGridUploads.appendChild(fileItem);
+                }
+            });
+            if (clearAllBtn) clearAllBtn.style.display = 'block';
+        }
+        
+        console.log(`Gallery updated: ${galleryFiles.length} gallery files, ${uploadedFiles.length} uploaded files`);
     }
     
     revokeBlobUrls() {
@@ -688,10 +714,12 @@ class DescriptionMediaModal {
         }
         
         const loader = document.getElementById('galleryLoader');
-        const galleryGrid = document.getElementById('galleryGrid');
+        const galleryGridCreatives = document.getElementById('galleryGridCreatives');
+        const galleryGridUploads = document.getElementById('galleryGridUploads');
         
         if (loader) loader.style.display = 'block';
-        if (galleryGrid) galleryGrid.style.display = 'none';
+        if (galleryGridCreatives) galleryGridCreatives.style.display = 'none';
+        if (galleryGridUploads) galleryGridUploads.style.display = 'none';
         
         try {
             console.log(`Loading existing files for ${this.entityType} with ID ${this.entityId}`);
@@ -700,7 +728,8 @@ class DescriptionMediaModal {
             if (!response.ok) {
                 console.error('Failed to load existing files:', response.status);
                 if (loader) loader.style.display = 'none';
-                if (galleryGrid) galleryGrid.style.display = 'grid';
+                if (galleryGridCreatives) galleryGridCreatives.style.display = 'grid';
+                if (galleryGridUploads) galleryGridUploads.style.display = 'grid';
                 return;
             }
             
@@ -736,7 +765,8 @@ class DescriptionMediaModal {
             console.error('Error loading existing files:', error);
         } finally {
             if (loader) loader.style.display = 'none';
-            if (galleryGrid) galleryGrid.style.display = 'grid';
+            if (galleryGridCreatives) galleryGridCreatives.style.display = 'grid';
+            if (galleryGridUploads) galleryGridUploads.style.display = 'grid';
         }
     }
     
