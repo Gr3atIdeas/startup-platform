@@ -9319,21 +9319,14 @@ def upload_description_media(request, entity_type, entity_id):
         entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name=entity_type)
         file_type_obj, _ = FileTypes.objects.get_or_create(type_name='uploaded_content')
         
-        existing_images = FileStorage.objects.filter(
+        uploaded_files_qs = FileStorage.objects.filter(
             entity_type=entity_type_obj,
             entity_id=entity_id,
-            file_type=file_type_obj,
-            file_path__icontains='/modal_download/',
-            file_path__regex=r'\.(jpg|jpeg|png|gif|webp)$'
-        ).count()
+            file_type=file_type_obj
+        )
         
-        existing_videos = FileStorage.objects.filter(
-            entity_type=entity_type_obj,
-            entity_id=entity_id,
-            file_type=file_type_obj,
-            file_path__icontains='/modal_download/',
-            file_path__regex=r'\.(mp4|mov|avi|webm)$'
-        ).count()
+        existing_images = sum(1 for f in uploaded_files_qs if f.original_file_name and any(f.original_file_name.lower().endswith(ext) for ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp']))
+        existing_videos = sum(1 for f in uploaded_files_qs if f.original_file_name and any(f.original_file_name.lower().endswith(ext) for ext in ['.mp4', '.mov', '.avi', '.webm']))
         
         # Подсчитываем новые файлы
         new_images = sum(1 for f in files if f.content_type in allowed_image_types)
@@ -9397,7 +9390,6 @@ def upload_description_media(request, entity_type, entity_id):
                     entity_id=entity_id,
                     file_type=file_type_obj,
                     file_url=file_id,
-                    file_path=file_path,
                     uploaded_at=timezone.now(),
                     startup=entity if entity_type == 'startup' else None,
                     original_file_name=file.name,
