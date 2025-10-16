@@ -334,6 +334,10 @@
 }
 
 
+.mobile-auth {
+  display: none;
+}
+
 .header-role-button {
   padding: 8px 12px;
   font-size: 14px;
@@ -798,9 +802,16 @@ nav.nav-menu
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 8px;
+    gap: 4px;
     flex: 1;
-    max-width: calc(100% - 60px);
+    max-width: calc(100% - 50px);
+  }
+  
+  .header-auth-section {
+    order: 3;
+    margin-left: 10px;
+    margin-top: 0;
+    align-self: center;
   }
   
   .header-search-bar {
@@ -823,12 +834,21 @@ nav.nav-menu
     min-width: auto;
   }
   
+  .mobile-auth {
+    display: block;
+  }
+  
+  .header-auth-section {
+    display: none;
+  }
+  
   .header-search-bar {
     order: 2;
     width: 100%;
     margin-top: 10px;
     padding: 8px 15px;
     max-width: none;
+    display: block;
   }
   
   .header-search-input {
