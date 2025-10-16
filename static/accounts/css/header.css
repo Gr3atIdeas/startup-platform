@@ -761,13 +761,17 @@ nav.nav-menu
   
   .header-content-wrapper {
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
     align-items: stretch;
   }
   
   .header-logo-link {
     align-self: center;
     margin-right: 0;
+  }
+  
+  .header-logo-icon-img {
+    height: 40px;
   }
   
   .header-nav {
@@ -778,13 +782,56 @@ nav.nav-menu
   .header-nav-links {
     justify-content: center;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
   }
   
   .header-nav-link {
-    font-size: 11px;
-    padding: 5px 8px;
+    font-size: clamp(11px, 2.8vw, 13px);
+    padding: 6px 10px;
+    white-space: nowrap;
     min-width: auto;
+  }
+  
+  .header-search-bar {
+    order: 3;
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px 15px;
+    max-width: none;
+  }
+  
+  .header-search-input {
+    font-size: clamp(12px, 3.2vw, 14px);
+  }
+  
+  .header-auth-section {
+    order: 1;
+    align-self: center;
+    margin-left: 0;
+  }
+  
+  .profile-dropdown-button {
+    padding: 8px 12px;
+  }
+  
+  .profile-avatar-wrapper {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .profile-dropdown-avatar {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .header-login-button {
+    padding: 8px 16px;
+    font-size: clamp(12px, 3vw, 14px);
+  }
+  
+  .create-dropdown-button {
+    padding: 6px 12px;
+    font-size: clamp(11px, 2.8vw, 13px);
   }
   
   .catalog-dropdown-container {
@@ -885,69 +932,143 @@ nav.nav-menu
   .create-dropdown-container:hover .create-dropdown-menu {
     display: none !important;
   }
+}
+
+@media (max-width: 480px) {
+  .header-content-wrapper {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .header-logo-link {
+    align-self: center;
+    margin-right: 0;
+  }
+  
+  .header-logo-icon-img {
+    height: 35px;
+    width: auto;
+  }
+  
+  .header-nav {
+    order: 2;
+    width: 100%;
+  }
+  
+  .header-nav-links {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .header-nav-link {
+    font-size: clamp(10px, 2.5vw, 12px);
+    padding: 6px 8px;
+    white-space: nowrap;
+    min-width: auto;
+  }
   
   .header-search-bar {
     order: 3;
-    margin-top: 15px;
+    width: 100%;
+    margin-top: 8px;
     padding: 8px 15px;
+    max-width: none;
+  }
+  
+  .header-search-input {
+    font-size: clamp(11px, 3vw, 13px);
   }
   
   .header-auth-section {
     order: 1;
     align-self: center;
+    margin-left: 0;
   }
   
   .profile-dropdown-button {
     padding: 8px 12px;
   }
   
+  .profile-avatar-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+  
   .profile-dropdown-avatar {
-    width: 32px;
-    height: 32px;
-  }
-}
-
-@media (max-width: 480px) {
-  .header-content-wrapper {
-    gap: 15px;
+    width: 40px;
+    height: 40px;
   }
   
-  .header-nav-links {
-    gap: 8px;
+  .header-login-button {
+    padding: 8px 16px;
+    font-size: clamp(11px, 2.8vw, 13px);
   }
   
-  .header-nav-link {
-    font-size: 10px;
-    padding: 4px 6px;
-  }
-  
-  .header-search-bar {
+  .create-dropdown-button {
     padding: 6px 12px;
-  }
-  
-  .header-search-input {
-    font-size: 11px;
-  }
-  
-  .profile-dropdown-button {
-    padding: 6px 10px;
-  }
-  
-  .profile-dropdown-avatar {
-    width: 28px;
-    height: 28px;
+    font-size: clamp(10px, 2.5vw, 12px);
   }
 }
 
 @media (max-width: 360px) {
+  .header-content-wrapper {
+    gap: 8px;
+  }
+  
+  .header-logo-icon-img {
+    height: 30px;
+  }
+  
   .header-nav-links {
-    flex-direction: column;
-    gap: 5px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
   }
   
   .header-nav-link {
-    width: 100%;
-    text-align: center;
+    font-size: clamp(9px, 2.2vw, 11px);
+    padding: 4px 6px;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .header-search-bar {
+    padding: 6px 12px;
+    margin-top: 6px;
+  }
+  
+  .header-search-input {
+    font-size: clamp(10px, 2.5vw, 12px);
+  }
+  
+  .profile-avatar-wrapper {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .profile-dropdown-avatar {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .header-login-button {
+    padding: 6px 12px;
+    font-size: clamp(9px, 2.2vw, 11px);
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  .create-dropdown-button {
+    padding: 4px 8px;
+    font-size: clamp(8px, 2vw, 10px);
+    min-width: 44px;
+    min-height: 44px;
   }
   
   .catalog-dropdown-menu {
@@ -967,17 +1088,6 @@ nav.nav-menu
   
   .catalog-dropdown-container:hover .catalog-dropdown-menu {
     display: none !important;
-  }
-    font-size: 11px;
-    padding: 6px;
-  }
-  
-  .header-search-bar {
-    padding: 5px 10px;
-  }
-  
-  .header-search-input {
-    font-size: 10px;
   }
 }
 
@@ -1014,5 +1124,77 @@ nav.nav-menu
   
   .header-content-wrapper {
     gap: 10px;
+  }
+}
+
+@media (max-width: 320px) {
+  .header-content-wrapper {
+    gap: 6px;
+  }
+  
+  .header-logo-icon-img {
+    height: 25px;
+  }
+  
+  .header-nav-links {
+    gap: 3px;
+  }
+  
+  .header-nav-link {
+    font-size: clamp(8px, 2vw, 10px);
+    padding: 3px 5px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  
+  .header-search-bar {
+    padding: 5px 10px;
+    margin-top: 4px;
+  }
+  
+  .header-search-input {
+    font-size: clamp(9px, 2.2vw, 11px);
+  }
+  
+  .profile-avatar-wrapper {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .profile-dropdown-avatar {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .header-login-button {
+    padding: 5px 10px;
+    font-size: clamp(8px, 2vw, 10px);
+    min-width: 40px;
+    min-height: 40px;
+  }
+  
+  .create-dropdown-button {
+    padding: 3px 6px;
+    font-size: clamp(7px, 1.8vw, 9px);
+    min-width: 40px;
+    min-height: 40px;
+  }
+  
+  .catalog-dropdown-menu,
+  .create-dropdown-menu {
+    width: 98%;
+    max-width: 250px;
+  }
+  
+  .catalog-dropdown-item.no-wave-effect,
+  .create-dropdown-item.no-wave-effect {
+    padding: 10px 15px;
+    font-size: 13px;
+  }
+  
+  .catalog-dropdown-item-icon,
+  .create-dropdown-item-icon {
+    width: 16px;
+    height: 16px;
   }
 }
