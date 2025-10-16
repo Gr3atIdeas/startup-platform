@@ -257,8 +257,55 @@
                     <div class="create-dropdown-overlay"></div>
                 </div>
             {% endif %}
+            
+            {% if user.is_authenticated %}
+                <div class="profile-dropdown-container mobile-profile">
+                    <button class="profile-dropdown-button no-wave-effect">
+                        <div class="profile-avatar-wrapper">
+                            <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" class="profile-dropdown-avatar">
+                        </div>
+                    </button>
+                    <div class="profile-dropdown-menu">
+                        <a href="{% url 'notifications_page' %}" class="profile-dropdown-item profile-dropdown-notifications" style="display: none !important;">
+                            <span class="notification-icon-background">
+                                <img src="{% static 'accounts/images/bell.svg' %}" alt="Уведомления" class="profile-dropdown-item-icon">
+                            </span>
+                            Уведомления
+                        </a>
+                        <a href="{% url 'profile' %}" class="profile-dropdown-item">
+                            <img src="{% static 'accounts/images/icons/profile_menu.svg' %}" alt="Профиль" class="profile-dropdown-item-icon">
+                            Профиль
+                        </a>
+                        <a href="{% url 'startups_list' %}" class="profile-dropdown-item">
+                            <img src="{% static 'accounts/images/icons/startups_menu.svg' %}" alt="Стартапы" class="profile-dropdown-item-icon">
+                            Стартапы
+                        </a> 
+                        <a href="{% url 'support_orders' %}" class="profile-dropdown-item">
+                            <img src="{% static 'accounts/images/icons/support_menu.svg' %}" alt="Поддержка" class="profile-dropdown-item-icon">
+                            Поддержка
+                        </a> 
+                        <a href="{% url 'contacts' %}" class="profile-dropdown-item">
+                            <img src="{% static 'accounts/images/icons/contacts_menu.svg' %}" alt="Контакты" class="profile-dropdown-item-icon">
+                            Контакты
+                        </a>
+                        <a href="{% url 'faq' %}" class="profile-dropdown-item">
+                            <img src="{% static 'accounts/images/icons/faq_menu.svg' %}" alt="FAQ" class="profile-dropdown-item-icon">
+                            FAQ
+                        </a>
+                        <a href="{% url 'logout' %}" class="profile-dropdown-item profile-dropdown-logout">
+                            <img src="{% static 'accounts/images/icons/logout_menu.svg' %}" alt="Выйти" class="profile-dropdown-item-icon">
+                            Выйти
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{% url 'login' %}" class="header-auth-button-link header-login-button mobile-login">
+                    Войти
+                    <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="icon" class="header-auth-button-icon">
+                </a>
+            {% endif %}
         </nav>
-        <div class="header-auth-section">
+        <div class="header-auth-section desktop-auth">
             {% if user.is_authenticated %}
                 <div class="profile-dropdown-container">
                     <button class="profile-dropdown-button no-wave-effect">
