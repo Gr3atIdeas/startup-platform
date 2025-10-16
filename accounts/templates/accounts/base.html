@@ -255,11 +255,9 @@
                         <div class="create-dropdown-overlay"></div>
                     </div>
                 {% endif %}
-            </div>
-            
-            <div class="header-auth-section mobile-auth">
+                
                 {% if user.is_authenticated %}
-                    <div class="profile-dropdown-container">
+                    <div class="profile-dropdown-container mobile-profile">
                         <button class="profile-dropdown-button no-wave-effect">
                             <div class="profile-avatar-wrapper">
                                 <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" class="profile-dropdown-avatar">
@@ -299,7 +297,7 @@
                         </div>
                     </div>
                 {% else %}
-                    <a href="{% url 'login' %}" class="header-auth-button-link header-login-button">
+                    <a href="{% url 'login' %}" class="header-auth-button-link header-login-button mobile-login">
                         Войти
                         <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="icon" class="header-auth-button-icon">
                     </a>
