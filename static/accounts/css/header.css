@@ -786,10 +786,12 @@ nav.nav-menu
   }
   
   .header-nav-links {
-    justify-content: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     gap: 8px;
     flex: 1;
+    max-width: calc(100% - 60px);
   }
   
   .desktop-auth {
@@ -811,6 +813,11 @@ nav.nav-menu
     height: 45px;
   }
   
+  .mobile-profile {
+    align-self: center;
+    margin-left: 10px;
+  }
+  
   .mobile-login {
     padding: 6px 12px;
     font-size: clamp(11px, 2.8vw, 13px);
@@ -819,6 +826,8 @@ nav.nav-menu
     border: none !important;
     box-shadow: none !important;
     text-decoration: none;
+    align-self: center;
+    margin-left: 10px;
   }
   
   .header-nav-link {
@@ -997,9 +1006,11 @@ nav.nav-menu
   }
   
   .header-nav-links {
-    justify-content: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     gap: 6px;
+    max-width: calc(100% - 50px);
   }
   
   .header-nav-link {
@@ -1054,6 +1065,14 @@ nav.nav-menu
     border: none !important;
     box-shadow: none !important;
   }
+  
+  .mobile-profile {
+    margin-left: 8px;
+  }
+  
+  .mobile-login {
+    margin-left: 8px;
+  }
 }
 
 @media (max-width: 360px) {
@@ -1066,10 +1085,11 @@ nav.nav-menu
   }
   
   .header-nav-links {
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     gap: 4px;
-    justify-content: center;
+    max-width: calc(100% - 45px);
   }
   
   .header-nav-link {
@@ -1117,6 +1137,14 @@ nav.nav-menu
     color: var(--Color5, white) !important;
     border: none !important;
     box-shadow: none !important;
+  }
+  
+  .mobile-profile {
+    margin-left: 6px;
+  }
+  
+  .mobile-login {
+    margin-left: 6px;
   }
   
   .catalog-dropdown-menu {
@@ -1185,7 +1213,11 @@ nav.nav-menu
   }
   
   .header-nav-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     gap: 3px;
+    max-width: calc(100% - 40px);
   }
   
   .header-nav-link {
@@ -1230,6 +1262,14 @@ nav.nav-menu
     color: var(--Color5, white) !important;
     border: none !important;
     box-shadow: none !important;
+  }
+  
+  .mobile-profile {
+    margin-left: 5px;
+  }
+  
+  .mobile-login {
+    margin-left: 5px;
   }
   
   .catalog-dropdown-menu,
