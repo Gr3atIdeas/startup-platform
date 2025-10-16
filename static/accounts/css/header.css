@@ -334,8 +334,13 @@
 }
 
 .mobile-profile,
-.mobile-login {
+.mobile-login,
+.mobile-create {
   display: none;
+}
+
+.desktop-create {
+  display: block;
 }
 
 .header-role-button {
@@ -477,6 +482,19 @@ nav.nav-menu
   .catalog-dropdown-container.open .catalog-dropdown-menu {
     transform: none !important;
     opacity: 1 !important;
+  }
+  
+  .create-dropdown-container {
+    position: relative;
+    display: inline-block;
+    margin-left: auto;
+  }
+  
+  .header-nav-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 16px;
   }
 }
 
@@ -799,8 +817,13 @@ nav.nav-menu
   }
   
   .mobile-profile,
-  .mobile-login {
+  .mobile-login,
+  .mobile-create {
     display: block;
+  }
+  
+  .desktop-create {
+    display: none;
   }
   
   .mobile-profile .profile-avatar-wrapper {
