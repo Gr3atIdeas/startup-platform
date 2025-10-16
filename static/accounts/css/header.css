@@ -824,7 +824,7 @@ nav.nav-menu
   }
   
   .header-search-bar {
-    order: 3;
+    order: 2;
     width: 100%;
     margin-top: 10px;
     padding: 8px 15px;
@@ -1047,6 +1047,9 @@ nav.nav-menu
   .create-dropdown-button {
     padding: 6px 8px;
     font-size: clamp(10px, 2.5vw, 12px);
+    background: #3fff47 !important;
+    color: #000 !important;
+    border-radius: 5px !important;
   }
   
 }
@@ -1109,6 +1112,9 @@ nav.nav-menu
     font-size: clamp(8px, 2vw, 10px);
     min-width: 44px;
     min-height: 44px;
+    background: #3fff47 !important;
+    color: #000 !important;
+    border-radius: 5px !important;
   }
   
   .catalog-dropdown-menu {
@@ -1222,6 +1228,9 @@ nav.nav-menu
     font-size: clamp(7px, 1.8vw, 9px);
     min-width: 40px;
     min-height: 40px;
+    background: #3fff47 !important;
+    color: #000 !important;
+    border-radius: 5px !important;
   }
   
   .catalog-dropdown-menu,
