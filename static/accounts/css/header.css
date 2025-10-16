@@ -811,10 +811,21 @@ nav.nav-menu
     margin-top: 10px;
     padding: 8px 15px;
     max-width: none;
+    display: block;
+    height: auto;
+    min-height: auto;
   }
   
   .header-search-input {
     font-size: clamp(12px, 3.2vw, 14px);
+  }
+  
+  .header-nav {
+    order: 3;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   
   
@@ -826,20 +837,7 @@ nav.nav-menu
   }
   
   .header-auth-section {
-    order: 3;
-    margin-left: 10px;
-    margin-top: 0;
-    align-self: center;
-  }
-  
-  .header-auth-section .profile-avatar-wrapper {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .header-auth-section .profile-dropdown-avatar {
-    width: 40px;
-    height: 40px;
+    display: none;
   }
   
   .profile-dropdown-button {
