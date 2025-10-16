@@ -333,11 +333,6 @@
   display: none;
 }
 
-.mobile-profile,
-.mobile-login {
-  display: none;
-}
-
 
 
 
@@ -830,28 +825,21 @@ nav.nav-menu
     min-width: auto;
   }
   
-  .mobile-profile,
-  .mobile-login {
-    display: block;
-  }
-  
-  .mobile-profile .profile-avatar-wrapper {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .mobile-profile .profile-dropdown-avatar {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .mobile-login {
-    padding: 6px 12px;
-    font-size: clamp(11px, 2.8vw, 13px);
-  }
-  
   .header-auth-section {
-    display: none;
+    order: 3;
+    margin-left: 10px;
+    margin-top: 0;
+    align-self: center;
+  }
+  
+  .header-auth-section .profile-avatar-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .header-auth-section .profile-dropdown-avatar {
+    width: 40px;
+    height: 40px;
   }
   
   .profile-dropdown-button {
