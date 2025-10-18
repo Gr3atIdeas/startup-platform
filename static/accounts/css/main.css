@@ -3168,13 +3168,20 @@ body > main.content::after {
     height: 300px;
     object-fit: cover;
   }
-  
+}
+
+/* ========== МОБИЛЬНЫЕ УСТРОЙСТВА ========== */
+@media (max-width: 767px) {
   /* Featured1 - карточки */
+  .featured1 {
+    padding: 30px 15px;
+  }
+  
   .featured1 .feature-card {
     min-width: 100%;
     width: 100%;
     height: auto;
-    min-height: 400px;
+    min-height: 350px;
   }
   
   .featured1-carousel-inner {
@@ -3183,13 +3190,108 @@ body > main.content::after {
   
   .featured1 .heading .parent3 .div16,
   .featured1 .heading .parent3 .div17 {
-    font-size: clamp(30px, 8vw, 55px);
+    font-size: clamp(28px, 7vw, 55px);
   }
   
-  /* Frame-wrapper блоки */
+  .featured1 .features-carousel-wrapper {
+    width: 100%;
+    overflow: visible;
+  }
+  
+  /* Voltforge-description - fix text overflow */
+  .voltforge-description {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-right: 15px;
+    box-sizing: border-box;
+  }
+  
+  /* Icon9 - full size image */
+  .featured3 .icon9 {
+    position: relative;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-height: none;
+  }
+  
+  /* Featured3 */
+  .featured3 {
+    padding: 40px 15px;
+  }
+  
+  .featured3 .frame-parent {
+    height: auto;
+    min-height: auto;
+    flex-direction: column;
+  }
+  
+  .featured3 .parent4 {
+    padding: 30px 15px;
+  }
+  
+  .featured3 .heading1 .div18 {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .featured3 .frame-group {
+    width: 100%;
+    gap: 15px;
+  }
+  
+  /* Frame-group text fix */
+  .featured3 .frame-parent2,
+  .featured3 .chevron-forward-circle-outline-parent {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .featured3 .faq,
+  .featured3 .div20 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .featured3 .scale-1200-photoroom-2-parent {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    max-width: 300px;
+    margin: 20px auto 0;
+  }
+  
+  /* Featured4 - full adaptive */
+  .featured4 {
+    padding: 40px 15px;
+  }
+  
+  .featured4 .frame-parent3 {
+    width: 100% !important;
+    height: auto !important;
+    padding: 20px 15px;
+    flex-direction: column;
+  }
+  
+  .featured4 .frame-parent3 img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+  
+  .featured4 .parent6,
+  .featured4 .parent7 {
+    width: 100% !important;
+    max-width: 100%;
+  }
+  
+  /* Frame-wrapper общие */
   .frame-wrapper {
     padding: 20px 15px !important;
     overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
   }
   
   .frame-wrapper .div18,
@@ -3201,81 +3303,58 @@ body > main.content::after {
     overflow-wrap: break-word;
   }
   
-  /* Featured3 - дополнительные стили */
-  .featured3 {
-    padding: 40px 15px;
-  }
-  
-  .featured3 .frame-parent {
-    height: auto;
-    min-height: 400px;
-    flex-direction: column;
-  }
-  
-  .featured3 .parent4 {
-    padding: 30px 20px;
-  }
-  
-  .featured3 .heading1 .div18 {
-    width: 100%;
-  }
-  
-  .featured3 .frame-group {
-    width: 100%;
-  }
-  
-  .featured3 .scale-1200-photoroom-2-parent {
-    position: relative;
-    right: auto;
-    bottom: auto;
-    width: 100%;
-    margin-top: 20px;
-  }
-  
-  /* Frame-parent3 */
-  .frame-parent3 {
-    width: 100% !important;
-    height: auto !important;
-    padding: 20px 15px;
-  }
-  
-  .frame-parent3 img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-  }
-  
-  /* Featured6 galaxy-carousel-wrapper */
+  /* Featured6 galaxy-carousel-wrapper - fix missing images */
   .featured6 {
     padding: 40px 15px;
   }
   
   .galaxy-carousel-wrapper {
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
+    display: block;
   }
   
-  .galaxy-carousel-wrapper img,
   .galaxy-carousel-wrapper .galaxy-carousel {
     width: 100%;
-    height: auto;
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   
-  /* Featured7 */
+  .galaxy-carousel-wrapper img {
+    width: 100%;
+    height: auto;
+    min-width: 100%;
+    object-fit: contain;
+  }
+  
+  .featured6 .galaxy-step-container {
+    flex-direction: column;
+  }
+  
+  /* Featured7 - full size image */
   .featured7 {
     padding: 40px 15px;
   }
   
   .featured7 > div,
-  .featured7 > img {
+  .featured7 .frame-parent {
+    width: 100%;
+  }
+  
+  .featured7 img {
     width: 100%;
     height: auto;
     object-fit: contain;
+    max-width: 100%;
   }
   
-  /* Featured10 */
+  /* Featured10 - restore block */
   .featured10 {
     padding: 40px 15px;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
   
   .featured10 .frame-parent,
@@ -3290,8 +3369,27 @@ body > main.content::after {
     object-fit: contain;
   }
   
-  /* Footer - скрываем tagline */
+  .featured10 .parent8,
+  .featured10 .parent9 {
+    width: 100% !important;
+    max-width: 100%;
+  }
+  
+  /* Footer - fix cut off links */
   .footer-brand-tagline {
     display: none !important;
+  }
+  
+  footer .footer-bottom,
+  footer .footer-legal-links {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  footer .footer-legal-links a {
+    white-space: normal;
+    text-align: center;
+    font-size: 12px;
   }
 }
