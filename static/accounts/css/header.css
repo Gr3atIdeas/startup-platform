@@ -1057,6 +1057,7 @@ nav.nav-menu
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1000;
   }
   
   .profile-dropdown-button {
@@ -1097,6 +1098,28 @@ nav.nav-menu
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  
+  .create-dropdown-container {
+    position: relative;
+    z-index: 1000;
+  }
+  
+  .create-dropdown-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+  }
+  
+  .create-dropdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
   }
   
 }
