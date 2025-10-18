@@ -791,16 +791,17 @@ nav.nav-menu
   
   .header-search-bar {
     order: 2 !important;
-    width: auto !important;
+    width: 100% !important;
     padding: 8px 15px !important;
     max-width: 100% !important;
     display: flex !important;
-    height: auto !important;
+    height: 40px !important;
     min-height: 40px !important;
+    max-height: 40px !important;
     margin: 0 !important;
     flex-grow: 0 !important;
-    flex-shrink: 1 !important;
-    align-self: stretch !important;
+    flex-shrink: 0 !important;
+    align-self: auto !important;
   }
   
   .header-search-input {
@@ -1020,17 +1021,17 @@ nav.nav-menu
   
   .header-search-bar {
     order: 2;
-    width: auto;
+    width: 100%;
     margin-top: 0;
     margin-bottom: 0;
     padding: 8px 15px;
     max-width: 100%;
     display: flex;
     flex-grow: 0;
-    flex-shrink: 1;
+    flex-shrink: 0;
     min-height: 40px;
-    height: auto;
-    align-self: stretch;
+    height: 40px;
+    max-height: 40px;
   }
   
   .header-search-input {
