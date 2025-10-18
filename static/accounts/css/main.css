@@ -3181,7 +3181,42 @@ body > main.content::after {
     min-width: 100%;
     width: 100%;
     height: auto;
-    min-height: 350px;
+    min-height: 400px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  
+  .featured1 .feature-card img.rectangle-icon {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 20px 20px 0 0;
+  }
+  
+  .featured1 .feature-card .div8,
+  .featured1 .feature-card .div9,
+  .featured1 .feature-card .div11 {
+    position: relative;
+    width: auto;
+    padding: 0 20px;
+    left: auto;
+    right: auto;
+    bottom: auto;
+  }
+  
+  .featured1 .feature-card .div8 {
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: clamp(20px, 5vw, 28px);
+  }
+  
+  .featured1 .feature-card .div9,
+  .featured1 .feature-card .div11 {
+    margin-bottom: 20px;
+    font-size: 14px;
   }
   
   .featured1-carousel-inner {
@@ -3237,7 +3272,7 @@ body > main.content::after {
   
   .featured3 .frame-group {
     width: 100%;
-    gap: 15px;
+    gap: 30px;
   }
   
   /* Frame-group text fix */
@@ -3280,10 +3315,31 @@ body > main.content::after {
     object-fit: contain;
   }
   
-  .featured4 .parent6,
+  .featured4 .parent6 {
+    width: 100% !important;
+    max-width: 100%;
+    align-items: center !important;
+    text-align: center;
+  }
+  
+  .featured4 .parent6 .div23 {
+    width: 100% !important;
+    max-width: 100%;
+    align-items: center;
+  }
+  
   .featured4 .parent7 {
     width: 100% !important;
     max-width: 100%;
+  }
+  
+  /* Кнопка "Посмотреть стартапы" */
+  .featured4 .parent6 .parent5,
+  .featured3 .parent5,
+  a[href*="startups"] {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
   }
   
   /* Frame-wrapper общие */
@@ -3314,17 +3370,36 @@ body > main.content::after {
     display: block;
   }
   
-  .galaxy-carousel-wrapper .galaxy-carousel {
+  .featured6 .galaxy-carousel {
     width: 100%;
-    display: flex;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    height: auto !important;
+    min-height: 300px;
+    position: relative;
+    overflow: visible !important;
   }
   
-  .galaxy-carousel-wrapper img {
+  .featured6 .galaxy-step-card {
+    position: relative !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    display: flex !important;
     width: 100%;
     height: auto;
-    min-width: 100%;
+  }
+  
+  .featured6 .galaxy-step-card.active-step {
+    display: flex !important;
+  }
+  
+  .featured6 .galaxy-step-card:not(.active-step) {
+    display: none !important;
+  }
+  
+  .featured6 .galaxy-step-card .frame-child12 {
+    width: 100%;
+    height: auto !important;
+    min-height: 300px;
+    max-height: none !important;
     object-fit: contain;
   }
   
@@ -3332,7 +3407,28 @@ body > main.content::after {
     flex-direction: column;
   }
   
-  /* Featured7 - full size image */
+  /* QR code block - restore visibility */
+  .subscription-bonus {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .bonus-text-content {
+    text-align: center;
+  }
+  
+  .bonus-image-placeholder {
+    width: 150px;
+    height: 150px;
+  }
+  
+  /* Featured7 - full size image and center text */
   .featured7 {
     padding: 40px 15px;
   }
@@ -3340,6 +3436,10 @@ body > main.content::after {
   .featured7 > div,
   .featured7 .frame-parent {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
   
   .featured7 img {
@@ -3347,6 +3447,18 @@ body > main.content::after {
     height: auto;
     object-fit: contain;
     max-width: 100%;
+  }
+  
+  .featured7 .parent4,
+  .featured7 .div23,
+  .featured7 .div25,
+  .featured7 p,
+  .featured7 span {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    padding: 0 15px;
+    box-sizing: border-box;
   }
   
   /* Featured10 - restore block */

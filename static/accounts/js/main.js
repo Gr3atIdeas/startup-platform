@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (featureCards.length > 0) {
       const cardWidth = featureCards[0].offsetWidth
       const gap = parseInt(getComputedStyle(featuresCarousel).gap) || 20
-      const visibleCards = 3
+      const visibleCards = window.innerWidth <= 767 ? 1 : 3
       let currentCardIndex = 0
       const scrollAmount = cardWidth + gap
       const totalCards = featureCards.length
