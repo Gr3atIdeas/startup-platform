@@ -601,7 +601,6 @@ body > main.content::after {
 .featured1 .feature-card:nth-child(3) .div11,
 .featured1 .feature-card:nth-child(4) .div11 {
   margin-bottom: 0px;
-  bottom: 40px;
 }
 
 .featured1 .heading .parent3 .div16 {
