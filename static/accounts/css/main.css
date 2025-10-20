@@ -3172,9 +3172,42 @@ body > main.content::after {
 
 /* ========== МОБИЛЬНЫЕ УСТРОЙСТВА ========== */
 @media (max-width: 767px) {
-  /* Featured1 - карточки */
+  /* Featured1 - карточки в столбик без карусели */
   .featured1 {
     padding: 30px 15px;
+  }
+  
+  /* Скрываем элементы управления карусели */
+  .featured1 .heading .wrap {
+    display: none !important;
+  }
+  
+  .featured1 .heading {
+    margin-bottom: 30px;
+  }
+  
+  .featured1 .heading .parent3 .div16,
+  .featured1 .heading .parent3 .div17 {
+    font-size: clamp(28px, 7vw, 55px);
+  }
+  
+  /* Карусель превращаем в вертикальный список */
+  .featured1 .features-carousel-wrapper {
+    width: 100%;
+    overflow: visible;
+  }
+  
+  .featured1 .features-carousel {
+    overflow: visible;
+  }
+  
+  .featured1-carousel-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    transform: none !important;
+    transition: none !important;
   }
   
   .featured1 .feature-card {
@@ -3186,6 +3219,7 @@ body > main.content::after {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    margin: 0;
   }
   
   .featured1 .feature-card img.rectangle-icon {
@@ -3217,20 +3251,6 @@ body > main.content::after {
   .featured1 .feature-card .div11 {
     margin-bottom: 20px;
     font-size: 14px;
-  }
-  
-  .featured1-carousel-inner {
-    gap: 10px;
-  }
-  
-  .featured1 .heading .parent3 .div16,
-  .featured1 .heading .parent3 .div17 {
-    font-size: clamp(28px, 7vw, 55px);
-  }
-  
-  .featured1 .features-carousel-wrapper {
-    width: 100%;
-    overflow: visible;
   }
   
   /* Voltforge-description - fix text overflow */
