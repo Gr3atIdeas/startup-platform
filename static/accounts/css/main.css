@@ -3368,6 +3368,12 @@ body > main.content::after {
   .featured4 .group-div {
     width: 100%;
     max-width: 300px;
+    text-align: center;
+  }
+  
+  .featured4 .group-div .div24,
+  .featured4 .group-div .div26 {
+    text-align: center;
   }
   
   /* Кнопка "Посмотреть стартапы" */
@@ -3465,9 +3471,16 @@ body > main.content::after {
     height: 150px;
   }
   
-  /* Featured7 - full size image and center text */
+  /* Featured7 - card-industry styles */
   .featured7 {
-    padding: 40px 15px;
+    background-color: black;
+    padding: 0px 24px;
+    width: 430px;
+    height: 474.8px;
+  }
+  
+  .featured7 .card-industry {
+    background-color: black;
   }
   
   .featured7 > div,
