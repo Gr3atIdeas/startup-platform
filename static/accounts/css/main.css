@@ -3465,7 +3465,7 @@ body > main.content::after {
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    margin-top: -30px;
+    margin-top: 315px;
   }
   
   .subscription-form-wrapper {
@@ -3493,6 +3493,10 @@ body > main.content::after {
   
   .bonus-text-content {
     text-align: center;
+  }
+  
+  .bonus-description {
+    text-align: center !important;
   }
   
   .bonus-image-placeholder {
