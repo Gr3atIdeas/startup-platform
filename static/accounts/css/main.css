@@ -3369,11 +3369,18 @@ body > main.content::after {
     width: 100%;
     max-width: 300px;
     text-align: center;
+    position: relative;
   }
   
   .featured4 .group-div .div24,
+  .featured4 .group-div .div25,
   .featured4 .group-div .div26 {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
     text-align: center;
+    margin: 10px 0;
   }
   
   /* Кнопка "Посмотреть стартапы" */
@@ -3474,13 +3481,17 @@ body > main.content::after {
   /* Featured7 - card-industry styles */
   .featured7 {
     background-color: black;
-    padding: 0px 24px;
-    width: 430px;
-    height: 474.8px;
+    padding: 40px 15px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    box-sizing: border-box;
   }
   
   .featured7 .card-industry {
     background-color: black;
+    width: 100%;
+    height: auto;
   }
   
   .featured7 > div,
@@ -3511,22 +3522,30 @@ body > main.content::after {
     box-sizing: border-box;
   }
   
-  /* Featured10 - restore block */
+  /* Featured10 - compressed and column layout */
   .featured10 {
-    padding: 40px 15px;
-    display: block !important;
+    padding: 30px 15px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
     opacity: 1 !important;
     visibility: visible !important;
+    box-sizing: border-box;
   }
   
   .featured10 .frame-parent,
   .featured10 > div {
     width: 100%;
+    display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 20px;
   }
   
   .featured10 img {
     width: 100%;
+    max-width: 300px;
     height: auto;
     object-fit: contain;
   }
@@ -3535,6 +3554,18 @@ body > main.content::after {
   .featured10 .parent9 {
     width: 100% !important;
     max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .featured10 .div30,
+  .featured10 .div31,
+  .featured10 p,
+  .featured10 span {
+    width: 100%;
+    text-align: center;
   }
   
   /* Footer - fix cut off links */
