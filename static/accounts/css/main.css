@@ -3321,6 +3321,11 @@ body > main.content::after {
     padding: 40px 15px;
   }
   
+  /* Скрываем картинку icon10 для мобилок */
+  .featured4 .icon10 {
+    display: none !important;
+  }
+  
   .featured4 .frame-parent3 {
     width: 100% !important;
     height: auto !important;
@@ -3350,6 +3355,19 @@ body > main.content::after {
   .featured4 .parent7 {
     width: 100% !important;
     max-width: 100%;
+  }
+  
+  /* group-parent - карточки в столбец */
+  .featured4 .group-parent {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .featured4 .group-div {
+    width: 100%;
+    max-width: 300px;
   }
   
   /* Кнопка "Посмотреть стартапы" */
