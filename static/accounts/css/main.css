@@ -3377,7 +3377,6 @@ body > main.content::after {
   .featured4 .group-div .div26 {
     position: relative !important;
     left: auto !important;
-    top: auto !important;
     width: 100% !important;
     text-align: center;
     margin: 10px 0;
@@ -3457,7 +3456,7 @@ body > main.content::after {
     flex-direction: column;
   }
   
-  /* QR code block - restore visibility */
+  /* QR code block and subscription - restore visibility */
   .subscription-bonus {
     position: relative !important;
     left: auto !important;
@@ -3466,7 +3465,30 @@ body > main.content::after {
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    margin-top: 20px;
+    margin-top: -30px;
+  }
+  
+  .subscription-form-wrapper {
+    width: 620px;
+    padding: 30px;
+    left: 60px;
+    top: 231px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    box-sizing: border-box;
+  }
+  
+  .subscription-info {
+    left: 9px;
+    top: 30px;
+    position: absolute;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 167px;
   }
   
   .bonus-text-content {
