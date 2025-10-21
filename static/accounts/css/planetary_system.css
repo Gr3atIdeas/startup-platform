@@ -1065,7 +1065,7 @@
   position: absolute;
   
   width: 805px; 
-  height: 65px;
+  height: 75px;
   left: 50%;
   top: 0;
   transform: translateX(-50%); 
@@ -1082,7 +1082,7 @@
   white-space: nowrap !important;
   scrollbar-width: none !important;
   
-  padding: 5px 15px;
+  padding: 10px 20px;
 }
 .ultra_new_planetary_categories_container::-webkit-scrollbar {
   display: none;
@@ -1149,9 +1149,6 @@
 
 
 .ultra_new_planetary_category_item.category-all.selected {
-  width: 135px !important;
-  margin-left: -10px;
-  margin-right: 10px;
 }
 
 
