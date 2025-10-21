@@ -1096,6 +1096,7 @@
   top: auto !important;
   bottom: auto !important;
   margin: 0;
+  margin-left: 40px !important;
   z-index: 200;
 }
 
