@@ -177,7 +177,6 @@
         <div class="ultra_new_planetary_category_item category-all {% if selected_galaxy == 'All' or selected_galaxy == 'Все' %}selected{% endif %}" data-name="Все">
           <img src="{% static 'accounts/images/planetary_system/categories/category_bg.png' %}" class="ultra_new_planetary_category_bg" alt="">
           <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="Все">
-          <div class="ultra_new_planetary_category_label">Все</div>
         </div>
 
         
@@ -185,7 +184,6 @@
           <div class="ultra_new_planetary_category_item {% if direction.direction_name == selected_galaxy or direction.original_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.original_name }}">
             <img src="{% static 'accounts/images/planetary_system/categories/category_bg.png' %}" class="ultra_new_planetary_category_bg" alt="">
             <img src="{% static 'accounts/images/planetary_system/categories/' %}{{ direction.icon }}" class="ultra_new_planetary_category_icon" alt="{{ direction.direction_name }}">
-            <div class="ultra_new_planetary_category_label">{{ direction.direction_name }}</div>
           </div>
         {% endfor %}
       </div>
