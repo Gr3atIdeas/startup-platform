@@ -1102,7 +1102,7 @@
 .ultra_new_planetary_category_item.category-all.selected .ultra_new_planetary_category_bg {
   width: 135.43px;
   height: 64.5px;
-  border-radius: 32px;
+  object-fit: contain;
 }
 
 
@@ -1134,8 +1134,7 @@
 .ultra_new_planetary_category_item.selected .ultra_new_planetary_category_bg {
   width: 124px !important;
   height: 64px !important;
-  border-radius: 50px / 30px !important;
-  background: url('../images/planetary_system/ellipse_planetary.svg') center/contain no-repeat;
+  object-fit: contain;
 }
 
 
@@ -1168,10 +1167,9 @@
   position: absolute;
   width: 60px;
   height: 60px;
-  border-radius: 9999px;
-  background: url('../images/planetary_system/circle_planetary.svg') center/contain no-repeat; 
+  object-fit: contain;
   z-index: 1;
-  box-shadow: 0 0 20px rgba(30, 58, 138, 0.3);
+  pointer-events: none;
 }
 
 
@@ -1337,7 +1335,6 @@
   .ultra_new_planetary_category_bg {
     width: 35px !important;
     height: 35px !important;
-    background-size: 100px 70px;
   }
 
   .ultra_new_planetary_category_icon {
@@ -1433,7 +1430,6 @@
   .ultra_new_planetary_category_bg {
     width: 30px !important;
     height: 30px !important;
-    background-size: 80px 60px;
   }
 
   .ultra_new_planetary_category_icon {
@@ -1519,7 +1515,6 @@
   .ultra_new_planetary_category_bg {
     width: 25px !important;
     height: 25px !important;
-    background-size: 70px 50px;
   }
 
   .ultra_new_planetary_category_icon {
