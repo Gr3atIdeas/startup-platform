@@ -40,7 +40,7 @@
   position: relative;
   background: linear-gradient(180deg, black 0%, #004E9F 100%);
   box-shadow: 6px 6px 10px rgba(123, 97, 255, 0.25);
-  overflow: hidden;
+  overflow: visible;
   border-radius: 10px;
   outline: 1px #C6BBFE solid;
   outline-offset: -1px;
@@ -1104,7 +1104,7 @@
 .ultra_new_planetary_category_item.category-all.selected .ultra_new_planetary_category_bg {
   width: 135px;
   height: 55px;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 
@@ -1169,7 +1169,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 50%;
   z-index: 1;
   pointer-events: none;
@@ -1189,7 +1189,7 @@
 
 .ultra_new_planetary_nav_arrow {
   position: absolute;
-  top: 16px;
+  top: 35px;
   width: 31.17px;
   height: 31.17px;
   background: #FFEF2B;
@@ -1242,7 +1242,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 75px;
+  top: 95px;
   background: #050505;
   border-radius: 20px;
   padding: 9px 17px;
@@ -1349,7 +1349,7 @@
   .ultra_new_planetary_nav_arrow {
     width: 25px;
     height: 25px;
-    top: 12px;
+    top: 25px;
   }
 
   .ultra_new_planetary_nav_left {
@@ -1368,7 +1368,7 @@
   .ultra_new_planetary_selected_label {
     left: 50%;
     transform: translateX(-50%);
-    top: 55px;
+    top: 70px;
     font-size: 10px;
     padding: 6px 12px;
   }
@@ -1433,7 +1433,7 @@
   .ultra_new_planetary_nav_arrow {
     width: 20px;
     height: 20px;
-    top: 10px;
+    top: 20px;
   }
 
   .ultra_new_planetary_nav_arrow_icon {
@@ -1442,7 +1442,7 @@
   }
 
   .ultra_new_planetary_selected_label {
-    top: 45px;
+    top: 58px;
     font-size: 9px;
     padding: 5px 10px;
   }
@@ -1507,7 +1507,7 @@
   .ultra_new_planetary_nav_arrow {
     width: 18px;
     height: 18px;
-    top: 8px;
+    top: 18px;
   }
 
   .ultra_new_planetary_nav_arrow_icon {
@@ -1516,7 +1516,7 @@
   }
 
   .ultra_new_planetary_selected_label {
-    top: 40px;
+    top: 52px;
     font-size: 8px;
     padding: 4px 8px;
   }
