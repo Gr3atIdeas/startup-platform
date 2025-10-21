@@ -40,7 +40,8 @@
   position: relative;
   background: linear-gradient(180deg, black 0%, #004E9F 100%);
   box-shadow: 6px 6px 10px rgba(123, 97, 255, 0.25);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   border-radius: 10px;
   outline: 1px #C6BBFE solid;
   outline-offset: -1px;
@@ -1082,7 +1083,7 @@
   white-space: nowrap !important;
   scrollbar-width: none !important;
   
-  padding: 5px 15px 5px 70px;
+  padding: 5px 15px;
 }
 .ultra_new_planetary_categories_container::-webkit-scrollbar {
   display: none;
