@@ -1052,7 +1052,7 @@
   bottom: 2px;
   left: 50%;
   transform: translateX(-50%);
-  width: 900px;
+  width: 950px;
   height: 100px;
   z-index: 100;
   overflow: visible; 
@@ -1064,10 +1064,10 @@
 .ultra_new_planetary_categories_container {
   position: absolute;
   
-  width: 805px; 
-  height: 65px;
+  width: 900px; 
+  height: 75px;
   left: 50%;
-  top: 0;
+  top: -5px;
   transform: translateX(-50%); 
   display: flex;
   align-items: center;
@@ -1096,7 +1096,6 @@
   top: auto !important;
   bottom: auto !important;
   margin: 0;
-  margin-left: 40px !important;
   z-index: 200;
 }
 
