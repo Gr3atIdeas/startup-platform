@@ -1082,7 +1082,7 @@
   white-space: nowrap !important;
   scrollbar-width: none !important;
   
-  padding: 5px 8px;
+  padding: 5px 15px;
 }
 .ultra_new_planetary_categories_container::-webkit-scrollbar {
   display: none;
