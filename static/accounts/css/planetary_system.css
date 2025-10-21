@@ -1078,10 +1078,11 @@
 
 .ultra_new_planetary_categories_container {
   overflow-x: auto !important;
+  overflow-y: visible !important;
   white-space: nowrap !important;
   scrollbar-width: none !important;
   
-  padding-left: 8px; 
+  padding: 5px 8px;
 }
 .ultra_new_planetary_categories_container::-webkit-scrollbar {
   display: none;
