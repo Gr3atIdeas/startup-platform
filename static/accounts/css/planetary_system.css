@@ -1053,7 +1053,7 @@
   left: 50%;
   transform: translateX(-50%);
   width: 900px;
-  height: 100px;
+  height: 120px;
   z-index: 100;
   overflow: visible; 
 }
@@ -1065,7 +1065,7 @@
   position: absolute;
   
   width: 805px; 
-  height: 90px;
+  height: 100px;
   left: 50%;
   top: 0;
   transform: translateX(-50%); 
@@ -1082,7 +1082,7 @@
   white-space: nowrap !important;
   scrollbar-width: none !important;
   
-  padding: 15px 25px;
+  padding: 20px 30px;
 }
 .ultra_new_planetary_categories_container::-webkit-scrollbar {
   display: none;
@@ -1097,6 +1097,7 @@
   bottom: auto !important;
   margin: 0;
   z-index: 200;
+  background: none;
 }
 
 
@@ -1119,7 +1120,7 @@
   flex: 0 0 auto;
   width: 55px;
   height: 55px;
-  overflow: visible;
+  overflow: visible !important;
 }
 
 
@@ -1133,6 +1134,7 @@
   z-index: 104;
   width: 105px !important;
   height: 55px !important;
+  overflow: visible !important;
 }
 
 
@@ -1150,6 +1152,8 @@
 
 
 .ultra_new_planetary_category_item.category-all.selected {
+  width: 140px !important;
+  height: 60px !important;
 }
 
 
@@ -1158,11 +1162,6 @@
 .ultra_new_planetary_category_bg,
 .ultra_new_planetary_category_icon {
   transition: all 0.3s ease;
-}
-
-
-.ultra_new_planetary_category_item.category-all {
-  margin-right: 0;
 }
 
 
@@ -1520,28 +1519,6 @@
     top: 40px;
     font-size: 8px;
     padding: 4px 8px;
-  }
-}
-
-
-.ultra_new_planetary_category_item.category-all {
-  z-index: 200;
-}
-
-
-@media (max-width: 768px) {
-  .ultra_new_planetary_category_item.category-all {
-    margin-right: 0 !important;
-  }
-}
-
-.ultra_new_planetary_category_item.category-all {
-  background: none;
-}
-
-@media (max-width: 768px) {
-  .ultra_new_planetary_category_item.category-all {
-    background: none;
   }
 }
 
