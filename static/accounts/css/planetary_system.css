@@ -40,8 +40,7 @@
   position: relative;
   background: linear-gradient(180deg, black 0%, #004E9F 100%);
   box-shadow: 6px 6px 10px rgba(123, 97, 255, 0.25);
-  overflow-x: hidden;
-  overflow-y: visible;
+  overflow: hidden;
   border-radius: 10px;
   outline: 1px #C6BBFE solid;
   outline-offset: -1px;
@@ -1102,8 +1101,8 @@
 
 
 .ultra_new_planetary_category_item.category-all.selected .ultra_new_planetary_category_bg {
-  width: 135.43px;
-  height: 64.5px;
+  width: 135px;
+  height: 55px;
   object-fit: contain;
 }
 
@@ -1139,7 +1138,7 @@
 .ultra_new_planetary_category_item.selected .ultra_new_planetary_category_bg {
   width: 100% !important;
   height: 100% !important;
-  border-radius: 50%;
+  border-radius: 50% / 50%;
 }
 
 
@@ -1171,8 +1170,8 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+  object-fit: fill;
+  border-radius: 0;
   z-index: 1;
   pointer-events: none;
   left: 0;
