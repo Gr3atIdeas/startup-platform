@@ -3047,6 +3047,8 @@ body > main.content::after {
 
 .featured #ultra_new_planetary_galaxy {
   --ultra_new_planetary_galaxy_scale: 0.8;
+  top: 100%;
+  left: 124%;
 }
 
 @media (max-width: 768px) {
