@@ -1461,3 +1461,16 @@ body {
     object-fit: cover;
   }
 }
+
+.featured7 .frame-parent22.card-gamification {
+  display: none;
+}
+
+.featured7 .card-industry {
+  min-height: 521px;
+  height: 521px;
+}
+
+.featured9 {
+  display: none !important;
+}
