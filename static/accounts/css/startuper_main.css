@@ -1016,22 +1016,6 @@ body {
     transform: none;
   }
 
-  .featured5 .frame-parent7 {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .featured5 .frame-parent8,
-  .featured5 .frame-parent9,
-  .featured5 .creators {
-    width: 100%;
-    max-width: 500px; 
-  }
-
-  .featured5 .divider {
-    display: none;
-  }
-
   .featured9 .heading-parent {
     flex-direction: column;
   }
