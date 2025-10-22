@@ -3045,9 +3045,8 @@ body > main.content::after {
   height: 800px;
 }
 
-#ultra_new_planetary_galaxy {
-  transform: scale(0.8);
-  transform-origin: center center;
+.featured #ultra_new_planetary_galaxy {
+  --ultra_new_planetary_galaxy_scale: 0.8;
 }
 
 @media (max-width: 768px) {
@@ -3057,8 +3056,8 @@ body > main.content::after {
     height: 600px;
   }
   
-  #ultra_new_planetary_galaxy {
-    transform: scale(0.7);
+  .featured #ultra_new_planetary_galaxy {
+    --ultra_new_planetary_galaxy_scale: 0.7;
   }
 }
 
@@ -3069,8 +3068,8 @@ body > main.content::after {
     height: 500px;
   }
   
-  #ultra_new_planetary_galaxy {
-    transform: scale(0.6);
+  .featured #ultra_new_planetary_galaxy {
+    --ultra_new_planetary_galaxy_scale: 0.6;
   }
 }
 
