@@ -1,3 +1,20 @@
+/* Consents modal sizing */
+#consentsModal .modal-dialog { max-width: 870px; width: 870px; margin: 10vh auto; background: #222; color: #fff; border-radius: 10px; border: 1px solid rgba(255,255,255,.2); box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+
+/* Consent doc buttons wrapping */
+.consents-docs-buttons .consent-doc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  white-space: normal;
+  text-align: center;
+  row-gap: 2px;
+  column-gap: 8px;
+  min-height: 40px;
+  padding: 10px 16px;
+  max-width: 100%;
+}
 
 .form-control.input-error,
 .select-wrapper .form-control.input-error {
