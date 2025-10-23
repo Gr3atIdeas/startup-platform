@@ -781,11 +781,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     setupDragAndDrop('id_creatives_input', 'creativesDropArea', 'creativesPreview', 
-        { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] }, true, 3);
+        { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] }, true, 10);
     setupDragAndDrop('id_video_input', 'videoDropArea', 'videoPreview', 
         { mimes: ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska'], extensions: ['mp4', 'mov', 'avi', 'mkv'] }, false, 1);
     setupDragAndDrop('id_proofs_input', 'proofsDropArea', 'proofsPreview', 
-        { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] }, true, 3);
+        { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] }, true, 10);
 
     function setupCustomCheckboxes() {
         document.querySelectorAll('.agreement-section .custom-checkbox-label').forEach(label => {

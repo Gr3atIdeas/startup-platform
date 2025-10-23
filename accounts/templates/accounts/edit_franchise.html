@@ -48,18 +48,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const videoInput = document.getElementById('id_video_input');
             const logoInput = document.getElementById('id_logo_input');
             
-            if (creativesInput && creativesInput.files.length > 3) {
-                alert('Максимально 3 изображения');
+            if (creativesInput && creativesInput.files.length > 10) {
+                alert('Максимально 10 изображений');
                 return;
             }
             
-            if (proofsInput && proofsInput.files.length > 15) {
-                alert('Максимально 15 документов');
+            if (proofsInput && proofsInput.files.length > 10) {
+                alert('Максимально 10 документов');
                 return;
             }
             
-            if (videoInput && videoInput.files.length > 1) {
-                alert('Максимально 1 видео');
+            if (videoInput && videoInput.files.length > 3) {
+                alert('Максимально 3 видео');
                 return;
             }
             

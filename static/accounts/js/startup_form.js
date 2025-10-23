@@ -150,8 +150,6 @@ document.addEventListener('DOMContentLoaded', function () {
       var filtered = filterFiles(combined)
       setFiles(filtered)
       
-      // Очищаем input чтобы можно было загрузить тот же файл снова
-      input.value = ''
     })
     dropArea.addEventListener('dragover', function (e) {
       e.preventDefault()
@@ -197,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
       reader.readAsDataURL(file)
     })
   }
-  bindInputWithDropArea('id_creatives_input', 'creativesDropArea', 'creativesPreview', { kind: 'image', mimePrefix: 'image/', maxCount: 3 })
+  bindInputWithDropArea('id_creatives_input', 'creativesDropArea', 'creativesPreview', { kind: 'image', mimePrefix: 'image/', maxCount: 10 })
   bindInputWithDropArea('id_video_input', 'videoDropArea', 'videoPreview', { kind: 'video', mimePrefix: 'video/', maxCount: 3 })
   bindInputWithDropArea('id_proofs_input', 'proofsDropArea', 'proofsPreview', { kind: 'file', allowedExts: ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx'], maxCount: 10 })
   var microCheckbox = document.getElementById('id_micro_investment_available')
@@ -350,10 +348,10 @@ document.addEventListener('DOMContentLoaded', function () {
         var c = creativesInput.files ? creativesInput.files.length : 0
         if (c < 1) {
           hasError = true
-          showFieldError(creativesInput, 'Добавьте хотя бы 1 изображение (до 3)')
-        } else if (c > 3) {
+          showFieldError(creativesInput, 'Добавьте хотя бы 1 изображение (до 10)')
+        } else if (c > 10) {
           hasError = true
-          showFieldError(creativesInput, 'Не более 3 изображений')
+          showFieldError(creativesInput, 'Не более 10 изображений')
         } else {
           clearFieldError(creativesInput)
         }
@@ -388,9 +386,9 @@ document.addEventListener('DOMContentLoaded', function () {
       var videoInput = document.getElementById('id_video_input')
       var proofsInput = document.getElementById('id_proofs_input')
       
-      if (creativesInput && creativesInput.files && creativesInput.files.length > 3) {
+      if (creativesInput && creativesInput.files && creativesInput.files.length > 10) {
         hasError = true
-        showFieldError(creativesInput, 'Не более 3 изображений')
+        showFieldError(creativesInput, 'Не более 10 изображений')
       } else if (creativesInput) {
         clearFieldError(creativesInput)
       }
