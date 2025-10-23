@@ -1174,13 +1174,13 @@ h3.section-title {
 }
 
 .file-preview-item .file-name-display {
-  font-weight: 500; 
-  color: #2c3e50; 
+  font-weight: 500;
+  color: #ffffff !important;
   margin: 0;
   font-size: 0.9rem;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
 
 

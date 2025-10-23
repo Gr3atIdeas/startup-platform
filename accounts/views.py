@@ -1134,57 +1134,6 @@ def franchises_list(request):
     )
     franchise_directions = Directions.objects.filter(direction_id__in=existing_dir_ids).order_by("direction_name")
 
-    if not Franchises.objects.exists():
-        franchise_names = [
-            "БургерХаус", "КофеМир", "ПиццаПлюс", "СушиБар", "ШаурмаСтар", "КебабКинг",
-            "БлинХаус", "ПельменХаус", "СупБар", "СалатСтар", "ДесертХаус", "МороженоМир",
-            "ЧайХаус", "СокБар", "КоктейльХаус", "СмузиСтар", "МилкшейкБар", "ЛимонадХаус",
-            "СпортХаус", "ФитнесСтар", "ЙогаБар", "ТанцыХаус", "БоксСтар", "ПлаваниеБар",
-            "БегХаус", "ВелосипедСтар", "ТренажерБар", "БассейнХаус", "СаунаСтар", "МассажБар",
-            "КрасотаХаус", "СалонСтар", "ПарикмахерБар", "МаникюрХаус", "ПедикюрСтар", "СПАБар",
-            "КосметикаХаус", "ПарфюмСтар", "УходБар", "МакияжХаус", "ПрическаСтар", "СтильБар",
-            "ОдеждаХаус", "ОбувьСтар", "АксессуарБар", "СумкаХаус", "РеменьСтар", "ЧасыБар",
-            "УкрашениеХаус", "БижутерияСтар", "ЗолотоБар", "СереброХаус", "ПлатинаСтар", "БриллиантБар"
-        ]
-
-        startups = Startups.objects.filter(status="approved")
-        for i, startup in enumerate(startups):
-            franchise_name = franchise_names[i % len(franchise_names)]
-            franchise_direction = franchise_directions[i % len(franchise_directions)] if franchise_directions.exists() else None
-
-            franchise = Franchises.objects.create(
-                title=franchise_name,
-                short_description=startup.short_description,
-                description=startup.description,
-                terms=startup.terms,
-                direction=franchise_direction,
-                stage=startup.stage,
-                investment_size=startup.funding_goal,
-                payback_period=12,
-                own_businesses=5,
-                franchise_businesses=15,
-                valuation=startup.valuation,
-                pitch_deck_url=startup.pitch_deck_url,
-                created_at=startup.created_at,
-                updated_at=startup.updated_at,
-                status="approved",
-                total_invested=startup.total_invested,
-                info_url=startup.info_url,
-                percent_amount=startup.percent_amount,
-                customization_data=startup.customization_data,
-                total_voters=startup.total_voters,
-                sum_votes=startup.sum_votes,
-                is_edited=startup.is_edited,
-                moderator_comment=startup.moderator_comment,
-                step_number=startup.step_number,
-                logo_urls=startup.logo_urls,
-                creatives_urls=startup.creatives_urls,
-                proofs_urls=startup.proofs_urls,
-                video_urls=startup.video_urls,
-                planet_image=startup.planet_image,
-                owner=startup.owner
-            )
-
     franchises_qs = Franchises.objects.filter(status="approved")
     selected_categories = request.GET.getlist("category")
     min_payback_str = request.GET.get("min_payback", "0")
@@ -1288,66 +1237,7 @@ def franchises_list(request):
         elif sort_order == "oldest":
             franchises_qs = franchises_qs.order_by("created_at")
 
-    try:
-        approved_count = Franchises.objects.filter(status="approved").count()
-        if approved_count < 18:
-            from .models import Startups
-            available_startups = list(Startups.objects.filter(status="approved")[:100])
-            seed_names = [
-                "Orbit Digital", "NovaLab Studio", "Cometix", "PixelFoundry",
-                "NeuroCraft", "Skyline Media", "Quantum Works", "AstroBrand",
-                "DeepWave", "Hyperlink", "BlueOrbit", "MetaForge",
-                "Brandverse", "CodeSmiths", "UXia Lab", "Visionary",
-                "IdeaGarden", "EchoPixel", "CraftLabs", "MotionQuark",
-            ]
-            import random
-            missing = 18 - approved_count
-            for i in range(max(0, missing)):
-                base_title = seed_names[i % len(seed_names)]
-                title = f"{base_title} {random.randint(100, 999)}"
-                st = available_startups[i % len(available_startups)] if available_startups else None
-                try:
-                    Franchises.objects.create(
-                        title=title,
-                        short_description=(st.short_description if st else "Агентство полного цикла"),
-                        description=(st.description if st else "Услуги: разработка, дизайн, маркетинг."),
-                        terms=(st.terms if st else "Условия обсуждаются индивидуально."),
-                        direction=(st.direction if st else None),
-                        stage=(st.stage if st else None),
-                        investment_size=(st.funding_goal if st else 0),
-                        payback_period=12,
-                        own_businesses=0,
-                        franchise_businesses=0,
-                        valuation=(st.valuation if st else 0),
-                        pitch_deck_url=(st.pitch_deck_url if st else None),
-                        created_at=timezone.now(),
-                        updated_at=timezone.now(),
-                        status="approved",
-                        total_invested=0,
-                        info_url=(st.info_url if st else None),
-                        percent_amount=(st.percent_amount if st else 0),
-                        customization_data={"agency_category": random.choice([
-                            "Веб-разработка", "Мобильная разработка", "Дизайн",
-                            "Маркетинг", "ИИ", "Брендинг", "Видео и мультимедиа"
-                        ])},
-                        total_voters=0,
-                        sum_votes=0,
-                        is_edited=False,
-                        moderator_comment=None,
-                        step_number=1,
-                        logo_urls=(st.logo_urls if st else []),
-                        creatives_urls=(st.creatives_urls if st else []),
-                        proofs_urls=(st.proofs_urls if st else []),
-                        video_urls=(st.video_urls if st else []),
-                        planet_image=(st.planet_image if st else None),
-                        owner=(st.owner if st else None),
-                        franchise_cost=0,
-                        profit_calculation=None,
-                    )
-                except Exception:
-                    pass
-    except Exception:
-        pass
+    
 
     paginator = Paginator(franchises_qs, 6)
     page_obj = paginator.get_page(page_number)

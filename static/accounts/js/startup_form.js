@@ -633,27 +633,25 @@ document.addEventListener('DOMContentLoaded', function () {
     var confirm=document.getElementById('consentConfirmBtn')
     if(!modal||!content||!title||!confirm) return
     currentDocNumber = docNumber
-    title.textContent = docNumber===1?'Документ 1':'Документ 2'
+    title.textContent = docNumber===1?'Политика конфиденциальности':'Согласие на обработку персональных данных'
     content.innerHTML=''
     var inner=document.createElement('div')
-    inner.style.maxHeight='60vh'; inner.style.overflow='auto'; inner.style.padding='8px'
-    // Делаем первый документ длиннее, чтобы точно был скролл
-    var repeatCount = docNumber===1 ? 24 : 12
-    inner.innerHTML = ('<p>Текст документа '+docNumber+'. Пролистайте до конца для подтверждения.</p>').repeat(repeatCount)
+    inner.style.maxHeight='60vh'; inner.style.overflow='auto'; inner.style.padding='0'
+    var iframe=document.createElement('iframe')
+    iframe.style.width='100%'; iframe.style.height='60vh'; iframe.style.border='none'
+    iframe.setAttribute('title', title.textContent)
+    iframe.src = docNumber===1
+      ? '/static/accounts/docs/%D0%9F%D0%BE%D0%BB%D0%B8%D1%82%D0%B8%D0%BA%D0%B0%20%D0%BA%D0%BE%D0%BD%D1%84%D0%B8%D0%B4%D0%B5%D0%BD%D1%86%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B8.docx'
+      : '/static/accounts/docs/%D0%A1%D0%BE%D0%B3%D0%BB%D0%B0%D1%81%D0%B8%D0%B5%20%D0%BD%D0%B0%20%D0%BE%D0%B1%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D1%83%20%D0%BF%D0%B5%D1%80%D1%81%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D1%85%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85.docx'
+    inner.appendChild(iframe)
     content.appendChild(inner)
     confirm.disabled=true
     function tryUnlock(){
-      var atBottom = inner.scrollTop + inner.clientHeight >= inner.scrollHeight - 2
+      var atBottom = true
       if(atBottom){ confirm.disabled=false; return true }
       return false
     }
-    inner.addEventListener('scroll', tryUnlock)
-    inner.addEventListener('wheel', tryUnlock, {passive:true})
-    inner.addEventListener('touchmove', tryUnlock, {passive:true})
-    // Если текста мало и скролла нет — сразу разблокируем
-    setTimeout(function(){
-      if(inner.scrollHeight<=inner.clientHeight+2){ confirm.disabled=false }
-    }, 0)
+    setTimeout(function(){ confirm.disabled=false }, 300)
     modal.classList.add('open')
     modal.style.visibility='visible'; modal.style.opacity='1'
     confirm.onclick=function(){

@@ -350,7 +350,7 @@ class DescriptionMediaModal {
                 ${removeButtonHtml}
                 </div>
             <div class="file-info" style="padding: 10px; background: white;">
-                <div class="file-name" style="font-size: 12px; font-weight: 500; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapedName}">${escapedName}</div>
+                <div class="file-name" style="font-size: 12px; font-weight: 500; color: #ffffff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapedName}">${escapedName}</div>
                 <div class="file-type" style="font-size: 11px; color: #666; margin-top: 4px;">${isImage ? 'Изображение' : 'Видео'} ${sourceLabel}</div>
             </div>
         `;

@@ -77,7 +77,7 @@
 
         
         <div class="rating-filter">
-          <div class="rating-label-container"> 
+        <div class="rating-label-container"> 
             <label class="rating-label">Рейтинг</label>
             
             <span id="ratingValueDisplay" class="rating-value-display">{{ min_rating|default:0|floatformat:1 }} - {{ max_rating|default:5|floatformat:1 }}</span>
@@ -118,7 +118,7 @@
           
           {% include 'accounts/partials/_startup_cards.html' with page_obj=page_obj %}
         {% else %}
-          <div class="no-startups">
+          <div class="no-cards">
             <p>В настоящее время нет доступных стартапов. Загляните позже!</p>
           </div>
         {% endif %}
