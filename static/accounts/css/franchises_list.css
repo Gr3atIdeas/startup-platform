@@ -756,6 +756,33 @@ body {
   margin-top: 15px;
 }
 
+/* Унифицированный стиль ползунков во всех блоках сайдбара каталога франшиз */
+.sidebar .noUi-target {
+  background: #ebebeb;
+  height: 4px;
+  margin-bottom: 5px;
+  box-shadow: none;
+  border: none;
+  border-radius: 9999px;
+}
+.sidebar .noUi-connect {
+  background: #004e9f;
+  box-shadow: none;
+  border-radius: 9999px;
+}
+.sidebar .noUi-handle {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #004e9f;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+  top: -6px;
+  right: -8px;
+}
+.sidebar .noUi-handle:focus { outline: none; }
+
 /* Новые стили карточек франшиз */
 .franchise-card {
   position: relative;
