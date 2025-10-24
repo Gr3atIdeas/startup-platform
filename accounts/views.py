@@ -391,9 +391,7 @@ FIXED_CATEGORIES = [
     {'original_name': 'Cafe', 'direction_name': 'Кафе/рестораны', 'icon': 'cafe.png'},
     {'original_name': 'Delivery', 'direction_name': 'Доставка', 'icon': 'delivery-b562f7.png'},
     {'original_name': 'Fastfood', 'direction_name': 'Фастфуд', 'icon': 'fastfood.png'},
-    {'original_name': 'Health', 'direction_name': 'Здоровье', 'icon': 'health.png'},
-    {'original_name': 'Healthcare', 'direction_name': 'Здравоохранение', 'icon': 'healthcare.png'},
-    {'original_name': 'Medicine', 'direction_name': 'Медицина', 'icon': 'medicine.png'},
+    {'original_name': 'Health', 'direction_name': 'Здоровье', 'icon': 'healthcare.png', 'match_names': ['Health', 'Healthcare', 'Medicine']},
     {'original_name': 'Finance', 'direction_name': 'Финансы', 'icon': 'finance.png'},
     {'original_name': 'Psychology', 'direction_name': 'Психология', 'icon': 'psychology-16bdc1.png'},
     {'original_name': 'Technology', 'direction_name': 'Технологии', 'icon': 'technology.png'},
@@ -981,15 +979,20 @@ def user_logout(request):
     return redirect("home")
 
 def startups_list(request):
-    startup_directions = Directions.objects.filter(
-        direction_name__in=[
-            'Technology', 'Healthcare', 'Finance', 'Education', 'Entertainment',
-            'Fashion', 'Food', 'Gaming', 'Real Estate', 'Travel', 'Agriculture',
-            'Energy', 'Environment', 'Social', 'Medicine', 'Auto', 'Delivery',
-            'Cafe', 'Fastfood', 'Health', 'Beauty', 'Transport', 'Sport',
-            'Psychology', 'AI', 'IT', 'Retail'
-        ]
-    ).order_by('direction_name')
+    # Формируем список направлений для сайдбара каталога: объединяем три категории здоровья в одну визуальную «Health»
+    health_group = ['Health', 'Healthcare', 'Medicine']
+    base_directions = [
+        'Technology', 'Finance', 'Education', 'Entertainment', 'Fashion', 'Food', 'Gaming',
+        'Real Estate', 'Travel', 'Agriculture', 'Energy', 'Environment', 'Social', 'Auto',
+        'Delivery', 'Cafe', 'Fastfood', 'Beauty', 'Transport', 'Sport', 'Psychology', 'AI', 'IT', 'Retail'
+    ]
+    # Загружаем все доступные направления из базы
+    existing = set(Directions.objects.values_list('direction_name', flat=True))
+    # Собираем итоговый отображаемый список с учетом наличия
+    display_names = [name for name in base_directions if name in existing]
+    if any(h in existing for h in health_group):
+        display_names.append('Health')
+    startup_directions = Directions.objects.filter(direction_name__in=display_names).order_by('direction_name')
 
     startups_qs = Startups.objects.filter(status="approved")
     selected_categories = request.GET.getlist("category")
@@ -1013,16 +1016,24 @@ def startups_list(request):
         rating_bucket=Floor(Coalesce(Avg("uservotes__rating"), 0.0)),
     )
 
-    categories = list(
-        Directions.objects.annotate(id=F("direction_id"), name=F("direction_name"))
-        .values("id", "name")
-        .order_by("name")
-    )
+    # Категории для JSON: заменяем группу здоровья одной записью
+    categories = []
+    for d in startup_directions:
+        name = d.direction_name
+        if name in health_group:
+            if not any(c['name'] == 'Health' for c in categories):
+                categories.append({'id': d.direction_id, 'name': 'Health'})
+        else:
+            categories.append({'id': d.direction_id, 'name': name})
 
     if selected_categories:
-        startups_qs = startups_qs.filter(
-            direction__direction_name__in=selected_categories
-        )
+        expanded = []
+        for cat in selected_categories:
+            if cat in ['Health', 'Healthcare', 'Medicine', 'Здоровье']:
+                expanded.extend(health_group)
+            else:
+                expanded.append(cat)
+        startups_qs = startups_qs.filter(direction__direction_name__in=list(set(expanded)))
 
     micro_investment = micro_investment_str == "1"
     if micro_investment:
@@ -5085,7 +5096,8 @@ def investor_main(request):
         direction_filter = Q()
         for category in FIXED_CATEGORIES:
             if category['original_name'] == selected_direction_name or category['direction_name'] == selected_direction_name:
-                direction_filter |= Q(direction__direction_name=category['direction_name'])
+                names = category.get('match_names') or [category['original_name']]
+                direction_filter |= Q(direction__direction_name__in=names)
         if direction_filter:
             startups_query = startups_query.filter(direction_filter)
     startups_filtered = startups_query.annotate(
@@ -5238,7 +5250,8 @@ def startuper_main(request):
         direction_filter = Q()
         for category in FIXED_CATEGORIES:
             if category['original_name'] == selected_direction_name or category['direction_name'] == selected_direction_name:
-                direction_filter |= Q(direction__direction_name=category['direction_name'])
+                names = category.get('match_names') or [category['original_name']]
+                direction_filter |= Q(direction__direction_name__in=names)
         if direction_filter:
             startups_query = startups_query.filter(direction_filter)
 

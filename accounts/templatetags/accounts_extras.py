@@ -11,7 +11,7 @@ def translate_category(name):
         return "Без категории"
     original = str(name).strip()
     translations_exact = {
-        "Medicine": "Медицина",
+        "Medicine": "Здоровье",
         "Auto": "Автомобили",
         "Delivery": "Доставка",
         "Cafe": "Кафе/рестораны",
@@ -23,7 +23,7 @@ def translate_category(name):
         "Psychology": "Психология",
         "AI": "ИИ",
         "Finance": "Финансы",
-        "Healthcare": "Здравоохранение",
+        "Healthcare": "Здоровье",
         "Technology": "Технологии",
         "IT": "ИТ",
         "Retail": "Ритейл",

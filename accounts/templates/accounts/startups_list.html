@@ -38,7 +38,7 @@
                 <input type="checkbox" name="category" value="{{ dir.direction_name }}" class="category-checkbox" {% if dir.direction_name in selected_categories %}checked{% endif %}>
                 <span class="category-name">
                     {% with original_name=dir.direction_name|default:"" %}
-                        {% if original_name == "Medicine" %}Медицина
+                        {% if original_name == "Medicine" %}Здоровье
                         {% elif original_name == "Auto" %}Автомобили
                         {% elif original_name == "Delivery" %}Доставка
                         {% elif original_name == "Cafe" %}Кафе/рестораны
@@ -50,7 +50,7 @@
                         {% elif original_name == "Psychology" %}Психология
                         {% elif original_name == "AI" %}ИИ
                         {% elif original_name == "Finance" %}Финансы
-                        {% elif original_name == "Healthcare" %}Здравоохранение
+                        {% elif original_name == "Healthcare" %}Здоровье
                         {% elif original_name == "Technology" %}Технологии
                         {% else %}{{ original_name|default:"Не указано" }}
                         {% endif %}

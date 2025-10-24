@@ -232,18 +232,24 @@ class StartupForm(forms.ModelForm):
             print(f"Error fetching planet URLs: {e}")
             self.fields["planet_image"].choices = []
         allowed_startup_directions = [
-            'Technology', 'Healthcare', 'Finance', 'Education', 'Entertainment',
+            'Technology', 'Finance', 'Education', 'Entertainment',
             'Fashion', 'Food', 'Gaming', 'Real Estate', 'Travel', 'Agriculture',
-            'Energy', 'Environment', 'Social', 'Medicine', 'Auto', 'Delivery',
+            'Energy', 'Environment', 'Social', 'Auto', 'Delivery',
             'Cafe', 'Fastfood', 'Health', 'Beauty', 'Transport', 'Sport',
             'Psychology', 'AI', 'IT', 'Retail'
         ]
+        extra_old = []
+        if getattr(self, 'instance', None) and getattr(self.instance, 'direction', None):
+            current_dir = getattr(self.instance.direction, 'direction_name', None)
+            if current_dir in ['Healthcare', 'Medicine']:
+                extra_old = ['Healthcare', 'Medicine']
+        queryset_names = allowed_startup_directions + extra_old
         self.fields["direction"].queryset = Directions.objects.filter(
-            direction_name__in=allowed_startup_directions
+            direction_name__in=queryset_names
         ).order_by("direction_name")
         direction_translations = {
             "Technology": "Технологии",
-            "Healthcare": "Здравоохранение",
+            "Healthcare": "Здоровье",
             "Finance": "Финансы",
             "Education": "Образование",
             "Entertainment": "Развлечения",
@@ -256,7 +262,7 @@ class StartupForm(forms.ModelForm):
             "Energy": "Энергетика",
             "Environment": "Экология",
             "Social": "Социальные проекты",
-            "Medicine": "Медицина",
+            "Medicine": "Здоровье",
             "Auto": "Авто",
             "Delivery": "Доставка",
             "Cafe": "Кафе/рестораны",

@@ -1226,15 +1226,15 @@ textarea.form-control.input-error {
 }
 
 
-.file-preview-item p {
-  color: #2c3e50 !important;
+.file-preview-area .file-preview-item p {
+  color: #ffffff !important;
   margin: 0;
   font-size: 0.9rem;
   font-weight: 500;
 }
 
-.file-preview-item a {
-  color: #2c3e50 !important;
+.file-preview-area .file-preview-item a {
+  color: #ffffff !important;
   text-decoration: none;
   font-weight: 500;
 }
