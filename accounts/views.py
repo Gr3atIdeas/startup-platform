@@ -2227,10 +2227,14 @@ def startup_detail(request, startup_id):
     if startup.funding_goal and startup.funding_goal > 0:
         from django.db.models import Sum as _Sum
         try:
-            current_total = startup.investmenttransactions.all().aggregate(total=_Sum("amount")).get("total") or 0
+            current_total = startup.investmenttransactions.all().aggregate(total=_Sum("amount")).get("total") or Decimal("0")
         except Exception:
-            current_total = startup.amount_raised or 0
-        progress_percentage = (current_total * 100.0) / float(startup.funding_goal)
+            current_total = startup.amount_raised or Decimal("0")
+        goal = Decimal(startup.funding_goal) if startup.funding_goal is not None else Decimal("0")
+        if goal > 0:
+            progress_percentage = (current_total * Decimal("100")) / goal
+        else:
+            progress_percentage = Decimal("0")
         if progress_percentage < 0:
             progress_percentage = 0
         if progress_percentage > 100:
