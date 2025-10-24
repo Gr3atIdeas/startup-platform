@@ -155,7 +155,56 @@ class StartupEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["direction"].queryset = Directions.objects.all()
+        allowed_startup_directions = [
+            'Technology', 'Finance', 'Education', 'Entertainment',
+            'Fashion', 'Food', 'Gaming', 'Real Estate', 'Travel', 'Agriculture',
+            'Energy', 'Environment', 'Social', 'Auto', 'Delivery',
+            'Cafe', 'Fastfood', 'Health', 'Beauty', 'Transport', 'Sport',
+            'Psychology', 'AI', 'IT', 'Retail'
+        ]
+        extra_old = []
+        if getattr(self, 'instance', None) and getattr(self.instance, 'direction', None):
+            current_dir = getattr(self.instance.direction, 'direction_name', None)
+            if current_dir in ['Healthcare', 'Medicine']:
+                extra_old = ['Healthcare', 'Medicine']
+        queryset_names = allowed_startup_directions + extra_old
+        self.fields["direction"].queryset = Directions.objects.filter(
+            direction_name__in=queryset_names
+        ).order_by("direction_name")
+
+        direction_translations = {
+            "Technology": "Технологии",
+            "Healthcare": "Здоровье",
+            "Finance": "Финансы",
+            "Education": "Образование",
+            "Entertainment": "Развлечения",
+            "Fashion": "Мода",
+            "Food": "Еда",
+            "Gaming": "Игры",
+            "Real Estate": "Недвижимость",
+            "Travel": "Путешествия",
+            "Agriculture": "Сельское хозяйство",
+            "Energy": "Энергетика",
+            "Environment": "Экология",
+            "Social": "Социальные проекты",
+            "Medicine": "Здоровье",
+            "Auto": "Авто",
+            "Delivery": "Доставка",
+            "Cafe": "Кафе/рестораны",
+            "Fastfood": "Фастфуд",
+            "Health": "Здоровье",
+            "Beauty": "Красота",
+            "Transport": "Транспорт",
+            "Sport": "Спорт",
+            "Psychology": "Психология",
+            "AI": "ИИ",
+            "IT": "ИТ",
+            "Retail": "Ритейл",
+        }
+        def _label_from_instance_edit(obj):
+            name = getattr(obj, "direction_name", str(obj))
+            return direction_translations.get(name, name)
+        self.fields["direction"].label_from_instance = _label_from_instance_edit
         try:
             self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
         except Exception as e:

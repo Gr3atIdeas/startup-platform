@@ -5192,13 +5192,17 @@ def investor_main(request):
             random_planet_num = random.randint(1, 6)
             planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
-        original_direction = None
-        for category in FIXED_CATEGORIES:
-            if category['direction_name'] == direction_name:
-                original_direction = category['original_name']
-                break
-        if not original_direction:
-            original_direction = direction_name
+        # Нормализуем здоровье в одну категорию 'Health'
+        if direction_name in ['Healthcare', 'Medicine']:
+            original_direction = 'Health'
+        else:
+            original_direction = None
+            for category in FIXED_CATEGORIES:
+                if category['direction_name'] == direction_name:
+                    original_direction = category['original_name']
+                    break
+            if not original_direction:
+                original_direction = direction_name
         all_startups_data.append({
             "id": startup.startup_id,
             "name": startup.title,
