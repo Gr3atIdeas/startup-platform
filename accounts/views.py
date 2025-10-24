@@ -2225,12 +2225,16 @@ def startup_detail(request, startup_id):
         show_moderator_comment = True
     progress_percentage = 0
     if startup.funding_goal and startup.funding_goal > 0:
-        progress_percentage = (
-            (startup.amount_raised / startup.funding_goal) * 100
-            if startup.amount_raised
-            else 0
-        )
-        progress_percentage = min(progress_percentage, 100)
+        from django.db.models import Sum as _Sum
+        try:
+            current_total = startup.investmenttransactions.all().aggregate(total=_Sum("amount")).get("total") or 0
+        except Exception:
+            current_total = startup.amount_raised or 0
+        progress_percentage = (current_total * 100.0) / float(startup.funding_goal)
+        if progress_percentage < 0:
+            progress_percentage = 0
+        if progress_percentage > 100:
+            progress_percentage = 100
     investors_count = startup.get_investors_count()
     timeline_events = StartupTimeline.objects.filter(startup=startup).order_by(
         "step_number"
