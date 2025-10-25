@@ -48,11 +48,11 @@
             <form method="post" class="status-form">
               {% csrf_token %}
               <select name="status" class="status-select" onchange="this.form.submit()">
-                <option value="approved" {% if specialist.status == 'approved' %}selected{% endif %}>Approved</option>
-                <option value="blocked" {% if specialist.status == 'blocked' %}selected{% endif %}>Blocked</option>
-                <option value="closed" {% if specialist.status == 'closed' %}selected{% endif %}>Closed</option>
-                <option value="pending" {% if specialist.status == 'pending' %}selected{% endif %}>Pending</option>
-                <option value="rejected" {% if specialist.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                <option value="approved" {% if specialist.status == 'approved' %}selected{% endif %}>Одобрено</option>
+                <option value="blocked" {% if specialist.status == 'blocked' %}selected{% endif %}>Заблокировано</option>
+                <option value="closed" {% if specialist.status == 'closed' %}selected{% endif %}>Закрыто</option>
+                <option value="pending" {% if specialist.status == 'pending' %}selected{% endif %}>На рассмотрении</option>
+                <option value="rejected" {% if specialist.status == 'rejected' %}selected{% endif %}>Отклонено</option>
               </select>
             </form>
           {% endif %}
