@@ -689,16 +689,20 @@ body {
   .catalog-filters-toggle { display: block; width: 100%; max-width: 1032px; margin: 0 auto; }
   .sidebar { transition: max-height .3s ease, padding .3s ease; overflow: hidden; }
   .sidebar.no-animate { transition: none !important; }
-  .catalog-container .sidebar:not(.mobile-open) { max-height: 0; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; background: transparent; box-shadow: none; border: 0; }
-  .sidebar.mobile-collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; }
+  .catalog-container .sidebar:not(.mobile-open) { max-height: 0; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; overflow: hidden !important; overflow-y: hidden !important; overflow-x: hidden !important; background: transparent; box-shadow: none; border: 0; visibility: hidden; pointer-events: none; }
+  .catalog-container .sidebar:not(.mobile-open) * { visibility: hidden !important; }
+  .sidebar.mobile-collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; overflow: hidden !important; overflow-y: hidden !important; overflow-x: hidden !important; visibility: hidden; pointer-events: none; }
+  .sidebar.mobile-collapsed * { visibility: hidden !important; }
   .sidebar.mobile-open { max-height: 2000px; padding: 20px 20px 30px 20px; }
 }
 @media (max-width: 960px) {
   .catalog-filters-toggle { display: block; width: 100%; max-width: 1032px; margin: 0 auto; }
   .sidebar { transition: max-height .3s ease, padding .3s ease; overflow: hidden; }
   .sidebar.no-animate { transition: none !important; }
-  .catalog-container .sidebar:not(.mobile-open) { max-height: 0; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; background: transparent; box-shadow: none; border: 0; }
-  .sidebar.mobile-collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; }
+  .catalog-container .sidebar:not(.mobile-open) { max-height: 0; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; overflow: hidden !important; overflow-y: hidden !important; overflow-x: hidden !important; background: transparent; box-shadow: none; border: 0; visibility: hidden; pointer-events: none; }
+  .catalog-container .sidebar:not(.mobile-open) * { visibility: hidden !important; }
+  .sidebar.mobile-collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; overflow: hidden !important; overflow-y: hidden !important; overflow-x: hidden !important; visibility: hidden; pointer-events: none; }
+  .sidebar.mobile-collapsed * { visibility: hidden !important; }
   .sidebar.mobile-open { max-height: 2000px; padding: 20px 20px 30px 20px; }
 }
 
