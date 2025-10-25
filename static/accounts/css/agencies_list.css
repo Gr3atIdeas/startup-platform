@@ -694,43 +694,7 @@ body {
   }
 }
 
-/* Кнопка «Фильтры» и мобильное раскрытие сайдбара */
-.catalog-filters-toggle { display: none; }
-.filters-toggle-btn {
-  width: 100%;
-  max-width: 1032px;
-  height: 40px;
-  border-radius: 10px;
-  border: 1px solid #d9d9d9;
-  background: #fff;
-  color: #004e9f;
-  font-family: Unbounded, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.filters-toggle-icon { transition: transform .2s ease; display: inline-block; }
-.filters-toggle-btn.is-open .filters-toggle-icon { transform: rotate(45deg); }
-@media (width <= 960px) {
-  .catalog-filters-toggle { display: block; width: 100%; max-width: 1032px; margin: 0 auto; }
-  .sidebar { transition: max-height .3s ease, padding .3s ease; overflow: hidden; }
-  .sidebar.no-animate { transition: none !important; }
-  .catalog-container .sidebar:not(.mobile-open) { max-height: 0; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; background: transparent; box-shadow: none; border: 0; }
-  .sidebar.mobile-collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; }
-  .sidebar.mobile-open { max-height: 2000px; padding: 20px 20px 30px 20px; }
-}
-@media (max-width: 960px) {
-  .catalog-filters-toggle { display: block; width: 100%; max-width: 1032px; margin: 0 auto; }
-  .sidebar { transition: max-height .3s ease, padding .3s ease; overflow: hidden; }
-  .sidebar.no-animate { transition: none !important; }
-  .catalog-container .sidebar:not(.mobile-open) { max-height: 0; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; overflow: hidden; background: transparent; box-shadow: none; border: 0; }
-  .sidebar.mobile-collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; }
-  .sidebar.mobile-open { max-height: 2000px; padding: 20px 20px 30px 20px; }
-}
+/* удалены стили кнопки «Фильтры» и скрытия сайдбара */
 
 @media (width <= 400px) {
   body {

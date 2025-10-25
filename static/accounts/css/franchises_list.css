@@ -664,41 +664,7 @@ body {
   }
 }
 
-/* Кнопка «Фильтры» и мобильное раскрытие сайдбара */
-.catalog-filters-toggle { display: none; }
-.filters-toggle-btn {
-  width: 100%;
-  max-width: 1032px;
-  height: 40px;
-  border-radius: 10px;
-  border: 1px solid #d9d9d9;
-  background: #fff;
-  color: #004e9f;
-  font-family: Unbounded, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.filters-toggle-icon { transition: transform .2s ease; display: inline-block; }
-.filters-toggle-btn.is-open .filters-toggle-icon { transform: rotate(45deg); }
-@media (width <= 960px) {
-  .catalog-filters-toggle { display: block; width: 100%; max-width: 1032px; margin: 0 auto; }
-  .sidebar { transition: none; }
-  .sidebar.no-animate { transition: none !important; }
-  .catalog-container .sidebar { display: none !important; padding: 0 !important; margin: 0 !important; max-height: none !important; overflow: hidden !important; background: transparent !important; box-shadow: none !important; border: 0 !important; }
-  .sidebar.mobile-open { display: block !important; padding: 20px 20px 30px 20px !important; background: #fff !important; box-shadow: 0 2px 4px rgb(0 0 0 / 15%) !important; }
-}
-@media (max-width: 960px) {
-  .catalog-filters-toggle { display: block; width: 100%; max-width: 1032px; margin: 0 auto; }
-  .sidebar { transition: none; }
-  .sidebar.no-animate { transition: none !important; }
-  .catalog-container .sidebar { display: none !important; padding: 0 !important; margin: 0 !important; max-height: none !important; overflow: hidden !important; background: transparent !important; box-shadow: none !important; border: 0 !important; }
-  .sidebar.mobile-open { display: block !important; padding: 20px 20px 30px 20px !important; background: #fff !important; box-shadow: 0 2px 4px rgb(0 0 0 / 15%) !important; }
-}
+/* удалены стили кнопки «Фильтры» и скрытия сайдбара */
 
 @media (width <= 400px) {
   body {
