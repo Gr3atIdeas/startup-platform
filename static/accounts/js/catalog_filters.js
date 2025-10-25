@@ -403,7 +403,9 @@
       });
 
       window.addEventListener('resize', function(){
+        sidebar.classList.add('no-animate');
         applyInitialState();
+        setTimeout(function(){ sidebar.classList.remove('no-animate'); }, 50);
       });
     } catch (_) {}
   }
