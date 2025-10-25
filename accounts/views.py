@@ -5027,12 +5027,28 @@ def main_page_moderator(request):
     
     try:
         # Сначала попробуем получить стартапы с инвестициями
-        startups_with_investments = Startups.objects.filter(
-            status="approved"
-        ).annotate(
-            total_investors=Count("investmenttransactions", distinct=True),
-            total_amount=Sum("investmenttransactions__amount")
-        ).order_by("-startup_id")[:6]
+        startups_with_investments = (
+            Startups.objects.filter(status="approved")
+            .annotate(
+                total_amount=Sum(
+                    "investmenttransactions__amount",
+                    filter=Q(
+                        investmenttransactions__amount__gt=0,
+                        investmenttransactions__transaction_status="completed",
+                    ),
+                ),
+                total_investors=Count(
+                    "investmenttransactions__investor",
+                    filter=Q(
+                        investmenttransactions__amount__gt=0,
+                        investmenttransactions__transaction_status="completed",
+                    ),
+                    distinct=True,
+                ),
+            )
+            .filter(total_amount__gt=0)
+            .order_by("-startup_id")[:6]
+        )
         
         for startup in startups_with_investments:
             # Получаем обновления для стартапа
@@ -6037,7 +6053,23 @@ def cosmochat(request):
                 chat.display_name = "Удаленный чат"
                 chat.display_avatar = None
     search_form = UserSearchForm(request.GET)
-    users = Users.objects.all()
+    users = (
+        Users.objects.all()
+        .select_related("role")
+        .annotate(
+            invested_startups_count=Count(
+                "investmenttransactions__startup",
+                filter=(
+                    Q(investmenttransactions__amount__gt=0)
+                    & (
+                        Q(investmenttransactions__transaction_status="completed")
+                        | Q(investmenttransactions__transaction_status__isnull=True)
+                    )
+                ),
+                distinct=True,
+            )
+        )
+    )
     if search_form.is_valid():
         query = search_form.cleaned_data.get("query", "")
         roles = search_form.cleaned_data.get("roles", [])

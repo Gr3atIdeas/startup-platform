@@ -93,8 +93,7 @@
                         </div>
                         <div class="user-stats-new">
                             {% if user_profile.role.role_name == "investor" %}
-                            <p>Инвестирует от: <span>{{ user_profile.investorprofile.investment_range_min|default:"N/A" }}₽</span></p>
-                            <p>Инвестировал в: <span>{{ user_profile.investorprofile.completed_projects_count|default:0 }} стартапов</span></p>
+                            <p>Инвестировал в: <span>{{ user_profile.invested_startups_count|default:0 }} стартапов</span></p>
                             {% elif user_profile.role.role_name == "startuper" %}
                             <p>Мин. вклад: <span>{{ user_profile.startuperprofile.min_investment_needed|default:"N/A" }}₽</span></p>
                             <p>Открыл: <span>{{ user_profile.startuperprofile.projects_count|default:0 }} стартапов</span></p>
@@ -130,8 +129,7 @@
                         </div>
                         <div class="user-stats-new">
                             {% if user_profile.role.role_name == "investor" %}
-                            <p>Инвестирует от: <span>{{ user_profile.investorprofile.investment_range_min|default:"N/A" }}₽</span></p>
-                            <p>Инвестировал в: <span>{{ user_profile.investorprofile.completed_projects_count|default:0 }} стартапов</span></p>
+                            <p>Инвестировал в: <span>{{ user_profile.invested_startups_count|default:0 }} стартапов</span></p>
                             {% elif user_profile.role.role_name == "startuper" %}
                             <p>Мин. вклад: <span>{{ user_profile.startuperprofile.min_investment_needed|default:"N/A" }}₽</span></p>
                             <p>Открыл: <span>{{ user_profile.startuperprofile.projects_count|default:0 }} стартапов</span></p>
