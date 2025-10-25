@@ -9,7 +9,7 @@
 {% block head_extra %}
   {{ block.super }}
   
-  <link rel="stylesheet" href="{% static 'accounts/css/franchises_list.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/franchises_list.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
