@@ -358,6 +358,51 @@
     }
   }
 
+  function setupMobileFiltersToggle() {
+    try {
+      var toggleBtn = document.querySelector('.filters-toggle-btn');
+      var sidebar = document.querySelector('.catalog-container > .sidebar');
+      if (!toggleBtn || !sidebar) return;
+
+      function isMobile() { return window.innerWidth <= 960; }
+
+      function applyInitialState() {
+        if (isMobile()) {
+          var hasActive = hasActiveFilters(filterFormElement);
+          if (hasActive) {
+            sidebar.classList.add('mobile-open');
+            sidebar.classList.remove('mobile-collapsed');
+            toggleBtn.classList.add('is-open');
+            toggleBtn.setAttribute('aria-expanded', 'true');
+          } else {
+            sidebar.classList.add('mobile-collapsed');
+            sidebar.classList.remove('mobile-open');
+            toggleBtn.classList.remove('is-open');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+          }
+        } else {
+          sidebar.classList.remove('mobile-open', 'mobile-collapsed');
+          toggleBtn.classList.remove('is-open');
+          toggleBtn.setAttribute('aria-expanded', 'false');
+        }
+      }
+
+      applyInitialState();
+
+      toggleBtn.addEventListener('click', function(){
+        if (!isMobile()) return;
+        var opened = sidebar.classList.toggle('mobile-open');
+        sidebar.classList.toggle('mobile-collapsed', !opened);
+        toggleBtn.classList.toggle('is-open', opened);
+        toggleBtn.setAttribute('aria-expanded', opened ? 'true' : 'false');
+      });
+
+      window.addEventListener('resize', function(){
+        applyInitialState();
+      });
+    } catch (_) {}
+  }
+
   function bindClearButton() {
     if (!filterFormElement) return;
     clearButtonElement = document.getElementById('clearFiltersBtn');
@@ -458,6 +503,7 @@
     bindFormHandlers();
     bindPaginationHandlers();
     attachSliderListenersWithRetry(20, 200);
+    setupMobileFiltersToggle();
     clearButtonElement = document.getElementById('clearFiltersBtn');
     bindClearButton();
     normalizeDefaultInputs();
