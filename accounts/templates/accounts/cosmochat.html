@@ -95,8 +95,7 @@
                             {% if user_profile.role.role_name == "investor" %}
                             <p>Инвестировал в: <span>{{ user_profile.invested_startups_count|default:0 }} стартапов</span></p>
                             {% elif user_profile.role.role_name == "startuper" %}
-                            <p>Мин. вклад: <span>{{ user_profile.startuperprofile.min_investment_needed|default:"N/A" }}₽</span></p>
-                            <p>Открыл: <span>{{ user_profile.startuperprofile.projects_count|default:0 }} стартапов</span></p>
+                            <p>Открыл: <span>{{ user_profile.owned_startups_count|default:0 }} стартапов</span></p>
                             {% else %}
                             <p>Нет данных о роли</p>
                             {% endif %}
@@ -131,8 +130,7 @@
                             {% if user_profile.role.role_name == "investor" %}
                             <p>Инвестировал в: <span>{{ user_profile.invested_startups_count|default:0 }} стартапов</span></p>
                             {% elif user_profile.role.role_name == "startuper" %}
-                            <p>Мин. вклад: <span>{{ user_profile.startuperprofile.min_investment_needed|default:"N/A" }}₽</span></p>
-                            <p>Открыл: <span>{{ user_profile.startuperprofile.projects_count|default:0 }} стартапов</span></p>
+                            <p>Открыл: <span>{{ user_profile.owned_startups_count|default:0 }} стартапов</span></p>
                             {% else %}
                             <p>Нет данных о роли</p>
                             {% endif %}

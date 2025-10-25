@@ -6067,7 +6067,8 @@ def cosmochat(request):
                     )
                 ),
                 distinct=True,
-            )
+            ),
+            owned_startups_count=Count("startups", distinct=True),
         )
     )
     if search_form.is_valid():
