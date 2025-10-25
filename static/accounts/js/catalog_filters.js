@@ -13,6 +13,8 @@
     return (
       documentRoot.getElementById('startupsGrid') ||
       documentRoot.getElementById('franchisesGrid') ||
+      documentRoot.getElementById('agenciesGrid') ||
+      documentRoot.getElementById('specialistsGrid') ||
       null
     );
   }
@@ -210,6 +212,7 @@
     bindPaginationHandlers();
     bindFormHandlers();
     attachSliderListenersWithRetry(20, 200);
+    setupMobileFiltersToggle();
     clearButtonElement = document.getElementById('clearFiltersBtn');
     bindClearButton();
     updateClearButtonVisibility();

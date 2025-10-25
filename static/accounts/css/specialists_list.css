@@ -287,9 +287,6 @@ body {
   width: 100%;
 }
 
-.category-item {
-}
-
 .category-label {
   display: flex;
   align-items: center;
@@ -1049,6 +1046,7 @@ body {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  line-clamp: 3;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -1157,6 +1155,6 @@ body {
   }
   
   .specialist-progress-container {
-    width: 100%;
+    width: 95%;
   }
 }
