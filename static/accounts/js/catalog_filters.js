@@ -372,6 +372,7 @@
       function applyInitialState() {
         if (isMobile()) {
           var hasActive = hasActiveFilters(filterFormElement);
+          sidebar.classList.add('no-animate');
           if (hasActive) {
             sidebar.classList.add('mobile-open');
             sidebar.classList.remove('mobile-collapsed');
@@ -383,6 +384,7 @@
             toggleBtn.classList.remove('is-open');
             toggleBtn.setAttribute('aria-expanded', 'false');
           }
+          setTimeout(function(){ sidebar.classList.remove('no-animate'); }, 50);
         } else {
           sidebar.classList.remove('mobile-open', 'mobile-collapsed');
           toggleBtn.classList.remove('is-open');

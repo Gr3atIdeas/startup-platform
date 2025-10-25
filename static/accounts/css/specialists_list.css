@@ -716,8 +716,10 @@ body {
 @media (width <= 960px) {
   .catalog-filters-toggle { display: block; width: 100%; max-width: 1032px; margin: 0 auto; }
   .sidebar { transition: max-height .3s ease, padding .3s ease; overflow: hidden; }
+  .sidebar.no-animate { transition: none !important; }
+  .catalog-filters-toggle + .sidebar { max-height: 0; padding-top: 0; padding-bottom: 0; overflow: hidden; }
   .sidebar.mobile-collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; }
-  .sidebar.mobile-open { max-height: 2000px; }
+  .sidebar.mobile-open { max-height: 2000px; padding: 20px 20px 30px 20px; }
 }
 
 @media (width <= 400px) {
