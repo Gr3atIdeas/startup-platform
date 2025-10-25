@@ -123,4 +123,25 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.remove();
         }
     };
+
+    (function(){
+        const attachModal = (linkId, modalId) => {
+            try {
+                const link = document.getElementById(linkId);
+                const modal = document.getElementById(modalId);
+                if (!link || !modal) return;
+                const overlay = modal.querySelector('.easter-egg-overlay');
+                const closeBtn = modal.querySelector('.easter-egg-close');
+                const open = (e) => { e && e.preventDefault(); modal.style.display = 'flex'; };
+                const close = (e) => { e && e.preventDefault(); modal.style.display = 'none'; };
+                link.addEventListener('click', open);
+                overlay && overlay.addEventListener('click', close);
+                closeBtn && closeBtn.addEventListener('click', close);
+                document.addEventListener('keydown', function(ev){ if (ev.key === 'Escape' && modal.style.display !== 'none') close(); });
+            } catch(_) {}
+        };
+        attachModal('footerLegalInfoLink', 'legalInfoModal');
+        attachModal('footerOfferLink', 'offerModal');
+        attachModal('footerPrivacyLink', 'privacyModal');
+    })();
 });
