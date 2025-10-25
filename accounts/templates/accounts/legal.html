@@ -1,3 +1,89 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+
+{% block title %}Правовая информация{% endblock %}
+
+{% block content %}
+  <div class="legal-page-container">
+    <h1 class="legal-page-title">Правовые документы</h1>
+    <div class="legal-list">
+      <button type="button" id="legalPageLegalInfo" class="legal-list-item">1. Правовая информация</button>
+      <button type="button" id="legalPageOffer" class="legal-list-item">2. Оферта</button>
+      <button type="button" id="legalPagePrivacy" class="legal-list-item">3. Политика конфиденциальности</button>
+      <button type="button" id="legalPageCookies" class="legal-list-item">4. Политика использования cookies и аналитики</button>
+    </div>
+  </div>
+
+  <div id="cookiesModal" class="easter-egg-modal" style="display: none;">
+    <div class="easter-egg-overlay"></div>
+    <div class="easter-egg-content">
+      <div class="easter-egg-header">
+        <h3>Политика использования Cookies и аналитики</h3>
+        <button class="easter-egg-close" type="button">×</button>
+      </div>
+      <div class="easter-egg-video-container" style="min-height: auto;">
+        <div style="max-height: 65vh; overflow: auto; width: 100%; color: #fff;">
+          <pre style="white-space: pre-wrap; font-family: inherit;">Политика использования Cookies и аналитики
+
+1. Общие положения
+
+Сайт использует cookies и аналогичные технологии для корректной работы сайта, аналитики и маркетинга.
+
+2. Цели использования cookies
+
+
+
+Обеспечение работы форм обратной связи и функционала Сайта;
+Сбор статистики о посещениях и поведении пользователей;
+Формирование рекламных аудиторий и ретаргетинг в рекламных системах (Яндекс, соцсети).
+
+3. Согласие пользователя
+
+Продолжая использовать Сайт, пользователь подтверждает согласие на использование cookies и других трекинговых технологий.
+
+4. Управление cookies
+
+Пользователь может отключить cookies через настройки браузера, однако часть функционала Сайта может быть недоступна.
+
+
+
+</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block custom_styles %}
+<style>
+  .legal-page-container{max-width:1303px;margin:45px auto;padding:0 20px;color:#fff;font-family:'Unbounded',sans-serif}
+  .legal-page-title{font-size:32px;margin:0 0 24px 0;font-weight:500}
+  .legal-list{display:flex;flex-direction:column;gap:12px}
+  .legal-list-item{background:transparent;border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:10px;padding:14px 18px;text-align:left;cursor:pointer;transition:all .2s ease;font-size:16px}
+  .legal-list-item:hover{border-color:rgba(255,255,255,0.35);transform:translateY(-1px)}
+  @media (max-width:768px){.legal-page-container{margin:24px auto;padding:0 12px}.legal-page-title{font-size:24px}}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function(){
+    function attach(id, modalId){
+      var el=document.getElementById(id); var modal=document.getElementById(modalId);
+      if(!el||!modal) return; var overlay=modal.querySelector('.easter-egg-overlay'); var closeBtn=modal.querySelector('.easter-egg-close');
+      var open=function(e){ e&&e.preventDefault(); modal.style.display='flex'; };
+      var close=function(e){ e&&e.preventDefault(); modal.style.display='none'; };
+      el.addEventListener('click', open); overlay&&overlay.addEventListener('click', close); closeBtn&&closeBtn.addEventListener('click', close);
+      document.addEventListener('keydown', function(ev){ if(ev.key==='Escape'&&modal.style.display!=='none') close(); });
+    }
+    attach('legalPageLegalInfo','legalInfoModal');
+    attach('legalPageOffer','offerModal');
+    attach('legalPagePrivacy','privacyModal');
+    attach('legalPageCookies','cookiesModal');
+  })();
+</script>
+{% endblock %}
+
 {% extends 'accounts/base.html' %}
 
 {% block title %}Юридическая информация{% endblock %}
