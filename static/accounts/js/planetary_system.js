@@ -75,9 +75,9 @@
         ultraNewPlanetaryGalaxyX = 1.08;
         ultraNewPlanetaryGalaxyScale = 0.8;
       } else {
-        ultraNewPlanetaryGalaxyY = -200;
-        ultraNewPlanetaryGalaxyX = 0;
-        ultraNewPlanetaryGalaxyScale = 0.8;
+        ultraNewPlanetaryGalaxyY = -53; // desktop per screenshot
+        ultraNewPlanetaryGalaxyX = -15;
+        ultraNewPlanetaryGalaxyScale = 1.1;
       }
     } else {
       ultraNewPlanetaryGalaxyY = 0;
