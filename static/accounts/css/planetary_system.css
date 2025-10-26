@@ -6,6 +6,9 @@
   --ultra_new_planetary_galaxy_scale: 0.7;
   --ultra_new_planetary_galaxy_x: 0px;
   --ultra_new_planetary_galaxy_y: 0px;
+  --ultra_new_planetary_scene_size: min(100vw, 80vh);
+  --ultra_new_planetary_orbit_scale: 1;
+  --ultra_new_planetary_planet_min_size: 44px;
 }
 
 .featured .group:has(#ultra_new_planetary_solar_system.home-page-planetary) {
@@ -96,6 +99,7 @@
   perspective: 1000px;
   z-index: 3;
   cursor: grab;
+  touch-action: pan-y;
 }
 
 #ultra_new_planetary_solar_system.dragging {
@@ -376,11 +380,11 @@
 
 .ultra_new_planetary_planet {
   position: absolute;
-  width: var(--planet-size);
-  height: var(--planet-size);
+  width: var(--computed-planet-size, clamp(var(--ultra_new_planetary_planet_min_size), var(--planet-size), 72px));
+  height: var(--computed-planet-size, clamp(var(--ultra_new_planetary_planet_min_size), var(--planet-size), 72px));
   
-  margin-left: calc(-0.5 * var(--planet-size));
-  margin-top: calc(-0.5 * var(--planet-size));
+  margin-left: calc(-0.5 * var(--computed-planet-size, var(--planet-size)));
+  margin-top: calc(-0.5 * var(--computed-planet-size, var(--planet-size)));
   
   transform: rotateX(var(--ultra_new_planetary_planet_compensation));
   border-radius: 50% !important;
@@ -1265,8 +1269,8 @@
   }
   
   #ultra_new_planetary_scene {
-    width: 900px;
-    height: 900px;
+    width: var(--ultra_new_planetary_scene_size);
+    height: var(--ultra_new_planetary_scene_size);
   }
 }
 
@@ -1297,22 +1301,14 @@
   }
 
   #ultra_new_planetary_scene {
-    width: 600px;
-    height: 600px;
+    width: var(--ultra_new_planetary_scene_size);
+    height: var(--ultra_new_planetary_scene_size);
   }
 
   
-  .ultra_new_planetary_planet {
-    transform: scale(0.8);
-  }
-  
-  .ultra_new_planetary_orbit {
-    transform: scale(0.8);
-  }
-  
-  #ultra_new_planetary_sun_image {
-    transform: scale(0.8);
-  }
+  .ultra_new_planetary_planet {}
+  .ultra_new_planetary_orbit {}
+  #ultra_new_planetary_sun_image {}
 
   .ultra_new_planetary_all_startups_button {
     top: 10px;
@@ -1381,22 +1377,14 @@
   }
 
   #ultra_new_planetary_scene {
-    width: 500px;
-    height: 500px;
+    width: var(--ultra_new_planetary_scene_size);
+    height: var(--ultra_new_planetary_scene_size);
   }
 
   
-  .ultra_new_planetary_planet {
-    transform: scale(0.6);
-  }
-  
-  .ultra_new_planetary_orbit {
-    transform: scale(0.6);
-  }
-  
-  #ultra_new_planetary_sun_image {
-    transform: scale(0.6);
-  }
+  .ultra_new_planetary_planet {}
+  .ultra_new_planetary_orbit {}
+  #ultra_new_planetary_sun_image {}
 
   .ultra_new_planetary_all_startups_button {
     top: 5px;
@@ -1455,22 +1443,14 @@
   }
 
   #ultra_new_planetary_scene {
-    width: 400px;
-    height: 400px;
+    width: var(--ultra_new_planetary_scene_size);
+    height: var(--ultra_new_planetary_scene_size);
   }
 
   
-  .ultra_new_planetary_planet {
-    transform: scale(0.5);
-  }
-  
-  .ultra_new_planetary_orbit {
-    transform: scale(0.5);
-  }
-  
-  #ultra_new_planetary_sun_image {
-    transform: scale(0.5);
-  }
+  .ultra_new_planetary_planet {}
+  .ultra_new_planetary_orbit {}
+  #ultra_new_planetary_sun_image {}
 
   .ultra_new_planetary_all_startups_button {
     top: 3px;
@@ -1519,6 +1499,21 @@
     top: 52px;
     font-size: 8px;
     padding: 4px 8px;
+  }
+}
+
+@media (max-width: 390px) {
+  .ultra_new_planetary_orbit:nth-of-type(n+5) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ultra_new_planetary_stars {
+    animation: none;
+  }
+  .ultra_new_planetary_planet_orientation {
+    animation: none !important;
   }
 }
 

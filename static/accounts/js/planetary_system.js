@@ -54,7 +54,7 @@
     const path = window.location.pathname;
     if (path === '/') {
       return 'home';
-    } else if (path === '/investor/' || path === '/startupper/') {
+    } else if (path.includes('investor') || path.includes('startuper')) {
       return 'main';
     } else if (path === '/planetary-system/') {
       return 'planetary';
@@ -88,8 +88,21 @@
       setInitialGalaxyPosition();
       setTimeout(() => {
         initializeUltraNewPlanetaryObjects();
+        applyResponsiveOrbits();
         startUltraNewPlanetaryAnimation();
       }, 100);
+      if (window.innerWidth < 340 || (navigator.deviceMemory && navigator.deviceMemory <= 2)) {
+        const orbits = document.querySelectorAll('.ultra_new_planetary_orbit');
+        orbits.forEach((o, idx) => {
+          if (idx > 2) o.style.display = 'none';
+        });
+        stopUltraNewPlanetaryAnimation();
+      }
+      window.addEventListener('resize', applyResponsiveOrbits, { passive: true });
+      window.addEventListener('orientationchange', applyResponsiveOrbits, { passive: true });
+      setupTouchEvents();
+      setupVisibilityPause();
+      applyReducedMotionPreference();
     } catch (error) {
       console.warn('Ultra New Planetary System initialization error:', error);
     }
@@ -179,6 +192,76 @@
     solarSystem.addEventListener('dblclick', function(e) {
       e.preventDefault();
       resetUltraNewPlanetaryGalaxyTransform();
+    });
+  }
+  function setupTouchEvents() {
+    const solarSystem = document.getElementById('ultra_new_planetary_solar_system');
+    if (!solarSystem) return;
+    let touchDragging = false;
+    let lastTouchX = 0;
+    let lastTouchY = 0;
+    let pinchStartDist = 0;
+    const dragThreshold = 8;
+    function getDistance(t1, t2) {
+      const dx = t1.clientX - t2.clientX;
+      const dy = t1.clientY - t2.clientY;
+      return Math.hypot(dx, dy);
+    }
+    solarSystem.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 1) {
+        lastTouchX = e.touches[0].clientX;
+        lastTouchY = e.touches[0].clientY;
+        touchDragging = true;
+      } else if (e.touches.length === 2) {
+        touchDragging = false;
+        pinchStartDist = getDistance(e.touches[0], e.touches[1]);
+      }
+    }, { passive: true });
+    solarSystem.addEventListener('touchmove', function(e) {
+      if (e.touches.length === 1 && touchDragging) {
+        const t = e.touches[0];
+        const dx = t.clientX - lastTouchX;
+        const dy = t.clientY - lastTouchY;
+        if (Math.abs(dx) > dragThreshold || Math.abs(dy) > dragThreshold) {
+          ultraNewPlanetaryGalaxyX = Math.max(-ultraNewPlanetaryMaxOffset, Math.min(ultraNewPlanetaryMaxOffset, ultraNewPlanetaryGalaxyX + dx));
+          ultraNewPlanetaryGalaxyY = Math.max(-ultraNewPlanetaryMaxOffset, Math.min(ultraNewPlanetaryMaxOffset, ultraNewPlanetaryGalaxyY + dy));
+          updateUltraNewPlanetaryGalaxyTransform();
+          lastTouchX = t.clientX;
+          lastTouchY = t.clientY;
+        }
+      } else if (e.touches.length === 2) {
+        const dist = getDistance(e.touches[0], e.touches[1]);
+        if (pinchStartDist > 0) {
+          const scaleDelta = (dist - pinchStartDist) / 200;
+          ultraNewPlanetaryGalaxyScale = Math.max(0.7, Math.min(1.4, ultraNewPlanetaryGalaxyScale + scaleDelta));
+          updateUltraNewPlanetaryGalaxyTransform();
+        }
+        pinchStartDist = dist;
+      }
+    }, { passive: true });
+    solarSystem.addEventListener('touchend', function(e) {
+      if (e.touches.length === 0) {
+        touchDragging = false;
+        pinchStartDist = 0;
+      }
+    });
+  }
+  function setupVisibilityPause() {
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) {
+        stopUltraNewPlanetaryAnimation();
+      } else {
+        startUltraNewPlanetaryAnimation();
+      }
+    });
+  }
+  function applyReducedMotionPreference() {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (media.matches) {
+      stopUltraNewPlanetaryAnimation();
+    }
+    media.addEventListener('change', (e) => {
+      if (e.matches) stopUltraNewPlanetaryAnimation(); else startUltraNewPlanetaryAnimation();
     });
   }
   function updateUltraNewPlanetaryGalaxyTransform() {
@@ -295,6 +378,25 @@
     const currentStartups = ultraNewPlanetaryStartupsData || [];
     updateUltraNewPlanetaryPlanets(currentStartups);
     startUltraNewPlanetaryAnimation();
+  }
+  function applyResponsiveOrbits() {
+    const scene = document.getElementById('ultra_new_planetary_scene');
+    const orbits = document.querySelectorAll('.ultra_new_planetary_orbit');
+    if (!scene || !orbits.length) return;
+    const rect = scene.getBoundingClientRect();
+    const base = Math.min(rect.width, rect.height);
+    const factors = [0.42, 0.56, 0.7, 0.84, 0.98, 1.12];
+    orbits.forEach((orbit, idx) => {
+      const factor = factors[Math.min(idx, factors.length - 1)];
+      const size = Math.max(120, Math.floor(base * factor));
+      orbit.style.setProperty('--orbit-size', size + 'px');
+    });
+    const planets = document.querySelectorAll('.ultra_new_planetary_planet');
+    const planetSize = Math.max(44, Math.min(72, Math.floor(base * 0.08)));
+    planets.forEach(p => {
+      p.style.setProperty('--planet-size', planetSize + 'px');
+      p.style.setProperty('--computed-planet-size', planetSize + 'px');
+    });
   }
   function updateUltraNewPlanetaryPlanets(startups) {
     const planets = document.querySelectorAll('.ultra_new_planetary_planet');
@@ -467,12 +569,14 @@
     }
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
+    stopUltraNewPlanetaryAnimation();
   }
   function hideUltraNewPlanetaryModal() {
     const modal = document.getElementById('ultra_new_planetary_modal');
     if (modal) {
       modal.style.display = 'none';
       document.body.style.overflow = 'auto';
+      startUltraNewPlanetaryAnimation();
     }
   }
 
@@ -503,6 +607,15 @@
     }
     updateArrows();
     container.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows, { passive: true });
+    const labelEl = document.getElementById('ultra_new_planetary_selected_label');
+    function placeLabel() {
+      if (!labelEl) return;
+      const isNarrow = window.innerWidth <= 390;
+      labelEl.style.top = isNarrow ? '64px' : '95px';
+    }
+    placeLabel();
+    window.addEventListener('resize', placeLabel, { passive: true });
     if (prevBtn) {
       prevBtn.onclick = function() {
         container.scrollBy({ left: -container.clientWidth * 0.7, behavior: 'smooth' });
