@@ -465,11 +465,12 @@
     planet.parentNode.replaceChild(newPlanet, planet);
 
     const clickHandler = function(e) {
+      e.preventDefault();
       e.stopPropagation();
       showUltraNewPlanetaryModal(startup, imageUrl);
     };
-    newPlanet.addEventListener('click', clickHandler, { passive: true });
-    newPlanet.addEventListener('touchend', clickHandler, { passive: true });
+    newPlanet.addEventListener('click', clickHandler, { passive: false });
+    newPlanet.addEventListener('touchend', clickHandler, { passive: false });
     newPlanet.style.cursor = 'pointer';
     newPlanet.style.opacity = '1';
     newPlanet.style.display = 'block';
@@ -603,8 +604,11 @@
         if (e.target === modal) hideUltraNewPlanetaryModal();
       });
       modal.addEventListener('touchend', function(e){
-        if (e.target === modal) hideUltraNewPlanetaryModal();
-      }, { passive: true });
+        if (e.target === modal) {
+          e.preventDefault();
+          hideUltraNewPlanetaryModal();
+        }
+      }, { passive: false });
     }
   });
 

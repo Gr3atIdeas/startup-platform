@@ -265,6 +265,7 @@
   transform-style: preserve-3d;
   will-change: left, top;
   pointer-events: auto;
+  z-index: 19;
 }
 
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_planet_orientation {
