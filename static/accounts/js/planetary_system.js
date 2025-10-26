@@ -64,13 +64,21 @@
 
   function setInitialGalaxyPosition() {
     const currentPage = getCurrentPage();
+    const isMobile = window.innerWidth <= 768;
     if (currentPage === 'home') {
       ultraNewPlanetaryGalaxyY = 0;
       ultraNewPlanetaryGalaxyX = 0;
       ultraNewPlanetaryGalaxyScale = 1.1;
     } else if (currentPage === 'main') {
-      ultraNewPlanetaryGalaxyY = -200;
-      ultraNewPlanetaryGalaxyScale = 0.8;
+      if (isMobile) {
+        ultraNewPlanetaryGalaxyY = -12; // mobile like on screenshot
+        ultraNewPlanetaryGalaxyX = 1.08;
+        ultraNewPlanetaryGalaxyScale = 0.8;
+      } else {
+        ultraNewPlanetaryGalaxyY = -200;
+        ultraNewPlanetaryGalaxyX = 0;
+        ultraNewPlanetaryGalaxyScale = 0.8;
+      }
     } else {
       ultraNewPlanetaryGalaxyY = 0;
       ultraNewPlanetaryGalaxyScale = 1;
@@ -456,9 +464,12 @@
     const newPlanet = planet.cloneNode(true);
     planet.parentNode.replaceChild(newPlanet, planet);
 
-    newPlanet.addEventListener('click', function() {
+    const clickHandler = function(e) {
+      e.stopPropagation();
       showUltraNewPlanetaryModal(startup, imageUrl);
-    });
+    };
+    newPlanet.addEventListener('click', clickHandler, { passive: true });
+    newPlanet.addEventListener('touchend', clickHandler, { passive: true });
     newPlanet.style.cursor = 'pointer';
     newPlanet.style.opacity = '1';
     newPlanet.style.display = 'block';
@@ -579,6 +590,23 @@
       startUltraNewPlanetaryAnimation();
     }
   }
+  // ensure close on backdrop and cross also on mobile
+  document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('ultra_new_planetary_modal');
+    const closeBtn = document.getElementById('ultra_new_planetary_modal_close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', hideUltraNewPlanetaryModal);
+      closeBtn.addEventListener('touchend', function(e){ e.preventDefault(); hideUltraNewPlanetaryModal(); }, { passive: false });
+    }
+    if (modal) {
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) hideUltraNewPlanetaryModal();
+      });
+      modal.addEventListener('touchend', function(e){
+        if (e.target === modal) hideUltraNewPlanetaryModal();
+      }, { passive: true });
+    }
+  });
 
   function startUltraNewPlanetaryAnimation() {
     function animate() {
