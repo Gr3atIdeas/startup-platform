@@ -1053,6 +1053,10 @@ h3.section-title {
   .form-navigation-header { padding: 0 15px; }
   #consentsModal .modal-dialog { width: 92vw; max-width: 92vw; margin: 8vh auto; }
   .form-top-grid { flex-direction: column; gap: 20px; }
+  .form-top-card { padding: 10px; }
+  .catalog-card-image-group { margin-top: 16px; margin-left: 2px; }
+  .agreement-section { display: flex; flex-direction: column; gap: 15px; align-items: flex-start; }
+  .agreement-section .section-title { line-height: 50px; }
 }
 
 @media (max-width: 480px) {

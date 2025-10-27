@@ -1893,4 +1893,9 @@ input[type=number] {
         align-self: flex-start;
         margin-top: 8px;
     }
+
+  .form-top-card { padding: 10px; }
+  .catalog-card-image-group { margin-top: 16px; margin-left: 2px; }
+  .agreement-section { display: flex; flex-direction: column; gap: 15px; align-items: flex-start; pointer-events: auto; position: relative; z-index: 5; }
+  .agreement-section .section-title { line-height: 50px; }
 }

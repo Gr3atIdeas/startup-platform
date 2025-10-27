@@ -1646,6 +1646,11 @@ body,
     height: 45px;
     font-size: 14px;
   }
+
+  .form-top-card { padding: 10px; }
+  .catalog-card-image-group { margin-top: 16px; margin-left: 2px; }
+  .agreement-section { display: flex; flex-direction: column; gap: 15px; align-items: flex-start; }
+  .agreement-section .section-title { line-height: 50px; }
 }
 
 @media (max-width: 480px) {
