@@ -1474,3 +1474,143 @@ body {
 .featured9 {
   display: none !important;
 }
+
+@media (max-width: 767px) {
+  .featured3 {
+    padding: 40px 15px;
+  }
+  .featured3 .frame-parent {
+    height: auto;
+    min-height: auto;
+    flex-direction: column;
+  }
+  .featured3 .parent4 {
+    width: 100%;
+    padding: 30px 15px;
+  }
+  .featured3 .heading1 .div18 {
+    width: 100%;
+    max-width: 100%;
+  }
+  .featured3 .frame-group {
+    width: 100%;
+    gap: 30px;
+  }
+  .featured3 .frame-parent2,
+  .featured3 .chevron-forward-circle-outline-parent {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .featured3 .faq,
+  .featured3 .div20 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  .featured3 .icon9 {
+    position: relative;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-height: none;
+  }
+  .featured3 .scale-1200-photoroom-2-parent {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    max-width: 300px;
+    margin: 20px auto 0;
+  }
+
+  .journey-start-wrapper {
+    padding: 30px 15px;
+  }
+  .journey-start-container {
+    width: 100%;
+    gap: 40px;
+  }
+  .journey-start-banner {
+    height: 320px;
+  }
+  .journey-start-banner-text {
+    width: auto;
+    left: 15px;
+    right: 15px;
+    top: auto;
+    bottom: 20px;
+    position: absolute;
+    font-size: 18px;
+    line-height: 22px;
+  }
+  .journey-start-banner-image-container {
+    width: 230px;
+    height: auto;
+    left: 50%;
+    top: 20px;
+    transform: translateX(-50%);
+  }
+  .journey-start-banner-image {
+    position: relative;
+    width: 100%;
+    height: auto;
+    left: auto;
+    top: auto;
+    transform: none;
+  }
+
+  .journey-start-interests {
+    width: 100%;
+    gap: 20px;
+  }
+  .category-carousel {
+    max-width: 100%;
+  }
+  .category-carousel-viewport {
+    padding: 10px 0;
+  }
+  .category-carousel-inner {
+    gap: 15px;
+  }
+  .category-carousel-arrow {
+    width: 32px;
+    height: 32px;
+  }
+  .category-carousel-arrow-left { left: -5px; }
+  .category-carousel-arrow-right { right: -5px; }
+  .category-carousel-inner .journey-start-category {
+    width: 140px;
+    flex: 0 0 140px;
+  }
+  .journey-start-category img {
+    height: 100px;
+  }
+  .journey-start-category-name {
+    font-size: 14px;
+  }
+
+  .featured7 {
+    padding: 40px 15px;
+    background-color: black;
+  }
+  .featured7 .group-container {
+    display: none !important;
+  }
+  .featured7 .frame-parent21 {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .featured7 .card-industry {
+    width: 100%;
+    height: auto;
+    padding: 30px 20px;
+  }
+  .featured7 .div57 {
+    font-size: 28px;
+    line-height: 32px;
+    margin-bottom: 16px;
+  }
+  .featured7 .div60 {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+}
