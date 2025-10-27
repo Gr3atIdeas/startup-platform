@@ -1816,6 +1816,15 @@ input[type=number] {
 #consentsModal .modal-body { padding: 16px 20px; }
 #consentsModal .modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 12px 20px; border-top: 1px solid rgba(255,255,255,.1); }
 
+@media (max-width: 768px) {
+  .form-navigation-header { padding: 0 15px; }
+  #consentsModal .modal-dialog { width: 92vw; max-width: 92vw; margin: 8vh auto; }
+}
+
+@media (max-width: 480px) {
+  #consentsModal .modal-dialog { width: 94vw; max-width: 94vw; margin: 6vh auto; }
+}
+
 /* One-row layout for URL / valuation / amount */
 .presentation-finance-group { display: flex; flex-direction: column; gap: 45px; align-items: flex-start; }
 .presentation-finance-group .form-group { margin: 0; width: 100%; }
