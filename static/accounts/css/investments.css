@@ -1132,9 +1132,10 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 430px) {
   .investments-container {
-    padding: 10px 8px;
+    padding: 15px 12px;
+    max-width: 100%;
   }
   
   .analytics-section {
@@ -1142,34 +1143,90 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
     gap: 15px;
   }
   
-  .analytics-left {
+  .analytics-left,
+  .analytics-content {
     width: 100%;
   }
   
+  .analytics-content {
+    padding: 20px 15px;
+  }
+  
+  .analytics-title {
+    font-size: 36px;
+  }
+  
   .planetary-system-container {
-    width: 200px;
-    height: 200px;
+    height: 350px;
+  }
+  
+  .my_startups_planetary-system #my_startups_logo {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .my_startups_planetary-system #info-card {
+    max-width: 85%;
+    padding: 12px;
+  }
+  
+  .my_startups_planetary-system #info-card h2 {
+    font-size: 16px;
+  }
+  
+  .my_startups_planetary-system #info-card .planet-image {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .categories-radial-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+  
+  .categories-radial-section {
+    padding: 20px 15px;
+  }
+  
+  .stats-overview {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .analytics-chart-container {
+    min-height: 200px;
   }
   
   .startups-header {
-    padding: 15px 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding-bottom: 20px;
   }
   
-  .startups-title-main {
-    font-size: 18px;
-  }
-  
+  .startups-title-main,
   .startups-title-sub {
-    font-size: 12px;
+    font-size: 35px;
+  }
+  
+  .total-investment {
+    text-align: left;
+  }
+  
+  .investment-amount {
+    padding: 12px 20px;
+    font-size: 14px;
+    min-width: auto;
   }
   
   .startups-filters {
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+    align-items: stretch;
   }
   
   .startups-search-wrapper {
-    width: 100%;
+    max-width: 100%;
   }
   
   .filter-buttons {
@@ -1178,16 +1235,306 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   }
   
   .filter-btn {
-    font-size: 10px;
-    padding: 6px 12px;
+    font-size: 12px;
+    padding: 8px 16px;
+    touch-action: manipulation;
+  }
+  
+  .filter-dropdown-content {
+    min-width: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .startups-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .startup-card {
+    padding: 15px;
+  }
+  
+  .startup-card-left {
+    width: 80px;
+  }
+  
+  .startup-planet-placeholder {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  .startup-name {
+    font-size: 14px;
+  }
+  
+  .startup-rating {
+    font-size: 12px;
+  }
+  
+  .startup-comments {
+    font-size: 12px;
+  }
+  
+  .detail-label {
+    font-size: 12px;
+  }
+  
+  .detail-value {
+    font-size: 12px;
+  }
+  
+  .startup-category-tag {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  
+  .show-more-btn {
+    font-size: 13px;
+    padding: 10px 20px;
+    touch-action: manipulation;
+  }
+  
+  .applications-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .applications-title-main,
+  .applications-title-sub {
+    font-size: 35px;
+  }
+  
+  .status-filter-buttons {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .status-filter-btn {
+    font-size: 12px;
+    padding: 8px 14px;
+  }
+  
+  .applications-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .application-card {
+    width: 100%;
+  }
+  
+  .modal-categories-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  
+  .my_startups_planetary-system .planet {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@media (max-width: 390px) {
+  .investments-container {
+    padding: 12px 10px;
+  }
+  
+  .planetary-system-container {
+    height: 320px;
+  }
+  
+  .my_startups_planetary-system #my_startups_logo {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .analytics-title {
+    font-size: 32px;
+  }
+  
+  .startups-title-main,
+  .startups-title-sub {
+    font-size: 32px;
+  }
+  
+  .categories-radial-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  
+  .radial-chart {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .radial-chart-text {
+    font-size: 12px;
+  }
+  
+  .category-radial-name {
+    font-size: 11px;
   }
   
   .startup-card {
     padding: 12px;
   }
   
+  .startup-planet-placeholder {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  
+  .applications-title-main,
+  .applications-title-sub {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 375px) {
+  .investments-container {
+    padding: 10px 10px;
+  }
+  
+  .planetary-system-container {
+    height: 300px;
+  }
+  
+  .my_startups_planetary-system #my_startups_logo {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .analytics-title {
+    font-size: 28px;
+  }
+  
+  .startups-title-main,
+  .startups-title-sub {
+    font-size: 28px;
+  }
+  
+  .filter-btn {
+    font-size: 11px;
+    padding: 7px 14px;
+  }
+  
   .startup-name {
     font-size: 13px;
+  }
+  
+  .detail-label,
+  .detail-value {
+    font-size: 11px;
+  }
+  
+  .applications-title-main,
+  .applications-title-sub {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 360px) {
+  .investments-container {
+    padding: 10px 8px;
+  }
+  
+  .analytics-section {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .analytics-left {
+    width: 100%;
+  }
+  
+  .analytics-content {
+    padding: 15px 12px;
+  }
+  
+  .analytics-title {
+    font-size: 26px;
+  }
+  
+  .planetary-system-container {
+    height: 280px;
+  }
+  
+  .my_startups_planetary-system #my_startups_logo {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .my_startups_planetary-system #info-card {
+    padding: 10px;
+    max-width: 90%;
+  }
+  
+  .my_startups_planetary-system #info-card h2 {
+    font-size: 14px;
+  }
+  
+  .my_startups_planetary-system #info-card .planet-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .categories-radial-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .radial-chart {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .radial-chart-text {
+    font-size: 11px;
+  }
+  
+  .category-radial-name {
+    font-size: 10px;
+  }
+  
+  .startups-header {
+    padding: 12px 8px;
+  }
+  
+  .startups-title-main,
+  .startups-title-sub {
+    font-size: 26px;
+  }
+  
+  .investment-amount {
+    padding: 10px 15px;
+    font-size: 13px;
+  }
+  
+  .startups-filters {
+    gap: 10px;
+  }
+  
+  .filter-btn {
+    font-size: 10px;
+    padding: 6px 12px;
+  }
+  
+  .startup-card {
+    padding: 10px;
+  }
+  
+  .startup-card-left {
+    width: 70px;
+  }
+  
+  .startup-planet-placeholder {
+    width: 45px !important;
+    height: 45px !important;
+  }
+  
+  .startup-name {
+    font-size: 12px;
   }
   
   .startup-rating {
@@ -1203,17 +1550,47 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   }
   
   .detail-value {
-    font-size: 11px;
+    font-size: 10px;
   }
   
   .startup-category-tag {
     font-size: 9px;
-    padding: 2px 6px;
+    padding: 3px 6px;
+  }
+  
+  .startup-financials {
+    padding: 12px;
+    gap: 8px;
   }
   
   .show-more-btn {
-    font-size: 12px;
+    font-size: 11px;
     padding: 8px 16px;
+  }
+  
+  .applications-title-main,
+  .applications-title-sub {
+    font-size: 26px;
+  }
+  
+  .status-filter-btn {
+    font-size: 10px;
+    padding: 6px 12px;
+  }
+  
+  .application-card {
+    padding: 15px;
+    height: auto;
+    min-height: 180px;
+  }
+  
+  .application-title {
+    font-size: 14px;
+  }
+  
+  .modal-categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 }
 

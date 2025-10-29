@@ -2373,7 +2373,71 @@
                   isReturningToCenter = false;
               });
 
+              // Touch-события для мобильных устройств
+              let lastTouchDistance = 0;
+              let touchStartTime = 0;
+              
+              solarSystem.addEventListener('touchstart', (e) => {
+                  if (e.touches.length === 1) {
+                      isDragging = true;
+                      startX = e.touches[0].clientX;
+                      startY = e.touches[0].clientY;
+                      touchStartTime = Date.now();
+                      solarSystem.classList.add('dragging');
+                      lastInteractionTime = Date.now();
+                      isReturningToCenter = false;
+                  } else if (e.touches.length === 2) {
+                      isDragging = false;
+                      const dx = e.touches[0].clientX - e.touches[1].clientX;
+                      const dy = e.touches[0].clientY - e.touches[1].clientY;
+                      lastTouchDistance = Math.sqrt(dx * dx + dy * dy);
+                  }
+              });
 
+              solarSystem.addEventListener('touchmove', (e) => {
+                  e.preventDefault();
+                  if (e.touches.length === 1 && isDragging) {
+                      const deltaX = e.touches[0].clientX - startX;
+                      const deltaY = e.touches[0].clientY - startY;
+                      offsetX += deltaX;
+                      offsetY += deltaY;
+                      offsetX = Math.max(-solarSystem.offsetWidth / 2, Math.min(solarSystem.offsetWidth / 2, offsetX));
+                      offsetY = Math.max(-solarSystem.offsetHeight / 2, Math.min(solarSystem.offsetHeight / 2, offsetY));
+                      scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                      startX = e.touches[0].clientX;
+                      startY = e.touches[0].clientY;
+                      lastInteractionTime = Date.now();
+                  } else if (e.touches.length === 2) {
+                      const dx = e.touches[0].clientX - e.touches[1].clientX;
+                      const dy = e.touches[0].clientY - e.touches[1].clientY;
+                      const distance = Math.sqrt(dx * dx + dy * dy);
+                      
+                      if (lastTouchDistance > 0) {
+                          const delta = (distance - lastTouchDistance) * 0.01;
+                          const isMobile = window.innerWidth <= 430;
+                          const minScale = isMobile ? 0.3 : 0.5;
+                          const maxScale = isMobile ? 1.5 : 3;
+                          scale = Math.max(minScale, Math.min(maxScale, scale + delta));
+                          scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                          lastInteractionTime = Date.now();
+                          isReturningToCenter = false;
+                      }
+                      lastTouchDistance = distance;
+                  }
+              });
+
+              solarSystem.addEventListener('touchend', (e) => {
+                  if (e.touches.length === 0) {
+                      isDragging = false;
+                      solarSystem.classList.remove('dragging');
+                      lastInteractionTime = Date.now();
+                      lastTouchDistance = 0;
+                  } else if (e.touches.length === 1) {
+                      lastTouchDistance = 0;
+                      startX = e.touches[0].clientX;
+                      startY = e.touches[0].clientY;
+                  }
+              });
 
               function checkInactivity() {
                   const now = Date.now();
