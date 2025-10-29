@@ -836,6 +836,107 @@
         color: #191919;
         border-color: #FFEF2B;
     }
+
+    @media (max-width: 430px) {
+      .applications-section {
+        padding: 30px 0;
+      }
+
+      .applications-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .applications-title-main,
+      .applications-title-sub {
+        font-size: 35px;
+      }
+
+      .status-filter-buttons {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .status-filter-btn {
+        font-size: 12px;
+        padding: 8px 14px;
+        touch-action: manipulation;
+      }
+
+      .applications-list {
+        grid-template-columns: 1fr;
+      }
+
+      .application-card {
+        width: 100%;
+        height: auto;
+        min-height: 180px;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .applications-title-main,
+      .applications-title-sub {
+        font-size: 32px;
+      }
+
+      .application-card {
+        padding: 15px;
+        min-height: 160px;
+      }
+
+      .application-title {
+        font-size: 15px;
+      }
+
+      .application-status {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 375px) {
+      .applications-title-main,
+      .applications-title-sub {
+        font-size: 28px;
+      }
+
+      .status-filter-btn {
+        font-size: 11px;
+        padding: 7px 12px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .applications-section {
+        padding: 20px 0;
+      }
+
+      .applications-title-main,
+      .applications-title-sub {
+        font-size: 26px;
+      }
+
+      .status-filter-btn {
+        font-size: 10px;
+        padding: 6px 10px;
+      }
+
+      .application-card {
+        padding: 12px;
+      }
+
+      .application-title {
+        font-size: 14px;
+      }
+
+      .application-status {
+        font-size: 12px;
+        padding: 3px 8px;
+      }
+    }
   </style>
 {% endblock %}
 

@@ -1872,6 +1872,61 @@ input[type="text"].profile-edit-input::placeholder {
   }
 }
 
+@media (max-width: 430px) {
+  .profile-main-content {
+    padding: 18px 12px;
+  }
+  
+  .profile-main-startup-card-item {
+    padding: 18px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .profile-main-startup-card-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .profile-main-startup-info {
+    width: 100%;
+  }
+  
+  .profile-main-startup-image {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .profile-main-startup-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 390px) {
+  .profile-main-content {
+    padding: 16px 10px;
+  }
+  
+  .profile-main-startup-card-item {
+    padding: 16px;
+  }
+  
+  .profile-main-startup-name {
+    font-size: 14px;
+  }
+  
+  .profile-main-startup-description {
+    font-size: 12px;
+  }
+  
+  .profile-main-startup-image {
+    width: 90px;
+    height: 90px;
+  }
+}
+
 @media (max-width: 360px) {
   .profile-sidebar {
     padding: 12px 8px;
