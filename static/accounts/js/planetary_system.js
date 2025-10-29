@@ -594,20 +594,44 @@
   // ensure close on backdrop and cross also on mobile
   document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('ultra_new_planetary_modal');
+    const backdrop = document.querySelector('.ultra_new_planetary_modal_backdrop');
     const closeBtn = document.getElementById('ultra_new_planetary_modal_close');
+    
     if (closeBtn) {
-      closeBtn.addEventListener('click', hideUltraNewPlanetaryModal);
-      closeBtn.addEventListener('touchend', function(e){ e.preventDefault(); hideUltraNewPlanetaryModal(); }, { passive: false });
+      closeBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        hideUltraNewPlanetaryModal();
+      });
+      closeBtn.addEventListener('touchend', function(e){ 
+        e.preventDefault(); 
+        e.stopPropagation();
+        hideUltraNewPlanetaryModal(); 
+      }, { passive: false });
     }
+    
     if (modal) {
       modal.addEventListener('click', function(e) {
-        if (e.target === modal) hideUltraNewPlanetaryModal();
+        if (e.target === modal || e.target.classList.contains('ultra_new_planetary_modal_backdrop')) {
+          hideUltraNewPlanetaryModal();
+        }
       });
       modal.addEventListener('touchend', function(e){
-        if (e.target === modal) {
+        if (e.target === modal || e.target.classList.contains('ultra_new_planetary_modal_backdrop')) {
           e.preventDefault();
           hideUltraNewPlanetaryModal();
         }
+      }, { passive: false });
+    }
+    
+    if (backdrop) {
+      backdrop.addEventListener('click', function(e) {
+        e.preventDefault();
+        hideUltraNewPlanetaryModal();
+      });
+      backdrop.addEventListener('touchend', function(e){ 
+        e.preventDefault(); 
+        hideUltraNewPlanetaryModal(); 
       }, { passive: false });
     }
   });

@@ -1781,3 +1781,244 @@ body {
     height: 75px;
   }
 }
+
+.featured9 {
+  display: none !important;
+}
+
+.faq-page-wrapper {
+  display: none !important;
+}
+
+.featured7 .card-gamification {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .journey-start-wrapper {
+    padding: 30px 15px;
+  }
+  
+  .journey-start-container {
+    width: 100%;
+    gap: 40px;
+  }
+  
+  .journey-start-banner {
+    height: 320px;
+  }
+  
+  .journey-start-banner-text {
+    width: auto;
+    left: 15px;
+    right: 15px;
+    top: auto;
+    bottom: 20px;
+    position: absolute;
+    font-size: 18px;
+    line-height: 22px;
+  }
+  
+  .journey-start-banner-image-container {
+    width: 230px;
+    height: auto;
+    left: 50%;
+    top: 20px;
+    transform: translateX(-50%);
+  }
+  
+  .journey-start-banner-image {
+    position: relative;
+    width: 100%;
+    height: auto;
+    left: auto;
+    top: auto;
+    transform: none;
+  }
+  
+  .journey-start-interests {
+    width: 100%;
+    gap: 20px;
+  }
+  
+  .category-carousel {
+    max-width: 100%;
+  }
+  
+  .category-carousel-viewport {
+    padding: 10px 0;
+  }
+  
+  .category-carousel-inner {
+    gap: 15px;
+  }
+  
+  .category-carousel-arrow {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .category-carousel-arrow-left { left: -5px; }
+  .category-carousel-arrow-right { right: -5px; }
+  
+  .category-carousel-inner .journey-start-category {
+    width: 140px;
+    flex: 0 0 140px;
+  }
+  
+  .journey-start-category img {
+    height: 100px;
+  }
+  
+  .journey-start-category-name {
+    font-size: 14px;
+  }
+  
+  .featured7 {
+    padding: 40px 15px;
+    background-color: transparent;
+  }
+  
+  .featured7 .frame-parent21 {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .featured7 .card-industry {
+    width: 100%;
+    height: auto;
+    padding: 30px 20px;
+  }
+  
+  .featured7 .div57 {
+    font-size: 28px;
+    line-height: 32px;
+    margin-bottom: 16px;
+  }
+  
+  .featured7 .div60 {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  .featured5 {
+    padding: 40px 15px;
+  }
+  
+  .featured5 .frame-parent7 {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .featured5 .frame-parent8,
+  .featured5 .frame-parent9,
+  .featured5 .creators {
+    width: 100%;
+  }
+  
+  .featured5 .divider {
+    display: none;
+  }
+  
+  .featured5 .voltforge-description {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .journey-start-banner {
+    height: 280px;
+  }
+  
+  .journey-start-banner-text {
+    font-size: 16px;
+    line-height: 20px;
+  }
+  
+  .journey-start-banner-image-container {
+    width: 180px;
+  }
+  
+  .category-carousel-inner .journey-start-category {
+    width: 120px;
+    flex: 0 0 120px;
+  }
+  
+  .journey-start-category img {
+    height: 85px;
+  }
+  
+  .journey-start-category-name {
+    font-size: 12px;
+  }
+  
+  .featured7 .card-industry {
+    padding: 25px 15px;
+  }
+  
+  .featured7 .div57 {
+    font-size: 24px;
+    line-height: 28px;
+  }
+  
+  .featured7 .div60 {
+    font-size: 12px;
+  }
+  
+  .featured5 .frame-parent9 {
+    gap: 20px;
+  }
+  
+  .featured5 .frame-parent10 .frame-child9 {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .featured5 .voltforge-description {
+    font-size: 12px;
+    line-height: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .journey-start-banner {
+    height: 250px;
+  }
+  
+  .journey-start-banner-text {
+    font-size: 14px;
+    line-height: 18px;
+    left: 10px;
+    right: 10px;
+  }
+  
+  .journey-start-banner-image-container {
+    width: 150px;
+  }
+  
+  .category-carousel-inner .journey-start-category {
+    width: 100px;
+    flex: 0 0 100px;
+  }
+  
+  .journey-start-category img {
+    height: 70px;
+  }
+  
+  .journey-start-category-name {
+    font-size: 11px;
+  }
+  
+  .featured7 .card-industry {
+    padding: 20px 12px;
+  }
+  
+  .featured7 .div57 {
+    font-size: 20px;
+    line-height: 24px;
+  }
+  
+  .featured7 .div60 {
+    font-size: 11px;
+  }
+}
