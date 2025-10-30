@@ -23,6 +23,7 @@ from django.core.files.storage import default_storage
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.core.serializers.json import DjangoJSONEncoder
+from .tasks import upload_video_to_s3
 from django.db import (
     models,
     transaction,
@@ -3520,34 +3521,27 @@ def create_startup(request):
                         file_save_errors.append({"field": "proofs", "file": getattr(proof_file, "name", ""), "error": str(e)})
             videos = request.FILES.getlist("video")
             if videos:
-                video_type, _ = FileTypes.objects.get_or_create(type_name="video")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
                 for video in videos:
                     if not hasattr(video, "name"):
                         logger.warning(f"Пропущено видео: {video}")
                         continue
-                    unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
-                    video_id = str(uuid.uuid4())
-                    file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
                     try:
-                        logger.info(f"Попытка сохранить видео по пути: {file_path}")
-                        if not try_save_file(video, file_path):
-                            raise Exception("Не удалось сохранить видео")
-                        logger.info(f"Видео успешно сохранено по пути: {file_path}")
-                        video_ids.append(video_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
-                            entity_id=startup.startup_id,
-                            file_type=video_type,
-                            file_url=video_id,
-                            uploaded_at=timezone.now(),
-                            startup=startup,
-                            original_file_name=unique_filename,
+                        unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
+                        video_data = video.read()
+                        content_type = getattr(video, 'content_type', 'video/mp4')
+                        
+                        upload_video_to_s3.delay(
+                            video_data=video_data,
+                            video_name=video.name,
+                            video_content_type=content_type,
+                            startup_id=startup.startup_id,
+                            original_filename=unique_filename
                         )
-                        logger.info(f"Видео сохранено: {file_path}")
+                        logger.info(f"Видео отправлено в очередь Celery: {video.name}")
+                        messages.info(request, f"Видео {video.name} загружается в фоновом режиме.")
                     except Exception as e:
-                        logger.error(f"Ошибка сохранения видео: {e}", exc_info=True)
-                        messages.warning(request, "Не удалось сохранить одно из видео, но стартап создан.")
+                        logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
                         file_save_errors.append({"field": "video", "file": getattr(video, "name", ""), "error": str(e)})
             startup.logo_urls = logo_ids
             startup.creatives_urls = creatives_ids
@@ -4620,13 +4614,12 @@ def edit_startup(request, startup_id):
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
                 entity_type = EntityTypes.objects.get(type_name="startup")
-                video_ids = []  # Инициализируем список для новых файлов
+                video_ids = []
                 for video in videos:
                     if not hasattr(video, "name"):
                         logger.warning(f"Пропущено видео, так как это не файл: {video}")
                         continue
                     
-                    # Проверяем, не существует ли уже файл с таким именем
                     existing_file = FileStorage.objects.filter(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
@@ -4638,22 +4631,23 @@ def edit_startup(request, startup_id):
                         logger.warning(f"Видео {video.name} уже существует, пропускаем создание")
                         continue
                     
-                    unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
-                    video_id = str(uuid.uuid4())
-                    file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
-                    default_storage.save(file_path, video)
-                    video_ids.append(video_id)
-                    safe_create_file_storage(
-                        entity_type=entity_type,
-                        entity_id=startup.startup_id,
-                        file_type=video_type,
-                        file_url=video_id,
-                        uploaded_at=timezone.now(),
-                        startup=startup,
-                        original_file_name=video.name,
-                    )
-                    logger.info(f"Видео сохранено с ID: {video_id}")
-                # video_ids будут добавлены в конце функции
+                    try:
+                        unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
+                        video_data = video.read()
+                        content_type = getattr(video, 'content_type', 'video/mp4')
+                        
+                        upload_video_to_s3.delay(
+                            video_data=video_data,
+                            video_name=video.name,
+                            video_content_type=content_type,
+                            startup_id=startup.startup_id,
+                            original_filename=unique_filename
+                        )
+                        logger.info(f"Видео отправлено в очередь Celery: {video.name}")
+                        messages.info(request, f"Видео {video.name} загружается в фоновом режиме.")
+                    except Exception as e:
+                        logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
             startup.logo_urls = logo_ids
             # Обновляем URL файлов только если были загружены новые
             if 'creative_ids' in locals() and creative_ids:

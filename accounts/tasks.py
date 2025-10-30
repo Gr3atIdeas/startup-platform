@@ -1,0 +1,134 @@
+import logging
+import uuid
+from celery import shared_task
+from django.core.files.storage import default_storage
+from django.conf import settings
+from django.utils import timezone
+import boto3
+from .models import FileStorage, FileTypes, EntityTypes, Startups
+
+logger = logging.getLogger(__name__)
+
+
+def try_save_file_to_s3(file_content, file_path, content_type='application/octet-stream'):
+    try:
+        default_storage.save(file_path, file_content)
+        return True
+    except Exception as e:
+        logger.error(f"Ошибка default_storage.save для {file_path}: {e}", exc_info=True)
+        try:
+            s3 = boto3.client(
+                's3',
+                endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+                aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+                aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+                region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
+            )
+            bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+            s3.put_object(Bucket=bucket, Key=file_path, Body=file_content, ContentType=content_type, ACL='public-read')
+            logger.info(f"Файл успешно загружен через boto3: {file_path}")
+            return True
+        except Exception as e2:
+            logger.error(f"Ошибка загрузки через boto3 для {file_path}: {e2}", exc_info=True)
+            return False
+
+
+@shared_task(bind=True, max_retries=3)
+def upload_video_to_s3(self, video_data, video_name, video_content_type, startup_id, original_filename):
+    try:
+        video_id = str(uuid.uuid4())
+        file_path = f"startups/{startup_id}/videos/{video_id}_{video_name}"
+        
+        logger.info(f"Начало загрузки видео: {file_path}")
+        
+        from io import BytesIO
+        video_file = BytesIO(video_data)
+        
+        if not try_save_file_to_s3(video_file, file_path, video_content_type):
+            raise Exception("Не удалось сохранить видео в S3")
+        
+        logger.info(f"Видео успешно загружено: {file_path}")
+        
+        video_type, _ = FileTypes.objects.get_or_create(type_name="video")
+        entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
+        
+        startup = Startups.objects.get(startup_id=startup_id)
+        
+        existing_file = FileStorage.objects.filter(file_url=video_id).first()
+        if not existing_file:
+            FileStorage.objects.create(
+                entity_type=entity_type,
+                entity_id=startup_id,
+                file_type=video_type,
+                file_url=video_id,
+                uploaded_at=timezone.now(),
+                startup=startup,
+                original_file_name=original_filename,
+            )
+            logger.info(f"FileStorage создан для видео: {video_id}")
+        
+        current_video_urls = startup.video_urls or []
+        if video_id not in current_video_urls:
+            current_video_urls.append(video_id)
+            startup.video_urls = current_video_urls
+            startup.save(update_fields=['video_urls'])
+            logger.info(f"video_id {video_id} добавлен в Startups.video_urls")
+        
+        return {
+            'success': True,
+            'video_id': video_id,
+            'file_path': file_path
+        }
+        
+    except Exception as e:
+        logger.error(f"Ошибка загрузки видео: {e}", exc_info=True)
+        raise self.retry(exc=e, countdown=60)
+
+
+@shared_task(bind=True, max_retries=3)
+def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type_name, entity_id, file_type_name, original_filename):
+    try:
+        file_id = str(uuid.uuid4())
+        file_path = f"{entity_type_name}s/{entity_id}/{file_type_name}/{file_id}_{file_name}"
+        
+        logger.info(f"Начало загрузки файла: {file_path}")
+        
+        from io import BytesIO
+        file_obj = BytesIO(file_data)
+        
+        if not try_save_file_to_s3(file_obj, file_path, file_content_type):
+            raise Exception(f"Не удалось сохранить файл {file_name} в S3")
+        
+        logger.info(f"Файл успешно загружен: {file_path}")
+        
+        file_type, _ = FileTypes.objects.get_or_create(type_name=file_type_name)
+        entity_type, _ = EntityTypes.objects.get_or_create(type_name=entity_type_name)
+        
+        startup = None
+        if entity_type_name == "startup":
+            startup = Startups.objects.get(startup_id=entity_id)
+        
+        existing_file = FileStorage.objects.filter(file_url=file_id).first()
+        if not existing_file:
+            FileStorage.objects.create(
+                entity_type=entity_type,
+                entity_id=entity_id,
+                file_type=file_type,
+                file_url=file_id,
+                uploaded_at=timezone.now(),
+                startup=startup,
+                original_file_name=original_filename,
+            )
+            logger.info(f"FileStorage создан для файла: {file_id}")
+        
+        return {
+            'success': True,
+            'file_id': file_id,
+            'file_path': file_path
+        }
+        
+    except Exception as e:
+        logger.error(f"Ошибка загрузки файла: {e}", exc_info=True)
+        raise self.retry(exc=e, countdown=60)
+
