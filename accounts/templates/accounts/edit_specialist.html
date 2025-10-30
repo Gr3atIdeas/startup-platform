@@ -28,8 +28,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
+        let isSubmitting = false; // Флаг для предотвращения повторных отправок
+        
         form.addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // Защита от повторных отправок
+            if (isSubmitting) {
+                console.warn('⚠️ Форма уже отправляется, игнорируем повторную попытку');
+                return;
+            }
+            
+            console.log('🚀 Начало отправки формы специалиста');
+            isSubmitting = true;
+            
+            // Блокируем кнопку submit
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent = 'Отправка...';
+            }
             
             const fileInputIds = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input', 'id_catalog_card_image_input'];
             fileInputIds.forEach(inputId => {
@@ -50,20 +68,49 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (creativesInput && creativesInput.files.length > 10) {
                 alert('Максимально 10 изображений');
+                isSubmitting = false;
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Сохранить';
+                }
                 return;
             }
             
             if (proofsInput && proofsInput.files.length > 10) {
                 alert('Максимально 10 документов');
+                isSubmitting = false;
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Сохранить';
+                }
                 return;
             }
             
             if (videoInput && videoInput.files.length > 1) {
                 alert('Максимально 1 видео');
+                isSubmitting = false;
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Сохранить';
+                }
                 return;
             }
             
             const formData = new FormData(form);
+            
+            // Логируем файлы в FormData
+            console.log('=== FormData содержимое ===');
+            let videoCount = 0;
+            for (let pair of formData.entries()) {
+                if (pair[1] instanceof File) {
+                    console.log(pair[0] + ': ' + pair[1].name + ' (' + pair[1].size + ' bytes)');
+                    if (pair[0] === 'video') {
+                        videoCount++;
+                    }
+                }
+            }
+            console.log(`📹 Всего видео файлов: ${videoCount}`);
+            console.log('===========================');
             
             fetch(form.action, {
                 method: 'POST',
@@ -82,17 +129,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then(data => {
+                console.log('✅ Ответ от сервера получен');
                 if (data.success) {
+                    console.log('✅ Форма специалиста успешно сохранена');
                     if (data.redirect_url) {
                         window.location.href = data.redirect_url;
                     }
                 } else {
+                    console.error('❌ Ошибка сохранения:', data.error);
                     alert('Ошибка сохранения: ' + (data.error || 'Неизвестная ошибка'));
+                    // Разблокируем форму при ошибке
+                    isSubmitting = false;
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Сохранить';
+                    }
                 }
             })
             .catch(error => {
-                console.error('AJAX ошибка:', error);
+                console.error('❌ AJAX ошибка:', error);
                 alert('Ошибка отправки формы: ' + error.message);
+                // Разблокируем форму при ошибке
+                isSubmitting = false;
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Сохранить';
+                }
             });
         });
     }

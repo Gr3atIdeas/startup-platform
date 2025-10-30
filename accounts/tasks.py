@@ -58,6 +58,8 @@ def upload_video_to_s3(self, video_data, video_name, video_content_type, entity_
         entity_type, _ = EntityTypes.objects.get_or_create(type_name=entity_type_name)
         
         from .models import Startups, Franchises, Agencies, Specialists
+        from django.db import transaction
+        
         entity_model = {'startup': Startups, 'franchise': Franchises, 'agency': Agencies, 'specialist': Specialists}.get(entity_type_name)
         entity = entity_model.objects.get(pk=entity_id) if entity_model else None
         
@@ -73,14 +75,24 @@ def upload_video_to_s3(self, video_data, video_name, video_content_type, entity_
                 original_file_name=original_filename,
             )
             logger.info(f"FileStorage создан для видео: {video_id}")
+        else:
+            logger.warning(f"FileStorage с video_id {video_id} уже существует! Пропускаем создание.")
         
         if entity:
-            current_video_urls = entity.video_urls or []
-            if video_id not in current_video_urls:
-                current_video_urls.append(video_id)
-                entity.video_urls = current_video_urls
-                entity.save(update_fields=['video_urls'])
-                logger.info(f"video_id {video_id} добавлен в {entity_type_name}.video_urls")
+            # Используем transaction для предотвращения race condition
+            with transaction.atomic():
+                # Перезагружаем entity с блокировкой строки
+                entity = entity_model.objects.select_for_update().get(pk=entity_id)
+                current_video_urls = entity.video_urls or []
+                logger.info(f"Текущие video_urls для {entity_type_name} {entity_id}: {current_video_urls}")
+                
+                if video_id not in current_video_urls:
+                    current_video_urls.append(video_id)
+                    entity.video_urls = current_video_urls
+                    entity.save(update_fields=['video_urls'])
+                    logger.info(f"✅ video_id {video_id} добавлен в {entity_type_name}.video_urls. Новый список: {entity.video_urls}")
+                else:
+                    logger.warning(f"⚠️ video_id {video_id} уже есть в {entity_type_name}.video_urls! Пропускаем добавление.")
         
         return {
             'success': True,
@@ -128,34 +140,47 @@ def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type
                 original_file_name=original_filename,
             )
             logger.info(f"FileStorage создан для файла: {file_id}")
+        else:
+            logger.warning(f"FileStorage с file_id {file_id} уже существует! Пропускаем создание.")
 
         # Update entity's file_urls (e.g., logo_urls, creatives_urls, proofs_urls)
         if entity:
-            if file_type_name == 'logo':
-                current_logo_urls = entity.logo_urls or []
-                if file_id not in current_logo_urls:
-                    current_logo_urls.append(file_id)
-                    entity.logo_urls = current_logo_urls
-                    entity.save(update_fields=['logo_urls'])
-                    logger.info(f"file_id {file_id} добавлен в {entity_type_name}.logo_urls")
-            elif file_type_name == 'creative':
-                current_creatives_urls = entity.creatives_urls or []
-                if file_id not in current_creatives_urls:
-                    current_creatives_urls.append(file_id)
-                    entity.creatives_urls = current_creatives_urls
-                    entity.save(update_fields=['creatives_urls'])
-                    logger.info(f"file_id {file_id} добавлен в {entity_type_name}.creatives_urls")
-            elif file_type_name == 'proof':
-                current_proofs_urls = entity.proofs_urls or []
-                if file_id not in current_proofs_urls:
-                    current_proofs_urls.append(file_id)
-                    entity.proofs_urls = current_proofs_urls
-                    entity.save(update_fields=['proofs_urls'])
-                    logger.info(f"file_id {file_id} добавлен в {entity_type_name}.proofs_urls")
-            elif file_type_name == 'catalog_card_image':
-                entity.catalog_card_image = file_id
-                entity.save(update_fields=['catalog_card_image'])
-                logger.info(f"file_id {file_id} добавлен в {entity_type_name}.catalog_card_image")
+            from django.db import transaction
+            with transaction.atomic():
+                # Перезагружаем entity с блокировкой строки
+                entity = entity_model.objects.select_for_update().get(pk=entity_id)
+                
+                if file_type_name == 'logo':
+                    current_logo_urls = entity.logo_urls or []
+                    if file_id not in current_logo_urls:
+                        current_logo_urls.append(file_id)
+                        entity.logo_urls = current_logo_urls
+                        entity.save(update_fields=['logo_urls'])
+                        logger.info(f"✅ file_id {file_id} добавлен в {entity_type_name}.logo_urls")
+                    else:
+                        logger.warning(f"⚠️ file_id {file_id} уже есть в logo_urls")
+                elif file_type_name == 'creative':
+                    current_creatives_urls = entity.creatives_urls or []
+                    if file_id not in current_creatives_urls:
+                        current_creatives_urls.append(file_id)
+                        entity.creatives_urls = current_creatives_urls
+                        entity.save(update_fields=['creatives_urls'])
+                        logger.info(f"✅ file_id {file_id} добавлен в {entity_type_name}.creatives_urls")
+                    else:
+                        logger.warning(f"⚠️ file_id {file_id} уже есть в creatives_urls")
+                elif file_type_name == 'proof':
+                    current_proofs_urls = entity.proofs_urls or []
+                    if file_id not in current_proofs_urls:
+                        current_proofs_urls.append(file_id)
+                        entity.proofs_urls = current_proofs_urls
+                        entity.save(update_fields=['proofs_urls'])
+                        logger.info(f"✅ file_id {file_id} добавлен в {entity_type_name}.proofs_urls")
+                    else:
+                        logger.warning(f"⚠️ file_id {file_id} уже есть в proofs_urls")
+                elif file_type_name == 'catalog_card_image':
+                    entity.catalog_card_image = file_id
+                    entity.save(update_fields=['catalog_card_image'])
+                    logger.info(f"✅ file_id {file_id} добавлен в {entity_type_name}.catalog_card_image")
         
         return {
             'success': True,
