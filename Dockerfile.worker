@@ -15,7 +15,8 @@ USER appuser
 
 ENV CONTAINER_ROLE=worker
 
-HEALTHCHECK NONE
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD celery -A marketplace inspect ping -d celery@$HOSTNAME || exit 1
 
 CMD ["celery", "-A", "marketplace", "worker", "--loglevel=info", "--concurrency=2"]
 
