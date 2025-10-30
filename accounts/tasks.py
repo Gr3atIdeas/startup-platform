@@ -36,12 +36,13 @@ def try_save_file_to_s3(file_content, file_path, content_type='application/octet
 
 
 @shared_task(bind=True, max_retries=3)
-def upload_video_to_s3(self, video_data, video_name, video_content_type, startup_id, original_filename):
+def upload_video_to_s3(self, video_data, video_name, video_content_type, entity_id, original_filename, entity_type_name='startup'):
     try:
         video_id = str(uuid.uuid4())
-        file_path = f"startups/{startup_id}/videos/{video_id}_{video_name}"
+        entity_folder = f"{entity_type_name}s" if not entity_type_name.endswith('s') else entity_type_name
+        file_path = f"{entity_folder}/{entity_id}/videos/{video_id}_{video_name}"
         
-        logger.info(f"Начало загрузки видео: {file_path}, размер: {len(video_data)} байт")
+        logger.info(f"Начало загрузки видео ({entity_type_name}): {file_path}, размер: {len(video_data)} байт")
         
         from io import BytesIO
         if isinstance(video_data, str):
@@ -54,29 +55,32 @@ def upload_video_to_s3(self, video_data, video_name, video_content_type, startup
         logger.info(f"Видео успешно загружено: {file_path}")
         
         video_type, _ = FileTypes.objects.get_or_create(type_name="video")
-        entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
+        entity_type, _ = EntityTypes.objects.get_or_create(type_name=entity_type_name)
         
-        startup = Startups.objects.get(startup_id=startup_id)
+        from .models import Startups, Franchises, Agencies, Specialists
+        entity_model = {'startup': Startups, 'franchise': Franchises, 'agency': Agencies, 'specialist': Specialists}.get(entity_type_name)
+        entity = entity_model.objects.get(pk=entity_id) if entity_model else None
         
         existing_file = FileStorage.objects.filter(file_url=video_id).first()
         if not existing_file:
             FileStorage.objects.create(
                 entity_type=entity_type,
-                entity_id=startup_id,
+                entity_id=entity_id,
                 file_type=video_type,
                 file_url=video_id,
                 uploaded_at=timezone.now(),
-                startup=startup,
+                startup=entity if entity_type_name == 'startup' else None,
                 original_file_name=original_filename,
             )
             logger.info(f"FileStorage создан для видео: {video_id}")
         
-        current_video_urls = startup.video_urls or []
-        if video_id not in current_video_urls:
-            current_video_urls.append(video_id)
-            startup.video_urls = current_video_urls
-            startup.save(update_fields=['video_urls'])
-            logger.info(f"video_id {video_id} добавлен в Startups.video_urls")
+        if entity:
+            current_video_urls = entity.video_urls or []
+            if video_id not in current_video_urls:
+                current_video_urls.append(video_id)
+                entity.video_urls = current_video_urls
+                entity.save(update_fields=['video_urls'])
+                logger.info(f"video_id {video_id} добавлен в {entity_type_name}.video_urls")
         
         return {
             'success': True,

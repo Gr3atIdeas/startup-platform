@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-group upload-box" id="videoDropArea">
                         <label for="id_video_input">*Видео (новое или для замены)</label>
-                        {{ form.video|attr:"id:id_video_input"|attr:"name:video"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
+                        {{ form.video|attr:"id:id_video_input"|attr:"name:video"|attr:"multiple:true"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файл</div>
                         <div class="small-text">Допустимый формат MOV, MP4 (1 файл)</div>
                         <div id="videoPreview" class="file-preview-area">

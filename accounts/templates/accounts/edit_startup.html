@@ -80,6 +80,14 @@ document.addEventListener('DOMContentLoaded', function() {
                    // Создаем FormData после проверки файлов
                    const formData = new FormData(form);
                    
+                   // Логируем файлы в FormData
+                   console.log('=== FormData содержимое ===');
+                   for (let pair of formData.entries()) {
+                       if (pair[1] instanceof File) {
+                           console.log(pair[0] + ': ' + pair[1].name + ' (' + pair[1].size + ' bytes)');
+                       }
+                   }
+                   console.log('===========================');
             
             
             // Отправляем AJAX запрос
@@ -311,9 +319,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="form-group upload-box" id="videoDropArea">
                         <label for="id_video_input">*Видео (новое или для замены)</label>
-                        {{ form.video|attr:"id:id_video_input"|attr:"name:video"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
-                        <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файл</div>
-                        <div class="small-text">Допустимый формат MOV, MP4 (1 файл)</div>
+                        {{ form.video|attr:"id:id_video_input"|attr:"name:video"|attr:"multiple:true"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
+                        <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файлы</div>
+                        <div class="small-text">Допустимый формат MOV, MP4 (до 3 файлов)</div>
                         <div id="videoPreview" class="file-preview-area">
                                                          {% for video_url in startup.video_urls %}
                                  <div class="file-preview-item existing-file" data-file-id="{{ video_url }}">

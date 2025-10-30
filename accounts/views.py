@@ -3537,8 +3537,9 @@ def create_startup(request):
                             video_data=video_data_b64,
                             video_name=video.name,
                             video_content_type=content_type,
-                            startup_id=startup.startup_id,
-                            original_filename=unique_filename
+                            entity_id=startup.startup_id,
+                            original_filename=unique_filename,
+                            entity_type_name='startup'
                         )
                         logger.info(f"Видео отправлено в очередь Celery: {video.name}, размер: {len(video_data)} байт")
                         messages.info(request, f"Видео {video.name} загружается в фоновом режиме.")
@@ -3729,7 +3730,7 @@ def create_franchise(request):
                             file_url=creative_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=proof_file.name,
+                            original_file_name=creative_file.name,
                         )
                     except Exception:
                         messages.warning(request, "Не удалось сохранить один из креативов, но франшиза создана.")
@@ -3758,31 +3759,38 @@ def create_franchise(request):
                     except Exception:
                         messages.warning(request, "Не удалось сохранить один из документов, но франшиза создана.")
 
-            video = form.cleaned_data.get("video")
-            if video:
-                video_type, _ = FileTypes.objects.get_or_create(type_name="video")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
-                video_id = str(uuid.uuid4())
-                file_path = f"franchises/{franchise.franchise_id}/videos/{video_id}_{video.name}"
-                try:
-                    default_storage.save(file_path, video)
-                    video_ids.append(video_id)
-                    safe_create_file_storage(
-                        entity_type=entity_type,
-                        entity_id=franchise.franchise_id,
-                        file_type=video_type,
-                        file_url=video_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=video.name,
-                    )
-                except Exception:
-                    messages.warning(request, "Не удалось сохранить видео, но франшиза создана.")
+            videos = request.FILES.getlist("video")
+            if videos:
+                for video in videos:
+                    if not hasattr(video, "name"):
+                        logger.warning(f"Пропущено видео: {video}")
+                        continue
+                    try:
+                        unique_filename = get_unique_filename(video.name, franchise.franchise_id, "video")
+                        video_data = video.read()
+                        content_type = getattr(video, 'content_type', 'video/mp4')
+                        
+                        video_data_b64 = base64.b64encode(video_data).decode('utf-8')
+                        
+                        upload_video_to_s3.delay(
+                            video_data=video_data_b64,
+                            video_name=video.name,
+                            video_content_type=content_type,
+                            entity_id=franchise.franchise_id,
+                            original_filename=unique_filename,
+                            entity_type_name='franchise'
+                        )
+                        logger.info(f"Видео отправлено в очередь Celery: {video.name}, размер: {len(video_data)} байт")
+                        messages.info(request, f"Видео {video.name} загружается в фоновом режиме.")
+                    except Exception as e:
+                        logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
 
             franchise.logo_urls = logo_ids
             franchise.creatives_urls = creatives_ids
             franchise.proofs_urls = proofs_ids
-            franchise.video_urls = video_ids
+            franchise.video_urls = franchise.video_urls or []
+            logger.info("Видео загружается асинхронно через Celery, video_urls обновится при завершении загрузки")
             
             slider_images = request.POST.getlist("slider_images")
             if len(slider_images) > 4:
@@ -3911,14 +3919,39 @@ def create_agency(request):
                 save_file_set([logo], "logo", "logos", logo_ids)
             save_file_set(form.cleaned_data.get("creatives", []), "creative", "creatives", creatives_ids)
             save_file_set(form.cleaned_data.get("proofs", []), "proof", "proofs", proofs_ids)
-            video = form.cleaned_data.get("video")
-            if video:
-                save_file_set([video], "video", "videos", video_ids)
+            
+            videos = request.FILES.getlist("video")
+            if videos:
+                for video in videos:
+                    if not hasattr(video, "name"):
+                        logger.warning(f"Пропущено видео: {video}")
+                        continue
+                    try:
+                        unique_filename = get_unique_filename(video.name, agency.agency_id, "video")
+                        video_data = video.read()
+                        content_type = getattr(video, 'content_type', 'video/mp4')
+                        
+                        video_data_b64 = base64.b64encode(video_data).decode('utf-8')
+                        
+                        upload_video_to_s3.delay(
+                            video_data=video_data_b64,
+                            video_name=video.name,
+                            video_content_type=content_type,
+                            entity_id=agency.agency_id,
+                            original_filename=unique_filename,
+                            entity_type_name='agency'
+                        )
+                        logger.info(f"Видео агентства отправлено в очередь Celery: {video.name}, размер: {len(video_data)} байт")
+                        messages.info(request, f"Видео {video.name} загружается в фоновом режиме.")
+                    except Exception as e:
+                        logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
 
             agency.logo_urls = logo_ids
             agency.creatives_urls = creatives_ids
             agency.proofs_urls = proofs_ids
-            agency.video_urls = video_ids
+            agency.video_urls = agency.video_urls or []
+            logger.info("Видео загружается асинхронно через Celery, video_urls обновится при завершении загрузки")
             
             # Сохранение catalog_card_image
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
@@ -4061,14 +4094,39 @@ def create_specialist(request):
                 save_file_set([logo], "logo", "logos", logo_ids)
             save_file_set(form.cleaned_data.get("creatives", []), "creative", "creatives", creatives_ids)
             save_file_set(form.cleaned_data.get("proofs", []), "proof", "proofs", proofs_ids)
-            video = form.cleaned_data.get("video")
-            if video:
-                save_file_set([video], "video", "videos", video_ids)
+            
+            videos = request.FILES.getlist("video")
+            if videos:
+                for video in videos:
+                    if not hasattr(video, "name"):
+                        logger.warning(f"Пропущено видео: {video}")
+                        continue
+                    try:
+                        unique_filename = get_unique_filename(video.name, spec.specialist_id, "video")
+                        video_data = video.read()
+                        content_type = getattr(video, 'content_type', 'video/mp4')
+                        
+                        video_data_b64 = base64.b64encode(video_data).decode('utf-8')
+                        
+                        upload_video_to_s3.delay(
+                            video_data=video_data_b64,
+                            video_name=video.name,
+                            video_content_type=content_type,
+                            entity_id=spec.specialist_id,
+                            original_filename=unique_filename,
+                            entity_type_name='specialist'
+                        )
+                        logger.info(f"Видео специалиста отправлено в очередь Celery: {video.name}, размер: {len(video_data)} байт")
+                        messages.info(request, f"Видео {video.name} загружается в фоновом режиме.")
+                    except Exception as e:
+                        logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
 
             spec.logo_urls = logo_ids
             spec.creatives_urls = creatives_ids
             spec.proofs_urls = proofs_ids
-            spec.video_urls = video_ids
+            spec.video_urls = spec.video_urls or []
+            logger.info("Видео загружается асинхронно через Celery, video_urls обновится при завершении загрузки")
             
             # Сохранение catalog_card_image
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
@@ -4645,8 +4703,9 @@ def edit_startup(request, startup_id):
                             video_data=video_data_b64,
                             video_name=video.name,
                             video_content_type=content_type,
-                            startup_id=startup.startup_id,
-                            original_filename=unique_filename
+                            entity_id=startup.startup_id,
+                            original_filename=unique_filename,
+                            entity_type_name='startup'
                         )
                         logger.info(f"Видео отправлено в очередь Celery: {video.name}, размер: {len(video_data)} байт")
                         messages.info(request, f"Видео {video.name} загружается в фоновом режиме.")
@@ -8271,7 +8330,7 @@ def edit_franchise(request, franchise_id):
                             file_url=creative_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=proof_file.name,
+                            original_file_name=creative_file.name,
                         )
                     except Exception as e:
                         messages.warning(request, f"Не удалось сохранить креатив: {e}")
@@ -8300,33 +8359,38 @@ def edit_franchise(request, franchise_id):
                         messages.warning(request, f"Не удалось сохранить документ: {e}")
             
             if videos:
-                video_type, _ = FileTypes.objects.get_or_create(type_name="video")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 for video in videos:
                     if not hasattr(video, "name"):
+                        logger.warning(f"Пропущено видео франшизы: {video}")
                         continue
-                    video_id = str(uuid.uuid4())
-                    file_path = f"franchises/{franchise.franchise_id}/videos/{video_id}_{video.name}"
                     try:
-                        default_storage.save(file_path, video)
-                        video_ids.append(video_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        unique_filename = get_unique_filename(video.name, franchise.franchise_id, "video")
+                        video_data = video.read()
+                        content_type = getattr(video, 'content_type', 'video/mp4')
+                        
+                        video_data_b64 = base64.b64encode(video_data).decode('utf-8')
+                        
+                        upload_video_to_s3.delay(
+                            video_data=video_data_b64,
+                            video_name=video.name,
+                            video_content_type=content_type,
                             entity_id=franchise.franchise_id,
-                            file_type=video_type,
-                            file_url=video_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=proof_file.name,
+                            original_filename=unique_filename,
+                            entity_type_name='franchise'
                         )
+                        logger.info(f"Видео франшизы отправлено в очередь Celery: {video.name}, размер: {len(video_data)} байт")
+                        messages.info(request, f"Видео {video.name} загружается в фоновом режиме.")
                     except Exception as e:
-                        messages.warning(request, f"Не удалось сохранить видео: {e}")
+                        logger.error(f"Ошибка отправки видео франшизы в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
+                logger.info("Видео франшизы загружается асинхронно через Celery")
+                if franchise.video_urls is None:
+                    franchise.video_urls = []
             
             # Обновляем URL файлов
             franchise.logo_urls = logo_ids
             franchise.creatives_urls = creative_ids
             franchise.proofs_urls = proofs_ids
-            franchise.video_urls = video_ids
             
             # Обработка удаленных файлов
             deleted_files_json = request.POST.get('deleted_files', '[]')
@@ -8580,7 +8644,7 @@ def edit_agency(request, agency_id):
                             file_url=creative_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=proof_file.name,
+                            original_file_name=creative_file.name,
                         )
                     except Exception as e:
                         messages.warning(request, f"Не удалось сохранить креатив: {e}")
@@ -8609,27 +8673,33 @@ def edit_agency(request, agency_id):
                         messages.warning(request, f"Не удалось сохранить документ: {e}")
             
             if videos:
-                video_type, _ = FileTypes.objects.get_or_create(type_name="video")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
                 for video in videos:
                     if not hasattr(video, "name"):
+                        logger.warning(f"Пропущено видео агентства: {video}")
                         continue
-                    video_id = str(uuid.uuid4())
-                    file_path = f"agencies/{agency.agency_id}/videos/{video_id}_{video.name}"
                     try:
-                        default_storage.save(file_path, video)
-                        video_ids.append(video_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        unique_filename = get_unique_filename(video.name, agency.agency_id, "video")
+                        video_data = video.read()
+                        content_type = getattr(video, 'content_type', 'video/mp4')
+                        
+                        video_data_b64 = base64.b64encode(video_data).decode('utf-8')
+                        
+                        upload_video_to_s3.delay(
+                            video_data=video_data_b64,
+                            video_name=video.name,
+                            video_content_type=content_type,
                             entity_id=agency.agency_id,
-                            file_type=video_type,
-                            file_url=video_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=proof_file.name,
+                            original_filename=unique_filename,
+                            entity_type_name='agency'
                         )
+                        logger.info(f"Видео агентства отправлено в очередь Celery: {video.name}, размер: {len(video_data)} байт")
+                        messages.info(request, f"Видео {video.name} загружается в фоновом режиме.")
                     except Exception as e:
-                        messages.warning(request, f"Не удалось сохранить видео: {e}")
+                        logger.error(f"Ошибка отправки видео агентства в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
+                logger.info("Видео агентства загружается асинхронно через Celery")
+                if agency.video_urls is None:
+                    agency.video_urls = []
             
             # Обработка удаленных файлов
             deleted_files_json = request.POST.get('deleted_files', '[]')
@@ -8682,7 +8752,6 @@ def edit_agency(request, agency_id):
             agency.logo_urls = logo_ids
             agency.creatives_urls = creative_ids
             agency.proofs_urls = proofs_ids
-            agency.video_urls = video_ids
             
             slider_images = request.POST.getlist("slider_images")
             if len(slider_images) > 4:
@@ -8892,7 +8961,7 @@ def edit_specialist(request, specialist_id):
                             file_url=creative_id,
                             uploaded_at=timezone.now(),
                             startup=None,
-                            original_file_name=proof_file.name,
+                            original_file_name=creative_file.name,
                         )
                     except Exception as e:
                         messages.warning(request, f"Не удалось сохранить креатив: {e}")
@@ -8921,33 +8990,38 @@ def edit_specialist(request, specialist_id):
                         messages.warning(request, f"Не удалось сохранить документ: {e}")
             
             if videos:
-                video_type, _ = FileTypes.objects.get_or_create(type_name="video")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 for video in videos:
                     if not hasattr(video, "name"):
+                        logger.warning(f"Пропущено видео специалиста: {video}")
                         continue
-                    video_id = str(uuid.uuid4())
-                    file_path = f"specialists/{specialist.specialist_id}/videos/{video_id}_{video.name}"
                     try:
-                        default_storage.save(file_path, video)
-                        video_ids.append(video_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        unique_filename = get_unique_filename(video.name, specialist.specialist_id, "video")
+                        video_data = video.read()
+                        content_type = getattr(video, 'content_type', 'video/mp4')
+                        
+                        video_data_b64 = base64.b64encode(video_data).decode('utf-8')
+                        
+                        upload_video_to_s3.delay(
+                            video_data=video_data_b64,
+                            video_name=video.name,
+                            video_content_type=content_type,
                             entity_id=specialist.specialist_id,
-                            file_type=video_type,
-                            file_url=video_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=proof_file.name,
+                            original_filename=unique_filename,
+                            entity_type_name='specialist'
                         )
+                        logger.info(f"Видео специалиста отправлено в очередь Celery: {video.name}, размер: {len(video_data)} байт")
+                        messages.info(request, f"Видео {video.name} загружается в фоновом режиме.")
                     except Exception as e:
-                        messages.warning(request, f"Не удалось сохранить видео: {e}")
+                        logger.error(f"Ошибка отправки видео специалиста в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
+                logger.info("Видео специалиста загружается асинхронно через Celery")
+                if specialist.video_urls is None:
+                    specialist.video_urls = []
             
             # Обновляем URL файлов
             specialist.logo_urls = logo_ids
             specialist.creatives_urls = creative_ids
             specialist.proofs_urls = proofs_ids
-            specialist.video_urls = video_ids
             
             # Обработка удаленных файлов
             deleted_files_json = request.POST.get('deleted_files', '[]')
