@@ -40,7 +40,7 @@ def upload_video_to_s3(self, video_data, video_name, video_content_type, entity_
     try:
         video_id = str(uuid.uuid4())
         entity_folder = f"{entity_type_name}s" if not entity_type_name.endswith('s') else entity_type_name
-        file_path = f"{entity_folder}/{entity_id}/videos/{video_id}_{video_name}"
+        file_path = f"{entity_folder}/{entity_id}/videos/{video_id}_{original_filename}"
         
         logger.info(f"Начало загрузки видео ({entity_type_name}): {file_path}, размер: {len(video_data)} байт")
         
@@ -97,7 +97,7 @@ def upload_video_to_s3(self, video_data, video_name, video_content_type, entity_
 def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type_name, entity_id, file_type_name, original_filename):
     try:
         file_id = str(uuid.uuid4())
-        file_path = f"{entity_type_name}s/{entity_id}/{file_type_name}/{file_id}_{file_name}"
+        file_path = f"{entity_type_name}s/{entity_id}/{file_type_name}/{file_id}_{original_filename}"
         
         logger.info(f"Начало загрузки файла: {file_path}")
         
@@ -112,9 +112,9 @@ def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type
         file_type, _ = FileTypes.objects.get_or_create(type_name=file_type_name)
         entity_type, _ = EntityTypes.objects.get_or_create(type_name=entity_type_name)
         
-        startup = None
-        if entity_type_name == "startup":
-            startup = Startups.objects.get(startup_id=entity_id)
+        from .models import Startups, Franchises, Agencies, Specialists
+        entity_model = {'startup': Startups, 'franchise': Franchises, 'agency': Agencies, 'specialist': Specialists}.get(entity_type_name)
+        entity = entity_model.objects.get(pk=entity_id) if entity_model else None
         
         existing_file = FileStorage.objects.filter(file_url=file_id).first()
         if not existing_file:
@@ -124,10 +124,38 @@ def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type
                 file_type=file_type,
                 file_url=file_id,
                 uploaded_at=timezone.now(),
-                startup=startup,
+                startup=entity if entity_type_name == 'startup' else None,
                 original_file_name=original_filename,
             )
             logger.info(f"FileStorage создан для файла: {file_id}")
+
+        # Update entity's file_urls (e.g., logo_urls, creatives_urls, proofs_urls)
+        if entity:
+            if file_type_name == 'logo':
+                current_logo_urls = entity.logo_urls or []
+                if file_id not in current_logo_urls:
+                    current_logo_urls.append(file_id)
+                    entity.logo_urls = current_logo_urls
+                    entity.save(update_fields=['logo_urls'])
+                    logger.info(f"file_id {file_id} добавлен в {entity_type_name}.logo_urls")
+            elif file_type_name == 'creative':
+                current_creatives_urls = entity.creatives_urls or []
+                if file_id not in current_creatives_urls:
+                    current_creatives_urls.append(file_id)
+                    entity.creatives_urls = current_creatives_urls
+                    entity.save(update_fields=['creatives_urls'])
+                    logger.info(f"file_id {file_id} добавлен в {entity_type_name}.creatives_urls")
+            elif file_type_name == 'proof':
+                current_proofs_urls = entity.proofs_urls or []
+                if file_id not in current_proofs_urls:
+                    current_proofs_urls.append(file_id)
+                    entity.proofs_urls = current_proofs_urls
+                    entity.save(update_fields=['proofs_urls'])
+                    logger.info(f"file_id {file_id} добавлен в {entity_type_name}.proofs_urls")
+            elif file_type_name == 'catalog_card_image':
+                entity.catalog_card_image = file_id
+                entity.save(update_fields=['catalog_card_image'])
+                logger.info(f"file_id {file_id} добавлен в {entity_type_name}.catalog_card_image")
         
         return {
             'success': True,
