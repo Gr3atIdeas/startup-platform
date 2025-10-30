@@ -85,7 +85,7 @@ class StartupEditForm(forms.ModelForm):
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
     terms = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Условия *", required=True
+        widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False
     )
     planet_image = forms.ChoiceField(
         choices=[],
@@ -1004,7 +1004,7 @@ class FranchiseEditForm(forms.ModelForm):
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
     terms = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Условия *", required=True
+        widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False
     )
     planet_image = forms.ChoiceField(
         choices=[],
@@ -1088,7 +1088,7 @@ class AgencyEditForm(forms.ModelForm):
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
     terms = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ *", required=True
+        widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False
     )
     planet_image = forms.ChoiceField(
         choices=[],
@@ -1181,7 +1181,7 @@ class SpecialistEditForm(forms.ModelForm):
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
     terms = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ *", required=True
+        widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False
     )
     additional_info = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 5}), label="Услуги и кейсы", required=False
