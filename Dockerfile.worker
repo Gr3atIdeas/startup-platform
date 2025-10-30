@@ -15,5 +15,7 @@ USER appuser
 
 ENV CONTAINER_ROLE=worker
 
+HEALTHCHECK NONE
+
 CMD ["celery", "-A", "marketplace", "worker", "--loglevel=info", "--concurrency=2"]
 
