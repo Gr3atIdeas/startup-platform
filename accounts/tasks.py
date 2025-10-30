@@ -1,5 +1,6 @@
 import logging
 import uuid
+import base64
 from celery import shared_task
 from django.core.files.storage import default_storage
 from django.conf import settings
@@ -40,9 +41,11 @@ def upload_video_to_s3(self, video_data, video_name, video_content_type, startup
         video_id = str(uuid.uuid4())
         file_path = f"startups/{startup_id}/videos/{video_id}_{video_name}"
         
-        logger.info(f"Начало загрузки видео: {file_path}")
+        logger.info(f"Начало загрузки видео: {file_path}, размер: {len(video_data)} байт")
         
         from io import BytesIO
+        if isinstance(video_data, str):
+            video_data = base64.b64decode(video_data)
         video_file = BytesIO(video_data)
         
         if not try_save_file_to_s3(video_file, file_path, video_content_type):

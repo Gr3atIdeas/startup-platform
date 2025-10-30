@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import uuid
+import base64
 from decimal import Decimal
 from random import choice, shuffle
 import time
@@ -3530,14 +3531,16 @@ def create_startup(request):
                         video_data = video.read()
                         content_type = getattr(video, 'content_type', 'video/mp4')
                         
+                        video_data_b64 = base64.b64encode(video_data).decode('utf-8')
+                        
                         upload_video_to_s3.delay(
-                            video_data=video_data,
+                            video_data=video_data_b64,
                             video_name=video.name,
                             video_content_type=content_type,
                             startup_id=startup.startup_id,
                             original_filename=unique_filename
                         )
-                        logger.info(f"Видео отправлено в очередь Celery: {video.name}")
+                        logger.info(f"Видео отправлено в очередь Celery: {video.name}, размер: {len(video_data)} байт")
                         messages.info(request, f"Видео {video.name} загружается в фоновом режиме.")
                     except Exception as e:
                         logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
@@ -3546,7 +3549,8 @@ def create_startup(request):
             startup.logo_urls = logo_ids
             startup.creatives_urls = creatives_ids
             startup.proofs_urls = proofs_ids
-            startup.video_urls = video_ids
+            startup.video_urls = startup.video_urls or []
+            logger.info("Видео загружается асинхронно через Celery, video_urls обновится при завершении загрузки")
             
             slider_images = request.POST.getlist("slider_images")
             if len(slider_images) > 4:
@@ -4614,7 +4618,6 @@ def edit_startup(request, startup_id):
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
                 entity_type = EntityTypes.objects.get(type_name="startup")
-                video_ids = []
                 for video in videos:
                     if not hasattr(video, "name"):
                         logger.warning(f"Пропущено видео, так как это не файл: {video}")
@@ -4636,41 +4639,34 @@ def edit_startup(request, startup_id):
                         video_data = video.read()
                         content_type = getattr(video, 'content_type', 'video/mp4')
                         
+                        video_data_b64 = base64.b64encode(video_data).decode('utf-8')
+                        
                         upload_video_to_s3.delay(
-                            video_data=video_data,
+                            video_data=video_data_b64,
                             video_name=video.name,
                             video_content_type=content_type,
                             startup_id=startup.startup_id,
                             original_filename=unique_filename
                         )
-                        logger.info(f"Видео отправлено в очередь Celery: {video.name}")
+                        logger.info(f"Видео отправлено в очередь Celery: {video.name}, размер: {len(video_data)} байт")
                         messages.info(request, f"Видео {video.name} загружается в фоновом режиме.")
                     except Exception as e:
                         logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
+                logger.info("Видео загружается асинхронно через Celery, video_urls обновится автоматически")
+                if startup.video_urls is None:
+                    startup.video_urls = []
             startup.logo_urls = logo_ids
-            # Обновляем URL файлов только если были загружены новые
             if 'creative_ids' in locals() and creative_ids:
-                # Удаляем дубликаты из существующих URL
                 existing_creatives = startup.creatives_urls or []
-                # Добавляем только новые URL, которых еще нет
                 new_creatives = [url for url in creative_ids if url not in existing_creatives]
                 startup.creatives_urls = existing_creatives + new_creatives
                 logger.info(f"Добавлено {len(new_creatives)} новых креативов (было {len(existing_creatives)}, дубликатов пропущено: {len(creative_ids) - len(new_creatives)})")
             if 'proofs_ids' in locals() and proofs_ids:
-                # Удаляем дубликаты из существующих URL
                 existing_proofs = startup.proofs_urls or []
-                # Добавляем только новые URL, которых еще нет
                 new_proofs = [url for url in proofs_ids if url not in existing_proofs]
                 startup.proofs_urls = existing_proofs + new_proofs
                 logger.info(f"Добавлено {len(new_proofs)} новых документов (было {len(existing_proofs)}, дубликатов пропущено: {len(proofs_ids) - len(new_proofs)})")
-            if 'video_ids' in locals() and video_ids:
-                # Удаляем дубликаты из существующих URL
-                existing_videos = startup.video_urls or []
-                # Добавляем только новые URL, которых еще нет
-                new_videos = [url for url in video_ids if url not in existing_videos]
-                startup.video_urls = existing_videos + new_videos
-                logger.info(f"Добавлено {len(new_videos)} новых видео (было {len(existing_videos)}, дубликатов пропущено: {len(video_ids) - len(new_videos)})")
             # Обработка удаленных файлов
             deleted_files_json = request.POST.get('deleted_files', '[]')
             try:
