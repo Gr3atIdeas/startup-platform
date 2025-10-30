@@ -15,54 +15,52 @@
 <script>
 
 document.addEventListener('DOMContentLoaded', function() {
+    if (window.startupFormInitialized) {
+        return;
+    }
+    window.startupFormInitialized = true;
+    
     const form = document.getElementById('startupForm');
     if (form) {
-        
-        // Удаляем дублирующиеся креативы
         removeDuplicateCreatives();
         
-        // Добавляем обработчики для полей файлов
         const fileInputs = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input', 'id_catalog_card_image_input'];
         fileInputs.forEach(inputId => {
             const input = document.getElementById(inputId);
             if (input) {
                 input.addEventListener('change', function(e) {
-                    // Сохраняем файлы в глобальную переменную
                     window.selectedFiles = window.selectedFiles || {};
                     window.selectedFiles[inputId] = e.target.files;
                 });
             }
         });
         
-        let isSubmitting = false; // Флаг для предотвращения повторных отправок
+        window.isSubmittingStartup = false;
         
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Предотвращаем обычную отправку формы
+            e.preventDefault();
+            e.stopImmediatePropagation();
             
-            // Защита от повторных отправок
-            if (isSubmitting) {
-                console.warn('⚠️ Форма уже отправляется, игнорируем повторную попытку');
-                return;
+            const timestamp = new Date().toISOString();
+            console.log(`🚀 [${timestamp}] Submit event triggered`);
+            
+            if (window.isSubmittingStartup) {
+                console.warn(`⚠️ [${timestamp}] Форма УЖЕ отправляется, игнорируем`);
+                return false;
             }
             
-            console.log('🚀 Начало отправки формы');
-            isSubmitting = true;
+            console.log(`✅ [${timestamp}] Начало отправки формы`);
+            window.isSubmittingStartup = true;
             
-            // Блокируем кнопку submit
             const submitButton = form.querySelector('button[type="submit"]');
             if (submitButton) {
                 submitButton.disabled = true;
                 submitButton.textContent = 'Отправка...';
             }
-            
-            // Восстанавливаем файлы из глобальной переменной
-            
-            // Восстанавливаем файлы для каждого input'а
             const fileInputIds = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input', 'id_catalog_card_image_input'];
             fileInputIds.forEach(inputId => {
                 const input = document.getElementById(inputId);
                 if (input && window.selectedFiles && window.selectedFiles[inputId]) {
-                    // Создаем новый DataTransfer для восстановления файлов
                     const dataTransfer = new DataTransfer();
                     for (let i = 0; i < window.selectedFiles[inputId].length; i++) {
                         dataTransfer.items.add(window.selectedFiles[inputId][i]);
@@ -71,49 +69,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            // Проверяем файлы после восстановления
             const creativesInput = document.getElementById('id_creatives_input');
             const proofsInput = document.getElementById('id_proofs_input');
             const videoInput = document.getElementById('id_video_input');
             const logoInput = document.getElementById('id_logo_input');
+                   
+            if (creativesInput && creativesInput.files.length > 10) {
+                alert('Максимально 10 изображений');
+                window.isSubmittingStartup = false;
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Сохранить';
+                }
+                return;
+            }
             
+            if (proofsInput && proofsInput.files.length > 10) {
+                alert('Максимально 10 документов');
+                window.isSubmittingStartup = false;
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Сохранить';
+                }
+                return;
+            }
             
-            // Проверка лимитов файлов
-                   
-                   if (creativesInput && creativesInput.files.length > 10) {
-                       alert('Максимально 10 изображений');
-                       isSubmitting = false;
-                       if (submitButton) {
-                           submitButton.disabled = false;
-                           submitButton.textContent = 'Сохранить';
-                       }
-                       return;
-                   }
-                   
-                   if (proofsInput && proofsInput.files.length > 10) {
-                       alert('Максимально 10 документов');
-                       isSubmitting = false;
-                       if (submitButton) {
-                           submitButton.disabled = false;
-                           submitButton.textContent = 'Сохранить';
-                       }
-                       return;
-                   }
-                   
-                   if (videoInput && videoInput.files.length > 3) {
-                       alert('Максимально 3 видео');
-                       isSubmitting = false;
-                       if (submitButton) {
-                           submitButton.disabled = false;
-                           submitButton.textContent = 'Сохранить';
-                       }
-                       return;
-                   }
-                   
-                   // Создаем FormData после проверки файлов
-                   const formData = new FormData(form);
-                   
-                   // Логируем файлы в FormData
+            if (videoInput && videoInput.files.length > 3) {
+                alert('Максимально 3 видео');
+                window.isSubmittingStartup = false;
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Сохранить';
+                }
+                return;
+            }
+            
+            const formData = new FormData(form);
                    console.log('=== FormData содержимое ===');
                    let videoCount = 0;
                    for (let pair of formData.entries()) {
@@ -126,10 +117,6 @@ document.addEventListener('DOMContentLoaded', function() {
                    }
                    console.log(`📹 Всего видео файлов: ${videoCount}`);
                    console.log('===========================');
-            
-            
-            // Отправляем AJAX запрос
-            
             
             fetch(form.action, {
                 method: 'POST',
@@ -157,8 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     console.error('❌ Ошибка сохранения:', data.error);
                     alert('Ошибка сохранения: ' + (data.error || 'Неизвестная ошибка'));
-                    // Разблокируем форму при ошибке
-                    isSubmitting = false;
+                    window.isSubmittingStartup = false;
                     if (submitButton) {
                         submitButton.disabled = false;
                         submitButton.textContent = 'Сохранить';
@@ -168,8 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => {
                 console.error('❌ AJAX ошибка:', error);
                 alert('Ошибка отправки формы: ' + error.message);
-                // Разблокируем форму при ошибке
-                isSubmitting = false;
+                window.isSubmittingStartup = false;
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Сохранить';
@@ -505,7 +490,6 @@ window.STARTUP_FORM_CONFIG = {
 };
 </script>
 <script>
-// Удаление существующих файлов на странице редактирования
 document.addEventListener('click', function(event) {
   if (event.target.classList && event.target.classList.contains('delete-existing-file-btn')) {
     var fileId = event.target.getAttribute('data-file-id');
@@ -533,7 +517,6 @@ document.addEventListener('click', function(event) {
   }
 });
 
-// Функция для удаления дублирующихся креативов
 function removeDuplicateCreatives() {
     const creativesPreview = document.getElementById('creativesPreview');
     if (!creativesPreview) return;
@@ -542,7 +525,6 @@ function removeDuplicateCreatives() {
     const seenUrls = new Set();
     let duplicatesRemoved = 0;
     
-    // Собираем все элементы в массив для безопасного удаления
     const filesArray = Array.from(existingFiles);
     
     filesArray.forEach(file => {
@@ -564,7 +546,6 @@ function removeDuplicateCreatives() {
 <script src="{% static 'accounts/js/slider_checkbox.js' %}"></script>
 <script src="{% static 'accounts/js/description_media_modal.js' %}"></script>
 <script>
-// Инициализация модального окна для медиа
 document.addEventListener('DOMContentLoaded', function() {
     const getMediaLinkBtn = document.getElementById('getMediaLinkBtn');
     if (getMediaLinkBtn) {

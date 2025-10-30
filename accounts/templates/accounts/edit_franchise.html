@@ -13,6 +13,11 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    if (window.franchiseFormInitialized) {
+        return;
+    }
+    window.franchiseFormInitialized = true;
+    
     const form = document.getElementById('franchiseForm');
     if (form) {
         removeDuplicateCreatives();
@@ -28,21 +33,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        let isSubmitting = false; // Флаг для предотвращения повторных отправок
+        window.isSubmittingFranchise = false;
         
         form.addEventListener('submit', function(e) {
             e.preventDefault();
+            e.stopImmediatePropagation();
             
-            // Защита от повторных отправок
-            if (isSubmitting) {
-                console.warn('⚠️ Форма уже отправляется, игнорируем повторную попытку');
-                return;
+            const timestamp = new Date().toISOString();
+            console.log(`🚀 [${timestamp}] Submit event triggered`);
+            
+            if (window.isSubmittingFranchise) {
+                console.warn(`⚠️ [${timestamp}] Форма УЖЕ отправляется, игнорируем`);
+                return false;
             }
             
-            console.log('🚀 Начало отправки формы франшизы');
-            isSubmitting = true;
-            
-            // Блокируем кнопку submit
+            console.log(`✅ [${timestamp}] Начало отправки формы франшизы`);
+            window.isSubmittingFranchise = true;
             const submitButton = form.querySelector('button[type="submit"]');
             if (submitButton) {
                 submitButton.disabled = true;
@@ -68,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (creativesInput && creativesInput.files.length > 10) {
                 alert('Максимально 10 изображений');
-                isSubmitting = false;
+                window.isSubmittingFranchise = false;
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Сохранить';
@@ -78,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (proofsInput && proofsInput.files.length > 10) {
                 alert('Максимально 10 документов');
-                isSubmitting = false;
+                window.isSubmittingFranchise = false;
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Сохранить';
@@ -88,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (videoInput && videoInput.files.length > 3) {
                 alert('Максимально 3 видео');
-                isSubmitting = false;
+                window.isSubmittingFranchise = false;
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Сохранить';
@@ -98,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const formData = new FormData(form);
             
-            // Логируем файлы в FormData
             console.log('=== FormData содержимое ===');
             let videoCount = 0;
             for (let pair of formData.entries()) {
@@ -139,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.error('❌ Ошибка сохранения:', data.error);
                     alert('Ошибка сохранения: ' + (data.error || 'Неизвестная ошибка'));
                     // Разблокируем форму при ошибке
-                    isSubmitting = false;
+                    window.isSubmittingFranchise = false;
                     if (submitButton) {
                         submitButton.disabled = false;
                         submitButton.textContent = 'Сохранить';
@@ -150,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('❌ AJAX ошибка:', error);
                 alert('Ошибка отправки формы: ' + error.message);
                 // Разблокируем форму при ошибке
-                isSubmitting = false;
+                window.isSubmittingFranchise = false;
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Сохранить';
