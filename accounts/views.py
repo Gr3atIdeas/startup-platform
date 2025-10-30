@@ -4681,17 +4681,6 @@ def edit_startup(request, startup_id):
                         logger.warning(f"Пропущено видео, так как это не файл: {video}")
                         continue
                     
-                    existing_file = FileStorage.objects.filter(
-                        entity_type=entity_type,
-                        entity_id=startup.startup_id,
-                        file_type=video_type,
-                        original_file_name=video.name
-                    ).first()
-                    
-                    if existing_file:
-                        logger.warning(f"Видео {video.name} уже существует, пропускаем создание")
-                        continue
-                    
                     try:
                         unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
                         video_data = video.read()
