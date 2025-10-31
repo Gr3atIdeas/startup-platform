@@ -8,7 +8,7 @@
     <!-- Шапка с изображением -->
     <div class="agency-card-header">
       {% if agency.get_catalog_card_image_url %}
-        <img src="{{ agency.get_catalog_card_image_url }}" alt="Изображение {{ agency.title }}" class="agency-header-image" onerror="console.log('Image failed to load:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';" onload="console.log('Image loaded successfully:', this.src);">
+        <img src="{{ agency.get_catalog_card_image_url }}" alt="Изображение {{ agency.title }}" class="agency-header-image" loading="lazy" decoding="async" onerror="console.log('Image failed to load:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';" onload="console.log('Image loaded successfully:', this.src);">
         <div class="agency-header-placeholder" style="display:none;">
           <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">
           <span style="color: #a9a9a9; font-size: 12px; margin-top: 8px;">Изображение недоступно</span>
@@ -24,7 +24,7 @@
     <!-- Планетка -->
     {% if agency.planet_image %}
       <div class="planet-miniature-container">
-        <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ agency.planet_image }}" alt="Планета {{ agency.title }}" class="planet-miniature">
+        <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ agency.planet_image }}" alt="Планета {{ agency.title }}" class="planet-miniature" loading="lazy" decoding="async">
       </div>
     {% endif %}
 
@@ -34,7 +34,7 @@
       <div class="agency-title-row">
         <div class="agency-logo">
           {% if agency.logo_urls %}
-            <img src="{% get_file_url_tag agency.logo_urls.0 agency.agency_id 'logo' 'agency' %}" alt="Логотип {{ agency.title }}">
+            <img src="{% get_file_url_tag agency.logo_urls.0 agency.agency_id 'logo' 'agency' %}" alt="Логотип {{ agency.title }}" loading="lazy" decoding="async">
           {% else %}
             <div class="logo-placeholder"></div>
           {% endif %}

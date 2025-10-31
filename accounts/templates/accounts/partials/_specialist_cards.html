@@ -8,7 +8,7 @@
     <!-- Шапка с изображением -->
     <div class="specialist-card-header">
       {% if specialist.get_catalog_card_image_url %}
-        <img src="{{ specialist.get_catalog_card_image_url }}" alt="Изображение {{ specialist.title }}" class="specialist-header-image" onerror="console.log('Image failed to load:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';" onload="console.log('Image loaded successfully:', this.src);">
+        <img src="{{ specialist.get_catalog_card_image_url }}" alt="Изображение {{ specialist.title }}" class="specialist-header-image" loading="lazy" decoding="async" onerror="console.log('Image failed to load:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';" onload="console.log('Image loaded successfully:', this.src);">
         <div class="specialist-header-placeholder" style="display:none;">
           <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">
           <span style="color: #a9a9a9; font-size: 12px; margin-top: 8px;">Изображение недоступно</span>
@@ -24,7 +24,7 @@
     <!-- Планетка -->
     {% if specialist.planet_image %}
       <div class="planet-miniature-container">
-        <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ specialist.planet_image }}" alt="Планета {{ specialist.title }}" class="planet-miniature">
+        <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ specialist.planet_image }}" alt="Планета {{ specialist.title }}" class="planet-miniature" loading="lazy" decoding="async">
       </div>
     {% endif %}
 
@@ -34,7 +34,7 @@
       <div class="specialist-title-row">
         <div class="specialist-logo">
           {% if specialist.logo_urls %}
-            <img src="{% get_file_url_tag specialist.logo_urls.0 specialist.specialist_id 'logo' 'specialist' %}" alt="Логотип {{ specialist.title }}">
+            <img src="{% get_file_url_tag specialist.logo_urls.0 specialist.specialist_id 'logo' 'specialist' %}" alt="Логотип {{ specialist.title }}" loading="lazy" decoding="async">
           {% else %}
             <div class="logo-placeholder"></div>
           {% endif %}
