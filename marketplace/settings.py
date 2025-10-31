@@ -254,6 +254,18 @@ CELERY_TIMEZONE = 'UTC'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "KEY_PREFIX": "greatideas",
+        "TIMEOUT": 86400,
+    }
+}
+
 logger.info("=== Проверка настроек Django ===")
 logger.info(f"STORAGES: {STORAGES}")
 logger.info(f"INSTALLED_APPS: {INSTALLED_APPS}")

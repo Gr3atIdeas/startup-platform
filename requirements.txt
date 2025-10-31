@@ -32,3 +32,4 @@ bleach==6.1.0
 beautifulsoup4==4.12.2
 celery==5.4.0
 redis==5.0.8
+django-redis==5.4.0

@@ -32,6 +32,13 @@ def get_file_info(file_id, entity_id, file_type, entity_type: str = "startup"):
     Получает URL и оригинальное имя файла из S3.
     Возвращает словарь с 'url' и 'original_name' или None если файл не найден.
     """
+    from django.core.cache import cache
+    
+    cache_key = f"s3_info:{entity_type}:{entity_id}:{file_type}:{file_id}"
+    cached_info = cache.get(cache_key)
+    if cached_info:
+        return cached_info
+    
     s3_client = boto3.client(
         "s3",
         endpoint_url=settings.AWS_S3_ENDPOINT_URL,
@@ -66,10 +73,12 @@ def get_file_info(file_id, entity_id, file_type, entity_type: str = "startup"):
             else:
                 original_name = filename
             logger.debug(f"Найден файл {file_type}: {url}, оригинальное имя: {original_name}")
-            return {
+            result = {
                 'url': url,
                 'original_name': original_name
             }
+            cache.set(cache_key, result, 86400)
+            return result
         else:
 
             if entity_type != "startup" and file_type != "avatar":
@@ -90,13 +99,22 @@ def get_file_info(file_id, entity_id, file_type, entity_type: str = "startup"):
                             original_name = filename
                     else:
                         original_name = filename
-                    return { 'url': url, 'original_name': original_name }
+                    result = { 'url': url, 'original_name': original_name }
+                    cache.set(cache_key, result, 86400)
+                    return result
             logger.warning(f"Файл не найден: prefix={prefix}")
             return None
     except ClientError as e:
         logger.error(f"Ошибка при получении информации о файле: {e}")
         return None
 def get_file_url(file_id, entity_id, file_type, entity_type: str = "startup"):
+    from django.core.cache import cache
+    
+    cache_key = f"s3_url:{entity_type}:{entity_id}:{file_type}:{file_id}"
+    cached_url = cache.get(cache_key)
+    if cached_url:
+        return cached_url
+    
     s3_client = boto3.client(
         "s3",
         endpoint_url=settings.AWS_S3_ENDPOINT_URL,
@@ -116,6 +134,7 @@ def get_file_url(file_id, entity_id, file_type, entity_type: str = "startup"):
 
             url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
             logger.debug(f"Сгенерирован URL для {file_type}: {url}")
+            cache.set(cache_key, url, 86400)
             return url
         else:
             if entity_type != "startup" and file_type != "avatar":
@@ -125,6 +144,7 @@ def get_file_url(file_id, entity_id, file_type, entity_type: str = "startup"):
                     key = response2["Contents"][0]["Key"]
 
                     url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
+                    cache.set(cache_key, url, 86400)
                     return url
             logger.warning(f"Файл не найден: prefix={prefix}")
             return None
