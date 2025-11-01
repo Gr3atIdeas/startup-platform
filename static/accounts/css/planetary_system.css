@@ -24,15 +24,12 @@
   --ultra_new_planetary_galaxy_y: 0px;
   position: absolute !important;
   top: 50% !important;
-  left: 125% !important;
+  right: -10% !important;
   width: 70% !important;
   height: 100% !important;
   transform: translateY(-50%) !important;
   z-index: 1 !important;
 }
-
-
-
 
 .ultra_new_planetary_system_wrapper {
   width: 100%;
@@ -273,13 +270,6 @@
   z-index: 19;
   cursor: pointer;
 }
-
-#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_planet_orientation {
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%);
-}
-
 
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(2) .ultra_new_planetary_planet_orientation {
   animation: orbit-rotation-1 80s linear infinite;
@@ -1536,7 +1526,6 @@
 @media (max-width: 768px) {
   #ultra_new_planetary_solar_system.home-page-planetary {
     --ultra_new_planetary_galaxy_scale: 0.8;
-    top: 50% !important;
     right: -100px !important;
     width: 90% !important;
     height: 90% !important;
@@ -1560,7 +1549,6 @@
 @media (max-width: 480px) {
   #ultra_new_planetary_solar_system.home-page-planetary {
     --ultra_new_planetary_galaxy_scale: 0.65;
-    top: 50% !important;
     right: -80px !important;
     width: 100% !important;
     height: 85% !important;
@@ -1582,7 +1570,6 @@
 @media (max-width: 360px) {
   #ultra_new_planetary_solar_system.home-page-planetary {
     --ultra_new_planetary_galaxy_scale: 0.55;
-    top: 50% !important;
     right: -60px !important;
     width: 100% !important;
     height: 80% !important;
