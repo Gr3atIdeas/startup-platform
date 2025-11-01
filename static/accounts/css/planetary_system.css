@@ -19,7 +19,6 @@
   --ultra_new_planetary_galaxy_tilt: 0deg;
   --ultra_new_planetary_planet_compensation: 0deg;
   --ultra_new_planetary_sun_compensation: 0deg;
-  --ultra_new_planetary_galaxy_scale: 1.1;
   --ultra_new_planetary_galaxy_x: 0px;
   --ultra_new_planetary_galaxy_y: 0px;
   position: absolute !important;
@@ -137,6 +136,19 @@
   -moz-backface-visibility: hidden;
 }
 
+.featured #ultra_new_planetary_galaxy {
+  --ultra_new_planetary_galaxy_scale: 0.8;
+  top: 50%;
+  left: 125%;
+}
+
+@media (max-width: 768px) {
+  .featured #ultra_new_planetary_galaxy {
+    --ultra_new_planetary_galaxy_scale: 0.8;
+    top: 50%;
+    left: 139%;
+  }
+}
 
 #ultra_new_planetary_sun_container {
   position: absolute;
@@ -269,6 +281,11 @@
   pointer-events: auto;
   z-index: 19;
   cursor: pointer;
+}
+
+.featured .ultra_new_planetary_planet_orientation {
+  left: 50%;
+  top: 50%;
 }
 
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(2) .ultra_new_planetary_planet_orientation {
