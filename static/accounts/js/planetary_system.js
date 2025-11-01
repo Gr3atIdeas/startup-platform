@@ -708,6 +708,8 @@
         return;
       }
       if (solarSystem && solarSystem.classList.contains('home-page-planetary')) {
+        planetOrientation.style.left = '';
+        planetOrientation.style.top = '';
         return;
       }
       const orbitSize = parseFloat(orbit.style.getPropertyValue('--orbit-size')) || 200;

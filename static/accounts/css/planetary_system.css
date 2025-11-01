@@ -286,30 +286,36 @@
 .featured #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_planet_orientation {
   left: 50% !important;
   top: 50% !important;
+  pointer-events: none !important;
+  will-change: transform;
+}
+
+.featured #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_planet {
+  pointer-events: auto;
 }
 
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(2) .ultra_new_planetary_planet_orientation {
-  animation: orbit-rotation-1 80s linear infinite;
+  animation: orbit-rotation-1 80s linear infinite !important;
 }
 
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(3) .ultra_new_planetary_planet_orientation {
-  animation: orbit-rotation-2 95s linear infinite;
+  animation: orbit-rotation-2 95s linear infinite !important;
 }
 
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(4) .ultra_new_planetary_planet_orientation {
-  animation: orbit-rotation-3 110s linear infinite;
+  animation: orbit-rotation-3 110s linear infinite !important;
 }
 
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(5) .ultra_new_planetary_planet_orientation {
-  animation: orbit-rotation-4 125s linear infinite;
+  animation: orbit-rotation-4 125s linear infinite !important;
 }
 
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(6) .ultra_new_planetary_planet_orientation {
-  animation: orbit-rotation-5 140s linear infinite;
+  animation: orbit-rotation-5 140s linear infinite !important;
 }
 
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(7) .ultra_new_planetary_planet_orientation {
-  animation: orbit-rotation-6 160s linear infinite;
+  animation: orbit-rotation-6 160s linear infinite !important;
 }
 
 @keyframes orbit-rotation-1 {
@@ -1553,12 +1559,10 @@
   }
   
   .ultra_new_planetary_planet {
-    pointer-events: auto !important;
     z-index: 20 !important;
   }
   
   .ultra_new_planetary_planet_orientation {
-    pointer-events: auto !important;
     z-index: 19 !important;
   }
 }
@@ -1577,10 +1581,6 @@
   
   #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit {
     pointer-events: none;
-  }
-  
-  #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_planet {
-    pointer-events: auto !important;
   }
 }
 
