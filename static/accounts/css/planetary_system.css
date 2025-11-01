@@ -283,21 +283,9 @@
   cursor: pointer;
 }
 
-.featured #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit {
-  top: 50%;
-  left: 50%;
-  margin-left: calc(-0.5 * var(--orbit-size));
-  margin-top: calc(-0.5 * var(--orbit-size));
-}
-
 .featured #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_planet_orientation {
   left: 50%;
   top: 50%;
-}
-
-.featured #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_planet {
-  left: 0;
-  top: 0;
 }
 
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(2) .ultra_new_planetary_planet_orientation {
