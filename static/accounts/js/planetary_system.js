@@ -703,7 +703,11 @@
     planets.forEach((planet, index) => {
       const orbit = planet.closest('.ultra_new_planetary_orbit');
       const planetOrientation = planet.closest('.ultra_new_planetary_planet_orientation');
+      const solarSystem = planet.closest('#ultra_new_planetary_solar_system');
       if (!orbit || !planetOrientation) {
+        return;
+      }
+      if (solarSystem && solarSystem.classList.contains('home-page-planetary')) {
         return;
       }
       const orbitSize = parseFloat(orbit.style.getPropertyValue('--orbit-size')) || 200;
