@@ -283,7 +283,7 @@
   cursor: pointer;
 }
 
-.featured .ultra_new_planetary_planet_orientation {
+.featured #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_planet_orientation {
   left: 50%;
   top: 50%;
 }
