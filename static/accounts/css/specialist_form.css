@@ -1607,6 +1607,7 @@ body,
   
   .form-navigation-header {
     margin-bottom: 20px;
+    padding: 0 15px;
   }
   
   .form-main-title {
@@ -1615,6 +1616,15 @@ body,
   
   .form-section {
     padding: 20px 15px;
+  }
+  
+  .form-top-grid {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .form-top-left {
+    flex-direction: column;
   }
   
   .planet-display {
@@ -1658,14 +1668,9 @@ body,
   .catalog-card-image-group .catalog-card-image-label {
     width: 320px;
   }
-  .form-group .small-text {
-    text-wrap-mode: wrap;
-  }
-  .consents-docs-buttons {
-    display: block;
-  }
   .agreement-section { display: flex; flex-direction: column; gap: 15px; align-items: flex-start; }
   .agreement-section .section-title { line-height: 50px; }
+  #consentsModal .modal-dialog { width: 92vw; max-width: 92vw; margin: 8vh auto; }
 }
 
 @media (max-width: 480px) {
@@ -1696,7 +1701,7 @@ body,
   }
   
   .catalog-card-image-group .catalog-card-image-label {
-    width: 120px;
+    width: 320px;
     height: 60px;
   }
   
@@ -1754,7 +1759,7 @@ body,
   }
   
   .catalog-card-image-group .catalog-card-image-label {
-    width: 100px;
+    width: 320px;
     height: 50px;
   }
   

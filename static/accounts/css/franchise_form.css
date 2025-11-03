@@ -1053,6 +1053,10 @@ h3.section-title {
   .form-navigation-header { padding: 0 15px; }
   #consentsModal .modal-dialog { width: 92vw; max-width: 92vw; margin: 8vh auto; }
   .form-top-grid { flex-direction: column; gap: 20px; }
+  .form-top-left {
+    flex-direction: column;
+    gap: 20px;
+  }
   .form-top-card { padding: 10px; }
   .catalog-card-image-group { margin-top: 16px; margin-left: 2px; }
   .catalog-card-image-group .catalog-card-image-label {
@@ -1620,6 +1624,7 @@ body,
   
   .form-navigation-header {
     margin-bottom: 20px;
+    padding: 0 15px;
   }
   
   .form-main-title {
@@ -1628,6 +1633,10 @@ body,
   
   .form-section {
     padding: 20px 15px;
+  }
+  
+  .form-top-left {
+    flex-direction: column;
   }
   
   .planet-display {
@@ -1695,7 +1704,7 @@ body,
   }
   
   .catalog-card-image-group .catalog-card-image-label {
-    width: 120px;
+    width: 320px;
     height: 60px;
   }
   
@@ -1753,7 +1762,7 @@ body,
   }
   
   .catalog-card-image-group .catalog-card-image-label {
-    width: 100px;
+    width: 320px;
     height: 50px;
   }
   
