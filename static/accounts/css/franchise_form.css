@@ -1055,6 +1055,15 @@ h3.section-title {
   .form-top-grid { flex-direction: column; gap: 20px; }
   .form-top-card { padding: 10px; }
   .catalog-card-image-group { margin-top: 16px; margin-left: 2px; }
+  .catalog-card-image-group .catalog-card-image-label {
+    width: 320px;
+  }
+  .form-group .small-text {
+    text-wrap-mode: wrap;
+  }
+  .consents-docs-buttons {
+    display: block;
+  }
   .agreement-section { display: flex; flex-direction: column; gap: 15px; align-items: flex-start; }
   .agreement-section .section-title { line-height: 50px; }
 }
@@ -1632,8 +1641,14 @@ body,
   }
   
   .catalog-card-image-group .catalog-card-image-label {
-    width: 150px;
+    width: 320px;
     height: 75px;
+  }
+  .form-group .small-text {
+    text-wrap-mode: wrap;
+  }
+  .consents-docs-buttons {
+    display: block;
   }
   
   .form-control {
