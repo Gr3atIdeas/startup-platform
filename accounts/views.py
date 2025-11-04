@@ -5839,6 +5839,7 @@ def invest(request, startup_id):
             
             transaction = InvestmentTransactions(
                 startup=startup,
+                franchise=None,
                 investor=request.user,
                 amount=amount,
                 is_micro=startup.micro_investment_available if hasattr(startup, 'micro_investment_available') else False,
