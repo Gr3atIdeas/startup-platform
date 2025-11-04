@@ -66,7 +66,8 @@ a:hover {
 
 .back-link-container {
   margin-bottom: 30px;
-  width: 1303px;
+  max-width: 1303px;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   padding: 0 12px;
@@ -2613,7 +2614,7 @@ a:hover {
 
 .similar-startups-container {
   width: 1303px; 
-  max-width: 1303px; 
+  max-width: 100%;
   margin: 0 auto; 
   padding: 0 30px; 
   box-sizing: border-box;
@@ -5197,14 +5198,36 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
     gap: 15px;
   }
 
+  .similar-card {
+    width: 100%;
+  }
+
   .similar-startups-section {
-    width: calc(100% - 10px);
     margin: 20px 5px;
-    padding: 15px 10px;
+    padding: 30px 15px;
+    border-radius: 15px;
+  }
+
+  .similar-startups-container {
+    width: 100%;
+    padding: 0 15px;
+  }
+
+  .show-all-button {
+    position: static;
+    width: 100%;
+    margin-top: 20px;
+    justify-content: center;
   }
 
   .main-content-grid {
     margin: 0 5px;
+    padding: 20px 5px;
+  }
+
+  .back-link-container {
+    margin: 0 5px 20px 5px;
+    width: calc(100% - 10px);
   }
 }
 
@@ -5273,18 +5296,40 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   }
 
   .similar-startups-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 15px;
   }
 
+  .similar-card {
+    width: 100%;
+  }
+
   .similar-startups-section {
-    width: calc(100% - 10px);
     margin: 20px 5px;
-    padding: 15px 10px;
+    padding: 30px 15px;
+    border-radius: 15px;
+  }
+
+  .similar-startups-container {
+    width: 100%;
+    padding: 0 15px;
+  }
+
+  .show-all-button {
+    position: static;
+    width: 100%;
+    margin-top: 20px;
+    justify-content: center;
   }
 
   .main-content-grid {
     margin: 0 5px;
+    padding: 20px 5px;
+  }
+
+  .back-link-container {
+    margin: 0 5px 20px 5px;
+    width: calc(100% - 10px);
   }
 }
 
