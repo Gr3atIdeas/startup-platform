@@ -203,6 +203,30 @@ body {
   
 }
 
+.no-orders-message {
+  width: 100%;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.no-orders-message p {
+  color: #000000 !important;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 18px;
+  margin: 10px 0;
+}
+
+.no-orders-message a {
+  color: #004e9f !important;
+  text-decoration: none;
+}
+
+.no-orders-message a:hover {
+  text-decoration: underline;
+}
+
 .order-card {
   padding: 24px 31px;
   border-radius: 10px;

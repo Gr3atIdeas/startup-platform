@@ -1549,32 +1549,92 @@ function openInvestModal(type, startupId) {
   currentInvestStartupId = startupId;
   currentInvestType = type;
   
-  const modal = document.getElementById('investModal');
-  const modalTitle = document.getElementById('investModalTitle');
-  const amountInput = document.getElementById('investAmount');
-  const errorDiv = document.getElementById('investError');
+  const userRole = getUserRole();
+  const pageDataElement = document.querySelector('.startup-detail-page');
+  const isAuthenticated = pageDataElement && pageDataElement.dataset.userAuthenticated === 'true';
   
-  if (!modal) return;
-  
-  if (modalTitle) {
-    modalTitle.textContent = type === 'buy' ? 'Выкупить' : 'Инвестировать';
+  if (!isAuthenticated) {
+    alert('Для инвестирования необходимо войти в систему');
+    return;
   }
   
-  if (amountInput) {
-    amountInput.value = '';
-  }
-  
-  if (errorDiv) {
-    errorDiv.style.display = 'none';
-    errorDiv.textContent = '';
-  }
-  
-  if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-    const bsModal = new bootstrap.Modal(modal);
-    bsModal.show();
+  if (userRole === 'moderator') {
+    const modal = document.getElementById('investModal');
+    const modalTitle = document.getElementById('investModalTitle');
+    const amountInput = document.getElementById('investAmount');
+    const errorDiv = document.getElementById('investError');
+    
+    if (!modal) return;
+    
+    if (modalTitle) {
+      modalTitle.textContent = type === 'buy' ? 'Выкупить' : 'Инвестировать';
+    }
+    
+    if (amountInput) {
+      amountInput.value = '';
+      amountInput.style.display = 'block';
+    }
+    
+    const amountLabel = amountInput ? amountInput.previousElementSibling : null;
+    if (amountLabel && amountLabel.tagName === 'LABEL') {
+      amountLabel.style.display = 'block';
+    }
+    
+    if (errorDiv) {
+      errorDiv.style.display = 'none';
+      errorDiv.textContent = '';
+    }
+    
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      const bsModal = new bootstrap.Modal(modal);
+      bsModal.show();
+    } else {
+      modal.style.display = 'block';
+    }
+  } else if (userRole === 'investor' || userRole === 'startuper') {
+    const csrfTokenInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+    const csrfToken = csrfTokenInput ? csrfTokenInput.value : getCookie('csrftoken');
+    
+    if (!csrfToken) {
+      alert('Ошибка безопасности. Перезагрузите страницу.');
+      return;
+    }
+    
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', csrfToken);
+    
+    fetch(`/invest/${startupId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrfToken
+      },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        if (data.redirect) {
+          window.location.href = `/cosmochat/?chat_id=${data.chat_id}`;
+        }
+      } else {
+        alert(data.error || 'Произошла ошибка при создании чата');
+      }
+    })
+    .catch(error => {
+      alert('Произошла ошибка при отправке запроса');
+    });
   } else {
-    modal.style.display = 'block';
+    alert('Недостаточно прав для инвестирования');
   }
+}
+
+function getUserRole() {
+  const pageDataElement = document.querySelector('.startup-detail-page');
+  if (pageDataElement) {
+    const userRole = pageDataElement.dataset.userRole;
+    return userRole;
+  }
+  return null;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1583,20 +1643,10 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (confirmInvestButton) {
     confirmInvestButton.addEventListener('click', function() {
-      const amountInput = document.getElementById('investAmount');
+      const userRole = getUserRole();
       const errorDiv = document.getElementById('investError');
       
-      if (!amountInput || !currentInvestStartupId) {
-        return;
-      }
-      
-      const amount = parseFloat(amountInput.value);
-      
-      if (!amount || amount <= 0) {
-        if (errorDiv) {
-          errorDiv.textContent = 'Введите корректную сумму';
-          errorDiv.style.display = 'block';
-        }
+      if (!currentInvestStartupId) {
         return;
       }
       
@@ -1612,7 +1662,26 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       const formData = new FormData();
-      formData.append('amount', amount);
+      
+      if (userRole === 'moderator') {
+        const amountInput = document.getElementById('investAmount');
+        if (!amountInput) {
+          return;
+        }
+        
+        const amount = parseFloat(amountInput.value);
+        
+        if (!amount || amount <= 0) {
+          if (errorDiv) {
+            errorDiv.textContent = 'Введите корректную сумму';
+            errorDiv.style.display = 'block';
+          }
+          return;
+        }
+        
+        formData.append('amount', amount);
+      }
+      
       formData.append('csrfmiddlewaretoken', csrfToken);
       
       confirmInvestButton.disabled = true;
@@ -1632,17 +1701,21 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmInvestButton.disabled = false;
         
         if (data.success) {
-          if (typeof bootstrap !== 'undefined' && bootstrap.Modal && investModal) {
-            const bsModal = bootstrap.Modal.getInstance(investModal);
-            if (bsModal) {
-              bsModal.hide();
+          if (data.redirect) {
+            window.location.href = `/cosmochat/?chat_id=${data.chat_id}`;
+          } else {
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal && investModal) {
+              const bsModal = bootstrap.Modal.getInstance(investModal);
+              if (bsModal) {
+                bsModal.hide();
+              }
+            } else if (investModal) {
+              investModal.style.display = 'none';
             }
-          } else if (investModal) {
-            investModal.style.display = 'none';
+            
+            alert('Инвестирование успешно выполнено!');
+            location.reload();
           }
-          
-          alert('Инвестирование успешно выполнено!');
-          location.reload();
         } else {
           if (errorDiv) {
             errorDiv.textContent = data.error || 'Произошла ошибка при инвестировании';

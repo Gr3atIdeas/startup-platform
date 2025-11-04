@@ -24,7 +24,8 @@
      data-user-has-voted="{{ user_has_voted|yesno:'true,false' }}"
      data-load-similar-url="{% url 'load_similar_startups' startup_id=startup.startup_id %}"
      data-owner-id="{{ startup.owner.user_id }}"
-     data-funding-goal="{{ startup.funding_goal|default:0 }}">
+     data-funding-goal="{{ startup.funding_goal|default:0 }}"
+     data-user-role="{% if user.is_authenticated and user.role %}{{ user.role.role_name }}{% endif %}">
   <div class="back-link-container">
     <a href="{% url 'startups_list' %}" class="back-button">
       <i class="fas fa-arrow-left"></i> Назад

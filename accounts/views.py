@@ -5806,9 +5806,9 @@ def invest(request, startup_id):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
     startup = get_object_or_404(Startups, startup_id=startup_id)
-    if not request.user.is_authenticated or request.user.role.role_name != "investor":
+    if not request.user.is_authenticated:
         return JsonResponse(
-            {"success": False, "error": "Только инвесторы могут инвестировать"}
+            {"success": False, "error": "Требуется авторизация"}
         )
     if startup.status in ["blocked", "closed"]:
         return JsonResponse(
@@ -5817,41 +5817,124 @@ def invest(request, startup_id):
                 "error": f"Инвестирование запрещено: стартап {startup.status}",
             }
         )
-    try:
-        amount = Decimal(request.POST.get("amount", "0"))
-        if amount <= 0:
-            return JsonResponse(
-                {"success": False, "error": "Сумма должна быть больше 0"}
+    
+    user_role = request.user.role.role_name if request.user.role else None
+    
+    if user_role == "moderator":
+        try:
+            amount = Decimal(request.POST.get("amount", "0"))
+            if amount <= 0:
+                return JsonResponse(
+                    {"success": False, "error": "Сумма должна быть больше 0"}
+                )
+            transaction = InvestmentTransactions(
+                startup=startup,
+                investor=request.user,
+                amount=amount,
+                is_micro=startup.micro_investment_available,
+                transaction_type=TransactionTypes.objects.get(type_name="investment"),
+                transaction_status="completed",
+                payment_method=PaymentMethods.objects.get(method_name="default"),
+                created_at=timezone.now(),
+                updated_at=timezone.now(),
             )
-        transaction = InvestmentTransactions(
-            startup=startup,
-            investor=request.user,
-            amount=amount,
-            is_micro=startup.micro_investment_available,
-            transaction_type=TransactionTypes.objects.get(type_name="investment"),
-            transaction_status="completed",
-            payment_method=PaymentMethods.objects.get(method_name="default"),
-            created_at=timezone.now(),
-            updated_at=timezone.now(),
-        )
-        transaction.save()
-        startup.amount_raised = (startup.amount_raised or Decimal("0")) + amount
-        startup.total_invested = (startup.total_invested or Decimal("0")) + amount
-        startup.save()
-        investors_count = startup.get_investors_count()
-        progress_percentage = startup.get_progress_percentage()
+            transaction.save()
+            startup.amount_raised = (startup.amount_raised or Decimal("0")) + amount
+            startup.total_invested = (startup.total_invested or Decimal("0")) + amount
+            startup.save()
+            investors_count = startup.get_investors_count()
+            progress_percentage = startup.get_progress_percentage()
+            return JsonResponse(
+                {
+                    "success": True,
+                    "amount_raised": float(startup.amount_raised),
+                    "investors_count": investors_count,
+                    "progress_percentage": float(progress_percentage),
+                }
+            )
+        except Exception as e:
+            logger.error(f"Ошибка при инвестировании: {str(e)}")
+            return JsonResponse(
+                {"success": False, "error": "Произошла ошибка при инвестировании"}
+            )
+    elif user_role in ["investor", "startuper"]:
+        if not startup.owner:
+            return JsonResponse(
+                {"success": False, "error": "У стартапа нет владельца"}
+            )
+        if startup.owner.user_id == request.user.user_id:
+            return JsonResponse(
+                {"success": False, "error": "Нельзя инвестировать в свой стартап"}
+            )
+        
+        try:
+            existing_chat = (
+                ChatConversations.objects.annotate(num_participants=Count("chatparticipants"))
+                .filter(
+                    is_group_chat=False, num_participants=2, chatparticipants__user=request.user
+                )
+                .filter(chatparticipants__user=startup.owner)
+                .first()
+            )
+            
+            if existing_chat:
+                chat = existing_chat
+                chat_existed = True
+            else:
+                chat = ChatConversations.objects.create(
+                    name=f"Чат {request.user.first_name} и {startup.owner.first_name}",
+                    is_group_chat=False,
+                    created_at=timezone.now(),
+                    updated_at=timezone.now(),
+                )
+                ChatParticipants.objects.create(conversation=chat, user=request.user)
+                ChatParticipants.objects.create(conversation=chat, user=startup.owner)
+                chat_existed = False
+            
+            if not chat.is_deal:
+                participants = chat.chatparticipants_set.all()
+                participant_roles = [p.user.role.role_name.lower() if p.user and p.user.role else None for p in participants]
+                participant_roles_set = {r for r in participant_roles if r}
+                
+                if len(participants) >= 2 and {"startuper", "investor"}.issubset(participant_roles_set):
+                    with transaction.atomic():
+                        chat.is_deal = True
+                        chat.deal_status = "pending"
+                        chat.updated_at = timezone.now()
+                        chat.save()
+                        moderators = Users.objects.filter(role__role_name="moderator")
+                        if moderators.exists():
+                            moderator = choice(list(moderators))
+                            moderator_participant, created = ChatParticipants.objects.get_or_create(
+                                conversation=chat, user=moderator
+                            )
+                            if created:
+                                message = Messages(
+                                    conversation=chat,
+                                    sender=None,
+                                    message_text=f"Сделку начал {request.user.get_full_name()}. Назначен модератор: {moderator.get_full_name()}",
+                                    status=MessageStatuses.objects.get(status_name="sent"),
+                                    created_at=timezone.now(),
+                                    updated_at=timezone.now(),
+                                )
+                                message.save()
+            
+            return JsonResponse(
+                {
+                    "success": True,
+                    "redirect": True,
+                    "chat_id": chat.conversation_id,
+                    "chat_existed": chat_existed,
+                }
+            )
+        except Exception as e:
+            logger.error(f"Ошибка при создании чата: {str(e)}")
+            return JsonResponse(
+                {"success": False, "error": "Произошла ошибка при создании чата"}
+            )
+    else:
         return JsonResponse(
-            {
-                "success": True,
-                "amount_raised": float(startup.amount_raised),
-                "investors_count": investors_count,
-                "progress_percentage": float(progress_percentage),
-            }
-        )
-    except Exception as e:
-        logger.error(f"Ошибка при инвестировании: {str(e)}")
-        return JsonResponse(
-            {"success": False, "error": "Произошла ошибка при инвестировании"}
+            {"success": False, "error": "Недостаточно прав для инвестирования"}
         )
 
 @login_required
