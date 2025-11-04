@@ -1541,3 +1541,126 @@ document.addEventListener('click', function(event) {
     dropdown.classList.remove('show');
   }
 });
+
+let currentInvestStartupId = null;
+let currentInvestType = null;
+
+function openInvestModal(type, startupId) {
+  currentInvestStartupId = startupId;
+  currentInvestType = type;
+  
+  const modal = document.getElementById('investModal');
+  const modalTitle = document.getElementById('investModalTitle');
+  const amountInput = document.getElementById('investAmount');
+  const errorDiv = document.getElementById('investError');
+  
+  if (!modal) return;
+  
+  if (modalTitle) {
+    modalTitle.textContent = type === 'buy' ? 'Выкупить' : 'Инвестировать';
+  }
+  
+  if (amountInput) {
+    amountInput.value = '';
+  }
+  
+  if (errorDiv) {
+    errorDiv.style.display = 'none';
+    errorDiv.textContent = '';
+  }
+  
+  if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+    const bsModal = new bootstrap.Modal(modal);
+    bsModal.show();
+  } else {
+    modal.style.display = 'block';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const confirmInvestButton = document.getElementById('confirmInvestButton');
+  const investModal = document.getElementById('investModal');
+  
+  if (confirmInvestButton) {
+    confirmInvestButton.addEventListener('click', function() {
+      const amountInput = document.getElementById('investAmount');
+      const errorDiv = document.getElementById('investError');
+      
+      if (!amountInput || !currentInvestStartupId) {
+        return;
+      }
+      
+      const amount = parseFloat(amountInput.value);
+      
+      if (!amount || amount <= 0) {
+        if (errorDiv) {
+          errorDiv.textContent = 'Введите корректную сумму';
+          errorDiv.style.display = 'block';
+        }
+        return;
+      }
+      
+      const csrfTokenInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+      const csrfToken = csrfTokenInput ? csrfTokenInput.value : getCookie('csrftoken');
+      
+      if (!csrfToken) {
+        if (errorDiv) {
+          errorDiv.textContent = 'Ошибка безопасности. Перезагрузите страницу.';
+          errorDiv.style.display = 'block';
+        }
+        return;
+      }
+      
+      const formData = new FormData();
+      formData.append('amount', amount);
+      formData.append('csrfmiddlewaretoken', csrfToken);
+      
+      confirmInvestButton.disabled = true;
+      if (errorDiv) {
+        errorDiv.style.display = 'none';
+      }
+      
+      fetch(`/invest/${currentInvestStartupId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrfToken
+        },
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        confirmInvestButton.disabled = false;
+        
+        if (data.success) {
+          if (typeof bootstrap !== 'undefined' && bootstrap.Modal && investModal) {
+            const bsModal = bootstrap.Modal.getInstance(investModal);
+            if (bsModal) {
+              bsModal.hide();
+            }
+          } else if (investModal) {
+            investModal.style.display = 'none';
+          }
+          
+          alert('Инвестирование успешно выполнено!');
+          location.reload();
+        } else {
+          if (errorDiv) {
+            errorDiv.textContent = data.error || 'Произошла ошибка при инвестировании';
+            errorDiv.style.display = 'block';
+          } else {
+            alert(data.error || 'Произошла ошибка при инвестировании');
+          }
+        }
+      })
+      .catch(error => {
+        confirmInvestButton.disabled = false;
+        if (errorDiv) {
+          errorDiv.textContent = 'Произошла ошибка при отправке запроса';
+          errorDiv.style.display = 'block';
+        } else {
+          alert('Произошла ошибка при отправке запроса');
+        }
+      });
+    });
+  }
+});

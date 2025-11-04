@@ -5853,6 +5853,57 @@ def invest(request, startup_id):
         return JsonResponse(
             {"success": False, "error": "Произошла ошибка при инвестировании"}
         )
+
+@login_required
+def invest_franchise(request, franchise_id):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"})
+    franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
+    if not request.user.is_authenticated or request.user.role.role_name != "investor":
+        return JsonResponse(
+            {"success": False, "error": "Только инвесторы могут инвестировать"}
+        )
+    if franchise.status in ["blocked", "closed"]:
+        return JsonResponse(
+            {
+                "success": False,
+                "error": f"Инвестирование запрещено: франшиза {franchise.status}",
+            }
+        )
+    try:
+        amount = Decimal(request.POST.get("amount", "0"))
+        if amount <= 0:
+            return JsonResponse(
+                {"success": False, "error": "Сумма должна быть больше 0"}
+            )
+        transaction = InvestmentTransactions(
+            franchise=franchise,
+            investor=request.user,
+            amount=amount,
+            is_micro=False,
+            transaction_type=TransactionTypes.objects.get(type_name="investment"),
+            transaction_status="completed",
+            payment_method=PaymentMethods.objects.get(method_name="default"),
+            created_at=timezone.now(),
+            updated_at=timezone.now(),
+        )
+        transaction.save()
+        franchise.total_invested = (franchise.total_invested or Decimal("0")) + amount
+        franchise.save()
+        investors_count = franchise.get_investors_count()
+        return JsonResponse(
+            {
+                "success": True,
+                "amount_raised": float(franchise.total_invested),
+                "investors_count": investors_count,
+            }
+        )
+    except Exception as e:
+        logger.error(f"Ошибка при инвестировании франшизы: {str(e)}")
+        return JsonResponse(
+            {"success": False, "error": "Произошла ошибка при инвестировании"}
+        )
+
 class NewsForm(forms.Form):
     title = forms.CharField(max_length=255, label="Заголовок")
     content = forms.CharField(widget=forms.Textarea, label="Текст новости")

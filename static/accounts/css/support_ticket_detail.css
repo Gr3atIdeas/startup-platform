@@ -483,3 +483,131 @@ banner button:not([style*="display: none"]) {
     display: block !important;
     visibility: visible !important;
 }
+
+@media (max-width: 768px) {
+    .ticket-detail-container {
+        flex-direction: column !important;
+        padding: 20px 15px !important;
+        gap: 30px !important;
+        max-width: 100% !important;
+    }
+
+    .left-panel {
+        width: 100% !important;
+    }
+
+    .right-panel {
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    .tickets-list-section {
+        width: 100% !important;
+    }
+
+    .tickets-list {
+        height: 400px !important;
+        max-height: 400px !important;
+    }
+
+    .info-block {
+        gap: 10px;
+    }
+
+    .info-label {
+        font-size: 14px;
+    }
+
+    .info-field,
+    .comment-field {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    .status-select {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    .ticket-card {
+        padding: 12px;
+    }
+
+    .ticket-card-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .ticket-card-right {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .ticket-detail-container {
+        padding: 15px 10px !important;
+        gap: 20px !important;
+    }
+
+    .back-link {
+        margin-bottom: 15px;
+    }
+
+    .back-link a {
+        font-size: 12px;
+    }
+
+    .info-label {
+        font-size: 13px;
+    }
+
+    .info-field,
+    .comment-field,
+    .status-select {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    .tickets-list-title {
+        font-size: 18px;
+    }
+
+    .ticket-card {
+        padding: 10px;
+    }
+
+    .ticket-date-label,
+    .ticket-topic-label,
+    .ticket-status-label,
+    .ticket-number-label {
+        font-size: 11px;
+    }
+
+    .ticket-date-value,
+    .ticket-topic-value,
+    .ticket-status-value,
+    .ticket-number-value {
+        font-size: 12px;
+    }
+
+    .close-ticket-btn {
+        padding: 10px 20px;
+        margin-top: 15px;
+    }
+
+    .close-ticket-btn div {
+        font-size: 14px;
+    }
+
+    .moderator-form textarea {
+        padding: 8px 10px;
+        font-size: 13px;
+        min-height: 80px;
+    }
+
+    .tickets-list {
+        height: 300px !important;
+        max-height: 300px !important;
+    }
+}

@@ -115,11 +115,11 @@
       
       <div class="action-buttons-container">
         {% if startup.only_buy or startup.both_mode %}
-        <button class="action-button primary-button" onclick="window.location.href='{% url 'invest' startup.startup_id %}'">Выкупить</button>
+        <button class="action-button primary-button" onclick="openInvestModal('buy', {{ startup.startup_id }})">Выкупить</button>
         {% endif %}
         <div class="secondary-actions">
           {% if startup.only_invest or startup.both_mode %}
-          <button class="action-button secondary-button" onclick="window.location.href='{% url 'invest' startup.startup_id %}'">Инвестировать</button>
+          <button class="action-button secondary-button" onclick="openInvestModal('invest', {{ startup.startup_id }})">Инвестировать</button>
           {% if startup.micro_investment_available %}
           <div class="microinvestment-badge">
             <i class="fas fa-check-circle"></i> Микроинвестиции
@@ -760,6 +760,28 @@
   </div>
 
   
+  <div class="modal fade" id="investModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="investModalTitle">Инвестировать</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="investAmount" class="form-label">Сумма (₽)</label>
+            <input type="number" id="investAmount" class="form-control" placeholder="Введите сумму" min="1" step="1">
+          </div>
+          <div id="investError" class="text-danger" style="display: none;"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
+          <button type="button" class="action-button" id="confirmInvestButton">Подтвердить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="{% static 'accounts/js/startup_detail.js' %}" defer></script>
 </div> 
 
