@@ -5075,5 +5075,58 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   .about-text video {
     max-height: 350px;
   }
+  
+  .main-content-grid {
+    flex-direction: column;
+    padding: 20px 15px;
+    gap: 20px;
+  }
+
+  .back-link-container {
+    width: 100%;
+    padding: 0 15px;
+    margin-bottom: 20px;
+  }
+
+  .top-section {
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .left-column {
+    width: 100%;
+    min-height: auto;
+  }
+
+  .startup-detail-media-container {
+    width: 100%;
+    height: 300px;
+  }
+
+  .right-column {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content-grid {
+    padding: 15px 10px;
+    gap: 15px;
+  }
+
+  .back-link-container {
+    padding: 0 10px;
+    margin-bottom: 15px;
+  }
+
+  .top-section {
+    gap: 15px;
+  }
+
+  .startup-detail-media-container {
+    height: 250px;
+  }
 }
 

@@ -133,20 +133,21 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // ПРИНУДИТЕЛЬНОЕ ЦЕНТРИРОВАНИЕ КОНТЕЙНЕРА
+    // ПРИНУДИТЕЛЬНОЕ ЦЕНТРИРОВАНИЕ КОНТЕЙНЕРА (только для десктопа)
     const container = document.querySelector('.ticket-detail-container');
-    if (container) {
+    if (container && window.innerWidth > 768) {
         const viewportWidth = window.innerWidth;
         const containerWidth = 1303;
         const leftPosition = (viewportWidth - containerWidth) / 2;
         
-        // Принудительно позиционируем контейнер
-        container.style.setProperty('position', 'relative', 'important');
-        container.style.setProperty('left', leftPosition + 'px', 'important');
-        container.style.setProperty('width', containerWidth + 'px', 'important');
-        container.style.setProperty('max-width', 'none', 'important');
-        container.style.setProperty('margin', '0', 'important');
-        container.style.setProperty('transform', 'none', 'important');
+        if (leftPosition > 0) {
+            container.style.setProperty('position', 'relative', 'important');
+            container.style.setProperty('left', leftPosition + 'px', 'important');
+            container.style.setProperty('width', containerWidth + 'px', 'important');
+            container.style.setProperty('max-width', 'none', 'important');
+            container.style.setProperty('margin', '0', 'important');
+            container.style.setProperty('transform', 'none', 'important');
+        }
     }
     
     // Дополнительные исправления стилей
@@ -179,25 +180,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // ИСПРАВЛЯЕМ ПРАВЫЙ СТОЛБЕЦ - ДЕЛАЕМ ЕГО ВЫСОТУ КАК У ЛЕВОГО
-    const rightPanel = document.querySelector('.right-panel');
-    const leftPanel = document.querySelector('.left-panel');
-    
-    if (rightPanel && leftPanel) {
-        const leftRect = leftPanel.getBoundingClientRect();
-        const leftHeight = leftRect.height;
+    // ИСПРАВЛЯЕМ ПРАВЫЙ СТОЛБЕЦ - ДЕЛАЕМ ЕГО ВЫСОТУ КАК У ЛЕВОГО (только для десктопа)
+    if (window.innerWidth > 768) {
+        const rightPanel = document.querySelector('.right-panel');
+        const leftPanel = document.querySelector('.left-panel');
         
-        rightPanel.style.setProperty('height', leftHeight + 'px', 'important');
-        rightPanel.style.setProperty('max-height', leftHeight + 'px', 'important');
-        rightPanel.style.removeProperty('min-height');
-        
-        const ticketsList = rightPanel.querySelector('.tickets-list');
-        if (ticketsList) {
-            const availableHeight = leftHeight - 40; // 40px для заголовка
-            ticketsList.style.setProperty('height', availableHeight + 'px', 'important');
-            ticketsList.style.setProperty('max-height', availableHeight + 'px', 'important');
-            ticketsList.style.setProperty('overflow-y', 'auto', 'important');
-            ticketsList.style.removeProperty('min-height');
+        if (rightPanel && leftPanel) {
+            const leftRect = leftPanel.getBoundingClientRect();
+            const leftHeight = leftRect.height;
+            
+            rightPanel.style.setProperty('height', leftHeight + 'px', 'important');
+            rightPanel.style.setProperty('max-height', leftHeight + 'px', 'important');
+            rightPanel.style.removeProperty('min-height');
+            
+            const ticketsList = rightPanel.querySelector('.tickets-list');
+            if (ticketsList) {
+                const availableHeight = leftHeight - 40; // 40px для заголовка
+                ticketsList.style.setProperty('height', availableHeight + 'px', 'important');
+                ticketsList.style.setProperty('max-height', availableHeight + 'px', 'important');
+                ticketsList.style.setProperty('overflow-y', 'auto', 'important');
+                ticketsList.style.removeProperty('min-height');
+            }
         }
     }
 

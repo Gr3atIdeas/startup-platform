@@ -5827,14 +5827,24 @@ def invest(request, startup_id):
                 return JsonResponse(
                     {"success": False, "error": "Сумма должна быть больше 0"}
                 )
+            
+            transaction_type, _ = TransactionTypes.objects.get_or_create(
+                type_name="investment",
+                defaults={"type_name": "investment"}
+            )
+            payment_method, _ = PaymentMethods.objects.get_or_create(
+                method_name="default",
+                defaults={"method_name": "default"}
+            )
+            
             transaction = InvestmentTransactions(
                 startup=startup,
                 investor=request.user,
                 amount=amount,
-                is_micro=startup.micro_investment_available,
-                transaction_type=TransactionTypes.objects.get(type_name="investment"),
+                is_micro=startup.micro_investment_available if hasattr(startup, 'micro_investment_available') else False,
+                transaction_type=transaction_type,
                 transaction_status="completed",
-                payment_method=PaymentMethods.objects.get(method_name="default"),
+                payment_method=payment_method,
                 created_at=timezone.now(),
                 updated_at=timezone.now(),
             )
@@ -5853,9 +5863,9 @@ def invest(request, startup_id):
                 }
             )
         except Exception as e:
-            logger.error(f"Ошибка при инвестировании: {str(e)}")
+            logger.error(f"Ошибка при инвестировании: {str(e)}", exc_info=True)
             return JsonResponse(
-                {"success": False, "error": "Произошла ошибка при инвестировании"}
+                {"success": False, "error": f"Произошла ошибка при инвестировании: {str(e)}"}
             )
     elif user_role in ["investor", "startuper"]:
         if not startup.owner:
@@ -5868,14 +5878,18 @@ def invest(request, startup_id):
             )
         
         try:
-            existing_chat = (
-                ChatConversations.objects.annotate(num_participants=Count("chatparticipants"))
-                .filter(
-                    is_group_chat=False, num_participants=2, chatparticipants__user=request.user
-                )
-                .filter(chatparticipants__user=startup.owner)
-                .first()
-            )
+            from django.db import transaction as db_transaction
+            
+            existing_chats = ChatConversations.objects.filter(
+                is_group_chat=False,
+                chatparticipants__user=request.user
+            ).filter(
+                chatparticipants__user=startup.owner
+            ).annotate(
+                num_participants=Count("chatparticipants")
+            ).filter(num_participants=2).distinct()
+            
+            existing_chat = existing_chats.first()
             
             if existing_chat:
                 chat = existing_chat
@@ -5897,7 +5911,7 @@ def invest(request, startup_id):
                 participant_roles_set = {r for r in participant_roles if r}
                 
                 if len(participants) >= 2 and {"startuper", "investor"}.issubset(participant_roles_set):
-                    with transaction.atomic():
+                    with db_transaction.atomic():
                         chat.is_deal = True
                         chat.deal_status = "pending"
                         chat.updated_at = timezone.now()
@@ -5909,11 +5923,15 @@ def invest(request, startup_id):
                                 conversation=chat, user=moderator
                             )
                             if created:
+                                sent_status, _ = MessageStatuses.objects.get_or_create(
+                                    status_name="sent",
+                                    defaults={"status_name": "sent"}
+                                )
                                 message = Messages(
                                     conversation=chat,
                                     sender=None,
                                     message_text=f"Сделку начал {request.user.get_full_name()}. Назначен модератор: {moderator.get_full_name()}",
-                                    status=MessageStatuses.objects.get(status_name="sent"),
+                                    status=sent_status,
                                     created_at=timezone.now(),
                                     updated_at=timezone.now(),
                                 )
@@ -5928,9 +5946,9 @@ def invest(request, startup_id):
                 }
             )
         except Exception as e:
-            logger.error(f"Ошибка при создании чата: {str(e)}")
+            logger.error(f"Ошибка при создании чата: {str(e)}", exc_info=True)
             return JsonResponse(
-                {"success": False, "error": "Произошла ошибка при создании чата"}
+                {"success": False, "error": f"Произошла ошибка при создании чата: {str(e)}"}
             )
     else:
         return JsonResponse(
@@ -5959,14 +5977,23 @@ def invest_franchise(request, franchise_id):
             return JsonResponse(
                 {"success": False, "error": "Сумма должна быть больше 0"}
             )
+        transaction_type, _ = TransactionTypes.objects.get_or_create(
+            type_name="investment",
+            defaults={"type_name": "investment"}
+        )
+        payment_method, _ = PaymentMethods.objects.get_or_create(
+            method_name="default",
+            defaults={"method_name": "default"}
+        )
+        
         transaction = InvestmentTransactions(
             franchise=franchise,
             investor=request.user,
             amount=amount,
             is_micro=False,
-            transaction_type=TransactionTypes.objects.get(type_name="investment"),
+            transaction_type=transaction_type,
             transaction_status="completed",
-            payment_method=PaymentMethods.objects.get(method_name="default"),
+            payment_method=payment_method,
             created_at=timezone.now(),
             updated_at=timezone.now(),
         )
