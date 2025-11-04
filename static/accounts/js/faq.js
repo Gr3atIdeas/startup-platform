@@ -12,11 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const faqDataElement = document.getElementById('faqData')
     if (faqDataElement) {
       faqData = JSON.parse(faqDataElement.textContent)
-    } else {
-      console.error('FAQ data element not found')
     }
   } catch (error) {
-    console.error('Error parsing FAQ data:', error)
   }
   accordionCategories.forEach((category) => {
     const header = category.querySelector('.faq-accordion-header')
@@ -85,11 +82,6 @@ document.addEventListener('DOMContentLoaded', function () {
       if (faqData[questionId] && faqAnswerTitle && faqAnswerBody) {
         faqAnswerTitle.textContent = faqData[questionId].title
         faqAnswerBody.innerHTML = faqData[questionId].answer
-      } else {
-        if (!faqData[questionId])
-          console.warn(`No data found for question ID: ${questionId}`)
-        if (!faqAnswerTitle) console.warn('faqAnswerTitle element not found')
-        if (!faqAnswerBody) console.warn('faqAnswerBody element not found')
       }
     })
   })

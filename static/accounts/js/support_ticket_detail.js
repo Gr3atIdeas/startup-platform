@@ -21,22 +21,16 @@ document.addEventListener('DOMContentLoaded', function() {
         card.addEventListener('click', function() {
 
             const ticketId = this.getAttribute('data-ticket-id');
-            console.log('Found ticket ID from data attribute:', ticketId);
 
             if (ticketId && !isNaN(ticketId)) {
                 const url = `/support/ticket/${ticketId}/`;
-                console.log('Redirecting to:', url);
                 window.location.href = url;
             } else {
-                console.error('Invalid ticket ID:', ticketId);
-
                 const ticketNumberElement = this.querySelector('.ticket-info-right .detail-value:last-child');
                 if (ticketNumberElement) {
                     const fallbackId = ticketNumberElement.textContent.replace('#', '');
-                    console.log('Fallback ticket ID:', fallbackId);
                     if (fallbackId && !isNaN(fallbackId)) {
                         const url = `/support/ticket/${fallbackId}/`;
-                        console.log('Redirecting to (fallback):', url);
                         window.location.href = url;
                     }
                 }
@@ -76,7 +70,6 @@ function closeTicket() {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
         alert('Произошла ошибка при закрытии заявки');
     });
 }
@@ -113,7 +106,6 @@ function updateTicketStatus(status) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
         alert('Произошла ошибка при обновлении статуса');
     });
 }

@@ -69,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     else if (urlParams.get('chat_id')) {
         const chatId = urlParams.get('chat_id');
-        console.log('Opening chat from URL parameter:', chatId);
         setTimeout(() => {
             loadChat(chatId).then(() => {
                 const chatWindowColumn = document.getElementById('chatWindowColumn');
@@ -77,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     chatWindowColumn.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }).catch((error) => {
-                console.error('Failed to load chat from URL:', error);
                 showNoChatSelected();
             });
         }, 1000);
@@ -138,12 +136,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (navigateToDetailsViewBtn && !navigateToDetailsViewBtn.dataset.eventListener) {
         navigateToDetailsViewBtn.dataset.eventListener = 'true';
         navigateToDetailsViewBtn.addEventListener('click', function () {
-            console.log('#navigateToDetailsViewBtn clicked');
             if (selectedGroupChatUserIds.length > 0) {
-                console.log('Selected users:', selectedGroupChatUserIds);
                 const groupChatUsersList = document.getElementById('groupChatUsersList');
                 const groupChatNameInput = document.getElementById('groupChatNameInput');
-                console.log('Calling renderSelectedParticipantsForDetailsView...');
                 renderSelectedParticipantsForDetailsView(groupChatUsersList);
                 if (groupChatNameInput && groupChatUsersList) {
                     const firstFewNames = selectedGroupChatUserIds
@@ -158,7 +153,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         .join(', ');
                     groupChatNameInput.value = firstFewNames || 'Новый групповой чат';
                 }
-                console.log('Calling toggleGroupChatModalView(true)...');
                 toggleGroupChatModalView(true);
             } else {
                 alert('Выберите хотя бы одного пользователя.');
@@ -310,7 +304,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 })
                 .catch(error => {
-                    console.error('Ошибка при переименовании:', error);
                     alert('Произошла ошибка при переименовании чата.');
                 });
             }
@@ -415,7 +408,6 @@ function showActiveChatWindow() {
 }
 function loadChat(chatId) {
     return new Promise((resolve, reject) => {
-        console.log('Загрузка чата:', chatId);
         currentChatId = chatId;
         if (chatIdInput) chatIdInput.value = chatId;
         if (pollingInterval) {
@@ -499,7 +491,6 @@ function loadChat(chatId) {
             }
         })
         .catch((error) => {
-            console.error('Ошибка загрузки чата:', error);
             alert('Произошла ошибка при загрузке чата.');
             showNoChatSelected();
             reject(error);
@@ -535,20 +526,17 @@ function handleSendMessage(e) {
             }
         })
         .catch((error) => {
-            console.error('Ошибка отправки:', error)
             alert('Произошла ошибка при отправке сообщения.')
         })
 }
 function startPolling() {
     if (pollingInterval) clearInterval(pollingInterval);
     pollingInterval = setInterval(() => {
-        console.log('Polling...');
         fetch('/cosmochat/chat-list/', {
             headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
         })
         .then(response => {
             if (!response.ok) {
-                console.error('Ошибка при получении списка чатов:', response.status, response.statusText);
                 return;
             }
             return response.json();
@@ -568,10 +556,9 @@ function startPolling() {
                                }
                 }
             } else {
-                console.error('Ошибка данных списка чатов:', data.error);
             }
         })
-        .catch(error => console.error('Ошибка при опросе списка чатов:', error));
+        .catch(error => {});
 
         if (currentChatId) {
             const url = lastMessageTimestamp
@@ -617,12 +604,10 @@ function startPolling() {
                                  }
                              }
                         } else {
-                            console.error('Ошибка опроса:', data.error || 'Неизвестная ошибка', data);
                         }
                     }
                 })
                 .catch(error => {
-                    console.error('Ошибка при опросе новых сообщений:', error);
                 });
         }
     }, 5000);
@@ -806,10 +791,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (roleData) {
             window.requestUserRole = roleData.role_name;
         } else {
-            console.warn('REQUEST_USER_ROLE не установлен. Получено пустое значение из JSON.');
         }
     } else {
-        console.error('Элемент request_user_role_data не найден или пуст. Проверьте шаблон.');
     }
 });
 function startDeal(chatId) {
@@ -818,7 +801,6 @@ function startDeal(chatId) {
         alert('Ошибка: chatId не определён');
         return;
     }
-    console.log('Starting deal for chatId:', chatId);
     const initiatorName = window.REQUEST_USER_ID ? document.querySelector(`.user-card-new[data-user-id="${window.REQUEST_USER_ID}"] h3`)?.textContent || 'Пользователь' : 'Пользователь';
     fetch(`/cosmochat/start-deal/${chatId}/`, {
         method: 'POST',
@@ -830,7 +812,6 @@ function startDeal(chatId) {
         body: JSON.stringify({ initiator_name: initiatorName })
     })
     .then(response => {
-        console.log('Response status:', response.status);
         return response.json();
     })
     .then(data => {
@@ -883,7 +864,6 @@ function startDeal(chatId) {
         }
     })
     .catch(error => {
-        console.error('Ошибка начала сделки:', error);
         alert('Произошла ошибка при начале сделки.');
         if (startDealBtn) {
             startDealBtn.disabled = false;
@@ -906,7 +886,7 @@ function deleteMessage(messageId) {
                     alert(data.error || 'Ошибка при удалении сообщения');
                 }
             })
-            .catch((error) => console.error('Ошибка удаления сообщения:', error));
+            .catch((error) => {});
     }
 }
 function removeParticipant(chatId, userId) {
@@ -923,7 +903,7 @@ function removeParticipant(chatId, userId) {
                     alert(data.error || 'Ошибка при исключении участника');
                 }
             })
-            .catch((error) => console.error('Ошибка исключения участника:', error));
+            .catch((error) => {});
     }
 }
 function appendMessage(msg, isOwnMessageSentJustNow) {
@@ -978,7 +958,6 @@ function showParticipantsModal() {
         return;
     }
     if (!addParticipantModal || !participantsList) {
-        console.error('addParticipantModal or participantsList is null');
         return;
     }
     participantsList.innerHTML = '';
@@ -1076,7 +1055,6 @@ function openProfileModal(userId) {
       if (startChatButtonEl2) startChatButtonEl2.disabled = false;
     })
     .catch((error) => {
-      console.error('Ошибка загрузки профиля:', error)
       alert('Произошла ошибка при загрузке профиля.')
       const startChatButtonEl3 = document.getElementById('startChatBtn');
       if (startChatButtonEl3) startChatButtonEl3.disabled = false;
@@ -1182,33 +1160,26 @@ function startChat() {
     })
 }
 function openAddParticipantModal() {
-  console.log('openAddParticipantModal called, currentChatId:', currentChatId);
   if (!currentChatId) {
     alert('Выберите чат для добавления участника');
     return;
   }
   const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
   const isGroupChat = chatItem && chatItem.dataset.chatType === 'group';
-  console.log('Chat type:', isGroupChat ? 'group' : 'personal', 'Participants count:', currentParticipants.length);
   if (!isGroupChat && currentParticipants.length >= 3) {
     alert('В личном чате уже максимальное количество участников (3)');
     return;
   }
-  console.log('Fetching available users for chat:', currentChatId);
   fetch(`/cosmochat/available-users-for-chat/${currentChatId}/`, {
     headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
   })
     .then((response) => {
-      console.log('Fetch response status:', response.status);
       if (!response.ok) {
-        console.error('Failed to fetch available users:', response.statusText);
       }
       return response.json();
     })
     .then((data) => {
-      console.log('Fetch data:', data);
       if (!addParticipantModal || !participantsList) {
-        console.error('addParticipantModal or participantsList is null');
         return;
       }
       participantsList.innerHTML = '';
@@ -1230,25 +1201,21 @@ function openAddParticipantModal() {
         participantsList.innerHTML =
           '<p style="padding:10px; text-align:center;">Нет доступных пользователей для добавления или все уже в чате.</p>';
       }
-      console.log('Showing modal');
       addParticipantModal.classList.add('active');
       addParticipantModal.style.display = 'flex';
     })
     .catch((error) => {
-      console.error('Ошибка загрузки пользователей:', error);
       alert('Произошла ошибка при загрузке списка пользователей.');
     });
 }
 function closeAddParticipantModal() {
   if (addParticipantModal) {
-    console.log('Closing addParticipantModal');
     addParticipantModal.classList.remove('active');
     addParticipantModal.style.display = 'none';
   }
 }
 function addParticipantToChat(userId) {
     if (!currentChatId) return;
-    console.log('Attempting to add participant, chatId:', currentChatId, 'userId:', userId);
     const formData = new FormData();
     formData.append('user_id', userId);
     fetch(`/cosmochat/add-participant/${currentChatId}/`, {
@@ -1260,14 +1227,11 @@ function addParticipantToChat(userId) {
         }
     })
         .then((response) => {
-            console.log('Add participant response status:', response.status);
             if (!response.ok) {
-                console.error('Failed to add participant:', response.statusText);
             }
             return response.json();
         })
         .then((data) => {
-            console.log('Add participant data:', data);
             if (data.success) {
                 alert('Участник добавлен! Информация обновится.');
                 closeAddParticipantModal();
@@ -1277,7 +1241,6 @@ function addParticipantToChat(userId) {
             }
         })
         .catch((error) => {
-            console.error('Ошибка добавления участника:', error);
             alert('Произошла ошибка при добавлении участника.');
         });
 }
@@ -1484,7 +1447,6 @@ async function leaveChat() {
       isLeavingChat = false;
     })
     .catch(error => {
-      console.error('Ошибка выхода из чата:', error);
       window.showNotification('Произошла ошибка при выходе из чата.', 'error');
       
       // Сбрасываем состояние кнопки при ошибке
@@ -1505,38 +1467,20 @@ document.addEventListener('DOMContentLoaded', function () {
         const requestUserIdData = JSON.parse(requestUserIdElement.textContent)
         if (requestUserIdData) {
             window.REQUEST_USER_ID = parseInt(requestUserIdData)
-        } else {
-            console.warn(
-                'REQUEST_USER_ID не установлен. Получено пустое значение из JSON.'
-            )
         }
     } else {
-        console.error(
-            'Элемент request_user_id_data не найден или пуст. Проверьте шаблон.'
-        )
         const bodyUserId = document.body.dataset.userId
         if (bodyUserId) {
             window.REQUEST_USER_ID = parseInt(bodyUserId)
-        } else {
-            console.warn(
-                'REQUEST_USER_ID не установлен. Некоторые функции чата могут работать некорректно.'
-            )
         }
     }
 })
 function updateUserRatingDisplay(starsContainer) {
   if (!starsContainer) {
-    console.error(
-      '[updateUserRatingDisplay] Container not found for user card.'
-    )
     return
   }
   const ratingString = starsContainer.dataset.rating
   if (typeof ratingString === 'undefined') {
-    console.warn(
-      '[updateUserRatingDisplay] data-rating attribute not found on container:',
-      starsContainer
-    )
     return
   }
   const iconContainers = starsContainer.querySelectorAll(
@@ -1546,16 +1490,10 @@ function updateUserRatingDisplay(starsContainer) {
   iconContainers.forEach((container, index) => {
     const filledIcon = container.querySelector('.icon-filled')
     if (!filledIcon) {
-      console.warn(
-        `[updateUserRatingDisplay] Filled icon not found in planet container ${index + 1}`
-      )
       return
     }
     const emptyIcon = container.querySelector('.icon-empty')
     if (!emptyIcon) {
-      console.warn(
-        `[updateUserRatingDisplay] Empty icon not found in planet container ${index + 1}`
-      )
       return
     }
     if (index < Math.floor(ratingValue)) {
@@ -1678,7 +1616,6 @@ function startChatWithUser(userId) {
       }
     })
     .catch((error) => {
-      console.error('Ошибка при создании чата:', error)
       alert('Произошла критическая ошибка при попытке начать чат.')
     })
 }
@@ -1748,7 +1685,6 @@ function createGroupChat(chatName, userIds) {
       }
     })
     .catch((error) => {
-      console.error('Ошибка при создании группового чата:', error)
       alert('Произошла критическая ошибка при создании группового чата.')
     })
 }
@@ -2073,17 +2009,14 @@ function showPage(page) {
   }
 }
 function openGroupChatModal() {
-  console.log('openGroupChatModal called');
   const groupChatModalOverlay = document.getElementById('groupChatModal');
   if (!groupChatModalOverlay) {
-    console.error('#groupChatModal not found');
     return;
   }
   selectedGroupChatUserIds = [];
   groupChatModalOverlay.style.display = 'flex';
   setTimeout(() => {
     groupChatModalOverlay.classList.add('active');
-    console.log('Group chat modal activated');
   }, 10);
   const groupChatModalElement = groupChatModalOverlay.querySelector('.group-chat-modal');
   if (groupChatModalElement) {
@@ -2097,7 +2030,6 @@ function openGroupChatModal() {
   const countElement = document.getElementById('selectedUsersCount');
   const pillsContainer = document.getElementById('selectedUserPillsContainer');
   if (usersList && countElement && pillsContainer) {
-    console.log('Loading group chat users');
     loadGroupChatUsers(usersList, countElement, pillsContainer);
   }
 }
@@ -2111,9 +2043,7 @@ function closeGroupChatModal() {
 }
 
 function loadGroupChatUsers(usersListElement, countElement, pillsContainer) {
-  console.log('loadGroupChatUsers called')
   if (!usersListElement) {
-    console.error('loadGroupChatUsers: usersListElement is null!')
     return
   }
   const activeRoleButtons = document.querySelectorAll(
@@ -2187,26 +2117,21 @@ function loadGroupChatUsers(usersListElement, countElement, pillsContainer) {
       }
     })
     .catch((error) => {
-      console.error('Ошибка загрузки пользователей:', error)
       usersListElement.innerHTML =
         '<p style="padding: 10px; text-align: center;">Ошибка загрузки.</p>'
     })
 }
 function updateSelectedUsersCount(countElement) {
-  console.log('updateSelectedUsersCount called')
   if (!countElement) {
-    console.error('updateSelectedUsersCount: countElement is null!')
     return
   }
   const count = selectedGroupChatUserIds.length
   countElement.textContent = `${count}/10`
 }
 function toggleGroupChatModalView(showDetailsView) {
-  console.log('toggleGroupChatModalView called with:', showDetailsView)
   const groupChatContentWrapper = document.getElementById('groupChatModalContentWrapper')
   const groupChatDetailsView = document.getElementById('groupChatDetailsView')
   if (!groupChatContentWrapper || !groupChatDetailsView) {
-    console.error('toggleGroupChatModalView: groupChatContentWrapper or groupChatDetailsView is null! GETTING THEM BY ID.')
     return
   }
   const groupChatUsersList = document.getElementById('groupChatUsersList')
@@ -2227,11 +2152,9 @@ function toggleGroupChatModalView(showDetailsView) {
   }
 }
 function renderSelectedParticipantsForDetailsView(groupChatUsersListFromCaller) {
-  console.log('renderSelectedParticipantsForDetailsView called')
   const groupChatSelectedParticipantsList = document.getElementById('groupChatSelectedParticipantsList')
   const usersList = groupChatUsersListFromCaller || document.getElementById('groupChatUsersList')
   if (!groupChatSelectedParticipantsList || !usersList) {
-    console.error('renderSelectedParticipantsForDetailsView: groupChatSelectedParticipantsList or usersList is null!')
     return
   }
   groupChatSelectedParticipantsList.innerHTML = ''
@@ -2255,9 +2178,7 @@ function renderSelectedParticipantsForDetailsView(groupChatUsersListFromCaller) 
   })
 }
 function renderSelectedUserPills(pillsContainer, usersList) {
-  console.log('renderSelectedUserPills called')
   if (!pillsContainer || !usersList) {
-    console.error('renderSelectedUserPills: pillsContainer or usersList is null!')
     return
   }
   pillsContainer.innerHTML = ''

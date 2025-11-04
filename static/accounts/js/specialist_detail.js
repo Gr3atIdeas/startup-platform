@@ -353,22 +353,16 @@ function setupSimilarSpecialistsShowMore() {
         }
       })
       .catch((error) => {
-        console.error('Ошибка:', error);
         alert('Ошибка при создании чата: ' + error.message);
       });
   }
 
   function setupActionButtons() {
-    console.log('Setting up action buttons...');
 
     const chatButton = document.querySelector('.carousel-chat-button-unique');
-    console.log('Chat button found:', !!chatButton);
     if (chatButton) {
-      console.log('Chat button text:', chatButton.textContent.trim());
-      console.log('Chat button classes:', chatButton.className);
       chatButton.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log('Chat button clicked');
 
         const ownerId = document.querySelector('.specialist-detail-page').dataset.ownerId;
         if (!ownerId) {
@@ -379,7 +373,6 @@ function setupSimilarSpecialistsShowMore() {
         startChatWithUser(ownerId);
       });
     } else {
-      console.error('Chat button not found');
     }
 
     const writeButton = document.querySelector('.write-author-button-unique');

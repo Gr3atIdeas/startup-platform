@@ -8,7 +8,7 @@
     <!-- Шапка с изображением -->
     <div class="startup-card-header">
       {% if startup.get_catalog_card_image_url %}
-        <img src="{{ startup.get_catalog_card_image_url }}" alt="Изображение {{ startup.title }}" class="startup-header-image" onerror="console.log('Image failed to load:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';" onload="console.log('Image loaded successfully:', this.src);">
+        <img src="{{ startup.get_catalog_card_image_url }}" alt="Изображение {{ startup.title }}" class="startup-header-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="startup-header-placeholder" style="display:none;">
           <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">
           <span style="color: #a9a9a9; font-size: 12px; margin-top: 8px;">Изображение недоступно</span>

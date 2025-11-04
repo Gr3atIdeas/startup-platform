@@ -581,7 +581,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const previewArea = document.getElementById(previewAreaId);
 
         if (!dropArea || !fileInput || !previewArea) {
-            console.error('Элементы не найдены для Drag & Drop:', { inputId, dropAreaId, previewAreaId });
             return;
         }
         
@@ -605,11 +604,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         fileInput.addEventListener('change', (event) => {
-            console.log(`File input ${inputId} CHANGED. Event target files:`, event.target.files);
             if (event.target.files && event.target.files.length > 0) {
                 handleFiles(event.target.files, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles);
             } else {
-                console.log(`File input ${inputId} changed, but no files selected or files array is empty.`);
             }
             checkPlaceholderVisibility(dropAreaId);
         });
@@ -656,24 +653,19 @@ document.addEventListener('DOMContentLoaded', function() {
             else dropArea.classList.remove('input-error');
         }
 
-        console.log(`handleFiles called for inputId: ${inputId}. Received ${files.length} files. IsMultiple: ${isMultiple}, MaxFiles: ${maxFiles}, ExistingFilesInPreview: ${existingFileCount}`);
 
         if (!isMultiple) {
             previewArea.innerHTML = '';
-            console.log('Cleared preview area for single file input.');
         }
 
         let filesToProcess = Array.from(files);
-        console.log('Initial filesToProcess count:', filesToProcess.length);
 
         if (isMultiple && (existingFileCount + filesToProcess.length > maxFiles)) {
             displayFileUploadError(inputId, `Можно загрузить не более ${maxFiles} файлов для этого поля.`);
             filesToProcess = filesToProcess.slice(0, maxFiles - existingFileCount);
-            console.log(`Slicing files for multiple input. New filesToProcess count: ${filesToProcess.length}`);
         } else if (!isMultiple && filesToProcess.length > maxFiles) {
             displayFileUploadError(inputId, `Можно загрузить не более ${maxFiles} файла для этого поля.`);
             filesToProcess = filesToProcess.slice(0, maxFiles);
-            console.log(`Slicing files for single input. New filesToProcess count: ${filesToProcess.length}`);
         }
         
         if (filesToProcess.length < Array.from(files).length) {
@@ -681,12 +673,10 @@ document.addEventListener('DOMContentLoaded', function() {
             filesToProcess.forEach(file => dataTransfer.items.add(file));
             if (fileInput) {
                 fileInput.files = dataTransfer.files;
-                console.log(`Updated fileInput.files for ${inputId} due to maxFiles constraint. New count: ${fileInput.files.length}`);
             }
         }
 
         filesToProcess.forEach((file, index) => {
-            console.log(`Processing file #${index + 1}: ${file.name}, type: ${file.type}, size: ${file.size}`);
             const fileType = file.type;
             const fileName = file.name;
             const fileExtension = fileName.split('.').pop().toLowerCase();
@@ -698,11 +688,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 isAllowed = true;
             }
             
-            console.log(`File ${fileName} - Allowed: ${isAllowed}. Type found: ${fileType}, Ext found: ${fileExtension}. Allowed mimes: ${allowedTypesDetails.mimes.join(',')}, Allowed exts: ${allowedTypesDetails.extensions.join(',')}`);
 
             if (!isAllowed) {
                 displayFileUploadError(inputId, `Файл "${file.name}" имеет неподдерживаемый тип или расширение. Допустимые форматы: ${allowedTypesDetails.extensions.map(ext => ext.toUpperCase()).join(', ')}`);
-                console.warn(`File ${file.name} has unsupported type. Skipping.`);
                 if (fileInput) {
                     const dt = new DataTransfer();
                     Array.from(fileInput.files).forEach(f => {
@@ -711,7 +699,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
                     fileInput.files = dt.files;
-                    console.log(`Removed disallowed file ${file.name} from input ${inputId}. New input count: ${fileInput.files.length}`);
                 }
                 return;
             }
@@ -758,17 +745,14 @@ document.addEventListener('DOMContentLoaded', function() {
             };
 
             if (file.type.startsWith('image/')) {
-                console.log(`Reading ${file.name} as Data URL (image).`);
                 reader.readAsDataURL(file);
             } else {
-                console.log(`Processing ${file.name} as non-image. Triggering onload directly.`);
                 reader.onload({ target: { result: null } });
             }
         });
 
         if (fileInput) {
             fileInput.dataset.hadFile = previewArea.children.length > 0 ? 'true' : 'false';
-            console.log(`Finished processing for ${inputId}. Preview area has ${previewArea.children.length} items. hadFile: ${fileInput.dataset.hadFile}`);
         }
         updateFileActionButtonsState(previewAreaId);
     }
@@ -837,7 +821,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function translateDirectionOptions() {
         const directionSelect = document.getElementById('{{ form.direction.id_for_label }}');
         if (!directionSelect) {
-            console.error('Direction select field not found for translation.');
             return;
         }
 
@@ -904,12 +887,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayFileUploadError(inputId, message) {
         const fileInput = document.getElementById(inputId);
         if (!fileInput) {
-            console.error('File input not found for error display:', inputId);
             return;
         }
         const dropArea = fileInput.closest('.upload-box, .logo-upload-group');
         if (!dropArea) {
-            console.error('Drop area not found for input:', inputId);
             return;
         }
 

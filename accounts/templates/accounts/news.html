@@ -162,7 +162,6 @@
       }
     })
     .catch(error => {
-      console.error('Ошибка:', error);
       if (typeof window.showNotification === 'function') {
         window.showNotification('Произошла ошибка при отправке формы', 'error', 4000);
       } else {
@@ -207,7 +206,6 @@
       }
     })
     .catch(error => {
-      console.error('Ошибка:', error);
       alert('Произошла ошибка при удалении новости');
     });
   }
@@ -253,11 +251,6 @@
             // If this needs to trigger form submission or filtering, add here
         });
     } else {
-        console.error('Failed to initialize noUiSlider for news. Elements missing or libraries not loaded.');
-        if (!newsRatingSlider) console.error('Element #newsRatingSlider not found');
-        if (!newsRatingValueDisplay) console.error('Element #newsRatingValueDisplay not found');
-        if (typeof noUiSlider === 'undefined') console.error('Library noUiSlider not loaded');
-        if (typeof wNumb === 'undefined') console.error('Library wNumb not loaded');
     }
 
     // Инициализация пагинации для новостей

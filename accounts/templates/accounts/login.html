@@ -244,7 +244,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Изменено: Получаем canvas по ID
     const g=D.getElementById('starfield-canvas'); // g = canvas element
     if (!g) {
-        console.error("Starfield canvas not found!");
         return;
     }
     let i=d/2; // mouse x center
@@ -253,7 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
     g.height=e;
     const k=g.getContext("2d"); // k = context
     if (!k) {
-        console.error("Could not get 2D context for starfield canvas!");
         return;
     }
     // Добавляем переменные для плавного смещения

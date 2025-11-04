@@ -1,12 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     if (typeof document === 'undefined') {
-        console.error('Document is not defined');
         return;
     }
     const headerSearchInput = document.querySelector('.header-search-input');
 
     if (!headerSearchInput) {
-        console.log('Header search input not found');
         return;
     }
 
@@ -208,9 +206,6 @@ document.addEventListener('DOMContentLoaded', function() {
             displaySearchResults(data);
         })
         .catch(error => {
-            console.error('Ошибка поиска:', error);
-
-
             let errorMessage = 'Ошибка при выполнении поиска';
             let errorDetails = '';
 
@@ -269,8 +264,6 @@ document.addEventListener('DOMContentLoaded', function() {
             searchDropdown.style.display = 'none';
         }
     });
-
-    console.log('Global search functionality loaded successfully');
 });
 
 

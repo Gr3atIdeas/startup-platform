@@ -1386,7 +1386,6 @@
             button.disabled = false;
           })
           .catch(error => {
-            console.error('Ошибка:', error);
             alert('Произошла ошибка при скачивании отчета. Попробуйте еще раз.');
             
             // Восстанавливаем кнопку
@@ -1617,7 +1616,6 @@
                          }
                      }
                      if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
-                         console.warn("Не удалось определить активный фильтр категории для поиска.");
                          activeCategoryFilter = null;
                      } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
                           activeCategoryFilter = null;
@@ -1757,7 +1755,6 @@
                          }
                      }
                      if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
-                         console.warn("Не удалось определить активный фильтр категории для поиска.");
                          activeCategoryFilter = null;
                      } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
                          activeCategoryFilter = null;
@@ -1875,7 +1872,6 @@
                          }
                      }
                      if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
-                         console.warn("Не удалось определить активный фильтр категории для поиска.");
                          activeCategoryFilter = null;
                      } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
                          activeCategoryFilter = null;

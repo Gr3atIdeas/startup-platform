@@ -205,13 +205,6 @@
             maxRatingInput.value = maxValue;
         });
     } else {
-        console.error('Не удалось инициализировать noUiSlider. Элементы не найдены или библиотеки не подключены.');
-        if (!ratingSlider) console.error('Элемент #ratingSlider не найден');
-        if (!ratingValueDisplay) console.error('Элемент #ratingValueDisplay не найден');
-        if (!minRatingInput) console.error('Элемент #minRatingInput не найден');
-        if (!maxRatingInput) console.error('Элемент #maxRatingInput не найден');
-        if (typeof noUiSlider === 'undefined') console.error('Библиотека noUiSlider не подключена');
-        if (typeof wNumb === 'undefined') console.error('Библиотека wNumb не подключена');
     }
   }
 
@@ -286,8 +279,6 @@
           }, 100); // Небольшая задержка для срабатывания transition
 
         } else {
-          if (!animationContainer) console.error('Animation container (.progress-animation-container) not found in:', container);
-          if (!percentageSpan) console.error('Progress text span (.progress-percentage) not found in:', container);
         }
       });
     }

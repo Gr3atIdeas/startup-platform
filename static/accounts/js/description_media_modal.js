@@ -23,7 +23,6 @@ class DescriptionMediaModal {
     }
     
     init() {
-        console.log('Modal init, isCreateMode:', this.isCreateMode, 'entityId:', this.entityId, 'entityType:', this.entityType);
         this.createModal();
         this.bindEvents();
     }
@@ -126,18 +125,8 @@ class DescriptionMediaModal {
                 // Закрывать ТОЛЬКО если кликнули НЕПОСРЕДСТВЕННО на overlay, НЕ на dialog
                 const clickedOnOverlay = e.target === this.modal;
                 
-                console.log('Click detected:', {
-                    clickedElement: e.target.className || e.target.tagName,
-                    clickedOnOverlay: clickedOnOverlay,
-                    targetIsModal: e.target === this.modal,
-                    targetIsDialog: e.target === modalDialog
-                });
-                
                 if (clickedOnOverlay) {
-                    console.log('Clicked directly on overlay background, closing modal');
                     this.close();
-                } else {
-                    console.log('Clicked inside modal content, NOT closing');
                 }
             });
         }
@@ -246,8 +235,6 @@ class DescriptionMediaModal {
         
         if (!galleryGridCreatives || !galleryGridUploads) return;
         
-        console.log('updateGallery called, files count:', this.files.length);
-        
         this.revokeBlobUrls();
         
         // Разделяем файлы по источникам
@@ -283,8 +270,6 @@ class DescriptionMediaModal {
             });
             if (clearAllBtn) clearAllBtn.style.display = 'block';
         }
-        
-        console.log(`Gallery updated: ${galleryFiles.length} gallery files, ${uploadedFiles.length} uploaded files`);
     }
     
     revokeBlobUrls() {
@@ -299,8 +284,6 @@ class DescriptionMediaModal {
     }
     
     createFileItem(file, index) {
-        console.log('createFileItem called for:', file.name, 'isImage:', file.type.startsWith('image/'));
-        
         const isImage = file.type.startsWith('image/');
         const fileItem = document.createElement('div');
         fileItem.className = 'gallery-item';
@@ -311,17 +294,15 @@ class DescriptionMediaModal {
         
         if (file.isExisting) {
             fileUrl = file.url;
-            console.log('Using existing URL:', fileUrl);
         } else {
             const blobUrl = URL.createObjectURL(file);
             this.blobUrls.set(index, blobUrl);
             fileUrl = blobUrl;
-            console.log('Created blob URL:', blobUrl);
         }
         
         let preview;
         if (isImage) {
-            preview = `<img src="${fileUrl}" alt="${escapedName}" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="console.error('Failed to load:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            preview = `<img src="${fileUrl}" alt="${escapedName}" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                        <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: #f0f0f0; color: #666; font-size: 12px; text-align: center; padding: 10px; box-sizing: border-box;">
                            <div>
                                <div style="font-size: 40px; margin-bottom: 8px;">🖼️</div>
@@ -334,9 +315,6 @@ class DescriptionMediaModal {
                     <div style="font-size: 12px; text-align: center; padding: 0 10px; word-break: break-word;">Видео</div>
              </div>`;
         }
-        
-        console.log('Preview HTML:', preview.substring(0, 100));
-        console.log('File URL for image:', fileUrl);
         
         const removeButtonHtml = (this.isCreateMode || file.isGallery) ? '' : '<button type="button" class="btn-remove-file" data-index="' + index + '" style="position: absolute; top: 5px; right: 5px; background: rgba(220,53,69,0.9); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 16px; line-height: 1; z-index: 10;">×</button>';
         const sourceLabel = file.isGallery ? '<span class="file-source-label" style="color: #28a745; font-size: 11px; font-weight: 600;">из галереи</span>' : '';
@@ -356,26 +334,15 @@ class DescriptionMediaModal {
         `;
         
         if (!this.isCreateMode) {
-            console.log('Adding click listener to fileItem, index:', index);
-            
             fileItem.addEventListener('click', (e) => {
-                e.stopPropagation(); // ВАЖНО! Останавливаем всплытие до overlay
-                console.log('File item clicked!', {
-                    target: e.target.className || e.target.tagName,
-                    index: index,
-                    isRemoveButton: e.target.classList.contains('btn-remove-file')
-                });
+                e.stopPropagation();
                 
                 if (!e.target.classList.contains('btn-remove-file')) {
-                    console.log('Not remove button, calling copyFileUrlAndClose');
                     this.copyFileUrlAndClose(index);
-                } else {
-                    console.log('Remove button clicked, ignoring');
                 }
             });
             
             fileItem.addEventListener('mouseenter', () => {
-                console.log('Mouse entered fileItem');
                 fileItem.style.borderColor = '#007bff';
                 fileItem.style.boxShadow = '0 2px 8px rgba(0,123,255,0.3)';
             });
@@ -384,8 +351,6 @@ class DescriptionMediaModal {
                 fileItem.style.borderColor = '#ddd';
                 fileItem.style.boxShadow = 'none';
             });
-        } else {
-            console.log('Create mode, not adding click listener');
         }
         
         const removeBtn = fileItem.querySelector('.btn-remove-file');
@@ -401,16 +366,12 @@ class DescriptionMediaModal {
     }
     
     async copyFileUrlAndClose(index) {
-        console.log('copyFileUrlAndClose called for index:', index);
         const file = this.files[index];
         if (!file) {
-            console.error('File not found at index:', index);
             return;
         }
         
-        // Если файл еще не загружен на сервер, сначала загружаем
         if (!file.isExisting) {
-            console.log('File not uploaded yet, uploading first...');
             this.showNotification('Загрузка файла на сервер...', 'info');
             
             try {
@@ -448,7 +409,6 @@ class DescriptionMediaModal {
                     this.showNotification('Ошибка загрузки файла: ' + (result.error || 'Unknown error'), 'error');
                 }
             } catch (error) {
-                console.error('Upload error:', error);
                 this.showNotification('Ошибка загрузки файла', 'error');
             }
             return;
@@ -460,8 +420,6 @@ class DescriptionMediaModal {
             `<img src="${file.url}" alt="${file.name}">` :
             `<video src="${file.url}" controls></video>`;
         
-        console.log('Generated tag:', tag);
-        
         try {
             await this.copyToClipboard(tag);
             this.showNotification('HTML тег скопирован в буфер обмена', 'success');
@@ -470,7 +428,6 @@ class DescriptionMediaModal {
                 this.close();
             }, 500);
         } catch (error) {
-            console.error('Failed to copy:', error);
             this.showNotification('Ошибка копирования в буфер обмена', 'error');
         }
     }
@@ -545,7 +502,6 @@ class DescriptionMediaModal {
         formData.append('files', file);
         
         const csrfToken = this.getCSRFToken();
-        console.log(`[UPLOAD] Uploading file: ${file.name}, CSRF: ${csrfToken}, URL: /upload-description-media/${this.entityType}/${this.entityId}/`);
         
         try {
             const response = await fetch(`/upload-description-media/${this.entityType}/${this.entityId}/`, {
@@ -557,19 +513,14 @@ class DescriptionMediaModal {
                 body: formData
             });
             
-            console.log(`[UPLOAD] Response status: ${response.status} ${response.statusText}`);
-            
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-                console.error(`[UPLOAD] Error response:`, errorData);
                 return { success: false, error: errorData.error || 'Server error' };
             }
             
             const result = await response.json();
-            console.log(`[UPLOAD] Success:`, result);
             return result;
         } catch (error) {
-            console.error(`[UPLOAD] Network error:`, error);
             return { success: false, error: 'Ошибка сети' };
         }
     }
@@ -578,22 +529,17 @@ class DescriptionMediaModal {
         try {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 await navigator.clipboard.writeText(text);
-                console.log('Copied to clipboard via navigator.clipboard:', text);
         } else {
-            // Fallback для старых браузеров
             const textArea = document.createElement('textarea');
             textArea.value = text;
                 textArea.style.position = 'fixed';
                 textArea.style.left = '-9999px';
                 document.body.appendChild(textArea);
                 textArea.select();
-                const success = document.execCommand('copy');
+                document.execCommand('copy');
                 document.body.removeChild(textArea);
-                console.log('Copied to clipboard via execCommand:', success, text);
             }
         } catch (error) {
-            console.error('Failed to copy to clipboard:', error);
-            // Пробуем fallback
             try {
                 const textArea = document.createElement('textarea');
                 textArea.value = text;
@@ -603,9 +549,7 @@ class DescriptionMediaModal {
             textArea.select();
             document.execCommand('copy');
             document.body.removeChild(textArea);
-                console.log('Copied to clipboard via fallback');
             } catch (e) {
-                console.error('All copy methods failed:', e);
                 throw e;
             }
         }
@@ -716,7 +660,6 @@ class DescriptionMediaModal {
     
     async loadExistingFiles() {
         if (this.isCreateMode) {
-            console.log('Skipping file load in create mode');
             return;
         }
         
@@ -729,11 +672,9 @@ class DescriptionMediaModal {
         if (galleryGridUploads) galleryGridUploads.style.display = 'none';
         
         try {
-            console.log(`Loading existing files for ${this.entityType} with ID ${this.entityId}`);
             const response = await fetch(`/get-description-media/${this.entityType}/${this.entityId}/`);
             
             if (!response.ok) {
-                console.error('Failed to load existing files:', response.status);
                 if (loader) loader.style.display = 'none';
                 if (galleryGridCreatives) galleryGridCreatives.style.display = 'grid';
                 if (galleryGridUploads) galleryGridUploads.style.display = 'grid';
@@ -741,15 +682,9 @@ class DescriptionMediaModal {
             }
             
             const result = await response.json();
-            console.log('Loaded files from server:', result);
-            console.log('result.success:', result.success);
-            console.log('result.files:', result.files);
-            console.log('Is result.files array?', Array.isArray(result.files));
             
             if (result.success && Array.isArray(result.files)) {
-                console.log(`Mapping ${result.files.length} files...`);
-                this.files = result.files.map((fileData, index) => {
-                    console.log(`Mapping file ${index}:`, fileData);
+                this.files = result.files.map((fileData) => {
                     return {
                         id: fileData.id,
                         name: fileData.name,
@@ -761,15 +696,10 @@ class DescriptionMediaModal {
                     };
                 });
                 
-                console.log('Mapped files:', this.files);
-                console.log('Calling updateGallery...');
                 this.updateGallery();
                 this.updateSaveButton();
-            } else {
-                console.log('No files found or invalid response. result.success:', result.success, 'isArray:', Array.isArray(result.files));
             }
         } catch (error) {
-            console.error('Error loading existing files:', error);
         } finally {
             if (loader) loader.style.display = 'none';
             if (galleryGridCreatives) galleryGridCreatives.style.display = 'grid';
@@ -860,7 +790,6 @@ class DescriptionMediaModal {
         
         this.modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
-        console.log('Modal shown, display set to block');
         
         if (this.isCreateMode) {
             const modalBody = this.modal.querySelector('.modal-body');
@@ -935,9 +864,7 @@ let descriptionMediaModalInstance = null;
 
 // Глобальная функция для открытия модального окна
 window.openDescriptionMediaModal = function(entityType, entityId = null) {
-    // Если модалка уже существует, закрываем её и удаляем
     if (descriptionMediaModalInstance) {
-        console.log('Closing existing modal instance');
         descriptionMediaModalInstance.close();
         if (descriptionMediaModalInstance.modal) {
             descriptionMediaModalInstance.modal.remove();
@@ -945,8 +872,6 @@ window.openDescriptionMediaModal = function(entityType, entityId = null) {
         descriptionMediaModalInstance = null;
     }
     
-    // Создаем новый экземпляр
-    console.log('Creating new modal instance for', entityType, entityId);
     descriptionMediaModalInstance = new DescriptionMediaModal({
         entityType: entityType,
         entityId: entityId

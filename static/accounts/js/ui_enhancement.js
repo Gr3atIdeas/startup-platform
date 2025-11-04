@@ -17,8 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
             clickCount++;
             lastClickTime = currentTime;
 
-            console.log(`Клик ${clickCount}/${REQUIRED_CLICKS}`);
-
             if (clickCount >= REQUIRED_CLICKS) {
                 showVideoEasterEgg();
                 clickCount = 0;
@@ -97,8 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
             },
         });
-        } else {
-            console.error('Plyr не загружен');
         }
 
 

@@ -130,8 +130,6 @@
     .catch(function (error) {
       if (error && error.name === 'AbortError') return;
 
-      console.error('Error updating news:', error);
-      console.log('Falling back to regular navigation');
       window.location.href = url;
     });
   }

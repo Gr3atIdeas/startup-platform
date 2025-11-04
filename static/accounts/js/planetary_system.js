@@ -112,7 +112,6 @@
       setupVisibilityPause();
       applyReducedMotionPreference();
     } catch (error) {
-      console.warn('Ultra New Planetary System initialization error:', error);
     }
   }
   function loadUltraNewPlanetarySystemData() {
@@ -142,7 +141,6 @@
       try {
         ultraNewPlanetaryFallbackImages = JSON.parse(fallbackScript.textContent);
       } catch (error) {
-        console.warn('Fallback images loading error:', error);
       }
     }
   }
@@ -540,7 +538,6 @@
       planetImageElement.src = modalImageUrl;
 
       planetImageElement.onerror = function() {
-        console.warn('Не удалось загрузить изображение стартапа:', modalImageUrl);
         this.src = getUltraNewPlanetaryFallbackImage(0);
       };
     }

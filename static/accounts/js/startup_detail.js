@@ -17,7 +17,6 @@ function toggleTextTruncation(sectionId, maxLines) {
   try {
     const container = document.getElementById(sectionId);
     if (!container) {
-      console.warn(`Container with id '${sectionId}' not found`);
       return;
     }
 
@@ -32,7 +31,6 @@ function toggleTextTruncation(sectionId, maxLines) {
       if (toggle) toggle.textContent = 'Показать полностью';
     }
   } catch (error) {
-    console.error('Error in toggleTextTruncation:', error);
   }
 }
 
@@ -115,7 +113,6 @@ function initializeCarousel() {
 document.addEventListener('DOMContentLoaded', function () {
   const pageDataElement = document.querySelector('.startup-detail-page')
   if (!pageDataElement) {
-    console.error('Не удалось найти основной элемент .startup-detail-page')
     return
   }
   const startupId = pageDataElement.dataset.startupId
@@ -124,11 +121,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   initializeCarousel()
 
-  console.log('CSRF Token found:', !!csrfToken);
-  console.log('Startup ID found:', startupId);
 
   if (!startupId) {
-    console.error('Startup ID не найден в data-атрибутах.')
           return
   }
 
@@ -143,19 +137,16 @@ document.addEventListener('DOMContentLoaded', function () {
   function setupUserSearch(modalId, searchInputId, resultsId, onSelect) {
     const searchModalElement = document.getElementById(modalId)
     if (!searchModalElement) {
-      console.error(`Modal element with id '${modalId}' not found`);
       return;
     }
     const searchInput = document.getElementById(searchInputId)
     const searchResults = document.getElementById(resultsId)
 
     if (!searchInput) {
-      console.error(`Search input with id '${searchInputId}' not found`);
       return;
     }
 
     if (!searchResults) {
-      console.error(`Search results with id '${resultsId}' not found`);
       return;
     }
 
@@ -165,7 +156,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return
       }
 
-      console.log('Searching for:', query);
 
       fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`, {
         headers: {
@@ -174,11 +164,9 @@ document.addEventListener('DOMContentLoaded', function () {
         },
       })
       .then(response => {
-        console.log('Search response status:', response.status);
         return response.json();
       })
       .then(data => {
-        console.log('Search results:', data);
         searchResults.innerHTML = ''
         if (!data.suggestions || data.suggestions.length === 0) {
           searchResults.innerHTML = '<li class="list-group-item">Пользователи не найдены</li>'
@@ -191,7 +179,6 @@ document.addEventListener('DOMContentLoaded', function () {
           li.textContent = user.name
           li.dataset.userId = user.id
           li.addEventListener('click', () => {
-            console.log('User selected:', user);
             onSelect(user);
             if (modalId === 'changeOwnerModal') {
                 if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
@@ -200,7 +187,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     currentModal.hide();
                     }
                 } else {
-                    console.error('Bootstrap Modal not available for hiding modal');
                 }
             }
           });
@@ -208,7 +194,6 @@ document.addEventListener('DOMContentLoaded', function () {
         })
       })
       .catch(error => {
-        console.error('Ошибка поиска:', error)
         searchResults.innerHTML = '<li class="list-group-item">Ошибка поиска</li>'
       })
     }, 300)
@@ -225,46 +210,35 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  console.log('Setting up change owner search...');
   setupUserSearch('changeOwnerModal', 'userSearchInput', 'userSearchResults', (user) => {
-    console.log('Setting up change owner for user:', user);
     const confirmModalEl = document.getElementById('confirmChangeOwnerModal')
     if (!confirmModalEl) {
-      console.error('Confirm modal element not found');
       return;
     }
     const newOwnerNameEl = document.getElementById('newOwnerName');
     const newOwnerIdEl = document.getElementById('newOwnerId');
 
-    console.log('newOwnerName element found:', !!newOwnerNameEl);
-    console.log('newOwnerId element found:', !!newOwnerIdEl);
 
     if (!newOwnerNameEl || !newOwnerIdEl) {
-      console.error('Required elements for change owner not found');
       alert('Ошибка: элементы формы не найдены');
       return;
     }
 
     newOwnerNameEl.textContent = user.name;
     newOwnerIdEl.value = user.id;
-    console.log('Set new owner name:', user.name, 'id:', user.id);
     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
     const confirmModal = new bootstrap.Modal(confirmModalEl);
     confirmModal.show();
     } else {
-      console.error('Bootstrap Modal not available');
       alert('Ошибка: Bootstrap не загружен');
     }
   });
 
   const confirmChangeOwnerBtn = document.querySelector('.confirm-change-owner')
-  console.log('Confirm change owner button found:', !!confirmChangeOwnerBtn);
   if (confirmChangeOwnerBtn) {
     confirmChangeOwnerBtn.addEventListener('click', function () {
-      console.log('Confirm change owner button clicked');
       const newOwnerIdEl = document.getElementById('newOwnerId');
       if (!newOwnerIdEl) {
-        console.error('newOwnerId element not found');
         alert('Ошибка: элемент формы не найден');
         return;
       }
@@ -280,7 +254,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      console.log('Sending change owner request for startup:', startupId, 'new owner:', newOwnerId);
 
       fetch(`/change_owner/${startupId}/`, {
         method: 'POST',
@@ -291,13 +264,10 @@ document.addEventListener('DOMContentLoaded', function () {
         body: `new_owner_id=${newOwnerId}`,
       })
       .then(async response => {
-        console.log('Change owner response status:', response.status);
         let data = null;
         try {
           data = await response.json();
-          console.log('Change owner response data:', data);
         } catch (e) {
-          console.error('Error parsing JSON response:', e);
         }
 
         if (response.ok && data && data.success) {
@@ -309,48 +279,38 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       })
       .catch(error => {
-        console.error('Ошибка при смене владельца:', error);
         alert('Сетевая ошибка при смене владельца.');
       });
     })
   } else {
-    console.error('Confirm change owner button not found');
   }
 
   const addInvestorModalEl = document.getElementById('addInvestorModal');
-  console.log('Add investor modal element found:', !!addInvestorModalEl);
   let selectedInvestor = null;
   if (addInvestorModalEl) {
-    console.log('Add investor modal found');
 
     setupUserSearch('addInvestorModal', 'investorSearchInput', 'investorSearchResults', (user) => {
-      console.log('Investor selected:', user);
       selectedInvestor = user;
       const investorSearchInput = document.getElementById('investorSearchInput');
-      console.log('Investor search input found:', !!investorSearchInput);
       if (investorSearchInput) {
       investorSearchInput.value = user.name;
       investorSearchInput.disabled = true;
       }
 
       const searchResults = document.getElementById('investorSearchResults');
-      console.log('Investor search results found:', !!searchResults);
       if (searchResults) {
         searchResults.innerHTML = '';
       }
 
       const addInvestmentButton = document.getElementById('addInvestmentButton');
-      console.log('Add investment button found in setup:', !!addInvestmentButton);
       if (addInvestmentButton) {
         addInvestmentButton.disabled = false;
       }
     });
 
     const addInvestmentButton = document.getElementById('addInvestmentButton');
-    console.log('Add investment button found:', !!addInvestmentButton);
     if (addInvestmentButton) {
     addInvestmentButton.addEventListener('click', function() {
-        console.log('Add investment button clicked');
 
         if (!selectedInvestor) {
             alert('Сначала выберите пользователя из списка.');
@@ -359,13 +319,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const amountInput = document.getElementById('investmentAmount');
         if (!amountInput) {
-          console.error('Investment amount input not found');
           alert('Ошибка: поле суммы инвестиции не найдено');
           return;
         }
 
         const amount = amountInput.value;
-        console.log('Investment amount:', amount);
         if (!amount || parseFloat(amount) <= 0) {
             alert('Введите корректную сумму инвестиции.');
             return;
@@ -376,7 +334,6 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
 
-        console.log('Adding investor:', selectedInvestor, 'amount:', amount);
 
         fetch(`/add_investor/${startupId}/`, {
             method: 'POST',
@@ -390,13 +347,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }),
         })
         .then(async response => {
-            console.log('Add investor response status:', response.status);
             let data = null;
             try {
                 data = await response.json();
-                console.log('Add investor response data:', data);
             } catch (e) {
-                console.error('Error parsing JSON response:', e);
             }
 
             if (response.ok && data && data.success) {
@@ -410,44 +364,36 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
         .catch(error => {
-            console.error('Ошибка при добавлении инвестора:', error);
             alert('Сетевая ошибка при добавлении инвестора.');
         });
     });
     } else {
-      console.error('Add investment button not found');
     }
   }
 
     function resetAddInvestorForm() {
-      console.log('Resetting add investor form');
         selectedInvestor = null;
 
         const searchInput = document.getElementById('investorSearchInput');
-      console.log('Search input found in reset:', !!searchInput);
       if (searchInput) {
         searchInput.value = '';
         searchInput.disabled = false;
       }
 
       const amountInput = document.getElementById('investmentAmount');
-      console.log('Amount input found in reset:', !!amountInput);
       if (amountInput) {
           amountInput.value = '';
       }
 
       const addButton = document.getElementById('addInvestmentButton');
-      console.log('Add button found in reset:', !!addButton);
       if (addButton) {
           addButton.disabled = true;
       }
   }
 
     function loadCurrentInvestors() {
-      console.log('Loading current investors for startup:', startupId);
         fetch(`/get_investors/${startupId}/`)
         .then(response => {
-          console.log('Get investors response status:', response.status);
             if (!response.ok) {
                 return response.text().then(text => {
                     throw new Error(`Ошибка сервера: ${response.status}. Ответ: ${text}`);
@@ -456,19 +402,14 @@ document.addEventListener('DOMContentLoaded', function () {
             return response.json();
         })
         .then(data => {
-          console.log('Investors data received:', data);
             const investorsList = document.getElementById('currentInvestorsList');
-          console.log('Current investors list element found:', !!investorsList);
           if (investorsList) {
             investorsList.innerHTML = data.html;
           } else {
-              console.error('Current investors list element not found');
           }
         })
         .catch(error => {
-          console.error('Ошибка загрузки инвесторов:', error);
             const investorsList = document.getElementById('currentInvestorsList');
-          console.log('Investors list element found in error handler:', !!investorsList);
           if (investorsList) {
             investorsList.innerHTML = '<p class="text-danger">Не удалось загрузить список инвесторов.</p>';
           }
@@ -476,14 +417,11 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   const currentInvestorsList = document.getElementById('currentInvestorsList');
-  console.log('Current investors list element found for event listener:', !!currentInvestorsList);
   if (currentInvestorsList) {
     currentInvestorsList.addEventListener('click', function(event) {
         const deleteButton = event.target.closest('.delete-investment-btn');
         if (deleteButton) {
-            console.log('Delete investment button clicked');
             const userId = deleteButton.dataset.userId;
-            console.log('Deleting investment for user:', userId);
 
             if (!userId) {
                 alert('Ошибка: не удалось определить пользователя.');
@@ -496,23 +434,19 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (confirm(`Вы уверены, что хотите удалить этого инвестора?`)) {
-                console.log('Sending delete investment request');
                 fetch(`/delete_investment/${startupId}/${userId}/`, {
                     method: 'POST',
                     headers: { 'X-CSRFToken': csrfToken },
                 })
                 .then(response => {
-                    console.log('Delete investment response status:', response.status);
                     if (!response.ok) {
                         return response.text().then(text => {
-                            console.error('Delete investment error response:', text);
                             throw new Error(text)
                         });
                     }
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Delete investment response data:', data);
                     if (data.success) {
                         alert('Инвестиция удалена.');
                         loadCurrentInvestors();
@@ -522,33 +456,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 })
                 .catch(error => {
-                    console.error('Ошибка при удалении инвестиции:', error);
                     alert('Произошла ошибка при удалении.');
                 });
             }
         }
     });
   } else {
-    console.error('Current investors list element not found for event listener');
   }
 
     function updateStartupFinancials(investorCount, amountRaised) {
-        console.log('Updating financials:', { investorCount, amountRaised });
 
         const investorCountDisplay = document.getElementById('investor-count-display');
-      console.log('Investor count display found:', !!investorCountDisplay);
         if (investorCountDisplay) {
             investorCountDisplay.textContent = `(${investorCount})`;
         } else {
-            console.error('Element with id "investor-count-display" not found.');
         }
 
         const amountRaisedCard = document.querySelector('.info-card-value-button.accent-blue-bg');
-      console.log('Amount raised card found:', !!amountRaisedCard);
         if (amountRaisedCard) {
             amountRaisedCard.textContent = `${new Intl.NumberFormat('ru-RU').format(Math.floor(amountRaised))} ₽`;
       } else {
-          console.error('Amount raised card element not found.');
         }
 
         const fundingGoal = parseFloat(pageDataElement.dataset.fundingGoal) || 0;
@@ -557,40 +484,31 @@ document.addEventListener('DOMContentLoaded', function () {
         const progressBar = document.querySelector('.progress-animation-container');
         const progressText = document.querySelector('.progress-percentage');
 
-      console.log('Progress bar found:', !!progressBar);
-      console.log('Progress text found:', !!progressText);
 
         if (progressBar) {
             progressBar.style.width = `${Math.min(progressPercentage, 100)}%`;
       } else {
-          console.error('Progress bar element not found.');
         }
 
         if (progressText) {
             progressText.textContent = `${Math.floor(progressPercentage)}%`;
       } else {
-          console.error('Progress text element not found.');
         }
     }
 
   if (addInvestorModalEl) {
     addInvestorModalEl.addEventListener('show.bs.modal', function () {
-        console.log('Add investor modal shown');
         loadCurrentInvestors();
         resetAddInvestorForm();
     });
   }
 
   function setupRatingStars() {
-    console.log('Setting up rating stars...');
     let ratingStars = document.querySelector('.rating-stars[data-interactive="true"]');
     if (!ratingStars) {
-      console.log('Rating stars not found or not interactive');
       const allRatingStars = document.querySelectorAll('.rating-stars');
-      console.log('All rating stars found:', allRatingStars.length);
       if (allRatingStars.length > 0) {
         ratingStars = allRatingStars[0];
-        console.log('Using first rating stars element');
       } else {
         return;
       }
@@ -600,13 +518,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentRatingStr = ratingStars.dataset.rating || '0';
     const currentRating = parseFloat(currentRatingStr.replace(',', '.')) || 0;
 
-    console.log('Found rating stars:', ratingStars);
-    console.log('Rating containers count:', ratingContainers.length);
-    console.log('Current rating:', currentRating);
-    console.log('Rating stars data attributes:', {
-      rating: ratingStars.dataset.rating,
-      interactive: ratingStars.dataset.interactive
-    });
 
     ratingContainers.forEach((container, index) => {
       const emptyIcon = container.querySelector('.icon-empty');
@@ -621,10 +532,6 @@ document.addEventListener('DOMContentLoaded', function () {
         filledIcon.style.opacity = '0';
       }
 
-      console.log(`Container ${index + 1} initial state:`, {
-        emptyDisplay: emptyIcon ? emptyIcon.style.display : 'no element',
-        filledDisplay: filledIcon ? filledIcon.style.display : 'no element'
-      });
     });
 
     updateRatingDisplay(currentRating);
@@ -634,17 +541,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const value = index + 1;
 
         container.addEventListener('mouseenter', () => {
-          console.log('Mouse enter on rating container:', value);
           updateRatingDisplay(value);
         });
 
         container.addEventListener('mouseleave', () => {
-          console.log('Mouse leave on rating container');
           updateRatingDisplay(currentRating);
         });
 
         container.addEventListener('click', () => {
-          console.log('Click on rating container:', value);
           submitRating(value);
         });
       });
@@ -652,7 +556,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateRatingDisplay(rating) {
-    console.log('Updating rating display to:', rating);
     const ratingContainers = document.querySelectorAll('.rating-stars .rating-icon-container');
 
     ratingContainers.forEach((container, index) => {
@@ -660,7 +563,6 @@ document.addEventListener('DOMContentLoaded', function () {
       const emptyIcon = container.querySelector('.icon-empty');
       const filledIcon = container.querySelector('.icon-filled');
 
-      console.log(`Container ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
 
       if (value <= Math.floor(rating)) {
         if (emptyIcon) {
@@ -698,7 +600,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function submitRating(rating) {
-    console.log('Submitting rating:', rating);
 
     if (!csrfToken) {
       alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
@@ -715,17 +616,14 @@ document.addEventListener('DOMContentLoaded', function () {
       body: `rating=${rating}`
     })
     .then(response => {
-      console.log('Rating submission response status:', response.status);
       if (!response.ok) {
         return response.text().then(text => {
-          console.error('Rating submission error response:', text);
           throw new Error(text);
         });
       }
       return response.json();
     })
     .then(data => {
-      console.log('Rating submission response data:', data);
       if (data.success) {
         const ratingStars = document.querySelector('.rating-stars');
         if (ratingStars) {
@@ -751,20 +649,17 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     })
     .catch(error => {
-      console.error('Ошибка при отправке оценки:', error);
       alert('Произошла ошибка при отправке оценки.');
     });
   }
 
   function setupCommentRatings() {
-    console.log('Setting up comment ratings...');
     const commentRatings = document.querySelectorAll('.comment-rating');
 
     commentRatings.forEach((ratingContainer, index) => {
       const rating = parseFloat(ratingContainer.dataset.rating) || 0;
       const ratingIcons = ratingContainer.querySelectorAll('.rating-icon-container');
 
-      console.log(`Comment ${index + 1} rating:`, rating);
 
       ratingIcons.forEach((iconContainer, iconIndex) => {
         const value = iconIndex + 1;
@@ -808,22 +703,18 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function setupOverallRating() {
-    console.log('Setting up overall rating...');
     const overallRating = document.querySelector('.overall-rating-stars');
 
     if (overallRating) {
       const rating = parseFloat(overallRating.dataset.rating) || 0;
       const ratingIcons = overallRating.querySelectorAll('.rating-icon-container');
 
-      console.log('Overall rating:', rating);
-      console.log('Rating icons found:', ratingIcons.length);
 
       ratingIcons.forEach((iconContainer, iconIndex) => {
         const value = iconIndex + 1;
         const emptyIcon = iconContainer.querySelector('.icon-empty');
         const filledIcon = iconContainer.querySelector('.icon-filled');
 
-        console.log(`Icon ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
 
         if (value <= Math.floor(rating)) {
           if (emptyIcon) {
@@ -837,7 +728,6 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
           const partialValue = rating % 1;
-          console.log(`Partial rating for icon ${value}: ${partialValue}`);
           if (emptyIcon) {
             emptyIcon.style.display = 'block';
             emptyIcon.style.opacity = '1';
@@ -860,7 +750,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     } else {
-      console.log('Overall rating element not found');
     }
   }
 
@@ -923,14 +812,12 @@ document.addEventListener('DOMContentLoaded', function () {
   setupModeratorDelete();
 
   function setupSimilarStartupsRatings() {
-    console.log('Setting up similar startups ratings...');
     const similarRatings = document.querySelectorAll('.similar-card-rating');
 
     similarRatings.forEach((ratingContainer, index) => {
       const rating = parseFloat(ratingContainer.dataset.rating) || 0;
       const ratingIcons = ratingContainer.querySelectorAll('.rating-icon-container');
 
-      console.log(`Similar startup ${index + 1} rating:`, rating);
 
       ratingIcons.forEach((iconContainer, iconIndex) => {
         const value = iconIndex + 1;
@@ -974,20 +861,16 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function setupSimilarStartupsShowMore() {
-    console.log('Setting up similar startups show more button...');
     const showMoreButton = document.querySelector('.show-more-similar');
 
     if (showMoreButton) {
-      console.log('Show more button found');
       showMoreButton.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log('Show more button clicked');
 
         const startupId = document.querySelector('.startup-detail-page').dataset.startupId;
         const loadSimilarUrl = document.querySelector('.startup-detail-page').dataset.loadSimilarUrl;
 
         if (!loadSimilarUrl) {
-          console.error('Load similar URL not found');
           return;
         }
 
@@ -1014,13 +897,11 @@ document.addEventListener('DOMContentLoaded', function () {
             setupSimilarStartupsShowMore();
           })
           .catch(error => {
-            console.error('Error loading similar startups:', error);
             showMoreButton.innerHTML = '<i class="fas fa-redo"></i> Показать еще';
             showMoreButton.disabled = false;
           });
       });
     } else {
-      console.log('Show more button not found');
     }
   }
 
@@ -1178,48 +1059,35 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function setupTabNavigation() {
-    console.log('Setting up tab navigation...');
     const tabButtons = document.querySelectorAll('.tab-button');
     const contentSections = document.querySelectorAll('.content-section');
 
-    console.log('Found tab buttons:', tabButtons.length);
-    console.log('Found content sections:', contentSections.length);
 
     tabButtons.forEach((button, index) => {
       const targetId = button.dataset.target;
-      console.log(`Tab button ${index}:`, button.textContent.trim(), 'target:', targetId);
     });
 
     contentSections.forEach((section, index) => {
-      console.log(`Content section ${index}:`, section.id);
     });
 
     tabButtons.forEach(button => {
       button.addEventListener('click', () => {
         const targetId = button.dataset.target;
-        console.log('Tab button clicked, target:', targetId);
-        console.log('Button element:', button);
-        console.log('Button text:', button.textContent.trim());
 
         tabButtons.forEach(btn => btn.classList.remove('active'));
         contentSections.forEach(section => section.classList.remove('active'));
 
         button.classList.add('active');
         const targetSection = document.getElementById(targetId);
-        console.log('Target section found:', !!targetSection);
         if (targetSection) {
           targetSection.classList.add('active');
-          console.log('Activated section:', targetId);
-          console.log('Section classes after activation:', targetSection.className);
         } else {
-          console.error('Target section not found:', targetId);
           const partialMatch = Array.from(contentSections).find(section =>
             section.id.includes(targetId.replace('-section', '')) ||
             targetId.includes(section.id.replace('-section', ''))
           );
           if (partialMatch) {
             partialMatch.classList.add('active');
-            console.log('Found partial match, activated section:', partialMatch.id);
           }
         }
       });
@@ -1229,16 +1097,11 @@ document.addEventListener('DOMContentLoaded', function () {
   setupTabNavigation();
 
   function setupActionButtons() {
-    console.log('Setting up action buttons...');
 
     const chatButton = document.querySelector('.carousel-chat-button-unique');
-    console.log('Chat button found:', !!chatButton);
     if (chatButton) {
-      console.log('Chat button text:', chatButton.textContent.trim());
-      console.log('Chat button classes:', chatButton.className);
       chatButton.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log('Chat button clicked');
 
         const ownerId = document.querySelector('.startup-detail-page').dataset.ownerId;
         if (!ownerId) {
@@ -1249,17 +1112,12 @@ document.addEventListener('DOMContentLoaded', function () {
         startChatWithUser(ownerId);
       });
     } else {
-      console.error('Chat button not found');
     }
 
     const writeButton = document.querySelector('.write-author-button-unique');
-    console.log('Write button found:', !!writeButton);
     if (writeButton) {
-      console.log('Write button text:', writeButton.textContent.trim());
-      console.log('Write button classes:', writeButton.className);
       writeButton.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log('Write button clicked');
 
         const ownerId = document.querySelector('.startup-detail-page').dataset.ownerId;
         if (!ownerId) {
@@ -1270,14 +1128,11 @@ document.addEventListener('DOMContentLoaded', function () {
         startChatWithUser(ownerId);
       });
     } else {
-      console.error('Write button not found');
     }
 
     const allButtons = document.querySelectorAll('button');
-    console.log('Total buttons found on page:', allButtons.length);
     allButtons.forEach((btn, index) => {
       if (btn.textContent.includes('Чат') || btn.textContent.includes('Написать')) {
-        console.log(`Button ${index}:`, btn.textContent.trim(), 'classes:', btn.className);
       }
     });
   }
@@ -1286,24 +1141,18 @@ document.addEventListener('DOMContentLoaded', function () {
   setupImageManager();
 
   function setupTimelineSteps() {
-    console.log('Setting up timeline steps...');
     const timelineSteps = document.querySelectorAll('.timeline-step');
     const descriptionItems = document.querySelectorAll('.timeline-description-item');
 
     if (timelineSteps.length === 0) {
-      console.log('No timeline steps found');
       return;
     }
 
-    console.log('Found timeline steps:', timelineSteps.length);
-    console.log('Found description items:', descriptionItems.length);
 
     timelineSteps.forEach((step, index) => {
       const stepNumber = step.dataset.step;
-      console.log(`Setting up step ${stepNumber} (index ${index})`);
 
       step.addEventListener('click', () => {
-        console.log(`Step ${stepNumber} clicked`);
 
         timelineSteps.forEach(s => s.classList.remove('active-step-display'));
         descriptionItems.forEach(d => d.classList.remove('active'));
@@ -1313,9 +1162,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const targetDescription = document.querySelector(`.timeline-description-item:nth-child(${parseInt(stepNumber)})`);
         if (targetDescription) {
           targetDescription.classList.add('active');
-          console.log(`Activated description for step ${stepNumber}`);
         } else {
-          console.error(`Description not found for step ${stepNumber}`);
         }
       });
 
@@ -1353,7 +1200,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       })
       .catch((error) => {
-        console.error('Ошибка:', error);
         alert('Ошибка при создании чата: ' + error.message);
       });
   }
@@ -1553,7 +1399,6 @@ function deleteImage(fileId) {
     }
   })
   .catch(error => {
-    console.error('Error:', error);
     alert('Ошибка при удалении изображения');
   });
 }
@@ -1588,7 +1433,6 @@ function saveImageOrder() {
     }
   })
   .catch(error => {
-    console.error('Error:', error);
     alert('Ошибка при сохранении порядка изображений');
   });
 }
@@ -1659,7 +1503,6 @@ function handleFileUpload(files) {
     }
   })
   .catch(error => {
-    console.error('Error:', error);
     alert('Ошибка при загрузке файлов');
     uploadProgress.style.display = 'none';
   });

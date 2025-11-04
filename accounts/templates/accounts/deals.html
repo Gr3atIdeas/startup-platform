@@ -149,7 +149,7 @@
                             alert(data.error || 'Ошибка отправки сообщения');
                         }
                     })
-                    .catch(error => console.error('Ошибка:', error));
+                    .catch(error => {});
                 });
             }
 
@@ -174,7 +174,7 @@
                             alert(data.error || 'Ошибка при одобрении сделки');
                         }
                     })
-                    .catch(error => console.error('Ошибка:', error));
+                    .catch(error => {});
                 });
             }
 
@@ -199,7 +199,7 @@
                             alert(data.error || 'Ошибка при отклонении сделки');
                         }
                     })
-                    .catch(error => console.error('Ошибка:', error));
+                    .catch(error => {});
                 });
             }
             

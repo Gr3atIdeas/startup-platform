@@ -41,15 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             e.stopImmediatePropagation();
             
-            const timestamp = new Date().toISOString();
-            console.log(`🚀 [${timestamp}] Submit event triggered`);
-            
             if (window.isSubmittingStartup) {
-                console.warn(`⚠️ [${timestamp}] Форма УЖЕ отправляется, игнорируем`);
                 return false;
             }
-            
-            console.log(`✅ [${timestamp}] Начало отправки формы`);
             window.isSubmittingStartup = true;
             
             const submitButton = form.querySelector('button[type="submit"]');
@@ -105,18 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const formData = new FormData(form);
-                   console.log('=== FormData содержимое ===');
-                   let videoCount = 0;
-                   for (let pair of formData.entries()) {
-                       if (pair[1] instanceof File) {
-                           console.log(pair[0] + ': ' + pair[1].name + ' (' + pair[1].size + ' bytes)');
-                           if (pair[0] === 'video') {
-                               videoCount++;
-                           }
-                       }
-                   }
-                   console.log(`📹 Всего видео файлов: ${videoCount}`);
-                   console.log('===========================');
             
             fetch(form.action, {
                 method: 'POST',
@@ -135,14 +117,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then(data => {
-                console.log('✅ Ответ от сервера получен');
                 if (data.success) {
-                    console.log('✅ Форма успешно сохранена');
                     if (data.redirect_url) {
                         window.location.href = data.redirect_url;
                     }
                 } else {
-                    console.error('❌ Ошибка сохранения:', data.error);
                     alert('Ошибка сохранения: ' + (data.error || 'Неизвестная ошибка'));
                     window.isSubmittingStartup = false;
                     if (submitButton) {
@@ -152,7 +131,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
-                console.error('❌ AJAX ошибка:', error);
                 alert('Ошибка отправки формы: ' + error.message);
                 window.isSubmittingStartup = false;
                 if (submitButton) {

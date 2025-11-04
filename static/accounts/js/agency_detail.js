@@ -17,7 +17,6 @@ function toggleTextTruncation(sectionId, maxLines) {
   try {
     const container = document.getElementById(sectionId);
     if (!container) {
-      console.warn(`Container with id '${sectionId}' not found`);
       return;
     }
 
@@ -32,7 +31,6 @@ function toggleTextTruncation(sectionId, maxLines) {
       if (toggle) toggle.textContent = 'Показать полностью';
     }
   } catch (error) {
-    console.error('Error in toggleTextTruncation:', error);
   }
 }
 
@@ -41,18 +39,13 @@ window.toggleTextTruncation = toggleTextTruncation;
 document.addEventListener('DOMContentLoaded', function () {
   const pageDataElement = document.querySelector('.agency-detail-page')
   if (!pageDataElement) {
-    console.error('Не удалось найти основной элемент .agency-detail-page')
     return
   }
   const agencyId = pageDataElement.dataset.agencyId
   const csrfTokenInput = document.querySelector('input[name="csrfmiddlewaretoken"]')
   const csrfToken = csrfTokenInput ? csrfTokenInput.value : getCookie('csrftoken')
 
-  console.log('CSRF Token found:', !!csrfToken);
-  console.log('Agency ID found:', agencyId);
-
   if (!agencyId) {
-    console.error('Agency ID не найден в data-атрибутах.')
           return
   }
 
@@ -67,19 +60,16 @@ document.addEventListener('DOMContentLoaded', function () {
   function setupUserSearch(modalId, searchInputId, resultsId, onSelect) {
     const searchModalElement = document.getElementById(modalId)
     if (!searchModalElement) {
-      console.error(`Modal element with id '${modalId}' not found`);
       return;
     }
     const searchInput = document.getElementById(searchInputId)
     const searchResults = document.getElementById(resultsId)
 
     if (!searchInput) {
-      console.error(`Search input with id '${searchInputId}' not found`);
       return;
     }
 
     if (!searchResults) {
-      console.error(`Search results with id '${resultsId}' not found`);
       return;
     }
 
@@ -89,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return
       }
 
-      console.log('Searching for:', query);
 
       fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`, {
         headers: {
@@ -98,11 +87,9 @@ document.addEventListener('DOMContentLoaded', function () {
         },
       })
       .then(response => {
-        console.log('Search response status:', response.status);
         return response.json();
       })
       .then(data => {
-        console.log('Search results:', data);
         searchResults.innerHTML = ''
         if (!data.suggestions || data.suggestions.length === 0) {
           searchResults.innerHTML = '<li class="list-group-item">Пользователи не найдены</li>'
@@ -115,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function () {
           li.textContent = user.name
           li.dataset.userId = user.id
           li.addEventListener('click', () => {
-            console.log('User selected:', user);
             onSelect(user);
             if (modalId === 'changeOwnerModal') {
                 if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
@@ -124,7 +110,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     currentModal.hide();
                     }
                 } else {
-                    console.error('Bootstrap Modal not available for hiding modal');
                 }
             }
           });
@@ -132,7 +117,6 @@ document.addEventListener('DOMContentLoaded', function () {
         })
       })
       .catch(error => {
-        console.error('Ошибка поиска:', error)
         searchResults.innerHTML = '<li class="list-group-item">Ошибка поиска</li>'
       })
     }, 300)
@@ -149,46 +133,35 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  console.log('Setting up change owner search...');
   setupUserSearch('changeOwnerModal', 'userSearchInput', 'userSearchResults', (user) => {
-    console.log('Setting up change owner for user:', user);
     const confirmModalEl = document.getElementById('confirmChangeOwnerModal')
     if (!confirmModalEl) {
-      console.error('Confirm modal element not found');
       return;
     }
     const newOwnerNameEl = document.getElementById('newOwnerName');
     const newOwnerIdEl = document.getElementById('newOwnerId');
 
-    console.log('newOwnerName element found:', !!newOwnerNameEl);
-    console.log('newOwnerId element found:', !!newOwnerIdEl);
 
     if (!newOwnerNameEl || !newOwnerIdEl) {
-      console.error('Required elements for change owner not found');
       alert('Ошибка: элементы формы не найдены');
       return;
     }
 
     newOwnerNameEl.textContent = user.name;
     newOwnerIdEl.value = user.id;
-    console.log('Set new owner name:', user.name, 'id:', user.id);
     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
     const confirmModal = new bootstrap.Modal(confirmModalEl);
     confirmModal.show();
     } else {
-      console.error('Bootstrap Modal not available');
       alert('Ошибка: Bootstrap не загружен');
     }
   });
 
   const confirmChangeOwnerBtn = document.querySelector('.confirm-change-owner')
-  console.log('Confirm change owner button found:', !!confirmChangeOwnerBtn);
   if (confirmChangeOwnerBtn) {
     confirmChangeOwnerBtn.addEventListener('click', function () {
-      console.log('Confirm change owner button clicked');
       const newOwnerIdEl = document.getElementById('newOwnerId');
       if (!newOwnerIdEl) {
-        console.error('newOwnerId element not found');
         alert('Ошибка: элемент формы не найден');
         return;
       }
@@ -204,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      console.log('Sending change owner request for agency:', agencyId, 'new owner:', newOwnerId);
 
               fetch(`/change_owner_agency/${agencyId}/`, {
         method: 'POST',
@@ -215,13 +187,10 @@ document.addEventListener('DOMContentLoaded', function () {
         body: `new_owner_id=${newOwnerId}`,
       })
       .then(async response => {
-        console.log('Change owner response status:', response.status);
         let data = null;
         try {
           data = await response.json();
-          console.log('Change owner response data:', data);
         } catch (e) {
-          console.error('Error parsing JSON response:', e);
         }
 
         if (response.ok && data && data.success) {
@@ -233,24 +202,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       })
       .catch(error => {
-        console.error('Ошибка при смене владельца:', error);
         alert('Сетевая ошибка при смене владельца.');
       });
     })
   } else {
-    console.error('Confirm change owner button not found');
   }
 
   function setupRatingStars() {
-    console.log('Setting up rating stars...');
     let ratingStars = document.querySelector('.rating-stars[data-interactive="true"]');
     if (!ratingStars) {
-      console.log('Rating stars not found or not interactive');
       const allRatingStars = document.querySelectorAll('.rating-stars');
-      console.log('All rating stars found:', allRatingStars.length);
       if (allRatingStars.length > 0) {
         ratingStars = allRatingStars[0];
-        console.log('Using first rating stars element');
       } else {
         return;
       }
@@ -260,13 +223,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentRatingStr = ratingStars.dataset.rating || '0';
     const currentRating = parseFloat(currentRatingStr.replace(',', '.')) || 0;
 
-    console.log('Found rating stars:', ratingStars);
-    console.log('Rating containers count:', ratingContainers.length);
-    console.log('Current rating:', currentRating);
-    console.log('Rating stars data attributes:', {
-      rating: ratingStars.dataset.rating,
-      interactive: ratingStars.dataset.interactive
-    });
 
     ratingContainers.forEach((container, index) => {
       const emptyIcon = container.querySelector('.icon-empty');
@@ -281,10 +237,6 @@ document.addEventListener('DOMContentLoaded', function () {
         filledIcon.style.opacity = '0';
       }
 
-      console.log(`Container ${index + 1} initial state:`, {
-        emptyDisplay: emptyIcon ? emptyIcon.style.display : 'no element',
-        filledDisplay: filledIcon ? filledIcon.style.display : 'no element'
-      });
     });
 
     updateRatingDisplay(currentRating);
@@ -294,17 +246,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const value = index + 1;
 
         container.addEventListener('mouseenter', () => {
-          console.log('Mouse enter on rating container:', value);
           updateRatingDisplay(value);
         });
 
         container.addEventListener('mouseleave', () => {
-          console.log('Mouse leave on rating container');
           updateRatingDisplay(currentRating);
         });
 
         container.addEventListener('click', () => {
-          console.log('Click on rating container:', value);
           submitRating(value);
         });
       });
@@ -312,7 +261,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateRatingDisplay(rating) {
-    console.log('Updating rating display to:', rating);
     const ratingContainers = document.querySelectorAll('.rating-stars .rating-icon-container');
 
     ratingContainers.forEach((container, index) => {
@@ -320,7 +268,6 @@ document.addEventListener('DOMContentLoaded', function () {
       const emptyIcon = container.querySelector('.icon-empty');
       const filledIcon = container.querySelector('.icon-filled');
 
-      console.log(`Container ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
 
       if (value <= Math.floor(rating)) {
         if (emptyIcon) {
@@ -358,7 +305,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function submitRating(rating) {
-    console.log('Submitting rating:', rating);
 
     if (!csrfToken) {
       alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
@@ -375,17 +321,14 @@ document.addEventListener('DOMContentLoaded', function () {
       body: `rating=${rating}`
     })
     .then(response => {
-      console.log('Rating submission response status:', response.status);
       if (!response.ok) {
         return response.text().then(text => {
-          console.error('Rating submission error response:', text);
           throw new Error(text);
         });
       }
       return response.json();
     })
     .then(data => {
-      console.log('Rating submission response data:', data);
       if (data.success) {
         const ratingStars = document.querySelector('.rating-stars');
         if (ratingStars) {
@@ -411,20 +354,17 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     })
     .catch(error => {
-      console.error('Ошибка при отправке оценки:', error);
       alert('Произошла ошибка при отправке оценки.');
     });
   }
 
   function setupCommentRatings() {
-    console.log('Setting up comment ratings...');
     const commentRatings = document.querySelectorAll('.comment-rating');
 
     commentRatings.forEach((ratingContainer, index) => {
       const rating = parseFloat(ratingContainer.dataset.rating) || 0;
       const ratingIcons = ratingContainer.querySelectorAll('.rating-icon-container');
 
-      console.log(`Comment ${index + 1} rating:`, rating);
 
       ratingIcons.forEach((iconContainer, iconIndex) => {
         const value = iconIndex + 1;
@@ -468,22 +408,18 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function setupOverallRating() {
-    console.log('Setting up overall rating...');
     const overallRating = document.querySelector('.overall-rating-stars');
 
     if (overallRating) {
       const rating = parseFloat(overallRating.dataset.rating) || 0;
       const ratingIcons = overallRating.querySelectorAll('.rating-icon-container');
 
-      console.log('Overall rating:', rating);
-      console.log('Rating icons found:', ratingIcons.length);
 
       ratingIcons.forEach((iconContainer, iconIndex) => {
         const value = iconIndex + 1;
         const emptyIcon = iconContainer.querySelector('.icon-empty');
         const filledIcon = iconContainer.querySelector('.icon-filled');
 
-        console.log(`Icon ${value}: empty=${!!emptyIcon}, filled=${!!filledIcon}`);
 
         if (value <= Math.floor(rating)) {
           if (emptyIcon) {
@@ -497,7 +433,6 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         } else if (value === Math.ceil(rating) && rating % 1 !== 0) {
           const partialValue = rating % 1;
-          console.log(`Partial rating for icon ${value}: ${partialValue}`);
           if (emptyIcon) {
             emptyIcon.style.display = 'block';
             emptyIcon.style.opacity = '1';
@@ -520,7 +455,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     } else {
-      console.log('Overall rating element not found');
     }
   }
 
@@ -583,14 +517,12 @@ document.addEventListener('DOMContentLoaded', function () {
   setupModeratorDelete();
 
   function setupSimilarAgenciesRatings() {
-    console.log('Setting up similar agencies ratings...');
     const similarRatings = document.querySelectorAll('.similar-card-rating');
 
     similarRatings.forEach((ratingContainer, index) => {
       const rating = parseFloat(ratingContainer.dataset.rating) || 0;
       const ratingIcons = ratingContainer.querySelectorAll('.rating-icon-container');
 
-      console.log(`Similar agency ${index + 1} rating:`, rating);
 
       ratingIcons.forEach((iconContainer, iconIndex) => {
         const value = iconIndex + 1;
@@ -634,20 +566,16 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function setupSimilarAgenciesShowMore() {
-    console.log('Setting up similar agencies show more button...');
     const showMoreButton = document.querySelector('.show-more-similar');
 
     if (showMoreButton) {
-      console.log('Show more button found');
       showMoreButton.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log('Show more button clicked');
 
         const agencyId = document.querySelector('.agency-detail-page').dataset.agencyId;
         const loadSimilarUrl = document.querySelector('.agency-detail-page').dataset.loadSimilarUrl;
 
         if (!loadSimilarUrl) {
-          console.error('Load similar URL not found');
           return;
         }
 
@@ -677,13 +605,11 @@ document.addEventListener('DOMContentLoaded', function () {
             setupSimilarAgenciesShowMore();
           })
           .catch(error => {
-            console.error('Error loading similar agencies:', error);
             showMoreButton.innerHTML = '<i class="fas fa-redo"></i> Показать еще';
             showMoreButton.disabled = false;
           });
       });
     } else {
-      console.log('Show more button not found');
     }
   }
 
@@ -841,48 +767,35 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function setupTabNavigation() {
-    console.log('Setting up tab navigation...');
     const tabButtons = document.querySelectorAll('.tab-button');
     const contentSections = document.querySelectorAll('.content-section');
 
-    console.log('Found tab buttons:', tabButtons.length);
-    console.log('Found content sections:', contentSections.length);
 
     tabButtons.forEach((button, index) => {
       const targetId = button.dataset.target;
-      console.log(`Tab button ${index}:`, button.textContent.trim(), 'target:', targetId);
     });
 
     contentSections.forEach((section, index) => {
-      console.log(`Content section ${index}:`, section.id);
     });
 
     tabButtons.forEach(button => {
       button.addEventListener('click', () => {
         const targetId = button.dataset.target;
-        console.log('Tab button clicked, target:', targetId);
-        console.log('Button element:', button);
-        console.log('Button text:', button.textContent.trim());
 
         tabButtons.forEach(btn => btn.classList.remove('active'));
         contentSections.forEach(section => section.classList.remove('active'));
 
         button.classList.add('active');
         const targetSection = document.getElementById(targetId);
-        console.log('Target section found:', !!targetSection);
         if (targetSection) {
           targetSection.classList.add('active');
-          console.log('Activated section:', targetId);
-          console.log('Section classes after activation:', targetSection.className);
         } else {
-          console.error('Target section not found:', targetId);
           const partialMatch = Array.from(contentSections).find(section =>
             section.id.includes(targetId.replace('-section', '')) ||
             targetId.includes(section.id.replace('-section', ''))
           );
           if (partialMatch) {
             partialMatch.classList.add('active');
-            console.log('Found partial match, activated section:', partialMatch.id);
           }
         }
       });
@@ -968,16 +881,11 @@ function initializeCarousel() {
   initializeCarousel();
 
   function setupActionButtons() {
-    console.log('Setting up action buttons...');
 
     const chatButton = document.querySelector('.carousel-chat-button-unique');
-    console.log('Chat button found:', !!chatButton);
     if (chatButton) {
-      console.log('Chat button text:', chatButton.textContent.trim());
-      console.log('Chat button classes:', chatButton.className);
       chatButton.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log('Chat button clicked');
 
         const ownerId = document.querySelector('.agency-detail-page').dataset.ownerId;
         if (!ownerId) {
@@ -988,17 +896,12 @@ function initializeCarousel() {
         startChatWithUser(ownerId);
       });
     } else {
-      console.error('Chat button not found');
     }
 
     const writeButton = document.querySelector('.write-author-button-unique');
-    console.log('Write button found:', !!writeButton);
     if (writeButton) {
-      console.log('Write button text:', writeButton.textContent.trim());
-      console.log('Write button classes:', writeButton.className);
       writeButton.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log('Write button clicked');
 
         const ownerId = document.querySelector('.agency-detail-page').dataset.ownerId;
         if (!ownerId) {
@@ -1009,14 +912,11 @@ function initializeCarousel() {
         startChatWithUser(ownerId);
       });
     } else {
-      console.error('Write button not found');
     }
 
     const allButtons = document.querySelectorAll('button');
-    console.log('Total buttons found on page:', allButtons.length);
     allButtons.forEach((btn, index) => {
       if (btn.textContent.includes('Чат') || btn.textContent.includes('Написать')) {
-        console.log(`Button ${index}:`, btn.textContent.trim(), 'classes:', btn.className);
       }
     });
   }
@@ -1051,7 +951,6 @@ function initializeCarousel() {
         }
       })
       .catch((error) => {
-        console.error('Ошибка:', error);
         alert('Ошибка при создании чата: ' + error.message);
       });
   }

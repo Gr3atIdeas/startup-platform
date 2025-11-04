@@ -404,7 +404,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 })
                 .catch(error => {
-                    console.error('Ошибка:', error);
                     alert('Произошла ошибка при удалении аватара.');
                 });
             }
@@ -474,7 +473,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
-                console.error('Ошибка:', error);
                 alert('Произошла ошибка при сохранении профиля.');
             });
         });
@@ -576,7 +574,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         window.showNotification('Ссылка на профиль скопирована', 'success', 3000);
                     }
                 } catch (e) {
-                    console.error(e);
                 }
                 document.body.removeChild(textarea);
             }

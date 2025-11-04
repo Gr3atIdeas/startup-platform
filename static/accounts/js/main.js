@@ -270,11 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         updateSuccessControls()
       })
-    } else {
-      console.warn('Карточки в карусели "Истории успеха" не найдены.')
     }
-  } else {
-    console.warn('Элементы карусели "Истории успеха" не найдены.')
   }
   const galaxyContainer = document.getElementById('ultra_new_planetary_galaxy');
   if (galaxyContainer) {
@@ -284,7 +280,6 @@ document.addEventListener('DOMContentLoaded', function () {
       try {
         demoStartupsData = JSON.parse(demoDataScript.textContent);
       } catch (error) {
-        console.warn('Failed to parse demo startups data:', error);
       }
     }
     const planetObjects = [];
