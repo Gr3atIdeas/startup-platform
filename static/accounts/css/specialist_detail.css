@@ -862,6 +862,27 @@ a:hover {
   font-weight: 300;
 }
 
+.edit-ai-rating-btn {
+  margin-top: 10px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 200px;
+}
+
+.edit-ai-rating-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+}
+
 .specialist-detail-raised-amount-info {
   display: flex;
   flex-direction: column;
@@ -1296,7 +1317,8 @@ a:hover {
 
 .tab-navigation {
   display: flex;
-  gap: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
   align-self: stretch;
   margin-bottom: 25px;
   padding-bottom: 15px;
@@ -1310,30 +1332,29 @@ a:hover {
   justify-content: center;
   padding: 6px 12px; 
   border: none; 
-
-  
   font-family: Unbounded, sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 300;
   line-height: 18px;
   letter-spacing: -0.28px;
-
-  
   text-align: center;
   cursor: pointer;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
-  white-space: nowrap;
+  white-space: normal;
+  word-wrap: break-word;
   border-radius: 8px; 
   background-color: transparent; 
   color: var(--text-secondary); 
   box-shadow: none; 
   appearance: none; 
   position: relative; 
-  overflow: hidden; 
+  overflow: visible; 
   z-index: 1;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 
@@ -4726,11 +4747,14 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   .main-content-grid {
     padding: 15px 10px;
     gap: 15px;
+    margin: 0 5px;
   }
 
   .back-link-container {
     padding: 0 10px;
-    margin-bottom: 15px;
+    margin: 0 5px 15px 5px;
+    width: calc(100% - 10px);
+    max-width: 100%;
   }
 
   .top-section {
@@ -4739,6 +4763,177 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
   .specialist-detail-media-container {
     height: 250px;
+  }
+
+  .tab-navigation {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tabbed-content-wrapper .tab-navigation .tab-button {
+    font-size: 12px;
+    padding: 5px 10px;
+    flex: 1 1 calc(50% - 4px);
+    max-width: calc(50% - 4px);
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  .tabbed-content-wrapper {
+    padding: 15px 10px;
+    margin: 0 5px 20px 5px;
+  }
+
+  #comments-section {
+    width: calc(100% - 10px);
+    margin: 20px 5px;
+    padding: 15px 10px;
+  }
+
+  .comments-main-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .comments-rating-summary-wrapper {
+    width: 100%;
+  }
+
+  .similar-startups-grid,
+  .similar-specialists-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .similar-startups-section {
+    margin: 20px 5px;
+    padding: 30px 15px;
+  }
+
+  .similar-startups-container {
+    width: 100%;
+    padding: 0 15px;
+  }
+
+  .show-all-button {
+    position: static;
+    width: 100%;
+    margin-top: 20px;
+    justify-content: center;
+  }
+
+  .specialist-name {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .tab-navigation {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tabbed-content-wrapper .tab-navigation .tab-button {
+    font-size: 12px;
+    padding: 5px 8px;
+    flex: 1 1 calc(33.333% - 6px);
+    max-width: calc(33.333% - 6px);
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  .tabbed-content-wrapper {
+    margin: 0 5px 20px 5px;
+    padding: 15px 10px;
+  }
+
+  #comments-section {
+    width: calc(100% - 10px);
+    margin: 20px 5px;
+    padding: 15px 10px;
+  }
+
+  .comments-main-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .comments-rating-summary-wrapper {
+    width: 100%;
+  }
+
+  .similar-startups-grid,
+  .similar-specialists-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .similar-startups-section {
+    margin: 20px 5px;
+    padding: 30px 15px;
+  }
+
+  .similar-startups-container {
+    width: 100%;
+    padding: 0 15px;
+  }
+
+  .show-all-button {
+    position: static;
+    width: 100%;
+    margin-top: 20px;
+    justify-content: center;
+  }
+
+  .back-link-container {
+    margin: 0 5px 20px 5px;
+    width: calc(100% - 10px);
+    max-width: 100%;
+  }
+
+  .main-content-grid {
+    margin: 0 5px;
+    padding: 20px 5px;
+  }
+
+  .specialist-name {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+
+  .detail-info-section-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .detail-info-section-left-content {
+    width: 100%;
+    order: 2;
+  }
+
+  .detail-info-section-stage-block {
+    width: 100%;
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  .detail-info-section-presentation-card {
+    width: 100%;
+    margin: 0 auto 20px auto;
+    order: 1;
+    max-width: 300px;
+  }
+
+  .detail-info-section-about-block {
+    order: 3;
+  }
+
+  .info-blocks {
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
   }
 }
 

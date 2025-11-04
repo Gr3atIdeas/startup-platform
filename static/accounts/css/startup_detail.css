@@ -3926,6 +3926,27 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   margin-left: auto;
 }
 
+.edit-ai-rating-btn {
+  margin-top: 10px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 200px;
+}
+
+.edit-ai-rating-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+}
+
 .startup-detail-raised-amount-info {
   display: flex;
   flex-direction: column;

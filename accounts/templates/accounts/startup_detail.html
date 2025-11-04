@@ -136,9 +136,12 @@
           <div class="startup-detail-ai-rating-icon">
             <span class="startup-detail-ai-label">AI</span>
           </div>
-          <span class="startup-detail-ai-rating-value">5 из 10</span>
+          <span class="startup-detail-ai-rating-value" id="ai-rating-value">{{ ai_rating|default:5|floatformat:1 }} из 10</span>
           <span class="startup-detail-ai-rating-date">Создан {{ startup.created_at|date:"d/m/Y" }}</span>
         </div>
+        {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+        <button class="edit-ai-rating-btn" onclick="openEditAiRatingModal('startup', {{ startup.startup_id }}, {{ ai_rating|default:5 }})">Редактировать</button>
+        {% endif %}
       </div>
       
       <div class="author-info-section">
@@ -778,6 +781,28 @@
         <div class="modal-footer">
           <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
           <button type="button" class="action-button" id="confirmInvestButton">Подтвердить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="editAiRatingModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Редактировать оценку AI</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="aiRatingInput" class="form-label">Оценка (от 1 до 10)</label>
+            <input type="number" id="aiRatingInput" class="form-control" placeholder="Введите оценку" min="1" max="10" step="0.1">
+          </div>
+          <div id="aiRatingError" class="text-danger" style="display: none;"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
+          <button type="button" class="action-button" id="confirmAiRatingButton">Сохранить</button>
         </div>
       </div>
     </div>

@@ -1736,4 +1736,124 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   }
+
+  let currentAiRatingEntityType = null;
+  let currentAiRatingEntityId = null;
+
+  function openEditAiRatingModal(entityType, entityId, currentRating) {
+    currentAiRatingEntityType = entityType;
+    currentAiRatingEntityId = entityId;
+    
+    const modal = document.getElementById('editAiRatingModal');
+    const ratingInput = document.getElementById('aiRatingInput');
+    const errorDiv = document.getElementById('aiRatingError');
+    
+    if (!modal) return;
+    
+    if (ratingInput) {
+      ratingInput.value = currentRating || '';
+    }
+    
+    if (errorDiv) {
+      errorDiv.style.display = 'none';
+      errorDiv.textContent = '';
+    }
+    
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      const bsModal = new bootstrap.Modal(modal);
+      bsModal.show();
+    } else {
+      modal.style.display = 'block';
+    }
+  }
+
+  window.openEditAiRatingModal = openEditAiRatingModal;
+
+  const confirmAiRatingButton = document.getElementById('confirmAiRatingButton');
+  const editAiRatingModal = document.getElementById('editAiRatingModal');
+  
+  if (confirmAiRatingButton) {
+    confirmAiRatingButton.addEventListener('click', function() {
+      const ratingInput = document.getElementById('aiRatingInput');
+      const errorDiv = document.getElementById('aiRatingError');
+      
+      if (!ratingInput || !currentAiRatingEntityId) {
+        return;
+      }
+      
+      const rating = parseFloat(ratingInput.value);
+      
+      if (!rating || rating < 1 || rating > 10) {
+        if (errorDiv) {
+          errorDiv.textContent = 'Оценка должна быть от 1 до 10';
+          errorDiv.style.display = 'block';
+        }
+        return;
+      }
+      
+      const csrfTokenInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+      const csrfToken = csrfTokenInput ? csrfTokenInput.value : getCookie('csrftoken');
+      
+      if (!csrfToken) {
+        if (errorDiv) {
+          errorDiv.textContent = 'Ошибка безопасности. Перезагрузите страницу.';
+          errorDiv.style.display = 'block';
+        }
+        return;
+      }
+      
+      const formData = new FormData();
+      formData.append('ai_rating', rating);
+      formData.append('csrfmiddlewaretoken', csrfToken);
+      
+      confirmAiRatingButton.disabled = true;
+      if (errorDiv) {
+        errorDiv.style.display = 'none';
+      }
+      
+      fetch(`/edit-ai-rating/${currentAiRatingEntityType}/${currentAiRatingEntityId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrfToken
+        },
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        confirmAiRatingButton.disabled = false;
+        
+        if (data.success) {
+          const ratingValueElement = document.getElementById('ai-rating-value');
+          if (ratingValueElement) {
+            ratingValueElement.textContent = data.ai_rating + ' из 10';
+          }
+          
+          if (typeof bootstrap !== 'undefined' && bootstrap.Modal && editAiRatingModal) {
+            const bsModal = bootstrap.Modal.getInstance(editAiRatingModal);
+            if (bsModal) {
+              bsModal.hide();
+            }
+          } else if (editAiRatingModal) {
+            editAiRatingModal.style.display = 'none';
+          }
+        } else {
+          if (errorDiv) {
+            errorDiv.textContent = data.error || 'Произошла ошибка при сохранении оценки';
+            errorDiv.style.display = 'block';
+          } else {
+            alert(data.error || 'Произошла ошибка при сохранении оценки');
+          }
+        }
+      })
+      .catch(error => {
+        confirmAiRatingButton.disabled = false;
+        if (errorDiv) {
+          errorDiv.textContent = 'Произошла ошибка при отправке запроса';
+          errorDiv.style.display = 'block';
+        } else {
+          alert('Произошла ошибка при отправке запроса');
+        }
+      });
+    });
+  }
 });

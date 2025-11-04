@@ -1606,6 +1606,11 @@ def agency_detail(request, agency_id):
 
     # Получаем синхронизированные документы (только те, что есть в редакторе)
     agency_documents = get_synced_files(agency, "proof", "proofs_urls")
+    ai_rating = None
+    if agency.customization_data and isinstance(agency.customization_data, dict):
+        ai_rating = agency.customization_data.get('ai_rating', 5)
+    else:
+        ai_rating = 5
 
     context = {
         "agency": agency,
@@ -1624,6 +1629,7 @@ def agency_detail(request, agency_id):
         "video_urls": video_urls,
         "proofs_urls": proofs_urls,
         "agency_documents": agency_documents,
+        "ai_rating": ai_rating,
     }
     return render(request, "accounts/agency_detail.html", context)
 
@@ -1741,6 +1747,11 @@ def specialist_detail(request, specialist_id):
 
     # Получаем синхронизированные документы (только те, что есть в редакторе)
     specialist_documents = get_synced_files(specialist, "proof", "proofs_urls")
+    ai_rating = None
+    if specialist.customization_data and isinstance(specialist.customization_data, dict):
+        ai_rating = specialist.customization_data.get('ai_rating', 5)
+    else:
+        ai_rating = 5
 
     context = {
         "specialist": specialist,
@@ -1759,6 +1770,7 @@ def specialist_detail(request, specialist_id):
         "video_urls": video_urls,
         "proofs_urls": proofs_urls,
         "specialist_documents": specialist_documents,
+        "ai_rating": ai_rating,
     }
     return render(request, "accounts/specialist_detail.html", context)
 def franchise_detail(request, franchise_id):
@@ -1875,6 +1887,11 @@ def franchise_detail(request, franchise_id):
 
     # Получаем синхронизированные документы (только те, что есть в редакторе)
     franchise_documents = get_synced_files(franchise, "proof", "proofs_urls")
+    ai_rating = None
+    if franchise.customization_data and isinstance(franchise.customization_data, dict):
+        ai_rating = franchise.customization_data.get('ai_rating', 5)
+    else:
+        ai_rating = 5
 
     context = {
         "franchise": franchise,
@@ -1893,6 +1910,7 @@ def franchise_detail(request, franchise_id):
         "video_urls": video_urls,
         "proofs_urls": proofs_urls,
         "franchise_documents": franchise_documents,
+        "ai_rating": ai_rating,
     }
     return render(request, "accounts/franchise_detail.html", context)
 
@@ -2247,6 +2265,11 @@ def startup_detail(request, startup_id):
     )
     # Получаем синхронизированные документы (только те, что есть в редакторе)
     startup_documents = get_synced_files(startup, "proof", "proofs_urls")
+    ai_rating = None
+    if startup.customization_data and isinstance(startup.customization_data, dict):
+        ai_rating = startup.customization_data.get('ai_rating', 5)
+    else:
+        ai_rating = 5
     context = {
         "startup": startup,
         "comments": comments_with_rating,
@@ -2266,6 +2289,7 @@ def startup_detail(request, startup_id):
         "investors_count": investors_count,
         "timeline_events": timeline_events,
         "startup_documents": startup_documents,
+        "ai_rating": ai_rating,
     }
     return render(request, "accounts/startup_detail.html", context)
 def load_similar_startups(request, startup_id: int):
@@ -5837,19 +5861,23 @@ def invest(request, startup_id):
                 defaults={"method_name": "default"}
             )
             
-            transaction_data = {
-                "startup": startup,
-                "investor": request.user,
-                "amount": amount,
-                "is_micro": startup.micro_investment_available if hasattr(startup, 'micro_investment_available') else False,
-                "transaction_type": transaction_type,
-                "transaction_status": "completed",
-                "payment_method": payment_method,
-                "created_at": timezone.now(),
-                "updated_at": timezone.now(),
-            }
-            
-            transaction = InvestmentTransactions.objects.create(**transaction_data)
+            from django.db import connection
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    INSERT INTO investment_transactions 
+                    (startup_id, investor_id, amount, is_micro, transaction_type_id, transaction_status, payment_method_id, created_at, updated_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, [
+                    startup.startup_id,
+                    request.user.user_id,
+                    amount,
+                    startup.micro_investment_available if hasattr(startup, 'micro_investment_available') else False,
+                    transaction_type.type_id,
+                    "completed",
+                    payment_method.method_id,
+                    timezone.now(),
+                    timezone.now(),
+                ])
             startup.amount_raised = (startup.amount_raised or Decimal("0")) + amount
             startup.total_invested = (startup.total_invested or Decimal("0")) + amount
             startup.save()
@@ -5955,6 +5983,44 @@ def invest(request, startup_id):
         return JsonResponse(
             {"success": False, "error": "Недостаточно прав для инвестирования"}
         )
+
+@login_required
+def edit_ai_rating(request, entity_type, entity_id):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"})
+    
+    if not request.user.is_authenticated or not request.user.role or request.user.role.role_name != "moderator":
+        return JsonResponse({"success": False, "error": "Недостаточно прав"})
+    
+    try:
+        rating = Decimal(request.POST.get("ai_rating", "0"))
+        if rating < 1 or rating > 10:
+            return JsonResponse({"success": False, "error": "Оценка должна быть от 1 до 10"})
+        
+        if entity_type == "startup":
+            entity = get_object_or_404(Startups, startup_id=entity_id)
+        elif entity_type == "franchise":
+            entity = get_object_or_404(Franchises, franchise_id=entity_id)
+        elif entity_type == "agency":
+            entity = get_object_or_404(Agencies, agency_id=entity_id)
+        elif entity_type == "specialist":
+            entity = get_object_or_404(Specialists, specialist_id=entity_id)
+        else:
+            return JsonResponse({"success": False, "error": "Неверный тип сущности"})
+        
+        if not hasattr(entity, 'customization_data') or not entity.customization_data:
+            entity.customization_data = {}
+        
+        if not isinstance(entity.customization_data, dict):
+            entity.customization_data = {}
+        
+        entity.customization_data['ai_rating'] = float(rating)
+        entity.save()
+        
+        return JsonResponse({"success": True, "ai_rating": float(rating)})
+    except Exception as e:
+        logger.error(f"Ошибка при сохранении AI рейтинга: {str(e)}", exc_info=True)
+        return JsonResponse({"success": False, "error": f"Произошла ошибка: {str(e)}"})
 
 @login_required
 def invest_franchise(request, franchise_id):

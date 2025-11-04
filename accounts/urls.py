@@ -108,6 +108,7 @@ urlpatterns = [
     path("vote-startup/<int:startup_id>/", views.vote_startup, name="vote_startup"),
     path("invest/<int:startup_id>/", views.invest, name="invest"),
     path("invest-franchise/<int:franchise_id>/", views.invest_franchise, name="invest_franchise"),
+    path("edit-ai-rating/<str:entity_type>/<int:entity_id>/", views.edit_ai_rating, name="edit_ai_rating"),
     path("search-suggestions/", views.search_suggestions, name="search_suggestions"),
     path("global-search/", views.global_search, name="global_search"),
     path("planetary-system/", views.planetary_system, name="planetary_system"),
