@@ -5850,20 +5850,20 @@ def invest(request, startup_id):
             }
             
             transaction = InvestmentTransactions.objects.create(**transaction_data)
-        startup.amount_raised = (startup.amount_raised or Decimal("0")) + amount
-        startup.total_invested = (startup.total_invested or Decimal("0")) + amount
-        startup.save()
-        investors_count = startup.get_investors_count()
-        progress_percentage = startup.get_progress_percentage()
-        return JsonResponse(
-            {
-                "success": True,
-                "amount_raised": float(startup.amount_raised),
-                "investors_count": investors_count,
-                "progress_percentage": float(progress_percentage),
-            }
-        )
-    except Exception as e:
+            startup.amount_raised = (startup.amount_raised or Decimal("0")) + amount
+            startup.total_invested = (startup.total_invested or Decimal("0")) + amount
+            startup.save()
+            investors_count = startup.get_investors_count()
+            progress_percentage = startup.get_progress_percentage()
+            return JsonResponse(
+                {
+                    "success": True,
+                    "amount_raised": float(startup.amount_raised),
+                    "investors_count": investors_count,
+                    "progress_percentage": float(progress_percentage),
+                }
+            )
+        except Exception as e:
             logger.error(f"Ошибка при инвестировании: {str(e)}", exc_info=True)
             return JsonResponse(
                 {"success": False, "error": f"Произошла ошибка при инвестировании: {str(e)}"}
