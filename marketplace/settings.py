@@ -254,6 +254,43 @@ CELERY_TIMEZONE = 'UTC'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_BROKER_CONNECTION_RETRY = True
+CELERY_BROKER_CONNECTION_MAX_RETRIES = 10
+
+CELERY_REDIS_SOCKET_KEEPALIVE = True
+CELERY_REDIS_SOCKET_KEEPALIVE_OPTIONS = {
+    1: 1,
+    2: 20,
+    3: 3
+}
+
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'visibility_timeout': 3600,
+    'socket_keepalive': True,
+    'socket_keepalive_options': {
+        1: 1,
+        2: 20,
+        3: 3
+    },
+    'health_check_interval': 30,
+    'retry_on_timeout': True,
+    'max_connections': 50,
+}
+
+CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
+    'socket_keepalive': True,
+    'socket_keepalive_options': {
+        1: 1,
+        2: 20,
+        3: 3
+    },
+    'retry_on_timeout': True,
+    'health_check_interval': 30,
+}
+
+CELERY_WORKER_CANCEL_LONG_RUNNING_TASKS_ON_CONNECTION_LOSS = True
+
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
