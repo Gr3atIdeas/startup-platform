@@ -131,26 +131,21 @@ export default {
   max-width: 1303px;
   margin: 45px auto;
   padding: 0 20px;
-}
 
-@media (max-width: 768px) {
-  .dashboard-grid {
+  @media (max-width: 768px) {
     gap: 20px;
     margin: 30px auto;
     padding: 0 15px;
   }
-}
 
-@media (max-width: 480px) {
-  .dashboard-grid {
+  @media (max-width: 480px) {
     gap: 15px;
     margin: 20px auto;
     padding: 0 10px;
     flex-direction: column;
   }
-}
 
-    .card {
+  .card {
     position: relative;
     border-radius: 10px;
     overflow: visible;
@@ -177,66 +172,63 @@ export default {
       margin: 0;
       color: #fff;
     }
-  }
 
-  @media (max-width: 768px) {
-    .card {
+    @media (max-width: 768px) {
       h3 {
         font-size: 18px;
         line-height: 16px;
       }
     }
-  }
 
-  @media (max-width: 480px) {
-    .card {
+    @media (max-width: 480px) {
       h3 {
         font-size: 16px;
         line-height: 14px;
       }
     }
-  }
-  .card-bg,
-  .news-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 1;
-  }
-  .mirrored {
-    transform: scaleX(-1);
-  }
 
-  .card-overlay {
-    position: absolute;
-    width: 100%;
-    height: 192px;
-    left: 0;
-    bottom: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.25) 0%,
-      rgba(0, 0, 0, 0.55) 100%
-    );
-    filter: blur(27.5px);
-    z-index: 2;
-  }
-  .card-overlay-dark {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    background: linear-gradient(
-      270deg,
-      rgba(0, 0, 0, 0.1) 0%,
-      rgba(0, 0, 0, 0.5) 100%
-    );
-    z-index: 2;
-  }
+    .card-bg,
+    .news-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+    .mirrored {
+      transform: scaleX(-1);
+    }
+
+    .card-overlay {
+      position: absolute;
+      width: 100%;
+      height: 192px;
+      left: 0;
+      bottom: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.25) 0%,
+        rgba(0, 0, 0, 0.55) 100%
+      );
+      filter: blur(27.5px);
+      z-index: 2;
+    }
+    .card-overlay-dark {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      background: linear-gradient(
+        270deg,
+        rgba(0, 0, 0, 0.1) 0%,
+        rgba(0, 0, 0, 0.5) 100%
+      );
+      z-index: 2;
+    }
+
     .card-content {
     position: relative;
     z-index: 3;
@@ -254,10 +246,8 @@ export default {
       justify-content: center;
       padding-left: 60px;
     }
-  }
 
-  @media (max-width: 768px) {
-    .card-content {
+    @media (max-width: 768px) {
       padding: 15px;
       gap: 15px;
 
@@ -265,10 +255,8 @@ export default {
         padding-left: 40px;
       }
     }
-  }
 
-  @media (max-width: 480px) {
-    .card-content {
+    @media (max-width: 480px) {
       padding: 15px;
       gap: 12px;
 
