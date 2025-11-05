@@ -26,7 +26,6 @@
             class="startup-carousel-card" 
             v-for="startup in carouselData" 
             :key="startup.startup_id"
-            ref="cards"
           >
             <img
               :src="startup.logo_url"
@@ -116,20 +115,23 @@ export default {
     updateCardWidth() {
       this.windowWidth = window.innerWidth
       this.$nextTick(() => {
-        if (this.$refs.cards && this.$refs.cards[0]) {
-          const card = this.$refs.cards[0]
-          const cardRect = card.getBoundingClientRect()
-          const track = this.$refs.track || card.parentElement
-          const gap = parseInt(window.getComputedStyle(track).gap) || (this.windowWidth <= 480 ? 20 : this.windowWidth <= 768 ? 30 : 39)
-          this.cardWidth = cardRect.width + gap
-        } else {
-          if (this.windowWidth <= 480) {
-            this.cardWidth = this.windowWidth - 40 + 20
-          } else if (this.windowWidth <= 768) {
-            this.cardWidth = this.windowWidth - 120 + 30
-          } else {
-            this.cardWidth = 840
+        if (this.$refs.track) {
+          const track = this.$refs.track
+          const firstCard = track.querySelector('.startup-carousel-card')
+          if (firstCard) {
+            const cardRect = firstCard.getBoundingClientRect()
+            const gap = parseInt(window.getComputedStyle(track).gap) || (this.windowWidth <= 480 ? 20 : this.windowWidth <= 768 ? 30 : 39)
+            this.cardWidth = cardRect.width + gap
+            return
           }
+        }
+        
+        if (this.windowWidth <= 480) {
+          this.cardWidth = this.windowWidth - 40 + 20
+        } else if (this.windowWidth <= 768) {
+          this.cardWidth = this.windowWidth - 120 + 30
+        } else {
+          this.cardWidth = 840
         }
       })
     },
