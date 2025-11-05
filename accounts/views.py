@@ -5088,7 +5088,7 @@ def main_page_moderator(request):
     carousel_data = []
     
     try:
-        # Сначала попробуем получить стартапы с инвестициями
+        # Сначала получаем стартапы с инвестициями
         startups_with_investments = (
             Startups.objects.filter(status="approved")
             .annotate(
@@ -5112,11 +5112,10 @@ def main_page_moderator(request):
             .order_by("-startup_id")[:6]
         )
         
+        added_startup_ids = set()
+        
         for startup in startups_with_investments:
-            # Получаем обновления для стартапа
             updates = get_startup_updates(startup)
-            
-            # Всегда ведем на создание чата, проверка будет в космочате
             chat_url = f"/cosmochat/?start_chat_with={startup.owner.user_id}" if startup.owner else "/cosmochat/"
             
             carousel_data.append({
@@ -5129,14 +5128,19 @@ def main_page_moderator(request):
                 "chat_url": chat_url,
                 "startup_url": f"/startups/{startup.startup_id}/"
             })
+            added_startup_ids.add(startup.startup_id)
         
-        # Если нет стартапов с инвестициями, показываем просто одобренные стартапы
-        if not carousel_data:
-            approved_startups = Startups.objects.filter(status="approved").order_by("-startup_id")[:6]
+        # Добавляем остальные одобренные стартапы, чтобы в сумме было до 6
+        remaining_count = 6 - len(carousel_data)
+        if remaining_count > 0:
+            approved_startups = (
+                Startups.objects.filter(status="approved")
+                .exclude(startup_id__in=added_startup_ids)
+                .order_by("-startup_id")[:remaining_count]
+            )
+            
             for startup in approved_startups:
                 updates = get_startup_updates(startup)
-                
-                # Всегда ведем на создание чата, проверка будет в космочате
                 chat_url = f"/cosmochat/?start_chat_with={startup.owner.user_id}" if startup.owner else "/cosmochat/"
                 
                 carousel_data.append({
@@ -5149,8 +5153,6 @@ def main_page_moderator(request):
                     "chat_url": chat_url,
                     "startup_url": f"/startups/{startup.startup_id}/"
                 })
-        
-        # Если нет данных, оставляем пустой массив
             
     except Exception as e:
         # В случае ошибки оставляем пустой массив

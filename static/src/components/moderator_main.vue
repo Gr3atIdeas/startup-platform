@@ -130,6 +130,25 @@ export default {
   gap: 30px;
   max-width: 1303px;
   margin: 45px auto;
+  padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    gap: 20px;
+    margin: 30px auto;
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-grid {
+    gap: 15px;
+    margin: 20px auto;
+    padding: 0 10px;
+    flex-direction: column;
+  }
+}
 
     .card {
     position: relative;
@@ -157,6 +176,24 @@ export default {
       line-height: 18px;
       margin: 0;
       color: #fff;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .card {
+      h3 {
+        font-size: 18px;
+        line-height: 16px;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .card {
+      h3 {
+        font-size: 16px;
+        line-height: 14px;
+      }
     }
   }
   .card-bg,
@@ -219,6 +256,28 @@ export default {
     }
   }
 
+  @media (max-width: 768px) {
+    .card-content {
+      padding: 15px;
+      gap: 15px;
+
+      &.left-align {
+        padding-left: 40px;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .card-content {
+      padding: 15px;
+      gap: 12px;
+
+      &.left-align {
+        padding-left: 20px;
+      }
+    }
+  }
+
   .deals-card {
     width: 389px;
     height: 346px;
@@ -276,6 +335,101 @@ export default {
     height: 180px;
   }
 
+  @media (max-width: 1024px) {
+    .deals-card {
+      width: calc(50% - 15px);
+      min-width: 300px;
+    }
+    .applications-card {
+      width: calc(50% - 15px);
+      min-width: 300px;
+    }
+    .news-card {
+      width: 100%;
+    }
+    .image-card-tall {
+      width: calc(33.333% - 20px);
+      min-width: 150px;
+    }
+    .image-card-small-planet {
+      width: calc(33.333% - 20px);
+      min-width: 150px;
+    }
+    .support-card {
+      width: calc(33.333% - 20px);
+      min-width: 150px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .deals-card {
+      width: 100%;
+      height: 280px;
+    }
+    .applications-card {
+      width: 100%;
+      height: 280px;
+    }
+    .news-card {
+      width: 100%;
+      height: 160px;
+    }
+    .image-card-tall {
+      width: calc(50% - 10px);
+      height: 280px;
+    }
+    .image-card-small-planet {
+      width: calc(50% - 10px);
+      height: 180px;
+    }
+    .support-card {
+      width: 100%;
+      height: 160px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .deals-card {
+      width: 100%;
+      height: 250px;
+    }
+    .applications-card {
+      width: 100%;
+      height: 250px;
+    }
+    .news-card {
+      width: 100%;
+      height: 140px;
+      
+      .card-inner {
+        flex-direction: column;
+      }
+      
+      .card-content {
+        width: 100%;
+        padding: 15px;
+      }
+      
+      .news-image {
+        width: 100%;
+        height: 60px;
+        border-radius: 0 0 10px 10px;
+      }
+    }
+    .image-card-tall {
+      width: 100%;
+      height: 200px;
+    }
+    .image-card-small-planet {
+      width: 100%;
+      height: 160px;
+    }
+    .support-card {
+      width: 100%;
+      height: 140px;
+    }
+  }
+
 }
 
 .btn-primary {
@@ -297,6 +451,24 @@ export default {
   &:hover {
     transform: translateY(-2px) !important;
     box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .btn-primary {
+    padding: 10px 28px !important;
+    font-size: 14px !important;
+    height: 36px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-primary {
+    padding: 10px 24px !important;
+    font-size: 14px !important;
+    height: 36px !important;
+    width: 100%;
+    text-align: center;
   }
 }
 </style>

@@ -16,15 +16,17 @@
         <img src="/static/accounts/images/main_page_moderator/chevron-back-circle-outline.svg" alt="Назад" />
       </button>
       
-      <div class="startup-carousel-viewport">
+      <div class="startup-carousel-viewport" ref="viewport">
         <div 
           class="startup-carousel-track"
-          :style="{ transform: `translateX(-${currentIndex * 840}px)` }"
+          ref="track"
+          :style="{ transform: `translateX(-${currentIndex * cardWidth}px)` }"
         >
           <div 
             class="startup-carousel-card" 
             v-for="startup in carouselData" 
             :key="startup.startup_id"
+            ref="cards"
           >
             <img
               :src="startup.logo_url"
@@ -92,10 +94,45 @@ export default {
   },
   data() {
     return {
-      currentIndex: 0
+      currentIndex: 0,
+      cardWidth: 840,
+      windowWidth: typeof window !== 'undefined' ? window.innerWidth : 1920
+    }
+  },
+  mounted() {
+    if (typeof window !== 'undefined') {
+      this.$nextTick(() => {
+        this.updateCardWidth()
+        window.addEventListener('resize', this.updateCardWidth)
+      })
+    }
+  },
+  beforeUnmount() {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', this.updateCardWidth)
     }
   },
   methods: {
+    updateCardWidth() {
+      this.windowWidth = window.innerWidth
+      this.$nextTick(() => {
+        if (this.$refs.cards && this.$refs.cards[0]) {
+          const card = this.$refs.cards[0]
+          const cardRect = card.getBoundingClientRect()
+          const track = this.$refs.track || card.parentElement
+          const gap = parseInt(window.getComputedStyle(track).gap) || (this.windowWidth <= 480 ? 20 : this.windowWidth <= 768 ? 30 : 39)
+          this.cardWidth = cardRect.width + gap
+        } else {
+          if (this.windowWidth <= 480) {
+            this.cardWidth = this.windowWidth - 40 + 20
+          } else if (this.windowWidth <= 768) {
+            this.cardWidth = this.windowWidth - 120 + 30
+          } else {
+            this.cardWidth = 840
+          }
+        }
+      })
+    },
     nextSlide() {
       if (this.currentIndex < this.carouselData.length - 1) {
         this.currentIndex++
@@ -133,6 +170,18 @@ export default {
   max-width: 1303px;
 }
 
+@media (max-width: 768px) {
+  .startup-carousel-section {
+    padding: 30px 15px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-section {
+    padding: 20px 10px 10px;
+  }
+}
+
 .startup-carousel-title {
   margin-bottom: 40px;
   text-align: left;
@@ -151,6 +200,26 @@ export default {
   }
 }
 
+@media (max-width: 768px) {
+  .startup-carousel-title {
+    margin-bottom: 30px;
+
+    h2 {
+      font-size: 40px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-title {
+    margin-bottom: 20px;
+
+    h2 {
+      font-size: 28px;
+    }
+  }
+}
+
 .startup-carousel-container {
   position: relative;
   display: flex;
@@ -160,6 +229,20 @@ export default {
   backdrop-filter: blur(20px);
   padding: 54px 80px;
   margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .startup-carousel-container {
+    padding: 30px 60px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-container {
+    padding: 20px 10px;
+    border-radius: 16px;
+  }
 }
 
 .startup-carousel-viewport {
@@ -173,6 +256,18 @@ export default {
   gap: 39px;
   transition: transform 0.5s ease-in-out;
   width: max-content;
+}
+
+@media (max-width: 768px) {
+  .startup-carousel-track {
+    gap: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-track {
+    gap: 20px;
+  }
 }
 
 .startup-carousel-card {
@@ -195,6 +290,25 @@ export default {
   box-sizing: border-box;
 }
 
+@media (max-width: 768px) {
+  .startup-carousel-card {
+    flex: 0 0 calc(100vw - 160px);
+    width: calc(100vw - 160px);
+    height: auto;
+    min-height: 450px;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-card {
+    flex: 0 0 calc(100vw - 40px);
+    width: calc(100vw - 40px);
+    min-height: 400px;
+    padding: 20px;
+  }
+}
+
 .startup-carousel-card-avatar {
   position: absolute;
   width: 373px;
@@ -204,6 +318,20 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .startup-carousel-card-avatar {
+    width: 250px;
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-card-avatar {
+    width: 180px;
+    height: 180px;
+  }
 }
 
 .startup-carousel-card-content {
@@ -219,6 +347,15 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .startup-carousel-card-title {
@@ -227,6 +364,18 @@ export default {
   color: white;
   margin: 0;
   font-family: 'Unbounded', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .startup-carousel-card-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-card-title {
+    font-size: 22px;
+  }
 }
 
 .startup-carousel-card-investment {
@@ -238,6 +387,14 @@ export default {
   font-weight: 300;
   color: white;
   text-align: right;
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-card-investment {
+    padding: 12px 16px;
+    font-size: 11px;
+    text-align: left;
+  }
 }
 
 .startup-carousel-card-investment-label {
@@ -252,10 +409,25 @@ export default {
   display: block;
 }
 
+@media (max-width: 480px) {
+  .startup-carousel-card-investment-amount {
+    font-size: 14px;
+  }
+}
+
 .startup-carousel-card-footer {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-card-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 .startup-carousel-card-updates {
@@ -274,6 +446,14 @@ export default {
   display: inline-block;
   width: auto;
   max-width: 100%;
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-card-update {
+    padding: 6px 16px;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
 }
 
 .startup-carousel-card-update:last-child {
@@ -323,6 +503,22 @@ export default {
   }
 }
 
+@media (max-width: 480px) {
+  .startup-carousel-card-chat-btn {
+    width: 70px;
+    height: 70px;
+
+    img {
+      width: 28px;
+      height: 28px;
+    }
+
+    span {
+      font-size: 12px;
+    }
+  }
+}
+
 .startup-carousel-card-link-btn {
   padding: 12px 35px;
   background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
@@ -345,6 +541,15 @@ export default {
   &:hover {
     transform: translateY(-2px);
     box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-card-link-btn {
+    padding: 10px 24px;
+    font-size: 14px;
+    height: 36px;
+    width: 100%;
   }
 }
 
@@ -390,11 +595,59 @@ export default {
   right: 20px;
 }
 
+@media (max-width: 768px) {
+  .startup-carousel-btn {
+    width: 50px;
+    height: 50px;
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .startup-carousel-btn--prev {
+    left: 10px;
+  }
+
+  .startup-carousel-btn--next {
+    right: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-btn {
+    width: 40px;
+    height: 40px;
+
+    img {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .startup-carousel-btn--prev {
+    left: 5px;
+  }
+
+  .startup-carousel-btn--next {
+    right: 5px;
+  }
+}
+
 .startup-carousel-dots {
   display: flex;
   justify-content: center;
   gap: 13px;
   margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+  .startup-carousel-dots {
+    gap: 8px;
+    margin-top: 15px;
+  }
 }
 
 .startup-carousel-dot {
