@@ -265,6 +265,7 @@ export default {
       }
     }
   }
+  }
 
   .deals-card {
     width: 389px;
