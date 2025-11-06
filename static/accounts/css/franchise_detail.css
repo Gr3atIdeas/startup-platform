@@ -4604,13 +4604,6 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   display: block;
 }
 
-.detail-info-section-about-block::after {
-  content: "";
-  display: block;
-  clear: both;
-  height: 0;
-  visibility: hidden;
-}
 
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
@@ -4642,7 +4635,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   align-items: center;
   gap: 16px;
   float: right;
-  margin: -50px 0 23px 34px;
+  margin: -70px 0 23px 34px;
   flex-shrink: 0;
 }
 
