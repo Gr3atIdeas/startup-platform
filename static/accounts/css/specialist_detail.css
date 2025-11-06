@@ -4511,11 +4511,9 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .detail-info-section-about-block {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
+  position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .about-title {
@@ -4525,7 +4523,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   line-height: 1.59;
   letter-spacing: -0.02em;
   color: #FFEF2B;
-  margin: 0;
+  margin: 0 0 25px 0;
 }
 
 .about-content {
@@ -4541,6 +4539,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   line-height: 1.29;
   letter-spacing: -0.02em;
   color: #FFFFFF;
+  margin-right: 225px;
 }
 
 .additional-info {
@@ -4622,7 +4621,12 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   display: block;
 }
 
-/* Очистка float для текста с изображениями */
+.detail-info-section-about-block::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 .about-text::after {
   content: "";
   display: table;
@@ -4659,8 +4663,9 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   align-items: center;
   gap: 16px;
   float: right;
-  margin: -50px 0 23px 23px;
+  margin: 0 0 23px 34px;
   clear: right;
+  flex-shrink: 0;
 }
 
 .presentation-image-container {
@@ -4896,13 +4901,17 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   .detail-info-section-presentation-card {
     float: none;
     width: 100%;
-    margin: 0 auto 20px auto;
-    max-width: 300px;
+    margin: 23px auto;
+    max-width: 250px;
     clear: both;
   }
 
   .detail-info-section-about-block {
     width: 100%;
+  }
+
+  .about-text {
+    margin-right: 0;
   }
 
   #comments-section {
@@ -4977,12 +4986,17 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
   .detail-info-section-presentation-card {
     width: 100%;
-    margin: 0 auto;
-    max-width: 300px;
+    margin: 23px auto;
+    max-width: 250px;
+    float: none;
   }
 
   .detail-info-section-about-block {
     width: 100%;
+  }
+
+  .about-text {
+    margin-right: 0;
   }
 
   .info-blocks {
