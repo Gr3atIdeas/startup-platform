@@ -4804,19 +4804,6 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   clear: both;
 }
 
-.detail-info-section-top-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 23px;
-  width: 100%;
-}
-
-.detail-info-section-left-content {
-  width: 100%;
-  position: relative;
-}
-
 .detail-info-section-stage-block {
   display: flex;
   align-items: center;
@@ -4825,7 +4812,9 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   border: 1px solid #FFFFFF;
   border-radius: 50px;
   width: fit-content;
-  flex-shrink: 0;
+  margin-bottom: 23px;
+  float: left;
+  clear: left;
 }
 
 .stage-icon-container {
@@ -4865,8 +4854,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   display: flex;
   flex-direction: column;
   gap: 23px;
-  width: 100%;
   margin-right: 195px;
+  overflow: hidden;
 }
 
 .about-title {
@@ -5009,8 +4998,10 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   flex-direction: column;
   align-items: center;
   gap: 14px;
-  flex-shrink: 0;
+  float: right;
   margin-left: 23px;
+  margin-bottom: 23px;
+  clear: right;
 }
 
 .presentation-image-container {
@@ -5192,20 +5183,11 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
     margin: 0 5px 20px 5px;
   }
 
-  .detail-info-section-top-row {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .detail-info-section-left-content {
-    width: 100%;
-  }
-
   .detail-info-section-stage-block {
+    float: none;
     width: 100%;
     justify-content: center;
-    margin: 0 auto;
+    margin: 0 auto 20px auto;
   }
 
   .detail-info-section-presentation-card {
@@ -5294,31 +5276,24 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
     padding: 5px 8px;
   }
 
-  .detail-info-section-container {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .detail-info-section-left-content {
-    width: 100%;
-    order: 2;
-  }
-
   .detail-info-section-stage-block {
+    float: none;
     width: 100%;
     justify-content: center;
-    margin: 0 auto;
+    margin: 0 auto 20px auto;
   }
 
   .detail-info-section-presentation-card {
+    float: none;
     width: 100%;
     margin: 0 auto 20px auto;
-    order: 1;
     max-width: 300px;
   }
 
   .detail-info-section-about-block {
-    order: 3;
+    width: 100%;
+    margin-right: 0;
+    float: none;
   }
 
   .info-blocks {

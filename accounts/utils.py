@@ -164,6 +164,27 @@ def get_file_url(file_id, entity_id, file_type, entity_type: str = "startup"):
                     except Exception:
                         pass
                     return url
+            
+            entity_root = {
+                "startup": "startups",
+                "franchise": "franchises",
+                "agency": "agencies",
+                "specialist": "specialists",
+            }.get(entity_type or "startup", "startups")
+            
+            if file_type not in ['logo', 'avatar']:
+                fallback_prefix = f"{entity_root}/{entity_id}/{file_type}/{file_id}_"
+                response3 = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=fallback_prefix)
+                if "Contents" in response3 and len(response3["Contents"]) > 0:
+                    key = response3["Contents"][0]["Key"]
+                    url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
+                    try:
+                        cache.set(cache_key, url, 86400)
+                    except Exception:
+                        pass
+                    logger.info(f"Файл найден в fallback пути: {url}")
+                    return url
+            
             logger.warning(f"Файл не найден: prefix={prefix}")
             return None
     except ClientError as e:

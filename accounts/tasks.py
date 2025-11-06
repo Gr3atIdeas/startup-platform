@@ -110,7 +110,9 @@ def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type
     try:
         if file_id is None:
             file_id = str(uuid.uuid4())
-        file_path = f"{entity_type_name}s/{entity_id}/{file_type_name}/{file_id}_{original_filename}"
+        entity_folder = f"{entity_type_name}s" if not entity_type_name.endswith('s') else entity_type_name
+        file_type_folder = f"{file_type_name}s" if file_type_name not in ['logo', 'avatar'] else file_type_name
+        file_path = f"{entity_folder}/{entity_id}/{file_type_folder}/{file_id}_{original_filename}"
         
         logger.info(f"Начало загрузки файла: {file_path}")
         
