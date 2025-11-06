@@ -4539,7 +4539,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   line-height: 1.29;
   letter-spacing: -0.02em;
   color: #FFFFFF;
-  margin-right: 225px;
+  text-align: justify;
 }
 
 .additional-info {
@@ -4666,6 +4666,9 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   margin: 0 0 23px 34px;
   clear: right;
   flex-shrink: 0;
+  shape-outside: margin-box;
+  position: relative;
+  top: 0;
 }
 
 .presentation-image-container {
