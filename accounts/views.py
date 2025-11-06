@@ -3488,7 +3488,7 @@ def create_startup(request):
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но стартап создан.")
                     file_save_errors.append({"field": "catalog_card_image", "error": str(e)})
             
-                creatives = request.FILES.getlist("creatives")
+            creatives = request.FILES.getlist("creatives")
             if not creatives:
                 creatives = form.cleaned_data.get("creatives", [])
                 if creatives and not isinstance(creatives, list):
