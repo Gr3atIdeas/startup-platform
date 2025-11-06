@@ -432,6 +432,16 @@ document.addEventListener('DOMContentLoaded', function () {
       // AJAX submit, чтобы не терялись прикрепленные файлы при серверных ошибках
       try {
         e.preventDefault()
+        
+        var loadingOverlay = document.createElement('div')
+        loadingOverlay.id = 'submission-loading-overlay'
+        loadingOverlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 10000; display: flex; align-items: center; justify-content: center;'
+        var loadingContent = document.createElement('div')
+        loadingContent.style.cssText = 'background: #2a2a2a; padding: 30px 50px; border-radius: 12px; text-align: center; color: #fff; font-family: Unbounded, sans-serif;'
+        loadingContent.innerHTML = '<div style="font-size: 24px; font-weight: 600; margin-bottom: 10px;">Отправка</div><div style="font-size: 14px; color: #aaa;">Пожалуйста, подождите...</div>'
+        loadingOverlay.appendChild(loadingContent)
+        document.body.appendChild(loadingOverlay)
+        
         var formData = new FormData(startupForm)
         var csrfInput = startupForm.querySelector('input[name="csrfmiddlewaretoken"]')
         var csrfToken = csrfInput ? csrfInput.value : null
@@ -444,6 +454,8 @@ document.addEventListener('DOMContentLoaded', function () {
           if (!res.ok) return res.json().then(function (data) { throw data })
           return res.json()
         }).then(function (data) {
+          var loadingOverlay = document.getElementById('submission-loading-overlay')
+          if (loadingOverlay) loadingOverlay.remove()
           if (data && data.success && data.redirect_url) {
             if (data.file_save_errors && data.file_save_errors.length) {
               var generalBox = document.getElementById('formGeneralErrors')
@@ -473,6 +485,8 @@ document.addEventListener('DOMContentLoaded', function () {
             window.location.assign(data.redirect_url)
           }
         }).catch(function (err) {
+          var loadingOverlay = document.getElementById('submission-loading-overlay')
+          if (loadingOverlay) loadingOverlay.remove()
           // показать серверные ошибки без перезагрузки
           var errors = (err && err.errors) || {}
           var nonField = (err && err.non_field_errors) || []

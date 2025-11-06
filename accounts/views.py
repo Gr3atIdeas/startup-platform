@@ -3488,9 +3488,11 @@ def create_startup(request):
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но стартап создан.")
                     file_save_errors.append({"field": "catalog_card_image", "error": str(e)})
             
-            creatives = form.cleaned_data.get("creatives", [])
+            creatives = request.FILES.getlist("creatives")
             if not creatives:
-                creatives = request.FILES.getlist("creatives")
+                creatives = form.cleaned_data.get("creatives", [])
+                if creatives and not isinstance(creatives, list):
+                    creatives = [creatives]
             if creatives:
                 creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
@@ -3498,30 +3500,37 @@ def create_startup(request):
                     if not hasattr(creative_file, "name"):
                         logger.warning(f"Пропущен креатив: {creative_file}")
                         continue
-                    unique_filename = get_unique_filename(creative_file.name, startup.startup_id, "creative")
-                    creative_id = str(uuid.uuid4())
-                    file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{creative_file.name}"
                     try:
-                        logger.info(f"Попытка сохранить креатив по пути: {file_path}")
-                        if not try_save_file(creative_file, file_path):
-                            raise Exception("Не удалось сохранить креатив")
-                        logger.info(f"Креатив успешно сохранён по пути: {file_path}")
-                        creatives_ids.append(creative_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        unique_filename = get_unique_filename(creative_file.name, startup.startup_id, "creative")
+                        creative_id = str(uuid.uuid4())
+                        file_data = creative_file.read()
+                        content_type = getattr(creative_file, 'content_type', 'image/jpeg')
+                        
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                        
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=creative_file.name,
+                            file_content_type=content_type,
+                            entity_type_name='startup',
                             entity_id=startup.startup_id,
-                            file_type=creative_type,
-                            file_url=creative_id,
-                            uploaded_at=timezone.now(),
-                            startup=startup,
-                            original_file_name=unique_filename,
+                            file_type_name='creative',
+                            original_filename=unique_filename,
+                            file_id=creative_id
                         )
-                        logger.info(f"Креатив сохранён: {file_path}")
+                        creatives_ids.append(creative_id)
+                        logger.info(f"Изображение отправлено в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
+                        messages.info(request, f"Изображение {creative_file.name} загружается в фоновом режиме.")
                     except Exception as e:
-                        logger.error(f"Ошибка сохранения креатива: {e}", exc_info=True)
-                        messages.warning(request, "Не удалось сохранить один из креативов, но стартап создан.")
+                        logger.error(f"Ошибка отправки изображения в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить изображение {creative_file.name} на загрузку.")
                         file_save_errors.append({"field": "creatives", "file": getattr(creative_file, "name", ""), "error": str(e)})
             proofs = request.FILES.getlist("proofs")
+            if not proofs:
+                proofs = form.cleaned_data.get("proofs", [])
+                if proofs and not isinstance(proofs, list):
+                    proofs = [proofs]
             if proofs:
                 proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
@@ -3529,28 +3538,31 @@ def create_startup(request):
                     if not hasattr(proof_file, "name"):
                         logger.warning(f"Пропущен пруф: {proof_file}")
                         continue
-                    unique_filename = get_unique_filename(proof_file.name, startup.startup_id, "proof")
-                    proof_id = str(uuid.uuid4())
-                    file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{proof_file.name}"
                     try:
-                        logger.info(f"Попытка сохранить пруф по пути: {file_path}")
-                        if not try_save_file(proof_file, file_path):
-                            raise Exception("Не удалось сохранить документ")
-                        logger.info(f"Пруф успешно сохранён по пути: {file_path}")
-                        proofs_ids.append(proof_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        unique_filename = get_unique_filename(proof_file.name, startup.startup_id, "proof")
+                        proof_id = str(uuid.uuid4())
+                        file_data = proof_file.read()
+                        content_type = getattr(proof_file, 'content_type', 'application/pdf')
+                        
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                        
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=proof_file.name,
+                            file_content_type=content_type,
+                            entity_type_name='startup',
                             entity_id=startup.startup_id,
-                            file_type=proof_type,
-                            file_url=proof_id,
-                            uploaded_at=timezone.now(),
-                            startup=startup,
-                            original_file_name=unique_filename,
+                            file_type_name='proof',
+                            original_filename=unique_filename,
+                            file_id=proof_id
                         )
-                        logger.info(f"Пруф сохранён: {file_path}, оригинальное название: {unique_filename}")
+                        proofs_ids.append(proof_id)
+                        logger.info(f"Документ отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
+                        messages.info(request, f"Документ {proof_file.name} загружается в фоновом режиме.")
                     except Exception as e:
-                        logger.error(f"Ошибка сохранения пруфа: {e}", exc_info=True)
-                        messages.warning(request, "Не удалось сохранить один из документов, но стартап создан.")
+                        logger.error(f"Ошибка отправки документа в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить документ {proof_file.name} на загрузку.")
                         file_save_errors.append({"field": "proofs", "file": getattr(proof_file, "name", ""), "error": str(e)})
             videos = request.FILES.getlist("video")
             if videos:
@@ -3743,53 +3755,79 @@ def create_franchise(request):
                     logger.error(f"Ошибка сохранения изображения карточки франшизы: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но франшиза создана.")
 
-            creatives = form.cleaned_data.get("creatives", [])
+            creatives = request.FILES.getlist("creatives")
+            if not creatives:
+                creatives = form.cleaned_data.get("creatives", [])
+                if creatives and not isinstance(creatives, list):
+                    creatives = [creatives]
             if creatives:
                 creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
                         continue
-                    creative_id = str(uuid.uuid4())
-                    file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{creative_file.name}"
                     try:
-                        default_storage.save(file_path, creative_file)
-                        creatives_ids.append(creative_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        unique_filename = get_unique_filename(creative_file.name, franchise.franchise_id, "creative")
+                        creative_id = str(uuid.uuid4())
+                        file_data = creative_file.read()
+                        content_type = getattr(creative_file, 'content_type', 'image/jpeg')
+                        
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                        
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=creative_file.name,
+                            file_content_type=content_type,
+                            entity_type_name='franchise',
                             entity_id=franchise.franchise_id,
-                            file_type=creative_type,
-                            file_url=creative_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=creative_file.name,
+                            file_type_name='creative',
+                            original_filename=unique_filename,
+                            file_id=creative_id
                         )
-                    except Exception:
-                        messages.warning(request, "Не удалось сохранить один из креативов, но франшиза создана.")
+                        creatives_ids.append(creative_id)
+                        logger.info(f"Изображение франшизы отправлено в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
+                        messages.info(request, f"Изображение {creative_file.name} загружается в фоновом режиме.")
+                    except Exception as e:
+                        logger.error(f"Ошибка отправки изображения франшизы в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить изображение {creative_file.name} на загрузку.")
 
             proofs = request.FILES.getlist("proofs")
+            if not proofs:
+                proofs = form.cleaned_data.get("proofs", [])
+                if proofs and not isinstance(proofs, list):
+                    proofs = [proofs]
             if proofs:
                 proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
                         continue
-                    proof_id = str(uuid.uuid4())
-                    file_path = f"franchises/{franchise.franchise_id}/proofs/{proof_id}_{proof_file.name}"
                     try:
-                        default_storage.save(file_path, proof_file)
-                        proofs_ids.append(proof_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        unique_filename = get_unique_filename(proof_file.name, franchise.franchise_id, "proof")
+                        proof_id = str(uuid.uuid4())
+                        file_data = proof_file.read()
+                        content_type = getattr(proof_file, 'content_type', 'application/pdf')
+                        
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                        
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=proof_file.name,
+                            file_content_type=content_type,
+                            entity_type_name='franchise',
                             entity_id=franchise.franchise_id,
-                            file_type=proof_type,
-                            file_url=proof_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=proof_file.name,
+                            file_type_name='proof',
+                            original_filename=unique_filename,
+                            file_id=proof_id
                         )
-                    except Exception:
-                        messages.warning(request, "Не удалось сохранить один из документов, но франшиза создана.")
+                        proofs_ids.append(proof_id)
+                        logger.info(f"Документ франшизы отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
+                        messages.info(request, f"Документ {proof_file.name} загружается в фоновом режиме.")
+                    except Exception as e:
+                        logger.error(f"Ошибка отправки документа франшизы в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить документ {proof_file.name} на загрузку.")
 
             videos = request.FILES.getlist("video")
             if videos:
@@ -3919,38 +3957,57 @@ def create_agency(request):
 
             logo_ids, creatives_ids, proofs_ids, video_ids = [], [], [], []
 
-            def save_file_set(files, type_name, subdir, ids_collector):
+            def save_file_set(files, type_name, subdir, ids_collector, entity_type_name='agency', entity_id=None):
+                if entity_id is None:
+                    entity_id = agency.agency_id
                 file_type, _ = FileTypes.objects.get_or_create(type_name=type_name)
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name=entity_type_name)
                 for f in files:
                     if not hasattr(f, "name"):
                         continue
-                    file_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(f.name)[0]
-                    ext = os.path.splitext(f.name)[1]
-                    safe_base = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base) + ext
-                    file_path = f"agencies/{agency.agency_id}/{subdir}/{file_id}_{safe_name}"
                     try:
-                        default_storage.save(file_path, f)
-                        ids_collector.append(file_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
-                            entity_id=agency.agency_id,
-                            file_type=file_type,
-                            file_url=file_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=f.name,
+                        file_id = str(uuid.uuid4())
+                        unique_filename = get_unique_filename(f.name, entity_id, type_name)
+                        file_data = f.read()
+                        content_type = getattr(f, 'content_type', 'image/jpeg' if type_name == 'creative' else 'application/pdf')
+                        
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                        
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=f.name,
+                            file_content_type=content_type,
+                            entity_type_name=entity_type_name,
+                            entity_id=entity_id,
+                            file_type_name=type_name,
+                            original_filename=unique_filename,
+                            file_id=file_id
                         )
-                    except Exception:
-                        pass
+                        ids_collector.append(file_id)
+                        logger.info(f"Файл {entity_type_name} ({type_name}) отправлен в очередь Celery: {f.name}, размер: {len(file_data)} байт")
+                        messages.info(request, f"Файл {f.name} загружается в фоновом режиме.")
+                    except Exception as e:
+                        logger.error(f"Ошибка отправки файла {entity_type_name} ({type_name}) в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить файл {f.name} на загрузку.")
 
             logo = form.cleaned_data.get("logo")
             if logo:
-                save_file_set([logo], "logo", "logos", logo_ids)
-            save_file_set(form.cleaned_data.get("creatives", []), "creative", "creatives", creatives_ids)
-            save_file_set(form.cleaned_data.get("proofs", []), "proof", "proofs", proofs_ids)
+                save_file_set([logo], "logo", "logos", logo_ids, 'agency', agency.agency_id)
+            creatives = request.FILES.getlist("creatives")
+            if not creatives:
+                creatives = form.cleaned_data.get("creatives", [])
+                if creatives and not isinstance(creatives, list):
+                    creatives = [creatives]
+            if creatives:
+                save_file_set(creatives, "creative", "creatives", creatives_ids, 'agency', agency.agency_id)
+            proofs = request.FILES.getlist("proofs")
+            if not proofs:
+                proofs = form.cleaned_data.get("proofs", [])
+                if proofs and not isinstance(proofs, list):
+                    proofs = [proofs]
+            if proofs:
+                save_file_set(proofs, "proof", "proofs", proofs_ids, 'agency', agency.agency_id)
             
             videos = request.FILES.getlist("video")
             if videos:
@@ -4095,37 +4152,56 @@ def create_specialist(request):
                     messages.warning(request, "Не удалось обработать временные медиа-файлы.")
 
             logo_ids, creatives_ids, proofs_ids, video_ids = [], [], [], []
-            def save_file_set(files, type_name, subdir, ids_collector):
+            def save_file_set(files, type_name, subdir, ids_collector, entity_type_name='specialist', entity_id=None):
+                if entity_id is None:
+                    entity_id = spec.specialist_id
                 file_type, _ = FileTypes.objects.get_or_create(type_name=type_name)
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name=entity_type_name)
                 for f in files:
                     if not hasattr(f, "name"):
                         continue
-                    file_id = str(uuid.uuid4())
-                    base_name = os.path.splitext(f.name)[0]
-                    ext = os.path.splitext(f.name)[1]
-                    safe_base = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base) + ext
-                    file_path = f"specialists/{spec.specialist_id}/{subdir}/{file_id}_{safe_name}"
                     try:
-                        default_storage.save(file_path, f)
-                        ids_collector.append(file_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
-                            entity_id=spec.specialist_id,
-                            file_type=file_type,
-                            file_url=file_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=f.name,
+                        file_id = str(uuid.uuid4())
+                        unique_filename = get_unique_filename(f.name, entity_id, type_name)
+                        file_data = f.read()
+                        content_type = getattr(f, 'content_type', 'image/jpeg' if type_name == 'creative' else 'application/pdf')
+                        
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                        
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=f.name,
+                            file_content_type=content_type,
+                            entity_type_name=entity_type_name,
+                            entity_id=entity_id,
+                            file_type_name=type_name,
+                            original_filename=unique_filename,
+                            file_id=file_id
                         )
-                    except Exception:
-                        pass
+                        ids_collector.append(file_id)
+                        logger.info(f"Файл {entity_type_name} ({type_name}) отправлен в очередь Celery: {f.name}, размер: {len(file_data)} байт")
+                        messages.info(request, f"Файл {f.name} загружается в фоновом режиме.")
+                    except Exception as e:
+                        logger.error(f"Ошибка отправки файла {entity_type_name} ({type_name}) в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось отправить файл {f.name} на загрузку.")
             logo = form.cleaned_data.get("logo")
             if logo:
-                save_file_set([logo], "logo", "logos", logo_ids)
-            save_file_set(form.cleaned_data.get("creatives", []), "creative", "creatives", creatives_ids)
-            save_file_set(form.cleaned_data.get("proofs", []), "proof", "proofs", proofs_ids)
+                save_file_set([logo], "logo", "logos", logo_ids, 'specialist', spec.specialist_id)
+            creatives = request.FILES.getlist("creatives")
+            if not creatives:
+                creatives = form.cleaned_data.get("creatives", [])
+                if creatives and not isinstance(creatives, list):
+                    creatives = [creatives]
+            if creatives:
+                save_file_set(creatives, "creative", "creatives", creatives_ids, 'specialist', spec.specialist_id)
+            proofs = request.FILES.getlist("proofs")
+            if not proofs:
+                proofs = form.cleaned_data.get("proofs", [])
+                if proofs and not isinstance(proofs, list):
+                    proofs = [proofs]
+            if proofs:
+                save_file_set(proofs, "proof", "proofs", proofs_ids, 'specialist', spec.specialist_id)
             
             videos = request.FILES.getlist("video")
             if videos:

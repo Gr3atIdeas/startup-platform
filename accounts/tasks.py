@@ -106,14 +106,17 @@ def upload_video_to_s3(self, video_data, video_name, video_content_type, entity_
 
 
 @shared_task(bind=True, max_retries=3)
-def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type_name, entity_id, file_type_name, original_filename):
+def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type_name, entity_id, file_type_name, original_filename, file_id=None):
     try:
-        file_id = str(uuid.uuid4())
+        if file_id is None:
+            file_id = str(uuid.uuid4())
         file_path = f"{entity_type_name}s/{entity_id}/{file_type_name}/{file_id}_{original_filename}"
         
         logger.info(f"Начало загрузки файла: {file_path}")
         
         from io import BytesIO
+        if isinstance(file_data, str):
+            file_data = base64.b64decode(file_data)
         file_obj = BytesIO(file_data)
         
         if not try_save_file_to_s3(file_obj, file_path, file_content_type):

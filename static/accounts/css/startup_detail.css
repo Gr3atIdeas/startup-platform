@@ -4805,10 +4805,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .detail-info-section-left-content {
-  display: flex;
-  flex-direction: column;
-  gap: 23px;
-  margin-right: 200px;
+  width: 100%;
+  position: relative;
 }
 
 .detail-info-section-stage-block {
@@ -4819,6 +4817,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   border: 1px solid #FFFFFF;
   border-radius: 50px;
   width: fit-content;
+  margin-bottom: 23px;
 }
 
 .stage-icon-container {
@@ -4859,6 +4858,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   flex-direction: column;
   gap: 23px;
   width: 100%;
+  overflow: hidden;
 }
 
 .about-title {
@@ -5004,6 +5004,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   float: right;
   margin-left: 23px;
   margin-bottom: 20px;
+  margin-top: 0;
 }
 
 .presentation-image-container {
@@ -5185,34 +5186,25 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
     margin: 0 5px 20px 5px;
   }
 
-  .detail-info-section-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
   .detail-info-section-left-content {
     width: 100%;
-    margin-right: 0;
-    order: 2;
   }
 
   .detail-info-section-stage-block {
     width: 100%;
     justify-content: center;
-    margin: 0 auto;
+    margin: 0 auto 20px auto;
   }
 
   .detail-info-section-presentation-card {
     width: 100%;
     float: none;
     margin: 0 auto 20px auto;
-    order: 1;
     max-width: 250px;
   }
 
   .detail-info-section-about-block {
-    order: 3;
+    width: 100%;
   }
 
   .info-blocks {

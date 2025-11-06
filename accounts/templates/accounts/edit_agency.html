@@ -61,6 +61,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitButton.textContent = 'Отправка...';
             }
             
+            var loadingOverlay = document.createElement('div');
+            loadingOverlay.id = 'submission-loading-overlay';
+            loadingOverlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 10000; display: flex; align-items: center; justify-content: center;';
+            var loadingContent = document.createElement('div');
+            loadingContent.style.cssText = 'background: #2a2a2a; padding: 30px 50px; border-radius: 12px; text-align: center; color: #fff; font-family: Unbounded, sans-serif;';
+            loadingContent.innerHTML = '<div style="font-size: 24px; font-weight: 600; margin-bottom: 10px;">Отправка</div><div style="font-size: 14px; color: #aaa;">Пожалуйста, подождите...</div>';
+            loadingOverlay.appendChild(loadingContent);
+            document.body.appendChild(loadingOverlay);
+            
             const fileInputIds = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input', 'id_catalog_card_image_input'];
             fileInputIds.forEach(inputId => {
                 const input = document.getElementById(inputId);
@@ -79,6 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const logoInput = document.getElementById('id_logo_input');
             
             if (creativesInput && creativesInput.files.length > 10) {
+                var loadingOverlay = document.getElementById('submission-loading-overlay');
+                if (loadingOverlay) loadingOverlay.remove();
                 alert('Максимально 10 изображений');
                 window.isSubmittingAgency = false;
                 if (submitButton) {
@@ -89,6 +100,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             if (proofsInput && proofsInput.files.length > 10) {
+                var loadingOverlay = document.getElementById('submission-loading-overlay');
+                if (loadingOverlay) loadingOverlay.remove();
                 alert('Максимально 10 документов');
                 window.isSubmittingAgency = false;
                 if (submitButton) {
@@ -99,6 +112,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             if (videoInput && videoInput.files.length > 3) {
+                var loadingOverlay = document.getElementById('submission-loading-overlay');
+                if (loadingOverlay) loadingOverlay.remove();
                 alert('Максимально 3 видео');
                 window.isSubmittingAgency = false;
                 if (submitButton) {
@@ -127,6 +142,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then(data => {
+                var loadingOverlay = document.getElementById('submission-loading-overlay');
+                if (loadingOverlay) loadingOverlay.remove();
                 if (data.success) {
                     if (data.redirect_url) {
                         window.location.href = data.redirect_url;
@@ -142,6 +159,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
+                var loadingOverlay = document.getElementById('submission-loading-overlay');
+                if (loadingOverlay) loadingOverlay.remove();
                 alert('Ошибка отправки формы: ' + error.message);
                 // Разблокируем форму при ошибке
                 window.isSubmittingAgency = false;
