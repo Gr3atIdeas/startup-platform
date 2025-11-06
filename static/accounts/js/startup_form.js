@@ -566,12 +566,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var ticking=false;return function(){if(!ticking){window.requestAnimationFrame(()=>{fn();ticking=false});ticking=true}}}
   // Consents strict lock
   var doc1Read=false, doc2Read=false;
-  var currentDocNumber=null; // 1 или 2 — какой документ открыт сейчас
+  var currentDocNumber=null;
   function setConsentsState(){
     var r=document.getElementById('id_agree_rules');
     var d=document.getElementById('id_agree_data_processing');
-    if(r){ if(doc1Read){ r.removeAttribute('disabled'); } else { r.setAttribute('disabled','disabled'); r.checked=false; } }
-    if(d){ if(doc2Read){ d.removeAttribute('disabled'); } else { d.setAttribute('disabled','disabled'); d.checked=false; } }
+    if(r){ r.removeAttribute('disabled'); }
+    if(d){ d.removeAttribute('disabled'); }
   }
   setConsentsState();
   // Кнопка выбора лого — триггерит скрытый input
@@ -740,14 +740,7 @@ document.addEventListener('DOMContentLoaded', function () {
 Я ознакомлен с Политикой конфиденциальности и принимаю её условия. Я понимаю, что могу отозвать согласие в любой момент.`
     inner.textContent = docNumber===1 ? policyText : consentText
     content.appendChild(inner)
-    confirm.disabled=true
-    function tryUnlock(){
-      var atBottom = inner.scrollTop + inner.clientHeight >= inner.scrollHeight - 2
-      if(atBottom){ confirm.disabled=false; return true }
-      return false
-    }
-    inner.addEventListener('scroll', tryUnlock)
-    setTimeout(function(){ if(inner.scrollHeight<=inner.clientHeight+2){ confirm.disabled=false } }, 0)
+    confirm.disabled=false
     modal.classList.add('open')
     modal.style.visibility='visible'; modal.style.opacity='1'
     confirm.onclick=function(){
@@ -762,7 +755,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var cb2=document.getElementById('id_agree_data_processing')
         if(cb2){ cb2.checked=true; cb2.dispatchEvent(new Event('change')) }
       }
-      setConsentsState()
     }
     var close=document.getElementById('consentCloseBtn')
     if(close) close.onclick=function(){ modal.classList.remove('open'); modal.style.visibility='hidden'; modal.style.opacity='0' }
