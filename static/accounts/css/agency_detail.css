@@ -1306,7 +1306,7 @@ a:hover {
 
 .tab-navigation {
   display: flex;
-  gap: 15px;
+  gap: 65px;
   align-self: stretch;
   margin-bottom: 25px;
   padding-bottom: 15px;
