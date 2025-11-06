@@ -8,7 +8,21 @@ def convert_newlines_to_html(text):
     if not text:
         return text
     
-    return text.replace('\n', '<br>')
+    text = text.replace('\r\n', '\n').replace('\r', '\n')
+    text = text.replace('\n', '<br>')
+    
+    return text
+
+
+def convert_html_to_newlines(text):
+    """Преобразует HTML-теги <br> обратно в переносы строк для отображения в textarea"""
+    if not text:
+        return text
+    
+    import re
+    text = re.sub(r'<br\s*/?>', '\n', text, flags=re.IGNORECASE)
+    
+    return text
 class RegisterForm(forms.ModelForm):
     hp_field = forms.CharField(required=False, label="", widget=forms.TextInput(attrs={
         "autocomplete": "off",
@@ -165,6 +179,11 @@ class StartupEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        if self.instance and self.instance.pk and hasattr(self.instance, 'description'):
+            if self.instance.description:
+                self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
+        
         allowed_startup_directions = [
             'Technology', 'Finance', 'Education', 'Entertainment',
             'Fashion', 'Food', 'Gaming', 'Real Estate', 'Travel', 'Agriculture',
@@ -532,6 +551,11 @@ class FranchiseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        if self.instance and self.instance.pk and hasattr(self.instance, 'description'):
+            if self.instance.description:
+                self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
+        
         try:
             self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
         except Exception as e:
@@ -645,6 +669,11 @@ class AgencyForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        if self.instance and self.instance.pk and hasattr(self.instance, 'description'):
+            if self.instance.description:
+                self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
+        
         try:
             self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
         except Exception as e:
@@ -748,6 +777,11 @@ class SpecialistForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        if self.instance and self.instance.pk and hasattr(self.instance, 'description'):
+            if self.instance.description:
+                self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
+        
         try:
             self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
         except Exception as e:
@@ -1131,20 +1165,27 @@ class AgencyEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        if self.instance and self.instance.pk:
+            if hasattr(self.instance, 'description') and self.instance.description:
+                self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
+            
+            if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
+                self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects', 12)
+                self.fields['agency_category'].initial = self.instance.customization_data.get('agency_category', '')
+                agency_desc = self.instance.customization_data.get('agency_description', '')
+                if agency_desc:
+                    self.fields['agency_description'].initial = convert_html_to_newlines(agency_desc)
+                agency_info = self.instance.customization_data.get('agency_additional_info', '')
+                if agency_info:
+                    self.fields['agency_additional_info'].initial = convert_html_to_newlines(agency_info)
+                self.fields['agency_services'].initial = self.instance.customization_data.get('agency_services', '')
+                self.fields['agency_pitch_deck_url'].initial = self.instance.customization_data.get('agency_pitch_deck_url', '')
+        
         try:
             self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
         except Exception as e:
             self.fields["planet_image"].choices = []
-        
-        # Инициализируем successful_projects из customization_data
-        if self.instance and self.instance.pk:
-            if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
-                self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects', 12)
-                self.fields['agency_category'].initial = self.instance.customization_data.get('agency_category', '')
-                self.fields['agency_description'].initial = self.instance.customization_data.get('agency_description', '')
-                self.fields['agency_additional_info'].initial = self.instance.customization_data.get('agency_additional_info', '')
-                self.fields['agency_services'].initial = self.instance.customization_data.get('agency_services', '')
-                self.fields['agency_pitch_deck_url'].initial = self.instance.customization_data.get('agency_pitch_deck_url', '')
 
     def clean_description(self):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
@@ -1236,11 +1277,18 @@ class SpecialistEditForm(forms.ModelForm):
         
         # Инициализируем successful_projects из customization_data
         if self.instance and self.instance.pk:
+            if hasattr(self.instance, 'description') and self.instance.description:
+                self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
+            
             if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
                 self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects', 12)
                 self.fields['specialist_category'].initial = self.instance.customization_data.get('specialist_category', '')
-                self.fields['specialist_description'].initial = self.instance.customization_data.get('specialist_description', '')
-                self.fields['specialist_additional_info'].initial = self.instance.customization_data.get('specialist_additional_info', '')
+                specialist_desc = self.instance.customization_data.get('specialist_description', '')
+                if specialist_desc:
+                    self.fields['specialist_description'].initial = convert_html_to_newlines(specialist_desc)
+                specialist_info = self.instance.customization_data.get('specialist_additional_info', '')
+                if specialist_info:
+                    self.fields['specialist_additional_info'].initial = convert_html_to_newlines(specialist_info)
 
     def clean_description(self):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
