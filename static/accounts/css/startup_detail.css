@@ -4876,6 +4876,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   letter-spacing: -0.02em;
   color: #FFFFFF;
   text-align: justify;
+  overflow-wrap: break-word;
 }
 
 .additional-info {
@@ -4960,13 +4961,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .detail-info-section-about-block::after {
   content: "";
   display: table;
-  clear: both;
-}
-
-.about-text::after {
-  content: "";
-  display: table;
-  clear: both;
+  clear: right;
 }
 
 /* Адаптивность для мобильных устройств */
@@ -4999,12 +4994,10 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   align-items: center;
   gap: 16px;
   float: right;
-  margin: 0 0 23px 34px;
-  clear: right;
+  margin: -23px 0 23px 34px;
   flex-shrink: 0;
   shape-outside: margin-box;
-  position: relative;
-  top: 0;
+  clear: right;
 }
 
 .presentation-image-container {
