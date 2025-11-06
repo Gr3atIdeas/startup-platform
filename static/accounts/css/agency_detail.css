@@ -5052,8 +5052,9 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .about-text img {
-  max-height: 400px;
-  object-fit: cover;
+  width: 100%;
+  max-height: none;
+  object-fit: contain;
 }
 
 .about-text video {
@@ -5076,7 +5077,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   }
   
   .about-text img {
-    max-height: 300px;
+    width: 100%;
+    max-height: none;
   }
   
   .about-text video {

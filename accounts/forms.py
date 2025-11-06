@@ -1,6 +1,14 @@
 from django import forms
 from .models import Comments, Directions, Roles, Startups, StartupStages, Users, ChatConversations, TransactionTypes, UserVotes, SupportTicket, Franchises, Agencies, Specialists
 from .utils import get_planet_urls
+
+
+def convert_newlines_to_html(text):
+    """Преобразует переносы строк в HTML-теги <br>"""
+    if not text:
+        return text
+    
+    return text.replace('\n', '<br>')
 class RegisterForm(forms.ModelForm):
     hp_field = forms.CharField(required=False, label="", widget=forms.TextInput(attrs={
         "autocomplete": "off",
@@ -128,7 +136,9 @@ class StartupEditForm(forms.ModelForm):
     def clean_description(self):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
-        return description  # Возвращаем как есть, без экранирования
+        if description:
+            description = convert_newlines_to_html(description)
+        return description
     
     class Meta:
         model = Startups
@@ -531,7 +541,9 @@ class FranchiseForm(forms.ModelForm):
     def clean_description(self):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
-        return description  # Возвращаем как есть, без экранирования
+        if description:
+            description = convert_newlines_to_html(description)
+        return description
 
     class Meta:
         model = Franchises
@@ -642,7 +654,9 @@ class AgencyForm(forms.ModelForm):
     def clean_description(self):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
-        return description  # Возвращаем как есть, без экранирования
+        if description:
+            description = convert_newlines_to_html(description)
+        return description
 
     class Meta:
         model = Agencies
@@ -743,7 +757,9 @@ class SpecialistForm(forms.ModelForm):
     def clean_description(self):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
-        return description  # Возвращаем как есть, без экранирования
+        if description:
+            description = convert_newlines_to_html(description)
+        return description
 
     class Meta:
         model = Specialists
@@ -1032,7 +1048,9 @@ class FranchiseEditForm(forms.ModelForm):
     def clean_description(self):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
-        return description  # Возвращаем как есть, без экранирования
+        if description:
+            description = convert_newlines_to_html(description)
+        return description
 
 
 class AgencyEditForm(forms.ModelForm):
@@ -1131,7 +1149,9 @@ class AgencyEditForm(forms.ModelForm):
     def clean_description(self):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
-        return description  # Возвращаем как есть, без экранирования
+        if description:
+            description = convert_newlines_to_html(description)
+        return description
 
 
 class SpecialistEditForm(forms.ModelForm):
@@ -1225,4 +1245,6 @@ class SpecialistEditForm(forms.ModelForm):
     def clean_description(self):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
-        return description  # Возвращаем как есть, без экранирования
+        if description:
+            description = convert_newlines_to_html(description)
+        return description
