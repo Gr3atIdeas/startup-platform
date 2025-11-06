@@ -4443,15 +4443,10 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   position: relative;
 }
 
-.detail-info-section-container::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
 .detail-info-section-left-column {
-  width: 100%;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 }
 
 .detail-info-section-stage-block {
@@ -4462,7 +4457,6 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   border: 1px solid #FFFFFF;
   border-radius: 50px;
   width: fit-content;
-  margin-bottom: 25px;
 }
 
 .stage-icon-container {
@@ -4502,7 +4496,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   display: flex;
   flex-direction: column;
   gap: 25px;
-  margin-right: 225px;
+  width: 100%;
+  overflow: hidden;
 }
 
 .about-title {
@@ -4646,8 +4641,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   align-items: center;
   gap: 16px;
   float: right;
-  margin-left: 34px;
-  margin-bottom: 20px;
+  margin: 0 0 23px 23px;
   clear: right;
 }
 
@@ -4869,10 +4863,26 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
     padding: 15px 10px;
   }
 
+  .detail-info-section-top-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .detail-info-section-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .detail-info-section-left-column {
+    width: 100%;
+  }
+
   .detail-info-section-stage-block {
     width: 100%;
     justify-content: center;
-    margin: 0 auto 20px auto;
+    margin: 0 auto;
   }
 
   .detail-info-section-presentation-card {
@@ -4880,11 +4890,11 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
     width: 100%;
     margin: 0 auto 20px auto;
     max-width: 300px;
+    clear: both;
   }
 
   .detail-info-section-about-block {
     width: 100%;
-    margin-right: 0;
   }
 
   #comments-section {

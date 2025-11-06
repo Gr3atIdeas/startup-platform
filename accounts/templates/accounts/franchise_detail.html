@@ -242,6 +242,18 @@
                   <div class="stage-value">{{ franchise.investment_size|default:0|floatformat:0|intcomma }} ₽</div>
                 </div>
 
+                <div class="detail-info-section-presentation-card">
+                  <div class="presentation-image-container">
+                    <div class="presentation-placeholder"></div>
+                  </div>
+                  <h3 class="presentation-title">Презентация</h3>
+                  {% if franchise.pitch_deck_url %}
+                    <a href="{{ franchise.pitch_deck_url }}" target="_blank" class="presentation-button">Смотреть</a>
+                  {% else %}
+                    <button class="presentation-button" disabled>Смотреть</button>
+                  {% endif %}
+                </div>
+
                 <div class="detail-info-section-about-block">
                   <h3 class="about-title">О франшизе</h3>
                   <div class="about-content">
@@ -256,18 +268,6 @@
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div class="detail-info-section-presentation-card">
-                <div class="presentation-image-container">
-                  <div class="presentation-placeholder"></div>
-                </div>
-                <h3 class="presentation-title">Презентация</h3>
-                {% if franchise.pitch_deck_url %}
-                  <a href="{{ franchise.pitch_deck_url }}" target="_blank" class="presentation-button">Смотреть</a>
-                {% else %}
-                  <button class="presentation-button" disabled>Смотреть</button>
-                {% endif %}
               </div>
             </div>
           </div>

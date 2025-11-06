@@ -251,6 +251,18 @@
                   <div class="stage-value">{{ startup.stage.stage_name|translate_stage }}</div>
                 </div>
 
+                <div class="detail-info-section-presentation-card">
+                  <div class="presentation-image-container">
+                    <div class="presentation-placeholder"></div>
+                  </div>
+                  <h3 class="presentation-title">Презентация</h3>
+                  {% if startup.pitch_deck_url %}
+                    <a href="{{ startup.pitch_deck_url }}" target="_blank" class="presentation-button">Смотреть</a>
+                  {% else %}
+                    <button class="presentation-button" disabled>Смотреть</button>
+                  {% endif %}
+                </div>
+
                 <div class="detail-info-section-about-block">
                   <h3 class="about-title">О проекте</h3>
                   <div class="about-content">
@@ -265,18 +277,6 @@
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div class="detail-info-section-presentation-card">
-                <div class="presentation-image-container">
-                  <div class="presentation-placeholder"></div>
-                </div>
-                <h3 class="presentation-title">Презентация</h3>
-                {% if startup.pitch_deck_url %}
-                  <a href="{{ startup.pitch_deck_url }}" target="_blank" class="presentation-button">Смотреть</a>
-                {% else %}
-                  <button class="presentation-button" disabled>Смотреть</button>
-                {% endif %}
               </div>
             </div>
           </div>
