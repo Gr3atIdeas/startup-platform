@@ -4863,8 +4863,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .about-content {
-  display: flex;
-  flex-direction: column;
+  display: block;
   gap: 13px;
 }
 
@@ -4877,10 +4876,13 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   color: #FFFFFF;
   text-align: justify;
   overflow-wrap: break-word;
+  padding-right: 0;
+  margin-right: 0;
 }
 
 .additional-info {
   margin-top: 13px;
+  clear: none;
 }
 
 .additional-info p {
@@ -4989,7 +4991,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   align-items: center;
   gap: 16px;
   float: right;
-  margin: -70px 0 23px 34px;
+  margin: -85px 0 23px 34px;
   flex-shrink: 0;
 }
 
