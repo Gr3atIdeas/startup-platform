@@ -4449,6 +4449,14 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   clear: both;
 }
 
+.detail-info-section-top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 23px;
+  width: 100%;
+}
+
 .detail-info-section-left-content {
   width: 100%;
   position: relative;
@@ -4462,7 +4470,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   border: 1px solid #FFFFFF;
   border-radius: 50px;
   width: fit-content;
-  margin-bottom: 23px;
+  flex-shrink: 0;
 }
 
 .stage-icon-container {
@@ -4503,7 +4511,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   flex-direction: column;
   gap: 23px;
   width: 100%;
-  overflow: hidden;
+  margin-right: 195px;
 }
 
 .about-title {
@@ -4646,10 +4654,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   flex-direction: column;
   align-items: center;
   gap: 14px;
-  float: right;
+  flex-shrink: 0;
   margin-left: 23px;
-  margin-bottom: 20px;
-  margin-top: 0;
 }
 
 .presentation-image-container {
@@ -4868,6 +4874,29 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   .tabbed-content-wrapper {
     margin: 0 5px 20px 5px;
     padding: 15px 10px;
+  }
+
+  .detail-info-section-top-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .detail-info-section-stage-block {
+    width: 100%;
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  .detail-info-section-presentation-card {
+    width: 100%;
+    margin: 0 auto;
+    max-width: 250px;
+  }
+
+  .detail-info-section-about-block {
+    width: 100%;
+    margin-right: 0;
   }
 
   #comments-section {
