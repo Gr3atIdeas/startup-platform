@@ -3757,7 +3757,7 @@ def create_franchise(request):
 
             creatives = request.FILES.getlist("creatives")
             if not creatives:
-            creatives = form.cleaned_data.get("creatives", [])
+                creatives = form.cleaned_data.get("creatives", [])
                 if creatives and not isinstance(creatives, list):
                     creatives = [creatives]
             if creatives:
