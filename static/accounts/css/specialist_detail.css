@@ -4624,8 +4624,10 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .detail-info-section-about-block::after {
   content: "";
-  display: table;
-  clear: right;
+  display: block;
+  clear: both;
+  height: 0;
+  visibility: hidden;
 }
 
 /* Адаптивность для мобильных устройств */
@@ -4658,10 +4660,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   align-items: center;
   gap: 16px;
   float: right;
-  margin: -23px 0 23px 34px;
-  clear: right;
+  margin: -50px 0 23px 34px;
   flex-shrink: 0;
-  shape-outside: margin-box;
 }
 
 .presentation-image-container {
@@ -5004,8 +5004,10 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 /* Очистка float для обтекания */
 .detail-info-section-about-block::after {
   content: "";
-  display: table;
-  clear: right;
+  display: block;
+  clear: both;
+  height: 0;
+  visibility: hidden;
 }
 
 /* Стили для медиа-элементов в описании */
