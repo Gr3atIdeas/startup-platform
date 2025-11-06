@@ -4871,13 +4871,71 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   font-size: 13px;
-  line-height: 1.29;
+  line-height: 1.6;
   letter-spacing: -0.02em;
   color: #FFFFFF;
   text-align: justify;
   overflow-wrap: break-word;
   padding-right: 0;
   margin-right: 0;
+  white-space: pre-wrap;
+}
+
+.about-text p {
+  margin: 0 0 16px 0;
+  line-height: 1.6;
+}
+
+.about-text p:last-child {
+  margin-bottom: 0;
+}
+
+.about-text br {
+  line-height: 1.6;
+}
+
+.about-text ul,
+.about-text ol {
+  margin: 0 0 16px 0;
+  padding-left: 24px;
+  line-height: 1.6;
+}
+
+.about-text li {
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.about-text h1,
+.about-text h2,
+.about-text h3,
+.about-text h4,
+.about-text h5,
+.about-text h6 {
+  margin: 20px 0 12px 0;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #FFEF2B;
+}
+
+.about-text h1:first-child,
+.about-text h2:first-child,
+.about-text h3:first-child,
+.about-text h4:first-child,
+.about-text h5:first-child,
+.about-text h6:first-child {
+  margin-top: 0;
+}
+
+.about-text strong,
+.about-text b {
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.about-text em,
+.about-text i {
+  font-style: italic;
 }
 
 .additional-info {
@@ -4886,7 +4944,12 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .additional-info p {
-  margin: 0 0 8px 0;
+  margin: 0 0 16px 0;
+  line-height: 1.6;
+}
+
+.additional-info p:last-child {
+  margin-bottom: 0;
 }
 
 .additional-info strong {
