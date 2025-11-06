@@ -3488,7 +3488,7 @@ def create_startup(request):
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но стартап создан.")
                     file_save_errors.append({"field": "catalog_card_image", "error": str(e)})
             
-                creatives = request.FILES.getlist("creatives")
+            creatives = request.FILES.getlist("creatives")
             if not creatives:
                 creatives = form.cleaned_data.get("creatives", [])
                 if creatives and not isinstance(creatives, list):
@@ -3501,8 +3501,8 @@ def create_startup(request):
                         logger.warning(f"Пропущен креатив: {creative_file}")
                         continue
                     try:
-                    unique_filename = get_unique_filename(creative_file.name, startup.startup_id, "creative")
-                    creative_id = str(uuid.uuid4())
+                        unique_filename = get_unique_filename(creative_file.name, startup.startup_id, "creative")
+                        creative_id = str(uuid.uuid4())
                         file_data = creative_file.read()
                         content_type = getattr(creative_file, 'content_type', 'image/jpeg')
                         
@@ -3539,8 +3539,8 @@ def create_startup(request):
                         logger.warning(f"Пропущен пруф: {proof_file}")
                         continue
                     try:
-                    unique_filename = get_unique_filename(proof_file.name, startup.startup_id, "proof")
-                    proof_id = str(uuid.uuid4())
+                        unique_filename = get_unique_filename(proof_file.name, startup.startup_id, "proof")
+                        proof_id = str(uuid.uuid4())
                         file_data = proof_file.read()
                         content_type = getattr(proof_file, 'content_type', 'application/pdf')
                         
@@ -3966,7 +3966,7 @@ def create_agency(request):
                     if not hasattr(f, "name"):
                         continue
                     try:
-                    file_id = str(uuid.uuid4())
+                        file_id = str(uuid.uuid4())
                         unique_filename = get_unique_filename(f.name, entity_id, type_name)
                         file_data = f.read()
                         content_type = getattr(f, 'content_type', 'image/jpeg' if type_name == 'creative' else 'application/pdf')
@@ -4161,7 +4161,7 @@ def create_specialist(request):
                     if not hasattr(f, "name"):
                         continue
                     try:
-                    file_id = str(uuid.uuid4())
+                        file_id = str(uuid.uuid4())
                         unique_filename = get_unique_filename(f.name, entity_id, type_name)
                         file_data = f.read()
                         content_type = getattr(f, 'content_type', 'image/jpeg' if type_name == 'creative' else 'application/pdf')
