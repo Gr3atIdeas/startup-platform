@@ -231,7 +231,7 @@
         <div class="tab-content-container">
           <div id="info-section" class="content-section active">
             <div class="detail-info-section-container">
-              <div class="detail-info-section-left-column">
+              <div class="detail-info-section-top-row">
                 <div class="detail-info-section-stage-block">
                   <div class="stage-icon-container">
                     <img src="{% static 'accounts/images/figma_assets/stage_icon.png' %}" alt="Ставка" class="stage-icon">
@@ -239,7 +239,9 @@
                   </div>
                   <div class="stage-value">{{ specialist.customization_data.hourly_rate|default:0|floatformat:0|intcomma }} ₽/час</div>
                 </div>
+              </div>
 
+              <div class="detail-info-section-about-block">
                 <div class="detail-info-section-presentation-card">
                   <div class="presentation-image-container">
                     <div class="presentation-placeholder"></div>
@@ -252,18 +254,16 @@
                   {% endif %}
                 </div>
 
-                <div class="detail-info-section-about-block">
-                  <h3 class="about-title">О специалисте</h3>
-                  <div class="about-content">
-                    <div class="about-text">
-                      {{ specialist.description|sanitize_html|safe|default:"Нет подробного описания." }}
-                      {% if specialist.additional_info %}
-                        <div class="additional-info">
-                          <p><strong>Основные функции:</strong></p>
-                          {{ specialist.additional_info|safe }}
-                        </div>
-                      {% endif %}
-                    </div>
+                <h3 class="about-title">О специалисте</h3>
+                <div class="about-content">
+                  <div class="about-text">
+                    {{ specialist.description|sanitize_html|safe|default:"Нет подробного описания." }}
+                    {% if specialist.additional_info %}
+                      <div class="additional-info">
+                        <p><strong>Основные функции:</strong></p>
+                        {{ specialist.additional_info|safe }}
+                      </div>
+                    {% endif %}
                   </div>
                 </div>
               </div>

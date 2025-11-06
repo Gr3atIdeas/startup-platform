@@ -4458,9 +4458,6 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .detail-info-section-top-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
   margin-bottom: 23px;
   width: 100%;
 }
@@ -4662,7 +4659,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   align-items: center;
   gap: 16px;
   float: right;
-  margin: 0 0 23px 23px;
+  margin: -50px 0 23px 23px;
   clear: right;
 }
 

@@ -4798,10 +4798,9 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   position: relative;
 }
 
-.detail-info-section-left-column {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
+.detail-info-section-top-row {
+  margin-bottom: 23px;
+  width: 100%;
 }
 
 .detail-info-section-stage-block {
@@ -4996,7 +4995,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   align-items: center;
   gap: 16px;
   float: right;
-  margin: 0 0 23px 23px;
+  margin: -50px 0 23px 23px;
   clear: right;
 }
 
@@ -5286,6 +5285,10 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
     width: 100%;
     justify-content: center;
     margin: 0 auto;
+  }
+
+  .detail-info-section-top-row {
+    margin-bottom: 20px;
   }
 
   .detail-info-section-presentation-card {

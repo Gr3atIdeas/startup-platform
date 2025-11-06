@@ -4641,7 +4641,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   align-items: center;
   gap: 16px;
   float: right;
-  margin: 0 0 23px 23px;
+  margin: -50px 0 23px 23px;
   clear: right;
 }
 

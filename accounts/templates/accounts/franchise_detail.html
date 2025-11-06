@@ -233,7 +233,7 @@
         <div class="tab-content-container">
           <div id="info-section" class="content-section active">
             <div class="detail-info-section-container">
-              <div class="detail-info-section-left-column">
+              <div class="detail-info-section-top-row">
                 <div class="detail-info-section-stage-block">
                   <div class="stage-icon-container">
                     <img src="{% static 'accounts/images/figma_assets/stage_icon.png' %}" alt="Стоимость" class="stage-icon">
@@ -241,7 +241,9 @@
                   </div>
                   <div class="stage-value">{{ franchise.investment_size|default:0|floatformat:0|intcomma }} ₽</div>
                 </div>
+              </div>
 
+              <div class="detail-info-section-about-block">
                 <div class="detail-info-section-presentation-card">
                   <div class="presentation-image-container">
                     <div class="presentation-placeholder"></div>
@@ -254,18 +256,16 @@
                   {% endif %}
                 </div>
 
-                <div class="detail-info-section-about-block">
-                  <h3 class="about-title">О франшизе</h3>
-                  <div class="about-content">
-                    <div class="about-text">
-                      {{ franchise.description|sanitize_html|safe|default:"Нет подробного описания." }}
-                      {% if franchise.additional_info %}
-                        <div class="additional-info">
-                          <p><strong>Основные функции:</strong></p>
-                          {{ franchise.additional_info|safe }}
-                        </div>
-                      {% endif %}
-                    </div>
+                <h3 class="about-title">О франшизе</h3>
+                <div class="about-content">
+                  <div class="about-text">
+                    {{ franchise.description|sanitize_html|safe|default:"Нет подробного описания." }}
+                    {% if franchise.additional_info %}
+                      <div class="additional-info">
+                        <p><strong>Основные функции:</strong></p>
+                        {{ franchise.additional_info|safe }}
+                      </div>
+                    {% endif %}
                   </div>
                 </div>
               </div>
