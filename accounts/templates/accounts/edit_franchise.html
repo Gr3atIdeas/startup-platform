@@ -23,12 +23,24 @@ document.addEventListener('DOMContentLoaded', function() {
         removeDuplicateCreatives();
         
         const fileInputs = ['id_creatives_input', 'id_proofs_input', 'id_video_input', 'id_logo_input', 'id_catalog_card_image_input'];
+        const multipleInputs = ['id_creatives_input', 'id_proofs_input', 'id_video_input'];
         fileInputs.forEach(inputId => {
             const input = document.getElementById(inputId);
             if (input) {
                 input.addEventListener('change', function(e) {
                     window.selectedFiles = window.selectedFiles || {};
-                    window.selectedFiles[inputId] = e.target.files;
+                    if (multipleInputs.includes(inputId) && e.target.files.length > 0) {
+                        const existingFiles = window.selectedFiles[inputId] ? Array.from(window.selectedFiles[inputId]) : [];
+                        const newFiles = Array.from(e.target.files);
+                        const allFiles = [...existingFiles, ...newFiles];
+                        const dataTransfer = new DataTransfer();
+                        allFiles.forEach(file => {
+                            dataTransfer.items.add(file);
+                        });
+                        window.selectedFiles[inputId] = dataTransfer.files;
+                    } else {
+                        window.selectedFiles[inputId] = e.target.files;
+                    }
                 });
             }
         });

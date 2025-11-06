@@ -283,6 +283,15 @@ class DescriptionMediaModal {
         return div.innerHTML;
     }
     
+    formatFileSize(bytes) {
+        if (!bytes || bytes === 0 || isNaN(bytes)) return '';
+        const k = 1024;
+        const sizes = ['Б', 'КБ', 'МБ', 'ГБ'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        if (i < 0) return bytes + ' ' + sizes[0];
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+    
     createFileItem(file, index) {
         const isImage = file.type.startsWith('image/');
         const fileItem = document.createElement('div');
@@ -310,9 +319,11 @@ class DescriptionMediaModal {
                            </div>
                        </div>`;
         } else {
-            preview = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #666; height: 100%; width: 100%;">
-                    <div style="font-size: 40px; margin-bottom: 8px;">▶</div>
-                    <div style="font-size: 12px; text-align: center; padding: 0 10px; word-break: break-word;">Видео</div>
+            const fileSize = file.size ? this.formatFileSize(file.size) : '';
+            preview = `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; color: #666; height: 100%; width: 100%; background: linear-gradient(135deg, rgba(35, 83, 217, 0.05) 0%, rgba(0, 78, 159, 0.08) 100%);">
+                    <div style="font-size: 48px; margin-bottom: 8px; filter: grayscale(0.3);">🎬</div>
+                    <div style="font-size: 13px; font-weight: 600; text-align: center; padding: 0 10px; word-break: break-word; color: #333; margin-bottom: 4px;">Видео</div>
+                    ${fileSize ? `<div style="font-size: 11px; text-align: center; padding: 0 10px; color: #888;">${fileSize}</div>` : ''}
              </div>`;
         }
         
@@ -327,9 +338,15 @@ class DescriptionMediaModal {
                 ${preview}
                 ${removeButtonHtml}
                 </div>
-            <div class="file-info" style="padding: 10px; background: white;">
-                <div class="file-name" style="font-size: 12px; font-weight: 500; color: #ffffff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapedName}">${escapedName}</div>
-                <div class="file-type" style="font-size: 11px; color: #666; margin-top: 4px;">${isImage ? 'Изображение' : 'Видео'} ${sourceLabel}</div>
+            <div class="file-info" style="padding: 10px; background: white; border-top: 1px solid #eee;">
+                <div class="file-name" style="font-size: 12px; font-weight: 600; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 4px;" title="${escapedName}">${escapedName}</div>
+                <div class="file-type" style="font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px;">
+                    <span style="display: inline-flex; align-items: center; gap: 4px;">
+                        ${isImage ? '🖼️' : '🎬'}
+                        <span>${isImage ? 'Изображение' : 'Видео'}</span>
+                    </span>
+                    ${sourceLabel}
+                </div>
             </div>
         `;
         

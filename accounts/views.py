@@ -1580,6 +1580,7 @@ def agency_detail(request, agency_id):
     )
     average_rating = agency.get_average_rating()
     total_votes = agency.total_voters
+    total_comments_count = AgencyComments.objects.filter(agency=agency, parent_comment__isnull=True).count()
     user_has_voted = False
     if request.user.is_authenticated:
         user_has_voted = AgencyVotes.objects.filter(
@@ -1620,6 +1621,7 @@ def agency_detail(request, agency_id):
         "form": form,
         "average_rating": average_rating,
         "total_votes_count": total_votes,
+        "total_comments_count": total_comments_count,
         "user_has_voted": user_has_voted,
         "rating_distribution": rating_distribution,
         "logo_urls": logo_urls,
@@ -1721,6 +1723,7 @@ def specialist_detail(request, specialist_id):
     )
     average_rating = specialist.get_average_rating()
     total_votes = specialist.total_voters
+    total_comments_count = SpecialistComments.objects.filter(specialist=specialist, parent_comment__isnull=True).count()
     user_has_voted = False
     if request.user.is_authenticated:
         user_has_voted = SpecialistVotes.objects.filter(
@@ -1761,6 +1764,7 @@ def specialist_detail(request, specialist_id):
         "form": form,
         "average_rating": average_rating,
         "total_votes_count": total_votes,
+        "total_comments_count": total_comments_count,
         "user_has_voted": user_has_voted,
         "rating_distribution": rating_distribution,
         "logo_urls": logo_urls,
@@ -1861,6 +1865,7 @@ def franchise_detail(request, franchise_id):
     )
     average_rating = franchise.get_average_rating()
     total_votes = franchise.total_voters
+    total_comments_count = FranchiseComments.objects.filter(franchise=franchise, parent_comment__isnull=True).count()
     user_has_voted = False
     if request.user.is_authenticated:
         user_has_voted = FranchiseVotes.objects.filter(
@@ -1901,6 +1906,7 @@ def franchise_detail(request, franchise_id):
         "form": form,
         "average_rating": average_rating,
         "total_votes_count": total_votes,
+        "total_comments_count": total_comments_count,
         "user_has_voted": user_has_voted,
         "rating_distribution": rating_distribution,
         "logo_urls": logo_urls,
@@ -2196,6 +2202,7 @@ def startup_detail(request, startup_id):
     form = CommentForm()
     average_rating = startup.get_average_rating()
     total_votes = startup.total_voters
+    total_comments_count = Comments.objects.filter(startup_id=startup, parent_comment_id__isnull=True).count()
     user_has_voted = False
     if request.user.is_authenticated:
         user_has_voted = UserVotes.objects.filter(
@@ -2276,6 +2283,7 @@ def startup_detail(request, startup_id):
         "form": form,
         "average_rating": average_rating,
         "total_votes_count": total_votes,
+        "total_comments_count": total_comments_count,
         "user_has_voted": user_has_voted,
         "rating_distribution": rating_distribution,
         "similar_startups": similar_startups,

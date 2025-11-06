@@ -170,7 +170,7 @@
             </div>
             <div class="rating-comments-container">
               <div class="rating-container">
-                <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
+                <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5{% if total_votes_count > 0 %} ({{ total_votes_count }}){% endif %}</span>
                 <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
                   {% for i in "12345" %}
                     <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
@@ -180,7 +180,7 @@
                   {% endfor %}
                 </div>
               </div>
-              <a href="#comments-section" class="comments-link">Комментарии ({{ total_votes_count|default:0 }})</a>
+              <a href="#comments-section" class="comments-link">Комментарии{% if total_comments_count > 0 %} ({{ total_comments_count }}){% endif %}</a>
             </div>
           </div>
         </div>
@@ -258,7 +258,7 @@
 
               <div class="detail-info-section-presentation-card">
                 <div class="presentation-image-container">
-                  <img src="{% static 'accounts/images/figma_assets/presentation_image.png' %}" alt="Презентация" class="presentation-image">
+                  <div class="presentation-placeholder"></div>
                 </div>
                 <h3 class="presentation-title">Презентация</h3>
                 {% if specialist.pitch_deck_url %}

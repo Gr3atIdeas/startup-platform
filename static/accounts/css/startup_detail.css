@@ -4794,18 +4794,21 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 /* Стили для таба "Информация" */
 
 .detail-info-section-container {
-  display: flex;
-  flex-direction: row;
-  gap: 23px;
   width: 100%;
-  align-items: flex-start;
+  position: relative;
+}
+
+.detail-info-section-container::after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 .detail-info-section-left-content {
   display: flex;
   flex-direction: column;
   gap: 23px;
-  flex: 1;
+  margin-right: 200px;
 }
 
 .detail-info-section-stage-block {
@@ -4994,12 +4997,13 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .detail-info-section-presentation-card {
   width: 172px;
-  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
-  margin-left: auto;
+  float: right;
+  margin-left: 23px;
+  margin-bottom: 20px;
 }
 
 .presentation-image-container {
@@ -5007,12 +5011,26 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   height: 152px;
   border-radius: 9px;
   overflow: hidden;
+  background: linear-gradient(135deg, rgba(35, 83, 217, 0.1) 0%, rgba(0, 78, 159, 0.15) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.presentation-image {
+.presentation-placeholder {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.presentation-placeholder::before {
+  content: "📄";
+  font-size: 48px;
+  opacity: 0.4;
 }
 
 .presentation-title {
@@ -5168,12 +5186,14 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   }
 
   .detail-info-section-container {
+    display: flex;
     flex-direction: column;
     gap: 20px;
   }
 
   .detail-info-section-left-content {
     width: 100%;
+    margin-right: 0;
     order: 2;
   }
 
@@ -5185,6 +5205,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
   .detail-info-section-presentation-card {
     width: 100%;
+    float: none;
     margin: 0 auto 20px auto;
     order: 1;
     max-width: 250px;

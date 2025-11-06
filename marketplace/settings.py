@@ -176,6 +176,10 @@ AWS_S3_PUBLIC_BASE_URL = S3_PUBLIC_BASE_URL  # Алиас для совмест�
 MEDIA_URL = f"{S3_PUBLIC_BASE_URL}/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "accounts.Users"
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 100 * 1024 * 1024
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
