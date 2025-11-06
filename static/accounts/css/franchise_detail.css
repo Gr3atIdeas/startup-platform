@@ -4441,25 +4441,18 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .detail-info-section-container {
   width: 100%;
   position: relative;
-}
-
-.detail-info-section-container::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.detail-info-section-top-row {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 23px;
-  width: 100%;
+  gap: 34px;
+  align-items: flex-start;
 }
 
-.detail-info-section-left-content {
-  width: 100%;
-  position: relative;
+.detail-info-section-left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  flex: 1;
+  min-width: 0;
 }
 
 .detail-info-section-stage-block {
@@ -4470,9 +4463,6 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   border: 1px solid #FFFFFF;
   border-radius: 50px;
   width: fit-content;
-  margin-bottom: 23px;
-  float: left;
-  clear: left;
 }
 
 .stage-icon-container {
@@ -4511,9 +4501,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .detail-info-section-about-block {
   display: flex;
   flex-direction: column;
-  gap: 23px;
-  margin-right: 195px;
-  overflow: hidden;
+  gap: 25px;
+  width: 100%;
 }
 
 .about-title {
@@ -4651,15 +4640,12 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .detail-info-section-presentation-card {
-  width: 172px;
+  width: 191px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
-  float: right;
-  margin-left: 23px;
-  margin-bottom: 23px;
-  clear: right;
+  gap: 16px;
+  flex-shrink: 0;
 }
 
 .presentation-image-container {
@@ -4886,24 +4872,29 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
     gap: 20px;
   }
 
+  .detail-info-section-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .detail-info-section-left-column {
+    width: 100%;
+  }
+
   .detail-info-section-stage-block {
-    float: none;
     width: 100%;
     justify-content: center;
-    margin: 0 auto 20px auto;
+    margin: 0 auto;
   }
 
   .detail-info-section-presentation-card {
-    float: none;
     width: 100%;
-    margin: 0 auto 20px auto;
+    margin: 0 auto;
     max-width: 250px;
   }
 
   .detail-info-section-about-block {
     width: 100%;
-    margin-right: 0;
-    float: none;
   }
 
   #comments-section {
@@ -4964,28 +4955,29 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
     max-width: 100%;
   }
 
-  .detail-info-section-left-content {
+  .detail-info-section-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .detail-info-section-left-column {
     width: 100%;
   }
 
   .detail-info-section-stage-block {
-    float: none;
     width: 100%;
     justify-content: center;
-    margin: 0 auto 20px auto;
+    margin: 0 auto;
   }
 
   .detail-info-section-presentation-card {
-    float: none;
     width: 100%;
-    margin: 0 auto 20px auto;
+    margin: 0 auto;
     max-width: 300px;
   }
 
   .detail-info-section-about-block {
     width: 100%;
-    margin-right: 0;
-    float: none;
   }
 
   .info-blocks {
