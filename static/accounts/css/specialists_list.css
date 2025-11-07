@@ -23,6 +23,10 @@
   right: -8px;
 }
 .sidebar .noUi-handle:focus { outline: none; }
+.sidebar .noUi-handle::before,
+.sidebar .noUi-handle::after {
+  display: none;
+}
 .no-cards {
   grid-column: 1 / -1;
   display: flex;
@@ -774,6 +778,10 @@ body {
 
 .rating-filter .noUi-handle:focus {
   outline: none;
+}
+.rating-filter .noUi-handle::before,
+.rating-filter .noUi-handle::after {
+  display: none;
 }
 
 .rating-range-label {

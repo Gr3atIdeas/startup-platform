@@ -747,6 +747,10 @@ body {
 .rating-filter .noUi-handle:focus {
   outline: none;
 }
+.rating-filter .noUi-handle::before,
+.rating-filter .noUi-handle::after {
+  display: none;
+}
 
 .rating-range-label {
   color: #757575;
@@ -785,6 +789,10 @@ body {
   right: -8px;
 }
 .sidebar .noUi-handle:focus { outline: none; }
+.sidebar .noUi-handle::before,
+.sidebar .noUi-handle::after {
+  display: none;
+}
 
 /* Новые стили карточек франшиз */
 .franchise-card {
