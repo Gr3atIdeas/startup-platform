@@ -5538,13 +5538,16 @@ def startuper_main(request):
             if startup.both_mode
             else "Не указано"
         )
-        folder_choice = random.choice(['planets_round', 'planets_ring'])
-        if folder_choice == 'planets_round':
-            random_planet_num = random.randint(1, 15)
-            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        if startup.planet_image:
+            planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
         else:
-            random_planet_num = random.randint(1, 6)
-            planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
+            folder_choice = random.choice(['planets_round', 'planets_ring'])
+            if folder_choice == 'planets_round':
+                random_planet_num = random.randint(1, 15)
+                planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+            else:
+                random_planet_num = random.randint(1, 6)
+                planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
         russian_direction = DIRECTION_TRANSLATIONS.get(direction_name, direction_name)
         original_direction = None
