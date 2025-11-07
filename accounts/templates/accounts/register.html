@@ -139,6 +139,13 @@ document.addEventListener('DOMContentLoaded', () => {
         g.width = d;
         g.height = e;
     };
+
+    if (window.innerWidth <= 768) {
+        window.scrollTo(0, 0);
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+        }, 100);
+    }
 });
 </script>
 {% endblock %}

@@ -174,8 +174,15 @@ main.content {
 }
 
 @media (max-width: 768px) {
+  main.content {
+    align-items: flex-start;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
   .auth-container {
     padding: 20px 15px;
+    margin-top: 0;
   }
   
   .auth-box {
@@ -204,6 +211,12 @@ main.content {
 }
 
 @media (max-width: 480px) {
+  main.content {
+    padding-top: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   .auth-container {
     padding: 15px 10px;
   }
@@ -214,6 +227,7 @@ main.content {
   
   .auth-box h1 {
     font-size: 20px;
+    margin-bottom: 20px;
   }
   
   .auth-box input[type="email"],
@@ -268,6 +282,11 @@ main.content {
 }
 
 @media (max-width: 768px) and (orientation: landscape) {
+  main.content {
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+
   .auth-container {
     padding: 15px 20px;
   }
@@ -279,6 +298,11 @@ main.content {
 }
 
 @media (max-height: 600px) {
+  main.content {
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+
   .auth-container {
     padding: 10px 15px;
   }
