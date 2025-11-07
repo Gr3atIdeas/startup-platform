@@ -24,7 +24,7 @@ body {
 main.content {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     flex-grow: 1;
     padding: 20px !important;
     padding-top: 0 !important;
@@ -182,11 +182,12 @@ main.content {
   main.content {
     padding: 10px !important;
     padding-top: 0 !important;
+    align-items: flex-start;
   }
 
   .auth-container {
     padding: 20px 15px;
-    margin-top: 0;
+    margin-top: 40px;
     max-width: 100%;
     position: relative;
     z-index: 10;
@@ -231,6 +232,7 @@ main.content {
   main.content {
     padding: 8px !important;
     padding-top: 0 !important;
+    align-items: flex-start;
   }
 
   .auth-container {
@@ -238,6 +240,7 @@ main.content {
     border-radius: 8px;
     position: relative;
     z-index: 10;
+    margin-top: 40px;
   }
   
   .auth-box h1 {
