@@ -328,7 +328,6 @@ class DescriptionMediaModal {
         }
         
         const removeButtonHtml = (this.isCreateMode || file.isGallery) ? '' : '<button type="button" class="btn-remove-file" data-index="' + index + '" style="position: absolute; top: 5px; right: 5px; background: rgba(220,53,69,0.9); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 16px; line-height: 1; z-index: 10;">×</button>';
-        const sourceLabel = file.isGallery ? '<span class="file-source-label" style="color: #28a745; font-size: 11px; font-weight: 600;">из галереи</span>' : '';
         
         fileItem.style.cssText = 'position: relative; border: 2px solid #ddd; border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.2s; background: white;';
         fileItem.setAttribute('title', 'Нажмите для копирования ссылки');
@@ -339,14 +338,7 @@ class DescriptionMediaModal {
                 ${removeButtonHtml}
                 </div>
             <div class="file-info" style="padding: 10px; background: white; border-top: 1px solid #eee;">
-                <div class="file-name" style="font-size: 12px; font-weight: 600; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 4px;" title="${escapedName}">${escapedName}</div>
-                <div class="file-type" style="font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px;">
-                    <span style="display: inline-flex; align-items: center; gap: 4px;">
-                        ${isImage ? '🖼️' : '🎬'}
-                        <span>${isImage ? 'Изображение' : 'Видео'}</span>
-                    </span>
-                    ${sourceLabel}
-                </div>
+                <div class="file-name" style="font-size: 12px; font-weight: 600; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapedName}">${escapedName}</div>
             </div>
         `;
         
