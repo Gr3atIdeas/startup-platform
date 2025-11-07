@@ -2740,6 +2740,10 @@ a:hover {
     padding: 20px;
   }
 
+  .top-section {
+    padding: 0 20px;
+  }
+
   .startup-name {
     font-size: 28px;
   }
@@ -2796,6 +2800,10 @@ a:hover {
 @media (width <= 480px) {
   .main-content-grid {
     padding: 15px;
+  }
+
+  .top-section {
+    padding: 0 15px;
   }
 
   .back-button {
