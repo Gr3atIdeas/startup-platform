@@ -41,12 +41,11 @@ try:
     logger.info("django-storages успешно импортирован")
 except ImportError as e:
     logger.error(f"Ошибка импорта django-storages: {str(e)}")
-SECRET_KEY = os.getenv(
-    "DJANGO_SECRET_KEY",
-    "django-insecure-0w+_*%hwspl5i9b)%9!i-3$dq5(e7i%e9*lh=v!u$4brh!5ok9",
-)
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+if not SECRET_KEY:
+    raise ValueError("DJANGO_SECRET_KEY environment variable is required")
 
-DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
+DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 ALLOWED_HOSTS = [
     "*",
     "greatideas.ru",
@@ -132,10 +131,11 @@ TEMPLATES = [
 WSGI_APPLICATION = "marketplace.wsgi.application"
 DATABASES = {
     "default": dj_database_url.config(
-        default="postgres://postgres:Kc94X8Ke3A9vKDYwPsRQnL6IMWCfOHUG5klqstts0tQRqjIxQ9WV04ZZxbclmGtA@iwk8ws8k888wwk84wkwg8kks:5432/marketplace_db",
         conn_max_age=600,
     )
 }
+if not DATABASES["default"]:
+    raise ValueError("DATABASE_URL environment variable is required")
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
