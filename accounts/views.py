@@ -2622,6 +2622,7 @@ def investments(request):
                 ),
                 "investors": f"Инвесторов: {startup.investors_count or 0}",
                 "image": logo_url,
+                "planet_image": startup_obj.planet_image,
                 "orbit_size": orbit_size,
                 "orbit_time": orbit_time,
                 "planet_size": planet_size,
@@ -5285,17 +5286,21 @@ def investor_main(request):
     planet_sizes = [60, 70, 56, 64, 50, 60]
     import random
     for idx, startup in enumerate(startups_filtered):
-        folder_choice = random.choice(['planets_round', 'planets_ring'])
-        if folder_choice == 'planets_round':
-            random_planet_num = random.randint(1, 15)
-            image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+        if startup.planet_image:
+            image_path = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
         else:
-            random_planet_num = random.randint(1, 6)
-            image_path = f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png"
+            folder_choice = random.choice(['planets_round', 'planets_ring'])
+            if folder_choice == 'planets_round':
+                random_planet_num = random.randint(1, 15)
+                image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+            else:
+                random_planet_num = random.randint(1, 6)
+                image_path = f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png"
+            image_path = static(image_path)
         planets_data_for_template.append(
             {
                 "id": startup.startup_id,
-                "image": static(image_path),
+                "image": image_path,
                 "orbit_size": fixed_orbit_sizes[idx % len(fixed_orbit_sizes)],
                 "orbit_time": orbit_times[idx % len(orbit_times)],
                 "planet_size": planet_sizes[idx % len(planet_sizes)],
@@ -5312,8 +5317,11 @@ def investor_main(request):
             if startup.both_mode
             else "Не указано"
         )
-        random_planet_num = random.randint(1, 8)
-        planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        if startup.planet_image:
+            planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+        else:
+            random_planet_num = random.randint(1, 8)
+            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
         planets_data_json.append({
             "id": startup.startup_id,
             "name": startup.title,
@@ -5356,13 +5364,16 @@ def investor_main(request):
             if startup.both_mode
             else "Не указано"
         )
-        folder_choice = random.choice(['planets_round', 'planets_ring'])
-        if folder_choice == 'planets_round':
-            random_planet_num = random.randint(1, 15)
-            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        if startup.planet_image:
+            planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
         else:
-            random_planet_num = random.randint(1, 6)
-            planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
+            folder_choice = random.choice(['planets_round', 'planets_ring'])
+            if folder_choice == 'planets_round':
+                random_planet_num = random.randint(1, 15)
+                planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+            else:
+                random_planet_num = random.randint(1, 6)
+                planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
         # Нормализуем здоровье в одну категорию 'Health'
         if direction_name in ['Healthcare', 'Medicine']:
@@ -5444,17 +5455,21 @@ def startuper_main(request):
     planet_sizes = [60, 70, 56, 64, 50, 60]
     import random
     for idx, startup in enumerate(startups_filtered):
-        folder_choice = random.choice(['planets_round', 'planets_ring'])
-        if folder_choice == 'planets_round':
-            random_planet_num = random.randint(1, 15)
-            image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+        if startup.planet_image:
+            image_path = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
         else:
-            random_planet_num = random.randint(1, 6)
-            image_path = f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png"
+            folder_choice = random.choice(['planets_round', 'planets_ring'])
+            if folder_choice == 'planets_round':
+                random_planet_num = random.randint(1, 15)
+                image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+            else:
+                random_planet_num = random.randint(1, 6)
+                image_path = f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png"
+            image_path = static(image_path)
         planets_data_for_template.append(
             {
                 "id": startup.startup_id,
-                "image": static(image_path),
+                "image": image_path,
                 "orbit_size": fixed_orbit_sizes[idx % len(fixed_orbit_sizes)],
                 "orbit_time": orbit_times[idx % len(orbit_times)],
                 "planet_size": planet_sizes[idx % len(planet_sizes)],
@@ -5471,13 +5486,16 @@ def startuper_main(request):
             if startup.both_mode
             else "Не указано"
         )
-        folder_choice = random.choice(['planets_round', 'planets_ring'])
-        if folder_choice == 'planets_round':
-            random_planet_num = random.randint(1, 15)
-            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        if startup.planet_image:
+            planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
         else:
-            random_planet_num = random.randint(1, 6)
-            planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
+            folder_choice = random.choice(['planets_round', 'planets_ring'])
+            if folder_choice == 'planets_round':
+                random_planet_num = random.randint(1, 15)
+                planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+            else:
+                random_planet_num = random.randint(1, 6)
+                planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
         planets_data_json.append({
             "id": startup.startup_id,
             "name": startup.title,

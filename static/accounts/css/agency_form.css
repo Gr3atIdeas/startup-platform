@@ -1675,12 +1675,25 @@ body,
     display: flex;
     justify-content: center;
   }
+  .submit-button {
+    text-align: center;
+    white-space: normal;
+    word-wrap: break-word;
+  }
   .custom-file-upload-button {
     margin: 0 auto;
     display: block;
+    text-align: center;
+    white-space: normal;
+    word-wrap: break-word;
+    width: auto;
+    max-width: 100%;
   }
   .btn-get-link {
     margin: 0 auto;
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: center;
   }
   .file-preview-item {
     display: contents;
