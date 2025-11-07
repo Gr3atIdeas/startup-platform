@@ -17,7 +17,7 @@
 }
 
 @media (max-width: 768px) {
-  .form-navigation-header { padding: 0; margin-bottom: 0; }
+  .form-navigation-header { padding: 0 15px; margin-bottom: 0; gap: 15px; }
   #consentsModal .modal-dialog { width: 92vw; max-width: 92vw; margin: 8vh auto; }
   .form-top-grid { flex-direction: column; gap: 20px; }
 }
@@ -1606,8 +1606,9 @@ body,
   }
   
   .form-navigation-header {
-    padding: 0;
+    padding: 0 15px;
     margin-bottom: 0;
+    gap: 15px;
   }
   
   .form-main-title {

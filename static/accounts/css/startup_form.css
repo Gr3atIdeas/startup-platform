@@ -1606,8 +1606,9 @@ body,
   }
   
   .form-navigation-header {
-    padding: 0;
+    padding: 0 15px;
     margin-bottom: 0;
+    gap: 15px;
   }
   
   .form-main-title {
@@ -1818,7 +1819,7 @@ input[type=number] {
 #consentsModal .modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 12px 20px; border-top: 1px solid rgba(255,255,255,.1); }
 
 @media (max-width: 768px) {
-  .form-navigation-header { padding: 0; margin-bottom: 0; }
+  .form-navigation-header { padding: 0 15px; margin-bottom: 0; gap: 15px; }
   #consentsModal .modal-dialog { width: 92vw; max-width: 92vw; margin: 8vh auto; }
 }
 

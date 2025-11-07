@@ -176,6 +176,9 @@ class StartupEditForm(forms.ModelForm):
             "terms",
             "catalog_card_image",
         ]
+        labels = {
+            "title": "Название",
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1071,6 +1074,9 @@ class FranchiseEditForm(forms.ModelForm):
             "logo", "direction", "creatives", "proofs", "video",
             "planet_image", "catalog_card_image", "profit_calculation"
         ]
+        labels = {
+            "title": "Название",
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1162,6 +1168,9 @@ class AgencyEditForm(forms.ModelForm):
             "pitch_deck_url", "logo", "direction", "stage",
             "creatives", "proofs", "video", "planet_image", "catalog_card_image", "successful_projects"
         ]
+        labels = {
+            "title": "Название",
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1267,6 +1276,9 @@ class SpecialistEditForm(forms.ModelForm):
             "pitch_deck_url", "logo", "direction", "stage",
             "creatives", "proofs", "video", "planet_image", "catalog_card_image", "successful_projects"
         ]
+        labels = {
+            "title": "Название",
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
