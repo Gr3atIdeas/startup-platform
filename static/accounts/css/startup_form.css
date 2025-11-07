@@ -1606,7 +1606,8 @@ body,
   }
   
   .form-navigation-header {
-    margin-bottom: 20px;
+    padding: 0;
+    margin-bottom: 0;
   }
   
   .form-main-title {
@@ -1817,7 +1818,7 @@ input[type=number] {
 #consentsModal .modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 12px 20px; border-top: 1px solid rgba(255,255,255,.1); }
 
 @media (max-width: 768px) {
-  .form-navigation-header { padding: 0 15px; }
+  .form-navigation-header { padding: 0; margin-bottom: 0; }
   #consentsModal .modal-dialog { width: 92vw; max-width: 92vw; margin: 8vh auto; }
 }
 
@@ -1894,13 +1895,19 @@ input[type=number] {
         margin-top: 8px;
     }
 
+  .form-navigation-header {
+    padding: 0;
+    margin-bottom: 0;
+  }
+
   .form-top-card { padding: 10px; }
   .catalog-card-image-group { margin-top: 16px; margin-left: 2px; }
   .catalog-card-image-group .catalog-card-image-label {
-    width: 320px;
+    width: auto;
   }
   .form-group .small-text {
     text-wrap-mode: wrap;
+    font-size: 7px;
   }
   .consents-docs-buttons {
     display: block;

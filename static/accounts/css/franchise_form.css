@@ -1050,7 +1050,7 @@ h3.section-title {
 }
 
 @media (max-width: 768px) {
-  .form-navigation-header { padding: 0 15px; }
+  .form-navigation-header { padding: 0; margin-bottom: 0; }
   #consentsModal .modal-dialog { width: 92vw; max-width: 92vw; margin: 8vh auto; }
   .form-top-grid { flex-direction: column; gap: 20px; }
   .form-top-left {
@@ -1623,8 +1623,8 @@ body,
   }
   
   .form-navigation-header {
-    margin-bottom: 20px;
-    padding: 0 15px;
+    padding: 0;
+    margin-bottom: 0;
   }
   
   .form-main-title {
@@ -1650,11 +1650,12 @@ body,
   }
   
   .catalog-card-image-group .catalog-card-image-label {
-    width: 320px;
+    width: auto;
     height: 75px;
   }
   .form-group .small-text {
     text-wrap-mode: wrap;
+    font-size: 7px;
   }
   .consents-docs-buttons {
     display: block;
