@@ -1,8 +1,8 @@
 
 body {
     background: #000 !important;
-    overflow: hidden !important;
-    height: 100vh;
+    overflow-x: hidden !important;
+    min-height: 100vh;
 }
 
 
@@ -25,15 +25,14 @@ main.content {
     padding: 20px;
     position: relative;
     z-index: 1;
-    height: 100vh;
+    min-height: 100vh;
     box-sizing: border-box;
-    overflow: hidden;
 }
 
 
 .auth-container {
     position: relative;
-    z-index: 1;
+    z-index: 10;
     background: rgba(40, 40, 40, 0.6);
     backdrop-filter: blur(5px);
     padding: 30px;
@@ -42,7 +41,7 @@ main.content {
     width: 100%;
     box-sizing: border-box;
     margin: 0;
-    margin-top: 20px;
+    margin-top: 0;
 }
 
 .auth-box {
@@ -177,13 +176,15 @@ main.content {
 @media (max-width: 768px) {
   main.content {
     padding: 10px;
-    padding-top: 15px;
+    padding-top: 10px;
   }
 
   .auth-container {
     padding: 20px 15px;
     margin-top: 0;
     max-width: 100%;
+    position: relative;
+    z-index: 10;
   }
   
   .auth-box {
@@ -224,12 +225,14 @@ main.content {
 @media (max-width: 480px) {
   main.content {
     padding: 8px;
-    padding-top: 12px;
+    padding-top: 8px;
   }
 
   .auth-container {
     padding: 18px 12px;
     border-radius: 8px;
+    position: relative;
+    z-index: 10;
   }
   
   .auth-box h1 {
