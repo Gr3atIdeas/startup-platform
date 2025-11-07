@@ -2739,6 +2739,30 @@ a:hover {
     font-size: 28px;
   }
 
+  .agency-detail-ai-rating-info {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .author-info-left-unique {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .startup-title-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .rating-comments-container {
+    margin-left: 0;
+    align-items: flex-start;
+    width: 100%;
+  }
+
   .info-blocks {
     grid-template-columns: 1fr 1fr;
   }
@@ -2803,6 +2827,18 @@ a:hover {
 
   .startup-name {
     font-size: 24px;
+  }
+
+  .agency-detail-ai-rating-info {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .author-info-left-unique {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .header-meta {
