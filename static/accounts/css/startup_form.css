@@ -1901,6 +1901,26 @@ input[type=number] {
     margin-bottom: 0;
   }
 
+  .form-fields-left {
+    width: auto;
+  }
+  .form-top-right .investment-type-card {
+    width: auto;
+  }
+  .submit-button-container {
+    display: flex;
+    justify-content: center;
+  }
+  .custom-file-upload-button {
+    margin: 0 auto;
+    display: block;
+  }
+  .btn-get-link {
+    margin: 0 auto;
+  }
+  .file-preview-item {
+    display: contents;
+  }
   .form-top-card { padding: 10px; }
   .catalog-card-image-group { margin-top: 16px; margin-left: 2px; }
   .catalog-card-image-group .catalog-card-image-label {

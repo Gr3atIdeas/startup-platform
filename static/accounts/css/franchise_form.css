@@ -1677,6 +1677,27 @@ body,
     height: 45px;
     font-size: 14px;
   }
+
+  .form-fields-left {
+    width: auto;
+  }
+  .form-top-right .investment-type-card {
+    width: auto;
+  }
+  .submit-button-container {
+    display: flex;
+    justify-content: center;
+  }
+  .custom-file-upload-button {
+    margin: 0 auto;
+    display: block;
+  }
+  .btn-get-link {
+    margin: 0 auto;
+  }
+  .file-preview-item {
+    display: contents;
+  }
 }
 
 @media (max-width: 480px) {
