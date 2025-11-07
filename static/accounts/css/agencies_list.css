@@ -721,7 +721,7 @@ body {
     gap: 20px;
   }
   .sort-dropdown select {
-    height: 36px;
+    height: auto;
     font-size: 13px;
   }
   .category-name {
