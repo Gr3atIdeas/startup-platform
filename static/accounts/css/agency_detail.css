@@ -2751,6 +2751,12 @@ a:hover {
     box-sizing: border-box;
   }
 
+  .agency-financial-info {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
   .startup-title-content {
     flex-direction: column;
     align-items: flex-start;
@@ -2836,6 +2842,12 @@ a:hover {
   }
 
   .author-info-left-unique {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .agency-financial-info {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
