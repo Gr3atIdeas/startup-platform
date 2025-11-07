@@ -605,12 +605,21 @@ document.addEventListener('DOMContentLoaded', function () {
     var cfg = (window.STARTUP_FORM_CONFIG||{})
     var planetChoices = Array.isArray(cfg.planetChoices)?cfg.planetChoices:[]
     var planetBaseUrl = cfg.planetBaseUrl || ''
+    var currentPlanet = cfg.currentPlanet || null
     var planetInput = document.getElementById('id_planet_image')
     var planetRibbon = document.getElementById('planetRibbon')
     var prevBtn = document.querySelector('.planet-nav-button.prev-planet')
     var nextBtn = document.querySelector('.planet-nav-button.next-planet')
     var planetIndex = 0
     var imgEl
+    
+    if(currentPlanet && planetChoices.length > 0){
+      var foundIndex = planetChoices.indexOf(currentPlanet)
+      if(foundIndex !== -1){
+        planetIndex = foundIndex
+      }
+    }
+    
     function setSrc(){
       if(!imgEl) return
       var name=(planetChoices && planetChoices.length)?planetChoices[planetIndex]:'placeholder.svg'
@@ -625,7 +634,6 @@ document.addEventListener('DOMContentLoaded', function () {
       imgEl.loading='lazy'; imgEl.decoding='async'
       imgEl.onerror=function(){ imgEl.src='https://via.placeholder.com/520x520?text=Planet' }
       planetRibbon.appendChild(imgEl)
-      planetIndex=0
       setSrc()
     }
     function shift(dir){
