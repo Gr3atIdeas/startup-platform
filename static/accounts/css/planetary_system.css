@@ -1558,6 +1558,10 @@
     --ultra_new_planetary_galaxy_scale: 0.75;
   }
   
+  #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit {
+    border: none !important;
+  }
+  
   .ultra_new_planetary_planet {
     z-index: 20 !important;
   }
