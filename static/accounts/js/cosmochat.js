@@ -89,6 +89,13 @@ document.addEventListener('DOMContentLoaded', function () {
     userCardsRatingContainers.forEach((container) => {
         updateUserRatingDisplay(container);
     });
+    const ratingTextMobileElements = document.querySelectorAll('.rating-value-mobile');
+    ratingTextMobileElements.forEach((element) => {
+        if (element.dataset.rating) {
+            const ratingForText = element.dataset.rating.replace('.', ',');
+            element.textContent = `${ratingForText}/5`;
+        }
+    });
     setupSearchDropdown();
     updatePaginationHTML();
     const startDealBtn = document.getElementById('startDealBtn');
@@ -1505,6 +1512,11 @@ function updateUserRatingDisplay(starsContainer) {
       filledIcon.style.width = '0%'
     }
   })
+  const ratingTextMobile = starsContainer.closest('.user-role-rating-new')?.querySelector('.rating-value-mobile')
+  if (ratingTextMobile && ratingTextMobile.dataset.rating) {
+    const ratingForText = ratingTextMobile.dataset.rating.replace('.', ',')
+    ratingTextMobile.textContent = `${ratingForText}/5`
+  }
 }
 function filterChats(filter) {
   const chatItems = document.querySelectorAll(

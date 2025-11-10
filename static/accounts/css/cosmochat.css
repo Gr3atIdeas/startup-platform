@@ -266,6 +266,29 @@ body.cosmochat-body {
   margin: 0;
 }
 
+.rating-text-mobile {
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+}
+
+.rating-label-mobile {
+  font-size: 10px;
+  font-weight: 300;
+  color: #a9a9a9;
+  letter-spacing: 0.12px;
+  font-family: Unbounded, sans-serif;
+}
+
+.rating-value-mobile {
+  font-size: 14px;
+  font-weight: 400;
+  color: black;
+  letter-spacing: 0.12px;
+  font-family: Unbounded, sans-serif;
+}
+
 .user-card-new .user-stats-new {
   width: 223px;
   display: flex;
@@ -2060,6 +2083,181 @@ body.cosmochat-body {
   
   .chat-input-field-area {
     padding: 10px 15px;
+  }
+
+  .group-chat-modal-overlay {
+    padding: 10px;
+  }
+
+  .group-chat-modal {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px 15px;
+    border-radius: 15px;
+  }
+
+  .group-chat-modal-content-wrapper {
+    width: 100%;
+    max-height: calc(100vh - 100px);
+    padding: 15px;
+    gap: 12px;
+  }
+
+  .group-chat-modal-close {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .group-chat-modal-close img {
+    width: 12px;
+    height: 12px;
+  }
+
+  .group-chat-modal-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .group-chat-modal-title {
+    font-size: 14px;
+    width: 100%;
+    order: 1;
+  }
+
+  .group-chat-modal-count {
+    font-size: 12px;
+    order: 2;
+  }
+
+  .group-chat-modal-next {
+    font-size: 14px;
+    order: 3;
+  }
+
+  .group-chat-modal-search {
+    padding: 6px 12px;
+    gap: 6px;
+  }
+
+  .group-chat-modal-search-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .group-chat-modal-search-input {
+    font-size: 11px;
+    min-width: 100px;
+  }
+
+  .group-chat-modal-role-filters {
+    gap: 8px;
+  }
+
+  .group-chat-modal-role-btn {
+    padding: 6px 18px;
+    font-size: 11px;
+  }
+
+  .group-chat-modal-user {
+    padding: 4px 5px 4px 0;
+  }
+
+  .group-chat-modal-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+  }
+
+  .group-chat-modal-user-firstname,
+  .group-chat-modal-user-lastname {
+    font-size: 14px;
+  }
+
+  .group-chat-modal-checkbox {
+    width: 20px;
+    height: 20px;
+  }
+
+  .group-chat-modal-checkbox-empty,
+  .group-chat-modal-checkbox-filled {
+    width: 16px;
+    height: 16px;
+  }
+
+  .group-chat-modal-details-view {
+    width: 100%;
+    max-height: calc(100vh - 100px);
+    padding: 15px;
+    gap: 12px;
+  }
+
+  .group-chat-modal-details-view .selected-chat-info {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .group-chat-modal-details-view .chat-icon-container {
+    width: 36px;
+    height: 36px;
+    padding: 7px;
+  }
+
+  .group-chat-modal-details-view .chat-details-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .group-chat-modal-details-view .chat-name-display-input {
+    font-size: 16px;
+  }
+
+  .group-chat-modal-details-view .add-participant-container {
+    font-size: 14px;
+    gap: 12px;
+    padding: 10px 0;
+  }
+
+  .participants-actions-list .participant-display-item img {
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+  }
+
+  .participants-actions-list .participant-name {
+    font-size: 16px;
+  }
+
+  .nav-action-create {
+    top: 15px;
+    right: 15px;
+    font-size: 14px;
+  }
+
+  .modal-header-nav .nav-action {
+    font-size: 14px;
+  }
+
+  .modal-header-nav .nav-title {
+    font-size: 14px;
+  }
+
+  .selected-user-pill {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .pill-name {
+    max-width: 80px;
+  }
+
+  .rating-stars-new {
+    display: none;
+  }
+
+  .rating-text-mobile {
+    display: flex;
   }
 }
 

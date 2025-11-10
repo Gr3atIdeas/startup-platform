@@ -83,6 +83,10 @@
                                     </span>
                                     {% endfor %}
                                 </div>
+                                <div class="rating-text-mobile">
+                                    <span class="rating-label-mobile">Рейтинг</span>
+                                    <span class="rating-value-mobile" data-rating="{{ effective_rating|stringformat:'.1f' }}">{{ effective_rating|stringformat:'.1f' }}/5</span>
+                                </div>
                                 <p class="role-text">
                                     {% if user_profile.role.role_name == "investor" %}Инвестор
                                     {% elif user_profile.role.role_name == "startuper" %}Стартапер
@@ -117,6 +121,10 @@
                                         <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Filled Planet" class="icon-filled">
                                     </span>
                                     {% endfor %}
+                                </div>
+                                <div class="rating-text-mobile">
+                                    <span class="rating-label-mobile">Рейтинг</span>
+                                    <span class="rating-value-mobile" data-rating="{{ user_profile.rating|default:0|stringformat:'.1f' }}">{{ user_profile.rating|default:0|stringformat:'.1f' }}/5</span>
                                 </div>
                                 <p class="role-text">
                                     {% if user_profile.role.role_name == "investor" %}Инвестор
