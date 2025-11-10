@@ -279,13 +279,19 @@ html {
   width: 100%; 
 }
 
+.faq-question-category.active {
+  background: #3a94f2;
+  color: white;
+  outline: none;
+}
+
 .faq-question-item.active {
   background: #3a94f2;
   color: white;
   outline: none;
 }
 
-.faq-question-category:hover,
+.faq-question-category:not(.active):hover,
 .faq-accordion-header:hover,
 .faq-question-item:not(.active):hover {
   background-color: #f0f0f0;
