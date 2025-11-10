@@ -79,6 +79,10 @@ document.addEventListener('DOMContentLoaded', function () {
       const questionId = this.dataset.questionId
       questionItems.forEach((qItem) => qItem.classList.remove('active'))
       this.classList.add('active')
+      const whatIsGreatIdeas = document.querySelector('.faq-question-category[data-question-id="what-is-great-ideas"]')
+      if (whatIsGreatIdeas && whatIsGreatIdeas !== this && questionId !== 'what-is-great-ideas') {
+        whatIsGreatIdeas.classList.remove('active')
+      }
       if (faqData[questionId] && faqAnswerTitle && faqAnswerBody) {
         faqAnswerTitle.textContent = faqData[questionId].title
         faqAnswerBody.innerHTML = faqData[questionId].answer
