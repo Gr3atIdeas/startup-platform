@@ -3628,9 +3628,20 @@ body > main.content::after {
   .featured10 .subscribe-btn {
     width: 100% !important;
     max-width: 280px !important;
+    height: 40px !important;
     justify-content: center !important;
     align-self: center !important;
     margin-bottom: 0 !important;
+    padding: 12px 25px !important;
+  }
+  
+  .featured10 .subscribe-btn .send-icon {
+    width: 14.77px !important;
+    height: 11.31px !important;
+    max-width: 14.77px !important;
+    max-height: 11.31px !important;
+    flex-shrink: 0;
+    object-fit: contain;
   }
   
   .featured10 .subscription-bonus {
