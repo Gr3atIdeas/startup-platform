@@ -346,7 +346,8 @@ a:hover {
 
 .agency-detail-carousel-indicators {
   position: absolute;
-  left: 180px;
+  left: 50%;
+  transform: translateX(-50%);
   bottom: 31px;
   display: flex;
   gap: 6px;
@@ -4296,7 +4297,6 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   overflow: hidden;
   z-index: 10;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  background-color: black;
 }
 
 .carousel-planet-thumbnail img {
