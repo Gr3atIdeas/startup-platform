@@ -173,6 +173,9 @@ body.cosmochat-body {
   align-items: center;
   cursor: pointer;
   transition: box-shadow 0.3s;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
 }
 
 .user-card-new:hover {
@@ -321,7 +324,10 @@ body.cosmochat-body {
   border: none;
   cursor: pointer;
   width: 147px;
+  min-width: 100px;
   text-align: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .hidden-user {
@@ -421,9 +427,11 @@ body.cosmochat-body {
 
 .articles-section-new {
   width: 409px;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   gap: 40px;
+  box-sizing: border-box;
 }
 
 .articles-section-new h2 {
@@ -2059,6 +2067,34 @@ body.cosmochat-body {
   
   .user-card-new {
     padding: 15px;
+    gap: 12px;
+    box-sizing: border-box;
+  }
+
+  .user-card-new .avatar-img {
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
+  }
+
+  .user-card-new .user-info-new {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .user-card-new .user-stats-new {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .chat-btn-on-card {
+    width: auto;
+    min-width: 100px;
+    flex-shrink: 0;
+    padding: 10px 16px;
+    font-size: 14px;
   }
   
   .main-chat-area-new {
@@ -2271,12 +2307,39 @@ body.cosmochat-body {
     padding-top: 15px;
     padding-bottom: 20px;
   }
+
+  .articles-section-new {
+    width: 100%;
+    gap: 25px;
+  }
+
+  .articles-section-new h2 {
+    font-size: 26px;
+    line-height: 26px;
+  }
   
   .user-card-new {
     padding: 12px;
+    gap: 10px;
+  }
+
+  .user-card-new .avatar-img {
+    width: 65px;
+    height: 65px;
   }
   
   .user-card-new .user-info-new h3 {
+    font-size: 14px;
+  }
+
+  .user-card-new .user-stats-new {
+    width: 100%;
+  }
+
+  .chat-btn-on-card {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px;
     font-size: 14px;
   }
   
@@ -2306,13 +2369,82 @@ body.cosmochat-body {
   }
 }
 
+@media (max-width: 390px) {
+  .articles-section-new {
+    width: 100%;
+    gap: 30px;
+  }
+
+  .articles-section-new h2 {
+    font-size: 28px;
+    line-height: 28px;
+  }
+
+  .user-card-new {
+    padding: 12px;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .user-card-new .avatar-img {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+  }
+
+  .user-card-new .user-info-new {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+    gap: 6px;
+  }
+
+  .user-card-new .user-info-new h3 {
+    font-size: 14px;
+    max-width: 100%;
+  }
+
+  .user-card-new .user-stats-new {
+    width: 100%;
+    order: 3;
+    margin-top: 8px;
+  }
+
+  .chat-btn-on-card {
+    width: 100%;
+    order: 4;
+    margin-top: 8px;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .user-role-rating-new {
+    gap: 4px;
+  }
+
+  .rating-value-mobile {
+    font-size: 12px;
+  }
+
+  .rating-label-mobile {
+    font-size: 9px;
+  }
+}
+
 @media (max-width: 360px) {
   .user-card-new {
     padding: 10px;
+    gap: 10px;
   }
   
   .user-card-new .user-info-new h3 {
     font-size: 13px;
+  }
+
+  .user-card-new .avatar-img {
+    width: 50px;
+    height: 50px;
   }
   
   .chat-window-column-new {
@@ -2333,6 +2465,11 @@ body.cosmochat-body {
   
   .message-bubble-new {
     padding: 6px 10px;
+  }
+
+  .articles-section-new h2 {
+    font-size: 24px;
+    line-height: 24px;
   }
 }
 
