@@ -4856,6 +4856,10 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .detail-info-section-top-row {
   margin-bottom: 23px;
   width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 .detail-info-section-stage-block {
@@ -5102,52 +5106,10 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .detail-info-section-presentation-card {
-  width: 191px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 16px;
-  float: right;
-  margin: -85px 0 23px 34px;
   flex-shrink: 0;
-}
-
-.presentation-image-container {
-  width: 100%;
-  height: 152px;
-  border-radius: 9px;
-  overflow: hidden;
-  background: linear-gradient(135deg, rgba(35, 83, 217, 0.1) 0%, rgba(0, 78, 159, 0.15) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.presentation-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.presentation-placeholder::before {
-  content: "📄";
-  font-size: 48px;
-  opacity: 0.4;
-}
-
-.presentation-title {
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-  font-size: 13px;
-  line-height: 1.29;
-  letter-spacing: -0.02em;
-  color: rgba(255, 255, 255, 0.32);
-  text-align: center;
-  margin: 0;
+  min-width: 150px;
 }
 
 .presentation-button {
@@ -5409,14 +5371,15 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
   .detail-info-section-top-row {
     margin-bottom: 20px;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
   }
 
   .detail-info-section-presentation-card {
-    float: none;
     width: 100%;
-    margin: 0 auto 20px auto;
     max-width: 300px;
-    clear: both;
+    justify-content: center;
   }
 
   .detail-info-section-about-block {
