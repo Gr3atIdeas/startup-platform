@@ -3478,7 +3478,6 @@ body > main.content::after {
     height: auto !important;
     min-height: 300px;
     max-height: none !important;
-    object-fit: contain;
   }
   
   .featured6 .galaxy-step-container {
