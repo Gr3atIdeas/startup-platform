@@ -409,10 +409,12 @@ document.addEventListener('DOMContentLoaded', function () {
           if (investorsList) {
             investorsList.innerHTML = data.html;
           }
-          if (selectedInvestor) {
-            const addInvestmentButton = document.getElementById('addInvestmentButton');
-            if (addInvestmentButton) {
+          const addInvestmentButton = document.getElementById('addInvestmentButton');
+          if (addInvestmentButton) {
+            if (selectedInvestor) {
               addInvestmentButton.disabled = false;
+            } else {
+              addInvestmentButton.disabled = true;
             }
           }
         })
@@ -521,7 +523,21 @@ document.addEventListener('DOMContentLoaded', function () {
   if (addInvestorModalEl) {
     addInvestorModalEl.addEventListener('show.bs.modal', function () {
         loadCurrentInvestors();
-        resetAddInvestorForm();
+        const searchInput = document.getElementById('investorSearchInput');
+        if (searchInput && !selectedInvestor) {
+            searchInput.value = '';
+            searchInput.disabled = false;
+        }
+        const amountInput = document.getElementById('investmentAmount');
+        if (amountInput) {
+            amountInput.value = '';
+        }
+        if (!selectedInvestor) {
+            const addButton = document.getElementById('addInvestmentButton');
+            if (addButton) {
+                addButton.disabled = true;
+            }
+        }
     });
   }
 

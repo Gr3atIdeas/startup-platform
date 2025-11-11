@@ -7781,8 +7781,8 @@ def delete_investment(request, startup_id, user_id):
 
                 logger.info(f"Found investment transaction {tx.transaction_id} for deletion")
 
-                startup = tx.startup
                 deleted_amount = tx.amount
+                startup = get_object_or_404(Startups, startup_id=startup_id)
                 tx.delete()
 
                 startup.amount_raised = (startup.amount_raised or Decimal("0")) - deleted_amount
