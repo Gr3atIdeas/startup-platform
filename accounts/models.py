@@ -390,7 +390,7 @@ class Startups(models.Model):
     def get_investors_count(self):
         return (
             InvestmentTransactions.objects.filter(
-                startup=self, franchise__isnull=True
+                startup=self
             )
             .values("investor_id")
             .distinct()
