@@ -405,7 +405,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const investorsList = document.getElementById('currentInvestorsList');
           if (investorsList) {
             investorsList.innerHTML = data.html;
-          } else {
+          }
+          if (selectedInvestor) {
+            const addInvestmentButton = document.getElementById('addInvestmentButton');
+            if (addInvestmentButton) {
+              addInvestmentButton.disabled = false;
+            }
           }
         })
         .catch(error => {
@@ -436,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (confirm(`Вы уверены, что хотите удалить эту инвестицию?`)) {
                 const url = `/delete_investment/${startupId}/${userId || 0}/`;
-                const body = transactionId ? JSON.stringify({ transaction_id: parseInt(transactionId) }) : null;
+                const body = transactionId ? JSON.stringify({ transaction_id: parseInt(transactionId) }) : '{}';
                 
                 fetch(url, {
                     method: 'POST',

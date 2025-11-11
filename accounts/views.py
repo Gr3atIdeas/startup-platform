@@ -7756,7 +7756,13 @@ def delete_investment(request, startup_id, user_id):
     if request.method == "POST":
         with transaction.atomic():
             try:
-                data = json.loads(request.body) if request.body else {}
+                data = {}
+                if request.body:
+                    try:
+                        data = json.loads(request.body)
+                    except (json.JSONDecodeError, ValueError):
+                        pass
+                
                 transaction_id = data.get("transaction_id")
                 
                 if transaction_id:
