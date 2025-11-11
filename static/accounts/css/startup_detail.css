@@ -3572,6 +3572,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   width: 24px; 
   height: 24px;
   object-fit: contain;
+  filter: grayscale(100%) brightness(0.7);
+  transition: filter 0.3s ease;
 }
 
 
@@ -3581,15 +3583,16 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .timeline-step.active-step-display .step-number-wrapper .step-icon {
-  
-  filter: brightness(
-    0.8
-  ); 
+  filter: brightness(0.8); 
 }
 
 .timeline-step.completed-step-display .step-number-wrapper {
   border-color: var(--accent-purple); 
   background-color: var(--accent-purple); 
+}
+
+.timeline-step.completed-step-display .step-number-wrapper .step-icon {
+  filter: none;
 }
 
 .timeline-step .step-text {
@@ -3610,6 +3613,10 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .timeline-step:not(.active-step-display):not(.completed-step-display) .step-number-wrapper {
   opacity: 0.7;
+}
+
+.timeline-step:not(.active-step-display):not(.completed-step-display) .step-number-wrapper .step-icon {
+  filter: grayscale(100%) brightness(0.7);
 }
 
 .timeline-step:not(.active-step-display):not(.completed-step-display):hover .step-number-wrapper {
