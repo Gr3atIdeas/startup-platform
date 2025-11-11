@@ -7802,10 +7802,10 @@ def delete_investment(request, startup_id, user_id):
                 )
             except InvestmentTransactions.DoesNotExist:
                 logger.warning(f"Investment transaction not found for startup {startup_id}, user {user_id}")
-                return JsonResponse({"error": "Инвестиция не найдена"}, status=404)
+                return JsonResponse({"success": False, "error": "Инвестиция не найдена"}, status=404)
             except Exception as e:
-                logger.error(f"Ошибка при удалении инвестиции: {e}")
-                return JsonResponse({"error": "Внутренняя ошибка сервера"}, status=500)
+                logger.error(f"Error deleting investment: {str(e)}", exc_info=True)
+                return JsonResponse({"success": False, "error": f"Ошибка при удалении: {str(e)}"}, status=500)
 
     logger.warning(f"Invalid method {request.method} for delete_investment")
     return JsonResponse({"error": "Неверный метод запроса"}, status=405)

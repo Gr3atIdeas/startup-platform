@@ -355,8 +355,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (response.ok && data && data.success) {
                 alert('Инвестор успешно добавлен!');
+                const amountInput = document.getElementById('investmentAmount');
+                if (amountInput) {
+                    amountInput.value = '';
+                }
                 loadCurrentInvestors();
-                resetAddInvestorForm();
                 updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
             } else {
                 const errMsg = (data && data.error) || 'Ошибка при добавлении инвестора.';
@@ -451,25 +454,31 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     body: body
                 })
-                .then(response => {
+                .then(async response => {
                     if (!response.ok) {
-                        return response.text().then(text => {
-                            throw new Error(text)
-                        });
+                        let errorText = '';
+                        try {
+                            const errorData = await response.json();
+                            errorText = errorData.error || errorData.message || `Ошибка ${response.status}`;
+                        } catch (e) {
+                            errorText = await response.text() || `Ошибка ${response.status}`;
+                        }
+                        throw new Error(errorText);
                     }
                     return response.json();
                 })
                 .then(data => {
-                    if (data.success) {
+                    if (data && data.success) {
                         alert('Инвестиция удалена.');
                         loadCurrentInvestors();
                         updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
                     } else {
-                        alert(data.error || 'Ошибка при удалении.');
+                        alert(data?.error || 'Ошибка при удалении.');
                     }
                 })
                 .catch(error => {
-                    alert('Произошла ошибка при удалении.');
+                    console.error('Delete investment error:', error);
+                    alert('Произошла ошибка при удалении: ' + (error.message || 'Неизвестная ошибка'));
                 });
             }
         }
