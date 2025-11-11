@@ -392,6 +392,7 @@ class Startups(models.Model):
             InvestmentTransactions.objects.filter(
                 startup=self
             )
+            .defer("franchise")
             .values("investor_id")
             .distinct()
             .count()

@@ -2254,7 +2254,7 @@ def startup_detail(request, startup_id):
     if startup.funding_goal and startup.funding_goal > 0:
         from django.db.models import Sum as _Sum
         try:
-            current_total = InvestmentTransactions.objects.filter(startup=startup).aggregate(total=_Sum("amount")).get("total") or Decimal("0")
+            current_total = InvestmentTransactions.objects.filter(startup=startup).defer("franchise").aggregate(total=_Sum("amount")).get("total") or Decimal("0")
         except Exception:
             current_total = startup.amount_raised or Decimal("0")
         goal = Decimal(startup.funding_goal) if startup.funding_goal is not None else Decimal("0")
@@ -5124,7 +5124,7 @@ def get_startup_updates(startup):
         # Получаем последние инвестиции
         recent_investments = InvestmentTransactions.objects.filter(
             startup=startup
-        ).select_related("investor").order_by("-created_at")[:3]
+        ).select_related("investor").defer("franchise").order_by("-created_at")[:3]
         
         for investment in recent_investments:
             if investment.investor:
@@ -7602,7 +7602,7 @@ def get_investors(request, startup_id):
         startup = get_object_or_404(Startups, startup_id=startup_id)
         investors = InvestmentTransactions.objects.filter(startup=startup).select_related(
             "investor"
-        )
+        ).defer("franchise")
 
         logger.info(f"Found {investors.count()} investment transactions for startup {startup_id}")
 
@@ -7657,24 +7657,46 @@ def add_investor(request, startup_id):
 
             existing_tx = InvestmentTransactions.objects.filter(
                 startup_id=startup_id, investor=user_to_invest
-            ).first()
+            ).defer("franchise").first()
 
             if existing_tx:
                 logger.info(f"Updating existing investment for user {user_id} in startup {startup_id}")
-                existing_tx.amount = amount
-                existing_tx.save()
+                from django.db import connection
+                with connection.cursor() as cursor:
+                    cursor.execute("""
+                        UPDATE investment_transactions 
+                        SET amount = %s, updated_at = %s
+                        WHERE transaction_id = %s
+                    """, [
+                        amount,
+                        timezone.now(),
+                        existing_tx.transaction_id,
+                    ])
             else:
                 logger.info(f"Creating new investment for user {user_id} in startup {startup_id}")
                 try:
                     investment_type_obj = TransactionTypes.objects.get(
                         type_name="investment"
                     )
-                    InvestmentTransactions.objects.create(
-                        investor=user_to_invest,
-                        startup=startup,
-                        amount=amount,
-                        transaction_type=investment_type_obj,
+                    payment_method, _ = PaymentMethods.objects.get_or_create(
+                        method_name="default",
+                        defaults={"method_name": "default"}
                     )
+                    from django.db import connection
+                    with connection.cursor() as cursor:
+                        cursor.execute("""
+                            INSERT INTO investment_transactions 
+                            (startup_id, investor_id, amount, transaction_type_id, payment_method_id, created_at, updated_at)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        """, [
+                            startup.startup_id,
+                            user_to_invest.user_id,
+                            amount,
+                            investment_type_obj.type_id,
+                            payment_method.method_id,
+                            timezone.now(),
+                            timezone.now(),
+                        ])
                 except TransactionTypes.DoesNotExist:
                     logger.error("Transaction type 'investment' not found")
                     return JsonResponse(
@@ -7684,7 +7706,7 @@ def add_investor(request, startup_id):
 
             startup.amount_raised = InvestmentTransactions.objects.filter(
                 startup=startup
-            ).aggregate(
+            ).defer("franchise").aggregate(
                 total=Sum("amount")
             )["total"] or Decimal("0")
             startup.save(update_fields=["amount_raised"])
@@ -7769,7 +7791,7 @@ def delete_investment(request, startup_id, user_id):
 
                 new_total = InvestmentTransactions.objects.filter(
                     startup=startup
-                ).aggregate(
+                ).defer("franchise").aggregate(
                     total=Sum("amount")
                 )["total"] or Decimal("0")
                 startup.amount_raised = new_total
