@@ -7600,9 +7600,9 @@ def get_investors(request, startup_id):
 
     try:
         startup = get_object_or_404(Startups, startup_id=startup_id)
-        investors = InvestmentTransactions.objects.filter(startup=startup).select_related(
+        investors = InvestmentTransactions.objects.filter(startup=startup, franchise__isnull=True).select_related(
             "investor"
-        )
+        ).defer("franchise")
 
         logger.info(f"Found {investors.count()} investment transactions for startup {startup_id}")
 
@@ -7656,7 +7656,7 @@ def add_investor(request, startup_id):
                 )
 
             existing_tx = InvestmentTransactions.objects.filter(
-                startup_id=startup_id, investor=user_to_invest
+                startup_id=startup_id, investor=user_to_invest, franchise__isnull=True
             ).first()
 
             if existing_tx:
@@ -7682,7 +7682,7 @@ def add_investor(request, startup_id):
                         status=500,
                     )
 
-            startup.amount_raised = startup.investmenttransactions_set.aggregate(
+            startup.amount_raised = startup.investmenttransactions_set.filter(franchise__isnull=True).aggregate(
                 total=Sum("amount")
             )["total"] or Decimal("0")
             startup.save(update_fields=["amount_raised"])
