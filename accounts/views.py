@@ -7611,6 +7611,7 @@ def get_investors(request, startup_id):
             if tx.investor:
                 investor_list.append(
                     {
+                        "transaction_id": tx.transaction_id,
                         "user_id": tx.investor.user_id,
                         "name": tx.investor.get_full_name() or tx.investor.email,
                         "amount": float(tx.amount),
@@ -7655,57 +7656,37 @@ def add_investor(request, startup_id):
                     {"success": False, "error": "Сумма должна быть положительной."}
                 )
 
-            existing_tx = InvestmentTransactions.objects.filter(
-                startup_id=startup_id, investor=user_to_invest
-            ).defer("franchise").first()
-
-            if existing_tx:
-                logger.info(f"Updating existing investment for user {user_id} in startup {startup_id}")
-                old_amount = existing_tx.amount
+            logger.info(f"Creating new investment for user {user_id} in startup {startup_id}")
+            try:
+                investment_type_obj = TransactionTypes.objects.get(
+                    type_name="investment"
+                )
+                payment_method, _ = PaymentMethods.objects.get_or_create(
+                    method_name="default",
+                    defaults={"method_name": "default"}
+                )
                 from django.db import connection
                 with connection.cursor() as cursor:
                     cursor.execute("""
-                        UPDATE investment_transactions 
-                        SET amount = %s, updated_at = %s
-                        WHERE transaction_id = %s
+                        INSERT INTO investment_transactions 
+                        (startup_id, investor_id, amount, transaction_type_id, payment_method_id, created_at, updated_at)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
                     """, [
+                        startup.startup_id,
+                        user_to_invest.user_id,
                         amount,
+                        investment_type_obj.type_id,
+                        payment_method.method_id,
                         timezone.now(),
-                        existing_tx.transaction_id,
+                        timezone.now(),
                     ])
-                startup.amount_raised = (startup.amount_raised or Decimal("0")) - old_amount + amount
-            else:
-                logger.info(f"Creating new investment for user {user_id} in startup {startup_id}")
-                try:
-                    investment_type_obj = TransactionTypes.objects.get(
-                        type_name="investment"
-                    )
-                    payment_method, _ = PaymentMethods.objects.get_or_create(
-                        method_name="default",
-                        defaults={"method_name": "default"}
-                    )
-                    from django.db import connection
-                    with connection.cursor() as cursor:
-                        cursor.execute("""
-                            INSERT INTO investment_transactions 
-                            (startup_id, investor_id, amount, transaction_type_id, payment_method_id, created_at, updated_at)
-                            VALUES (%s, %s, %s, %s, %s, %s, %s)
-                        """, [
-                            startup.startup_id,
-                            user_to_invest.user_id,
-                            amount,
-                            investment_type_obj.type_id,
-                            payment_method.method_id,
-                            timezone.now(),
-                            timezone.now(),
-                        ])
-                    startup.amount_raised = (startup.amount_raised or Decimal("0")) + amount
-                except TransactionTypes.DoesNotExist:
-                    logger.error("Transaction type 'investment' not found")
-                    return JsonResponse(
-                        {"error": "Тип транзакции 'investment' не найден в системе."},
-                        status=500,
-                    )
+                startup.amount_raised = (startup.amount_raised or Decimal("0")) + amount
+            except TransactionTypes.DoesNotExist:
+                logger.error("Transaction type 'investment' not found")
+                return JsonResponse(
+                    {"error": "Тип транзакции 'investment' не найден в системе."},
+                    status=500,
+                )
 
             startup.save(update_fields=["amount_raised"])
             new_investor_count = startup.get_investors_count()
@@ -7775,14 +7756,24 @@ def delete_investment(request, startup_id, user_id):
     if request.method == "POST":
         with transaction.atomic():
             try:
-                user_to_delete = get_object_or_404(Users, pk=user_id)
-                tx = get_object_or_404(
-                    InvestmentTransactions,
-                    startup_id=startup_id,
-                    investor=user_to_delete,
-                )
+                data = json.loads(request.body) if request.body else {}
+                transaction_id = data.get("transaction_id")
+                
+                if transaction_id:
+                    tx = get_object_or_404(
+                        InvestmentTransactions,
+                        transaction_id=transaction_id,
+                        startup_id=startup_id,
+                    )
+                else:
+                    user_to_delete = get_object_or_404(Users, pk=user_id)
+                    tx = get_object_or_404(
+                        InvestmentTransactions,
+                        startup_id=startup_id,
+                        investor=user_to_delete,
+                    )
 
-                logger.info(f"Found investment transaction {tx.id} for deletion")
+                logger.info(f"Found investment transaction {tx.transaction_id} for deletion")
 
                 startup = tx.startup
                 deleted_amount = tx.amount

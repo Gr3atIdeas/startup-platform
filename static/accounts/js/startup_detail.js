@@ -421,10 +421,11 @@ document.addEventListener('DOMContentLoaded', function () {
     currentInvestorsList.addEventListener('click', function(event) {
         const deleteButton = event.target.closest('.delete-investment-btn');
         if (deleteButton) {
+            const transactionId = deleteButton.dataset.transactionId;
             const userId = deleteButton.dataset.userId;
 
-            if (!userId) {
-                alert('Ошибка: не удалось определить пользователя.');
+            if (!transactionId && !userId) {
+                alert('Ошибка: не удалось определить транзакцию.');
                 return;
             }
 
@@ -433,10 +434,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            if (confirm(`Вы уверены, что хотите удалить этого инвестора?`)) {
-                fetch(`/delete_investment/${startupId}/${userId}/`, {
+            if (confirm(`Вы уверены, что хотите удалить эту инвестицию?`)) {
+                const url = `/delete_investment/${startupId}/${userId || 0}/`;
+                const body = transactionId ? JSON.stringify({ transaction_id: parseInt(transactionId) }) : null;
+                
+                fetch(url, {
                     method: 'POST',
-                    headers: { 'X-CSRFToken': csrfToken },
+                    headers: { 
+                        'X-CSRFToken': csrfToken,
+                        'Content-Type': 'application/json'
+                    },
+                    body: body
                 })
                 .then(response => {
                     if (!response.ok) {
