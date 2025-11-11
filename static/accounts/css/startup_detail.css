@@ -3613,6 +3613,8 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .timeline-step:not(.active-step-display):not(.completed-step-display) .step-number-wrapper {
   opacity: 0.7;
+  background-color: #000000;
+  border-color: var(--border-color);
 }
 
 .timeline-step:not(.active-step-display):not(.completed-step-display) .step-number-wrapper .step-icon {
