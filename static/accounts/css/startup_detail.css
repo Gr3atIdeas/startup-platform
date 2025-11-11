@@ -3619,10 +3619,12 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   opacity: 0.7;
   background-color: #000000 !important;
   border-color: var(--border-color);
+  position: relative;
 }
 
 .timeline-step:not(.active-step-display):not(.completed-step-display) .step-number-wrapper .step-icon {
-  filter: grayscale(100%) brightness(0.7) !important;
+  filter: brightness(0) invert(1) !important;
+  opacity: 0.7;
 }
 
 .timeline-step:not(.active-step-display):not(.completed-step-display):hover .step-number-wrapper {
