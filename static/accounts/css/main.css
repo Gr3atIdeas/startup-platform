@@ -3286,7 +3286,7 @@ body > main.content::after {
   }
   
   .featured3 .heading1 {
-    gap: 20px;
+    gap: 45px;
   }
   
   .featured3 .heading1 .div18 {
@@ -3297,7 +3297,7 @@ body > main.content::after {
   
   .featured3 .frame-group {
     width: 100%;
-    gap: 20px;
+    gap: 45px;
     margin-top: 15px;
   }
   
