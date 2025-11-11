@@ -3579,16 +3579,46 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .timeline-step.active-step-display .step-number-wrapper {
   border-color: var(--accent-yellow); 
-  background-color: var(--accent-yellow); 
+  background-color: transparent;
 }
 
 .timeline-step.active-step-display .step-number-wrapper .step-icon {
   filter: brightness(0.8); 
 }
 
+.timeline-step[data-step='1'].active-step-display .step-number-wrapper,
+.timeline-step[data-step='1'].completed-step-display .step-number-wrapper {
+  background-image: linear-gradient(307deg, #4392e3 0%, #004e9f 100%);
+  background-color: transparent;
+}
+
+.timeline-step[data-step='2'].active-step-display .step-number-wrapper,
+.timeline-step[data-step='2'].completed-step-display .step-number-wrapper {
+  background-image: linear-gradient(307deg, #7b61ff 0%, #3b1eca 100%);
+  background-color: transparent;
+}
+
+.timeline-step[data-step='3'].active-step-display .step-number-wrapper,
+.timeline-step[data-step='3'].completed-step-display .step-number-wrapper {
+  background-image: linear-gradient(217deg, #4392e3 0%, #004e9f 100%);
+  background-color: transparent;
+}
+
+.timeline-step[data-step='4'].active-step-display .step-number-wrapper,
+.timeline-step[data-step='4'].completed-step-display .step-number-wrapper {
+  background-image: linear-gradient(307deg, #f26162 0%, #d32f2f 100%);
+  background-color: transparent;
+}
+
+.timeline-step[data-step='5'].active-step-display .step-number-wrapper,
+.timeline-step[data-step='5'].completed-step-display .step-number-wrapper {
+  background-image: linear-gradient(217deg, #ffef2b 0%, #f9a825 100%);
+  background-color: transparent;
+}
+
 .timeline-step.completed-step-display .step-number-wrapper {
   border-color: var(--accent-purple); 
-  background-color: var(--accent-purple); 
+  background-color: transparent;
 }
 
 .timeline-step.completed-step-display .step-number-wrapper .step-icon {
