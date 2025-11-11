@@ -359,7 +359,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (amountInput) {
                     amountInput.value = '';
                 }
-                loadCurrentInvestors();
+                loadCurrentInvestors().then(() => {
+                    if (selectedInvestor) {
+                        const addInvestmentButton = document.getElementById('addInvestmentButton');
+                        if (addInvestmentButton) {
+                            addInvestmentButton.disabled = false;
+                        }
+                    }
+                });
                 updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
             } else {
                 const errMsg = (data && data.error) || 'Ошибка при добавлении инвестора.';
@@ -395,7 +402,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
     function loadCurrentInvestors() {
-        fetch(`/get_investors/${startupId}/`)
+        return fetch(`/get_investors/${startupId}/`)
         .then(response => {
             if (!response.ok) {
                 return response.text().then(text => {
@@ -417,12 +424,14 @@ document.addEventListener('DOMContentLoaded', function () {
               addInvestmentButton.disabled = true;
             }
           }
+          return data;
         })
         .catch(error => {
             const investorsList = document.getElementById('currentInvestorsList');
           if (investorsList) {
             investorsList.innerHTML = '<p class="text-danger">Не удалось загрузить список инвесторов.</p>';
           }
+          throw error;
       });
   }
 

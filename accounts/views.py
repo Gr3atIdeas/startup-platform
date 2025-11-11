@@ -7766,24 +7766,34 @@ def delete_investment(request, startup_id, user_id):
                 transaction_id = data.get("transaction_id")
                 
                 if transaction_id:
-                    tx = get_object_or_404(
-                        InvestmentTransactions,
+                    tx_qs = InvestmentTransactions.objects.filter(
                         transaction_id=transaction_id,
                         startup_id=startup_id,
-                    )
+                    ).defer("franchise")
+                    if not tx_qs.exists():
+                        return JsonResponse({"success": False, "error": "Инвестиция не найдена"}, status=404)
+                    tx = tx_qs.first()
                 else:
                     user_to_delete = get_object_or_404(Users, pk=user_id)
-                    tx = get_object_or_404(
-                        InvestmentTransactions,
+                    tx_qs = InvestmentTransactions.objects.filter(
                         startup_id=startup_id,
                         investor=user_to_delete,
-                    )
+                    ).defer("franchise")
+                    if not tx_qs.exists():
+                        return JsonResponse({"success": False, "error": "Инвестиция не найдена"}, status=404)
+                    tx = tx_qs.first()
 
                 logger.info(f"Found investment transaction {tx.transaction_id} for deletion")
 
                 deleted_amount = tx.amount
                 startup = get_object_or_404(Startups, startup_id=startup_id)
-                tx.delete()
+                
+                from django.db import connection
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "DELETE FROM investment_transactions WHERE transaction_id = %s",
+                        [tx.transaction_id]
+                    )
 
                 startup.amount_raised = (startup.amount_raised or Decimal("0")) - deleted_amount
                 if startup.amount_raised < 0:
