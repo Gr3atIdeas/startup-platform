@@ -7661,6 +7661,7 @@ def add_investor(request, startup_id):
 
             if existing_tx:
                 logger.info(f"Updating existing investment for user {user_id} in startup {startup_id}")
+                old_amount = existing_tx.amount
                 from django.db import connection
                 with connection.cursor() as cursor:
                     cursor.execute("""
@@ -7672,6 +7673,7 @@ def add_investor(request, startup_id):
                         timezone.now(),
                         existing_tx.transaction_id,
                     ])
+                startup.amount_raised = (startup.amount_raised or Decimal("0")) - old_amount + amount
             else:
                 logger.info(f"Creating new investment for user {user_id} in startup {startup_id}")
                 try:
@@ -7697,6 +7699,7 @@ def add_investor(request, startup_id):
                             timezone.now(),
                             timezone.now(),
                         ])
+                    startup.amount_raised = (startup.amount_raised or Decimal("0")) + amount
                 except TransactionTypes.DoesNotExist:
                     logger.error("Transaction type 'investment' not found")
                     return JsonResponse(
@@ -7704,11 +7707,6 @@ def add_investor(request, startup_id):
                         status=500,
                     )
 
-            startup.amount_raised = InvestmentTransactions.objects.filter(
-                startup=startup
-            ).defer("franchise").aggregate(
-                total=Sum("amount")
-            )["total"] or Decimal("0")
             startup.save(update_fields=["amount_raised"])
             new_investor_count = startup.get_investors_count()
 
@@ -7787,18 +7785,16 @@ def delete_investment(request, startup_id, user_id):
                 logger.info(f"Found investment transaction {tx.id} for deletion")
 
                 startup = tx.startup
+                deleted_amount = tx.amount
                 tx.delete()
 
-                new_total = InvestmentTransactions.objects.filter(
-                    startup=startup
-                ).defer("franchise").aggregate(
-                    total=Sum("amount")
-                )["total"] or Decimal("0")
-                startup.amount_raised = new_total
+                startup.amount_raised = (startup.amount_raised or Decimal("0")) - deleted_amount
+                if startup.amount_raised < 0:
+                    startup.amount_raised = Decimal("0")
                 startup.save(update_fields=["amount_raised"])
                 new_investor_count = startup.get_investors_count()
 
-                logger.info(f"Successfully deleted investment. New total: {new_total}, investors: {new_investor_count}")
+                logger.info(f"Successfully deleted investment. New total: {startup.amount_raised}, investors: {new_investor_count}")
 
                 return JsonResponse(
                     {
