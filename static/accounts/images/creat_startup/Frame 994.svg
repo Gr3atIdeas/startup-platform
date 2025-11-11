@@ -1,6 +1,6 @@
 <svg width="123" height="122" viewBox="0 0 123 122" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="Frame 994">
-<circle id="Ellipse 173" cx="61.0391" cy="61" r="61" fill="black"/>
+<circle id="Ellipse 173" cx="61.0391" cy="61" r="61" fill="url(#paint0_linear_1_7725)"/>
 <g id="Group 802">
 <path id="Ellipse 179 (Stroke)" fill-rule="evenodd" clip-rule="evenodd" d="M61.0391 89.5714C76.8186 89.5714 89.6105 76.7796 89.6105 61C89.6105 45.2204 76.8186 32.4286 61.0391 32.4286C45.2595 32.4286 32.4676 45.2204 32.4676 61C32.4676 76.7796 45.2595 89.5714 61.0391 89.5714ZM61.0391 91C77.6076 91 91.0391 77.5685 91.0391 61C91.0391 44.4315 77.6076 31 61.0391 31C44.4705 31 31.0391 44.4315 31.0391 61C31.0391 77.5685 44.4705 91 61.0391 91Z" fill="white"/>
 <g id="Mask group">
@@ -24,4 +24,10 @@
 </g>
 </g>
 </g>
+<defs>
+<linearGradient id="paint0_linear_1_7725" x1="103.5" y1="12" x2="26.5" y2="114.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#4392E3"/>
+<stop offset="1" stop-color="#004E9F"/>
+</linearGradient>
+</defs>
 </svg>
