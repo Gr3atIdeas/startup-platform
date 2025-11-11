@@ -3626,7 +3626,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .timeline-step:not(.active-step-display):not(.completed-step-display)[data-step="4"] .step-number-wrapper .step-icon {
-  filter: grayscale(100%) brightness(0.3) invert(1) !important;
+  filter: brightness(0) invert(1) contrast(1.2) !important;
   opacity: 0.7;
 }
 
