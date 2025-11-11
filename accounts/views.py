@@ -2254,7 +2254,7 @@ def startup_detail(request, startup_id):
     if startup.funding_goal and startup.funding_goal > 0:
         from django.db.models import Sum as _Sum
         try:
-            current_total = startup.investmenttransactions.all().aggregate(total=_Sum("amount")).get("total") or Decimal("0")
+            current_total = InvestmentTransactions.objects.filter(startup=startup).aggregate(total=_Sum("amount")).get("total") or Decimal("0")
         except Exception:
             current_total = startup.amount_raised or Decimal("0")
         goal = Decimal(startup.funding_goal) if startup.funding_goal is not None else Decimal("0")
@@ -7682,7 +7682,9 @@ def add_investor(request, startup_id):
                         status=500,
                     )
 
-            startup.amount_raised = startup.investmenttransactions_set.aggregate(
+            startup.amount_raised = InvestmentTransactions.objects.filter(
+                startup=startup
+            ).aggregate(
                 total=Sum("amount")
             )["total"] or Decimal("0")
             startup.save(update_fields=["amount_raised"])
@@ -7765,7 +7767,9 @@ def delete_investment(request, startup_id, user_id):
                 startup = tx.startup
                 tx.delete()
 
-                new_total = startup.investmenttransactions_set.aggregate(
+                new_total = InvestmentTransactions.objects.filter(
+                    startup=startup
+                ).aggregate(
                     total=Sum("amount")
                 )["total"] or Decimal("0")
                 startup.amount_raised = new_total
