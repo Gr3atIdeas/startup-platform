@@ -14,13 +14,14 @@ def sanitize_description_html(html_content):
     # Разрешенные теги
     allowed_tags = [
         'img', 'video', 'p', 'br', 'strong', 'em', 'b', 'i', 'u', 'ul', 'ol', 'li',
-        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'blockquote'
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'blockquote', 'a'
     ]
     
     # Разрешенные атрибуты
     allowed_attributes = {
         'img': ['src', 'alt', 'width', 'height', 'class'],
         'video': ['src', 'controls', 'width', 'height', 'class', 'poster'],
+        'a': ['href', 'target', 'rel', 'title'],
         '*': ['class', 'style']
     }
     
@@ -40,6 +41,12 @@ def sanitize_description_html(html_content):
     
     # Дополнительная проверка URL в src атрибутах
     cleaned_html = validate_media_urls(cleaned_html)
+    
+    # Преобразуем URL в ссылки, если они не обернуты в теги
+    cleaned_html = convert_urls_to_links(cleaned_html)
+    
+    # Валидация и очистка ссылок
+    cleaned_html = validate_links(cleaned_html)
     
     return cleaned_html
 
@@ -96,3 +103,87 @@ def extract_media_urls(html_content):
         pass
     
     return urls
+
+
+def convert_urls_to_links(html_content):
+    """
+    Преобразует URL в тексте в кликабельные ссылки, если они не обернуты в теги <a>.
+    """
+    import re
+    
+    if not html_content:
+        return ""
+    
+    try:
+        soup = BeautifulSoup(html_content, 'html.parser')
+        
+        # Регулярное выражение для поиска URL
+        url_pattern = re.compile(
+            r'https?://[^\s<>"{}|\\^`\[\]]+[^\s<>"{}|\\^`\[\].,;:!?]',
+            re.IGNORECASE
+        )
+        
+        # Обрабатываем все текстовые узлы
+        from bs4 import NavigableString
+        
+        for text_node in soup.find_all(string=True):
+            parent = text_node.parent
+            if parent and parent.name not in ['a', 'script', 'style']:
+                text = str(text_node)
+                # Проверяем, есть ли URL в тексте
+                if url_pattern.search(text):
+                    # Разбиваем текст на части и заменяем URL на ссылки
+                    parts = []
+                    last_end = 0
+                    for match in url_pattern.finditer(text):
+                        # Добавляем текст до URL
+                        if match.start() > last_end:
+                            parts.append(NavigableString(text[last_end:match.start()]))
+                        # Добавляем ссылку
+                        url = match.group(0)
+                        link_tag = soup.new_tag('a', href=url, target='_blank', rel='noopener noreferrer')
+                        link_tag.string = url
+                        parts.append(link_tag)
+                        last_end = match.end()
+                    # Добавляем оставшийся текст
+                    if last_end < len(text):
+                        parts.append(NavigableString(text[last_end:]))
+                    
+                    # Заменяем текстовый узел на новые элементы
+                    if parts:
+                        text_node.replace_with(*parts)
+        
+        return str(soup)
+    except Exception:
+        return html_content
+
+
+def validate_links(html_content):
+    """
+    Валидирует и очищает ссылки, добавляя rel="noopener noreferrer" для безопасности.
+    """
+    if not html_content:
+        return ""
+    
+    try:
+        soup = BeautifulSoup(html_content, 'html.parser')
+        
+        for link in soup.find_all('a'):
+            href = link.get('href', '')
+            if href:
+                # Проверяем, что это валидный URL
+                parsed = urlparse(href)
+                if parsed.scheme in ['http', 'https'] or (not parsed.scheme and parsed.path):
+                    # Добавляем target="_blank" если его нет
+                    if not link.get('target'):
+                        link['target'] = '_blank'
+                    # Добавляем rel="noopener noreferrer" для безопасности
+                    if not link.get('rel'):
+                        link['rel'] = 'noopener noreferrer'
+                else:
+                    # Удаляем невалидные ссылки
+                    link.unwrap()
+        
+        return str(soup)
+    except Exception:
+        return html_content

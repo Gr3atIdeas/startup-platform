@@ -4662,6 +4662,22 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   font-style: italic;
 }
 
+.about-text a {
+  color: #007bff;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+  word-break: break-all;
+}
+
+.about-text a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.about-text a:visited {
+  color: #6c5ce7;
+}
+
 .additional-info {
   margin-top: 13px;
   clear: none;
