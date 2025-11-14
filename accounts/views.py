@@ -1898,6 +1898,24 @@ def franchise_detail(request, franchise_id):
     else:
         ai_rating = 5
 
+    progress_percentage = 0
+    if franchise.investment_size and franchise.investment_size > 0:
+        from django.db.models import Sum as _Sum
+        try:
+            current_total = InvestmentTransactions.objects.filter(franchise=franchise).aggregate(total=_Sum("amount")).get("total") or Decimal("0")
+        except Exception:
+            current_total = franchise.total_invested or Decimal("0")
+        goal = Decimal(franchise.investment_size) if franchise.investment_size is not None else Decimal("0")
+        if goal > 0:
+            progress_percentage = (current_total * Decimal("100")) / goal
+        else:
+            progress_percentage = Decimal("0")
+        if progress_percentage < 0:
+            progress_percentage = 0
+        if progress_percentage > 100:
+            progress_percentage = 100
+    investors_count = franchise.get_investors_count()
+
     context = {
         "franchise": franchise,
         "similar_franchises": similar_franchises,
@@ -1917,6 +1935,8 @@ def franchise_detail(request, franchise_id):
         "proofs_urls": proofs_urls,
         "franchise_documents": franchise_documents,
         "ai_rating": ai_rating,
+        "progress_percentage": progress_percentage,
+        "investors_count": investors_count,
     }
     return render(request, "accounts/franchise_detail.html", context)
 
