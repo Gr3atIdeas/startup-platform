@@ -1914,6 +1914,7 @@ def franchise_detail(request, franchise_id):
             progress_percentage = 0
         if progress_percentage > 100:
             progress_percentage = 100
+        progress_percentage = float(progress_percentage)
     investors_count = franchise.get_investors_count()
 
     context = {
@@ -2270,7 +2271,7 @@ def startup_detail(request, startup_id):
         )
     ):
         show_moderator_comment = True
-    progress_percentage = 0
+    progress_percentage = 0.0
     if startup.funding_goal and startup.funding_goal > 0:
         from django.db.models import Sum as _Sum
         try:
@@ -2283,9 +2284,10 @@ def startup_detail(request, startup_id):
         else:
             progress_percentage = Decimal("0")
         if progress_percentage < 0:
-            progress_percentage = 0
+            progress_percentage = 0.0
         if progress_percentage > 100:
-            progress_percentage = 100
+            progress_percentage = 100.0
+        progress_percentage = float(progress_percentage)
     investors_count = startup.get_investors_count()
     timeline_events = StartupTimeline.objects.filter(startup=startup).order_by(
         "step_number"
