@@ -37,7 +37,7 @@
                         
                         <div class="search-dropdown-section">
                             <div class="search-dropdown-header">
-                                <div class="search-dropdown-title">Инвесторы</div>
+                                <div class="search-dropdown-title">Пользователи</div>
                                 <div class="search-dropdown-clear" data-section="investors">Очистить</div>
                             </div>
                             <div class="search-dropdown-users" id="investorUsers">
@@ -88,7 +88,7 @@
                                     <span class="rating-value-mobile" data-rating="{{ effective_rating|stringformat:'.1f' }}">{{ effective_rating|stringformat:'.1f' }}/5</span>
                                 </div>
                                 <p class="role-text">
-                                    {% if user_profile.role.role_name == "investor" %}Инвестор
+                                    {% if user_profile.role.role_name == "investor" %}Пользователь
                                     {% elif user_profile.role.role_name == "startuper" %}Стартапер
                                     {% elif user_profile.role.role_name == "moderator" %}Модератор
                                     {% else %}{{ user_profile.role.role_name|capfirst }}{% endif %}
@@ -127,7 +127,7 @@
                                     <span class="rating-value-mobile" data-rating="{{ user_profile.rating|default:0|stringformat:'.1f' }}">{{ user_profile.rating|default:0|stringformat:'.1f' }}/5</span>
                                 </div>
                                 <p class="role-text">
-                                    {% if user_profile.role.role_name == "investor" %}Инвестор
+                                    {% if user_profile.role.role_name == "investor" %}Пользователь
                                     {% elif user_profile.role.role_name == "startuper" %}Стартапер
                                     {% elif user_profile.role.role_name == "moderator" %}Модератор
                                     {% else %}{{ user_profile.role.role_name|capfirst }}{% endif %}
@@ -136,7 +136,7 @@
                         </div>
                         <div class="user-stats-new">
                             {% if user_profile.role.role_name == "investor" %}
-                            <p>Инвестировал в: <span>{{ user_profile.invested_startups_count|default:0 }} стартапов</span></p>
+                            <!-- <p>Инвестировал в: <span>{{ user_profile.invested_startups_count|default:0 }} стартапов</span></p> -->
                             {% elif user_profile.role.role_name == "startuper" %}
                             <p>Открыл: <span>{{ user_profile.owned_startups_count|default:0 }} стартапов</span></p>
                             {% else %}
@@ -333,7 +333,7 @@
                 
                 <div class="group-chat-modal-role-filters">
                     <button class="group-chat-modal-role-btn active" data-role="startuper">Стартапер</button>
-                    <button class="group-chat-modal-role-btn inactive" data-role="investor">Инвестор</button>
+                    <button class="group-chat-modal-role-btn inactive" data-role="investor">Пользователь</button>
                 </div>
                 
                 <div class="group-chat-modal-users" id="groupChatUsersList">

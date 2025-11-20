@@ -35,7 +35,7 @@
                         <div class="profile-sidebar-role">
                             <span>
                                 {% if user.role.role_name == "startuper" %}Стартапер
-                                {% elif user.role.role_name == "investor" %}Инвестор
+                                {% elif user.role.role_name == "investor" %}Пользователь
                                 {% elif user.role.role_name == "moderator" %}Модератор
                                 {% elif user.role.role_name == "administrator" %}Администратор
                                 {% else %}{{ user.role.role_name|default:"Роль не указана" }}{% endif %}
@@ -317,7 +317,7 @@
       <select name="role_id" class="role-select" required style="padding:10px;margin:10px 0;width:100%;border:1px solid #ccc;border-radius:4px;font-size:16px;">
         <option value="">Выберите роль</option>
         <option value="1">Стартапер</option>
-        <option value="2">Инвестор</option>
+        <option value="2">Пользователь</option>
       </select>
       <div class="modal-buttons" style="margin-top:20px;">
         <button type="submit" name="select_role" class="confirm" style="padding:10px 20px;margin:0 10px;border:none;border-radius:4px;cursor:pointer;font-size:16px;background-color:#4CAF50;color:#fff;">Подтвердить</button>

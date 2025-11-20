@@ -1614,7 +1614,7 @@ function openInvestModal(type, startupId) {
     if (!modal) return;
     
     if (modalTitle) {
-      modalTitle.textContent = type === 'buy' ? 'Выкупить' : 'Инвестировать';
+      modalTitle.textContent = type === 'buy' ? 'Выкупить' : 'Связаться';
     }
     
     if (amountInput) {

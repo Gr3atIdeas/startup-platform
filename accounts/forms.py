@@ -927,7 +927,7 @@ class UserSearchForm(forms.Form):
     roles = forms.MultipleChoiceField(
         choices=[
             ("startuper", "Стартапер"),
-            ("investor", "Инвестор"),
+            ("investor", "Пользователь"),
             ("moderator", "Модератор"),
         ],
         required=False,

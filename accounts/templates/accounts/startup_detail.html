@@ -120,7 +120,7 @@
         {% endif %}
         <div class="secondary-actions">
           {% if startup.only_invest or startup.both_mode %}
-          <button class="action-button secondary-button" onclick="openInvestModal('invest', {{ startup.startup_id }})">Инвестировать</button>
+          <button class="action-button secondary-button" onclick="openInvestModal('invest', {{ startup.startup_id }})">Связаться</button>
           {% if startup.micro_investment_available %}
           <div class="microinvestment-badge">
             <i class="fas fa-check-circle"></i> Микроинвестиции
@@ -764,7 +764,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="investModalTitle">Инвестировать</h5>
+          <h5 class="modal-title" id="investModalTitle">Связаться</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">

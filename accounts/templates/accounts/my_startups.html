@@ -1039,10 +1039,10 @@
                 </div>
                 <div class="planetary-modal-actions">
                   <button id="planetary-modal-details-btn" class="planetary-modal-details-btn">Подробнее</button>
-                  <div class="planetary-modal-investors-info">
+                   <!-- Спрятал пока, т.к. инвесторы убираем <div class="planetary-modal-investors-info">
                     <img src="{% static 'accounts/images/planetary_system/groups.svg' %}" alt="Инвесторы" class="planetary-modal-investor-icon">
                     <div id="planetary-modal-investors-count" class="planetary-modal-investors-text">Инвестировало (0)</div>
-                  </div>
+                  </div>-->
                 </div>
               </div>
             </div>
@@ -1190,10 +1190,10 @@
                     <span class="detail-label">Собрано:</span>
                     <span class="detail-value">{{ startup.amount_raised|default:'0'|floatformat:0|intcomma }} ₽</span>
                   </div>
-                  <div class="startup-detail-row">
+                  <!-- <div class="startup-detail-row">
                     <span class="detail-label">Инвесторов:</span>
                     <span class="detail-value">{{ startup.get_investors_count|default:0|floatformat:0|intcomma }}</span>
-                  </div>
+                  </div>-->
                   <div class="startup-detail-row">
                     <span class="detail-label">Цель:</span>
                     <span class="detail-value">{{ startup.funding_goal|default:'0'|floatformat:0|intcomma }} ₽</span>
