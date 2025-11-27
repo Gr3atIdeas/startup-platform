@@ -2,7 +2,7 @@ import logging
 import os
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.db import models
+from django.db import models, connection
 from django.utils import timezone
 from django.utils.text import slugify
 from django.conf import settings
@@ -743,9 +743,25 @@ class Franchises(models.Model):
         return None
 
     def get_investors_count(self):
-        return InvestmentTransactions.objects.filter(
-            franchise=self
-        ).values("investor_id").distinct().count()
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT column_name 
+                    FROM information_schema.columns 
+                    WHERE table_name = 'investment_transactions' 
+                    AND column_name = 'franchise_id'
+                """)
+                if not cursor.fetchone():
+                    return 0
+                cursor.execute("""
+                    SELECT COUNT(DISTINCT investor_id) 
+                    FROM investment_transactions 
+                    WHERE franchise_id = %s
+                """, [self.franchise_id])
+                result = cursor.fetchone()
+                return result[0] if result else 0
+        except Exception:
+            return 0
 
     def get_status_display(self):
         status_map = {
