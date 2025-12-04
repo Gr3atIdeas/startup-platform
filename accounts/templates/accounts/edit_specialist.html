@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     
                     <div class="form-group upload-box" id="videoDropArea">
-                        <label for="id_video_input">*Видео (новое или для замены)</label>
+                        <label for="id_video_input">Видео (новое или для замены)</label>
                         {{ form.video|attr:"id:id_video_input"|attr:"name:video"|attr:"multiple:true"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файл</div>
                         <div class="small-text">Допустимый формат MOV, MP4 (1 файл)</div>
@@ -377,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             <div class="form-content-section">
                 <div class="form-group full-width">
-                    <label for="{{ form.terms.id_for_label }}">*{{ form.terms.label|cut:"*" }}</label>
+                    <label for="{{ form.terms.id_for_label }}">{{ form.terms.label|cut:"*" }}</label>
                     {{ form.terms|add_class:"form-control"|attr:"placeholder:Этапы работ" }}
                     <div class="small-text">Этапы работ, если они уже определены.</div>
                     {% if form.terms.errors %}<span class="error-message">{{ form.terms.errors|first }}</span>{% endif %}
@@ -395,7 +395,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             <div class="form-content-section">
                 <div class="form-group upload-box full-width" id="proofsDropArea">
-                    <label for="id_proofs_input">*Документы (новые или для замены)</label>
+                    <label for="id_proofs_input">Документы (новые или для замены)</label>
                     {{ form.proofs|attr:"multiple:true"|attr:"id:id_proofs_input"|attr:"name:proofs"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
                     <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файл</div>
                     <div class="small-text">Допустимый формат Doc, Excel, PDF (до 15 файлов)</div>

@@ -130,7 +130,7 @@
                     </div>
                     
                     <div class="form-group upload-box" id="videoDropArea">
-                        <label for="id_video_input">*Видео</label>
+                        <label for="id_video_input">Видео</label>
                         {{ form.video|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_video_input" }}
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файлы</div>
                         <div class="small-text">Допустимый формат MOV, MP4 (до 3 файлов)</div>
@@ -154,7 +154,7 @@
             
              <div class="form-content-section">
                 <div class="form-group full-width">
-                    <label for="{{ form.terms.id_for_label }}">*{{ form.terms.label }}</label>
+                    <label for="{{ form.terms.id_for_label }}">{{ form.terms.label }}</label>
                     {{ form.terms|add_class:"form-control"|attr:"placeholder:Опишите этапы работ" }}
                     {% if form.terms.errors %}<span class="error-message">{{ form.terms.errors|first }}</span>{% endif %}
                 </div>
@@ -165,7 +165,7 @@
             
             <div class="form-content-section">
                 <div class="form-group upload-box full-width" id="proofsDropArea">
-                    <label for="id_proofs_input">*Документы</label>
+                    <label for="id_proofs_input">Документы</label>
                     {{ form.proofs|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_proofs_input" }}
                     <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файл</div>
                     <div class="small-text">Допустимый формат Doc, Excel, PDF (до 10 файлов)</div>
@@ -449,12 +449,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 { id: '{{ form.title.id_for_label }}', name: 'Название агентства', type: 'text' },
                 { id: '{{ form.short_description.id_for_label }}', name: 'Вводная', type: 'textarea' },
                 { id: '{{ form.description.id_for_label }}', name: 'Описание', type: 'textarea' },
-                { id: '{{ form.terms.id_for_label }}', name: 'Этапы работ', type: 'textarea' },
+                // terms теперь необязательное поле
                 { id: '{{ form.direction.id_for_label }}', name: 'Категория', type: 'select' },
                 
                 { id: 'id_logo_input', name: 'Логотип', type: 'file', required: true },
                 { id: 'id_creatives_input', name: 'Изображения', type: 'file', required: true },
-                { id: 'id_video_input', name: 'Видео', type: 'file', required: true }
+                // видео теперь необязательное поле
             ];
 
             for (const field of requiredFields) {

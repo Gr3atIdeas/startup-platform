@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function () {
       "[name='stage']",
       "[name='short_description']",
       "[name='description']",
-      "[name='terms']",
+      // terms теперь необязательное поле
     ]
     
     // Планета обязательна только при создании, не при редактировании
@@ -358,10 +358,8 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       if (videoInput) {
         var v = videoInput.files ? videoInput.files.length : 0
-        if (v < 1) {
-          hasError = true
-          showFieldError(videoInput, 'Добавьте хотя бы 1 видео (до 3)')
-        } else if (v > 3) {
+        // Видео теперь необязательное поле
+        if (v > 3) {
           hasError = true
           showFieldError(videoInput, 'Не более 3 видео')
         } else {
@@ -370,10 +368,8 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       if (proofsInput) {
         var p = proofsInput.files ? proofsInput.files.length : 0
-        if (p < 1) {
-          hasError = true
-          showFieldError(proofsInput, 'Добавьте хотя бы 1 документ (до 10)')
-        } else if (p > 10) {
+        // Документы теперь необязательное поле
+        if (p > 10) {
           hasError = true
           showFieldError(proofsInput, 'Не более 10 документов')
         } else {
