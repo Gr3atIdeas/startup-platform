@@ -15,6 +15,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+# Установка git для возможности обновления кода
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
@@ -28,9 +31,11 @@ COPY --from=frontend-builder /app/static/dist ./static/dist/
 
 COPY static/accounts/ ./static/accounts/
 COPY entrypoint.sh .
+COPY update.sh .
 
 RUN chmod +x health_check.py
 RUN chmod +x entrypoint.sh
+RUN chmod +x update.sh
 
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
