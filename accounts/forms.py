@@ -100,7 +100,7 @@ class StartupEditForm(forms.ModelForm):
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)",
+        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)",
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     short_description = forms.CharField(
@@ -272,7 +272,7 @@ class StartupForm(forms.ModelForm):
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)"
+        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)"
     )
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
@@ -546,7 +546,7 @@ class FranchiseForm(forms.ModelForm):
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)"
+        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)"
     )
     short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False)
@@ -665,7 +665,7 @@ class AgencyForm(forms.ModelForm):
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)"
+        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)"
     )
     short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False)
@@ -773,7 +773,7 @@ class SpecialistForm(forms.ModelForm):
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)"
+        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)"
     )
     short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False)
@@ -1052,7 +1052,7 @@ class FranchiseEditForm(forms.ModelForm):
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)",
+        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)",
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     short_description = forms.CharField(
@@ -1142,7 +1142,7 @@ class AgencyEditForm(forms.ModelForm):
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)",
+        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)",
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     short_description = forms.CharField(
@@ -1248,7 +1248,7 @@ class SpecialistEditForm(forms.ModelForm):
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)",
+        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)",
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     short_description = forms.CharField(
