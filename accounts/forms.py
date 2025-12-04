@@ -656,6 +656,7 @@ class AgencyForm(forms.ModelForm):
         ("ИИ", "ИИ"),
         ("Брендинг", "Брендинг"),
         ("Видео и мультимедиа", "Видео и мультимедиа"),
+        ("Перевод", "Перевод"),
     ], label="Категория *", required=True)
 
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
@@ -763,6 +764,7 @@ class SpecialistForm(forms.ModelForm):
         ("ИИ", "ИИ"),
         ("Брендинг", "Брендинг"),
         ("Видео и мультимедиа", "Видео и мультимедиа"),
+        ("Перевод", "Перевод"),
     ], label="Категория *", required=True)
 
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
@@ -1117,6 +1119,7 @@ class AgencyEditForm(forms.ModelForm):
             ("ИИ", "ИИ"),
             ("Брендинг", "Брендинг"),
             ("Видео и мультимедиа", "Видео и мультимедиа"),
+            ("Перевод", "Перевод"),
         ],
         label="Категория", required=False
     )
@@ -1228,6 +1231,7 @@ class SpecialistEditForm(forms.ModelForm):
             ("ИИ", "ИИ"),
             ("Брендинг", "Брендинг"),
             ("Видео и мультимедиа", "Видео и мультимедиа"),
+            ("Перевод", "Перевод"),
         ],
         label="Категория", required=False
     )
