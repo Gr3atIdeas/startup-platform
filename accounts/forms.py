@@ -660,14 +660,14 @@ class AgencyForm(forms.ModelForm):
 
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
-    video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
+    video = forms.FileField(required=False, help_text="Загрузите видео (MP4, MOV)")
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
         help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)"
     )
     short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
-    terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ *", required=True)
+    terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False)
     planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
 
     def __init__(self, *args, **kwargs):
@@ -767,14 +767,14 @@ class SpecialistForm(forms.ModelForm):
 
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
-    video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
+    video = forms.FileField(required=False, help_text="Загрузите видео (MP4, MOV)")
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
         help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)"
     )
     short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
-    terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ *", required=True)
+    terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False)
     additional_info = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Услуги и кейсы", required=False)
     planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
 
