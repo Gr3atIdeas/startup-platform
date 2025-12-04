@@ -136,7 +136,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (response.ok) {
                     return response.json();
                 } else {
-                    return response.text().then(text => {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Ошибка сервера: ' + response.status);
+                    }).catch(e => {
+                        if (e.message) throw e;
                         throw new Error('Ошибка сервера: ' + response.status);
                     });
                 }

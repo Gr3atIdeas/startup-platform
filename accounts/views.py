@@ -4688,14 +4688,20 @@ def edit_startup(request, startup_id):
             
             # Проверка лимитов файлов
             if len(creatives) > 10:
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "error": "Максимально 10 изображений"}, status=400)
                 messages.error(request, "Максимально 10 изображений")
                 return render(request, "accounts/edit_startup.html", {"form": form, "startup": startup, "timeline_steps": timeline_steps})
             
             if len(proofs) > 15:
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "error": "Максимально 15 документов"}, status=400)
                 messages.error(request, "Максимально 15 документов")
                 return render(request, "accounts/edit_startup.html", {"form": form, "startup": startup, "timeline_steps": timeline_steps})
             
             if len(videos) > 1:
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "error": "Максимально 1 видео"}, status=400)
                 messages.error(request, "Максимально 1 видео")
                 return render(request, "accounts/edit_startup.html", {"form": form, "startup": startup, "timeline_steps": timeline_steps})
             
@@ -8660,14 +8666,20 @@ def edit_franchise(request, franchise_id):
             
             # Проверка лимитов файлов
             if len(creatives) > 3:
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "error": "Максимально 3 изображения"}, status=400)
                 messages.error(request, "Максимально 3 изображения")
                 return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
             
             if len(proofs) > 15:
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "error": "Максимально 15 документов"}, status=400)
                 messages.error(request, "Максимально 15 документов")
                 return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
             
             if len(videos) > 1:
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "error": "Максимально 1 видео"}, status=400)
                 messages.error(request, "Максимально 1 видео")
                 return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
             
@@ -8974,14 +8986,20 @@ def edit_agency(request, agency_id):
             
             # Проверка лимитов файлов
             if len(creatives) > 3:
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "error": "Максимально 3 изображения"}, status=400)
                 messages.error(request, "Максимально 3 изображения")
                 return render(request, "accounts/edit_agency.html", {"form": form, "agency": agency})
             
             if len(proofs) > 15:
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "error": "Максимально 15 документов"}, status=400)
                 messages.error(request, "Максимально 15 документов")
                 return render(request, "accounts/edit_agency.html", {"form": form, "agency": agency})
             
             if len(videos) > 1:
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "error": "Максимально 1 видео"}, status=400)
                 messages.error(request, "Максимально 1 видео")
                 return render(request, "accounts/edit_agency.html", {"form": form, "agency": agency})
             
@@ -9288,14 +9306,20 @@ def edit_specialist(request, specialist_id):
             
             # Проверка лимитов файлов
             if len(creatives) > 3:
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "error": "Максимально 3 изображения"}, status=400)
                 messages.error(request, "Максимально 3 изображения")
                 return render(request, "accounts/edit_specialist.html", {"form": form, "specialist": specialist})
             
             if len(proofs) > 15:
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "error": "Максимально 15 документов"}, status=400)
                 messages.error(request, "Максимально 15 документов")
                 return render(request, "accounts/edit_specialist.html", {"form": form, "specialist": specialist})
             
             if len(videos) > 1:
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "error": "Максимально 1 видео"}, status=400)
                 messages.error(request, "Максимально 1 видео")
                 return render(request, "accounts/edit_specialist.html", {"form": form, "specialist": specialist})
             

@@ -253,7 +253,7 @@ class StartupForm(forms.ModelForm):
         required=True, help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)"
     )
     proofs = forms.FileField(
-        required=True, help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
+        required=False, help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
     )
     direction = forms.ModelChoiceField(
         queryset=Directions.objects.none(), label="Направление *", required=True
@@ -268,7 +268,7 @@ class StartupForm(forms.ModelForm):
     micro_investment_available = forms.BooleanField(
         required=False, label="Микроинвестиции доступны"
     )
-    video = forms.FileField(required=True, help_text="Загрузите видео (1 файл: MP4, MOV)")
+    video = forms.FileField(required=False, help_text="Загрузите видео (1 файл: MP4, MOV)")
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
@@ -278,7 +278,7 @@ class StartupForm(forms.ModelForm):
         widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
     )
     terms = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Условия *", required=True
+        widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False
     )
     planet_image = forms.ChoiceField(
         choices=[],
@@ -430,7 +430,7 @@ class StartupForm(forms.ModelForm):
             "title": "Название стартапа *",
             "short_description": "Вводная *",
             "description": "Описание *",
-            "terms": "Условия *",
+            "terms": "Условия",
             "funding_goal": "Цель финансирования (₽) *",
             "amount_raised": "Собранная сумма (₽)",
             "valuation": "Оценка (₽)",
@@ -440,8 +440,8 @@ class StartupForm(forms.ModelForm):
             "stage": "Стадия *",
             "logo": "Логотип *",
             "creatives": "Изображения *",
-            "video": "Видео *",
-            "proofs": "Документы *",
+            "video": "Видео",
+            "proofs": "Документы",
             "micro_investment_available": "Микроинвестиции доступны",
             "agree_rules": "Согласен с правилами *",
             "agree_data_processing": "Согласен с обработкой данных *",
@@ -522,7 +522,7 @@ class DirectionModelChoiceField(forms.ModelChoiceField):
 class FranchiseForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = forms.FileField(required=True, help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)")
-    proofs = forms.FileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
+    proofs = forms.FileField(required=False, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
     direction = DirectionModelChoiceField(
         queryset=Directions.objects.filter(
             direction_name__in=[
@@ -542,14 +542,14 @@ class FranchiseForm(forms.ModelForm):
 
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
-    video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
+    video = forms.FileField(required=False, help_text="Загрузите видео (MP4, MOV)")
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
         help_text="Загрузите широкоформатное изображение (рекомендуемое соотношение 3:1, форматы: PNG, JPEG, WEBP, максимум 5MB)"
     )
     short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
-    terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Условия *", required=True)
+    terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False)
     planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
 
     def __init__(self, *args, **kwargs):
@@ -611,7 +611,7 @@ class FranchiseForm(forms.ModelForm):
             "title": "Название франшизы *",
             "short_description": "Вводная *",
             "description": "Описание *",
-            "terms": "Условия *",
+            "terms": "Условия",
             "investment_size": "Размер инвестиций (₽)",
             "franchise_cost": "Стоимость франшизы (₽)",
             "pitch_deck_url": "URL презентации",
@@ -619,8 +619,8 @@ class FranchiseForm(forms.ModelForm):
             "stage": "Стадия *",
             "logo": "Логотип *",
             "creatives": "Изображения *",
-            "video": "Видео *",
-            "proofs": "Документы *",
+            "video": "Видео",
+            "proofs": "Документы",
             "agree_rules": "Согласен с правилами *",
             "agree_data_processing": "Согласен с обработкой данных *",
             "profit_calculation": "Стоимость и расчет прибыли",
@@ -647,7 +647,7 @@ class FranchiseForm(forms.ModelForm):
 class AgencyForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = forms.FileField(required=True, help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)")
-    proofs = forms.FileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
+    proofs = forms.FileField(required=False, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
     direction = forms.ChoiceField(choices=[
         ("Веб-разработка", "Веб-разработка"),
         ("Мобильная разработка", "Мобильная разработка"),
@@ -721,14 +721,14 @@ class AgencyForm(forms.ModelForm):
             "title": "Название агентства *",
             "short_description": "Вводная *",
             "description": "Описание *",
-            "terms": "Этапы работ *",
+            "terms": "Этапы работ",
             "pitch_deck_url": "URL презентации",
             "direction": "Категория *",
             "stage": "Стадия *",
             "logo": "Логотип *",
             "creatives": "Изображения *",
-            "video": "Видео *",
-            "proofs": "Документы *",
+            "video": "Видео",
+            "proofs": "Документы",
             "agree_rules": "Согласен с правилами *",
             "agree_data_processing": "Согласен с обработкой данных *",
         }
@@ -754,7 +754,7 @@ class AgencyForm(forms.ModelForm):
 class SpecialistForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = forms.FileField(required=True, help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)")
-    proofs = forms.FileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
+    proofs = forms.FileField(required=False, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
     direction = forms.ChoiceField(choices=[
         ("Веб-разработка", "Веб-разработка"),
         ("Мобильная разработка", "Мобильная разработка"),
@@ -831,15 +831,15 @@ class SpecialistForm(forms.ModelForm):
             "title": "Профиль специалиста *",
             "short_description": "Вводная *",
             "description": "Описание *",
-            "terms": "Этапы работ *",
+            "terms": "Этапы работ",
             "additional_info": "Услуги и кейсы",
             "pitch_deck_url": "URL презентации",
             "direction": "Категория *",
             "stage": "Стадия *",
             "logo": "Логотип *",
             "creatives": "Изображения *",
-            "video": "Видео *",
-            "proofs": "Документы *",
+            "video": "Видео",
+            "proofs": "Документы",
             "agree_rules": "Согласен с правилами *",
             "agree_data_processing": "Согласен с обработкой данных *",
         }
