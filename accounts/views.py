@@ -3325,8 +3325,18 @@ def create_startup(request):
         messages.error(request, "Доступ к созданию стартапа разрешён только пользователям с ролью 'Стартаппер' или 'Модератор'.")
         return redirect("home")
     if request.method == "POST":
+        # Логирование входящих данных
+        logger.info(f"=== CREATE_STARTUP START === User: {request.user.id} ({request.user.email})")
+        logger.info(f"POST keys: {list(request.POST.keys())}")
+        logger.info(f"FILES keys: {list(request.FILES.keys())}")
+        for key, files in request.FILES.lists():
+            logger.info(f"  {key}: {len(files)} файлов, sizes: {[f.size for f in files]}, names: {[f.name for f in files]}")
+        total_size = sum(f.size for f in request.FILES.values())
+        logger.info(f"Total upload size: {total_size / 1024 / 1024:.2f} MB")
+        
         form = StartupForm(request.POST, request.FILES)
         if form.is_valid():
+            logger.info("Form is valid, creating startup...")
             startup = form.save(commit=False)
             startup.owner = request.user
             startup.created_at = timezone.now()
@@ -3628,11 +3638,15 @@ def create_startup(request):
             return redirect("startup_creation_success")
         else:
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                logger.warning(f"=== CREATE_STARTUP FORM INVALID (AJAX) === User: {request.user.id}")
+                logger.warning(f"Form errors: {form.errors.as_json()}")
                 return JsonResponse({
                     "success": False,
                     "errors": form.errors,
                     "non_field_errors": form.non_field_errors(),
                 }, status=400)
+            logger.warning(f"=== CREATE_STARTUP FORM INVALID === User: {request.user.id}")
+            logger.warning(f"Form errors: {form.errors.as_json()}")
             messages.error(request, "Форма содержит ошибки.")
             return render(
                 request,
@@ -3650,8 +3664,18 @@ def create_franchise(request):
         messages.error(request, "Доступ к созданию франшизы разрешён только пользователям с ролью 'Стартаппер' или 'Модератор'.")
         return redirect("home")
     if request.method == "POST":
+        # Логирование входящих данных
+        logger.info(f"=== CREATE_FRANCHISE START === User: {request.user.id} ({request.user.email})")
+        logger.info(f"POST keys: {list(request.POST.keys())}")
+        logger.info(f"FILES keys: {list(request.FILES.keys())}")
+        for key, files in request.FILES.lists():
+            logger.info(f"  {key}: {len(files)} файлов, sizes: {[f.size for f in files]}, names: {[f.name for f in files]}")
+        total_size = sum(f.size for f in request.FILES.values())
+        logger.info(f"Total upload size: {total_size / 1024 / 1024:.2f} MB")
+        
         form = FranchiseForm(request.POST, request.FILES)
         if form.is_valid():
+            logger.info("Form is valid, creating franchise...")
             franchise = form.save(commit=False)
             franchise.owner = request.user
             franchise.created_at = timezone.now()
@@ -3877,9 +3901,12 @@ def create_franchise(request):
             franchise.slider_images = slider_images
             
             franchise.save()
+            logger.info(f"=== CREATE_FRANCHISE SUCCESS === franchise_id: {franchise.franchise_id}")
             messages.success(request, f'Франшиза "{franchise.title}" успешно создана и отправлена на модерацию!')
             return redirect("franchises_list")
         else:
+            logger.warning(f"=== CREATE_FRANCHISE FORM INVALID === User: {request.user.id}")
+            logger.warning(f"Form errors: {form.errors.as_json()}")
             messages.error(request, "Форма содержит ошибки.")
             return render(request, "accounts/create_franchise.html", {"form": form})
     else:
@@ -3893,8 +3920,18 @@ def create_agency(request):
         messages.error(request, "Доступ к созданию агентства разрешён только пользователям с ролью 'Стартаппер' или 'Модератор'.")
         return redirect("home")
     if request.method == "POST":
+        # Логирование входящих данных
+        logger.info(f"=== CREATE_AGENCY START === User: {request.user.id} ({request.user.email})")
+        logger.info(f"POST keys: {list(request.POST.keys())}")
+        logger.info(f"FILES keys: {list(request.FILES.keys())}")
+        for key, files in request.FILES.lists():
+            logger.info(f"  {key}: {len(files)} файлов, sizes: {[f.size for f in files]}, names: {[f.name for f in files]}")
+        total_size = sum(f.size for f in request.FILES.values())
+        logger.info(f"Total upload size: {total_size / 1024 / 1024:.2f} MB")
+        
         form = AgencyForm(request.POST, request.FILES)
         if form.is_valid():
+            logger.info("Form is valid, creating agency...")
             agency = form.save(commit=False)
             agency.owner = request.user
             agency.created_at = timezone.now()
@@ -4073,9 +4110,12 @@ def create_agency(request):
             agency.slider_images = slider_images
             
             agency.save()
+            logger.info(f"=== CREATE_AGENCY SUCCESS === agency_id: {agency.agency_id}")
             messages.success(request, f'Агентство "{agency.title}" успешно создано и отправлено на модерацию!')
             return redirect("agencies_list")
         else:
+            logger.warning(f"=== CREATE_AGENCY FORM INVALID === User: {request.user.id}")
+            logger.warning(f"Form errors: {form.errors.as_json()}")
             messages.error(request, "Форма содержит ошибки.")
             return render(request, "accounts/create_agency.html", {"form": form})
     else:
@@ -4089,8 +4129,18 @@ def create_specialist(request):
         messages.error(request, "Доступ к созданию профиля специалиста разрешён только пользователям с ролью 'Стартаппер' или 'Модератор'.")
         return redirect("home")
     if request.method == "POST":
+        # Логирование входящих данных
+        logger.info(f"=== CREATE_SPECIALIST START === User: {request.user.id} ({request.user.email})")
+        logger.info(f"POST keys: {list(request.POST.keys())}")
+        logger.info(f"FILES keys: {list(request.FILES.keys())}")
+        for key, files in request.FILES.lists():
+            logger.info(f"  {key}: {len(files)} файлов, sizes: {[f.size for f in files]}, names: {[f.name for f in files]}")
+        total_size = sum(f.size for f in request.FILES.values())
+        logger.info(f"Total upload size: {total_size / 1024 / 1024:.2f} MB")
+        
         form = SpecialistForm(request.POST, request.FILES)
         if form.is_valid():
+            logger.info("Form is valid, creating specialist...")
             spec = form.save(commit=False)
             spec.owner = request.user
             spec.created_at = timezone.now()
@@ -4267,9 +4317,12 @@ def create_specialist(request):
             spec.slider_images = slider_images
             
             spec.save()
+            logger.info(f"=== CREATE_SPECIALIST SUCCESS === specialist_id: {spec.specialist_id}")
             messages.success(request, f'Профиль специалиста "{spec.title}" успешно создан и отправлен на модерацию!')
             return redirect("specialists_list")
         else:
+            logger.warning(f"=== CREATE_SPECIALIST FORM INVALID === User: {request.user.id}")
+            logger.warning(f"Form errors: {form.errors.as_json()}")
             messages.error(request, "Форма содержит ошибки.")
             return render(request, "accounts/create_specialist.html", {"form": form})
     else:
@@ -8667,10 +8720,10 @@ def edit_franchise(request, franchise_id):
             videos = request.FILES.getlist("video")
             
             # Проверка лимитов файлов
-            if len(creatives) > 3:
+            if len(creatives) > 10:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
-                    return JsonResponse({"success": False, "error": "Максимально 3 изображения"}, status=400)
-                messages.error(request, "Максимально 3 изображения")
+                    return JsonResponse({"success": False, "error": "Максимально 10 изображений"}, status=400)
+                messages.error(request, "Максимально 10 изображений")
                 return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
             
             if len(proofs) > 15:
@@ -8987,10 +9040,10 @@ def edit_agency(request, agency_id):
             videos = request.FILES.getlist("video")
             
             # Проверка лимитов файлов
-            if len(creatives) > 3:
+            if len(creatives) > 10:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
-                    return JsonResponse({"success": False, "error": "Максимально 3 изображения"}, status=400)
-                messages.error(request, "Максимально 3 изображения")
+                    return JsonResponse({"success": False, "error": "Максимально 10 изображений"}, status=400)
+                messages.error(request, "Максимально 10 изображений")
                 return render(request, "accounts/edit_agency.html", {"form": form, "agency": agency})
             
             if len(proofs) > 15:
@@ -9307,10 +9360,10 @@ def edit_specialist(request, specialist_id):
             videos = request.FILES.getlist("video")
             
             # Проверка лимитов файлов
-            if len(creatives) > 3:
+            if len(creatives) > 10:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
-                    return JsonResponse({"success": False, "error": "Максимально 3 изображения"}, status=400)
-                messages.error(request, "Максимально 3 изображения")
+                    return JsonResponse({"success": False, "error": "Максимально 10 изображений"}, status=400)
+                messages.error(request, "Максимально 10 изображений")
                 return render(request, "accounts/edit_specialist.html", {"form": form, "specialist": specialist})
             
             if len(proofs) > 15:

@@ -170,7 +170,7 @@
                     <label for="id_proofs_input">Документы</label>
                     {{ form.proofs|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_proofs_input" }}
                     <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файл</div>
-                    <div class="small-text">Допустимый формат Doc, Excel, PDF (до 3 файлов)</div>
+                    <div class="small-text">Допустимый формат Doc, Excel, PDF (до 10 файлов)</div>
                     <div id="proofsPreview" class="file-preview-area">
                     </div>
                     {% if form.proofs.errors %}<span class="error-message">{{ form.proofs.errors|first }}</span>{% endif %}

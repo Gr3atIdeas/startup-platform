@@ -79,7 +79,7 @@ class StartupEditForm(forms.ModelForm):
         help_text="Загрузите новый логотип стартапа (изображение)",
     )
     creatives = forms.FileField(
-        required=False, help_text="Загрузите новые изображения (до 3 файлов: PNG, JPEG)",
+        required=False, help_text="Загрузите новые изображения (до 10 файлов: PNG, JPEG)",
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     proofs = forms.FileField(
@@ -522,7 +522,7 @@ class DirectionModelChoiceField(forms.ModelChoiceField):
 class FranchiseForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = forms.FileField(required=True, help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)")
-    proofs = forms.FileField(required=False, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
+    proofs = forms.FileField(required=False, help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)")
     direction = DirectionModelChoiceField(
         queryset=Directions.objects.filter(
             direction_name__in=[
@@ -647,7 +647,7 @@ class FranchiseForm(forms.ModelForm):
 class AgencyForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = forms.FileField(required=True, help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)")
-    proofs = forms.FileField(required=False, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
+    proofs = forms.FileField(required=False, help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)")
     direction = forms.ChoiceField(choices=[
         ("Веб-разработка", "Веб-разработка"),
         ("Мобильная разработка", "Мобильная разработка"),
@@ -755,7 +755,7 @@ class AgencyForm(forms.ModelForm):
 class SpecialistForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = forms.FileField(required=True, help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)")
-    proofs = forms.FileField(required=False, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
+    proofs = forms.FileField(required=False, help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)")
     direction = forms.ChoiceField(choices=[
         ("Веб-разработка", "Веб-разработка"),
         ("Мобильная разработка", "Мобильная разработка"),
@@ -1029,7 +1029,7 @@ class FranchiseEditForm(forms.ModelForm):
         help_text="Загрузите новый логотип франшизы (изображение)",
     )
     creatives = forms.FileField(
-        required=False, help_text="Загрузите новые изображения (до 3 файлов: PNG, JPEG)",
+        required=False, help_text="Загрузите новые изображения (до 10 файлов: PNG, JPEG)",
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     proofs = forms.FileField(
@@ -1102,7 +1102,7 @@ class AgencyEditForm(forms.ModelForm):
         help_text="Загрузите новый логотип агентства (изображение)",
     )
     creatives = forms.FileField(
-        required=False, help_text="Загрузите новые изображения (до 3 файлов: PNG, JPEG)",
+        required=False, help_text="Загрузите новые изображения (до 10 файлов: PNG, JPEG)",
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     proofs = forms.FileField(
@@ -1214,7 +1214,7 @@ class SpecialistEditForm(forms.ModelForm):
         help_text="Загрузите новый логотип специалиста (изображение)",
     )
     creatives = forms.FileField(
-        required=False, help_text="Загрузите новые изображения (до 3 файлов: PNG, JPEG)",
+        required=False, help_text="Загрузите новые изображения (до 10 файлов: PNG, JPEG)",
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     proofs = forms.FileField(

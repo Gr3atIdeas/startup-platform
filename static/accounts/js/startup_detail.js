@@ -1488,8 +1488,8 @@ function handleFileUpload(files) {
   if (!files || files.length === 0) return;
   
   // Проверяем лимиты
-  if (files.length > 3) {
-    alert('Максимально можно загрузить 3 изображения');
+  if (files.length > 10) {
+    alert('Максимально можно загрузить 10 изображений');
     return;
   }
   
