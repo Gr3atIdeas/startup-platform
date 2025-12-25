@@ -523,13 +523,11 @@ class FranchiseForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = forms.FileField(
         required=False,  # Делаем False, т.к. валидация через request.FILES.getlist
-        help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)",
-        widget=forms.FileInput(attrs={'multiple': True})
+        help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)"
     )
     proofs = forms.FileField(
         required=False, 
-        help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)",
-        widget=forms.FileInput(attrs={'multiple': True})
+        help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
     )
     direction = DirectionModelChoiceField(
         queryset=Directions.objects.filter(
@@ -656,13 +654,11 @@ class AgencyForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = forms.FileField(
         required=False,  # Делаем False, т.к. валидация через request.FILES.getlist
-        help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)",
-        widget=forms.FileInput(attrs={'multiple': True})
+        help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)"
     )
     proofs = forms.FileField(
         required=False, 
-        help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)",
-        widget=forms.FileInput(attrs={'multiple': True})
+        help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
     )
     direction = forms.ChoiceField(choices=[
         ("Веб-разработка", "Веб-разработка"),
@@ -772,13 +768,11 @@ class SpecialistForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
     creatives = forms.FileField(
         required=False,  # Делаем False, т.к. валидация через request.FILES.getlist
-        help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)",
-        widget=forms.FileInput(attrs={'multiple': True})
+        help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)"
     )
     proofs = forms.FileField(
         required=False, 
-        help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)",
-        widget=forms.FileInput(attrs={'multiple': True})
+        help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
     )
     direction = forms.ChoiceField(choices=[
         ("Веб-разработка", "Веб-разработка"),
