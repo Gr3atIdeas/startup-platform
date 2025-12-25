@@ -3326,7 +3326,7 @@ def create_startup(request):
         return redirect("home")
     if request.method == "POST":
         # Логирование входящих данных
-        logger.info(f"=== CREATE_STARTUP START === User: {request.user.id} ({request.user.email})")
+        logger.info(f"=== CREATE_STARTUP START === User: {request.user.user_id} ({request.user.email})")
         logger.info(f"POST keys: {list(request.POST.keys())}")
         logger.info(f"FILES keys: {list(request.FILES.keys())}")
         for key, files in request.FILES.lists():
@@ -3638,14 +3638,14 @@ def create_startup(request):
             return redirect("startup_creation_success")
         else:
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
-                logger.warning(f"=== CREATE_STARTUP FORM INVALID (AJAX) === User: {request.user.id}")
+                logger.warning(f"=== CREATE_STARTUP FORM INVALID (AJAX) === User: {request.user.user_id}")
                 logger.warning(f"Form errors: {form.errors.as_json()}")
                 return JsonResponse({
                     "success": False,
                     "errors": form.errors,
                     "non_field_errors": form.non_field_errors(),
                 }, status=400)
-            logger.warning(f"=== CREATE_STARTUP FORM INVALID === User: {request.user.id}")
+            logger.warning(f"=== CREATE_STARTUP FORM INVALID === User: {request.user.user_id}")
             logger.warning(f"Form errors: {form.errors.as_json()}")
             messages.error(request, "Форма содержит ошибки.")
             return render(
@@ -3665,7 +3665,7 @@ def create_franchise(request):
         return redirect("home")
     if request.method == "POST":
         # Логирование входящих данных
-        logger.info(f"=== CREATE_FRANCHISE START === User: {request.user.id} ({request.user.email})")
+        logger.info(f"=== CREATE_FRANCHISE START === User: {request.user.user_id} ({request.user.email})")
         logger.info(f"POST keys: {list(request.POST.keys())}")
         logger.info(f"FILES keys: {list(request.FILES.keys())}")
         for key, files in request.FILES.lists():
@@ -3905,7 +3905,7 @@ def create_franchise(request):
             messages.success(request, f'Франшиза "{franchise.title}" успешно создана и отправлена на модерацию!')
             return redirect("franchises_list")
         else:
-            logger.warning(f"=== CREATE_FRANCHISE FORM INVALID === User: {request.user.id}")
+            logger.warning(f"=== CREATE_FRANCHISE FORM INVALID === User: {request.user.user_id}")
             logger.warning(f"Form errors: {form.errors.as_json()}")
             messages.error(request, "Форма содержит ошибки.")
             return render(request, "accounts/create_franchise.html", {"form": form})
@@ -3921,7 +3921,7 @@ def create_agency(request):
         return redirect("home")
     if request.method == "POST":
         # Логирование входящих данных
-        logger.info(f"=== CREATE_AGENCY START === User: {request.user.id} ({request.user.email})")
+        logger.info(f"=== CREATE_AGENCY START === User: {request.user.user_id} ({request.user.email})")
         logger.info(f"POST keys: {list(request.POST.keys())}")
         logger.info(f"FILES keys: {list(request.FILES.keys())}")
         for key, files in request.FILES.lists():
@@ -4114,7 +4114,7 @@ def create_agency(request):
             messages.success(request, f'Агентство "{agency.title}" успешно создано и отправлено на модерацию!')
             return redirect("agencies_list")
         else:
-            logger.warning(f"=== CREATE_AGENCY FORM INVALID === User: {request.user.id}")
+            logger.warning(f"=== CREATE_AGENCY FORM INVALID === User: {request.user.user_id}")
             logger.warning(f"Form errors: {form.errors.as_json()}")
             messages.error(request, "Форма содержит ошибки.")
             return render(request, "accounts/create_agency.html", {"form": form})
@@ -4130,7 +4130,7 @@ def create_specialist(request):
         return redirect("home")
     if request.method == "POST":
         # Логирование входящих данных
-        logger.info(f"=== CREATE_SPECIALIST START === User: {request.user.id} ({request.user.email})")
+        logger.info(f"=== CREATE_SPECIALIST START === User: {request.user.user_id} ({request.user.email})")
         logger.info(f"POST keys: {list(request.POST.keys())}")
         logger.info(f"FILES keys: {list(request.FILES.keys())}")
         for key, files in request.FILES.lists():
@@ -4321,7 +4321,7 @@ def create_specialist(request):
             messages.success(request, f'Профиль специалиста "{spec.title}" успешно создан и отправлен на модерацию!')
             return redirect("specialists_list")
         else:
-            logger.warning(f"=== CREATE_SPECIALIST FORM INVALID === User: {request.user.id}")
+            logger.warning(f"=== CREATE_SPECIALIST FORM INVALID === User: {request.user.user_id})"
             logger.warning(f"Form errors: {form.errors.as_json()}")
             messages.error(request, "Форма содержит ошибки.")
             return render(request, "accounts/create_specialist.html", {"form": form})

@@ -346,10 +346,14 @@ document.addEventListener('DOMContentLoaded', function () {
       var proofsInput = document.getElementById('id_proofs_input')
       if (creativesInput) {
         var c = creativesInput.files ? creativesInput.files.length : 0
-        if (c < 1) {
+        // Также проверяем превью-область
+        var creativesPreview = document.getElementById('creativesPreview')
+        var previewCount = creativesPreview ? creativesPreview.querySelectorAll('.file-preview-item').length : 0
+        var totalCreatives = Math.max(c, previewCount)
+        if (totalCreatives < 1) {
           hasError = true
           showFieldError(creativesInput, 'Добавьте хотя бы 1 изображение (до 10)')
-        } else if (c > 10) {
+        } else if (totalCreatives > 10) {
           hasError = true
           showFieldError(creativesInput, 'Не более 10 изображений')
         } else {

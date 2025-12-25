@@ -511,7 +511,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             isInvalid = true;
                         }
                     } else if (field.type === 'file' && field.required) {
-                        if (element.files.length === 0) {
+                        // Проверяем и input.files и превью-область
+                        const previewAreaId = field.id.replace('_input', 'Preview');
+                        const previewArea = document.getElementById(previewAreaId);
+                        const hasFilesInInput = element.files && element.files.length > 0;
+                        const hasFilesInPreview = previewArea && previewArea.querySelectorAll('.file-preview-item').length > 0;
+                        if (!hasFilesInInput && !hasFilesInPreview) {
                             isInvalid = true;
                         }
                     }
