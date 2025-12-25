@@ -521,8 +521,16 @@ class DirectionModelChoiceField(forms.ModelChoiceField):
 
 class FranchiseForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
-    creatives = forms.FileField(required=True, help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)")
-    proofs = forms.FileField(required=False, help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)")
+    creatives = forms.FileField(
+        required=False,  # Делаем False, т.к. валидация через request.FILES.getlist
+        help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)",
+        widget=forms.ClearableFileInput(attrs={'multiple': True})
+    )
+    proofs = forms.FileField(
+        required=False, 
+        help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)",
+        widget=forms.ClearableFileInput(attrs={'multiple': True})
+    )
     direction = DirectionModelChoiceField(
         queryset=Directions.objects.filter(
             direction_name__in=[
@@ -646,8 +654,16 @@ class FranchiseForm(forms.ModelForm):
 
 class AgencyForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
-    creatives = forms.FileField(required=True, help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)")
-    proofs = forms.FileField(required=False, help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)")
+    creatives = forms.FileField(
+        required=False,  # Делаем False, т.к. валидация через request.FILES.getlist
+        help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)",
+        widget=forms.ClearableFileInput(attrs={'multiple': True})
+    )
+    proofs = forms.FileField(
+        required=False, 
+        help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)",
+        widget=forms.ClearableFileInput(attrs={'multiple': True})
+    )
     direction = forms.ChoiceField(choices=[
         ("Веб-разработка", "Веб-разработка"),
         ("Мобильная разработка", "Мобильная разработка"),
@@ -754,8 +770,16 @@ class AgencyForm(forms.ModelForm):
 
 class SpecialistForm(forms.ModelForm):
     logo = forms.ImageField(label="Логотип *", required=True)
-    creatives = forms.FileField(required=True, help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)")
-    proofs = forms.FileField(required=False, help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)")
+    creatives = forms.FileField(
+        required=False,  # Делаем False, т.к. валидация через request.FILES.getlist
+        help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)",
+        widget=forms.ClearableFileInput(attrs={'multiple': True})
+    )
+    proofs = forms.FileField(
+        required=False, 
+        help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)",
+        widget=forms.ClearableFileInput(attrs={'multiple': True})
+    )
     direction = forms.ChoiceField(choices=[
         ("Веб-разработка", "Веб-разработка"),
         ("Мобильная разработка", "Мобильная разработка"),

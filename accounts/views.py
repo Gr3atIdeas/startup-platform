@@ -3674,6 +3674,12 @@ def create_franchise(request):
         logger.info(f"Total upload size: {total_size / 1024 / 1024:.2f} MB")
         
         form = FranchiseForm(request.POST, request.FILES)
+        
+        # Проверяем наличие изображений через request.FILES.getlist
+        creatives_files = request.FILES.getlist("creatives")
+        if not creatives_files:
+            form.add_error("creatives", "Загрузите хотя бы одно изображение.")
+        
         if form.is_valid():
             logger.info("Form is valid, creating franchise...")
             franchise = form.save(commit=False)
@@ -3930,6 +3936,12 @@ def create_agency(request):
         logger.info(f"Total upload size: {total_size / 1024 / 1024:.2f} MB")
         
         form = AgencyForm(request.POST, request.FILES)
+        
+        # Проверяем наличие изображений через request.FILES.getlist
+        creatives_files = request.FILES.getlist("creatives")
+        if not creatives_files:
+            form.add_error("creatives", "Загрузите хотя бы одно изображение.")
+        
         if form.is_valid():
             logger.info("Form is valid, creating agency...")
             agency = form.save(commit=False)
@@ -4139,6 +4151,12 @@ def create_specialist(request):
         logger.info(f"Total upload size: {total_size / 1024 / 1024:.2f} MB")
         
         form = SpecialistForm(request.POST, request.FILES)
+        
+        # Проверяем наличие изображений через request.FILES.getlist
+        creatives_files = request.FILES.getlist("creatives")
+        if not creatives_files:
+            form.add_error("creatives", "Загрузите хотя бы одно изображение.")
+        
         if form.is_valid():
             logger.info("Form is valid, creating specialist...")
             spec = form.save(commit=False)

@@ -139,7 +139,7 @@
                     <div class="form-group upload-box" id="creativesDropArea">
                         <label for="id_creatives_input">*Изображения</label>
                         <div class="small-text" style="margin-bottom: 10px; color: var(--accent-yellow);">Выберите до 4х изображений для отображения в слайдере</div>
-                        {{ form.creatives|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_creatives_input" }}
+                        <input type="file" name="creatives" id="id_creatives_input" multiple accept="image/png,image/jpeg,image/jpg" style="display:none">
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_creatives_input').click()">Выбрать файл</div>
                         <div class="small-text">Допустимый формат PNG, JPEG (до 10 файлов)</div>
                         <div id="creativesPreview" class="file-preview-area"></div>
@@ -148,7 +148,7 @@
                     
                     <div class="form-group upload-box" id="videoDropArea">
                         <label for="id_video_input">Видео</label>
-                        {{ form.video|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_video_input" }}
+                        <input type="file" name="video" id="id_video_input" multiple accept="video/mp4,video/quicktime,video/x-msvideo,video/x-matroska" style="display:none">
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файлы</div>
                         <div class="small-text">Допустимый формат MOV, MP4 (до 3 файлов)</div>
                         <div id="videoPreview" class="file-preview-area"></div>
@@ -219,7 +219,7 @@
              <div class="form-content-section">
                 <div class="form-group upload-box full-width" id="proofsDropArea">
                     <label for="id_proofs_input">Документы</label>
-                    {{ form.proofs|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_proofs_input" }}
+                    <input type="file" name="proofs" id="id_proofs_input" multiple accept=".pdf,.doc,.docx,.xls,.xlsx" style="display:none">
                     <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файл</div>
                     <div class="small-text">Допустимый формат Doc, Excel, PDF (до 10 файлов)</div>
                     <div id="proofsPreview" class="file-preview-area">
