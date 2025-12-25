@@ -636,6 +636,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Drag & Drop для файлов ---
+    // Хранилище для накопленных файлов (чтобы не терять при каждом клике)
+    const accumulatedFiles = {};
+    
     function setupDragAndDrop(inputId, dropAreaId, previewAreaId, allowedTypesDetails, isMultiple = false, maxFiles = 1) {
         const dropArea = document.getElementById(dropAreaId);
         const fileInput = document.getElementById(inputId);
@@ -645,11 +648,15 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        // Инициализируем хранилище для этого инпута
+        if (isMultiple && !accumulatedFiles[inputId]) {
+            accumulatedFiles[inputId] = [];
+        }
+        
         const customButton = dropArea.querySelector('.custom-file-upload-button');
         if (customButton) {
             customButton.addEventListener('click', () => {
-                // Не сбрасываем value - это удалило бы накопленные файлы
-                // fileInput.value = null;
+                // Кнопка просто триггерит fileInput.click()
             });
         }
 
@@ -660,16 +667,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             if (!e.target.closest('.custom-file-upload-button')) {
-                // Не сбрасываем value для multiple, иначе потеряем накопленные файлы
-                // fileInput.value = null; // Убрано - это удаляло накопленные файлы
                 fileInput.click();
             }
         });
 
         fileInput.addEventListener('change', (event) => {
             if (event.target.files && event.target.files.length > 0) {
-                handleFiles(event.target.files, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles);
-            } else {
+                const newFiles = Array.from(event.target.files);
+                
+                if (isMultiple) {
+                    // Добавляем новые файлы к накопленным (без дубликатов)
+                    newFiles.forEach(newFile => {
+                        const isDuplicate = accumulatedFiles[inputId].some(f => 
+                            f.name === newFile.name && f.size === newFile.size
+                        );
+                        if (!isDuplicate) {
+                            accumulatedFiles[inputId].push(newFile);
+                        }
+                    });
+                    
+                    // Обновляем fileInput.files со всеми накопленными файлами
+                    const dataTransfer = new DataTransfer();
+                    accumulatedFiles[inputId].forEach(f => dataTransfer.items.add(f));
+                    fileInput.files = dataTransfer.files;
+                }
+                
+                handleFiles(newFiles, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles);
             }
             checkPlaceholderVisibility(dropAreaId);
         });
@@ -688,11 +711,30 @@ document.addEventListener('DOMContentLoaded', function() {
             dropArea.classList.remove('dragover');
             const files = event.dataTransfer.files;
             if (files.length) {
-                const dataTransfer = new DataTransfer();
-                Array.from(files).forEach(file => dataTransfer.items.add(file));
-                fileInput.files = dataTransfer.files;
+                const newFiles = Array.from(files);
                 
-                handleFiles(files, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles);
+                if (isMultiple) {
+                    // Добавляем новые файлы к накопленным (без дубликатов)
+                    newFiles.forEach(newFile => {
+                        const isDuplicate = accumulatedFiles[inputId].some(f => 
+                            f.name === newFile.name && f.size === newFile.size
+                        );
+                        if (!isDuplicate) {
+                            accumulatedFiles[inputId].push(newFile);
+                        }
+                    });
+                    
+                    // Обновляем fileInput.files со всеми накопленными файлами
+                    const dataTransfer = new DataTransfer();
+                    accumulatedFiles[inputId].forEach(f => dataTransfer.items.add(f));
+                    fileInput.files = dataTransfer.files;
+                } else {
+                    const dataTransfer = new DataTransfer();
+                    newFiles.forEach(file => dataTransfer.items.add(file));
+                    fileInput.files = dataTransfer.files;
+                }
+                
+                handleFiles(newFiles, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles);
             }
             checkPlaceholderVisibility(dropAreaId);
         });
@@ -726,33 +768,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isMultiple && (existingFileCount + filesToProcess.length > maxFiles)) {
             displayFileUploadError(inputId, `Можно загрузить не более ${maxFiles} файлов для этого поля.`);
             filesToProcess = filesToProcess.slice(0, maxFiles - existingFileCount);
+            // Обновляем accumulatedFiles, удаляя лишние
+            if (accumulatedFiles[inputId]) {
+                accumulatedFiles[inputId] = accumulatedFiles[inputId].slice(0, maxFiles);
+                const dataTransfer = new DataTransfer();
+                accumulatedFiles[inputId].forEach(f => dataTransfer.items.add(f));
+                fileInput.files = dataTransfer.files;
+            }
         } else if (!isMultiple && filesToProcess.length > maxFiles) {
             displayFileUploadError(inputId, `Можно загрузить не более ${maxFiles} файла для этого поля.`);
             filesToProcess = filesToProcess.slice(0, maxFiles);
-        }
-        
-        // Накапливаем файлы при isMultiple=true
-        if (isMultiple && fileInput) {
-            const dataTransfer = new DataTransfer();
-            // Добавляем существующие файлы
-            Array.from(fileInput.files || []).forEach(f => {
-                // Проверяем, не добавляем ли дублирующий файл
-                const isDuplicate = filesToProcess.some(newFile => 
-                    newFile.name === f.name && newFile.size === f.size
-                );
-                if (!isDuplicate) {
-                    dataTransfer.items.add(f);
-                }
-            });
-            // Добавляем новые файлы
-            filesToProcess.forEach(file => dataTransfer.items.add(file));
-            fileInput.files = dataTransfer.files;
-        } else if (filesToProcess.length < Array.from(files).length) {
-            const dataTransfer = new DataTransfer();
-            filesToProcess.forEach(file => dataTransfer.items.add(file));
-            if (fileInput) {
-                fileInput.files = dataTransfer.files;
-            }
         }
 
         filesToProcess.forEach((file, index) => {
@@ -848,14 +873,26 @@ document.addEventListener('DOMContentLoaded', function() {
             const inputId = previewArea.id.replace('Preview', '_input');
             const fileInput = document.getElementById(inputId);
 
+            // Удаляем из accumulatedFiles
+            if (accumulatedFiles[inputId]) {
+                accumulatedFiles[inputId] = accumulatedFiles[inputId].filter(file => 
+                    CSS.escape(file.name) !== fileNameToRemove
+                );
+            }
+
             if (fileInput) {
                 const dt = new DataTransfer();
-                const files = Array.from(fileInput.files);
-                files.forEach(file => {
-                    if (CSS.escape(file.name) !== fileNameToRemove) {
-                        dt.items.add(file);
-                    }
-                });
+                // Используем accumulatedFiles как источник истины
+                if (accumulatedFiles[inputId]) {
+                    accumulatedFiles[inputId].forEach(file => dt.items.add(file));
+                } else {
+                    const files = Array.from(fileInput.files);
+                    files.forEach(file => {
+                        if (CSS.escape(file.name) !== fileNameToRemove) {
+                            dt.items.add(file);
+                        }
+                    });
+                }
                 fileInput.files = dt.files;
             }
             previewItem.remove();
