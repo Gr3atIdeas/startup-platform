@@ -4321,7 +4321,7 @@ def create_specialist(request):
             messages.success(request, f'Профиль специалиста "{spec.title}" успешно создан и отправлен на модерацию!')
             return redirect("specialists_list")
         else:
-            logger.warning(f"=== CREATE_SPECIALIST FORM INVALID === User: {request.user.user_id})"
+            logger.warning(f"=== CREATE_SPECIALIST FORM INVALID === User: {request.user.user_id}")
             logger.warning(f"Form errors: {form.errors.as_json()}")
             messages.error(request, "Форма содержит ошибки.")
             return render(request, "accounts/create_specialist.html", {"form": form})
