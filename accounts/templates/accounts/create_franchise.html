@@ -648,7 +648,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const customButton = dropArea.querySelector('.custom-file-upload-button');
         if (customButton) {
             customButton.addEventListener('click', () => {
-                fileInput.value = null;
+                // Не сбрасываем value - это удалило бы накопленные файлы
+                // fileInput.value = null;
             });
         }
 
@@ -659,7 +660,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             if (!e.target.closest('.custom-file-upload-button')) {
-                fileInput.value = null;
+                // Не сбрасываем value для multiple, иначе потеряем накопленные файлы
+                // fileInput.value = null; // Убрано - это удаляло накопленные файлы
                 fileInput.click();
             }
         });
@@ -729,7 +731,23 @@ document.addEventListener('DOMContentLoaded', function() {
             filesToProcess = filesToProcess.slice(0, maxFiles);
         }
         
-        if (filesToProcess.length < Array.from(files).length) {
+        // Накапливаем файлы при isMultiple=true
+        if (isMultiple && fileInput) {
+            const dataTransfer = new DataTransfer();
+            // Добавляем существующие файлы
+            Array.from(fileInput.files || []).forEach(f => {
+                // Проверяем, не добавляем ли дублирующий файл
+                const isDuplicate = filesToProcess.some(newFile => 
+                    newFile.name === f.name && newFile.size === f.size
+                );
+                if (!isDuplicate) {
+                    dataTransfer.items.add(f);
+                }
+            });
+            // Добавляем новые файлы
+            filesToProcess.forEach(file => dataTransfer.items.add(file));
+            fileInput.files = dataTransfer.files;
+        } else if (filesToProcess.length < Array.from(files).length) {
             const dataTransfer = new DataTransfer();
             filesToProcess.forEach(file => dataTransfer.items.add(file));
             if (fileInput) {

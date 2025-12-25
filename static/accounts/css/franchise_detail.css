@@ -1308,8 +1308,8 @@ a:hover {
 
 .tab-navigation {
   display: flex;
-  flex-wrap: wrap;
-  gap: 65px;
+  flex-wrap: nowrap;
+  gap: 20px;
   align-self: stretch;
   margin-bottom: 25px;
   padding-bottom: 15px;
