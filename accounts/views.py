@@ -1495,9 +1495,8 @@ def specialists_list(request):
         }
         return render(request, "accounts/specialists_list.html", context)
 def agency_detail(request, agency_id):
-    try:
-        agency = Agencies.objects.get(agency_id=agency_id)
-    except Agencies.DoesNotExist:
+    agency = Agencies.objects.filter(agency_id=agency_id).first()
+    if not agency:
         return render(request, "accounts/404.html", status=404)
 
     if request.method == "POST":
@@ -8407,7 +8406,10 @@ def approve_agency(request, agency_id):
     if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
-    agency = get_object_or_404(Agencies, agency_id=agency_id)
+    agency = Agencies.objects.filter(agency_id=agency_id).first()
+    if not agency:
+        messages.error(request, "Агентство не найдено.")
+        return redirect("moderator_dashboard")
     if request.method == "POST":
         moderator_comment = request.POST.get("moderator_comment", "")
         agency.moderator_comment = moderator_comment
@@ -8421,7 +8423,10 @@ def reject_agency(request, agency_id):
     if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
-    agency = get_object_or_404(Agencies, agency_id=agency_id)
+    agency = Agencies.objects.filter(agency_id=agency_id).first()
+    if not agency:
+        messages.error(request, "Агентство не найдено.")
+        return redirect("moderator_dashboard")
     if request.method == "POST":
         moderator_comment = request.POST.get("moderator_comment", "")
         agency.moderator_comment = moderator_comment
@@ -8489,7 +8494,9 @@ def vote_franchise(request, franchise_id):
 def vote_agency(request, agency_id):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
-    agency = get_object_or_404(Agencies, agency_id=agency_id)
+    agency = Agencies.objects.filter(agency_id=agency_id).first()
+    if not agency:
+        return JsonResponse({"success": False, "error": "Агентство не найдено"})
     rating = int(request.POST.get("rating", 0))
     if not 1 <= rating <= 5:
         return JsonResponse({"success": False, "error": "Недопустимое значение рейтинга"})
@@ -8544,7 +8551,9 @@ def load_similar_franchises(request, franchise_id: int):
 @login_required
 def load_similar_agencies(request, agency_id: int):
     try:
-        agency = get_object_or_404(Agencies, agency_id=agency_id)
+        agency = Agencies.objects.filter(agency_id=agency_id).first()
+        if not agency:
+            return JsonResponse({"error": "Агентство не найдено"}, status=404)
         if agency.customization_data and "agency_category" in agency.customization_data:
             similar_qs = (
                 Agencies.objects.filter(
@@ -8947,7 +8956,10 @@ def edit_franchise(request, franchise_id):
 
 @login_required
 def edit_agency(request, agency_id):
-    agency = get_object_or_404(Agencies, agency_id=agency_id)
+    agency = Agencies.objects.filter(agency_id=agency_id).first()
+    if not agency:
+        messages.error(request, "Агентство не найдено.")
+        return redirect("agencies_list")
     if request.user != agency.owner and request.user.role.role_name != 'moderator':
         messages.error(request, "У вас нет прав для редактирования этого агентства.")
         return redirect("agency_detail", agency_id=agency_id)
