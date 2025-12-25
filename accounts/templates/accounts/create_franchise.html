@@ -317,17 +317,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300); // Длительность анимации (0.3s)
     }
 
-    prevButton.addEventListener('click', () => {
-        if (planetChoices.length === 0) return;
-        currentPlanetIndex = (currentPlanetIndex - 1 + planetChoices.length) % planetChoices.length;
-        updatePlanetDisplay('prev');
-    });
+    if (prevButton) {
+        prevButton.addEventListener('click', () => {
+            if (planetChoices.length === 0) return;
+            currentPlanetIndex = (currentPlanetIndex - 1 + planetChoices.length) % planetChoices.length;
+            updatePlanetDisplay('prev');
+        });
+    }
 
-    nextButton.addEventListener('click', () => {
-        if (planetChoices.length === 0) return;
-        currentPlanetIndex = (currentPlanetIndex + 1) % planetChoices.length;
-        updatePlanetDisplay('next');
-    });
+    if (nextButton) {
+        nextButton.addEventListener('click', () => {
+            if (planetChoices.length === 0) return;
+            currentPlanetIndex = (currentPlanetIndex + 1) % planetChoices.length;
+            updatePlanetDisplay('next');
+        });
+    }
 
     // Инициализация первой планеты
     if (planetChoices.length > 0) {
