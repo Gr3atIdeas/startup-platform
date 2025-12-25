@@ -58,10 +58,13 @@ def upload_video_to_s3(self, video_data, video_name, video_content_type, entity_
         entity_type, _ = EntityTypes.objects.get_or_create(type_name=entity_type_name)
         
         from .models import Startups, Franchises, Agencies, Specialists
-        from django.db import transaction
         
         entity_model = {'startup': Startups, 'franchise': Franchises, 'agency': Agencies, 'specialist': Specialists}.get(entity_type_name)
-        entity = entity_model.objects.get(pk=entity_id) if entity_model else None
+        entity = entity_model.objects.filter(pk=entity_id).first() if entity_model else None
+        
+        if not entity:
+            logger.error(f"Entity {entity_type_name} с id={entity_id} не найден!")
+            return {'success': False, 'error': f'{entity_type_name} not found'}
         
         existing_file = FileStorage.objects.filter(file_url=video_id).first()
         if not existing_file:
@@ -79,20 +82,34 @@ def upload_video_to_s3(self, video_data, video_name, video_content_type, entity_
             logger.warning(f"FileStorage с video_id {video_id} уже существует! Пропускаем создание.")
         
         if entity:
-            # Используем transaction для предотвращения race condition
-            with transaction.atomic():
-                # Перезагружаем entity с блокировкой строки
-                entity = entity_model.objects.select_for_update().get(pk=entity_id)
-                current_video_urls = entity.video_urls or []
-                logger.info(f"Текущие video_urls для {entity_type_name} {entity_id}: {current_video_urls}")
-                
-                if video_id not in current_video_urls:
-                    current_video_urls.append(video_id)
-                    entity.video_urls = current_video_urls
-                    entity.save(update_fields=['video_urls'])
-                    logger.info(f"✅ video_id {video_id} добавлен в {entity_type_name}.video_urls. Новый список: {entity.video_urls}")
-                else:
-                    logger.warning(f"⚠️ video_id {video_id} уже есть в {entity_type_name}.video_urls! Пропускаем добавление.")
+            from django.db import connection
+            
+            # Используем raw SQL для атомарного обновления JSONField
+            # Это решает проблему race condition при параллельных Celery задачах
+            def atomic_append_video_to_json_array(model, pk_field, pk_value, new_value):
+                """Атомарно добавляет video_id в JSON массив, избегая race condition"""
+                table_name = model._meta.db_table
+                with connection.cursor() as cursor:
+                    # PostgreSQL: используем jsonb для атомарного обновления
+                    sql = f"""
+                        UPDATE {table_name}
+                        SET video_urls = COALESCE(video_urls, '[]'::jsonb) || %s::jsonb
+                        WHERE {pk_field} = %s
+                        AND NOT (COALESCE(video_urls, '[]'::jsonb) @> %s::jsonb)
+                    """
+                    cursor.execute(sql, [f'["{new_value}"]', pk_value, f'["{new_value}"]'])
+                    updated = cursor.rowcount > 0
+                    logger.info(f"atomic_append_video_to_json_array: table={table_name}, pk_field={pk_field}, pk_value={pk_value}, updated={updated}")
+                    return updated
+            
+            # Используем db_column (имя колонки в БД), а не name (имя поля Django)
+            pk_field = entity_model._meta.pk.column or entity_model._meta.pk.name
+            logger.info(f"Video upload - Entity model: {entity_model.__name__}, pk_field (db_column): {pk_field}, entity_id: {entity_id}")
+            
+            if atomic_append_video_to_json_array(entity_model, pk_field, entity_id, video_id):
+                logger.info(f"✅ video_id {video_id} атомарно добавлен в {entity_type_name}.video_urls")
+            else:
+                logger.warning(f"⚠️ video_id {video_id} уже есть в video_urls или entity не найден")
         
         return {
             'success': True,
@@ -131,7 +148,12 @@ def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type
         
         from .models import Startups, Franchises, Agencies, Specialists
         entity_model = {'startup': Startups, 'franchise': Franchises, 'agency': Agencies, 'specialist': Specialists}.get(entity_type_name)
-        entity = entity_model.objects.get(pk=entity_id) if entity_model else None
+        # Используем filter().first() вместо get() чтобы избежать MultipleObjectsReturned
+        entity = entity_model.objects.filter(pk=entity_id).first() if entity_model else None
+        
+        if not entity:
+            logger.error(f"Entity {entity_type_name} с id={entity_id} не найден!")
+            return {'success': False, 'error': f'{entity_type_name} not found'}
         
         existing_file = FileStorage.objects.filter(file_url=file_id).first()
         if not existing_file:
@@ -166,9 +188,13 @@ def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type
                         AND NOT (COALESCE({field_name}, '[]'::jsonb) @> %s::jsonb)
                     """
                     cursor.execute(sql, [f'["{new_value}"]', pk_value, f'["{new_value}"]'])
-                    return cursor.rowcount > 0
+                    updated = cursor.rowcount > 0
+                    logger.info(f"atomic_append_to_json_array: table={table_name}, pk_field={pk_field}, pk_value={pk_value}, field={field_name}, updated={updated}")
+                    return updated
             
-            pk_field = entity_model._meta.pk.name
+            # Используем db_column (имя колонки в БД), а не name (имя поля Django)
+            pk_field = entity_model._meta.pk.column or entity_model._meta.pk.name
+            logger.info(f"Entity model: {entity_model.__name__}, pk_field (db_column): {pk_field}, entity_id: {entity_id}")
             
             if file_type_name == 'logo':
                 if atomic_append_to_json_array(entity_model, pk_field, entity_id, 'logo_urls', file_id):
@@ -187,10 +213,13 @@ def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type
                     logger.warning(f"⚠️ file_id {file_id} уже есть в proofs_urls или entity не найден")
             elif file_type_name == 'catalog_card_image':
                 with transaction.atomic():
-                    entity = entity_model.objects.select_for_update().get(pk=entity_id)
-                    entity.catalog_card_image = file_id
-                    entity.save(update_fields=['catalog_card_image'])
-                    logger.info(f"✅ file_id {file_id} добавлен в {entity_type_name}.catalog_card_image")
+                    entity = entity_model.objects.select_for_update().filter(pk=entity_id).first()
+                    if entity:
+                        entity.catalog_card_image = file_id
+                        entity.save(update_fields=['catalog_card_image'])
+                        logger.info(f"✅ file_id {file_id} добавлен в {entity_type_name}.catalog_card_image")
+                    else:
+                        logger.error(f"Entity {entity_type_name} с id={entity_id} не найден при сохранении catalog_card_image")
         
         return {
             'success': True,

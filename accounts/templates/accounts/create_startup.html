@@ -313,6 +313,11 @@
     </form>
 </div>
 
+<script src="{% static 'accounts/js/file_upload_utils.js' %}"></script>
+<script>
+// Инициализация FileUploadUtils с путём к статике
+FileUploadUtils.init({ staticUrl: "{% static 'accounts/images/creat_startup/' %}" });
+</script>
 <script src="{% static 'accounts/js/startup_form.js' %}"></script>
 <script src="{% static 'accounts/js/description_media_modal.js' %}"></script>
 <script>

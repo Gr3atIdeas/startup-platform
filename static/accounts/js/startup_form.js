@@ -3,165 +3,175 @@ document.addEventListener('DOMContentLoaded', function () {
   var logoLabel = document.querySelector('.logo-upload-label')
   var logoPlaceholder = document.getElementById('logoPlaceholder')
   var logoPreview = document.getElementById('logoPreview')
-  function toArray(fileList) {
-    return Array.prototype.slice.call(fileList || [])
+  
+  // Используем унифицированный модуль FileUploadUtils для загрузки файлов
+  if (window.FileUploadUtils) {
+    // Creatives (изображения)
+    FileUploadUtils.setupFileInput({
+      inputId: 'id_creatives_input',
+      dropAreaId: 'creativesDropArea',
+      previewAreaId: 'creativesPreview',
+      isMultiple: true,
+      maxFiles: 10,
+      allowedTypes: { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] }
+    });
+    
+    // Video
+    FileUploadUtils.setupFileInput({
+      inputId: 'id_video_input',
+      dropAreaId: 'videoDropArea',
+      previewAreaId: 'videoPreview',
+      isMultiple: true,
+      maxFiles: 3,
+      allowedTypes: { mimes: ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska'], extensions: ['mp4', 'mov', 'avi', 'mkv'] }
+    });
+    
+    // Proofs (документы)
+    FileUploadUtils.setupFileInput({
+      inputId: 'id_proofs_input',
+      dropAreaId: 'proofsDropArea',
+      previewAreaId: 'proofsPreview',
+      isMultiple: true,
+      maxFiles: 10,
+      allowedTypes: { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] }
+    });
+  } else {
+    // Fallback: старая логика если FileUploadUtils не загружен
+    console.warn('FileUploadUtils не загружен, используется fallback логика');
+    initLegacyFileUpload();
   }
-  function createPreviewItem(params) {
-    var container = document.createElement('div')
-    container.className = 'file-preview-item'
-    
-    // Создаем превью в том же стиле, что и существующие файлы
-    if (params.previewNode) {
-      container.appendChild(params.previewNode)
+  
+  function initLegacyFileUpload() {
+    // Старая логика загрузки файлов (fallback)
+    function toArray(fileList) {
+      return Array.prototype.slice.call(fileList || [])
     }
-    
-    var nameEl = document.createElement('p')
-    nameEl.textContent = params.displayName
-    container.appendChild(nameEl)
-    
-    // Добавляем кнопку удаления для новых файлов
-    if (params.showDelete) {
-      var deleteBtn = document.createElement('button')
-      deleteBtn.type = 'button'
-      deleteBtn.className = 'delete-new-file-btn'
-      deleteBtn.textContent = 'Удалить'
-      deleteBtn.addEventListener('click', function() {
-        if (params.onDelete) {
-          params.onDelete(params.index)
-        }
-      })
-      container.appendChild(deleteBtn)
-    }
-    
-    return container
-  }
-  function isAllowedByExt(filename, allowedExts) {
-    var idx = filename.lastIndexOf('.')
-    if (idx === -1) return false
-    var ext = filename.slice(idx + 1).toLowerCase()
-    return allowedExts.indexOf(ext) !== -1
-  }
-  function bindInputWithDropArea(inputId, dropAreaId, previewId, options) {
-    var input = document.getElementById(inputId)
-    var dropArea = document.getElementById(dropAreaId)
-    var preview = document.getElementById(previewId)
-    if (!input || !dropArea || !preview) return
-    
-    // Сохраняем текущие файлы (инициализируем пустым массивом)
-    var currentFiles = []
-    
-    // Инициализируем с существующими файлами из input
-    if (input.files && input.files.length > 0) {
-      currentFiles = toArray(input.files)
-    }
-    
-    function clearPreview() {
-      preview.innerHTML = ''
-    }
-    function updatePreview(files) {
-      // Удаляем только новые файлы (не существующие)
-      var newFiles = preview.querySelectorAll('.file-preview-item:not(.existing-file)')
-      newFiles.forEach(function(el) { el.remove() })
-      
-      // Добавляем только новые файлы, существующие остаются
-      files.forEach(function (file, index) {
-        var previewNode
-        var displayName = file.name
-        var typeLabel = ''
-        if (options.kind === 'image') {
-          var img = document.createElement('img')
-          img.style.maxWidth = '200px'
-          img.style.maxHeight = '150px'
-          var reader = new FileReader()
-          reader.onload = function (e) {
-            img.src = e.target.result
-          }
-          reader.readAsDataURL(file)
-          previewNode = img
-          typeLabel = 'IMAGE'
-        } else if (options.kind === 'video') {
-          var video = document.createElement('video')
-          video.setAttribute('controls', 'controls')
-          video.style.maxWidth = '200px'
-          video.style.maxHeight = '150px'
-          var readerV = new FileReader()
-          readerV.onload = function (e) {
-            video.src = e.target.result
-          }
-          readerV.readAsDataURL(file)
-          previewNode = video
-          typeLabel = 'VIDEO'
-        } else {
-          var icon = document.createElement('img')
-          icon.src = '/static/accounts/images/icons/file_icon.svg'
-          icon.className = 'file-icon'
-          icon.style.width = '40px'
-          icon.style.height = 'auto'
-          previewNode = icon
-          typeLabel = 'FILE'
-        }
-        var item = createPreviewItem({ 
-          previewNode: previewNode, 
-          displayName: displayName, 
-          typeLabel: typeLabel,
-          showDelete: true,
-          index: index,
-          onDelete: removeFile
-        })
-        preview.appendChild(item)
-      })
-    }
-    function filterFiles(fileList) {
-      var files = []
-      var maxCount = options.maxCount || 1
-      var allowedExts = options.allowedExts || []
-      var allowByMimePrefix = options.mimePrefix || null
-      for (var i = 0; i < fileList.length; i++) {
-        var f = fileList[i]
-        var ok = true
-        if (allowByMimePrefix) {
-          ok = f.type && f.type.indexOf(allowByMimePrefix) === 0
-        } else if (allowedExts.length) {
-          ok = isAllowedByExt(f.name, allowedExts)
-        }
-        if (ok) files.push(f)
-        if (files.length >= maxCount) break
+    function createPreviewItem(params) {
+      var container = document.createElement('div')
+      container.className = 'file-preview-item'
+      if (params.previewNode) {
+        container.appendChild(params.previewNode)
       }
-      return files
+      var nameEl = document.createElement('p')
+      nameEl.textContent = params.displayName
+      container.appendChild(nameEl)
+      if (params.showDelete) {
+        var deleteBtn = document.createElement('button')
+        deleteBtn.type = 'button'
+        deleteBtn.className = 'delete-new-file-btn'
+        deleteBtn.textContent = 'Удалить'
+        deleteBtn.addEventListener('click', function() {
+          if (params.onDelete) {
+            params.onDelete(params.index)
+          }
+        })
+        container.appendChild(deleteBtn)
+      }
+      return container
     }
-    function setFiles(files) {
-      currentFiles = files.slice() // Сохраняем копию
-      var dt = new DataTransfer()
-      files.forEach(function (f) { dt.items.add(f) })
-      input.files = dt.files
-      updatePreview(files)
+    function isAllowedByExt(filename, allowedExts) {
+      var idx = filename.lastIndexOf('.')
+      if (idx === -1) return false
+      var ext = filename.slice(idx + 1).toLowerCase()
+      return allowedExts.indexOf(ext) !== -1
     }
-    
-    function removeFile(index) {
-      currentFiles.splice(index, 1)
-      setFiles(currentFiles)
+    function bindInputWithDropArea(inputId, dropAreaId, previewId, options) {
+      var input = document.getElementById(inputId)
+      var dropArea = document.getElementById(dropAreaId)
+      var preview = document.getElementById(previewId)
+      if (!input || !dropArea || !preview) return
+      var currentFiles = []
+      if (input.files && input.files.length > 0) {
+        currentFiles = toArray(input.files)
+      }
+      function updatePreview(files) {
+        var newFilesEls = preview.querySelectorAll('.file-preview-item:not(.existing-file)')
+        newFilesEls.forEach(function(el) { el.remove() })
+        files.forEach(function (file, index) {
+          var previewNode
+          if (options.kind === 'image') {
+            var img = document.createElement('img')
+            img.style.maxWidth = '200px'
+            img.style.maxHeight = '150px'
+            var reader = new FileReader()
+            reader.onload = function (e) { img.src = e.target.result }
+            reader.readAsDataURL(file)
+            previewNode = img
+          } else if (options.kind === 'video') {
+            var video = document.createElement('video')
+            video.setAttribute('controls', 'controls')
+            video.style.maxWidth = '200px'
+            video.style.maxHeight = '150px'
+            var readerV = new FileReader()
+            readerV.onload = function (e) { video.src = e.target.result }
+            readerV.readAsDataURL(file)
+            previewNode = video
+          } else {
+            var icon = document.createElement('img')
+            icon.src = '/static/accounts/images/icons/file_icon.svg'
+            icon.className = 'file-icon'
+            icon.style.width = '40px'
+            previewNode = icon
+          }
+          preview.appendChild(createPreviewItem({ 
+            previewNode: previewNode, 
+            displayName: file.name,
+            showDelete: true,
+            index: index,
+            onDelete: removeFile
+          }))
+        })
+      }
+      function filterFiles(fileList) {
+        var files = []
+        var maxCount = options.maxCount || 1
+        var allowedExts = options.allowedExts || []
+        var allowByMimePrefix = options.mimePrefix || null
+        for (var i = 0; i < fileList.length; i++) {
+          var f = fileList[i]
+          var ok = true
+          if (allowByMimePrefix) {
+            ok = f.type && f.type.indexOf(allowByMimePrefix) === 0
+          } else if (allowedExts.length) {
+            ok = isAllowedByExt(f.name, allowedExts)
+          }
+          if (ok) files.push(f)
+          if (files.length >= maxCount) break
+        }
+        return files
+      }
+      function setFiles(files) {
+        currentFiles = files.slice()
+        var dt = new DataTransfer()
+        files.forEach(function (f) { dt.items.add(f) })
+        input.files = dt.files
+        updatePreview(files)
+      }
+      function removeFile(index) {
+        currentFiles.splice(index, 1)
+        setFiles(currentFiles)
+      }
+      input.addEventListener('change', function () {
+        var newFiles = toArray(input.files)
+        if (newFiles.length === 0) return
+        var combined = currentFiles.concat(newFiles)
+        var filtered = filterFiles(combined)
+        setFiles(filtered)
+      })
+      dropArea.addEventListener('dragover', function (e) { e.preventDefault() })
+      dropArea.addEventListener('drop', function (e) {
+        e.preventDefault()
+        var dropped = e.dataTransfer && e.dataTransfer.files ? e.dataTransfer.files : []
+        var combined = currentFiles.concat(toArray(dropped))
+        var filtered = filterFiles(combined)
+        setFiles(filtered)
+      })
     }
-    input.addEventListener('change', function () {
-      var newFiles = toArray(input.files)
-      if (newFiles.length === 0) return
-      
-      // Добавляем новые файлы к существующим
-      var combined = currentFiles.concat(newFiles)
-      var filtered = filterFiles(combined)
-      setFiles(filtered)
-      
-    })
-    dropArea.addEventListener('dragover', function (e) {
-      e.preventDefault()
-    })
-    dropArea.addEventListener('drop', function (e) {
-      e.preventDefault()
-      var dropped = e.dataTransfer && e.dataTransfer.files ? e.dataTransfer.files : []
-      var combined = currentFiles.concat(toArray(dropped))
-      var filtered = filterFiles(combined)
-      setFiles(filtered)
-    })
+    bindInputWithDropArea('id_creatives_input', 'creativesDropArea', 'creativesPreview', { kind: 'image', mimePrefix: 'image/', maxCount: 10 })
+    bindInputWithDropArea('id_video_input', 'videoDropArea', 'videoPreview', { kind: 'video', mimePrefix: 'video/', maxCount: 3 })
+    bindInputWithDropArea('id_proofs_input', 'proofsDropArea', 'proofsPreview', { kind: 'file', allowedExts: ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx'], maxCount: 10 })
   }
+
   // Ограничиваем клик логотипа только кнопкой (см. шаблон: #logoUploadButton)
   if (logoInput && logoPreview && logoPlaceholder) {
     logoInput.addEventListener('change', function () {
@@ -195,9 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
       reader.readAsDataURL(file)
     })
   }
-  bindInputWithDropArea('id_creatives_input', 'creativesDropArea', 'creativesPreview', { kind: 'image', mimePrefix: 'image/', maxCount: 10 })
-  bindInputWithDropArea('id_video_input', 'videoDropArea', 'videoPreview', { kind: 'video', mimePrefix: 'video/', maxCount: 3 })
-  bindInputWithDropArea('id_proofs_input', 'proofsDropArea', 'proofsPreview', { kind: 'file', allowedExts: ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx'], maxCount: 10 })
+
   var microCheckbox = document.getElementById('id_micro_investment_available')
   var microLabel = document.querySelector('.micro-investment-label-new')
   function syncMicroUI() {

@@ -1637,9 +1637,8 @@ def agency_detail(request, agency_id):
     return render(request, "accounts/agency_detail.html", context)
 
 def specialist_detail(request, specialist_id):
-    try:
-        specialist = Specialists.objects.get(specialist_id=specialist_id)
-    except Specialists.DoesNotExist:
+    specialist = Specialists.objects.filter(specialist_id=specialist_id).first()
+    if not specialist:
         return render(request, "accounts/404.html", status=404)
 
     if request.method == "POST":
@@ -8440,7 +8439,10 @@ def approve_specialist(request, specialist_id):
     if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
-    spec = get_object_or_404(Specialists, specialist_id=specialist_id)
+    spec = Specialists.objects.filter(specialist_id=specialist_id).first()
+    if not spec:
+        messages.error(request, "Специалист не найден.")
+        return redirect("moderator_dashboard")
     if request.method == "POST":
         moderator_comment = request.POST.get("moderator_comment", "")
         spec.moderator_comment = moderator_comment
@@ -8454,7 +8456,10 @@ def reject_specialist(request, specialist_id):
     if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
-    spec = get_object_or_404(Specialists, specialist_id=specialist_id)
+    spec = Specialists.objects.filter(specialist_id=specialist_id).first()
+    if not spec:
+        messages.error(request, "Специалист не найден.")
+        return redirect("moderator_dashboard")
     if request.method == "POST":
         moderator_comment = request.POST.get("moderator_comment", "")
         spec.moderator_comment = moderator_comment

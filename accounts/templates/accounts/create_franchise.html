@@ -273,12 +273,50 @@
     </form>
 </div>
 
+<script src="{% static 'accounts/js/file_upload_utils.js' %}"></script>
 <script>
 const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
 const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
 const planetBaseUrl = "{{ S3_PUBLIC_BASE_URL }}/choosable_planets/";
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Инициализируем FileUploadUtils с путем к статике
+    if (window.FileUploadUtils) {
+        FileUploadUtils.init({
+            staticUrl: creatStartupStaticUrl
+        });
+        
+        // Creatives (изображения)
+        FileUploadUtils.setupFileInput({
+            inputId: 'id_creatives_input',
+            dropAreaId: 'creativesDropArea',
+            previewAreaId: 'creativesPreview',
+            isMultiple: true,
+            maxFiles: 10,
+            allowedTypes: { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] }
+        });
+        
+        // Video
+        FileUploadUtils.setupFileInput({
+            inputId: 'id_video_input',
+            dropAreaId: 'videoDropArea',
+            previewAreaId: 'videoPreview',
+            isMultiple: true,
+            maxFiles: 3,
+            allowedTypes: { mimes: ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska'], extensions: ['mp4', 'mov', 'avi', 'mkv'] }
+        });
+        
+        // Proofs (документы)
+        FileUploadUtils.setupFileInput({
+            inputId: 'id_proofs_input',
+            dropAreaId: 'proofsDropArea',
+            previewAreaId: 'proofsPreview',
+            isMultiple: true,
+            maxFiles: 10,
+            allowedTypes: { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] }
+        });
+    }
+
     // --- Предзагрузка планет ---
     const planetImages = {};
     planetChoices.forEach(choice => {
@@ -639,279 +677,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Drag & Drop для файлов ---
-    // Хранилище для накопленных файлов (чтобы не терять при каждом клике)
-    const accumulatedFiles = {};
-    
-    function setupDragAndDrop(inputId, dropAreaId, previewAreaId, allowedTypesDetails, isMultiple = false, maxFiles = 1) {
-        const dropArea = document.getElementById(dropAreaId);
-        const fileInput = document.getElementById(inputId);
-        const previewArea = document.getElementById(previewAreaId);
-
-        if (!dropArea || !fileInput || !previewArea) {
-            return;
-        }
-        
-        // Инициализируем хранилище для этого инпута
-        if (isMultiple && !accumulatedFiles[inputId]) {
-            accumulatedFiles[inputId] = [];
-        }
-        
-        const customButton = dropArea.querySelector('.custom-file-upload-button');
-        if (customButton) {
-            customButton.addEventListener('click', () => {
-                // Кнопка просто триггерит fileInput.click()
-            });
-        }
-
-        checkPlaceholderVisibility(dropAreaId);
-
-        dropArea.addEventListener('click', (e) => {
-            if (e.target.closest('.delete-file-btn') || e.target.closest('.edit-file-btn')) {
-                return;
-            }
-            if (!e.target.closest('.custom-file-upload-button')) {
-                fileInput.click();
-            }
-        });
-
-        fileInput.addEventListener('change', (event) => {
-            if (event.target.files && event.target.files.length > 0) {
-                const newFiles = Array.from(event.target.files);
-                
-                if (isMultiple) {
-                    // Добавляем новые файлы к накопленным (без дубликатов)
-                    newFiles.forEach(newFile => {
-                        const isDuplicate = accumulatedFiles[inputId].some(f => 
-                            f.name === newFile.name && f.size === newFile.size
-                        );
-                        if (!isDuplicate) {
-                            accumulatedFiles[inputId].push(newFile);
-                        }
-                    });
-                    
-                    // Обновляем fileInput.files со всеми накопленными файлами
-                    const dataTransfer = new DataTransfer();
-                    accumulatedFiles[inputId].forEach(f => dataTransfer.items.add(f));
-                    fileInput.files = dataTransfer.files;
-                }
-                
-                handleFiles(newFiles, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles);
-            }
-            checkPlaceholderVisibility(dropAreaId);
-        });
-
-        dropArea.addEventListener('dragover', (event) => {
-            event.preventDefault();
-            dropArea.classList.add('dragover');
-        });
-
-        dropArea.addEventListener('dragleave', () => {
-            dropArea.classList.remove('dragover');
-        });
-
-        dropArea.addEventListener('drop', (event) => {
-            event.preventDefault();
-            dropArea.classList.remove('dragover');
-            const files = event.dataTransfer.files;
-            if (files.length) {
-                const newFiles = Array.from(files);
-                
-                if (isMultiple) {
-                    // Добавляем новые файлы к накопленным (без дубликатов)
-                    newFiles.forEach(newFile => {
-                        const isDuplicate = accumulatedFiles[inputId].some(f => 
-                            f.name === newFile.name && f.size === newFile.size
-                        );
-                        if (!isDuplicate) {
-                            accumulatedFiles[inputId].push(newFile);
-                        }
-                    });
-                    
-                    // Обновляем fileInput.files со всеми накопленными файлами
-                    const dataTransfer = new DataTransfer();
-                    accumulatedFiles[inputId].forEach(f => dataTransfer.items.add(f));
-                    fileInput.files = dataTransfer.files;
-                } else {
-                    const dataTransfer = new DataTransfer();
-                    newFiles.forEach(file => dataTransfer.items.add(file));
-                    fileInput.files = dataTransfer.files;
-                }
-                
-                handleFiles(newFiles, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles);
-            }
-            checkPlaceholderVisibility(dropAreaId);
-        });
-        
-        updateFileActionButtonsState(previewAreaId);
-    }
-
-    function handleFiles(files, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles) {
-        const fileInput = document.getElementById(inputId);
-        const previewArea = document.getElementById(previewAreaId);
-        const existingFileCount = previewArea.children.length;
-
-        const dropArea = fileInput.closest('.upload-box, .logo-upload-group');
-        if (dropArea) {
-            const existingError = dropArea.querySelector('.custom-validation-error.file-specific-upload-error');
-            if (existingError) {
-                existingError.remove();
-            }
-            const uploadButton = dropArea.querySelector('.custom-file-upload-button');
-            if (uploadButton) uploadButton.classList.remove('input-error');
-            else dropArea.classList.remove('input-error');
-        }
-
-
-        if (!isMultiple) {
-            previewArea.innerHTML = '';
-        }
-
-        let filesToProcess = Array.from(files);
-
-        if (isMultiple && (existingFileCount + filesToProcess.length > maxFiles)) {
-            displayFileUploadError(inputId, `Можно загрузить не более ${maxFiles} файлов для этого поля.`);
-            filesToProcess = filesToProcess.slice(0, maxFiles - existingFileCount);
-            // Обновляем accumulatedFiles, удаляя лишние
-            if (accumulatedFiles[inputId]) {
-                accumulatedFiles[inputId] = accumulatedFiles[inputId].slice(0, maxFiles);
-                const dataTransfer = new DataTransfer();
-                accumulatedFiles[inputId].forEach(f => dataTransfer.items.add(f));
-                fileInput.files = dataTransfer.files;
-            }
-        } else if (!isMultiple && filesToProcess.length > maxFiles) {
-            displayFileUploadError(inputId, `Можно загрузить не более ${maxFiles} файла для этого поля.`);
-            filesToProcess = filesToProcess.slice(0, maxFiles);
-        }
-
-        filesToProcess.forEach((file, index) => {
-            const fileType = file.type;
-            const fileName = file.name;
-            const fileExtension = fileName.split('.').pop().toLowerCase();
-            let isAllowed = false;
-
-            if (allowedTypesDetails.mimes.some(mime => fileType.startsWith(mime)) && fileType !== '') {
-                isAllowed = true;
-            } else if (allowedTypesDetails.extensions.includes(fileExtension)) {
-                isAllowed = true;
-            }
-            
-
-            if (!isAllowed) {
-                displayFileUploadError(inputId, `Файл "${file.name}" имеет неподдерживаемый тип или расширение. Допустимые форматы: ${allowedTypesDetails.extensions.map(ext => ext.toUpperCase()).join(', ')}`);
-                if (fileInput) {
-                    const dt = new DataTransfer();
-                    Array.from(fileInput.files).forEach(f => {
-                        if (f.name !== file.name || f.size !== file.size || f.lastModified !== file.lastModified) {
-                            dt.items.add(f);
-                        }
-                    });
-                    fileInput.files = dt.files;
-                }
-                return;
-            }
-
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                const isImage = file.type.startsWith('image/');
-                const previewSrc = isImage && e.target.result ? e.target.result : creatStartupStaticUrl + 'docimage.png';
-                const imageClass = isImage ? 'preview-image' : 'file-icon';
-
-                const dragHandleHTML = `<div class="drag-handle-mock"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
-                const actionsHTML = `
-                    <div class="file-actions">
-                        <button type="button" class="edit-file-btn" aria-label="Редактировать">
-                            <img src="${creatStartupStaticUrl}edit_icon.svg" alt="Редактировать">
-                        </button>
-                        <button type="button" class="delete-file-btn" aria-label="Удалить">
-                            <img src="${creatStartupStaticUrl}delete_icon.svg" alt="Удалить">
-                        </button>
-                    </div>`;
-
-                const previewItemHTML = `
-                    <div class="file-preview-item" draggable="true" data-filename="${CSS.escape(file.name)}">
-                        ${dragHandleHTML}
-                        <div class="file-info">
-                            <img src="${previewSrc}" alt="${isImage ? 'Предпросмотр' : 'Иконка файла'}" class="${imageClass}">
-                            <div class="file-text-details">
-                                <p class="file-name-display">${file.name}</p>
-                                <p class="file-type-display">${fileExtension.toUpperCase()}</p>
-                            </div>
-                        </div>
-                        ${actionsHTML}
-                    </div>`;
-
-                if (!isMultiple) {
-                    previewArea.innerHTML = previewItemHTML;
-                } else {
-                    if (previewArea.children.length < maxFiles) {
-                        previewArea.insertAdjacentHTML('beforeend', previewItemHTML);
-                    }
-                }
-                updateFileActionButtonsState(previewAreaId);
-            };
-
-            if (file.type.startsWith('image/')) {
-                reader.readAsDataURL(file);
-            } else {
-                reader.onload({ target: { result: null } });
-            }
-        });
-
-        if (fileInput) {
-            fileInput.dataset.hadFile = previewArea.children.length > 0 ? 'true' : 'false';
-        }
-        updateFileActionButtonsState(previewAreaId);
-    }
-    
-    document.addEventListener('click', function(event) {
-        const deleteButton = event.target.closest('.delete-file-btn');
-        if (deleteButton) {
-            const previewItem = deleteButton.closest('.file-preview-item');
-            if (!previewItem) return;
-
-            const fileNameToRemove = previewItem.dataset.filename;
-            const previewArea = previewItem.parentElement;
-            
-            const inputId = previewArea.id.replace('Preview', '_input');
-            const fileInput = document.getElementById(inputId);
-
-            // Удаляем из accumulatedFiles
-            if (accumulatedFiles[inputId]) {
-                accumulatedFiles[inputId] = accumulatedFiles[inputId].filter(file => 
-                    CSS.escape(file.name) !== fileNameToRemove
-                );
-            }
-
-            if (fileInput) {
-                const dt = new DataTransfer();
-                // Используем accumulatedFiles как источник истины
-                if (accumulatedFiles[inputId]) {
-                    accumulatedFiles[inputId].forEach(file => dt.items.add(file));
-                } else {
-                    const files = Array.from(fileInput.files);
-                    files.forEach(file => {
-                        if (CSS.escape(file.name) !== fileNameToRemove) {
-                            dt.items.add(file);
-                        }
-                    });
-                }
-                fileInput.files = dt.files;
-            }
-            previewItem.remove();
-            checkPlaceholderVisibility(previewArea.id.replace('Preview', 'DropArea'));
-            updateFileActionButtonsState(previewArea.id);
-        }
-    });
-
-    setupDragAndDrop('id_creatives_input', 'creativesDropArea', 'creativesPreview', 
-        { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] }, true, 10);
-    setupDragAndDrop('id_video_input', 'videoDropArea', 'videoPreview', 
-        { mimes: ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska'], extensions: ['mp4', 'mov', 'avi', 'mkv'] }, true, 3);
-    setupDragAndDrop('id_proofs_input', 'proofsDropArea', 'proofsPreview', 
-        { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] }, true, 10);
-
     function setupCustomCheckboxes() {
         document.querySelectorAll('.agreement-section .custom-checkbox-label').forEach(label => {
             const inputId = label.getAttribute('for');
@@ -951,70 +716,6 @@ document.addEventListener('DOMContentLoaded', function() {
         spinDown.addEventListener('click', () => {
             valuationInput.stepDown();
         });
-    }
-
-    function updateFileActionButtonsState(previewAreaId) {
-        const previewArea = document.getElementById(previewAreaId);
-        if (!previewArea) return;
-
-        const items = previewArea.querySelectorAll('.file-preview-item');
-        items.forEach(item => {
-            const editBtn = item.querySelector('.edit-file-btn');
-            const deleteBtn = item.querySelector('.delete-file-btn');
-            const fileName = item.dataset.filename;
-
-            if (editBtn) {
-                editBtn.style.display = 'none';
-            }
-        });
-    }
-    
-    function checkPlaceholderVisibility(dropAreaId) {
-        const dropArea = document.getElementById(dropAreaId);
-        if (!dropArea) return;
-    }
-
-    function displayFileUploadError(inputId, message) {
-        const fileInput = document.getElementById(inputId);
-        if (!fileInput) {
-            return;
-        }
-        const dropArea = fileInput.closest('.upload-box, .logo-upload-group');
-        if (!dropArea) {
-            return;
-        }
-
-        const existingError = dropArea.querySelector('.custom-validation-error.file-specific-upload-error');
-        if (existingError) {
-            existingError.remove();
-        }
-
-        const errorMsgElement = document.createElement('p');
-        errorMsgElement.className = 'error-message custom-validation-error file-specific-upload-error';
-        errorMsgElement.textContent = message;
-
-        const smallText = dropArea.querySelector('.small-text');
-        const uploadButton = dropArea.querySelector('.custom-file-upload-button');
-
-        if (smallText && smallText.nextSibling) {
-            smallText.parentNode.insertBefore(errorMsgElement, smallText.nextSibling);
-        } else if (smallText) {
-            smallText.parentNode.appendChild(errorMsgElement);
-        } else if (uploadButton && uploadButton.nextSibling) {
-            uploadButton.parentNode.insertBefore(errorMsgElement, uploadButton.nextSibling);
-        } else if (uploadButton) {
-            uploadButton.parentNode.appendChild(errorMsgElement);
-        } else {
-            dropArea.appendChild(errorMsgElement);
-        }
-
-        if (uploadButton) {
-            uploadButton.classList.add('input-error');
-        } else {
-            dropArea.classList.add('input-error');
-        }
-        
-        errorMsgElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 });
 </script>
