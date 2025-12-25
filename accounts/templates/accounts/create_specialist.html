@@ -444,6 +444,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         startupForm.addEventListener('submit', function(e) {
+            // Защита от двойного submit - проверяем в самом начале
+            const submitButton = this.querySelector('button[type="submit"]');
+            if (submitButton && submitButton.disabled) {
+                e.preventDefault();
+                return false;
+            }
+            // Немедленно блокируем кнопку
+            if (submitButton) {
+                submitButton.disabled = true;
+            }
+
             let firstInvalidElementOrGroup = null;
             let validationPassed = true;
             let firstErrorText = null;
@@ -543,7 +554,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            const submitButton = this.querySelector('button[type="submit"]');
             if (!validationPassed) {
                 e.preventDefault();
                 if (submitButton) {
