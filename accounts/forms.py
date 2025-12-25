@@ -524,12 +524,12 @@ class FranchiseForm(forms.ModelForm):
     creatives = forms.FileField(
         required=False,  # Делаем False, т.к. валидация через request.FILES.getlist
         help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)",
-        widget=forms.ClearableFileInput(attrs={'multiple': True})
+        widget=forms.FileInput(attrs={'multiple': True})
     )
     proofs = forms.FileField(
         required=False, 
         help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)",
-        widget=forms.ClearableFileInput(attrs={'multiple': True})
+        widget=forms.FileInput(attrs={'multiple': True})
     )
     direction = DirectionModelChoiceField(
         queryset=Directions.objects.filter(
@@ -657,12 +657,12 @@ class AgencyForm(forms.ModelForm):
     creatives = forms.FileField(
         required=False,  # Делаем False, т.к. валидация через request.FILES.getlist
         help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)",
-        widget=forms.ClearableFileInput(attrs={'multiple': True})
+        widget=forms.FileInput(attrs={'multiple': True})
     )
     proofs = forms.FileField(
         required=False, 
         help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)",
-        widget=forms.ClearableFileInput(attrs={'multiple': True})
+        widget=forms.FileInput(attrs={'multiple': True})
     )
     direction = forms.ChoiceField(choices=[
         ("Веб-разработка", "Веб-разработка"),
@@ -773,12 +773,12 @@ class SpecialistForm(forms.ModelForm):
     creatives = forms.FileField(
         required=False,  # Делаем False, т.к. валидация через request.FILES.getlist
         help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)",
-        widget=forms.ClearableFileInput(attrs={'multiple': True})
+        widget=forms.FileInput(attrs={'multiple': True})
     )
     proofs = forms.FileField(
         required=False, 
         help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)",
-        widget=forms.ClearableFileInput(attrs={'multiple': True})
+        widget=forms.FileInput(attrs={'multiple': True})
     )
     direction = forms.ChoiceField(choices=[
         ("Веб-разработка", "Веб-разработка"),
