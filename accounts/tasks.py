@@ -150,39 +150,44 @@ def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type
 
         # Update entity's file_urls (e.g., logo_urls, creatives_urls, proofs_urls)
         if entity:
-            from django.db import transaction
-            with transaction.atomic():
-                # Перезагружаем entity с блокировкой строки
-                entity = entity_model.objects.select_for_update().get(pk=entity_id)
-                
-                if file_type_name == 'logo':
-                    current_logo_urls = entity.logo_urls or []
-                    if file_id not in current_logo_urls:
-                        current_logo_urls.append(file_id)
-                        entity.logo_urls = current_logo_urls
-                        entity.save(update_fields=['logo_urls'])
-                        logger.info(f"✅ file_id {file_id} добавлен в {entity_type_name}.logo_urls")
-                    else:
-                        logger.warning(f"⚠️ file_id {file_id} уже есть в logo_urls")
-                elif file_type_name == 'creative':
-                    current_creatives_urls = entity.creatives_urls or []
-                    if file_id not in current_creatives_urls:
-                        current_creatives_urls.append(file_id)
-                        entity.creatives_urls = current_creatives_urls
-                        entity.save(update_fields=['creatives_urls'])
-                        logger.info(f"✅ file_id {file_id} добавлен в {entity_type_name}.creatives_urls")
-                    else:
-                        logger.warning(f"⚠️ file_id {file_id} уже есть в creatives_urls")
-                elif file_type_name == 'proof':
-                    current_proofs_urls = entity.proofs_urls or []
-                    if file_id not in current_proofs_urls:
-                        current_proofs_urls.append(file_id)
-                        entity.proofs_urls = current_proofs_urls
-                        entity.save(update_fields=['proofs_urls'])
-                        logger.info(f"✅ file_id {file_id} добавлен в {entity_type_name}.proofs_urls")
-                    else:
-                        logger.warning(f"⚠️ file_id {file_id} уже есть в proofs_urls")
-                elif file_type_name == 'catalog_card_image':
+            from django.db import transaction, connection
+            
+            # Используем raw SQL для атомарного обновления JSONField
+            # Это решает проблему race condition при параллельных Celery задачах
+            def atomic_append_to_json_array(model, pk_field, pk_value, field_name, new_value):
+                """Атомарно добавляет значение в JSON массив, избегая race condition"""
+                table_name = model._meta.db_table
+                with connection.cursor() as cursor:
+                    # PostgreSQL: используем jsonb_array_elements для проверки + COALESCE
+                    sql = f"""
+                        UPDATE {table_name}
+                        SET {field_name} = COALESCE({field_name}, '[]'::jsonb) || %s::jsonb
+                        WHERE {pk_field} = %s
+                        AND NOT (COALESCE({field_name}, '[]'::jsonb) @> %s::jsonb)
+                    """
+                    cursor.execute(sql, [f'["{new_value}"]', pk_value, f'["{new_value}"]'])
+                    return cursor.rowcount > 0
+            
+            pk_field = entity_model._meta.pk.name
+            
+            if file_type_name == 'logo':
+                if atomic_append_to_json_array(entity_model, pk_field, entity_id, 'logo_urls', file_id):
+                    logger.info(f"✅ file_id {file_id} атомарно добавлен в {entity_type_name}.logo_urls")
+                else:
+                    logger.warning(f"⚠️ file_id {file_id} уже есть в logo_urls или entity не найден")
+            elif file_type_name == 'creative':
+                if atomic_append_to_json_array(entity_model, pk_field, entity_id, 'creatives_urls', file_id):
+                    logger.info(f"✅ file_id {file_id} атомарно добавлен в {entity_type_name}.creatives_urls")
+                else:
+                    logger.warning(f"⚠️ file_id {file_id} уже есть в creatives_urls или entity не найден")
+            elif file_type_name == 'proof':
+                if atomic_append_to_json_array(entity_model, pk_field, entity_id, 'proofs_urls', file_id):
+                    logger.info(f"✅ file_id {file_id} атомарно добавлен в {entity_type_name}.proofs_urls")
+                else:
+                    logger.warning(f"⚠️ file_id {file_id} уже есть в proofs_urls или entity не найден")
+            elif file_type_name == 'catalog_card_image':
+                with transaction.atomic():
+                    entity = entity_model.objects.select_for_update().get(pk=entity_id)
                     entity.catalog_card_image = file_id
                     entity.save(update_fields=['catalog_card_image'])
                     logger.info(f"✅ file_id {file_id} добавлен в {entity_type_name}.catalog_card_image")
