@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="form-group">
                             <label for="{{ form.franchise_cost.id_for_label }}">{{ form.franchise_cost.label }}</label>
                             <div class="input-wrapper">
-                                {{ form.franchise_cost|add_class:"form-control"|attr:"placeholder:Стоимость франшизы ₽" }}
+                                {{ form.franchise_cost|add_class:"form-control"|attr:"placeholder:Паушальный взнос ₽" }}
                             </div>
                             {% if form.franchise_cost.errors %}<span class="error-message">{{ form.franchise_cost.errors|first }}</span>{% endif %}
                         </div>

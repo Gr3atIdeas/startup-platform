@@ -378,9 +378,15 @@ textarea.form-control,
 
 /* Dark theme form controls - transparent/dark background needs white text */
 .form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+.form-group select:focus {
   color: white;
+}
+
+/* Textareas always keep white background on focus */
+.form-group textarea:focus {
+  background: white !important;
+  color: #1e1e1e !important;
+  border-color: #ffc85e;
 }
 
 /* Keep dark text for inputs with white background */
@@ -2172,4 +2178,14 @@ input[type=number] {
   }
   .agreement-section { display: flex; flex-direction: column; gap: 15px; align-items: flex-start; pointer-events: auto; position: relative; z-index: 5; }
   .agreement-section .section-title { line-height: 50px; }
+}
+
+/* Global textarea white background - highest priority */
+textarea.form-control:focus,
+.form-group textarea:focus,
+.form-content-section textarea:focus,
+.form-main-content-wrapper textarea:focus {
+  background: white !important;
+  background-color: white !important;
+  color: #1e1e1e !important;
 }

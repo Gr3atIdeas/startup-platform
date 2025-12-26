@@ -286,6 +286,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             {% if form.stage.errors %}<span class="error-message">{{ form.stage.errors|first }}</span>{% endif %}
                         </div>
                     </div>
+                    <!-- Блок микроинвестиций временно скрыт -->
+                    <!--
                     <div class="investment-type-card">
                         <div class="form-group checkbox-group micro-investment-group">
                             {{ form.micro_investment_available|attr:"id:id_micro_investment_available"|add_class:"form-check-input-hidden" }}
@@ -307,6 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             {% if form.investment_type.errors %}<span class="error-message">{{ form.investment_type.errors|first }}</span>{% endif %}
                         </div>
                     </div>
+                    -->
                 </div>
             </div>
             </div>

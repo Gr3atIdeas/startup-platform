@@ -116,14 +116,15 @@ class StartupEditForm(forms.ModelForm):
         widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
     )
     INVESTMENT_TYPE_CHOICES = [
+        ("", "Выберите тип"),
         ("invest", "Инвестирование"),
         ("buy", "Выкуп"),
         ("both", "Инвестирование + Выкуп"),
     ]
     investment_type = forms.ChoiceField(
         choices=INVESTMENT_TYPE_CHOICES,
-        label="Тип инвестирования *",
-        required=True,
+        label="Тип инвестирования",
+        required=False,
         widget=forms.Select(attrs={"class": "form-control"}),
     )
     funding_goal = forms.IntegerField(
@@ -287,14 +288,15 @@ class StartupForm(forms.ModelForm):
         widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
     )
     INVESTMENT_TYPE_CHOICES = [
+        ("", "Выберите тип"),
         ("invest", "Инвестирование"),
         ("buy", "Выкуп"),
         ("both", "Инвестирование + Выкуп"),
     ]
     investment_type = forms.ChoiceField(
         choices=INVESTMENT_TYPE_CHOICES,
-        label="Тип инвестирования *",
-        required=True,
+        label="Тип инвестирования",
+        required=False,
         widget=forms.Select(attrs={"class": "form-control"}),
     )
     def __init__(self, *args, **kwargs):
@@ -606,7 +608,7 @@ class FranchiseForm(forms.ModelForm):
             "description": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Подробное описание франшизы"}),
             "terms": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Условия сотрудничества"}),
             "investment_size": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Введите сумму ₽"}),
-            "franchise_cost": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Стоимость франшизы ₽"}),
+            "franchise_cost": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Паушальный взнос ₽"}),
 
             "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
             "direction": forms.Select(attrs={"class": "form-control"}),
@@ -619,7 +621,7 @@ class FranchiseForm(forms.ModelForm):
             "description": "*Описание",
             "terms": "Условия",
             "investment_size": "Размер инвестиций (₽)",
-            "franchise_cost": "Стоимость франшизы (₽)",
+            "franchise_cost": "Паушальный взнос (₽)",
             "pitch_deck_url": "URL презентации",
             "direction": "Категория *",
             "stage": "Стадия *",

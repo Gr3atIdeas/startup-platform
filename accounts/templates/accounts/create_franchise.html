@@ -99,7 +99,7 @@
                         <div class="form-group">
                             <label for="{{ form.franchise_cost.id_for_label }}">{{ form.franchise_cost.label }}</label>
                             <div class="input-wrapper">
-                                {{ form.franchise_cost|add_class:"form-control"|attr:"placeholder:Стоимость франшизы ₽"|attr:"type:number"|attr:"min:0" }}
+                                {{ form.franchise_cost|add_class:"form-control"|attr:"placeholder:Паушальный взнос ₽"|attr:"type:number"|attr:"min:0" }}
                             </div>
                         </div>
                     </div>
@@ -716,7 +716,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script src="{% static 'accounts/js/slider_checkbox.js' %}"></script>
-<script src="{% static 'accounts/js/description_media_modal.js' %}"></script>
 <script>
 // Инициализация модального окна для медиа
 document.addEventListener('DOMContentLoaded', function() {

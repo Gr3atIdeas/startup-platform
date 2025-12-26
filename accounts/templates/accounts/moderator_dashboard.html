@@ -470,9 +470,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 </a>
             </div>
 
-    {% if pending_startups %}
+    {% if pending_startups or pending_franchises or pending_agencies or pending_specialists %}
             <div class="startup-cards-grid">
-                {% for startup in pending_startups %}
+    {% for startup in pending_startups %}
                 <div class="startup-card-item">
                     <div class="startup-card-item-content">
                         <div class="startup-card-main-info">
@@ -568,13 +568,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     </div>
                 </div>
-                {% endfor %}
-            </div>
-    {% endif %}
+    {% endfor %}
 
-    {% if pending_franchises %}
-            <div class="startup-cards-grid">
-                {% for franchise in pending_franchises %}
+    {% for franchise in pending_franchises %}
                 <div class="startup-card-item">
                     <div class="startup-card-item-content">
                         <div class="startup-card-main-info">
@@ -645,13 +641,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     </div>
                 </div>
-                {% endfor %}
-            </div>
-    {% endif %}
+    {% endfor %}
 
-    {% if pending_agencies %}
-            <div class="startup-cards-grid">
-                {% for agency in pending_agencies %}
+    {% for agency in pending_agencies %}
                 <div class="startup-card-item">
                     <div class="startup-card-item-content">
                         <div class="startup-card-main-info">
@@ -722,13 +714,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     </div>
                 </div>
-                {% endfor %}
-            </div>
-    {% endif %}
+    {% endfor %}
 
-    {% if pending_specialists %}
-            <div class="startup-cards-grid">
-                {% for specialist in pending_specialists %}
+    {% for specialist in pending_specialists %}
                 <div class="startup-card-item">
                     <div class="startup-card-item-content">
                         <div class="startup-card-main-info">
@@ -799,7 +787,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     </div>
                 </div>
-                {% endfor %}
+    {% endfor %}
             </div>
     {% endif %}
 
