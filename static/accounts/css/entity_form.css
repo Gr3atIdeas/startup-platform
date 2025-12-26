@@ -358,7 +358,14 @@ html, body { overflow-x: hidden; }
   line-height: 18px; 
   width: 100%; 
   box-sizing: border-box;
-  resize: none; 
+}
+
+/* Allow vertical resize for textareas */
+textarea.form-control,
+.form-group textarea,
+.form-main-content-wrapper textarea {
+  resize: vertical;
+  min-height: 100px;
 }
 
 .form-control:focus {
@@ -1180,9 +1187,28 @@ textarea.form-control.input-error {
 .form-main-content-wrapper input:focus,
 .form-main-content-wrapper select:focus,
 .form-main-content-wrapper textarea:focus {
+  border-color: #ffc85e;
+}
+
+/* Inputs with white background keep white on focus */
+.form-main-content-wrapper .form-control[style*="background: white"]:focus,
+.form-main-content-wrapper .form-control[style*="background-color: white"]:focus,
+.form-main-content-wrapper .form-control[style*="background:#fff"]:focus,
+.form-main-content-wrapper .form-control[style*="background-color:#fff"]:focus,
+.form-main-content-wrapper input[style*="background: white"]:focus,
+.form-main-content-wrapper input[style*="background-color: white"]:focus,
+.form-main-content-wrapper textarea[style*="background: white"]:focus,
+.form-main-content-wrapper textarea[style*="background-color: white"]:focus {
+  background: white !important;
+  color: #1e1e1e !important;
+}
+
+/* Transparent/dark inputs keep their style on focus */
+.form-main-content-wrapper .form-control:not([style*="background: white"]):not([style*="background-color: white"]):focus,
+.form-main-content-wrapper input:not([style*="background: white"]):not([style*="background-color: white"]):focus,
+.form-main-content-wrapper textarea:not([style*="background: white"]):not([style*="background-color: white"]):focus {
   color: white;
   background: rgba(255, 255, 255, 0.15);
-  border-color: #ffc85e;
 }
 
 .form-main-content-wrapper .form-control::placeholder,

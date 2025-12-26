@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <label for="id_creatives_input">*Изображения (новые или для замены)</label>
                         <div class="small-text" style="margin-bottom: 10px; color: var(--accent-yellow);">Выберите до 4х изображений для отображения в слайдере</div>
                         {{ form.creatives|attr:"multiple:true"|attr:"id:id_creatives_input"|attr:"name:creatives"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
-                        <div class="custom-file-upload-button" onclick="document.getElementById('id_creatives_input').click()">Выбрать файлы</div>
+                        <div class="custom-file-upload-button">Выбрать файлы</div>
                         <div class="small-text">Допустимый формат PNG, JPEG (до 10 файлов)</div>
                                             <div id="creativesPreview" class="file-preview-area">
                                                  {% for creative_url in startup.creatives_urls %}
@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="form-group upload-box" id="videoDropArea">
                         <label for="id_video_input">Видео (новое или для замены)</label>
                         {{ form.video|attr:"id:id_video_input"|attr:"name:video"|attr:"multiple:true"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
-                        <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файлы</div>
+                        <div class="custom-file-upload-button">Выбрать файлы</div>
                         <div class="small-text">Допустимый формат MOV, MP4 (до 3 файлов)</div>
                         <div id="videoPreview" class="file-preview-area">
                                                          {% for video_url in startup.video_urls %}
@@ -473,7 +473,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="form-group upload-box full-width" id="proofsDropArea">
                     <label for="id_proofs_input">Документы (новые или для замены)</label>
                     {{ form.proofs|attr:"multiple:true"|attr:"id:id_proofs_input"|attr:"name:proofs"|attr:"style:opacity:0;position:absolute;z-index:-1;" }}
-                    <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файл</div>
+                    <div class="custom-file-upload-button">Выбрать файл</div>
                     <div class="small-text">Допустимый формат Doc, Excel, PDF (до 15 файлов)</div>
                     <div id="proofsPreview" class="file-preview-area">
                         {% for proof_url in startup.proofs_urls %}

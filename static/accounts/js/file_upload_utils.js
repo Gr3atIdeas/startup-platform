@@ -422,12 +422,16 @@ window.FileUploadUtils = (function() {
             allowedTypes: allowedTypes 
         };
         
-        // Обработчик клика по области (кроме кнопок)
+        // Обработчик клика ТОЛЬКО по кнопке загрузки
         dropArea.addEventListener('click', function(e) {
+            // Игнорируем клики по кнопкам удаления/редактирования
             if (e.target.closest('.delete-file-btn') || e.target.closest('.edit-file-btn')) {
                 return;
             }
-            if (!e.target.closest('.custom-file-upload-button')) {
+            // Открываем диалог выбора файлов ТОЛЬКО при клике на кнопку
+            if (e.target.closest('.custom-file-upload-button')) {
+                e.preventDefault();
+                e.stopPropagation();
                 input.click();
             }
         });
