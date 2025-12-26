@@ -5837,10 +5837,19 @@ def startuper_main(request):
 
         for startup in random_startups:
 
+            # Получаем логотип стартапа
+            startup_logo = None
+            if hasattr(startup, 'get_logo_url') and startup.get_logo_url():
+                startup_logo = startup.get_logo_url()
+
+            # Получаем планету
             if startup.planet_image:
-                startup_image = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+                planet_image = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
             else:
-                startup_image = static('accounts/images/main_page/volt_forge.webp')
+                planet_image = static('accounts/images/main_page/volt_forge.webp')
+            
+            # Основное изображение - логотип если есть, иначе планета
+            startup_image = startup_logo if startup_logo else planet_image
 
 
             if hasattr(startup, 'owner') and startup.owner and hasattr(startup.owner, 'get_profile_picture_url'):
@@ -5850,10 +5859,7 @@ def startuper_main(request):
 
 
             rating = getattr(startup, 'rating_avg', 0.0)
-            if rating:
-                rating_formatted = f"{rating:.1f}/5"
-            else:
-                rating_formatted = "0.0/5"
+            rating_formatted = str(round(rating)) if rating else "0"
 
 
             description = getattr(startup, 'short_description', '') or getattr(startup, 'description', '')
@@ -5876,6 +5882,8 @@ def startuper_main(request):
                 'rating': rating_formatted,
                 'description': description,
                 'image': startup_image,
+                'planet_image': planet_image,
+                'has_logo': bool(startup_logo),
                 'owner_avatar': owner_avatar,
                 'url': startup_url
             }
@@ -5888,27 +5896,33 @@ def startuper_main(request):
             {
                 'id': 'fallback1',
                 'name': 'VoltForge Dynamics',
-                'rating': '4.4/5',
+                'rating': '4',
                 'description': 'VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...',
                 'image': static('accounts/images/main_page/volt_forge.webp'),
+                'planet_image': static('accounts/images/planetary_system/planets_round/1.webp'),
+                'has_logo': False,
                 'owner_avatar': static('accounts/images/default_icon.svg'),
                 'url': '/startups_list/'
             },
             {
                 'id': 'fallback2',
                 'name': 'NeuroBloom',
-                'rating': '4.7/5',
+                'rating': '5',
                 'description': 'NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны для раннего выявления тревоги, депрессии и выгорания.',
                 'image': static('accounts/images/main_page/neuro_bloom.webp'),
+                'planet_image': static('accounts/images/planetary_system/planets_round/2.webp'),
+                'has_logo': False,
                 'owner_avatar': static('accounts/images/default_icon.svg'),
                 'url': '/startups_list/'
             },
             {
                 'id': 'fallback3',
                 'name': 'BioCrop Nexus',
-                'rating': '4.2/5',
+                'rating': '4',
                 'description': 'BioCrop Nexus создает генетически оптимизированные семена, устойчивые к экстремальным климатическим условиям и вредителям.',
                 'image': static('accounts/images/main_page/biocrop_nexus.webp'),
+                'planet_image': static('accounts/images/planetary_system/planets_round/3.webp'),
+                'has_logo': False,
                 'owner_avatar': static('accounts/images/default_icon.svg'),
                 'url': '/startups_list/'
             }
@@ -5928,10 +5942,7 @@ def startuper_main(request):
 
 
             rating = getattr(startuper, 'rating_avg', 0.0)
-            if rating:
-                rating_formatted = f"{rating:.1f}/5"
-            else:
-                rating_formatted = "0.0/5"
+            rating_formatted = str(round(rating)) if rating else "0"
 
 
             first_name = getattr(startuper, 'first_name', '') or ''
@@ -5960,19 +5971,19 @@ def startuper_main(request):
             {
                 'id': 'fallback1',
                 'name': 'Виктор Смирнов',
-                'rating': '4.5/5',
+                'rating': '5',
                 'avatar': static('accounts/images/avatars/default_avatar_ufo.png')
             },
             {
                 'id': 'fallback2',
                 'name': 'Анна Кузнецова',
-                'rating': '4.9/5',
+                'rating': '5',
                 'avatar': static('accounts/images/avatars/default_avatar_ufo.png')
             },
             {
                 'id': 'fallback3',
                 'name': 'Дмитрий Иванов',
-                'rating': '4.3/5',
+                'rating': '4',
                 'avatar': static('accounts/images/avatars/default_avatar_ufo.png')
             }
         ]
