@@ -137,13 +137,41 @@
   padding: 0;
 }
 
+/* Контейнер для изображения с планеткой */
+.featured5 .startup-image-container {
+  position: relative;
+  width: 160px;
+  height: 156px;
+  flex-shrink: 0;
+}
+
 .featured5 .frame-parent10 .frame-child9 {
   
   width: 160px;
   height: 156px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 10px;
   flex-shrink: 0;
+  background: transparent;
+}
+
+/* Логотип стартапа - не обрезаем, показываем полностью */
+.featured5 .frame-parent10 .frame-child9.startup-logo {
+  object-fit: contain;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* Маленькая планетка в левом нижнем углу */
+.featured5 .startup-planet-badge {
+  position: absolute;
+  bottom: -5px;
+  left: -5px;
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
 .featured5 .content {

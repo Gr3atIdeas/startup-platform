@@ -387,18 +387,18 @@ DIRECTION_TRANSLATIONS = {
     'Robotics': 'Робототехника', 'Space': 'Космические технологии', 'Science': 'Наука', 'Research': 'Исследования',     'Other': 'Другое',
 }
 FIXED_CATEGORIES = [
-    {'original_name': 'AI', 'direction_name': 'ИИ', 'icon': 'ai.png'},
-    {'original_name': 'Auto', 'direction_name': 'Авто', 'icon': 'auto.png'},
-    {'original_name': 'Beauty', 'direction_name': 'Красота', 'icon': 'beauty.png'},
-    {'original_name': 'Cafe', 'direction_name': 'Кафе/рестораны', 'icon': 'cafe.png'},
-    {'original_name': 'Delivery', 'direction_name': 'Доставка', 'icon': 'delivery-b562f7.png'},
-    {'original_name': 'Fastfood', 'direction_name': 'Фастфуд', 'icon': 'fastfood.png'},
-    {'original_name': 'Health', 'direction_name': 'Здоровье', 'icon': 'healthcare.png', 'match_names': ['Health', 'Healthcare', 'Medicine']},
-    {'original_name': 'Finance', 'direction_name': 'Финансы', 'icon': 'finance.png'},
-    {'original_name': 'Psychology', 'direction_name': 'Психология', 'icon': 'psychology-16bdc1.png'},
-    {'original_name': 'Technology', 'direction_name': 'Технологии', 'icon': 'technology.png'},
-    {'original_name': 'Sport', 'direction_name': 'Спорт', 'icon': 'sport.png'},
-    {'original_name': 'Transport', 'direction_name': 'Транспорт', 'icon': 'transport.png'},
+    {'original_name': 'AI', 'direction_name': 'ИИ', 'icon': 'ai.webp'},
+    {'original_name': 'Auto', 'direction_name': 'Авто', 'icon': 'auto.webp'},
+    {'original_name': 'Beauty', 'direction_name': 'Красота', 'icon': 'beauty.webp'},
+    {'original_name': 'Cafe', 'direction_name': 'Кафе/рестораны', 'icon': 'cafe.webp'},
+    {'original_name': 'Delivery', 'direction_name': 'Доставка', 'icon': 'delivery-b562f7.webp'},
+    {'original_name': 'Fastfood', 'direction_name': 'Фастфуд', 'icon': 'fastfood.webp'},
+    {'original_name': 'Health', 'direction_name': 'Здоровье', 'icon': 'healthcare.webp', 'match_names': ['Health', 'Healthcare', 'Medicine']},
+    {'original_name': 'Finance', 'direction_name': 'Финансы', 'icon': 'finance.webp'},
+    {'original_name': 'Psychology', 'direction_name': 'Психология', 'icon': 'psychology-16bdc1.webp'},
+    {'original_name': 'Technology', 'direction_name': 'Технологии', 'icon': 'technology.webp'},
+    {'original_name': 'Sport', 'direction_name': 'Спорт', 'icon': 'sport.webp'},
+    {'original_name': 'Transport', 'direction_name': 'Транспорт', 'icon': 'transport.webp'},
 ]
 def home(request):
     if not request.user.is_authenticated:
@@ -619,22 +619,29 @@ def home(request):
                     logger.warning(f"Could not get rating for startup {getattr(startup, 'title', 'Unknown')}: {e}")
                     rating = 4.5
 
-                rating_formatted = f"{rating:.1f}".replace('.', ',')
+                rating_formatted = str(round(rating))
 
-
-                startup_image = None
+                # Получаем логотип стартапа
+                startup_logo = None
+                if hasattr(startup, 'get_logo_url') and startup.get_logo_url():
+                    startup_logo = startup.get_logo_url()
+                
+                # Получаем планету для декоративного отображения
+                planet_image = None
                 if hasattr(startup, 'planet_image') and startup.planet_image:
-                    startup_image = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+                    planet_image = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
                 else:
-
                     import random
                     folder_choice = random.choice(['planets_round', 'planets_ring'])
                     if folder_choice == 'planets_round':
                         planet_num = random.randint(1, 15)
-                        startup_image = static(f"accounts/images/planetary_system/planets_round/{planet_num}.png")
+                        planet_image = static(f"accounts/images/planetary_system/planets_round/{planet_num}.webp")
                     else:
                         planet_num = random.randint(1, 6)
-                        startup_image = static(f"accounts/images/planetary_system/planets_ring/{planet_num}.png")
+                        planet_image = static(f"accounts/images/planetary_system/planets_ring/{planet_num}.webp")
+                
+                # Основное изображение - логотип если есть, иначе планета
+                startup_image = startup_logo if startup_logo else planet_image
 
 
                 owner_avatar = static('accounts/images/avatars/default_avatar_ufo.png')
@@ -663,6 +670,8 @@ def home(request):
                     'rating': rating_formatted,
                     'description': description,
                     'image': startup_image,
+                    'planet_image': planet_image,
+                    'has_logo': bool(startup_logo),
                     'owner_avatar': owner_avatar,
                     'url': startup_url
                 }
@@ -675,27 +684,33 @@ def home(request):
                     {
                         'id': 1,
                         'name': 'VoltForge Dynamics',
-                        'rating': '4,4',
+                        'rating': '4',
                         'description': 'VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...',
                         'image': static('accounts/images/main_page/volt_forge.webp'),
+                        'planet_image': static('accounts/images/planetary_system/planets_round/1.webp'),
+                        'has_logo': False,
                         'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
                         'url': '/startups_list/'
                     },
                     {
                         'id': 2,
                         'name': 'NeuroBloom',
-                        'rating': '4,7',
+                        'rating': '5',
                         'description': 'NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны...',
                         'image': static('accounts/images/main_page/neuro_bloom.webp'),
+                        'planet_image': static('accounts/images/planetary_system/planets_round/2.webp'),
+                        'has_logo': False,
                         'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
                         'url': '/startups_list/'
                     },
                     {
                         'id': 3,
                         'name': 'BioCrop Nexus',
-                        'rating': '4,2',
+                        'rating': '4',
                         'description': 'BioCrop Nexus создает генетически оптимизированные семена, устойчивые к климату...',
                         'image': static('accounts/images/main_page/biocrop_nexus.webp'),
+                        'planet_image': static('accounts/images/planetary_system/planets_round/3.webp'),
+                        'has_logo': False,
                         'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
                         'url': '/startups_list/'
                     }
@@ -708,27 +723,33 @@ def home(request):
                 {
                     'id': 1,
                     'name': 'VoltForge Dynamics',
-                    'rating': '4,4',
+                    'rating': '4',
                     'description': 'VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...',
                     'image': static('accounts/images/main_page/volt_forge.webp'),
+                    'planet_image': static('accounts/images/planetary_system/planets_round/1.webp'),
+                    'has_logo': False,
                     'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
                     'url': '/startups_list/'
                 },
                 {
                     'id': 2,
                     'name': 'NeuroBloom',
-                    'rating': '4,7',
+                    'rating': '5',
                     'description': 'NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны...',
                     'image': static('accounts/images/main_page/neuro_bloom.webp'),
+                    'planet_image': static('accounts/images/planetary_system/planets_round/2.webp'),
+                    'has_logo': False,
                     'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
                     'url': '/startups_list/'
                 },
                 {
                     'id': 3,
                     'name': 'BioCrop Nexus',
-                    'rating': '4,2',
+                    'rating': '4',
                     'description': 'BioCrop Nexus создает генетически оптимизированные семена, устойчивые к климату...',
                     'image': static('accounts/images/main_page/biocrop_nexus.webp'),
+                    'planet_image': static('accounts/images/planetary_system/planets_round/3.webp'),
+                    'has_logo': False,
                     'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
                     'url': '/startups_list/'
                 }

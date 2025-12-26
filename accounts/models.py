@@ -371,6 +371,12 @@ class Startups(models.Model):
         managed = True
         db_table = "startups"
     def get_average_rating(self):
+        # Считаем реальный средний рейтинг из голосов
+        from django.db.models import Avg
+        avg = UserVotes.objects.filter(startup=self).aggregate(avg_rating=Avg('rating'))['avg_rating']
+        if avg is not None:
+            return float(avg)
+        # Fallback на кэшированные значения
         if self.total_voters > 0:
             return float(self.sum_votes) / self.total_voters
         return 0.0

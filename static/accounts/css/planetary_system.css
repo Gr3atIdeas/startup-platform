@@ -1202,12 +1202,15 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  object-fit: cover;
   border-radius: 50%;
   z-index: 1;
   pointer-events: none;
   left: 0;
   top: 0;
+  /* Используем WebP для оптимизации */
+  background-image: url('/static/accounts/images/planetary_system/categories/category_bg.webp');
+  background-size: cover;
+  background-position: center;
 }
 
 
