@@ -3614,8 +3614,14 @@ def create_startup(request):
             startup.video_urls = []
             logger.info("Файлы загружаются асинхронно через Celery, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
             
+            # При создании автоматически добавляем первые 4 креатива в слайдер
+            # (при редактировании пользователь может выбрать вручную через чекбоксы)
             slider_images = request.POST.getlist("slider_images")
-            if len(slider_images) > 4:
+            if not slider_images and creatives_ids:
+                # Если slider_images не был отправлен, используем creatives_ids
+                slider_images = creatives_ids[:4]
+                logger.info(f"Автоматически установлены slider_images из creatives_ids: {slider_images}")
+            elif len(slider_images) > 4:
                 slider_images = slider_images[:4]
             startup.slider_images = slider_images
             
@@ -3899,8 +3905,14 @@ def create_franchise(request):
             franchise.video_urls = []
             logger.info("Файлы загружаются асинхронно через Celery, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
             
+            # При создании автоматически добавляем первые 4 креатива в слайдер
+            # (при редактировании пользователь может выбрать вручную через чекбоксы)
             slider_images = request.POST.getlist("slider_images")
-            if len(slider_images) > 4:
+            if not slider_images and creatives_ids:
+                # Если slider_images не был отправлен, используем creatives_ids
+                slider_images = creatives_ids[:4]
+                logger.info(f"Автоматически установлены slider_images из creatives_ids: {slider_images}")
+            elif len(slider_images) > 4:
                 slider_images = slider_images[:4]
             franchise.slider_images = slider_images
             
@@ -4172,8 +4184,14 @@ def create_agency(request):
             agency.video_urls = []
             logger.info("Файлы загружаются асинхронно через Celery, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
             
+            # При создании автоматически добавляем первые 4 креатива в слайдер
+            # (при редактировании пользователь может выбрать вручную через чекбоксы)
             slider_images = request.POST.getlist("slider_images")
-            if len(slider_images) > 4:
+            if not slider_images and creatives_ids:
+                # Если slider_images не был отправлен, используем creatives_ids
+                slider_images = creatives_ids[:4]
+                logger.info(f"Автоматически установлены slider_images из creatives_ids: {slider_images}")
+            elif len(slider_images) > 4:
                 slider_images = slider_images[:4]
             agency.slider_images = slider_images
             
@@ -4454,8 +4472,14 @@ def create_specialist(request):
             spec.video_urls = []
             logger.info("Файлы загружаются асинхронно через Celery, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
             
+            # При создании автоматически добавляем первые 4 креатива в слайдер
+            # (при редактировании пользователь может выбрать вручную через чекбоксы)
             slider_images = request.POST.getlist("slider_images")
-            if len(slider_images) > 4:
+            if not slider_images and creatives_ids:
+                # Если slider_images не был отправлен, используем creatives_ids
+                slider_images = creatives_ids[:4]
+                logger.info(f"Автоматически установлены slider_images из creatives_ids: {slider_images}")
+            elif len(slider_images) > 4:
                 slider_images = slider_images[:4]
             spec.slider_images = slider_images
             
