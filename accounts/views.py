@@ -3942,19 +3942,6 @@ def create_agency(request):
         
         if form.is_valid():
             logger.info("Form is valid, creating agency...")
-            
-            # Защита от дублирования: проверяем, не создал ли пользователь агентство с таким же названием за последние 60 секунд
-            title = form.cleaned_data.get("title", "").strip()
-            recent_duplicate = Agencies.objects.filter(
-                owner=request.user,
-                title=title,
-                created_at__gte=timezone.now() - timezone.timedelta(seconds=60)
-            ).first()
-            if recent_duplicate:
-                logger.warning(f"Обнаружено дублирование агентства! User: {request.user.user_id}, title: {title}, existing_id: {recent_duplicate.agency_id}")
-                messages.info(request, f'Агентство "{title}" уже было создано.')
-                return redirect("agencies_list")
-            
             agency = form.save(commit=False)
             agency.owner = request.user
             agency.created_at = timezone.now()
@@ -4024,9 +4011,7 @@ def create_agency(request):
                     logger.error(f"Ошибка обработки временных медиа-файлов агентства: {e}", exc_info=True)
                     messages.warning(request, "Не удалось обработать временные медиа-файлы.")
 
-            logo_ids, creatives_ids, proofs_ids, video_ids = [], [], [], []
-
-            # Синхронная загрузка logo (как в startup/franchise)
+            logo_ids, creatives_ids, creative_ids, proofs_ids, video_ids = [], [], [], [], []
             logo = form.cleaned_data.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
@@ -4038,10 +4023,7 @@ def create_agency(request):
                 logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
                 try:
-                    logger.info(f"Попытка сохранить логотип агентства по пути: {file_path}")
-                    if not try_save_file(logo, file_path):
-                        raise Exception("Не удалось сохранить логотип")
-                    logger.info(f"Логотип агентства успешно сохранён: {file_path}")
+                    default_storage.save(file_path, logo)
                     logo_ids.append(logo_id)
                     safe_create_file_storage(
                         entity_type=entity_type,
@@ -4052,9 +4034,25 @@ def create_agency(request):
                         startup=None,
                         original_file_name=logo.name,
                     )
-                except Exception as e:
-                    logger.error(f"Ошибка сохранения логотипа агентства: {e}", exc_info=True)
+                except Exception:
                     messages.warning(request, "Не удалось сохранить логотип, но агентство создано.")
+
+            # Сохранение catalog_card_image
+            catalog_card_image = form.cleaned_data.get("catalog_card_image")
+            if catalog_card_image and hasattr(catalog_card_image, 'read'):
+                catalog_card_id = str(uuid.uuid4())
+                base_name = os.path.splitext(catalog_card_image.name)[0]
+                ext = os.path.splitext(catalog_card_image.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                try:
+                    if not try_save_file(catalog_card_image, file_path):
+                        raise Exception("Не удалось сохранить изображение карточки")
+                    agency.catalog_card_image = f"{catalog_card_id}_{safe_name}"
+                except Exception as e:
+                    logger.error(f"Ошибка сохранения изображения карточки агентства: {e}", exc_info=True)
+                    messages.warning(request, "Не удалось сохранить изображение для карточки, но агентство создано.")
 
             # Асинхронная загрузка creatives через Celery
             creatives = request.FILES.getlist("creatives")
@@ -4163,22 +4161,6 @@ def create_agency(request):
             agency.video_urls = []
             logger.info("Файлы загружаются асинхронно через Celery, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
             
-            # Сохранение catalog_card_image
-            catalog_card_image = form.cleaned_data.get("catalog_card_image")
-            if catalog_card_image and hasattr(catalog_card_image, 'read'):
-                catalog_card_id = str(uuid.uuid4())
-                base_name = os.path.splitext(catalog_card_image.name)[0]
-                ext = os.path.splitext(catalog_card_image.name)[1]
-                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
-                try:
-                    if not try_save_file(catalog_card_image, file_path):
-                        raise Exception("Не удалось сохранить изображение карточки")
-                    agency.catalog_card_image = f"{catalog_card_id}_{safe_name}"
-                except Exception as e:
-                    logger.error(f"Ошибка сохранения изображения карточки агентства: {e}", exc_info=True)
-            
             slider_images = request.POST.getlist("slider_images")
             if len(slider_images) > 4:
                 slider_images = slider_images[:4]
@@ -4222,19 +4204,6 @@ def create_specialist(request):
         
         if form.is_valid():
             logger.info("Form is valid, creating specialist...")
-            
-            # Защита от дублирования: проверяем, не создал ли пользователь специалиста с таким же названием за последние 60 секунд
-            title = form.cleaned_data.get("title", "").strip()
-            recent_duplicate = Specialists.objects.filter(
-                owner=request.user,
-                title=title,
-                created_at__gte=timezone.now() - timezone.timedelta(seconds=60)
-            ).first()
-            if recent_duplicate:
-                logger.warning(f"Обнаружено дублирование специалиста! User: {request.user.user_id}, title: {title}, existing_id: {recent_duplicate.specialist_id}")
-                messages.info(request, f'Профиль специалиста "{title}" уже был создан.')
-                return redirect("specialists_list")
-            
             spec = form.save(commit=False)
             spec.owner = request.user
             spec.created_at = timezone.now()
@@ -4304,9 +4273,7 @@ def create_specialist(request):
                     logger.error(f"Ошибка обработки временных медиа-файлов специалиста: {e}", exc_info=True)
                     messages.warning(request, "Не удалось обработать временные медиа-файлы.")
 
-            logo_ids, creatives_ids, proofs_ids, video_ids = [], [], [], []
-
-            # Синхронная загрузка logo (как в startup/franchise)
+            logo_ids, creatives_ids, creative_ids, proofs_ids, video_ids = [], [], [], [], []
             logo = form.cleaned_data.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
@@ -4318,10 +4285,7 @@ def create_specialist(request):
                 logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 try:
-                    logger.info(f"Попытка сохранить логотип специалиста по пути: {file_path}")
-                    if not try_save_file(logo, file_path):
-                        raise Exception("Не удалось сохранить логотип")
-                    logger.info(f"Логотип специалиста успешно сохранён: {file_path}")
+                    default_storage.save(file_path, logo)
                     logo_ids.append(logo_id)
                     safe_create_file_storage(
                         entity_type=entity_type,
@@ -4332,9 +4296,25 @@ def create_specialist(request):
                         startup=None,
                         original_file_name=logo.name,
                     )
-                except Exception as e:
-                    logger.error(f"Ошибка сохранения логотипа специалиста: {e}", exc_info=True)
+                except Exception:
                     messages.warning(request, "Не удалось сохранить логотип, но профиль специалиста создан.")
+
+            # Сохранение catalog_card_image
+            catalog_card_image = form.cleaned_data.get("catalog_card_image")
+            if catalog_card_image and hasattr(catalog_card_image, 'read'):
+                catalog_card_id = str(uuid.uuid4())
+                base_name = os.path.splitext(catalog_card_image.name)[0]
+                ext = os.path.splitext(catalog_card_image.name)[1]
+                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                safe_name = slugify(safe_base_name) + ext
+                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                try:
+                    if not try_save_file(catalog_card_image, file_path):
+                        raise Exception("Не удалось сохранить изображение карточки")
+                    spec.catalog_card_image = f"{catalog_card_id}_{safe_name}"
+                except Exception as e:
+                    logger.error(f"Ошибка сохранения изображения карточки специалиста: {e}", exc_info=True)
+                    messages.warning(request, "Не удалось сохранить изображение для карточки, но профиль специалиста создан.")
 
             # Асинхронная загрузка creatives через Celery
             creatives = request.FILES.getlist("creatives")
@@ -4442,22 +4422,6 @@ def create_specialist(request):
             spec.proofs_urls = []
             spec.video_urls = []
             logger.info("Файлы загружаются асинхронно через Celery, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
-            
-            # Сохранение catalog_card_image
-            catalog_card_image = form.cleaned_data.get("catalog_card_image")
-            if catalog_card_image and hasattr(catalog_card_image, 'read'):
-                catalog_card_id = str(uuid.uuid4())
-                base_name = os.path.splitext(catalog_card_image.name)[0]
-                ext = os.path.splitext(catalog_card_image.name)[1]
-                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
-                try:
-                    if not try_save_file(catalog_card_image, file_path):
-                        raise Exception("Не удалось сохранить изображение карточки")
-                    spec.catalog_card_image = f"{catalog_card_id}_{safe_name}"
-                except Exception as e:
-                    logger.error(f"Ошибка сохранения изображения карточки специалиста: {e}", exc_info=True)
             
             slider_images = request.POST.getlist("slider_images")
             if len(slider_images) > 4:
