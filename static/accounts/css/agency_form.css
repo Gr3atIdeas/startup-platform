@@ -317,6 +317,14 @@ body {
   resize: none; 
 }
 
+.form-control:focus {
+  color: #1e1e1e;
+  background: white;
+  border-color: #ffc85e;
+  outline: none;
+  box-shadow: none;
+}
+
 .form-control::placeholder {
   color: #c7c7c7; 
   font-size: 14px;
