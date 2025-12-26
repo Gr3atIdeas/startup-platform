@@ -1,36 +1,46 @@
 @font-face {
   font-family: Unbounded;
-  src: url('../fonts/Unbounded-Regular.ttf') format('truetype');
+  src: url('../fonts/Unbounded-Regular.woff2') format('woff2'),
+       url('../fonts/Unbounded-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: Unbounded;
-  src: url('../fonts/Unbounded-Light.ttf') format('truetype');
+  src: url('../fonts/Unbounded-Light.woff2') format('woff2'),
+       url('../fonts/Unbounded-Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: Unbounded;
-  src: url('../fonts/Unbounded-Medium.ttf') format('truetype');
+  src: url('../fonts/Unbounded-Medium.woff2') format('woff2'),
+       url('../fonts/Unbounded-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: Unbounded;
-  src: url('../fonts/Unbounded-SemiBold.ttf') format('truetype');
+  src: url('../fonts/Unbounded-SemiBold.woff2') format('woff2'),
+       url('../fonts/Unbounded-SemiBold.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: Unbounded;
-  src: url('../fonts/Unbounded-Bold.ttf') format('truetype');
+  src: url('../fonts/Unbounded-Bold.woff2') format('woff2'),
+       url('../fonts/Unbounded-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -38,6 +48,7 @@
   src: url('../fonts/blippo_blackcyrusbyme.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 img {
