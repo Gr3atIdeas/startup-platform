@@ -660,16 +660,32 @@ class AgencyForm(forms.ModelForm):
         required=False, 
         help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
     )
-    direction = forms.ChoiceField(choices=[
-        ("Веб-разработка", "Веб-разработка"),
-        ("Мобильная разработка", "Мобильная разработка"),
-        ("Дизайн", "Дизайн"),
-        ("Маркетинг", "Маркетинг"),
-        ("ИИ", "ИИ"),
-        ("Брендинг", "Брендинг"),
-        ("Видео и мультимедиа", "Видео и мультимедиа"),
-        ("Перевод", "Перевод"),
-    ], label="Категория *", required=True)
+    agency_category = forms.ChoiceField(
+        choices=[
+            ("", "Выберите категорию"),
+            ("Веб-разработка", "Веб-разработка"),
+            ("Мобильная разработка", "Мобильная разработка"),
+            ("Дизайн", "Дизайн"),
+            ("Маркетинг", "Маркетинг"),
+            ("ИИ", "ИИ"),
+            ("Брендинг", "Брендинг"),
+            ("Видео и мультимедиа", "Видео и мультимедиа"),
+            ("Перевод", "Перевод"),
+        ],
+        label="Категория", required=False
+    )
+    agency_description = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 3}), label="Вводное описание", required=False
+    )
+    agency_additional_info = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 5}), label="Основные услуги", required=False
+    )
+    agency_services = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 5}), label="Услуги", required=False
+    )
+    agency_pitch_deck_url = forms.URLField(
+        label="Презентация агентства", required=False
+    )
 
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
@@ -774,16 +790,26 @@ class SpecialistForm(forms.ModelForm):
         required=False, 
         help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
     )
-    direction = forms.ChoiceField(choices=[
-        ("Веб-разработка", "Веб-разработка"),
-        ("Мобильная разработка", "Мобильная разработка"),
-        ("Дизайн", "Дизайн"),
-        ("Маркетинг", "Маркетинг"),
-        ("ИИ", "ИИ"),
-        ("Брендинг", "Брендинг"),
-        ("Видео и мультимедиа", "Видео и мультимедиа"),
-        ("Перевод", "Перевод"),
-    ], label="Категория *", required=True)
+    specialist_category = forms.ChoiceField(
+        choices=[
+            ("", "Выберите категорию"),
+            ("Веб-разработка", "Веб-разработка"),
+            ("Мобильная разработка", "Мобильная разработка"),
+            ("Дизайн", "Дизайн"),
+            ("Маркетинг", "Маркетинг"),
+            ("ИИ", "ИИ"),
+            ("Брендинг", "Брендинг"),
+            ("Видео и мультимедиа", "Видео и мультимедиа"),
+            ("Перевод", "Перевод"),
+        ],
+        label="Категория", required=False
+    )
+    specialist_description = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 3}), label="Вводное описание", required=False
+    )
+    specialist_additional_info = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 5}), label="Основные функции", required=False
+    )
 
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)

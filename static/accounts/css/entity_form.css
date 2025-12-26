@@ -129,6 +129,31 @@ html, body { overflow-x: hidden; }
   padding: 30px;
 }
 
+/* Dark card inputs - white text on transparent background */
+.form-top-card .form-control,
+.form-top-card input,
+.form-top-card select,
+.form-top-card textarea {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.form-top-card .form-control:focus,
+.form-top-card input:focus,
+.form-top-card select:focus,
+.form-top-card textarea:focus {
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffc85e;
+}
+
+.form-top-card .form-control::placeholder,
+.form-top-card input::placeholder,
+.form-top-card textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .form-top-grid {
   display: grid;
   grid-template-columns: auto 360px;
@@ -211,6 +236,31 @@ html, body { overflow-x: hidden; }
   height: 288px;
   box-sizing: border-box;
   box-shadow: 6px 6px 10px rgb(0 0 0 / 25%); 
+}
+
+/* Dark card inputs - white text on transparent background */
+.investment-type-card .form-control,
+.investment-type-card input,
+.investment-type-card select,
+.investment-type-card textarea {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.investment-type-card .form-control:focus,
+.investment-type-card input:focus,
+.investment-type-card select:focus,
+.investment-type-card textarea:focus {
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffc85e;
+}
+
+.investment-type-card .form-control::placeholder,
+.investment-type-card input::placeholder,
+.investment-type-card textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* С„РёРєСЃРёСЂРѕРІР°РЅРЅР°СЏ С€РёСЂРёРЅР° РєР°СЂС‚РѕС‡РєРё РјРёРєСЂРѕРёРЅРІРµСЃС‚РёС†РёР№ */
@@ -317,6 +367,21 @@ html, body { overflow-x: hidden; }
   border-color: #ffc85e;
   outline: none;
   box-shadow: none;
+}
+
+/* Dark theme form controls - transparent/dark background needs white text */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  color: white;
+}
+
+/* Keep dark text for inputs with white background */
+.form-control[style*="background: white"]:focus,
+.form-control[style*="background-color: white"]:focus,
+.form-control[style*="background:#fff"]:focus,
+.form-control[style*="background-color:#fff"]:focus {
+  color: #1e1e1e;
 }
 
 .form-control::placeholder {
@@ -1099,6 +1164,31 @@ textarea.form-control.input-error {
   flex-direction: column;
   gap: 73px; 
   margin-bottom: 40px; 
+}
+
+/* Dark wrapper inputs - white text on transparent background */
+.form-main-content-wrapper .form-control,
+.form-main-content-wrapper input,
+.form-main-content-wrapper select,
+.form-main-content-wrapper textarea {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.form-main-content-wrapper .form-control:focus,
+.form-main-content-wrapper input:focus,
+.form-main-content-wrapper select:focus,
+.form-main-content-wrapper textarea:focus {
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffc85e;
+}
+
+.form-main-content-wrapper .form-control::placeholder,
+.form-main-content-wrapper input::placeholder,
+.form-main-content-wrapper textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 

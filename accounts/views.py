@@ -3995,13 +3995,27 @@ def create_agency(request):
             
             logger.info(f"=== AFTER FIRST SAVE === Created agency with ID: {agency.agency_id}")
             
-            cat = form.cleaned_data.get("direction")
+            # Сохраняем категорию и дополнительные поля в customization_data
+            data = agency.customization_data or {}
+            cat = form.cleaned_data.get("agency_category")
             if cat:
-                data = agency.customization_data or {}
                 data["agency_category"] = cat
+            agency_description = form.cleaned_data.get("agency_description")
+            if agency_description:
+                data["agency_description"] = agency_description
+            agency_additional_info = form.cleaned_data.get("agency_additional_info")
+            if agency_additional_info:
+                data["agency_additional_info"] = agency_additional_info
+            agency_services = form.cleaned_data.get("agency_services")
+            if agency_services:
+                data["agency_services"] = agency_services
+            agency_pitch_deck_url = form.cleaned_data.get("agency_pitch_deck_url")
+            if agency_pitch_deck_url:
+                data["agency_pitch_deck_url"] = str(agency_pitch_deck_url)
+            if data:
                 agency.customization_data = data
                 agency.save(update_fields=["customization_data"])
-                logger.info(f"=== AFTER CATEGORY SAVE === agency_id: {agency.agency_id}")
+                logger.info(f"=== AFTER CUSTOMIZATION_DATA SAVE === agency_id: {agency.agency_id}")
             
             def try_save_file(file_obj, file_path):
                 try:
@@ -4283,10 +4297,21 @@ def create_specialist(request):
             spec.status = "pending"
             spec.planet_image = form.cleaned_data.get("planet_image")
             spec.save()
-            cat = form.cleaned_data.get("direction")
+            
+            # Сохраняем данные кастомизации
+            cat = form.cleaned_data.get("specialist_category")
+            specialist_description = form.cleaned_data.get("specialist_description")
+            specialist_additional_info = form.cleaned_data.get("specialist_additional_info")
+            
+            data = spec.customization_data or {}
             if cat:
-                data = spec.customization_data or {}
                 data["specialist_category"] = cat
+            if specialist_description:
+                data["specialist_description"] = specialist_description
+            if specialist_additional_info:
+                data["specialist_additional_info"] = specialist_additional_info
+            
+            if data:
                 spec.customization_data = data
                 spec.save(update_fields=["customization_data"])
             

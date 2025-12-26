@@ -20,19 +20,22 @@
 
         
         <div class="form-section-top">
+            <div class="form-top-card">
             <div class="form-top-grid">
                 <div class="form-top-left">
-                <div class="form-group planet-upload-group" style="display:none;">
-                    <label class="planet-upload-label">Выберите планету</label>
-                    <div class="planet-selector">
+                <div class="form-group planet-upload-group">
+                    <label class="planet-upload-label">*Выберите планету</label>
+                    <div class="planet-selector" id="planetSelector">
                     <button type="button" class="planet-nav-button prev-planet" aria-label="Предыдущая планета">
-                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous">
+                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous" loading="lazy" decoding="async">
                     </button>
                     <div class="planet-display">
-                        <img src="" alt="Планета" class="planet-preview" id="planetPreview">
+                        <div class="planet-ribbon" id="planetRibbon">
+                            
+                        </div>
                     </div>
                     <button type="button" class="planet-nav-button next-planet" aria-label="Следующая планета">
-                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next">
+                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next" loading="lazy" decoding="async">
                     </button>
                     </div>
                     {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image" }}
@@ -41,53 +44,53 @@
                     {% endif %}
                 </div>
                 <div class="form-group logo-upload-group">
-                    <label for="{{ form.logo.id_for_label }}" class="logo-upload-label">
+                    <div class="logo-upload-label">
                     <div class="logo-placeholder" id="logoPlaceholder">
-                        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon">
-                        <span>*Загрузить логотип</span>
+                        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon" loading="lazy" decoding="async">
                     </div>
                     <img src="" alt="Логотип" class="logo-preview" id="logoPreview" style="display:none;">
-                    </label>
+                    </div>
                     {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
+                    <div class="custom-file-upload-button" id="logoUploadButton">*Выбрать логотип</div>
                     {% if form.logo.errors %}
                     <span class="error-message">{{ form.logo.errors|first }}</span>
                     {% endif %}
                 </div>
                 <div class="form-group catalog-card-image-group">
-                    <label for="{{ form.catalog_card_image.id_for_label }}" class="catalog-card-image-label">
+                    <div class="catalog-card-image-label">
                         <div class="catalog-card-image-placeholder" id="catalogCardImagePlaceholder">
-                            <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Card Image Icon">
-                            <span>{{ form.catalog_card_image.label }}</span>
+                            <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Card Image Icon" loading="lazy" decoding="async">
                         </div>
                         <img src="" alt="Изображение карточки" class="catalog-card-image-preview" id="catalogCardImagePreview" style="display:none;">
-                    </label>
+                    </div>
                     {{ form.catalog_card_image|add_class:"form-control-file"|attr:"id:id_catalog_card_image_input"|attr:"style:display:none;" }}
+                    <div class="custom-file-upload-button" id="catalogCardImageUploadButton">{{ form.catalog_card_image.label }}</div>
                     <div class="help-text">{{ form.catalog_card_image.help_text }}</div>
                     {% if form.catalog_card_image.errors %}
                     <span class="error-message">{{ form.catalog_card_image.errors|first }}</span>
                     {% endif %}
                 </div>
-                <div class="form-fields-left">
+                </div>
+                <div class="form-top-right">
+                    <div class="form-fields-left">
                         <div class="form-group">
-                            <label for="{{ form.title.id_for_label }}">*{{ form.title.label }}</label>
+                            <label for="{{ form.title.id_for_label }}">*{{ form.title.label|cut:"*" }}</label>
                             <div class="input-wrapper">
                                 {{ form.title|add_class:"form-control"|attr:"placeholder:Ромашка" }}
                             </div>
                             {% if form.title.errors %}<span class="error-message">{{ form.title.errors|first }}</span>{% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.direction.id_for_label }}">*{{ form.direction.label }}</label>
+                            <label for="{{ form.agency_category.id_for_label }}">{{ form.agency_category.label }}</label>
                             <div class="input-wrapper select-wrapper">
-                                {{ form.direction|add_class:"form-control" }}
-                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
+                                {{ form.agency_category|add_class:"form-control" }}
+                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow" loading="lazy" decoding="async">
                             </div>
-                            {% if form.direction.errors %}<span class="error-message">{{ form.direction.errors|first }}</span>{% endif %}
+                            {% if form.agency_category.errors %}<span class="error-message">{{ form.agency_category.errors|first }}</span>{% endif %}
                         </div>
-                        
-                        
                     </div>
                 </div>
-                
+            </div>
             </div>
         </div>
 
@@ -112,6 +115,30 @@
                     </div>
                     <div class="small-text">Подробное описание ваших услуг, компетенций и кейсов. Поддерживаются теги &lt;img&gt; и &lt;video&gt;.</div>
                     {% if form.description.errors %}<span class="error-message">{{ form.description.errors|first }}</span>{% endif %}
+                </div>
+                <div class="form-group full-width">
+                    <label for="{{ form.agency_description.id_for_label }}">{{ form.agency_description.label }}</label>
+                    {{ form.agency_description|add_class:"form-control"|attr:"placeholder:Вводное описание агентства" }}
+                    <div class="small-text">Краткое вводное описание для отображения в деталях.</div>
+                    {% if form.agency_description.errors %}<span class="error-message">{{ form.agency_description.errors|first }}</span>{% endif %}
+                </div>
+                <div class="form-group full-width">
+                    <label for="{{ form.agency_additional_info.id_for_label }}">{{ form.agency_additional_info.label }}</label>
+                    {{ form.agency_additional_info|add_class:"form-control"|attr:"placeholder:Основные услуги агентства" }}
+                    <div class="small-text">Основные услуги и направления работы.</div>
+                    {% if form.agency_additional_info.errors %}<span class="error-message">{{ form.agency_additional_info.errors|first }}</span>{% endif %}
+                </div>
+                <div class="form-group full-width">
+                    <label for="{{ form.agency_services.id_for_label }}">{{ form.agency_services.label }}</label>
+                    {{ form.agency_services|add_class:"form-control"|attr:"placeholder:Подробное описание услуг" }}
+                    <div class="small-text">Подробное описание услуг для отображения в табе "Услуги".</div>
+                    {% if form.agency_services.errors %}<span class="error-message">{{ form.agency_services.errors|first }}</span>{% endif %}
+                </div>
+                <div class="form-group full-width">
+                    <label for="{{ form.agency_pitch_deck_url.id_for_label }}">{{ form.agency_pitch_deck_url.label }}</label>
+                    {{ form.agency_pitch_deck_url|add_class:"form-control"|attr:"placeholder:https://example.com/presentation" }}
+                    <div class="small-text">Ссылка на презентацию агентства.</div>
+                    {% if form.agency_pitch_deck_url.errors %}<span class="error-message">{{ form.agency_pitch_deck_url.errors|first }}</span>{% endif %}
                 </div>
             </div>
 
@@ -236,117 +263,26 @@
 
 <script src="{% static 'accounts/js/file_upload_utils.js' %}"></script>
 <script>
-const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
-const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
-const planetBaseUrl = "{{ S3_PUBLIC_BASE_URL }}/choosable_planets/";
+// Инициализация FileUploadUtils с путём к статике
+FileUploadUtils.init({ staticUrl: "{% static 'accounts/images/creat_startup/' %}" });
+</script>
+<script src="{% static 'accounts/js/startup_form.js' %}"></script>
+<script src="{% static 'accounts/js/description_media_modal.js' %}"></script>
+<script>
+window.STARTUP_FORM_CONFIG = {
+  planetChoices: [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  planetBaseUrl: "{{ S3_PUBLIC_BASE_URL }}/choosable_planets/",
+};
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Инициализируем FileUploadUtils с путем к статике
-    if (window.FileUploadUtils) {
-        FileUploadUtils.init({
-            staticUrl: creatStartupStaticUrl
-        });
-        
-        // Creatives (изображения)
-        FileUploadUtils.setupFileInput({
-            inputId: 'id_creatives_input',
-            dropAreaId: 'creativesDropArea',
-            previewAreaId: 'creativesPreview',
-            isMultiple: true,
-            maxFiles: 10,
-            allowedTypes: { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] }
-        });
-        
-        // Video
-        FileUploadUtils.setupFileInput({
-            inputId: 'id_video_input',
-            dropAreaId: 'videoDropArea',
-            previewAreaId: 'videoPreview',
-            isMultiple: true,
-            maxFiles: 3,
-            allowedTypes: { mimes: ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska'], extensions: ['mp4', 'mov', 'avi', 'mkv'] }
-        });
-        
-        // Proofs (документы)
-        FileUploadUtils.setupFileInput({
-            inputId: 'id_proofs_input',
-            dropAreaId: 'proofsDropArea',
-            previewAreaId: 'proofsPreview',
-            isMultiple: true,
-            maxFiles: 10,
-            allowedTypes: { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] }
-        });
-    }
-
-    // --- Предзагрузка планет ---
-    const planetImages = {};
-    planetChoices.forEach(choice => {
-        const img = new Image();
-        img.src = planetBaseUrl + choice;
-        planetImages[choice] = img;
-    });
-
-    // --- Планеты ---
-    const planetInput = document.getElementById('id_planet_image');
-    const planetPreview = document.getElementById('planetPreview');
-    const prevButton = document.querySelector('.planet-nav-button.prev-planet');
-    const nextButton = document.querySelector('.planet-nav-button.next-planet');
-    let currentPlanetIndex = 0;
-    let isAnimating = false;
-
-    function updatePlanetDisplay(direction) {
-        if (isAnimating) return; // Предотвращаем запуск новой анимации, пока текущая не завершена
-        isAnimating = true;
-
-        // Устанавливаем новую планету
-        const newPlanet = planetChoices[currentPlanetIndex];
-        planetPreview.src = planetBaseUrl + newPlanet;
-        planetInput.value = newPlanet;
-
-        // Удаляем старые классы анимации и добавляем новую
-        planetPreview.classList.remove('slide-left', 'slide-right');
-        planetPreview.classList.add(direction === 'next' ? 'slide-right' : 'slide-left');
-
-        // После завершения анимации возвращаем планету в центр
-        setTimeout(() => {
-            planetPreview.classList.remove('slide-left', 'slide-right');
-            planetPreview.style.transform = 'translateX(0)';
-            planetPreview.style.opacity = '1';
-            isAnimating = false;
-        }, 300); // Длительность анимации (0.3s)
-    }
-
-    if (prevButton) {
-        prevButton.addEventListener('click', () => {
-            if (planetChoices.length === 0) return;
-            currentPlanetIndex = (currentPlanetIndex - 1 + planetChoices.length) % planetChoices.length;
-            updatePlanetDisplay('prev');
-        });
-    }
-
-    if (nextButton) {
-        nextButton.addEventListener('click', () => {
-            if (planetChoices.length === 0) return;
-            currentPlanetIndex = (currentPlanetIndex + 1) % planetChoices.length;
-            updatePlanetDisplay('next');
-        });
-    }
-
-    // Инициализация первой планеты
-    if (planetChoices.length > 0) {
-        planetPreview.src = planetBaseUrl + planetChoices[0];
-        planetInput.value = planetChoices[0];
-    } else {
-        planetPreview.src = 'https://via.placeholder.com/150';
-        planetInput.value = '';
-    }
-
     // --- Логотип ---
     const logoInput = document.getElementById('id_logo_input');
     const logoPlaceholder = document.getElementById('logoPlaceholder');
     const logoPreviewImg = document.getElementById('logoPreview');
+    const logoUploadButton = document.getElementById('logoUploadButton');
 
     if (logoInput && logoPlaceholder && logoPreviewImg) {
+        if (logoUploadButton) logoUploadButton.addEventListener('click', () => logoInput.click());
         logoPlaceholder.addEventListener('click', () => logoInput.click());
         logoPreviewImg.addEventListener('click', () => logoInput.click());
 
@@ -361,6 +297,69 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
                 reader.readAsDataURL(file);
             }
+        });
+    }
+
+    // --- Изображение карточки каталога ---
+    const catalogCardImageInput = document.getElementById('id_catalog_card_image_input');
+    const catalogCardImagePlaceholder = document.getElementById('catalogCardImagePlaceholder');
+    const catalogCardImagePreview = document.getElementById('catalogCardImagePreview');
+    const catalogCardImageUploadButton = document.getElementById('catalogCardImageUploadButton');
+
+    if (catalogCardImageInput && catalogCardImagePlaceholder && catalogCardImagePreview) {
+        if (catalogCardImageUploadButton) catalogCardImageUploadButton.addEventListener('click', () => catalogCardImageInput.click());
+        catalogCardImagePlaceholder.addEventListener('click', () => catalogCardImageInput.click());
+        catalogCardImagePreview.addEventListener('click', () => catalogCardImageInput.click());
+
+        catalogCardImageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    catalogCardImagePreview.src = e.target.result;
+                    catalogCardImagePreview.style.display = 'block';
+                    catalogCardImagePlaceholder.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Инициализация модального окна для медиа
+    const getMediaLinkBtn = document.getElementById('getMediaLinkBtn');
+    if (getMediaLinkBtn) {
+        getMediaLinkBtn.addEventListener('click', function() {
+            window.openDescriptionMediaModal('agency', null);
+        });
+    }
+
+    // Setup file upload areas
+    if (window.FileUploadUtils) {
+        FileUploadUtils.setupFileInput({
+            inputId: 'id_creatives_input',
+            dropAreaId: 'creativesDropArea',
+            previewAreaId: 'creativesPreview',
+            isMultiple: true,
+            maxFiles: 10,
+            allowedTypes: { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] }
+        });
+        
+        FileUploadUtils.setupFileInput({
+            inputId: 'id_video_input',
+            dropAreaId: 'videoDropArea',
+            previewAreaId: 'videoPreview',
+            isMultiple: true,
+            maxFiles: 3,
+            allowedTypes: { mimes: ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska'], extensions: ['mp4', 'mov', 'avi', 'mkv'] }
+        });
+        
+        FileUploadUtils.setupFileInput({
+            inputId: 'id_proofs_input',
+            dropAreaId: 'proofsDropArea',
+            previewAreaId: 'proofsPreview',
+            isMultiple: true,
+            maxFiles: 10,
+            allowedTypes: { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] }
         });
     }
 
