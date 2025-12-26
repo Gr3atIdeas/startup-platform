@@ -3942,6 +3942,11 @@ def create_agency(request):
         
         if form.is_valid():
             logger.info("Form is valid, creating agency...")
+            
+            # Проверяем сколько агентств уже есть в базе перед созданием
+            existing_count = Agencies.objects.filter(status="pending").count()
+            logger.info(f"=== BEFORE SAVE === Pending agencies in DB: {existing_count}")
+            
             agency = form.save(commit=False)
             agency.owner = request.user
             agency.created_at = timezone.now()
@@ -3949,12 +3954,16 @@ def create_agency(request):
             agency.status = "pending"
             agency.planet_image = form.cleaned_data.get("planet_image")
             agency.save()
+            
+            logger.info(f"=== AFTER FIRST SAVE === Created agency with ID: {agency.agency_id}")
+            
             cat = form.cleaned_data.get("direction")
             if cat:
                 data = agency.customization_data or {}
                 data["agency_category"] = cat
                 agency.customization_data = data
                 agency.save(update_fields=["customization_data"])
+                logger.info(f"=== AFTER CATEGORY SAVE === agency_id: {agency.agency_id}")
             
             def try_save_file(file_obj, file_path):
                 try:
@@ -4167,7 +4176,16 @@ def create_agency(request):
             agency.slider_images = slider_images
             
             agency.save()
+            
+            # Финальная проверка - сколько агентств с pending статусом после сохранения
+            final_count = Agencies.objects.filter(status="pending").count()
             logger.info(f"=== CREATE_AGENCY SUCCESS === agency_id: {agency.agency_id}")
+            logger.info(f"=== AFTER FINAL SAVE === Pending agencies in DB: {final_count}")
+            
+            # Проверяем нет ли дубликатов
+            all_pending = list(Agencies.objects.filter(status="pending").values_list('agency_id', 'title'))
+            logger.info(f"=== ALL PENDING AGENCIES === {all_pending}")
+            
             messages.success(request, f'Агентство "{agency.title}" успешно создано и отправлено на модерацию!')
             return redirect("agencies_list")
         else:
@@ -5914,11 +5932,18 @@ def startuper_main(request):
 
 
     return render(request, "accounts/startuper_main.html", context)
+
+
 def moderator_dashboard(request):
     pending_startups_list = Startups.objects.filter(status="pending")
     pending_franchises_list = Franchises.objects.filter(status="pending")
     pending_agencies_list = Agencies.objects.filter(status="pending")
     pending_specialists_list = Specialists.objects.filter(status="pending")
+    
+    # Логирование для отладки дублирования
+    logger.info(f"=== MODERATOR_DASHBOARD === pending_agencies count: {pending_agencies_list.count()}")
+    for agency in pending_agencies_list:
+        logger.info(f"  Agency ID: {agency.agency_id}, title: {agency.title}, status: {agency.status}")
     
     # Получаем категории как в каталогах
     # Стартапы - только определенные категории
