@@ -104,7 +104,7 @@ class StartupEditForm(forms.ModelForm):
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     short_description = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
+        widget=forms.Textarea(attrs={"rows": 3}), label="*Вводная", required=True
     )
     terms = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False
@@ -275,7 +275,7 @@ class StartupForm(forms.ModelForm):
         help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)"
     )
     short_description = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
+        widget=forms.Textarea(attrs={"rows": 3}), label="*Вводная", required=True
     )
     terms = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False
@@ -428,8 +428,8 @@ class StartupForm(forms.ModelForm):
         }
         labels = {
             "title": "Название стартапа *",
-            "short_description": "Вводная *",
-            "description": "Описание *",
+            "short_description": "*Вводная",
+            "description": "*Описание",
             "terms": "Условия",
             "funding_goal": "Цель финансирования (₽) *",
             "amount_raised": "Собранная сумма (₽)",
@@ -554,7 +554,7 @@ class FranchiseForm(forms.ModelForm):
         required=False,
         help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)"
     )
-    short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
+    short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="*Вводная", required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False)
     planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
 
@@ -615,8 +615,8 @@ class FranchiseForm(forms.ModelForm):
         }
         labels = {
             "title": "Название франшизы *",
-            "short_description": "Вводная *",
-            "description": "Описание *",
+            "short_description": "*Вводная",
+            "description": "*Описание",
             "terms": "Условия",
             "investment_size": "Размер инвестиций (₽)",
             "franchise_cost": "Стоимость франшизы (₽)",
@@ -695,7 +695,7 @@ class AgencyForm(forms.ModelForm):
         required=False,
         help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)"
     )
-    short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
+    short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="*Вводная", required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False)
     planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
 
@@ -748,8 +748,8 @@ class AgencyForm(forms.ModelForm):
         }
         labels = {
             "title": "Название агентства *",
-            "short_description": "Вводная *",
-            "description": "Описание *",
+            "short_description": "*Вводная",
+            "description": "*Описание",
             "terms": "Этапы работ",
             "pitch_deck_url": "URL презентации",
             "direction": "Категория *",
@@ -819,7 +819,7 @@ class SpecialistForm(forms.ModelForm):
         required=False,
         help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)"
     )
-    short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True)
+    short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="*Вводная", required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False)
     additional_info = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Услуги и кейсы", required=False)
     planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
@@ -875,8 +875,8 @@ class SpecialistForm(forms.ModelForm):
         }
         labels = {
             "title": "Профиль специалиста *",
-            "short_description": "Вводная *",
-            "description": "Описание *",
+            "short_description": "*Вводная",
+            "description": "*Описание",
             "terms": "Этапы работ",
             "additional_info": "Услуги и кейсы",
             "pitch_deck_url": "URL презентации",
@@ -1100,7 +1100,7 @@ class FranchiseEditForm(forms.ModelForm):
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     short_description = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
+        widget=forms.Textarea(attrs={"rows": 3}), label="*Вводная", required=True
     )
     terms = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False
@@ -1190,7 +1190,7 @@ class AgencyEditForm(forms.ModelForm):
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     short_description = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
+        widget=forms.Textarea(attrs={"rows": 3}), label="*Вводная", required=True
     )
     terms = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False
@@ -1296,7 +1296,7 @@ class SpecialistEditForm(forms.ModelForm):
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     short_description = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 3}), label="Вводная *", required=True
+        widget=forms.Textarea(attrs={"rows": 3}), label="*Вводная", required=True
     )
     terms = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False

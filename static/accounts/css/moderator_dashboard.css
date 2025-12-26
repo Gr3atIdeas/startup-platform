@@ -729,7 +729,7 @@ div.startup-card-item
   }
   
   .startup-cards-grid {
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -739,7 +739,7 @@ div.startup-card-item
   }
   
   .startup-cards-grid {
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -844,7 +844,7 @@ div.startup-card-item
   }
   
   .startup-cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: 1fr;
   }
 }
 
@@ -868,12 +868,12 @@ div.startup-card-item
 
 @media (max-width: 1200px) and (min-height: 800px) {
   .startup-cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 992px) and (min-height: 700px) {
   .startup-cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 }

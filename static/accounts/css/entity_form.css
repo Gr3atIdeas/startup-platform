@@ -1176,17 +1176,30 @@ textarea.form-control.input-error {
 /* Dark wrapper inputs - white text on transparent background */
 .form-main-content-wrapper .form-control,
 .form-main-content-wrapper input,
-.form-main-content-wrapper select,
-.form-main-content-wrapper textarea {
+.form-main-content-wrapper select {
   background: rgba(255, 255, 255, 0.1);
   color: white;
   border-color: rgba(255, 255, 255, 0.3);
 }
 
+/* Textareas should have white background for better readability */
+.form-main-content-wrapper textarea,
+.form-main-content-wrapper textarea.form-control {
+  background: white;
+  color: #1e1e1e;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
 .form-main-content-wrapper .form-control:focus,
 .form-main-content-wrapper input:focus,
-.form-main-content-wrapper select:focus,
-.form-main-content-wrapper textarea:focus {
+.form-main-content-wrapper select:focus {
+  border-color: #ffc85e;
+}
+
+.form-main-content-wrapper textarea:focus,
+.form-main-content-wrapper textarea.form-control:focus {
+  background: white;
+  color: #1e1e1e;
   border-color: #ffc85e;
 }
 
