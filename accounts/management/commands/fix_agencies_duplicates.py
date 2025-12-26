@@ -78,12 +78,42 @@ class Command(BaseCommand):
                 max_id = cursor.fetchone()[0]
                 self.stdout.write(f"Max agency_id: {max_id}")
                 
-                # Сбрасываем sequence на max_id + 1
-                cursor.execute(f"SELECT setval('agencies_agency_id_seq', {max_id}, true)")
-                new_val = cursor.fetchone()[0]
-                self.stdout.write(self.style.SUCCESS(f"Sequence reset to: {new_val}"))
+                # Пробуем найти реальное имя sequence для колонки agency_id
+                cursor.execute("""
+                    SELECT pg_get_serial_sequence('agencies', 'agency_id')
+                """)
+                seq_name = cursor.fetchone()[0]
+                
+                if seq_name:
+                    self.stdout.write(f"Found sequence: {seq_name}")
+                    cursor.execute(f"SELECT setval('{seq_name}', %s, true)", [max_id])
+                    new_val = cursor.fetchone()[0]
+                    self.stdout.write(self.style.SUCCESS(f"Sequence reset to: {new_val}"))
+                else:
+                    # Sequence не найден - создаём его и привязываем к колонке
+                    self.stdout.write(self.style.WARNING("No sequence found, creating one..."))
+                    
+                    # Создаём sequence
+                    cursor.execute(f"""
+                        CREATE SEQUENCE IF NOT EXISTS agencies_agency_id_seq
+                        START WITH {max_id + 1}
+                        OWNED BY agencies.agency_id
+                    """)
+                    
+                    # Устанавливаем default для колонки
+                    cursor.execute("""
+                        ALTER TABLE agencies 
+                        ALTER COLUMN agency_id 
+                        SET DEFAULT nextval('agencies_agency_id_seq')
+                    """)
+                    
+                    # Сбрасываем sequence на правильное значение
+                    cursor.execute(f"SELECT setval('agencies_agency_id_seq', %s, true)", [max_id])
+                    new_val = cursor.fetchone()[0]
+                    self.stdout.write(self.style.SUCCESS(f"Created and set sequence to: {new_val}"))
+                    
             except Exception as e:
-                self.stdout.write(self.style.WARNING(f"Could not reset sequence (may not exist): {e}"))
+                self.stdout.write(self.style.ERROR(f"Error resetting sequence: {e}"))
             
             # Шаг 4: Финальная проверка
             cursor.execute("SELECT COUNT(*) FROM agencies")
