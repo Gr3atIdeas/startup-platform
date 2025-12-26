@@ -3944,8 +3944,10 @@ def create_agency(request):
             logger.info("Form is valid, creating agency...")
             
             # Проверяем сколько агентств уже есть в базе перед созданием
-            existing_count = Agencies.objects.filter(status="pending").count()
+            qs = Agencies.objects.filter(status="pending")
+            existing_count = qs.count()
             logger.info(f"=== BEFORE SAVE === Pending agencies in DB: {existing_count}")
+            logger.info(f"=== SQL QUERY === {qs.query}")
             
             agency = form.save(commit=False)
             agency.owner = request.user
@@ -4182,9 +4184,20 @@ def create_agency(request):
             logger.info(f"=== CREATE_AGENCY SUCCESS === agency_id: {agency.agency_id}")
             logger.info(f"=== AFTER FINAL SAVE === Pending agencies in DB: {final_count}")
             
-            # Проверяем нет ли дубликатов
+            # Проверяем нет ли дубликатов через ORM
             all_pending = list(Agencies.objects.filter(status="pending").values_list('agency_id', 'title'))
-            logger.info(f"=== ALL PENDING AGENCIES === {all_pending}")
+            logger.info(f"=== ALL PENDING AGENCIES (ORM) === {all_pending}")
+            
+            # Проверяем через distinct
+            distinct_pending = list(Agencies.objects.filter(status="pending").distinct().values_list('agency_id', 'title'))
+            logger.info(f"=== ALL PENDING AGENCIES (DISTINCT) === {distinct_pending}")
+            
+            # Проверяем через raw SQL
+            from django.db import connection
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT agency_id, title FROM agencies WHERE status = 'pending'")
+                raw_result = cursor.fetchall()
+                logger.info(f"=== ALL PENDING AGENCIES (RAW SQL) === {raw_result}")
             
             messages.success(request, f'Агентство "{agency.title}" успешно создано и отправлено на модерацию!')
             return redirect("agencies_list")
@@ -5937,7 +5950,7 @@ def startuper_main(request):
 def moderator_dashboard(request):
     pending_startups_list = Startups.objects.filter(status="pending")
     pending_franchises_list = Franchises.objects.filter(status="pending")
-    pending_agencies_list = Agencies.objects.filter(status="pending")
+    pending_agencies_list = Agencies.objects.filter(status="pending").distinct()
     pending_specialists_list = Specialists.objects.filter(status="pending")
     
     # Логирование для отладки дублирования

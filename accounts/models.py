@@ -829,19 +829,13 @@ class FranchiseDirections(models.Model):
 
 class Agencies(models.Model):
     agency_id = models.AutoField(primary_key=True, db_column="agency_id")
-    owner = models.ForeignKey(
-        "Users", models.DO_NOTHING, blank=True, null=True, db_column="owner_id"
-    )
+    owner = models.ForeignKey("Users", models.DO_NOTHING, blank=True, null=True, db_column="owner_id")
     title = models.CharField(max_length=255)
     short_description = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     terms = models.TextField(blank=True, null=True)
-    direction = models.ForeignKey(
-        "Directions", models.DO_NOTHING, blank=True, null=True, db_column="direction_id"
-    )
-    stage = models.ForeignKey(
-        "StartupStages", models.DO_NOTHING, blank=True, null=True, db_column="stage_id"
-    )
+    direction = models.ForeignKey("Directions", models.DO_NOTHING, blank=True, null=True, db_column="direction_id")
+    stage = models.ForeignKey("StartupStages", models.DO_NOTHING, blank=True, null=True, db_column="stage_id")
     pitch_deck_url = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
@@ -860,10 +854,6 @@ class Agencies(models.Model):
     class Meta:
         managed = True
         db_table = "agencies"
-
-    @property
-    def franchise_id(self):
-        return self.agency_id
 
     def get_average_rating(self):
         if self.total_voters > 0:
