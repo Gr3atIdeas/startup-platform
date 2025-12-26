@@ -1287,8 +1287,8 @@ def franchises_list(request):
         }
         return render(request, "accounts/franchises_list.html", context)
 def agencies_list(request):
-
-    agencies_qs = Agencies.objects.filter(status="approved")
+    # Используем distinct() для предотвращения дубликатов (проблема с PRIMARY KEY в таблице agencies)
+    agencies_qs = Agencies.objects.filter(status="approved").distinct()
     agency_categories = [
         "Веб-разработка",
         "Мобильная разработка",
@@ -1602,6 +1602,9 @@ def agency_detail(request, agency_id):
         agency.creatives_urls if isinstance(agency.creatives_urls, list) else []
     )
     slider_images = agency.slider_images if isinstance(agency.slider_images, list) else []
+    # Фильтруем slider_images - показываем только загруженные файлы (которые есть в creatives_urls)
+    # Это решает проблему когда Celery ещё не успел загрузить файлы
+    slider_images = [img for img in slider_images if img in creatives_urls] if slider_images else creatives_urls[:4]
     all_creatives = creatives_urls
     video_urls = agency.video_urls if isinstance(agency.video_urls, list) else []
     proofs_urls = agency.proofs_urls if isinstance(agency.proofs_urls, list) else []
