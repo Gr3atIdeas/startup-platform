@@ -1602,9 +1602,9 @@ def agency_detail(request, agency_id):
         agency.creatives_urls if isinstance(agency.creatives_urls, list) else []
     )
     slider_images = agency.slider_images if isinstance(agency.slider_images, list) else []
-    # Фильтруем slider_images - показываем только загруженные файлы (которые есть в creatives_urls)
-    # Это решает проблему когда Celery ещё не успел загрузить файлы
-    slider_images = [img for img in slider_images if img in creatives_urls] if slider_images else creatives_urls[:4]
+    # Используем slider_images напрямую, если пусто - берём первые 4 creatives
+    if not slider_images:
+        slider_images = creatives_urls[:4]
     all_creatives = creatives_urls
     video_urls = agency.video_urls if isinstance(agency.video_urls, list) else []
     proofs_urls = agency.proofs_urls if isinstance(agency.proofs_urls, list) else []
@@ -4080,7 +4080,7 @@ def create_agency(request):
                     logger.error(f"Ошибка сохранения изображения карточки агентства: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но агентство создано.")
 
-            # Асинхронная загрузка creatives через Celery
+            # Синхронная загрузка creatives (как у logo, чтобы файлы были доступны сразу)
             creatives = request.FILES.getlist("creatives")
             if not creatives:
                 creatives = form.cleaned_data.get("creatives", [])
@@ -4095,27 +4095,26 @@ def create_agency(request):
                     try:
                         unique_filename = get_unique_filename(creative_file.name, agency.agency_id, "creative")
                         creative_id = str(uuid.uuid4())
-                        file_data = creative_file.read()
-                        content_type = getattr(creative_file, 'content_type', 'image/jpeg')
+                        file_path = f"agencies/{agency.agency_id}/creatives/{creative_id}_{unique_filename}"
                         
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                        # Синхронная загрузка в S3
+                        default_storage.save(file_path, creative_file)
                         
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
-                            file_name=creative_file.name,
-                            file_content_type=content_type,
-                            entity_type_name='agency',
+                        # Сохраняем в FileStorage
+                        safe_create_file_storage(
+                            entity_type=entity_type,
                             entity_id=agency.agency_id,
-                            file_type_name='creative',
-                            original_filename=unique_filename,
-                            file_id=creative_id
+                            file_type=creative_type,
+                            file_url=creative_id,
+                            uploaded_at=timezone.now(),
+                            startup=None,
+                            original_file_name=creative_file.name,
                         )
                         creatives_ids.append(creative_id)
-                        logger.info(f"Изображение агентства отправлено в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
+                        logger.info(f"Изображение агентства загружено синхронно: {creative_file.name}")
                     except Exception as e:
-                        logger.error(f"Ошибка отправки изображения агентства в очередь: {e}", exc_info=True)
-                        messages.warning(request, f"Не удалось отправить изображение {creative_file.name} на загрузку.")
+                        logger.error(f"Ошибка загрузки изображения агентства: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось загрузить изображение {creative_file.name}.")
 
             # Асинхронная загрузка proofs через Celery
             proofs = request.FILES.getlist("proofs")
@@ -4182,10 +4181,10 @@ def create_agency(request):
                         messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
 
             agency.logo_urls = logo_ids
-            agency.creatives_urls = []
+            agency.creatives_urls = creatives_ids  # Синхронно загруженные creatives
             agency.proofs_urls = []
             agency.video_urls = []
-            logger.info("Файлы загружаются асинхронно через Celery, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
+            logger.info(f"Creatives загружены синхронно: {creatives_ids}")
             
             # При создании автоматически добавляем первые 4 креатива в слайдер
             # (при редактировании пользователь может выбрать вручную через чекбоксы)
