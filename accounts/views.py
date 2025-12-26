@@ -9,6 +9,7 @@ from random import choice, shuffle
 import time
 import datetime
 from datetime import datetime as dt
+from io import BytesIO
 import boto3
 import requests
 from boto3 import client
@@ -25,6 +26,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.core.serializers.json import DjangoJSONEncoder
 from .tasks import upload_video_to_s3
+from .utils import process_uploaded_image
 from django.db import (
     models,
     transaction,
@@ -61,7 +63,7 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib.messages import get_messages
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -3475,8 +3477,10 @@ def create_startup(request):
             logo = form.cleaned_data.get("logo") or request.FILES.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
-                base_name = os.path.splitext(logo.name)[0]
-                ext = os.path.splitext(logo.name)[1]
+                # Конвертируем изображение в WebP для экономии места
+                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
+                base_name = os.path.splitext(processed_name)[0]
+                ext = os.path.splitext(processed_name)[1]
                 safe_base_name = "".join(
                     c for c in base_name if c.isalnum() or c in ("-", "_")
                 )
@@ -3486,7 +3490,7 @@ def create_startup(request):
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
                 try:
                     logger.info(f"Попытка сохранить логотип по пути: {file_path}")
-                    if not try_save_file(logo, file_path):
+                    if not try_save_file(processed_logo, file_path):
                         raise Exception("Не удалось сохранить логотип")
                     logger.info(f"Логотип успешно сохранён по пути: {file_path}")
                     logo_ids.append(logo_id)
@@ -3497,7 +3501,7 @@ def create_startup(request):
                         file_url=logo_id,
                         uploaded_at=timezone.now(),
                         startup=startup,
-                        original_file_name=logo.name,
+                        original_file_name=processed_name,
                     )
                     logger.info(f"Логотип сохранён: {file_path}")
                 except Exception as e:
@@ -3509,8 +3513,10 @@ def create_startup(request):
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
-                base_name = os.path.splitext(catalog_card_image.name)[0]
-                ext = os.path.splitext(catalog_card_image.name)[1]
+                # Конвертируем в WebP
+                processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+                base_name = os.path.splitext(processed_catalog_name)[0]
+                ext = os.path.splitext(processed_catalog_name)[1]
                 safe_base_name = "".join(
                     c for c in base_name if c.isalnum() or c in ("-", "_")
                 )
@@ -3518,7 +3524,7 @@ def create_startup(request):
                 file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
                 try:
                     logger.info(f"Попытка сохранить изображение карточки по пути: {file_path}")
-                    if not try_save_file(catalog_card_image, file_path):
+                    if not try_save_file(processed_catalog_image, file_path):
                         raise Exception("Не удалось сохранить изображение карточки")
                     logger.info(f"Изображение карточки успешно сохранено по пути: {file_path}")
                     startup.catalog_card_image = f"{catalog_card_id}_{safe_name}"
@@ -3782,15 +3788,17 @@ def create_franchise(request):
             logo = form.cleaned_data.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
-                base_name = os.path.splitext(logo.name)[0]
-                ext = os.path.splitext(logo.name)[1]
+                # Конвертируем в WebP
+                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
+                base_name = os.path.splitext(processed_name)[0]
+                ext = os.path.splitext(processed_name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"franchises/{franchise.franchise_id}/logos/{logo_id}_{safe_name}"
                 logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 try:
-                    default_storage.save(file_path, logo)
+                    default_storage.save(file_path, processed_logo)
                     logo_ids.append(logo_id)
                     safe_create_file_storage(
                         entity_type=entity_type,
@@ -3799,7 +3807,7 @@ def create_franchise(request):
                         file_url=logo_id,
                         uploaded_at=timezone.now(),
                         startup=None,
-                        original_file_name=logo.name,
+                        original_file_name=processed_name,
                     )
                 except Exception:
                     messages.warning(request, "Не удалось сохранить логотип, но франшиза создана.")
@@ -3808,13 +3816,15 @@ def create_franchise(request):
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
-                base_name = os.path.splitext(catalog_card_image.name)[0]
-                ext = os.path.splitext(catalog_card_image.name)[1]
+                # Конвертируем в WebP
+                processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+                base_name = os.path.splitext(processed_catalog_name)[0]
+                ext = os.path.splitext(processed_catalog_name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
                 try:
-                    if not try_save_file(catalog_card_image, file_path):
+                    if not try_save_file(processed_catalog_image, file_path):
                         raise Exception("Не удалось сохранить изображение карточки")
                     franchise.catalog_card_image = f"{catalog_card_id}_{safe_name}"
                     franchise.save(update_fields=['catalog_card_image'])
@@ -3942,9 +3952,22 @@ def create_franchise(request):
             
             franchise.save()
             logger.info(f"=== CREATE_FRANCHISE SUCCESS === franchise_id: {franchise.franchise_id}")
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "redirect_url": reverse("franchises_list"),
+                })
             messages.success(request, f'Франшиза "{franchise.title}" успешно создана и отправлена на модерацию!')
             return redirect("franchises_list")
         else:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                logger.warning(f"=== CREATE_FRANCHISE FORM INVALID (AJAX) === User: {request.user.user_id}")
+                logger.warning(f"Form errors: {form.errors.as_json()}")
+                return JsonResponse({
+                    "success": False,
+                    "errors": form.errors,
+                    "non_field_errors": form.non_field_errors(),
+                }, status=400)
             logger.warning(f"=== CREATE_FRANCHISE FORM INVALID === User: {request.user.user_id}")
             logger.warning(f"Form errors: {form.errors.as_json()}")
             messages.error(request, "Форма содержит ошибки.")
@@ -4076,15 +4099,17 @@ def create_agency(request):
             logo = form.cleaned_data.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
-                base_name = os.path.splitext(logo.name)[0]
-                ext = os.path.splitext(logo.name)[1]
+                # Конвертируем в WebP
+                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
+                base_name = os.path.splitext(processed_name)[0]
+                ext = os.path.splitext(processed_name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"agencies/{agency.agency_id}/logos/{logo_id}_{safe_name}"
                 logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
                 try:
-                    default_storage.save(file_path, logo)
+                    default_storage.save(file_path, processed_logo)
                     logo_ids.append(logo_id)
                     safe_create_file_storage(
                         entity_type=entity_type,
@@ -4093,7 +4118,7 @@ def create_agency(request):
                         file_url=logo_id,
                         uploaded_at=timezone.now(),
                         startup=None,
-                        original_file_name=logo.name,
+                        original_file_name=processed_name,
                     )
                 except Exception:
                     messages.warning(request, "Не удалось сохранить логотип, но агентство создано.")
@@ -4102,13 +4127,15 @@ def create_agency(request):
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
-                base_name = os.path.splitext(catalog_card_image.name)[0]
-                ext = os.path.splitext(catalog_card_image.name)[1]
+                # Конвертируем в WebP
+                processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+                base_name = os.path.splitext(processed_catalog_name)[0]
+                ext = os.path.splitext(processed_catalog_name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
                 try:
-                    if not try_save_file(catalog_card_image, file_path):
+                    if not try_save_file(processed_catalog_image, file_path):
                         raise Exception("Не удалось сохранить изображение карточки")
                     agency.catalog_card_image = f"{catalog_card_id}_{safe_name}"
                 except Exception as e:
@@ -4255,8 +4282,21 @@ def create_agency(request):
                 logger.info(f"=== ALL PENDING AGENCIES (RAW SQL) === {raw_result}")
             
             messages.success(request, f'Агентство "{agency.title}" успешно создано и отправлено на модерацию!')
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "redirect_url": reverse("agencies_list"),
+                })
             return redirect("agencies_list")
         else:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                logger.warning(f"=== CREATE_AGENCY FORM INVALID (AJAX) === User: {request.user.user_id}")
+                logger.warning(f"Form errors: {form.errors.as_json()}")
+                return JsonResponse({
+                    "success": False,
+                    "errors": form.errors,
+                    "non_field_errors": form.non_field_errors(),
+                }, status=400)
             logger.warning(f"=== CREATE_AGENCY FORM INVALID === User: {request.user.user_id}")
             logger.warning(f"Form errors: {form.errors.as_json()}")
             messages.error(request, "Форма содержит ошибки.")
@@ -4374,15 +4414,17 @@ def create_specialist(request):
             logo = form.cleaned_data.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
-                base_name = os.path.splitext(logo.name)[0]
-                ext = os.path.splitext(logo.name)[1]
+                # Конвертируем в WebP
+                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
+                base_name = os.path.splitext(processed_name)[0]
+                ext = os.path.splitext(processed_name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"specialists/{spec.specialist_id}/logos/{logo_id}_{safe_name}"
                 logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 try:
-                    default_storage.save(file_path, logo)
+                    default_storage.save(file_path, processed_logo)
                     logo_ids.append(logo_id)
                     safe_create_file_storage(
                         entity_type=entity_type,
@@ -4391,7 +4433,7 @@ def create_specialist(request):
                         file_url=logo_id,
                         uploaded_at=timezone.now(),
                         startup=None,
-                        original_file_name=logo.name,
+                        original_file_name=processed_name,
                     )
                 except Exception:
                     messages.warning(request, "Не удалось сохранить логотип, но профиль специалиста создан.")
@@ -4400,13 +4442,15 @@ def create_specialist(request):
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
-                base_name = os.path.splitext(catalog_card_image.name)[0]
-                ext = os.path.splitext(catalog_card_image.name)[1]
+                # Конвертируем в WebP
+                processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+                base_name = os.path.splitext(processed_catalog_name)[0]
+                ext = os.path.splitext(processed_catalog_name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
                 try:
-                    if not try_save_file(catalog_card_image, file_path):
+                    if not try_save_file(processed_catalog_image, file_path):
                         raise Exception("Не удалось сохранить изображение карточки")
                     spec.catalog_card_image = f"{catalog_card_id}_{safe_name}"
                 except Exception as e:
@@ -4533,9 +4577,22 @@ def create_specialist(request):
             
             spec.save()
             logger.info(f"=== CREATE_SPECIALIST SUCCESS === specialist_id: {spec.specialist_id}")
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "redirect_url": reverse("specialists_list"),
+                })
             messages.success(request, f'Профиль специалиста "{spec.title}" успешно создан и отправлен на модерацию!')
             return redirect("specialists_list")
         else:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                logger.warning(f"=== CREATE_SPECIALIST FORM INVALID (AJAX) === User: {request.user.user_id}")
+                logger.warning(f"Form errors: {form.errors.as_json()}")
+                return JsonResponse({
+                    "success": False,
+                    "errors": form.errors,
+                    "non_field_errors": form.non_field_errors(),
+                }, status=400)
             logger.warning(f"=== CREATE_SPECIALIST FORM INVALID === User: {request.user.user_id}")
             logger.warning(f"Form errors: {form.errors.as_json()}")
             messages.error(request, "Форма содержит ошибки.")
@@ -4944,8 +5001,10 @@ def edit_startup(request, startup_id):
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
-                file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{logo.name}"
-                default_storage.save(file_path, logo)
+                # Конвертируем в WebP
+                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
+                file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{processed_name}"
+                default_storage.save(file_path, processed_logo)
                 # Заменяем логотип (не добавляем)
                 logo_ids = [logo_id]
                 logger.info(f"Логотип сохранён с ID: {logo_id}")
@@ -5178,8 +5237,10 @@ def edit_startup(request, startup_id):
             catalog_card_image = form.cleaned_data.get("catalog_card_image") or request.FILES.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
-                base_name = os.path.splitext(catalog_card_image.name)[0]
-                ext = os.path.splitext(catalog_card_image.name)[1]
+                # Конвертируем в WebP
+                processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+                base_name = os.path.splitext(processed_catalog_name)[0]
+                ext = os.path.splitext(processed_catalog_name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
@@ -5195,8 +5256,11 @@ def edit_startup(request, startup_id):
                         config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
                     )
                     bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
-                    content_type = getattr(catalog_card_image, 'content_type', 'application/octet-stream')
-                    body_bytes = catalog_card_image.read()
+                    content_type = 'image/webp' if processed_catalog_name.endswith('.webp') else getattr(catalog_card_image, 'content_type', 'application/octet-stream')
+                    if hasattr(processed_catalog_image, 'read'):
+                        body_bytes = processed_catalog_image.read()
+                    else:
+                        body_bytes = processed_catalog_image.getvalue() if hasattr(processed_catalog_image, 'getvalue') else processed_catalog_image
                     try:
                         s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
                     except Exception:
@@ -8941,13 +9005,15 @@ def edit_franchise(request, franchise_id):
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
-                base_name = os.path.splitext(logo.name)[0]
-                ext = os.path.splitext(logo.name)[1]
+                # Конвертируем в WebP
+                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
+                base_name = os.path.splitext(processed_name)[0]
+                ext = os.path.splitext(processed_name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"franchises/{franchise.franchise_id}/logos/{logo_id}_{safe_name}"
                 try:
-                    default_storage.save(file_path, logo)
+                    default_storage.save(file_path, processed_logo)
                     logo_ids = [logo_id]
                     logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
                     entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
@@ -8958,7 +9024,7 @@ def edit_franchise(request, franchise_id):
                         file_url=logo_id,
                         uploaded_at=timezone.now(),
                         startup=None,
-                        original_file_name=logo.name,
+                        original_file_name=processed_name,
                     )
                 except Exception as e:
                     messages.warning(request, f"Не удалось сохранить логотип: {e}")
@@ -9123,8 +9189,10 @@ def edit_franchise(request, franchise_id):
             catalog_card_image = form.cleaned_data.get("catalog_card_image") or request.FILES.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
-                base_name = os.path.splitext(catalog_card_image.name)[0]
-                ext = os.path.splitext(catalog_card_image.name)[1]
+                # Конвертируем в WebP
+                processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+                base_name = os.path.splitext(processed_catalog_name)[0]
+                ext = os.path.splitext(processed_catalog_name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
@@ -9138,8 +9206,11 @@ def edit_franchise(request, franchise_id):
                         config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
                     )
                     bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
-                    content_type = getattr(catalog_card_image, 'content_type', 'application/octet-stream')
-                    body_bytes = catalog_card_image.read()
+                    content_type = 'image/webp' if processed_catalog_name.endswith('.webp') else getattr(catalog_card_image, 'content_type', 'application/octet-stream')
+                    if hasattr(processed_catalog_image, 'read'):
+                        body_bytes = processed_catalog_image.read()
+                    else:
+                        body_bytes = processed_catalog_image.getvalue() if hasattr(processed_catalog_image, 'getvalue') else processed_catalog_image
                     try:
                         s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
                     except Exception:
@@ -9264,13 +9335,15 @@ def edit_agency(request, agency_id):
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
-                base_name = os.path.splitext(logo.name)[0]
-                ext = os.path.splitext(logo.name)[1]
+                # Конвертируем в WebP
+                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
+                base_name = os.path.splitext(processed_name)[0]
+                ext = os.path.splitext(processed_name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"agencies/{agency.agency_id}/logos/{logo_id}_{safe_name}"
                 try:
-                    default_storage.save(file_path, logo)
+                    default_storage.save(file_path, processed_logo)
                     logo_ids = [logo_id]
                     logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
                     entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
@@ -9281,7 +9354,7 @@ def edit_agency(request, agency_id):
                         file_url=logo_id,
                         uploaded_at=timezone.now(),
                         startup=None,
-                        original_file_name=logo.name,
+                        original_file_name=processed_name,
                     )
                 except Exception as e:
                     messages.warning(request, f"Не удалось сохранить логотип: {e}")
@@ -9446,8 +9519,10 @@ def edit_agency(request, agency_id):
             catalog_card_image = form.cleaned_data.get("catalog_card_image") or request.FILES.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
-                base_name = os.path.splitext(catalog_card_image.name)[0]
-                ext = os.path.splitext(catalog_card_image.name)[1]
+                # Конвертируем в WebP
+                processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+                base_name = os.path.splitext(processed_catalog_name)[0]
+                ext = os.path.splitext(processed_catalog_name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
@@ -9461,8 +9536,11 @@ def edit_agency(request, agency_id):
                         config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
                     )
                     bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
-                    content_type = getattr(catalog_card_image, 'content_type', 'application/octet-stream')
-                    body_bytes = catalog_card_image.read()
+                    content_type = 'image/webp' if processed_catalog_name.endswith('.webp') else getattr(catalog_card_image, 'content_type', 'application/octet-stream')
+                    if hasattr(processed_catalog_image, 'read'):
+                        body_bytes = processed_catalog_image.read()
+                    else:
+                        body_bytes = processed_catalog_image.getvalue() if hasattr(processed_catalog_image, 'getvalue') else processed_catalog_image
                     try:
                         s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
                     except Exception:
@@ -9584,13 +9662,15 @@ def edit_specialist(request, specialist_id):
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
-                base_name = os.path.splitext(logo.name)[0]
-                ext = os.path.splitext(logo.name)[1]
+                # Конвертируем в WebP
+                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
+                base_name = os.path.splitext(processed_name)[0]
+                ext = os.path.splitext(processed_name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"specialists/{specialist.specialist_id}/logos/{logo_id}_{safe_name}"
                 try:
-                    default_storage.save(file_path, logo)
+                    default_storage.save(file_path, processed_logo)
                     logo_ids = [logo_id]
                     logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
                     entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
@@ -9601,7 +9681,7 @@ def edit_specialist(request, specialist_id):
                         file_url=logo_id,
                         uploaded_at=timezone.now(),
                         startup=None,
-                        original_file_name=logo.name,
+                        original_file_name=processed_name,
                     )
                 except Exception as e:
                     messages.warning(request, f"Не удалось сохранить логотип: {e}")
@@ -9769,8 +9849,10 @@ def edit_specialist(request, specialist_id):
             catalog_card_image = form.cleaned_data.get("catalog_card_image") or request.FILES.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
-                base_name = os.path.splitext(catalog_card_image.name)[0]
-                ext = os.path.splitext(catalog_card_image.name)[1]
+                # Конвертируем в WebP
+                processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+                base_name = os.path.splitext(processed_catalog_name)[0]
+                ext = os.path.splitext(processed_catalog_name)[1]
                 safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
                 safe_name = slugify(safe_base_name) + ext
                 file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
@@ -9784,8 +9866,11 @@ def edit_specialist(request, specialist_id):
                         config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
                     )
                     bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
-                    content_type = getattr(catalog_card_image, 'content_type', 'application/octet-stream')
-                    body_bytes = catalog_card_image.read()
+                    content_type = 'image/webp' if processed_catalog_name.endswith('.webp') else getattr(catalog_card_image, 'content_type', 'application/octet-stream')
+                    if hasattr(processed_catalog_image, 'read'):
+                        body_bytes = processed_catalog_image.read()
+                    else:
+                        body_bytes = processed_catalog_image.getvalue() if hasattr(processed_catalog_image, 'getvalue') else processed_catalog_image
                     try:
                         s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
                     except Exception:
@@ -10383,4 +10468,171 @@ def delete_description_media(request, entity_type, entity_id, file_id):
         logger.error(f"Error in delete_description_media: {e}", exc_info=True)
         return JsonResponse({'success': False, 'error': 'Internal server error'}, status=500)
 
+
+# ============================================================================
+# Временная загрузка файлов при создании сущности
+# ============================================================================
+
+import tempfile
+import os
+import base64
+
+@login_required
+@require_http_methods(["POST"])
+def temp_file_upload(request):
+    """
+    Загружает файлы во временное хранилище (сессию) при создании сущности.
+    Файлы сохраняются как base64 в сессии и возвращаются при ошибке валидации.
+    """
+    try:
+        if not request.FILES:
+            return JsonResponse({'success': False, 'error': 'No files provided'}, status=400)
+        
+        field_name = request.POST.get('field_name', 'files')
+        form_id = request.POST.get('form_id', 'default')
+        
+        # Инициализируем хранилище в сессии
+        if 'temp_files' not in request.session:
+            request.session['temp_files'] = {}
+        if form_id not in request.session['temp_files']:
+            request.session['temp_files'][form_id] = {}
+        if field_name not in request.session['temp_files'][form_id]:
+            request.session['temp_files'][form_id][field_name] = []
+        
+        uploaded = []
+        for uploaded_file in request.FILES.getlist('file'):
+            # Читаем файл и кодируем в base64
+            file_content = uploaded_file.read()
+            file_b64 = base64.b64encode(file_content).decode('utf-8')
+            
+            temp_id = str(uuid.uuid4())
+            file_data = {
+                'temp_id': temp_id,
+                'name': uploaded_file.name,
+                'size': uploaded_file.size,
+                'content_type': uploaded_file.content_type,
+                'data': file_b64,
+            }
+            
+            request.session['temp_files'][form_id][field_name].append(file_data)
+            uploaded.append({
+                'temp_id': temp_id,
+                'name': uploaded_file.name,
+                'size': uploaded_file.size,
+                'content_type': uploaded_file.content_type,
+            })
+        
+        request.session.modified = True
+        
+        return JsonResponse({
+            'success': True,
+            'files': uploaded
+        })
+        
+    except Exception as e:
+        logger.error(f"Error in temp_file_upload: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@login_required
+@require_http_methods(["GET"])
+def get_temp_files(request):
+    """
+    Возвращает список временных файлов для формы.
+    """
+    try:
+        form_id = request.GET.get('form_id', 'default')
+        field_name = request.GET.get('field_name')
+        
+        temp_files = request.session.get('temp_files', {})
+        form_files = temp_files.get(form_id, {})
+        
+        if field_name:
+            files = form_files.get(field_name, [])
+            # Не возвращаем данные файла, только метаданные
+            result = [{
+                'temp_id': f['temp_id'],
+                'name': f['name'],
+                'size': f['size'],
+                'content_type': f['content_type'],
+            } for f in files]
+            return JsonResponse({'success': True, 'files': result})
+        else:
+            # Возвращаем все поля
+            result = {}
+            for fn, files in form_files.items():
+                result[fn] = [{
+                    'temp_id': f['temp_id'],
+                    'name': f['name'],
+                    'size': f['size'],
+                    'content_type': f['content_type'],
+                } for f in files]
+            return JsonResponse({'success': True, 'fields': result})
+        
+    except Exception as e:
+        logger.error(f"Error in get_temp_files: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@login_required
+@require_http_methods(["DELETE", "POST"])
+def delete_temp_file(request, temp_id):
+    """
+    Удаляет временный файл из сессии.
+    """
+    try:
+        form_id = request.GET.get('form_id', request.POST.get('form_id', 'default'))
+        
+        temp_files = request.session.get('temp_files', {})
+        form_files = temp_files.get(form_id, {})
+        
+        deleted = False
+        for field_name, files in form_files.items():
+            for i, f in enumerate(files):
+                if f['temp_id'] == temp_id:
+                    del files[i]
+                    deleted = True
+                    break
+            if deleted:
+                break
+        
+        if deleted:
+            request.session.modified = True
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'error': 'File not found'}, status=404)
+        
+    except Exception as e:
+        logger.error(f"Error in delete_temp_file: {e}", exc_info=True)
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+def get_temp_file_content(request, form_id, field_name, temp_id):
+    """
+    Вспомогательная функция для получения содержимого временного файла.
+    Используется при сохранении формы.
+    """
+    temp_files = request.session.get('temp_files', {})
+    form_files = temp_files.get(form_id, {})
+    field_files = form_files.get(field_name, [])
+    
+    for f in field_files:
+        if f['temp_id'] == temp_id:
+            content = base64.b64decode(f['data'])
+            return {
+                'name': f['name'],
+                'content_type': f['content_type'],
+                'content': content,
+            }
+    return None
+
+
+def clear_temp_files(request, form_id):
+    """
+    Очищает временные файлы после успешного сохранения формы.
+    """
+    temp_files = request.session.get('temp_files', {})
+    if form_id in temp_files:
+        del temp_files[form_id]
+        request.session.modified = True
 

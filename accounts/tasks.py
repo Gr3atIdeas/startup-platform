@@ -7,8 +7,66 @@ from django.conf import settings
 from django.utils import timezone
 import boto3
 from .models import FileStorage, FileTypes, EntityTypes, Startups
+from PIL import Image
+from io import BytesIO
 
 logger = logging.getLogger(__name__)
+
+
+def convert_to_webp_in_memory(file_data, file_name, content_type, quality=85):
+    """
+    Конвертирует изображение в WebP формат в памяти.
+    
+    Args:
+        file_data: bytes данные файла
+        file_name: имя файла
+        content_type: MIME тип файла
+        quality: качество сжатия (1-100)
+    
+    Returns:
+        tuple: (webp_bytes, new_filename, new_content_type) или (None, None, None) если конвертация не нужна
+    """
+    try:
+        # Проверяем, что это изображение
+        if not content_type or not content_type.startswith('image/'):
+            return None, None, None
+        
+        # Проверяем расширение
+        ext = file_name.lower().split('.')[-1] if '.' in file_name else ''
+        image_extensions = {'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff'}
+        
+        if ext not in image_extensions:
+            return None, None, None
+        
+        # Открываем изображение
+        img = Image.open(BytesIO(file_data))
+        original_size = len(file_data)
+        
+        # Сохраняем альфа-канал если есть
+        if img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info):
+            img = img.convert('RGBA')
+        else:
+            img = img.convert('RGB')
+        
+        # Сохраняем в WebP
+        output = BytesIO()
+        img.save(output, 'WEBP', quality=quality, optimize=True)
+        webp_data = output.getvalue()
+        
+        # Создаём новое имя файла
+        base_name = '.'.join(file_name.split('.')[:-1]) if '.' in file_name else file_name
+        new_name = f"{base_name}.webp"
+        
+        new_size = len(webp_data)
+        reduction = ((original_size - new_size) / original_size * 100) if original_size > 0 else 0
+        
+        logger.info(f"[WebP] {file_name} -> {new_name}: {original_size/1024:.1f}KB -> {new_size/1024:.1f}KB ({reduction:.1f}% экономия)")
+        
+        return webp_data, new_name, 'image/webp'
+        
+    except Exception as e:
+        logger.warning(f"Ошибка конвертации в WebP: {e}")
+        return None, None, None
 
 
 def try_save_file_to_s3(file_content, file_path, content_type='application/octet-stream'):
@@ -130,13 +188,29 @@ def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type
         entity_folder = f"{entity_type_name}s" if not entity_type_name.endswith('s') else entity_type_name
         # Всегда добавляем 's' к типу файла для консистентности с utils._prefix_for
         file_type_folder = f"{file_type_name}s"
+        
+        # Декодируем данные файла
+        if isinstance(file_data, str):
+            file_data = base64.b64decode(file_data)
+        
+        # Конвертируем изображения в WebP для экономии места
+        # (применяется к logo, creative, catalog_card_image)
+        webp_data, webp_filename, webp_content_type = convert_to_webp_in_memory(
+            file_data, original_filename, file_content_type
+        )
+        
+        if webp_data:
+            # Используем сконвертированный WebP файл
+            file_data = webp_data
+            original_filename = webp_filename
+            file_content_type = webp_content_type
+            logger.info(f"Файл сконвертирован в WebP: {webp_filename}")
+        
         file_path = f"{entity_folder}/{entity_id}/{file_type_folder}/{file_id}_{original_filename}"
         
         logger.info(f"Начало загрузки файла: {file_path}")
         
         from io import BytesIO
-        if isinstance(file_data, str):
-            file_data = base64.b64decode(file_data)
         file_obj = BytesIO(file_data)
         
         if not try_save_file_to_s3(file_obj, file_path, file_content_type):

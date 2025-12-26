@@ -180,4 +180,8 @@ urlpatterns = [
     path("upload-description-media/<str:entity_type>/<int:entity_id>/", views.upload_description_media, name="upload_description_media"),
     path("get-description-media/<str:entity_type>/<int:entity_id>/", views.get_description_media, name="get_description_media"),
     path("delete-description-media/<str:entity_type>/<int:entity_id>/<str:file_id>/", views.delete_description_media, name="delete_description_media"),
+    # Временная загрузка файлов при создании сущности
+    path("temp-upload/", views.temp_file_upload, name="temp_file_upload"),
+    path("temp-files/", views.get_temp_files, name="get_temp_files"),
+    path("temp-delete/<str:temp_id>/", views.delete_temp_file, name="delete_temp_file"),
 ]

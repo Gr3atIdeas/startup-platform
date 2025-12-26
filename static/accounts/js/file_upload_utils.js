@@ -346,6 +346,9 @@ window.FileUploadUtils = (function() {
         
         var addedCount = 0;
         
+        // Определяем имя поля для сервера
+        var fieldName = inputId.replace('id_', '').replace('_input', '');
+        
         newFiles.forEach(function(file) {
             // Проверяем лимит
             if (isMultiple && accumulatedFiles[inputId].length >= maxFiles) {
@@ -372,6 +375,20 @@ window.FileUploadUtils = (function() {
             
             // Создаём превью
             addFilePreview(file, previewAreaId, isMultiple, maxFiles);
+            
+            // Загружаем на сервер во временное хранилище (асинхронно)
+            uploadTempFile(file, fieldName, getFormId()).then(function(tempInfo) {
+                if (tempInfo && tempInfo.temp_id) {
+                    // Добавляем temp_id к элементу превью
+                    var previewItems = document.querySelectorAll('#' + previewAreaId + ' .file-preview-item');
+                    for (var i = 0; i < previewItems.length; i++) {
+                        if (previewItems[i].dataset.filename === CSS.escape(file.name) && !previewItems[i].dataset.tempId) {
+                            previewItems[i].dataset.tempId = tempInfo.temp_id;
+                            break;
+                        }
+                    }
+                }
+            });
         });
         
         // Если добавили файлов больше лимита - показываем предупреждение
@@ -489,8 +506,183 @@ window.FileUploadUtils = (function() {
             const inputId = previewArea.id.replace('Preview', '_input');
             const dropAreaId = previewArea.id.replace('Preview', 'DropArea');
             
+            // Удаляем с сервера если есть temp_id
+            const tempId = previewItem.dataset.tempId;
+            if (tempId) {
+                deleteTempFileFromServer(tempId);
+            }
+            
             removeFile(inputId, fileNameToRemove, previewArea.id, dropAreaId);
         });
+    }
+    
+    /**
+     * Загружает файл на сервер во временное хранилище
+     */
+    function uploadTempFile(file, fieldName, formId) {
+        return new Promise(function(resolve, reject) {
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('field_name', fieldName);
+            formData.append('form_id', formId || getFormId());
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/temp-upload/', true);
+            xhr.setRequestHeader('X-CSRFToken', getCSRFToken());
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.success && response.files && response.files.length > 0) {
+                            resolve(response.files[0]);
+                        } else {
+                            resolve(null);
+                        }
+                    } catch (e) {
+                        resolve(null);
+                    }
+                } else {
+                    resolve(null);
+                }
+            };
+            
+            xhr.onerror = function() {
+                resolve(null);
+            };
+            
+            xhr.send(formData);
+        });
+    }
+    
+    /**
+     * Удаляет временный файл с сервера
+     */
+    function deleteTempFileFromServer(tempId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/temp-delete/' + tempId + '/', true);
+        xhr.setRequestHeader('X-CSRFToken', getCSRFToken());
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send('form_id=' + encodeURIComponent(getFormId()));
+    }
+    
+    /**
+     * Получает CSRF токен
+     */
+    function getCSRFToken() {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, 10) === 'csrftoken=') {
+                    cookieValue = cookie.substring(10);
+                    break;
+                }
+            }
+        }
+        // Также пробуем из скрытого поля формы
+        if (!cookieValue) {
+            var csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+            if (csrfInput) {
+                cookieValue = csrfInput.value;
+            }
+        }
+        return cookieValue;
+    }
+    
+    /**
+     * Получает ID формы (для группировки временных файлов)
+     */
+    function getFormId() {
+        var form = document.querySelector('form[id]');
+        if (form && form.id) return form.id;
+        // Генерируем уникальный ID на основе URL
+        return 'form_' + window.location.pathname.replace(/\//g, '_');
+    }
+    
+    /**
+     * Загружает список временных файлов с сервера и восстанавливает превью
+     */
+    function restoreTempFiles() {
+        var formId = getFormId();
+        
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/temp-files/?form_id=' + encodeURIComponent(formId), true);
+        
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success && response.fields) {
+                        // Восстанавливаем превью для каждого поля
+                        for (var fieldName in response.fields) {
+                            var files = response.fields[fieldName];
+                            restoreFieldPreviews(fieldName, files);
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error parsing temp files response:', e);
+                }
+            }
+        };
+        
+        xhr.send();
+    }
+    
+    /**
+     * Восстанавливает превью файлов для поля
+     */
+    function restoreFieldPreviews(fieldName, files) {
+        // Определяем previewAreaId из fieldName
+        // fieldName обычно: creatives, video, proofs, logo и т.д.
+        var previewAreaId = fieldName + 'Preview';
+        var previewArea = document.getElementById(previewAreaId);
+        
+        if (!previewArea) {
+            // Пробуем другие варианты названий
+            previewAreaId = 'id_' + fieldName + '_preview';
+            previewArea = document.getElementById(previewAreaId);
+        }
+        
+        if (!previewArea || files.length === 0) return;
+        
+        files.forEach(function(fileInfo) {
+            var isImage = fileInfo.content_type && fileInfo.content_type.startsWith('image/');
+            var previewSrc = isImage ? '/static/accounts/images/creat_startup/docimage.png' : config.staticUrl + config.docIconPath;
+            
+            // Для изображений показываем placeholder (полное изображение недоступно без данных)
+            var html = createTempPreviewHTML(fileInfo, previewSrc, isImage);
+            previewArea.insertAdjacentHTML('beforeend', html);
+        });
+    }
+    
+    /**
+     * Создает HTML для превью временного файла
+     */
+    function createTempPreviewHTML(fileInfo, previewSrc, isImage) {
+        var fileExtension = fileInfo.name.split('.').pop().toLowerCase();
+        
+        var dragHandleHTML = '<div class="drag-handle-mock"><span></span><span></span><span></span><span></span><span></span><span></span></div>';
+        
+        var actionsHTML = 
+            '<div class="file-actions">' +
+                '<button type="button" class="delete-file-btn" aria-label="Удалить">' +
+                    '<img src="' + config.staticUrl + config.deleteIconPath + '" alt="Удалить">' +
+                '</button>' +
+            '</div>';
+
+        return '<div class="file-preview-item" draggable="true" data-filename="' + CSS.escape(fileInfo.name) + '" data-temp-id="' + fileInfo.temp_id + '">' +
+                dragHandleHTML +
+                '<div class="file-info">' +
+                    '<img src="' + previewSrc + '" alt="Файл" class="file-icon">' +
+                    '<div class="file-text-details">' +
+                        '<p class="file-name-display">' + fileInfo.name + '</p>' +
+                        '<p class="file-type-display">' + fileExtension.toUpperCase() + ' (сохранён)</p>' +
+                    '</div>' +
+                '</div>' +
+                actionsHTML +
+            '</div>';
     }
     
     // Публичный API
@@ -498,13 +690,16 @@ window.FileUploadUtils = (function() {
         init: init,
         setupFileInput: setupFileInput,
         setupDeleteHandler: setupDeleteHandler,
+        uploadTempFile: uploadTempFile,
+        restoreTempFiles: restoreTempFiles,
+        getFormId: getFormId,
         getAccumulatedFiles: function(inputId) {
             return accumulatedFiles[inputId] || [];
         },
         clearFiles: function(inputId, previewAreaId, dropAreaId) {
             accumulatedFiles[inputId] = [];
             updateInputFiles(inputId);
-            const previewArea = document.getElementById(previewAreaId);
+            var previewArea = document.getElementById(previewAreaId);
             if (previewArea) previewArea.innerHTML = '';
             if (dropAreaId) checkPlaceholderVisibility(dropAreaId, inputId);
         },
@@ -513,8 +708,11 @@ window.FileUploadUtils = (function() {
 })();
 
 // Автоматически настраиваем глобальный обработчик удаления при загрузке
+// и восстанавливаем временные файлы
 document.addEventListener('DOMContentLoaded', function() {
     if (window.FileUploadUtils) {
         window.FileUploadUtils.setupDeleteHandler();
+        // Восстанавливаем файлы если страница перезагружена после ошибки валидации
+        window.FileUploadUtils.restoreTempFiles();
     }
 });

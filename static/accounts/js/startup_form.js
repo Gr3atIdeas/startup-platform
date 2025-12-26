@@ -173,17 +173,71 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Ограничиваем клик логотипа только кнопкой (см. шаблон: #logoUploadButton)
+  // Хранилище файлов в памяти для сохранения при ошибках валидации
+  var singleFileStorage = {
+    logo: null,
+    catalog_card_image: null
+  };
+  
+  // Функция загрузки файла во временное хранилище на сервере
+  function uploadSingleFileTempStorage(file, fieldName) {
+    if (!window.FileUploadUtils) return;
+    var formId = window.FileUploadUtils.getFormId ? window.FileUploadUtils.getFormId() : 'startup_form';
+    var formData = new FormData();
+    formData.append('file', file);
+    formData.append('field_name', fieldName);
+    formData.append('form_id', formId);
+    
+    var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]');
+    
+    fetch('/temp-upload/', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrfToken ? csrfToken.value : ''
+      },
+      body: formData,
+      credentials: 'same-origin'
+    }).then(function(res) {
+      return res.json();
+    }).then(function(data) {
+      if (data.success && data.files && data.files.length > 0) {
+        console.log('Файл ' + fieldName + ' загружен во временное хранилище: ', data.files[0].temp_id);
+      }
+    }).catch(function(err) {
+      console.error('Ошибка загрузки во временное хранилище:', err);
+    });
+  }
+  
+  // Функция синхронизации файла обратно в input (для FormData)
+  function syncSingleFileToInput(inputId, file) {
+    var input = document.getElementById(inputId);
+    if (!input || !file) return;
+    try {
+      var dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      input.files = dataTransfer.files;
+    } catch(e) {
+      console.warn('DataTransfer не поддерживается:', e);
+    }
+  }
+  
   if (logoInput && logoPreview && logoPlaceholder) {
     logoInput.addEventListener('change', function () {
       var file = logoInput.files && logoInput.files[0]
       if (!file) return
+      // Сохраняем в память
+      singleFileStorage.logo = file;
       var reader = new FileReader()
       reader.onload = function (e) {
         logoPreview.src = e.target.result
         logoPreview.style.display = 'block'
         logoPlaceholder.style.display = 'none'
+        // Сохраняем dataURL для восстановления превью
+        logoPreview.dataset.fileDataUrl = e.target.result;
       }
       reader.readAsDataURL(file)
+      // Загружаем во временное хранилище
+      uploadSingleFileTempStorage(file, 'logo');
     })
   }
 
@@ -196,15 +250,31 @@ document.addEventListener('DOMContentLoaded', function () {
     catalogCardImageInput.addEventListener('change', function () {
       var file = catalogCardImageInput.files && catalogCardImageInput.files[0]
       if (!file) return
+      // Сохраняем в память
+      singleFileStorage.catalog_card_image = file;
       var reader = new FileReader()
       reader.onload = function (e) {
         catalogCardImagePreview.src = e.target.result
         catalogCardImagePreview.style.display = 'block'
         catalogCardImagePlaceholder.style.display = 'none'
+        // Сохраняем dataURL для восстановления превью
+        catalogCardImagePreview.dataset.fileDataUrl = e.target.result;
       }
       reader.readAsDataURL(file)
+      // Загружаем во временное хранилище
+      uploadSingleFileTempStorage(file, 'catalog_card_image');
     })
   }
+  
+  // Синхронизируем файлы из памяти перед созданием FormData
+  window.syncSingleFilesBeforeSubmit = function() {
+    if (singleFileStorage.logo) {
+      syncSingleFileToInput('id_logo_input', singleFileStorage.logo);
+    }
+    if (singleFileStorage.catalog_card_image) {
+      syncSingleFileToInput('id_catalog_card_image_input', singleFileStorage.catalog_card_image);
+    }
+  };
 
   var microCheckbox = document.getElementById('id_micro_investment_available')
   var microLabel = document.querySelector('.micro-investment-label-new')
@@ -297,7 +367,11 @@ document.addEventListener('DOMContentLoaded', function () {
     setCurrentStep(initStep)
   }
 
-  var startupForm = document.getElementById('startupForm')
+  // Поддержка всех форм создания (startup, franchise, agency, specialist)
+  var startupForm = document.getElementById('startupForm') || 
+                    document.getElementById('franchiseForm') ||
+                    document.getElementById('agencyForm') ||
+                    document.getElementById('specialistForm')
   function showFieldError(fieldEl, message) {
     if (!fieldEl) return
     fieldEl.classList.add('input-error')
@@ -440,6 +514,11 @@ document.addEventListener('DOMContentLoaded', function () {
       // AJAX submit, чтобы не терялись прикрепленные файлы при серверных ошибках
       try {
         e.preventDefault()
+        
+        // Синхронизируем файлы из памяти обратно в input перед созданием FormData
+        if (typeof window.syncSingleFilesBeforeSubmit === 'function') {
+          window.syncSingleFilesBeforeSubmit();
+        }
         
         var loadingOverlay = document.createElement('div')
         loadingOverlay.id = 'submission-loading-overlay'

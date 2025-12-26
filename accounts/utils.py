@@ -7,7 +7,115 @@ import boto3
 from botocore.exceptions import ClientError
 from django.conf import settings
 from html import escape
+from io import BytesIO
+from PIL import Image
+
 logger = logging.getLogger(__name__)
+
+
+def convert_image_to_webp(uploaded_file, quality=85, max_size=None):
+    """
+    Конвертирует загруженное изображение в WebP формат для экономии места.
+    
+    Args:
+        uploaded_file: Django UploadedFile или file-like объект
+        quality: Качество сжатия (1-100), по умолчанию 85
+        max_size: Опциональный кортеж (width, height) для ресайза
+    
+    Returns:
+        tuple: (BytesIO объект с WebP данными, новое имя файла с .webp расширением)
+        или (None, None) если конвертация не удалась
+    """
+    try:
+        # Получаем оригинальное имя файла
+        original_name = getattr(uploaded_file, 'name', 'image.jpg')
+        
+        # Проверяем, что это изображение (не видео и не документ)
+        content_type = getattr(uploaded_file, 'content_type', '')
+        if content_type and not content_type.startswith('image/'):
+            logger.debug(f"Пропуск конвертации для не-изображения: {content_type}")
+            return None, None
+        
+        # Проверяем расширение файла
+        ext = original_name.lower().split('.')[-1] if '.' in original_name else ''
+        image_extensions = {'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'webp'}
+        if ext not in image_extensions:
+            logger.debug(f"Пропуск конвертации для расширения: {ext}")
+            return None, None
+        
+        # Если уже WebP - оптимизируем без конвертации
+        if ext == 'webp':
+            logger.debug(f"Файл уже в формате WebP: {original_name}")
+            return None, None
+        
+        # Сбрасываем позицию чтения файла
+        if hasattr(uploaded_file, 'seek'):
+            uploaded_file.seek(0)
+        
+        # Открываем изображение
+        img = Image.open(uploaded_file)
+        original_format = img.format
+        original_size = uploaded_file.size if hasattr(uploaded_file, 'size') else 0
+        
+        # Сохраняем альфа-канал если есть (для PNG с прозрачностью)
+        if img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info):
+            img = img.convert('RGBA')
+        else:
+            img = img.convert('RGB')
+        
+        # Изменяем размер если указано
+        if max_size:
+            img.thumbnail(max_size, Image.Resampling.LANCZOS)
+        
+        # Сохраняем в WebP
+        output = BytesIO()
+        img.save(output, 'WEBP', quality=quality, optimize=True)
+        output.seek(0)
+        
+        # Создаём новое имя файла с .webp расширением
+        base_name = '.'.join(original_name.split('.')[:-1]) if '.' in original_name else original_name
+        new_name = f"{base_name}.webp"
+        
+        new_size = output.getbuffer().nbytes
+        reduction = ((original_size - new_size) / original_size * 100) if original_size > 0 else 0
+        
+        logger.info(f"Конвертация в WebP: {original_name} -> {new_name}, "
+                   f"{original_size/1024:.1f}KB -> {new_size/1024:.1f}KB ({reduction:.1f}% экономия)")
+        
+        return output, new_name
+        
+    except Exception as e:
+        logger.warning(f"Ошибка конвертации в WebP: {e}")
+        return None, None
+
+
+def process_uploaded_image(uploaded_file, quality=85, max_size=None):
+    """
+    Обрабатывает загруженное изображение: конвертирует в WebP если возможно.
+    
+    Args:
+        uploaded_file: Django UploadedFile
+        quality: Качество сжатия WebP
+        max_size: Опциональный максимальный размер (width, height)
+    
+    Returns:
+        tuple: (file_object, filename, content_type)
+        Возвращает оригинальный файл если конвертация невозможна
+    """
+    webp_data, webp_name = convert_image_to_webp(uploaded_file, quality, max_size)
+    
+    if webp_data and webp_name:
+        # Создаём file-like объект с нужными атрибутами
+        webp_data.name = webp_name
+        webp_data.content_type = 'image/webp'
+        return webp_data, webp_name, 'image/webp'
+    
+    # Возвращаем оригинальный файл
+    if hasattr(uploaded_file, 'seek'):
+        uploaded_file.seek(0)
+    return uploaded_file, getattr(uploaded_file, 'name', 'file'), getattr(uploaded_file, 'content_type', 'application/octet-stream')
+
+
 def _prefix_for(entity_type: str, entity_id: int, file_type: str) -> str:
     if file_type == "avatar":
         return f"users/{entity_id}/avatar/"
