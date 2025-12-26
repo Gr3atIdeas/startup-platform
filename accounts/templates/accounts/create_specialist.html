@@ -321,36 +321,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Setup file upload areas
-    if (window.FileUploadUtils) {
-        FileUploadUtils.setupFileInput({
-            inputId: 'id_creatives_input',
-            dropAreaId: 'creativesDropArea',
-            previewAreaId: 'creativesPreview',
-            isMultiple: true,
-            maxFiles: 10,
-            allowedTypes: { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] }
-        });
-        
-        FileUploadUtils.setupFileInput({
-            inputId: 'id_video_input',
-            dropAreaId: 'videoDropArea',
-            previewAreaId: 'videoPreview',
-            isMultiple: true,
-            maxFiles: 3,
-            allowedTypes: { mimes: ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska'], extensions: ['mp4', 'mov', 'avi', 'mkv'] }
-        });
-        
-        FileUploadUtils.setupFileInput({
-            inputId: 'id_proofs_input',
-            dropAreaId: 'proofsDropArea',
-            previewAreaId: 'proofsPreview',
-            isMultiple: true,
-            maxFiles: 10,
-            allowedTypes: { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] }
-        });
-    }
-
     // --- Логика таймлайна ---
     const timelineSteps = document.querySelectorAll('.timeline-step');
     const descriptionContainers = document.querySelectorAll('.timeline-description-container');
