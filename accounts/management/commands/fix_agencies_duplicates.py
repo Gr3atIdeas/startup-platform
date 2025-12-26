@@ -70,7 +70,22 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(self.style.SUCCESS("PRIMARY KEY already exists"))
             
-            # Шаг 3: Финальная проверка
+            # Шаг 3: ВАЖНО! Сбрасываем sequence на правильное значение
+            self.stdout.write("Resetting sequence...")
+            try:
+                # Получаем максимальный agency_id
+                cursor.execute("SELECT COALESCE(MAX(agency_id), 0) FROM agencies")
+                max_id = cursor.fetchone()[0]
+                self.stdout.write(f"Max agency_id: {max_id}")
+                
+                # Сбрасываем sequence на max_id + 1
+                cursor.execute(f"SELECT setval('agencies_agency_id_seq', {max_id}, true)")
+                new_val = cursor.fetchone()[0]
+                self.stdout.write(self.style.SUCCESS(f"Sequence reset to: {new_val}"))
+            except Exception as e:
+                self.stdout.write(self.style.WARNING(f"Could not reset sequence (may not exist): {e}"))
+            
+            # Шаг 4: Финальная проверка
             cursor.execute("SELECT COUNT(*) FROM agencies")
             final_count = cursor.fetchone()[0]
             self.stdout.write(f"Final agency count: {final_count}")
