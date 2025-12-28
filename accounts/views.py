@@ -3955,10 +3955,10 @@ def create_franchise(request):
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
-                    "redirect_url": reverse("franchises_list"),
+                    "redirect_url": reverse("franchise_creation_success"),
                 })
             messages.success(request, f'Франшиза "{franchise.title}" успешно создана и отправлена на модерацию!')
-            return redirect("franchises_list")
+            return redirect("franchise_creation_success")
         else:
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 logger.warning(f"=== CREATE_FRANCHISE FORM INVALID (AJAX) === User: {request.user.user_id}")
@@ -4278,9 +4278,9 @@ def create_agency(request):
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
-                    "redirect_url": reverse("agencies_list"),
+                    "redirect_url": reverse("agency_creation_success"),
                 })
-            return redirect("agencies_list")
+            return redirect("agency_creation_success")
         else:
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 logger.warning(f"=== CREATE_AGENCY FORM INVALID (AJAX) === User: {request.user.user_id}")
@@ -4567,10 +4567,10 @@ def create_specialist(request):
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
-                    "redirect_url": reverse("specialists_list"),
+                    "redirect_url": reverse("specialist_creation_success"),
                 })
             messages.success(request, f'Профиль специалиста "{spec.title}" успешно создан и отправлен на модерацию!')
-            return redirect("specialists_list")
+            return redirect("specialist_creation_success")
         else:
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 logger.warning(f"=== CREATE_SPECIALIST FORM INVALID (AJAX) === User: {request.user.user_id}")
@@ -4590,6 +4590,19 @@ def create_specialist(request):
 @login_required
 def startup_creation_success(request):
     return render(request, "accounts/startup_creation_success.html")
+
+@login_required
+def agency_creation_success(request):
+    return render(request, "accounts/agency_creation_success.html")
+
+@login_required
+def franchise_creation_success(request):
+    return render(request, "accounts/franchise_creation_success.html")
+
+@login_required
+def specialist_creation_success(request):
+    return render(request, "accounts/specialist_creation_success.html")
+
 @login_required
 def delete_message(request, message_id):
     message = get_object_or_404(Messages, message_id=message_id)

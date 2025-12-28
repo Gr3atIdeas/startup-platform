@@ -92,6 +92,21 @@ urlpatterns = [
         views.startup_creation_success,
         name="startup_creation_success",
     ),
+    path(
+        "create-agency/success/",
+        views.agency_creation_success,
+        name="agency_creation_success",
+    ),
+    path(
+        "create-franchise/success/",
+        views.franchise_creation_success,
+        name="franchise_creation_success",
+    ),
+    path(
+        "create-specialist/success/",
+        views.specialist_creation_success,
+        name="specialist_creation_success",
+    ),
     path("edit-startup/<int:startup_id>/", views.edit_startup, name="edit_startup"),
     path("moderator-main/", views.main_page_moderator, name="main_page_moderator"),
     path("investor-main/", views.investor_main, name="investor_main"),

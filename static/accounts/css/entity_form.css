@@ -121,37 +121,40 @@ html, body { overflow-x: hidden; }
 }
 
 .form-top-card {
-  background: rgb(255 255 255 / 7%);
+  background: white;
   box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);
   border-radius: 20px;
-  border: 1px solid rgb(255 255 255 / 36%);
-  backdrop-filter: blur(10px);
+  border: 1px solid #d9d9d9;
   padding: 30px;
 }
 
-/* Dark card inputs - white text on transparent background */
+/* Card inputs - dark text on white background */
 .form-top-card .form-control,
 .form-top-card input,
 .form-top-card select,
 .form-top-card textarea {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border-color: rgba(255, 255, 255, 0.3);
+  background: white;
+  color: #1e1e1e;
+  border-color: #d9d9d9;
 }
 
 .form-top-card .form-control:focus,
 .form-top-card input:focus,
 .form-top-card select:focus,
 .form-top-card textarea:focus {
-  color: white;
-  background: rgba(255, 255, 255, 0.15);
+  color: #1e1e1e;
+  background: white;
   border-color: #ffc85e;
 }
 
 .form-top-card .form-control::placeholder,
 .form-top-card input::placeholder,
 .form-top-card textarea::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: #c7c7c7;
+}
+
+.form-top-card label {
+  color: #1e1e1e;
 }
 
 .form-top-grid {
@@ -220,13 +223,8 @@ html, body { overflow-x: hidden; }
 
 .investment-type-card {
   border-radius: 10px;
-  border: 1px solid rgb(255 255 255 / 36%); 
-
-  
-
-  
-  background-color: rgb(255 255 255 / 7%); 
-  backdrop-filter: blur(10px); 
+  border: 1px solid #d9d9d9;
+  background-color: white;
   padding: 25px 21px;
   display: flex;
   flex-direction: column;
@@ -238,29 +236,33 @@ html, body { overflow-x: hidden; }
   box-shadow: 6px 6px 10px rgb(0 0 0 / 25%); 
 }
 
-/* Dark card inputs - white text on transparent background */
+/* Card inputs - dark text on white background */
 .investment-type-card .form-control,
 .investment-type-card input,
 .investment-type-card select,
 .investment-type-card textarea {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border-color: rgba(255, 255, 255, 0.3);
+  background: white;
+  color: #1e1e1e;
+  border-color: #d9d9d9;
 }
 
 .investment-type-card .form-control:focus,
 .investment-type-card input:focus,
 .investment-type-card select:focus,
 .investment-type-card textarea:focus {
-  color: white;
-  background: rgba(255, 255, 255, 0.15);
+  color: #1e1e1e;
+  background: white;
   border-color: #ffc85e;
 }
 
 .investment-type-card .form-control::placeholder,
 .investment-type-card input::placeholder,
 .investment-type-card textarea::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: #c7c7c7;
+}
+
+.investment-type-card label {
+  color: #1e1e1e;
 }
 
 /* С„РёРєСЃРёСЂРѕРІР°РЅРЅР°СЏ С€РёСЂРёРЅР° РєР°СЂС‚РѕС‡РєРё РјРёРєСЂРѕРёРЅРІРµСЃС‚РёС†РёР№ */
@@ -292,7 +294,7 @@ html, body { overflow-x: hidden; }
   font-family: Unbounded;
   font-weight: 300;
   letter-spacing: 0.12px;
-  color: white;
+  color: #1e1e1e;
   cursor: pointer;
   order: 2; 
 }
@@ -336,7 +338,7 @@ html, body { overflow-x: hidden; }
   font-family: Unbounded;
   font-weight: 300;
   letter-spacing: 0.12px;
-  color: white;
+  color: #1e1e1e;
   text-align: left; 
 }
 
@@ -450,7 +452,7 @@ textarea.form-control,
   font-family: Unbounded;
   font-weight: 400;
   line-height: 18px;
-  color: white;
+  color: #1e1e1e;
 }
 
 .required-field-notice {
@@ -482,7 +484,7 @@ textarea.form-control,
 
 .form-group .small-text {
   font-size: 12px;
-  color: #c9c8c8; 
+  color: #6c757d; 
   margin-top: -10px; 
 }
 
@@ -498,7 +500,10 @@ textarea.form-control,
 .presentation-finance-group {
   display: flex;
   flex-direction: column;
-  gap: 20px; 
+  gap: 20px;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 .upload-box { position: relative; }
 .upload-box label { pointer-events: none; }
@@ -514,7 +519,7 @@ textarea.form-control,
   font-family: Unbounded;
   font-weight: 400;
   line-height: 18px;
-  color: white;
+  color: #1e1e1e;
 }
 
 .custom-file-upload-button {
@@ -610,13 +615,17 @@ textarea.form-control,
   display: flex;
   flex-direction: column;
   gap: 14px; 
-  margin-top: 10px; 
+  margin-top: 10px;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .file-preview-item {
   display: flex;
   align-items: center;
   gap: 14px;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .file-preview-item .drag-handle-mock {
@@ -645,7 +654,7 @@ textarea.form-control,
 
 .file-preview-item p.file-name {
   flex-grow: 1;
-  color: white;
+  color: #1e1e1e;
   font-size: 12px;
   font-family: Unbounded;
   font-weight: 300;
@@ -750,7 +759,7 @@ h3.section-title {
   font-family: Unbounded;
   font-weight: 400;
   line-height: 18px;
-  color: white;
+  color: #1e1e1e;
   margin-bottom: 20px;
 }
 
@@ -899,17 +908,13 @@ h3.section-title {
   display: none; 
   padding: 45px 22px 25px;
   border-radius: 10px;
-  border: 1px solid rgb(255 255 255 / 36%);
-  background-color: rgb(
-    40 40 40 / 30%
-  ); 
-  backdrop-filter: blur(5px);
+  border: 1px solid #d9d9d9;
+  background-color: white;
   flex-direction: column;
   gap: 30px;
   width: 100%; 
   box-sizing: border-box; 
-  overflow: hidden; 
-}
+  overflow: hidden; \n}
 
 .timeline-description-container.active {
   display: flex; 
@@ -939,7 +944,7 @@ h3.section-title {
   font-family: Unbounded;
   font-weight: 400;
   line-height: 18px;
-  color: white;
+  color: #1e1e1e;
   text-align: left;
 }
 
@@ -1040,7 +1045,7 @@ textarea.form-control.input-error {
   font-family: Unbounded;
   font-weight: 400;
   line-height: 18px;
-  color: white;
+  color: #1e1e1e;
   margin-bottom: 0; 
   text-align: left; 
 }
@@ -1072,7 +1077,7 @@ textarea.form-control.input-error {
 }
 
 .agreement-section .checkbox-group .custom-checkbox-label span.checkbox-text {
-  color: white;
+  color: #1e1e1e;
   font-size: 16px;
   font-family: Unbounded;
   font-weight: 400;
@@ -1171,11 +1176,10 @@ textarea.form-control.input-error {
 
 
 .form-main-content-wrapper {
-  background: rgb(255 255 255 / 7%);
+  background: white;
   box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);
   border-radius: 20px;
-  border: 1px solid rgb(255 255 255 / 36%);
-  backdrop-filter: blur(10px);
+  border: 1px solid #d9d9d9;
   padding: 50px; 
   display: flex;
   flex-direction: column;
@@ -1183,13 +1187,13 @@ textarea.form-control.input-error {
   margin-bottom: 40px; 
 }
 
-/* Dark wrapper inputs - white text on transparent background */
+/* Wrapper inputs - dark text on white background */
 .form-main-content-wrapper .form-control,
 .form-main-content-wrapper input,
 .form-main-content-wrapper select {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border-color: rgba(255, 255, 255, 0.3);
+  background: white;
+  color: #1e1e1e;
+  border-color: #d9d9d9;
 }
 
 /* Textareas should have white background for better readability */
@@ -1197,7 +1201,7 @@ textarea.form-control.input-error {
 .form-main-content-wrapper textarea.form-control {
   background: white;
   color: #1e1e1e;
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: #d9d9d9;
 }
 
 .form-main-content-wrapper .form-control:focus,
@@ -1348,7 +1352,7 @@ textarea.form-control.input-error {
   font-family: Unbounded;
   font-weight: 300;
   letter-spacing: 0.12px;
-  color: white;
+  color: #1e1e1e;
 }
 
 .micro-checkbox-visual {
@@ -1705,7 +1709,7 @@ body,
   font-family: Unbounded;
   font-weight: 300;
   letter-spacing: 0.12px;
-  color: white;
+  color: #1e1e1e;
 }
 
 .planet-selector {
