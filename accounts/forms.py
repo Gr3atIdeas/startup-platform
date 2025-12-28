@@ -488,9 +488,7 @@ class StartupForm(forms.ModelForm):
             cleaned_data["proofs"] = [proofs]
         else:
             cleaned_data["proofs"] = proofs if proofs else []
-        if len(cleaned_data.get("proofs", [])) == 0:
-            self.add_error("proofs", "Загрузите хотя бы один документ (до 10 файлов).")
-        elif len(cleaned_data.get("proofs", [])) > 10:
+        if len(cleaned_data.get("proofs", [])) > 10:
             self.add_error("proofs", "Можно прикрепить не более 10 документов.")
 
         videos = cleaned_data.get("video", [])
@@ -501,9 +499,7 @@ class StartupForm(forms.ModelForm):
         else:
             cleaned_data["video"] = videos if videos else []
 
-        if len(cleaned_data.get("video", [])) == 0:
-            self.add_error("video", "Загрузите хотя бы одно видео (до 3 файлов).")
-        elif len(cleaned_data.get("video", [])) > 3:
+        if len(cleaned_data.get("video", [])) > 3:
             self.add_error("video", "Можно прикрепить не более 3 видео.")
         return cleaned_data
 

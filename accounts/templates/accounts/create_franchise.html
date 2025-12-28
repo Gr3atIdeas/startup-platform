@@ -317,9 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoUploadButton = document.getElementById('logoUploadButton');
 
     if (logoInput && logoPlaceholder && logoPreviewImg) {
-        if (logoUploadButton) logoUploadButton.addEventListener('click', () => logoInput.click());
-        logoPlaceholder.addEventListener('click', () => logoInput.click());
-        logoPreviewImg.addEventListener('click', () => logoInput.click());
+        // Обработчики клика управляются через file_upload_utils.js
 
         logoInput.addEventListener('change', function() {
             const file = this.files[0];
@@ -342,9 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const catalogCardImageUploadButton = document.getElementById('catalogCardImageUploadButton');
 
     if (catalogCardImageInput && catalogCardImagePlaceholder && catalogCardImagePreview) {
-        if (catalogCardImageUploadButton) catalogCardImageUploadButton.addEventListener('click', () => catalogCardImageInput.click());
-        catalogCardImagePlaceholder.addEventListener('click', () => catalogCardImageInput.click());
-        catalogCardImagePreview.addEventListener('click', () => catalogCardImageInput.click());
+        // Обработчики клика управляются через file_upload_utils.js
 
         catalogCardImageInput.addEventListener('change', function() {
             const file = this.files[0];
