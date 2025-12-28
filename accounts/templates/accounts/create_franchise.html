@@ -612,9 +612,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 return false;
             } else {
+                e.preventDefault();
+                
                 if (submitButton) {
                     if (submitButton.disabled) {
-                        e.preventDefault();
                         return;
                     }
                     submitButton.disabled = true;
@@ -630,10 +631,83 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadingOverlay.appendChild(loadingContent);
                 document.body.appendChild(loadingOverlay);
                 
-                setTimeout(function() {
+                var formData = new FormData(this);
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(function(response) {
+                    return response.json().then(function(data) {
+                        return { ok: response.ok, data: data };
+                    });
+                })
+                .then(function(result) {
                     var overlay = document.getElementById('submission-loading-overlay');
                     if (overlay) overlay.remove();
-                }, 30000);
+                    
+                    if (result.ok && result.data.success) {
+                        window.location.href = result.data.redirect_url;
+                    } else {
+                        if (submitButton) {
+                            submitButton.disabled = false;
+                            submitButton.textContent = 'Отправить на модерацию';
+                        }
+                        
+                        if (result.data.errors) {
+                            var firstErrorField = null;
+                            for (var fieldName in result.data.errors) {
+                                var errorMessages = result.data.errors[fieldName];
+                                var errorText = Array.isArray(errorMessages) ? errorMessages.map(function(e) { return e.message || e; }).join(', ') : errorMessages;
+                                
+                                var field = document.querySelector('[name="' + fieldName + '"]') || 
+                                            document.getElementById('id_' + fieldName) ||
+                                            document.getElementById('id_' + fieldName + '_input');
+                                if (field) {
+                                    var parentGroup = field.closest('.form-group, .upload-box');
+                                    if (parentGroup) {
+                                        var existingError = parentGroup.querySelector('.error-message');
+                                        if (!existingError) {
+                                            var errorEl = document.createElement('span');
+                                            errorEl.className = 'error-message';
+                                            errorEl.textContent = errorText;
+                                            parentGroup.appendChild(errorEl);
+                                        } else {
+                                            existingError.textContent = errorText;
+                                        }
+                                        field.classList.add('input-error');
+                                        if (!firstErrorField) firstErrorField = field;
+                                    }
+                                }
+                                
+                                if (!firstErrorField && typeof window.showNotification === 'function') {
+                                    window.showNotification(errorText, 'error', 5000);
+                                }
+                            }
+                            
+                            if (firstErrorField) {
+                                firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        }
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Form submission error:', error);
+                    var overlay = document.getElementById('submission-loading-overlay');
+                    if (overlay) overlay.remove();
+                    
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Отправить на модерацию';
+                    }
+                    
+                    if (typeof window.showNotification === 'function') {
+                        window.showNotification('Произошла ошибка при отправке формы. Попробуйте ещё раз.', 'error', 5000);
+                    }
+                });
             }
         });
     }

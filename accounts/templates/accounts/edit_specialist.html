@@ -294,18 +294,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="small-text">Подробное описание специалиста. Расскажите об опыте, навыках и услугах. Поддерживаются теги &lt;img&gt; и &lt;video&gt;.</div>
                     {% if form.description.errors %}<span class="error-message">{{ form.description.errors|first }}</span>{% endif %}
                 </div>
-                <div class="form-group full-width">
-                    <label for="{{ form.specialist_description.id_for_label }}">{{ form.specialist_description.label }}</label>
-                    {{ form.specialist_description|add_class:"form-control"|attr:"placeholder:Вводное описание специалиста" }}
-                    <div class="small-text">Краткое вводное описание для отображения в деталях.</div>
-                    {% if form.specialist_description.errors %}<span class="error-message">{{ form.specialist_description.errors|first }}</span>{% endif %}
-                </div>
-                <div class="form-group full-width">
-                    <label for="{{ form.specialist_additional_info.id_for_label }}">{{ form.specialist_additional_info.label }}</label>
-                    {{ form.specialist_additional_info|add_class:"form-control"|attr:"placeholder:Основные функции специалиста" }}
-                    <div class="small-text">Основные функции и направления работы.</div>
-                    {% if form.specialist_additional_info.errors %}<span class="error-message">{{ form.specialist_additional_info.errors|first }}</span>{% endif %}
-                </div>
             </div>
 
             <div class="form-content-section">
@@ -378,8 +366,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="form-content-section">
                 <div class="form-group full-width">
                     <label for="{{ form.terms.id_for_label }}">{{ form.terms.label|cut:"*" }}</label>
-                    {{ form.terms|add_class:"form-control"|attr:"placeholder:Этапы работ" }}
-                    <div class="small-text">Этапы работ, если они уже определены.</div>
+                    {{ form.terms|add_class:"form-control"|attr:"placeholder:Опишите услуги..." }}
+                    <div class="small-text">Опишите услуги, которые вы предоставляете.</div>
                     {% if form.terms.errors %}<span class="error-message">{{ form.terms.errors|first }}</span>{% endif %}
                 </div>
             </div>

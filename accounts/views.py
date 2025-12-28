@@ -4023,18 +4023,11 @@ def create_agency(request):
             cat = form.cleaned_data.get("agency_category")
             if cat:
                 data["agency_category"] = cat
-            agency_description = form.cleaned_data.get("agency_description")
-            if agency_description:
-                data["agency_description"] = agency_description
-            agency_additional_info = form.cleaned_data.get("agency_additional_info")
-            if agency_additional_info:
-                data["agency_additional_info"] = agency_additional_info
             agency_services = form.cleaned_data.get("agency_services")
             if agency_services:
                 data["agency_services"] = agency_services
-            agency_pitch_deck_url = form.cleaned_data.get("agency_pitch_deck_url")
-            if agency_pitch_deck_url:
-                data["agency_pitch_deck_url"] = str(agency_pitch_deck_url)
+            successful_projects = form.cleaned_data.get("successful_projects", 12)
+            data["successful_projects"] = successful_projects
             if data:
                 agency.customization_data = data
                 agency.save(update_fields=["customization_data"])
@@ -4340,16 +4333,10 @@ def create_specialist(request):
             
             # Сохраняем данные кастомизации
             cat = form.cleaned_data.get("specialist_category")
-            specialist_description = form.cleaned_data.get("specialist_description")
-            specialist_additional_info = form.cleaned_data.get("specialist_additional_info")
             
             data = spec.customization_data or {}
             if cat:
                 data["specialist_category"] = cat
-            if specialist_description:
-                data["specialist_description"] = specialist_description
-            if specialist_additional_info:
-                data["specialist_additional_info"] = specialist_additional_info
             
             if data:
                 spec.customization_data = data
@@ -9293,10 +9280,7 @@ def edit_agency(request, agency_id):
             
             # Сохраняем новые поля customization_data
             agency.customization_data['agency_category'] = form.cleaned_data.get('agency_category', '')
-            agency.customization_data['agency_description'] = form.cleaned_data.get('agency_description', '')
-            agency.customization_data['agency_additional_info'] = form.cleaned_data.get('agency_additional_info', '')
             agency.customization_data['agency_services'] = form.cleaned_data.get('agency_services', '')
-            agency.customization_data['agency_pitch_deck_url'] = form.cleaned_data.get('agency_pitch_deck_url', '')
             
             # Проверяем загружены ли новые файлы
             if not has_changes:
@@ -9622,8 +9606,6 @@ def edit_specialist(request, specialist_id):
             
             # Сохраняем новые поля customization_data
             specialist.customization_data['specialist_category'] = form.cleaned_data.get('specialist_category', '')
-            specialist.customization_data['specialist_description'] = form.cleaned_data.get('specialist_description', '')
-            specialist.customization_data['specialist_additional_info'] = form.cleaned_data.get('specialist_additional_info', '')
             
             # Проверяем загружены ли новые файлы
             if not has_changes:

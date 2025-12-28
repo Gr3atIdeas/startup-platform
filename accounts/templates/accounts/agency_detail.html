@@ -199,27 +199,10 @@
 
       <div class="agency-financial-info">
         <div class="financial-goal">
-          <span class="financial-label">Цель</span>
-          <span class="financial-value">{{ agency.customization_data.successful_projects|default:0 }} проектов</span>
-        </div>
-        <div class="financial-raised">
-          <span class="financial-label">Собранная сумма</span>
-          <span class="financial-value">{{ agency.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
+          <span class="financial-label">Успешных проектов</span>
+          <span class="financial-value">{{ agency.customization_data.successful_projects|default:0 }}</span>
         </div>
       </div> 
-
-      <div class="progress-container">
-        <div class="progress-bar-visual">
-          <div class="progress-animation-container" style="width: {{ progress_percentage|default:0 }}%;">
-            <div class="progress-planets"></div>
-          </div>
-          <span class="progress-percentage">{{ progress_percentage|default:0|floatformat:0 }}%</span>
-        </div>
-        <div class="progress-backers-info">
-          <i class="fas fa-users"></i>
-          <span id="investor-count-display">({{ investors_count }})</span>
-        </div>
-      </div>
 
       <div class="tabbed-content-wrapper">
         <div class="tab-navigation">

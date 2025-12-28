@@ -195,30 +195,6 @@
         <span class="category-value">{{ specialist.customization_data.specialist_category|default:"Без категории" }}</span>
       </div>
 
-      <div class="specialist-financial-info">
-        <div class="financial-goal">
-          <span class="financial-label">Ставка</span>
-          <span class="financial-value">{{ specialist.customization_data.hourly_rate|default:0|floatformat:0|intcomma }} ₽/час</span>
-        </div>
-        <div class="financial-raised">
-          <span class="financial-label">Собранная сумма</span>
-          <span class="financial-value">{{ specialist.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
-        </div>
-      </div> 
-
-      <div class="progress-container">
-        <div class="progress-bar-visual">
-          <div class="progress-animation-container" style="width: {{ progress_percentage|default:0 }}%;">
-            <div class="progress-planets"></div>
-          </div>
-          <span class="progress-percentage">{{ progress_percentage|default:0|floatformat:0 }}%</span>
-        </div>
-        <div class="progress-backers-info">
-          <i class="fas fa-users"></i>
-          <span id="investor-count-display">({{ investors_count }})</span>
-        </div>
-      </div>
-
       <div class="tabbed-content-wrapper">
         <div class="tab-navigation">
           <button class="tab-button active" data-target="info-section"><span>Информация</span></button>
@@ -232,13 +208,6 @@
           <div id="info-section" class="content-section active">
             <div class="detail-info-section-container">
               <div class="detail-info-section-top-row">
-                <div class="detail-info-section-stage-block">
-                  <div class="stage-icon-container">
-                    <img src="{% static 'accounts/images/figma_assets/stage_icon.png' %}" alt="Ставка" class="stage-icon">
-                    <span class="stage-label">Ставка</span>
-                  </div>
-                  <div class="stage-value">{{ specialist.customization_data.hourly_rate|default:0|floatformat:0|intcomma }} ₽/час</div>
-                </div>
                 <div class="detail-info-section-presentation-card">
                   {% if specialist.pitch_deck_url %}
                     <a href="{{ specialist.pitch_deck_url }}" target="_blank" class="presentation-button">Презентация</a>

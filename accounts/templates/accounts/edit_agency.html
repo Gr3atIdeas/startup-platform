@@ -295,28 +295,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     {% if form.description.errors %}<span class="error-message">{{ form.description.errors|first }}</span>{% endif %}
                 </div>
                 <div class="form-group full-width">
-                    <label for="{{ form.agency_description.id_for_label }}">{{ form.agency_description.label }}</label>
-                    {{ form.agency_description|add_class:"form-control"|attr:"placeholder:Вводное описание агентства" }}
-                    <div class="small-text">Краткое вводное описание для отображения в деталях.</div>
-                    {% if form.agency_description.errors %}<span class="error-message">{{ form.agency_description.errors|first }}</span>{% endif %}
-                </div>
-                <div class="form-group full-width">
-                    <label for="{{ form.agency_additional_info.id_for_label }}">{{ form.agency_additional_info.label }}</label>
-                    {{ form.agency_additional_info|add_class:"form-control"|attr:"placeholder:Основные услуги агентства" }}
-                    <div class="small-text">Основные услуги и направления работы.</div>
-                    {% if form.agency_additional_info.errors %}<span class="error-message">{{ form.agency_additional_info.errors|first }}</span>{% endif %}
-                </div>
-                <div class="form-group full-width">
                     <label for="{{ form.agency_services.id_for_label }}">{{ form.agency_services.label }}</label>
                     {{ form.agency_services|add_class:"form-control"|attr:"placeholder:Подробное описание услуг" }}
                     <div class="small-text">Подробное описание услуг для отображения в табе "Услуги".</div>
                     {% if form.agency_services.errors %}<span class="error-message">{{ form.agency_services.errors|first }}</span>{% endif %}
-                </div>
-                <div class="form-group full-width">
-                    <label for="{{ form.agency_pitch_deck_url.id_for_label }}">{{ form.agency_pitch_deck_url.label }}</label>
-                    {{ form.agency_pitch_deck_url|add_class:"form-control"|attr:"placeholder:https://example.com/presentation" }}
-                    <div class="small-text">Ссылка на презентацию агентства.</div>
-                    {% if form.agency_pitch_deck_url.errors %}<span class="error-message">{{ form.agency_pitch_deck_url.errors|first }}</span>{% endif %}
                 </div>
             </div>
 
@@ -369,13 +351,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             <div class="form-content-section">
                 <div class="presentation-finance-group">
-                    <div class="form-group">
-                        <label for="{{ form.pitch_deck_url.id_for_label }}">{{ form.pitch_deck_url.label }}</label>
-                        <div class="input-wrapper">
-                            {{ form.pitch_deck_url|add_class:"form-control"|attr:"placeholder:URL" }}
-                        </div>
-                        {% if form.pitch_deck_url.errors %}<span class="error-message">{{ form.pitch_deck_url.errors|first }}</span>{% endif %}
-                    </div>
                     <div class="form-group">
                         <label for="{{ form.successful_projects.id_for_label }}">{{ form.successful_projects.label }}</label>
                         <div class="input-wrapper">

@@ -56,25 +56,6 @@
         <p class="specialist-description">{{ specialist.short_description|default:"Описание не указано" }}</p>
       </div>
 
-      <!-- Собранная сумма -->
-      <div class="specialist-amount-row">
-        <span class="amount-label">Собранная сумма</span>
-        <span class="amount-value">0 ₽</span>
-      </div>
-
-      <!-- Прогресс-бар -->
-      <div class="specialist-progress-container">
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" style="width: 0%"></div>
-        </div>
-        <div class="progress-percentage">0%</div>
-        <div class="investors-counter">
-          <div class="investors-icon">
-            <img src="{% static 'accounts/images/icons/groups.svg' %}" alt="Инвесторы" width="16" height="16">
-          </div>
-          <span class="investors-count">(0)</span>
-        </div>
-      </div>
     </div>
 
     <!-- Ссылка на детали -->

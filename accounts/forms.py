@@ -672,17 +672,8 @@ class AgencyForm(forms.ModelForm):
         ],
         label="Категория", required=False
     )
-    agency_description = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 3}), label="Вводное описание", required=False
-    )
-    agency_additional_info = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Основные услуги", required=False
-    )
     agency_services = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 5}), label="Услуги", required=False
-    )
-    agency_pitch_deck_url = forms.URLField(
-        label="Презентация агентства", required=False
     )
 
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
@@ -696,6 +687,12 @@ class AgencyForm(forms.ModelForm):
     short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="*Вводная", required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False)
     planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
+    successful_projects = forms.IntegerField(
+        label="Успешных проектов",
+        required=False,
+        initial=12,
+        help_text="Количество успешно реализованных проектов"
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -724,7 +721,6 @@ class AgencyForm(forms.ModelForm):
             "short_description",
             "description",
             "terms",
-            "pitch_deck_url",
             "logo",
 
             "agree_rules",
@@ -734,13 +730,13 @@ class AgencyForm(forms.ModelForm):
             "video",
             "planet_image",
             "catalog_card_image",
+            "successful_projects",
         ]
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Название агентства"}),
             "short_description": forms.Textarea(attrs={"class": "form-control", "rows": 3, "placeholder": "Краткое описание агентства"}),
             "description": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Подробное описание агентства"}),
             "terms": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Этапы работ"}),
-            "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
             "direction": forms.Select(attrs={"class": "form-control"}),
             "logo": forms.FileInput(attrs={"class": "form-control-file"}),
         }
@@ -749,7 +745,6 @@ class AgencyForm(forms.ModelForm):
             "short_description": "*Вводная",
             "description": "*Описание",
             "terms": "Этапы работ",
-            "pitch_deck_url": "URL презентации",
             "direction": "Категория *",
             "stage": "Стадия *",
             "logo": "Логотип *",
@@ -802,12 +797,6 @@ class SpecialistForm(forms.ModelForm):
         ],
         label="Категория", required=False
     )
-    specialist_description = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 3}), label="Вводное описание", required=False
-    )
-    specialist_additional_info = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Основные функции", required=False
-    )
 
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
@@ -818,7 +807,7 @@ class SpecialistForm(forms.ModelForm):
         help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)"
     )
     short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="*Вводная", required=True)
-    terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False)
+    terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Услуги", required=False)
     additional_info = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Услуги и кейсы", required=False)
     planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
 
@@ -1165,17 +1154,8 @@ class AgencyEditForm(forms.ModelForm):
         ],
         label="Категория", required=False
     )
-    agency_description = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 3}), label="Вводная", required=False
-    )
-    agency_additional_info = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Основные услуги", required=False
-    )
     agency_services = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 5}), label="Услуги", required=False
-    )
-    agency_pitch_deck_url = forms.URLField(
-        label="Презентация", required=False
     )
     video = forms.FileField(
         required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
@@ -1210,7 +1190,7 @@ class AgencyEditForm(forms.ModelForm):
         model = Agencies
         fields = [
             "title", "short_description", "description", "terms",
-            "pitch_deck_url", "logo", "direction", "stage",
+            "logo", "direction", "stage",
             "creatives", "proofs", "video", "planet_image", "catalog_card_image", "successful_projects"
         ]
         labels = {
@@ -1227,14 +1207,7 @@ class AgencyEditForm(forms.ModelForm):
             if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
                 self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects', 12)
                 self.fields['agency_category'].initial = self.instance.customization_data.get('agency_category', '')
-                agency_desc = self.instance.customization_data.get('agency_description', '')
-                if agency_desc:
-                    self.fields['agency_description'].initial = convert_html_to_newlines(agency_desc)
-                agency_info = self.instance.customization_data.get('agency_additional_info', '')
-                if agency_info:
-                    self.fields['agency_additional_info'].initial = convert_html_to_newlines(agency_info)
                 self.fields['agency_services'].initial = self.instance.customization_data.get('agency_services', '')
-                self.fields['agency_pitch_deck_url'].initial = self.instance.customization_data.get('agency_pitch_deck_url', '')
         
         try:
             self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
@@ -1277,12 +1250,6 @@ class SpecialistEditForm(forms.ModelForm):
         ],
         label="Категория", required=False
     )
-    specialist_description = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 3}), label="Вводная", required=False
-    )
-    specialist_additional_info = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Основные функции", required=False
-    )
     video = forms.FileField(
         required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
         widget=forms.ClearableFileInput(attrs={'accept': 'video/*'})
@@ -1297,7 +1264,7 @@ class SpecialistEditForm(forms.ModelForm):
         widget=forms.Textarea(attrs={"rows": 3}), label="*Вводная", required=True
     )
     terms = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False
+        widget=forms.Textarea(attrs={"rows": 5}), label="Услуги", required=False
     )
     additional_info = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 5}), label="Услуги и кейсы", required=False
@@ -1341,12 +1308,6 @@ class SpecialistEditForm(forms.ModelForm):
             if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
                 self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects', 12)
                 self.fields['specialist_category'].initial = self.instance.customization_data.get('specialist_category', '')
-                specialist_desc = self.instance.customization_data.get('specialist_description', '')
-                if specialist_desc:
-                    self.fields['specialist_description'].initial = convert_html_to_newlines(specialist_desc)
-                specialist_info = self.instance.customization_data.get('specialist_additional_info', '')
-                if specialist_info:
-                    self.fields['specialist_additional_info'].initial = convert_html_to_newlines(specialist_info)
 
     def clean_description(self):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
