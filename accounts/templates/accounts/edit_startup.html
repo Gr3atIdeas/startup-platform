@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 
-<script src="{% static 'accounts/js/file_upload_utils.js' %}"></script>
+<script src="{% static 'accounts/js/file_upload_utils.js' %}?v={% now 'U' %}"></script>
 <script>
 // Инициализация FileUploadUtils с путём к статике
 if (window.FileUploadUtils) {

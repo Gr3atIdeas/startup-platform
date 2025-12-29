@@ -571,6 +571,20 @@ window.FileUploadUtils = (function() {
      */
     function getCSRFToken() {
         var cookieValue = null;
+        
+        // 1. Пробуем из скрытого поля формы (приоритет для CSRF_USE_SESSIONS = True)
+        var csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+        if (csrfInput && csrfInput.value) {
+            return csrfInput.value;
+        }
+        
+        // 2. Пробуем из meta тега
+        var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        if (csrfMeta && csrfMeta.content) {
+            return csrfMeta.content;
+        }
+        
+        // 3. Пробуем из куки (для случаев когда CSRF_USE_SESSIONS = False)
         if (document.cookie && document.cookie !== '') {
             var cookies = document.cookie.split(';');
             for (var i = 0; i < cookies.length; i++) {
@@ -581,13 +595,7 @@ window.FileUploadUtils = (function() {
                 }
             }
         }
-        // Также пробуем из скрытого поля формы
-        if (!cookieValue) {
-            var csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
-            if (csrfInput) {
-                cookieValue = csrfInput.value;
-            }
-        }
+        
         return cookieValue;
     }
     

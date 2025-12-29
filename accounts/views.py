@@ -5124,9 +5124,9 @@ def edit_startup(request, startup_id):
             logger.info("Стартап сохранен")
             
             logo_ids = startup.logo_urls or []
-            creative_ids = []
-            proofs_ids = []
-            video_ids = []
+            creative_ids = startup.creatives_urls or []  # Существующие креативы
+            proofs_ids = startup.proofs_urls or []  # Существующие документы
+            video_ids = startup.video_urls or []  # Существующие видео
             logger.info("Переменные инициализированы")
             # Обработка логотипа
             logo = request.FILES.get("logo")
@@ -9131,8 +9131,7 @@ def edit_franchise(request, franchise_id):
             franchise.save()
             
             logo_ids = franchise.logo_urls or []
-            creatives_ids = []
-            creative_ids = franchise.creatives_urls or []
+            creative_ids = franchise.creatives_urls or []  # Существующие креативы
             proofs_ids = franchise.proofs_urls or []
             video_ids = franchise.video_urls or []
             
@@ -9198,7 +9197,7 @@ def edit_franchise(request, franchise_id):
                     file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{creative_file.name}"
                     try:
                         default_storage.save(file_path, creative_file)
-                        creatives_ids.append(creative_id)
+                        creative_ids.append(creative_id)  # Добавляем к существующим
                         safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=franchise.franchise_id,
@@ -9459,8 +9458,7 @@ def edit_agency(request, agency_id):
             agency.save()
             
             logo_ids = agency.logo_urls or []
-            creatives_ids = []
-            creative_ids = agency.creatives_urls or []
+            creative_ids = agency.creatives_urls or []  # Существующие креативы
             proofs_ids = agency.proofs_urls or []
             video_ids = agency.video_urls or []
             
@@ -9526,7 +9524,7 @@ def edit_agency(request, agency_id):
                     file_path = f"agencies/{agency.agency_id}/creatives/{creative_id}_{creative_file.name}"
                     try:
                         default_storage.save(file_path, creative_file)
-                        creatives_ids.append(creative_id)
+                        creative_ids.append(creative_id)  # Добавляем к существующим
                         safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=agency.agency_id,
@@ -9784,8 +9782,7 @@ def edit_specialist(request, specialist_id):
             specialist.save()
             
             logo_ids = specialist.logo_urls or []
-            creatives_ids = []
-            creative_ids = specialist.creatives_urls or []
+            creative_ids = specialist.creatives_urls or []  # Существующие креативы
             proofs_ids = specialist.proofs_urls or []
             video_ids = specialist.video_urls or []
             
@@ -9842,9 +9839,6 @@ def edit_specialist(request, specialist_id):
                 return render(request, "accounts/edit_specialist.html", {"form": form, "specialist": specialist})
             
             if creatives:
-                # Инициализируем creatives_ids если не инициализирован
-                if not 'creatives_ids' in locals():
-                    creatives_ids = []
                 creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 for creative_file in creatives:
@@ -9854,7 +9848,7 @@ def edit_specialist(request, specialist_id):
                     file_path = f"specialists/{specialist.specialist_id}/creatives/{creative_id}_{creative_file.name}"
                     try:
                         default_storage.save(file_path, creative_file)
-                        creatives_ids.append(creative_id)
+                        creative_ids.append(creative_id)  # Добавляем к существующим
                         safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=specialist.specialist_id,
