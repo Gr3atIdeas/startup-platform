@@ -48,7 +48,7 @@
                         
                         <div class="search-dropdown-section">
                             <div class="search-dropdown-header">
-                                <div class="search-dropdown-title">Стартаперы</div>
+                                <div class="search-dropdown-title">Пользователи</div>
                                 <div class="search-dropdown-clear" data-section="startupers">Очистить</div>
                             </div>
                             <div class="search-dropdown-users" id="startuperUsers">
@@ -89,7 +89,7 @@
                                 </div>
                                 <p class="role-text">
                                     {% if user_profile.role.role_name == "investor" %}Пользователь
-                                    {% elif user_profile.role.role_name == "startuper" %}Стартапер
+                                    {% elif user_profile.role.role_name == "startuper" %}Пользователь
                                     {% elif user_profile.role.role_name == "moderator" %}Модератор
                                     {% else %}{{ user_profile.role.role_name|capfirst }}{% endif %}
                                 </p>
@@ -128,7 +128,7 @@
                                 </div>
                                 <p class="role-text">
                                     {% if user_profile.role.role_name == "investor" %}Пользователь
-                                    {% elif user_profile.role.role_name == "startuper" %}Стартапер
+                                    {% elif user_profile.role.role_name == "startuper" %}Пользователь
                                     {% elif user_profile.role.role_name == "moderator" %}Модератор
                                     {% else %}{{ user_profile.role.role_name|capfirst }}{% endif %}
                                 </p>
@@ -332,7 +332,7 @@
                 </div>
                 
                 <div class="group-chat-modal-role-filters">
-                    <button class="group-chat-modal-role-btn active" data-role="startuper">Стартапер</button>
+                    <button class="group-chat-modal-role-btn active" data-role="startuper">Пользователь</button>
                     <button class="group-chat-modal-role-btn inactive" data-role="investor">Пользователь</button>
                 </div>
                 

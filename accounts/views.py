@@ -884,9 +884,9 @@ def register(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data["password"])
-            # Назначаем роль "user" по умолчанию (pk=4)
+            # Назначаем роль "startuper" по умолчанию (pk=1) - отображается как "Пользователь"
             try:
-                default_role = Roles.objects.get(pk=4)
+                default_role = Roles.objects.get(pk=1)
                 user.role = default_role
             except Roles.DoesNotExist:
                 pass
@@ -2842,7 +2842,8 @@ def profile(request, user_id=None):
             "bio": getattr(user, "bio", ""),
         }
         return JsonResponse(user_data)
-    show_role_selection = (not user.role_id or user.role_id == 4) and is_own_profile
+    # Модальное окно выбора роли больше не нужно - всем назначается роль startuper
+    show_role_selection = False
     if request.method == "POST" and is_own_profile:
         if "select_role" in request.POST:
             role_id = request.POST.get("role_id")

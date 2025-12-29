@@ -39,12 +39,13 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         if sociallogin.account.provider == 'telegram':
             if not user.role_id:
                 try:
-                    temp_role = Roles.objects.get(pk=4)
-                    user.role = temp_role
+                    # Назначаем роль "startuper" (pk=1) - отображается как "Пользователь"
+                    default_role = Roles.objects.get(pk=1)
+                    user.role = default_role
                     user.save(update_fields=['role'])
-                    logger.info(f"Assigned temporary role (ID=4) to new Telegram user: {user.username}")
+                    logger.info(f"Assigned default role (ID=1, startuper) to new Telegram user: {user.username}")
                 except Roles.DoesNotExist:
-                    logger.error("Role with ID=4 not found. Could not assign temporary role.")
+                    logger.error("Role with ID=1 not found. Could not assign default role.")
             logger.info(f"save_user method is triggering a data update for user {user.pk}.")
             update_user_from_telegram(user, sociallogin)
         return user
