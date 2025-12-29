@@ -3358,6 +3358,23 @@ def create_startup(request):
         total_size = sum(f.size for f in request.FILES.values())
         logger.info(f"Total upload size: {total_size / 1024 / 1024:.2f} MB")
         
+        # Защита от дубликатов: проверяем, не создал ли пользователь стартап в последние 5 секунд
+        five_seconds_ago = timezone.now() - datetime.timedelta(seconds=5)
+        recent_startups = Startups.objects.filter(
+            owner=request.user,
+            created_at__gte=five_seconds_ago
+        ).order_by('-created_at')
+        
+        if recent_startups.exists():
+            latest = recent_startups.first()
+            logger.warning(f"=== DUPLICATE STARTUP PREVENTED === User {request.user.user_id} tried to create duplicate, existing startup_id: {latest.startup_id}")
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "redirect_url": reverse("startup_creation_success"),
+                })
+            return redirect("startup_creation_success")
+        
         form = StartupForm(request.POST, request.FILES)
         if form.is_valid():
             logger.info("Form is valid, creating startup...")
@@ -3707,6 +3724,23 @@ def create_franchise(request):
         total_size = sum(f.size for f in request.FILES.values())
         logger.info(f"Total upload size: {total_size / 1024 / 1024:.2f} MB")
         
+        # Защита от дубликатов: проверяем, не создал ли пользователь франшизу в последние 5 секунд
+        five_seconds_ago = timezone.now() - datetime.timedelta(seconds=5)
+        recent_franchises = Franchises.objects.filter(
+            owner=request.user,
+            created_at__gte=five_seconds_ago
+        ).order_by('-created_at')
+        
+        if recent_franchises.exists():
+            latest = recent_franchises.first()
+            logger.warning(f"=== DUPLICATE FRANCHISE PREVENTED === User {request.user.user_id} tried to create duplicate, existing franchise_id: {latest.franchise_id}")
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "redirect_url": reverse("franchise_creation_success"),
+                })
+            return redirect("franchise_creation_success")
+        
         form = FranchiseForm(request.POST, request.FILES)
         
         # Проверяем наличие изображений через request.FILES.getlist
@@ -3991,6 +4025,23 @@ def create_agency(request):
             logger.info(f"  {key}: {len(files)} файлов, sizes: {[f.size for f in files]}, names: {[f.name for f in files]}")
         total_size = sum(f.size for f in request.FILES.values())
         logger.info(f"Total upload size: {total_size / 1024 / 1024:.2f} MB")
+        
+        # Защита от дубликатов: проверяем, не создал ли пользователь агентство в последние 5 секунд
+        five_seconds_ago = timezone.now() - datetime.timedelta(seconds=5)
+        recent_agencies = Agencies.objects.filter(
+            owner=request.user,
+            created_at__gte=five_seconds_ago
+        ).order_by('-created_at')
+        
+        if recent_agencies.exists():
+            latest = recent_agencies.first()
+            logger.warning(f"=== DUPLICATE AGENCY PREVENTED === User {request.user.user_id} tried to create duplicate, existing agency_id: {latest.agency_id}")
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "redirect_url": reverse("agency_creation_success"),
+                })
+            return redirect("agency_creation_success")
         
         form = AgencyForm(request.POST, request.FILES)
         
@@ -4313,6 +4364,23 @@ def create_specialist(request):
             logger.info(f"  {key}: {len(files)} файлов, sizes: {[f.size for f in files]}, names: {[f.name for f in files]}")
         total_size = sum(f.size for f in request.FILES.values())
         logger.info(f"Total upload size: {total_size / 1024 / 1024:.2f} MB")
+        
+        # Защита от дубликатов: проверяем, не создал ли пользователь специалиста в последние 5 секунд
+        five_seconds_ago = timezone.now() - datetime.timedelta(seconds=5)
+        recent_specialists = Specialists.objects.filter(
+            owner=request.user,
+            created_at__gte=five_seconds_ago
+        ).order_by('-created_at')
+        
+        if recent_specialists.exists():
+            latest = recent_specialists.first()
+            logger.warning(f"=== DUPLICATE SPECIALIST PREVENTED === User {request.user.user_id} tried to create duplicate, existing specialist_id: {latest.specialist_id}")
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({
+                    "success": True,
+                    "redirect_url": reverse("specialist_creation_success"),
+                })
+            return redirect("specialist_creation_success")
         
         form = SpecialistForm(request.POST, request.FILES)
         

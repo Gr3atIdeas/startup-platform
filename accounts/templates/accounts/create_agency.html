@@ -428,9 +428,12 @@ document.addEventListener('DOMContentLoaded', function() {
         var isFormSubmitting = false;
         
         startupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            
             // Предотвращаем повторную отправку
             if (isFormSubmitting) {
-                e.preventDefault();
+                console.log('Form already submitting, blocked');
                 return false;
             }
             
@@ -562,8 +565,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 return false;
             } else {
-                e.preventDefault();
-                
                 // Устанавливаем флаг отправки
                 isFormSubmitting = true;
                 

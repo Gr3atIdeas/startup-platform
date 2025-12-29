@@ -491,8 +491,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     return !hasError
   }
+  var isFormSubmitting = false;
   if (startupForm) {
     startupForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      
+      // Предотвращаем повторную отправку
+      if (isFormSubmitting) {
+        console.log('Form already submitting, blocked');
+        return false;
+      }
+      
       // очищаем предыдущие ошибки
       Array.prototype.forEach.call(startupForm.querySelectorAll('.input-error'), function (el) {
         el.classList.remove('input-error')
@@ -502,18 +512,19 @@ document.addEventListener('DOMContentLoaded', function () {
       })
       var ok = validateFormClientSide()
       if (!ok) {
-        e.preventDefault()
         var firstError = startupForm.querySelector('.input-error') || startupForm.querySelector('.custom-validation-error')
         if (firstError) {
           var target = firstError.closest('.form-group') || firstError
           if (target) { instantScrollIntoView(target) }
         }
-        return
+        return false;
       }
+      
+      // Устанавливаем флаг отправки
+      isFormSubmitting = true;
 
       // AJAX submit, чтобы не терялись прикрепленные файлы при серверных ошибках
       try {
-        e.preventDefault()
         
         // Синхронизируем файлы из памяти обратно в input перед созданием FormData
         if (typeof window.syncSingleFilesBeforeSubmit === 'function') {
@@ -572,6 +583,9 @@ document.addEventListener('DOMContentLoaded', function () {
             window.location.assign(data.redirect_url)
           }
         }).catch(function (err) {
+          // Сбрасываем флаг при ошибке
+          isFormSubmitting = false;
+          
           var loadingOverlay = document.getElementById('submission-loading-overlay')
           if (loadingOverlay) loadingOverlay.remove()
           // показать серверные ошибки без перезагрузки
