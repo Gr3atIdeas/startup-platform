@@ -193,6 +193,10 @@ body {
   border-radius: 5px;
 }
 
+.catalog-card-image-group .help-text {
+  color: #1e1e1e !important;
+}
+
 .form-fields-left {
   display: flex;
   flex-direction: column;

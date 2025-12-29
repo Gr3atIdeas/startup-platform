@@ -861,6 +861,9 @@ a:hover {
   font-size: 12px;
   color: #A9A9A9;
   font-weight: 300;
+  font-family: 'Unbounded', sans-serif;
+  letter-spacing: 0.12px;
+  margin-left: auto;
 }
 
 .edit-ai-rating-btn {

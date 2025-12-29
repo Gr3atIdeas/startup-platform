@@ -584,6 +584,10 @@ textarea.form-control,
   object-fit: cover;
 }
 
+.catalog-card-image-group .help-text {
+  color: #1e1e1e !important;
+}
+
 .catalog-card-image-group #catalogCardImageUploadButton { 
   margin-top: 8px; 
   pointer-events: auto; 

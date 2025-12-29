@@ -177,6 +177,44 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<script src="{% static 'accounts/js/file_upload_utils.js' %}"></script>
+<script>
+// Инициализация FileUploadUtils с путём к статике
+if (window.FileUploadUtils) {
+    FileUploadUtils.init({ staticUrl: "{% static 'accounts/images/creat_startup/' %}" });
+    
+    // Creatives (изображения)
+    FileUploadUtils.setupFileInput({
+        inputId: 'id_creatives_input',
+        dropAreaId: 'creativesDropArea',
+        previewAreaId: 'creativesPreview',
+        isMultiple: true,
+        maxFiles: 10,
+        allowedTypes: { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] }
+    });
+    
+    // Video
+    FileUploadUtils.setupFileInput({
+        inputId: 'id_video_input',
+        dropAreaId: 'videoDropArea',
+        previewAreaId: 'videoPreview',
+        isMultiple: true,
+        maxFiles: 3,
+        allowedTypes: { mimes: ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska'], extensions: ['mp4', 'mov', 'avi', 'mkv'] }
+    });
+    
+    // Proofs (документы)
+    FileUploadUtils.setupFileInput({
+        inputId: 'id_proofs_input',
+        dropAreaId: 'proofsDropArea',
+        previewAreaId: 'proofsPreview',
+        isMultiple: true,
+        maxFiles: 10,
+        allowedTypes: { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] }
+    });
+}
+</script>
+
 <style>
 .presentation-finance-group .form-control { max-width: 100% !important; }
 .file-preview-item p,
@@ -248,7 +286,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     {% if form.catalog_card_image.errors %}
                     <span class="error-message">{{ form.catalog_card_image.errors|first }}</span>
                     {% endif %}
-                </div>
                 </div>
                 </div>
                 <div class="form-top-right">
@@ -354,10 +391,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="form-group">
                         <label for="{{ form.successful_projects.id_for_label }}">{{ form.successful_projects.label }}</label>
                         <div class="input-wrapper">
-                            {{ form.successful_projects|add_class:"form-control"|attr:"placeholder:12" }}
+                            {{ form.successful_projects|add_class:"form-control"|attr:"placeholder:Количество проектов" }}
                         </div>
                         <div class="small-text">{{ form.successful_projects.help_text }}</div>
                         {% if form.successful_projects.errors %}<span class="error-message">{{ form.successful_projects.errors|first }}</span>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.pitch_deck_url.id_for_label }}">{{ form.pitch_deck_url.label }}</label>
+                        <div class="input-wrapper">
+                            {{ form.pitch_deck_url|add_class:"form-control"|attr:"placeholder:https://example.com/presentation" }}
+                        </div>
+                        <div class="small-text">Ссылка на презентацию агентства</div>
+                        {% if form.pitch_deck_url.errors %}<span class="error-message">{{ form.pitch_deck_url.errors|first }}</span>{% endif %}
                     </div>
                 </div>
             </div>

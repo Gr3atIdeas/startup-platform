@@ -884,6 +884,12 @@ def register(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data["password"])
+            # Назначаем роль "user" по умолчанию (pk=4)
+            try:
+                default_role = Roles.objects.get(pk=4)
+                user.role = default_role
+            except Roles.DoesNotExist:
+                pass
             user.save()
             _reset_limits(request.session, prefix)
             messages.success(
@@ -4105,8 +4111,9 @@ def create_agency(request):
             agency_services = form.cleaned_data.get("agency_services")
             if agency_services:
                 data["agency_services"] = agency_services
-            successful_projects = form.cleaned_data.get("successful_projects", 12)
-            data["successful_projects"] = successful_projects
+            successful_projects = form.cleaned_data.get("successful_projects")
+            if successful_projects is not None:
+                data["successful_projects"] = successful_projects
             if data:
                 agency.customization_data = data
                 agency.save(update_fields=["customization_data"])
@@ -9413,10 +9420,11 @@ def edit_agency(request, agency_id):
                 has_changes = True
             
             # Обрабатываем successful_projects и другие поля customization_data
-            successful_projects = form.cleaned_data.get('successful_projects', 12)
+            successful_projects = form.cleaned_data.get('successful_projects')
             if agency.customization_data is None:
                 agency.customization_data = {}
-            agency.customization_data['successful_projects'] = successful_projects
+            if successful_projects is not None:
+                agency.customization_data['successful_projects'] = successful_projects
             
             # Сохраняем новые поля customization_data
             agency.customization_data['agency_category'] = form.cleaned_data.get('agency_category', '')

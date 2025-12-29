@@ -121,18 +121,19 @@
       </div>
       
       
-            <div class="agency-detail-ai-rating-info">
-              <h3 class="agency-detail-ai-rating-title">Оценка</h3>
-              <div class="agency-detail-ai-rating-container">
-                <div class="startup-detail-ai-rating-icon">
-                  <span class="startup-detail-ai-label">AI</span>
-                </div>
-                <span class="startup-detail-ai-rating-value" id="ai-rating-value">{% widthratio ai_rating|default:5 1 1 %}/10</span>
-              </div>
-              {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-              <button class="edit-ai-rating-btn" onclick="openEditAiRatingModal('agency', {{ agency.agency_id }}, {{ ai_rating|default:5 }})">Редактировать</button>
-              {% endif %}
-            </div>
+      <div class="agency-detail-ai-rating-info">
+        <h3 class="agency-detail-ai-rating-title">Оценка</h3>
+        <div class="agency-detail-ai-rating-container">
+          <div class="startup-detail-ai-rating-icon">
+            <span class="startup-detail-ai-label">AI</span>
+          </div>
+          <span class="startup-detail-ai-rating-value" id="ai-rating-value">{{ ai_rating|default:5|floatformat:1 }} из 10</span>
+          <span class="startup-detail-ai-rating-date">Создан {{ agency.created_at|date:"d/m/Y" }}</span>
+        </div>
+        {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+        <button class="edit-ai-rating-btn" onclick="openEditAiRatingModal('agency', {{ agency.agency_id }}, {{ ai_rating|default:5 }})">Редактировать</button>
+        {% endif %}
+      </div>
             
       <div class="author-info-section">
         <div class="author-info-left-unique">

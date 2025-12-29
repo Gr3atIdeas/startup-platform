@@ -33,14 +33,15 @@ class RegisterForm(forms.ModelForm):
     confirm_password = forms.CharField(
         widget=forms.PasswordInput, label="Подтвердите пароль"
     )
-    role = forms.ModelChoiceField(
-        queryset=Roles.objects.filter(role_name__in=['startuper', 'investor']),
-        label="Роль",
-        empty_label="Выберите роль"
-    )
     class Meta:
         model = Users
-        fields = ["email", "first_name", "last_name", "phone", "role"]
+        fields = ["email", "first_name", "last_name", "phone"]
+        labels = {
+            "email": "Email",
+            "first_name": "Имя",
+            "last_name": "Фамилия",
+            "phone": "Телефон",
+        }
     def clean_email(self):
         email = self.cleaned_data.get("email")
         if email and Users.objects.filter(email=email).exists():
@@ -690,7 +691,6 @@ class AgencyForm(forms.ModelForm):
     successful_projects = forms.IntegerField(
         label="Успешных проектов",
         required=False,
-        initial=12,
         help_text="Количество успешно реализованных проектов"
     )
 
@@ -721,6 +721,7 @@ class AgencyForm(forms.ModelForm):
             "short_description",
             "description",
             "terms",
+            "pitch_deck_url",
             "logo",
 
             "agree_rules",
@@ -737,6 +738,7 @@ class AgencyForm(forms.ModelForm):
             "short_description": forms.Textarea(attrs={"class": "form-control", "rows": 3, "placeholder": "Краткое описание агентства"}),
             "description": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Подробное описание агентства"}),
             "terms": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Этапы работ"}),
+            "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
             "direction": forms.Select(attrs={"class": "form-control"}),
             "logo": forms.FileInput(attrs={"class": "form-control-file"}),
         }
@@ -745,6 +747,7 @@ class AgencyForm(forms.ModelForm):
             "short_description": "*Вводная",
             "description": "*Описание",
             "terms": "Этапы работ",
+            "pitch_deck_url": "URL презентации",
             "direction": "Категория *",
             "stage": "Стадия *",
             "logo": "Логотип *",
@@ -1067,7 +1070,7 @@ class FranchiseEditForm(forms.ModelForm):
         required=False, help_text="Загрузите новые документы (до 15 файлов: PDF, DOC, TXT)",
         widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
     )
-    direction = forms.ModelChoiceField(
+    direction = DirectionModelChoiceField(
         queryset=Directions.objects.filter(
             direction_name__in=[
                 "Beauty", "Cafe", "Delivery", "Fastfood", "Finance",
@@ -1109,6 +1112,18 @@ class FranchiseEditForm(forms.ModelForm):
         ]
         labels = {
             "title": "Название",
+            "short_description": "*Вводная",
+            "description": "*Описание",
+            "terms": "Условия",
+            "investment_size": "Размер инвестиций (₽)",
+            "franchise_cost": "Паушальный взнос (₽)",
+            "pitch_deck_url": "URL презентации",
+            "direction": "Категория",
+            "logo": "Логотип",
+            "creatives": "Изображения",
+            "video": "Видео",
+            "proofs": "Документы",
+            "profit_calculation": "Стоимость и расчет прибыли",
         }
 
     def __init__(self, *args, **kwargs):
@@ -1182,7 +1197,6 @@ class AgencyEditForm(forms.ModelForm):
     successful_projects = forms.IntegerField(
         label="Успешных проектов",
         required=False,
-        initial=12,
         help_text="Количество успешно реализованных проектов"
     )
 
@@ -1190,11 +1204,15 @@ class AgencyEditForm(forms.ModelForm):
         model = Agencies
         fields = [
             "title", "short_description", "description", "terms",
-            "logo", "direction", "stage",
+            "pitch_deck_url", "logo", "direction", "stage",
             "creatives", "proofs", "video", "planet_image", "catalog_card_image", "successful_projects"
         ]
         labels = {
             "title": "Название",
+            "pitch_deck_url": "URL презентации",
+        }
+        widgets = {
+            "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -1205,7 +1223,7 @@ class AgencyEditForm(forms.ModelForm):
                 self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
             
             if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
-                self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects', 12)
+                self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects')
                 self.fields['agency_category'].initial = self.instance.customization_data.get('agency_category', '')
                 self.fields['agency_services'].initial = self.instance.customization_data.get('agency_services', '')
         
@@ -1278,7 +1296,6 @@ class SpecialistEditForm(forms.ModelForm):
     successful_projects = forms.IntegerField(
         label="Успешных проектов",
         required=False,
-        initial=12,
         help_text="Количество успешно реализованных проектов"
     )
 
@@ -1290,7 +1307,17 @@ class SpecialistEditForm(forms.ModelForm):
             "creatives", "proofs", "video", "planet_image", "catalog_card_image", "successful_projects"
         ]
         labels = {
-            "title": "Название",
+            "title": "Профиль специалиста",
+            "short_description": "*Вводная",
+            "description": "*Описание",
+            "terms": "Этапы работ",
+            "additional_info": "Услуги и кейсы",
+            "pitch_deck_url": "URL презентации",
+            "direction": "Категория",
+            "logo": "Логотип",
+            "creatives": "Изображения",
+            "video": "Видео",
+            "proofs": "Документы",
         }
 
     def __init__(self, *args, **kwargs):
@@ -1306,7 +1333,7 @@ class SpecialistEditForm(forms.ModelForm):
                 self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
             
             if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
-                self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects', 12)
+                self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects')
                 self.fields['specialist_category'].initial = self.instance.customization_data.get('specialist_category', '')
 
     def clean_description(self):
