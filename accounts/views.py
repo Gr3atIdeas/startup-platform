@@ -6105,6 +6105,10 @@ def moderator_dashboard(request):
     for agency in pending_agencies_list:
         logger.info(f"  Agency ID: {agency.agency_id}, title: {agency.title}, status: {agency.status}")
     
+    logger.info(f"=== MODERATOR_DASHBOARD === pending_specialists count: {pending_specialists_list.count()}")
+    for specialist in pending_specialists_list:
+        logger.info(f"  Specialist ID: {specialist.specialist_id}, title: {specialist.title}, status: {specialist.status}")
+    
     # Получаем категории как в каталогах
     # Стартапы - только определенные категории
     startup_categories = Directions.objects.filter(

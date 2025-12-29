@@ -419,7 +419,15 @@ document.addEventListener('DOMContentLoaded', function() {
             return errorMsg;
         }
 
+        var isFormSubmitting = false;
+        
         startupForm.addEventListener('submit', function(e) {
+            // Предотвращаем повторную отправку
+            if (isFormSubmitting) {
+                e.preventDefault();
+                return false;
+            }
+            
             let firstInvalidElementOrGroup = null;
             let validationPassed = true;
             let firstErrorText = null;
@@ -550,6 +558,9 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 e.preventDefault();
                 
+                // Устанавливаем флаг отправки
+                isFormSubmitting = true;
+                
                 if (submitButton) {
                     if (submitButton.disabled) {
                         return;
@@ -588,6 +599,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (result.ok && result.data.success) {
                         window.location.href = result.data.redirect_url;
                     } else {
+                        // Сбрасываем флаг при ошибке
+                        isFormSubmitting = false;
+                        
                         if (submitButton) {
                             submitButton.disabled = false;
                             submitButton.textContent = 'Отправить на модерацию';
@@ -634,6 +648,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.error('Form submission error:', error);
                     var overlay = document.getElementById('submission-loading-overlay');
                     if (overlay) overlay.remove();
+                    
+                    // Сбрасываем флаг при ошибке
+                    isFormSubmitting = false;
                     
                     if (submitButton) {
                         submitButton.disabled = false;
