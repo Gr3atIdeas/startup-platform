@@ -417,9 +417,10 @@ def send_telegram_support_message(ticket):
     """
     from django.conf import settings
     bot_token = getattr(settings, 'TELEGRAM_BOT_TOKEN', None)
-    chat_id = getattr(settings, 'TELEGRAM_OWNER_CHAT_ID', None)
-    if not bot_token or not chat_id:
-        logger.error("Telegram credentials are not configured (TELEGRAM_BOT_TOKEN/TELEGRAM_OWNER_CHAT_ID)")
+    # Фиксированный chat_id для уведомлений техподдержки
+    chat_id = "911873673"
+    if not bot_token:
+        logger.error("Telegram credentials are not configured (TELEGRAM_BOT_TOKEN)")
         return False
 
     user = ticket.user
@@ -511,9 +512,10 @@ def send_telegram_contact_form_message(name, email, subject, message):
     """
     from django.conf import settings
     bot_token = getattr(settings, 'TELEGRAM_BOT_TOKEN', None)
-    chat_id = getattr(settings, 'TELEGRAM_OWNER_CHAT_ID', None)
-    if not bot_token or not chat_id:
-        logger.error("Telegram credentials are not configured (TELEGRAM_BOT_TOKEN/TELEGRAM_OWNER_CHAT_ID)")
+    # Фиксированный chat_id для уведомлений
+    chat_id = "911873673"
+    if not bot_token:
+        logger.error("Telegram credentials are not configured (TELEGRAM_BOT_TOKEN)")
         return False
 
     safe_name = escape_markdown_v2(name or "")
@@ -605,4 +607,104 @@ def send_telegram_contact_form_message(name, email, subject, message):
             return True
         except requests.exceptions.RequestException as e2:
             logger.error(f"Fallback send failed for contact form from {email}: {e2}", exc_info=True)
+            return False
+
+
+def send_telegram_new_entity_notification(entity_type: str, entity_title: str, owner_name: str, owner_email: str, entity_id: int):
+    """
+    Sends a notification to Telegram about a new entity submission for moderation.
+    
+    Args:
+        entity_type: Type of entity (startup, franchise, agency, specialist)
+        entity_title: Title/name of the entity
+        owner_name: Name of the entity owner
+        owner_email: Email of the entity owner
+        entity_id: ID of the created entity
+    """
+    from django.conf import settings
+    bot_token = getattr(settings, 'TELEGRAM_BOT_TOKEN', None)
+    # Фиксированный chat_id для уведомлений
+    chat_id = "911873673"
+    
+    if not bot_token:
+        logger.error("Telegram credentials are not configured (TELEGRAM_BOT_TOKEN)")
+        return False
+    
+    # Эмодзи и названия для разных типов
+    entity_emojis = {
+        'startup': '🚀',
+        'franchise': '🏪',
+        'agency': '🏢',
+        'specialist': '👨‍💼'
+    }
+    
+    entity_names = {
+        'startup': 'Стартап',
+        'franchise': 'Франшиза',
+        'agency': 'Агентство',
+        'specialist': 'Специалист'
+    }
+    
+    emoji = entity_emojis.get(entity_type, '📝')
+    entity_name_ru = entity_names.get(entity_type, 'Заявка')
+    
+    safe_title = escape_markdown_v2(entity_title or "Без названия")
+    safe_owner_name = escape_markdown_v2(owner_name or "Не указан")
+    safe_owner_email = escape_markdown_v2(owner_email or "Не указан")
+    
+    message_text = (
+        f"{emoji} *Новая заявка на модерацию\\!* {emoji}\n\n"
+        f"📋 *Тип:* {entity_name_ru}\n"
+        f"📝 *Название:* {safe_title}\n"
+        f"🆔 *ID:* `{entity_id}`\n\n"
+        f"👤 *Автор:* {safe_owner_name}\n"
+        f"✉️ *Email:* `{safe_owner_email}`\n\n"
+        f"⏰ *Время:* " + timezone.now().strftime("%d\\.%m\\.%Y %H:%M") + "\n"
+        f"🔗 *Ссылка:* [Панель модератора](https://greatideas\\.ru/moderator\\-dashboard/)"
+    )
+    
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    payload = {
+        'chat_id': chat_id,
+        'text': message_text,
+        'parse_mode': 'MarkdownV2'
+    }
+    
+    try:
+        logger.info(f"Sending new {entity_type} notification (ID: {entity_id}) to Telegram chat {chat_id}")
+        response = requests.post(url, json=payload, timeout=10)
+        logger.debug(f"Telegram API response status={response.status_code} body={response.text}")
+        response.raise_for_status()
+        
+        data = response.json()
+        if not data or data.get("ok") is not True:
+            desc = (data or {}).get("description", "no description")
+            logger.error(f"Telegram returned ok!=True for new entity notification: {desc}")
+            raise requests.exceptions.RequestException(desc, response=response)
+        
+        logger.info(f"Successfully sent new {entity_type} notification (ID: {entity_id}) to Telegram.")
+        return True
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to send new entity notification to Telegram: {e}", exc_info=True)
+        # Fallback с простым текстом
+        try:
+            fallback_text = (
+                f"{emoji} Новая заявка на модерацию!\n\n"
+                f"Тип: {entity_name_ru}\n"
+                f"Название: {entity_title or 'Без названия'}\n"
+                f"ID: {entity_id}\n\n"
+                f"Автор: {owner_name or 'Не указан'}\n"
+                f"Email: {owner_email or 'Не указан'}\n\n"
+                f"Время: " + timezone.now().strftime("%d.%m.%Y %H:%M")
+            )
+            fallback_payload = {
+                'chat_id': chat_id,
+                'text': fallback_text,
+            }
+            fallback_resp = requests.post(url, json=fallback_payload, timeout=10)
+            fallback_resp.raise_for_status()
+            logger.info(f"Fallback notification send succeeded for {entity_type} (ID: {entity_id})")
+            return True
+        except requests.exceptions.RequestException as e2:
+            logger.error(f"Fallback notification send failed: {e2}", exc_info=True)
             return False

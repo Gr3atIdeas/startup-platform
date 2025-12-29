@@ -286,44 +286,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (startupCardsGrid) {
         const allCards = Array.from(startupCardsGrid.querySelectorAll('.startup-card-item'));
         const showMoreButton = document.querySelector('.show-more-button');
-        const cardsToShowIncrement = 4;
-        let visibleCardsCount = 0;
 
-        function updateVisibleCards() {
-            allCards.forEach((card, index) => {
-                if (index < visibleCardsCount) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-
-            if (visibleCardsCount >= allCards.length) {
-                if (showMoreButton) showMoreButton.style.display = 'none';
-            } else {
-                if (showMoreButton) showMoreButton.style.display = 'inline-flex';
-            }
-        }
+        // Показываем все карточки сразу, без ограничений
+        allCards.forEach((card) => {
+            card.style.display = 'flex';
+        });
         
-        if (allCards.length > 0) { // Только если есть карточки
-            visibleCardsCount = cardsToShowIncrement;
-            updateVisibleCards();
-
-            if (showMoreButton) {
-                if (allCards.length <= cardsToShowIncrement) {
-                    showMoreButton.style.display = 'none';
-                } else {
-                     showMoreButton.style.display = 'inline-flex';
-                }
-                showMoreButton.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    visibleCardsCount += cardsToShowIncrement;
-                    updateVisibleCards();
-                });
-            }
-        } else {
-            if (showMoreButton) showMoreButton.style.display = 'none'; // Скрыть если карточек нет
-        }
+        // Скрываем кнопку "Показать еще"
+        if (showMoreButton) showMoreButton.style.display = 'none';
     }
     
     const newFilterButton = document.getElementById('newFilterButton');
@@ -796,16 +766,6 @@ document.addEventListener('DOMContentLoaded', function () {
     {% endif %}
         </section>
 
-        {% if pending_startups and pending_startups|length > 4 %} 
-        <div class="show-more-bar">
-            <a href="#" class="show-more-button">
-                Показать еще
-                <svg class="icon-eye" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16px" height="16px">
-                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                </svg>
-            </a>
-        </div>
-    {% endif %}
     </div>
 </body>
 {% endblock %}

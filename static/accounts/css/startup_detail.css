@@ -4964,7 +4964,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .about-text {
   font-family: Unbounded, sans-serif;
   font-weight: 300;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   letter-spacing: -0.02em;
   color: #FFFFFF;
@@ -5495,3 +5495,26 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   }
 }
 
+
+/* ��������������� ����� ������ ��� ���� ������ */
+.content-section p,
+#documents-section p,
+#conditions-section p,
+#stages-section p {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+  color: var(--text-secondary);
+}
+
+.startup-intro-description {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}

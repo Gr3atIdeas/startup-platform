@@ -26,7 +26,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.core.serializers.json import DjangoJSONEncoder
 from .tasks import upload_video_to_s3
-from .utils import process_uploaded_image
+from .utils import process_uploaded_image, send_telegram_new_entity_notification
 from django.db import (
     models,
     transaction,
@@ -3676,6 +3676,20 @@ def create_startup(request):
             logger.info(
                 f"Стартап создан: ID={startup.startup_id}, Planet={startup.planet_image}"
             )
+            
+            # Отправляем уведомление в Telegram о новой заявке
+            try:
+                owner_name = f"{request.user.first_name or ''} {request.user.last_name or ''}".strip() or request.user.email
+                send_telegram_new_entity_notification(
+                    entity_type='startup',
+                    entity_title=startup.title,
+                    owner_name=owner_name,
+                    owner_email=request.user.email,
+                    entity_id=startup.startup_id
+                )
+            except Exception as e:
+                logger.warning(f"Failed to send Telegram notification for startup {startup.startup_id}: {e}")
+            
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
@@ -3986,6 +4000,20 @@ def create_franchise(request):
             
             franchise.save()
             logger.info(f"=== CREATE_FRANCHISE SUCCESS === franchise_id: {franchise.franchise_id}")
+            
+            # Отправляем уведомление в Telegram о новой заявке
+            try:
+                owner_name = f"{request.user.first_name or ''} {request.user.last_name or ''}".strip() or request.user.email
+                send_telegram_new_entity_notification(
+                    entity_type='franchise',
+                    entity_title=franchise.title,
+                    owner_name=owner_name,
+                    owner_email=request.user.email,
+                    entity_id=franchise.franchise_id
+                )
+            except Exception as e:
+                logger.warning(f"Failed to send Telegram notification for franchise {franchise.franchise_id}: {e}")
+            
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
@@ -4325,6 +4353,19 @@ def create_agency(request):
                 raw_result = cursor.fetchall()
                 logger.info(f"=== ALL PENDING AGENCIES (RAW SQL) === {raw_result}")
             
+            # Отправляем уведомление в Telegram о новой заявке
+            try:
+                owner_name = f"{request.user.first_name or ''} {request.user.last_name or ''}".strip() or request.user.email
+                send_telegram_new_entity_notification(
+                    entity_type='agency',
+                    entity_title=agency.title,
+                    owner_name=owner_name,
+                    owner_email=request.user.email,
+                    entity_id=agency.agency_id
+                )
+            except Exception as e:
+                logger.warning(f"Failed to send Telegram notification for agency {agency.agency_id}: {e}")
+            
             messages.success(request, f'Агентство "{agency.title}" успешно создано и отправлено на модерацию!')
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
@@ -4632,6 +4673,20 @@ def create_specialist(request):
             
             spec.save()
             logger.info(f"=== CREATE_SPECIALIST SUCCESS === specialist_id: {spec.specialist_id}")
+            
+            # Отправляем уведомление в Telegram о новой заявке
+            try:
+                owner_name = f"{request.user.first_name or ''} {request.user.last_name or ''}".strip() or request.user.email
+                send_telegram_new_entity_notification(
+                    entity_type='specialist',
+                    entity_title=spec.title,
+                    owner_name=owner_name,
+                    owner_email=request.user.email,
+                    entity_id=spec.specialist_id
+                )
+            except Exception as e:
+                logger.warning(f"Failed to send Telegram notification for specialist {spec.specialist_id}: {e}")
+            
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,

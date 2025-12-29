@@ -4587,7 +4587,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .about-text {
   font-family: Unbounded, sans-serif;
   font-weight: 300;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   letter-spacing: -0.02em;
   color: #FFFFFF;
@@ -5126,4 +5126,28 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   .about-text video {
     max-height: 350px;
   }
+}
+
+/* Унифицированные стили текста для всех секций */
+.services-wrapper,
+.services-content,
+.content-section p,
+#documents-section p,
+#services-section p {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+  color: var(--text-secondary);
+}
+
+.agency-intro-description {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
 }
