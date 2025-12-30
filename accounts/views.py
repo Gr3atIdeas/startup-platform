@@ -10058,6 +10058,56 @@ def change_owner_franchise(request, franchise_id):
 
 
 @login_required
+def change_owner_agency(request, agency_id):
+    if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
+        return JsonResponse({'success': False, 'error': 'Недостаточно прав'})
+
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+
+    try:
+        agency = get_object_or_404(Agencies, agency_id=agency_id)
+        new_owner_id = request.POST.get('new_owner_id')
+
+        if not new_owner_id:
+            return JsonResponse({'success': False, 'error': 'ID нового владельца не указан'})
+
+        new_owner = get_object_or_404(Users, user_id=new_owner_id)
+        agency.owner = new_owner
+        agency.save()
+
+        return JsonResponse({'success': True, 'message': 'Владелец агентства изменен'})
+    except Exception as e:
+        logger.error(f"Ошибка при смене владельца агентства: {e}")
+        return JsonResponse({'success': False, 'error': 'Ошибка при смене владельца'})
+
+
+@login_required
+def change_owner_specialist(request, specialist_id):
+    if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
+        return JsonResponse({'success': False, 'error': 'Недостаточно прав'})
+
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+
+    try:
+        specialist = get_object_or_404(Specialists, specialist_id=specialist_id)
+        new_owner_id = request.POST.get('new_owner_id')
+
+        if not new_owner_id:
+            return JsonResponse({'success': False, 'error': 'ID нового владельца не указан'})
+
+        new_owner = get_object_or_404(Users, user_id=new_owner_id)
+        specialist.owner = new_owner
+        specialist.save()
+
+        return JsonResponse({'success': True, 'message': 'Владелец профиля специалиста изменен'})
+    except Exception as e:
+        logger.error(f"Ошибка при смене владельца специалиста: {e}")
+        return JsonResponse({'success': False, 'error': 'Ошибка при смене владельца'})
+
+
+@login_required
 def get_investors_franchise(request, franchise_id):
     if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
         return JsonResponse({'success': False, 'error': 'Недостаточно прав'})

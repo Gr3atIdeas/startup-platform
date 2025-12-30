@@ -198,7 +198,7 @@
       </div>
 
       <div class="startup-intro-description">
-        {{ startup.short_description|default:startup.description|striptags|truncatewords:30 }}
+        {{ startup.short_description|striptags|truncatewords:30|default:"" }}
       </div>
 
       <div class="startup-category-badge">
@@ -253,8 +253,6 @@
                 <div class="detail-info-section-presentation-card">
                   {% if startup.pitch_deck_url %}
                     <a href="{{ startup.pitch_deck_url }}" target="_blank" class="presentation-button">Презентация</a>
-                  {% else %}
-                    <button class="presentation-button" disabled>Презентация</button>
                   {% endif %}
                 </div>
               </div>

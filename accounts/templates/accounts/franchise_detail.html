@@ -189,7 +189,7 @@
       </div>
 
       <div class="franchise-intro-description">
-        {{ franchise.short_description|default:franchise.description|striptags|truncatewords:30 }}
+        {{ franchise.short_description|striptags|truncatewords:30|default:"" }}
       </div>
 
       <div class="franchise-category-badge">
@@ -247,8 +247,6 @@
                 <div class="detail-info-section-presentation-card">
                   {% if franchise.pitch_deck_url %}
                     <a href="{{ franchise.pitch_deck_url }}" target="_blank" class="presentation-button">Презентация</a>
-                  {% else %}
-                    <button class="presentation-button" disabled>Презентация</button>
                   {% endif %}
                 </div>
               </div>

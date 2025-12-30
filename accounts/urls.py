@@ -43,6 +43,8 @@ urlpatterns = [
         name="delete_investment",
     ),
     path("change_owner_franchise/<int:franchise_id>/", views.change_owner_franchise, name="change_owner_franchise"),
+    path("change_owner_agency/<int:agency_id>/", views.change_owner_agency, name="change_owner_agency"),
+    path("change_owner_specialist/<int:specialist_id>/", views.change_owner_specialist, name="change_owner_specialist"),
     path("get_investors_franchise/<int:franchise_id>/", views.get_investors_franchise, name="get_investors_franchise"),
     path("add_investor_franchise/<int:franchise_id>/", views.add_investor_franchise, name="add_investor_franchise"),
     path("edit_investment_franchise/<int:franchise_id>/<int:user_id>/", views.edit_investment_franchise, name="edit_investment_franchise"),

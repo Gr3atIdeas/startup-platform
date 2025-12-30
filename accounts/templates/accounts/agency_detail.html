@@ -189,7 +189,7 @@
       </div>
 
       <div class="agency-intro-description">
-        {{ agency.customization_data.agency_short_description|default:agency.description|striptags|truncatewords:30 }}
+        {{ agency.short_description|striptags|truncatewords:30|default:"" }}
       </div>
 
       <div class="agency-category-badge">
@@ -224,10 +224,8 @@
                   <div class="stage-value">{{ agency.customization_data.successful_projects|default:0 }}</div>
                 </div>
                 <div class="detail-info-section-presentation-card">
-                  {% if agency.customization_data.agency_pitch_deck_url %}
-                    <a href="{{ agency.customization_data.agency_pitch_deck_url }}" target="_blank" class="presentation-button">Презентация</a>
-                  {% else %}
-                    <button class="presentation-button" disabled>Презентация</button>
+                  {% if agency.pitch_deck_url %}
+                    <a href="{{ agency.pitch_deck_url }}" target="_blank" class="presentation-button">Презентация</a>
                   {% endif %}
                 </div>
               </div>

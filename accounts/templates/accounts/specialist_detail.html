@@ -187,7 +187,7 @@
       </div>
 
       <div class="specialist-intro-description">
-        {{ specialist.customization_data.specialist_short_description|default:specialist.description|striptags|truncatewords:30 }}
+        {{ specialist.short_description|striptags|truncatewords:30|default:"" }}
       </div>
 
       <div class="specialist-category-badge">
@@ -211,8 +211,6 @@
                 <div class="detail-info-section-presentation-card">
                   {% if specialist.pitch_deck_url %}
                     <a href="{{ specialist.pitch_deck_url }}" target="_blank" class="presentation-button">Презентация</a>
-                  {% else %}
-                    <button class="presentation-button" disabled>Презентация</button>
                   {% endif %}
                 </div>
               </div>
