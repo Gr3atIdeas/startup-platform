@@ -825,7 +825,7 @@ body {
 .franchise-card-header {
   position: relative;
   width: 100%;
-  height: 158px;
+  height: 110px;
   overflow: hidden;
   border-radius: 9px 9px 0 0;
 }
@@ -852,7 +852,7 @@ body {
 
 .planet-miniature-container {
   position: absolute;
-  top: 110px;
+  top: 62px;
   right: 10px;
   width: 70px;
   height: 71px;
@@ -1146,7 +1146,7 @@ body {
 
 .planet-miniature-container {
   position: absolute;
-  top: 110px;
+  top: 62px;
   right: 10px;
   width: 70px;
   height: 71px;

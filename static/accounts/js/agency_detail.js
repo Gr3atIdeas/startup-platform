@@ -839,6 +839,7 @@ function initializeCarousel() {
     }
 
     function startAutoSlide() {
+      clearInterval(autoSlideInterval);
       autoSlideInterval = setInterval(nextSlide, 5000);
     }
 

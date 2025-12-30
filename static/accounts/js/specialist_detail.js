@@ -424,6 +424,7 @@ function setupSimilarSpecialistsShowMore() {
     }
 
     function startAutoSlide() {
+      clearInterval(autoSlideInterval);
       autoSlideInterval = setInterval(nextSlide, 5000);
     }
 

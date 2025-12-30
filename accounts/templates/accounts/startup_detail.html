@@ -136,8 +136,7 @@
           <div class="startup-detail-ai-rating-icon">
             <span class="startup-detail-ai-label">AI</span>
           </div>
-          <span class="startup-detail-ai-rating-value" id="ai-rating-value">{{ ai_rating|default:5|floatformat:1 }} из 10</span>
-          <span class="startup-detail-ai-rating-date">Создан {{ startup.created_at|date:"d/m/Y" }}</span>
+          <span class="startup-detail-ai-rating-value" id="ai-rating-value">{{ ai_rating|default:5|floatformat:0 }}/10</span>
         </div>
         {% if user.is_authenticated and user.role.role_name == 'moderator' %}
         <button class="edit-ai-rating-btn" onclick="openEditAiRatingModal('startup', {{ startup.startup_id }}, {{ ai_rating|default:5 }})">Редактировать</button>
