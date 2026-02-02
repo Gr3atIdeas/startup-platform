@@ -5,6 +5,7 @@ import os
 import uuid
 import base64
 from decimal import Decimal
+from html import escape
 from random import choice, shuffle
 import time
 import datetime
@@ -8617,6 +8618,105 @@ def get_user_rating_for_startup(user_id, startup_id):
     pass
 def custom_404(request, exception):
     return render(request, "accounts/404.html", status=404)
+
+
+def _handle_moderation_callback(bot_token, callback_data, chat_id, message_id, original_text, callback_query):
+    """Обрабатывает нажатие кнопок Одобрить/Отклонить из Telegram уведомления."""
+    from accounts.moderation import approve_entity, reject_entity
+
+    parts = callback_data.split("_")
+    # mod_approve_startup_123 or mod_reject_franchise_456
+    if len(parts) < 4:
+        return
+
+    action = parts[1]  # approve / reject
+    entity_type = parts[2]  # startup / franchise / agency / specialist
+    try:
+        entity_id = int(parts[3])
+    except (ValueError, IndexError):
+        return
+
+    model_map = {
+        'startup': (Startups, 'startup_id'),
+        'franchise': (Franchises, 'franchise_id'),
+        'agency': (Agencies, 'agency_id'),
+        'specialist': (Specialists, 'specialist_id'),
+    }
+
+    if entity_type not in model_map:
+        return
+
+    Model, pk_field = model_map[entity_type]
+    entity = Model.objects.filter(**{pk_field: entity_id}).first()
+    if not entity:
+        _tg_edit_message(bot_token, chat_id, message_id, escape(original_text) + "\n\n⚠️ Объект не найден в базе данных.")
+        return
+
+    if entity.status == "approved" and action == "approve":
+        _tg_edit_message(bot_token, chat_id, message_id, escape(original_text) + "\n\nℹ️ Уже одобрено ранее.")
+        return
+    if entity.status == "rejected" and action == "reject":
+        _tg_edit_message(bot_token, chat_id, message_id, escape(original_text) + "\n\nℹ️ Уже отклонено ранее.")
+        return
+
+    # Найти модератора по telegram_id отправителя callback
+    from_user_id = str(callback_query.get("from", {}).get("id", ""))
+    moderator = Users.objects.filter(telegram_id=from_user_id).first()
+    if not moderator:
+        # Fallback: любой модератор
+        moderator = Users.objects.filter(role__role_name="moderator").first()
+    if not moderator:
+        _tg_edit_message(bot_token, chat_id, message_id, escape(original_text) + "\n\n⚠️ Модератор не найден.")
+        return
+
+    entity_names = {'startup': 'Стартап', 'franchise': 'Франшиза', 'agency': 'Агентство', 'specialist': 'Специалист'}
+    entity_name_ru = entity_names.get(entity_type, 'Заявка')
+
+    if action == "approve":
+        approve_entity(entity, moderator, entity_type, moderator_comment="Одобрено через Telegram")
+        status_text = "✅ ОДОБРЕНО"
+    else:
+        reject_entity(entity, moderator, entity_type, moderator_comment="Отклонено через Telegram")
+        status_text = "❌ ОТКЛОНЕНО"
+
+    mod_name = f"{moderator.first_name or ''} {moderator.last_name or ''}".strip() or moderator.email
+    safe_mod_name = escape(mod_name)
+    now_str = timezone.now().strftime("%d.%m.%Y %H:%M")
+
+    updated_text = escape(original_text) + f"\n\n<b>{status_text}</b>\n👤 Модератор: {safe_mod_name}\n⏰ {now_str}"
+
+    # Убираем кнопки действий, оставляем только ссылки
+    entity_url_paths = {'startup': 'startups', 'franchise': 'franchises', 'agency': 'agencies', 'specialist': 'specialists'}
+    url_path = entity_url_paths.get(entity_type, 'startups')
+    view_url = f"https://greatideas.ru/{url_path}/{entity_id}/"
+
+    new_keyboard = {
+        "inline_keyboard": [[
+            {"text": f"{'✅' if action == 'approve' else '❌'} {status_text}", "callback_data": "noop"},
+            {"text": "👁 Посмотреть", "url": view_url},
+        ]]
+    }
+
+    _tg_edit_message(bot_token, chat_id, message_id, updated_text, new_keyboard)
+    logger.info(f"Entity {entity_type} ID={entity_id} {action}d via Telegram by {moderator.email}")
+
+
+def _tg_edit_message(bot_token, chat_id, message_id, text, reply_markup=None):
+    """Редактирует сообщение в Telegram."""
+    payload = {
+        "chat_id": chat_id,
+        "message_id": message_id,
+        "text": text,
+        "parse_mode": "HTML",
+    }
+    if reply_markup:
+        payload["reply_markup"] = reply_markup
+    try:
+        requests.post(f"https://api.telegram.org/bot{bot_token}/editMessageText", json=payload, timeout=10)
+    except Exception as e:
+        logger.error(f"Failed to edit Telegram message: {e}")
+
+
 @csrf_exempt
 @require_POST
 def telegram_webhook(request, token):
@@ -8645,7 +8745,12 @@ def telegram_webhook(request, token):
         new_text = message.get("text", "")
         new_keyboard = None
         ticket = None
-        if callback_data.startswith("close_ticket_"):
+        if callback_data == "noop":
+            return HttpResponse(status=200)
+        elif callback_data.startswith("mod_approve_") or callback_data.startswith("mod_reject_"):
+            _handle_moderation_callback(bot_token, callback_data, chat_id, message_id, new_text, callback_query)
+            return HttpResponse(status=200)
+        elif callback_data.startswith("close_ticket_"):
             ticket_id = int(callback_data.split("_")[2])
             ticket = SupportTicket.objects.filter(pk=ticket_id).first()
             if ticket:
