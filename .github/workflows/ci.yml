@@ -1,3 +1,4 @@
+# CI/CD Pipeline — lint, build, deploy
 name: CI/CD Pipeline
 
 on:
