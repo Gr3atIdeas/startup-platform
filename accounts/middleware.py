@@ -1,9 +1,11 @@
 from django.http import HttpResponsePermanentRedirect
 import json
+import time
 from urllib.parse import urlencode
 import logging
 
 logger = logging.getLogger(__name__)
+perf_logger = logging.getLogger("performance")
 
 class WwwRedirectMiddleware:
     def __init__(self, get_response):
@@ -101,3 +103,67 @@ class TelegramCallbackCompatMiddleware:
         except Exception as e:
             logger.error(f"Ошибка в TelegramCallbackCompatMiddleware: {str(e)}")
         return self.get_response(request)
+
+
+class SlowRequestLoggingMiddleware:
+    """
+    Логирует запросы, которые выполняются дольше порогового значения.
+    Порог: SLOW_REQUEST_THRESHOLD_MS в settings (по умолчанию 500ms).
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+        from django.conf import settings
+        self.threshold_ms = getattr(settings, "SLOW_REQUEST_THRESHOLD_MS", 500)
+
+    def __call__(self, request):
+        start = time.monotonic()
+        response = self.get_response(request)
+        duration_ms = (time.monotonic() - start) * 1000
+
+        if duration_ms >= self.threshold_ms:
+            perf_logger.warning(
+                "SLOW REQUEST: %s %s — %.0fms (status %s, user=%s)",
+                request.method,
+                request.get_full_path(),
+                duration_ms,
+                response.status_code,
+                getattr(request.user, "user_id", "anon") if hasattr(request, "user") else "anon",
+            )
+
+        # Добавляем Server-Timing header для DevTools
+        response["Server-Timing"] = f"total;dur={duration_ms:.1f}"
+        return response
+
+
+class QueryCountLoggingMiddleware:
+    """
+    Логирует количество SQL-запросов на каждый HTTP-запрос.
+    Помогает обнаружить N+1 проблемы в production.
+    Работает только при DEBUG=True или QUERY_COUNT_LOGGING=True.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+        from django.conf import settings
+        self.enabled = getattr(settings, "QUERY_COUNT_LOGGING", False) or settings.DEBUG
+
+    def __call__(self, request):
+        if not self.enabled:
+            return self.get_response(request)
+
+        from django.db import connection
+        initial_queries = len(connection.queries)
+        response = self.get_response(request)
+        total_queries = len(connection.queries) - initial_queries
+
+        if total_queries > 20:
+            perf_logger.warning(
+                "HIGH QUERY COUNT: %s %s — %d queries (user=%s)",
+                request.method,
+                request.get_full_path(),
+                total_queries,
+                getattr(request.user, "user_id", "anon") if hasattr(request, "user") else "anon",
+            )
+
+        return response

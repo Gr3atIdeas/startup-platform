@@ -32,3 +32,9 @@ bleach==6.1.0
 beautifulsoup4==4.12.2
 celery==5.4.0
 redis==5.0.8
+gevent==24.2.1
+channels==4.1.0
+channels-redis==4.2.0
+daphne==4.1.2
+uvicorn[standard]==0.30.6
+django-silk==5.1.0

@@ -188,6 +188,45 @@
     }
   }
 
+  function updatePageFromJsonResponse(data, newUrl) {
+    var oldGrid = gridElement || findGridElement(document);
+    if (oldGrid && data.html !== undefined) {
+      oldGrid.innerHTML = data.html;
+    }
+
+    var oldPagination = paginationContainerElement || findPaginationContainer(document);
+    if (oldPagination) {
+      oldPagination.innerHTML = buildPaginationHtml(data.page_number, data.num_pages, data.has_next);
+      paginationContainerElement = oldPagination;
+      bindPaginationHandlers();
+    }
+
+    history.pushState({}, '', newUrl);
+  }
+
+  function buildPaginationHtml(currentPage, numPages, hasNext) {
+    if (numPages <= 1) return '';
+    var html = '<div class="pagination-numbers">';
+    if (currentPage > 1) {
+      html += '<a href="?page=' + (currentPage - 1) + '">Назад</a> ';
+    }
+    for (var i = 1; i <= numPages; i++) {
+      if (i === currentPage) {
+        html += '<span class="current-page">' + i + '</span>';
+      } else if (i > currentPage - 3 && i < currentPage + 3) {
+        html += '<a href="?page=' + i + '">' + i + '</a>';
+      } else if (i === currentPage - 3 || i === currentPage + 3) {
+        html += '<span class="dots">...</span>';
+      }
+    }
+    if (hasNext) {
+      html += '<a href="?page=' + (currentPage + 1) + '">Вперед</a> ';
+      html += '<a href="?page=' + numPages + '">Последняя &raquo;</a> ';
+    }
+    html += '</div>';
+    return html;
+  }
+
   function updatePageFromHtmlResponse(htmlText, newUrl) {
     var parser = new DOMParser();
     var doc = parser.parseFromString(htmlText, 'text/html');
@@ -224,9 +263,22 @@
     }
     currentFetchController = new AbortController();
 
-    return fetch(url, { signal: currentFetchController.signal, credentials: 'same-origin' })
-      .then(function (response) { return response.text(); })
-      .then(function (htmlText) { updatePageFromHtmlResponse(htmlText, url); })
+    return fetch(url, {
+      signal: currentFetchController.signal,
+      credentials: 'same-origin',
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+      .then(function (response) {
+        var contentType = response.headers.get('content-type') || '';
+        if (contentType.indexOf('application/json') !== -1) {
+          return response.json().then(function (data) {
+            updatePageFromJsonResponse(data, url);
+          });
+        }
+        return response.text().then(function (htmlText) {
+          updatePageFromHtmlResponse(htmlText, url);
+        });
+      })
       .catch(function (error) {
         if (error && error.name === 'AbortError') return;
 
@@ -471,11 +523,19 @@
 
     window.addEventListener('popstate', function () {
       var url = window.location.href;
-      fetch(url, { credentials: 'same-origin' })
-        .then(function (r) { return r.text(); })
-        .then(function (htmlText) {
-          updatePageFromHtmlResponse(htmlText, url);
-
+      fetch(url, { credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(function (response) {
+          var contentType = response.headers.get('content-type') || '';
+          if (contentType.indexOf('application/json') !== -1) {
+            return response.json().then(function (data) {
+              updatePageFromJsonResponse(data, url);
+            });
+          }
+          return response.text().then(function (htmlText) {
+            updatePageFromHtmlResponse(htmlText, url);
+          });
+        })
+        .then(function () {
           applyUrlParamsToForm(new URLSearchParams(window.location.search), filterFormElement);
         })
         .catch(function () { window.location.reload(); });

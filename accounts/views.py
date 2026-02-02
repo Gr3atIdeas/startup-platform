@@ -62,8 +62,10 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.text import slugify
+from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_http_methods
+from django.views.decorators.vary import vary_on_headers
 from django.contrib.messages import get_messages
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -124,6 +126,29 @@ from .models import (
 )
 from .utils import send_telegram_support_message, send_telegram_contact_form_message
 logger = logging.getLogger(__name__)
+
+
+def is_moderator(user):
+    """Централизованная проверка прав модератора."""
+    if not user or not user.is_authenticated:
+        return False
+    role = getattr(user, "role", None)
+    if not role:
+        return False
+    return (getattr(role, "role_name", "") or "").lower() == "moderator"
+
+
+def invalidate_catalog_cache():
+    """Сбрасываем кэш каталогов и главной страницы при изменении данных."""
+    from django.core.cache import cache as django_cache
+    django_cache.delete('home_page_anonymous_v1')
+    # cache_page использует ключи на основе URL, сбрасываем всё с нашим префиксом
+    try:
+        django_cache.delete_pattern('*views.decorators.cache*')
+    except (AttributeError, NotImplementedError):
+        # Если бэкенд не поддерживает delete_pattern, очищаем весь кэш
+        django_cache.clear()
+
 
 RATE_WINDOW_SECONDS = 60
 RATE_MAX_ATTEMPTS = 15
@@ -404,11 +429,16 @@ FIXED_CATEGORIES = [
 ]
 def home(request):
     if not request.user.is_authenticated:
+        from django.core.cache import cache as django_cache
+        cache_key = 'home_page_anonymous_v1'
+        cached_response = django_cache.get(cache_key)
+        if cached_response:
+            return cached_response
         import random
         from django.db.models import Avg, Count, Sum, F, Case, When, Value, FloatField, DecimalField
         from django.db.models.functions import Coalesce
         from django.templatetags.static import static
-        startups_query = Startups.objects.filter(status="approved").annotate(
+        startups_query = Startups.objects.filter(status="approved").select_related('owner', 'direction', 'stage').annotate(
             rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
             voters_count=Count("uservotes", distinct=True),
             total_investors=Count("investmenttransactions__investor", distinct=True),
@@ -487,14 +517,14 @@ def home(request):
                 "name": startup.title,
                 "description": startup.short_description or startup.description[:200] if startup.description else "",
                 "image": planet_image_url,
-                "rating": startup.get_average_rating(),
-                "voters_count": startup.total_voters,
-                "comment_count": startup.comments.count(),
+                "rating": round(startup.rating_avg, 2) if hasattr(startup, 'rating_avg') else startup.get_average_rating(),
+                "voters_count": startup.voters_count if hasattr(startup, 'voters_count') else startup.total_voters,
+                "comment_count": startup.comment_count if hasattr(startup, 'comment_count') else 0,
                 "direction": direction_original,
                 "funding_goal": f"{startup.funding_goal:,.0f} ₽".replace(",", " ") if startup.funding_goal else "Не указано",
                 "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не указано",
-                "investors": startup.get_investors_count(),
-                "progress": startup.get_progress_percentage(),
+                "investors": startup.total_investors if hasattr(startup, 'total_investors') else startup.get_investors_count(),
+                "progress": round(startup.progress, 2) if hasattr(startup, 'progress') and startup.progress is not None else startup.get_progress_percentage(),
                 "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
             })
 
@@ -505,7 +535,7 @@ def home(request):
             startuper_users = Users.objects.filter(
                 role__role_name__iexact='startuper',
                 rating__isnull=False
-            ).exclude(rating=0).order_by('?')[:3]
+            ).select_related('role').exclude(rating=0).order_by('?')[:3]
 
             for user in startuper_users:
 
@@ -607,11 +637,11 @@ def home(request):
 
             featured_startups = Startups.objects.filter(
                 status="approved"
-            ).order_by('?')[:3]
+            ).select_related('owner', 'direction').order_by('?')[:3]
 
 
             if len(featured_startups) == 0:
-                featured_startups = Startups.objects.all().order_by('?')[:3]
+                featured_startups = Startups.objects.all().select_related('owner', 'direction').order_by('?')[:3]
 
             for startup in featured_startups:
 
@@ -767,8 +797,9 @@ def home(request):
             "random_startups": random_startups,
         }
 
-        return render(request, "accounts/main.html", context)
-        return render(request, "accounts/main.html", context)
+        response = render(request, "accounts/main.html", context)
+        django_cache.set(cache_key, response, 60 * 5)  # Кэш 5 минут
+        return response
     if hasattr(request.user, "role") and request.user.role:
         role_name = request.user.role.role_name.lower()
         if role_name == "investor":
@@ -1009,6 +1040,8 @@ def user_logout(request):
     messages.success(request, "Вы успешно вышли из системы.")
     return redirect("home")
 
+@vary_on_headers('X-Requested-With')
+@cache_page(60 * 3)  # Кэш 3 минуты
 def startups_list(request):
     # Формируем список направлений для сайдбара каталога: объединяем три категории здоровья в одну визуальную «Health»
     health_group = ['Health', 'Healthcare', 'Medicine']
@@ -1025,7 +1058,7 @@ def startups_list(request):
         display_names.append('Health')
     startup_directions = Directions.objects.filter(direction_name__in=display_names).order_by('direction_name')
 
-    startups_qs = Startups.objects.filter(status="approved")
+    startups_qs = Startups.objects.filter(status="approved").select_related("owner", "direction", "stage")
     selected_categories = request.GET.getlist("category")
     micro_investment_str = request.GET.get("micro_investment", "0")
     min_goal_str = request.GET.get("min_goal", "0")
@@ -1167,6 +1200,8 @@ def startups_list(request):
         }
         return render(request, "accounts/startups_list.html", context)
 
+@vary_on_headers('X-Requested-With')
+@cache_page(60 * 3)  # Кэш 3 минуты
 def franchises_list(request):
 
     existing_dir_ids = (
@@ -1176,7 +1211,7 @@ def franchises_list(request):
     )
     franchise_directions = Directions.objects.filter(direction_id__in=existing_dir_ids).order_by("direction_name")
 
-    franchises_qs = Franchises.objects.filter(status="approved")
+    franchises_qs = Franchises.objects.filter(status="approved").select_related("owner", "direction", "stage")
     selected_categories = request.GET.getlist("category")
     min_payback_str = request.GET.get("min_payback", "0")
     max_payback_str = request.GET.get("max_payback", "60")
@@ -1315,9 +1350,11 @@ def franchises_list(request):
             "franchise_directions": franchise_directions,
         }
         return render(request, "accounts/franchises_list.html", context)
+@vary_on_headers('X-Requested-With')
+@cache_page(60 * 3)  # Кэш 3 минуты
 def agencies_list(request):
     # Используем distinct() для предотвращения дубликатов (проблема с PRIMARY KEY в таблице agencies)
-    agencies_qs = Agencies.objects.filter(status="approved").distinct()
+    agencies_qs = Agencies.objects.filter(status="approved").select_related("owner", "direction").distinct()
     agency_categories = [
         "Веб-разработка",
         "Мобильная разработка",
@@ -1420,8 +1457,10 @@ def agencies_list(request):
         }
         return render(request, "accounts/agencies_list.html", context)
 
+@vary_on_headers('X-Requested-With')
+@cache_page(60 * 3)  # Кэш 3 минуты
 def specialists_list(request):
-    specialists_qs = Specialists.objects.filter(status="approved")
+    specialists_qs = Specialists.objects.filter(status="approved").select_related("owner", "direction")
     specialist_categories = [
         "Веб-разработка",
         "Мобильная разработка",
@@ -1530,7 +1569,7 @@ def agency_detail(request, agency_id):
 
     if request.method == "POST":
         if "status" in request.POST:
-            if not request.user.is_authenticated or not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
+            if not is_moderator(request.user):
                 messages.error(request, "У вас нет прав для этого действия.")
                 return redirect("agency_detail", agency_id=agency.agency_id)
             new_status = (request.POST.get("status", "") or "").strip().lower()
@@ -1557,17 +1596,23 @@ def agency_detail(request, agency_id):
             user_vote = AgencyVotes.objects.filter(user=request.user, agency=agency).first()
             if 1 <= new_rating <= 5:
                 comment.user_rating = new_rating
-                if user_vote:
-                    if user_vote.rating != new_rating:
-                        agency.sum_votes = (agency.sum_votes or 0) + (new_rating - int(user_vote.rating or 0))
-                        user_vote.rating = new_rating
-                        user_vote.save(update_fields=["rating"])
-                        agency.save(update_fields=["sum_votes"])
-                else:
-                    AgencyVotes.objects.create(user=request.user, agency=agency, rating=new_rating)
-                    agency.total_voters = (agency.total_voters or 0) + 1
-                    agency.sum_votes = (agency.sum_votes or 0) + new_rating
-                    agency.save(update_fields=["total_voters", "sum_votes"])
+                with transaction.atomic():
+                    if user_vote:
+                        if user_vote.rating != new_rating:
+                            old_rating = int(user_vote.rating or 0)
+                            user_vote.rating = new_rating
+                            user_vote.save(update_fields=["rating"])
+                            Agencies.objects.filter(agency_id=agency.agency_id).update(
+                                sum_votes=models.F("sum_votes") + (new_rating - old_rating)
+                            )
+                            agency.refresh_from_db(fields=["sum_votes"])
+                    else:
+                        AgencyVotes.objects.create(user=request.user, agency=agency, rating=new_rating)
+                        Agencies.objects.filter(agency_id=agency.agency_id).update(
+                            total_voters=models.F("total_voters") + 1,
+                            sum_votes=models.F("sum_votes") + new_rating,
+                        )
+                        agency.refresh_from_db(fields=["total_voters", "sum_votes"])
             else:
                 if user_vote:
                     comment.user_rating = user_vote.rating
@@ -1675,7 +1720,7 @@ def specialist_detail(request, specialist_id):
 
     if request.method == "POST":
         if "status" in request.POST:
-            if not request.user.is_authenticated or not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
+            if not is_moderator(request.user):
                 messages.error(request, "У вас нет прав для этого действия.")
                 return redirect("specialist_detail", specialist_id=specialist.specialist_id)
             new_status = (request.POST.get("status", "") or "").strip().lower()
@@ -1702,17 +1747,23 @@ def specialist_detail(request, specialist_id):
             user_vote = SpecialistVotes.objects.filter(user=request.user, specialist=specialist).first()
             if 1 <= new_rating <= 5:
                 comment.user_rating = new_rating
-                if user_vote:
-                    if user_vote.rating != new_rating:
-                        specialist.sum_votes = (specialist.sum_votes or 0) + (new_rating - int(user_vote.rating or 0))
-                        user_vote.rating = new_rating
-                        user_vote.save(update_fields=["rating"])
-                        specialist.save(update_fields=["sum_votes"])
-                else:
-                    SpecialistVotes.objects.create(user=request.user, specialist=specialist, rating=new_rating)
-                    specialist.total_voters = (specialist.total_voters or 0) + 1
-                    specialist.sum_votes = (specialist.sum_votes or 0) + new_rating
-                    specialist.save(update_fields=["total_voters", "sum_votes"])
+                with transaction.atomic():
+                    if user_vote:
+                        if user_vote.rating != new_rating:
+                            old_rating = int(user_vote.rating or 0)
+                            user_vote.rating = new_rating
+                            user_vote.save(update_fields=["rating"])
+                            Specialists.objects.filter(specialist_id=specialist.specialist_id).update(
+                                sum_votes=models.F("sum_votes") + (new_rating - old_rating)
+                            )
+                            specialist.refresh_from_db(fields=["sum_votes"])
+                    else:
+                        SpecialistVotes.objects.create(user=request.user, specialist=specialist, rating=new_rating)
+                        Specialists.objects.filter(specialist_id=specialist.specialist_id).update(
+                            total_voters=models.F("total_voters") + 1,
+                            sum_votes=models.F("sum_votes") + new_rating,
+                        )
+                        specialist.refresh_from_db(fields=["total_voters", "sum_votes"])
             else:
                 if user_vote:
                     comment.user_rating = user_vote.rating
@@ -1817,7 +1868,7 @@ def franchise_detail(request, franchise_id):
 
     if request.method == "POST":
         if "status" in request.POST:
-            if not request.user.is_authenticated or not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
+            if not is_moderator(request.user):
                 messages.error(request, "У вас нет прав для этого действия.")
                 return redirect("franchise_detail", franchise_id=franchise.franchise_id)
             new_status = (request.POST.get("status", "") or "").strip().lower()
@@ -1855,17 +1906,23 @@ def franchise_detail(request, franchise_id):
             user_vote = FranchiseVotes.objects.filter(user=request.user, franchise=franchise).first()
             if 1 <= new_rating <= 5:
                 comment.user_rating = new_rating
-                if user_vote:
-                    if user_vote.rating != new_rating:
-                        franchise.sum_votes = (franchise.sum_votes or 0) + (new_rating - int(user_vote.rating or 0))
-                        user_vote.rating = new_rating
-                        user_vote.save(update_fields=["rating"])
-                        franchise.save(update_fields=["sum_votes"])
-                else:
-                    FranchiseVotes.objects.create(user=request.user, franchise=franchise, rating=new_rating)
-                    franchise.total_voters = (franchise.total_voters or 0) + 1
-                    franchise.sum_votes = (franchise.sum_votes or 0) + new_rating
-                    franchise.save(update_fields=["total_voters", "sum_votes"])
+                with transaction.atomic():
+                    if user_vote:
+                        if user_vote.rating != new_rating:
+                            old_rating = int(user_vote.rating or 0)
+                            user_vote.rating = new_rating
+                            user_vote.save(update_fields=["rating"])
+                            Franchises.objects.filter(franchise_id=franchise.franchise_id).update(
+                                sum_votes=models.F("sum_votes") + (new_rating - old_rating)
+                            )
+                            franchise.refresh_from_db(fields=["sum_votes"])
+                    else:
+                        FranchiseVotes.objects.create(user=request.user, franchise=franchise, rating=new_rating)
+                        Franchises.objects.filter(franchise_id=franchise.franchise_id).update(
+                            total_voters=models.F("total_voters") + 1,
+                            sum_votes=models.F("sum_votes") + new_rating,
+                        )
+                        franchise.refresh_from_db(fields=["total_voters", "sum_votes"])
             else:
                 if user_vote:
                     comment.user_rating = user_vote.rating
@@ -2175,7 +2232,7 @@ def startup_detail(request, startup_id):
         return get_object_or_404(Startups, startup_id=startup_id)
     if request.method == "POST":
         if "status" in request.POST:
-            if not request.user.is_authenticated or not hasattr(request.user, "role") or (request.user.role.role_name or "") != "moderator":
+            if not is_moderator(request.user):
                 messages.error(request, "У вас нет прав для этого действия.")
                 return redirect("startup_detail", startup_id=startup.startup_id)
             new_status = (request.POST.get("status", "") or "").strip().lower()
@@ -2210,25 +2267,30 @@ def startup_detail(request, startup_id):
                 new_rating = int(form.cleaned_data.get("user_rating") or 0)
             except (TypeError, ValueError):
                 new_rating = 0
-            user_vote = UserVotes.objects.filter(user=request.user, startup=startup).first()
-            if 1 <= new_rating <= 5:
-                comment.user_rating = new_rating
-                if user_vote:
-                    if user_vote.rating != new_rating:
-                        startup.sum_votes = (startup.sum_votes or 0) + (new_rating - int(user_vote.rating or 0))
-                        user_vote.rating = new_rating
-                        user_vote.save(update_fields=["rating"])
-                        startup.save(update_fields=["sum_votes"])
+            from django.db import transaction
+            with transaction.atomic():
+                user_vote = UserVotes.objects.filter(user=request.user, startup=startup).first()
+                if 1 <= new_rating <= 5:
+                    comment.user_rating = new_rating
+                    if user_vote:
+                        if user_vote.rating != new_rating:
+                            old_rating = int(user_vote.rating or 0)
+                            user_vote.rating = new_rating
+                            user_vote.save(update_fields=["rating"])
+                            Startups.objects.filter(startup_id=startup.startup_id).update(
+                                sum_votes=models.F("sum_votes") + (new_rating - old_rating)
+                            )
+                    else:
+                        UserVotes.objects.create(user=request.user, startup=startup, rating=new_rating)
+                        Startups.objects.filter(startup_id=startup.startup_id).update(
+                            total_voters=models.F("total_voters") + 1,
+                            sum_votes=models.F("sum_votes") + new_rating,
+                        )
                 else:
-                    UserVotes.objects.create(user=request.user, startup=startup, rating=new_rating)
-                    startup.total_voters = (startup.total_voters or 0) + 1
-                    startup.sum_votes = (startup.sum_votes or 0) + new_rating
-                    startup.save(update_fields=["total_voters", "sum_votes"])
-            else:
-                if user_vote:
-                    comment.user_rating = user_vote.rating
+                    if user_vote:
+                        comment.user_rating = user_vote.rating
 
-            comment.save()
+                comment.save()
             messages.success(request, "Ваш комментарий был добавлен.")
             return redirect("startup_detail", startup_id=startup.startup_id)
         else:
@@ -2237,6 +2299,7 @@ def startup_detail(request, startup_id):
         form = CommentForm()
     comments_with_rating = (
         Comments.objects.filter(startup_id=startup, parent_comment_id__isnull=True)
+        .select_related("user_id")
         .annotate(
             user_vote_rating=models.Subquery(
                 UserVotes.objects.filter(
@@ -2246,16 +2309,10 @@ def startup_detail(request, startup_id):
         )
         .order_by("-created_at")
     )
-    average_rating = (
-        startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
-    )
-    comments = Comments.objects.filter(
-        startup_id=startup, parent_comment_id__isnull=True
-    ).order_by("-created_at")
     form = CommentForm()
     average_rating = startup.get_average_rating()
     total_votes = startup.total_voters
-    total_comments_count = Comments.objects.filter(startup_id=startup, parent_comment_id__isnull=True).count()
+    total_comments_count = comments_with_rating.count()
     user_has_voted = False
     if request.user.is_authenticated:
         user_has_voted = UserVotes.objects.filter(
@@ -2274,6 +2331,7 @@ def startup_detail(request, startup_id):
         rating_distribution.setdefault(i, 0)
     similar_startups = (
         Startups.objects.filter(status="approved")
+        .select_related("owner", "direction")
         .exclude(startup_id=startup.startup_id)
         .order_by("?")[:4]
     )
@@ -3118,7 +3176,7 @@ def start_deal(request, chat_id):
     )
 @login_required
 def deals_view(request):
-    if not hasattr(request.user, "role") or (request.user.role.role_name or "").lower() != "moderator":
+    if not is_moderator(request.user):
         messages.error(request, "Доступ к этой странице разрешен только модераторам.")
         logger.warning(
             f"Access denied for user {request.user.user_id} - not a moderator"
@@ -3259,7 +3317,7 @@ def send_message(request):
         return JsonResponse(
             {"success": False, "error": "У вас нет доступа к этому чату"}
         )
-    if not getattr(request.user, "role", None) or (request.user.role.role_name or "").lower() != "moderator":
+    if not is_moderator(request.user):
         return JsonResponse(
             {
                 "success": False,
@@ -5643,7 +5701,7 @@ def main_page_moderator(request):
     """
     Отображает главную страницу для модератора.
     """
-    if not getattr(request.user, "role", None) or (request.user.role.role_name or "").lower() != "moderator":
+    if not is_moderator(request.user):
         return redirect("home")
     
     # Получаем реальные данные для карусели
@@ -6226,10 +6284,10 @@ def startuper_main(request):
 
 
 def moderator_dashboard(request):
-    pending_startups_list = Startups.objects.filter(status="pending")
-    pending_franchises_list = Franchises.objects.filter(status="pending")
-    pending_agencies_list = Agencies.objects.filter(status="pending").distinct()
-    pending_specialists_list = Specialists.objects.filter(status="pending")
+    pending_startups_list = Startups.objects.filter(status="pending").select_related("owner", "direction", "stage")
+    pending_franchises_list = Franchises.objects.filter(status="pending").select_related("owner", "direction", "stage")
+    pending_agencies_list = Agencies.objects.filter(status="pending").select_related("owner", "direction").distinct()
+    pending_specialists_list = Specialists.objects.filter(status="pending").select_related("owner", "direction")
     
     # Логирование для отладки дублирования
     logger.info(f"=== MODERATOR_DASHBOARD === pending_agencies count: {pending_agencies_list.count()}")
@@ -6376,35 +6434,25 @@ def moderator_dashboard(request):
     }
     return render(request, "accounts/moderator_dashboard.html", context)
 def approve_startup(request, startup_id):
-    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+    if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
     startup = get_object_or_404(Startups, startup_id=startup_id)
     if request.method == "POST":
+        from accounts.moderation import approve_entity
         moderator_comment = request.POST.get("moderator_comment", "")
-        startup.moderator_comment = moderator_comment
-        startup.status = "approved"
-        try:
-            startup.status_id = ReviewStatuses.objects.get(status_name="Approved")
-        except ReviewStatuses.DoesNotExist:
-            raise ValueError("Статус 'Approved' не найден в базе данных.")
-        startup.save()
+        approve_entity(startup, request.user, "startup", moderator_comment)
         messages.success(request, "Стартап одобрен.")
     return redirect("moderator_dashboard")
 def reject_startup(request, startup_id):
-    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+    if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
     startup = get_object_or_404(Startups, startup_id=startup_id)
     if request.method == "POST":
+        from accounts.moderation import reject_entity
         moderator_comment = request.POST.get("moderator_comment", "")
-        startup.moderator_comment = moderator_comment
-        startup.status = "rejected"
-        try:
-            startup.status_id = ReviewStatuses.objects.get(status_name="Rejected")
-        except ReviewStatuses.DoesNotExist:
-            raise ValueError("Статус 'Rejected' не найден в базе данных.")
-        startup.save()
+        reject_entity(startup, request.user, "startup", moderator_comment)
         messages.success(request, "Стартап отклонен.")
     return redirect("moderator_dashboard")
 @login_required
@@ -6412,21 +6460,36 @@ def vote_startup(request, startup_id):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
     startup = get_object_or_404(Startups, startup_id=startup_id)
-    rating = int(request.POST.get("rating", 0))
+    try:
+        rating = int(request.POST.get("rating", 0))
+    except (TypeError, ValueError):
+        return JsonResponse({"success": False, "error": "Некорректное значение рейтинга"})
     if not 1 <= rating <= 5:
         return JsonResponse(
             {"success": False, "error": "Недопустимое значение рейтинга"}
         )
-    if UserVotes.objects.filter(user=request.user, startup=startup).exists():
-        return JsonResponse(
-            {"success": False, "error": "Вы уже голосовали за этот стартап"}
-        )
-    UserVotes.objects.create(
-        user=request.user, startup=startup, rating=rating, created_at=timezone.now()
-    )
-    startup.total_voters += 1
-    startup.sum_votes += rating
-    startup.save()
+    from django.db import transaction
+    try:
+        with transaction.atomic():
+            # Атомарная проверка и создание голоса (предотвращает race condition)
+            vote, created = UserVotes.objects.get_or_create(
+                user=request.user,
+                startup=startup,
+                defaults={"rating": rating, "created_at": timezone.now()},
+            )
+            if not created:
+                return JsonResponse(
+                    {"success": False, "error": "Вы уже голосовали за этот стартап"}
+                )
+            # Атомарное обновление счётчиков через F() (предотвращает потерю данных)
+            Startups.objects.filter(startup_id=startup_id).update(
+                total_voters=models.F("total_voters") + 1,
+                sum_votes=models.F("sum_votes") + rating,
+            )
+    except Exception:
+        return JsonResponse({"success": False, "error": "Ошибка при сохранении голоса"})
+    # Перечитываем актуальные значения
+    startup.refresh_from_db(fields=["total_voters", "sum_votes"])
     average_rating = (
         startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
     )
@@ -6805,7 +6868,13 @@ def news(request):
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
     if is_ajax:
         html = render_to_string("accounts/partials/_news_cards.html", context, request=request)
-        return JsonResponse({"html": html})
+        return JsonResponse({
+            "html": html,
+            "has_next": page_obj.has_next(),
+            "page_number": page_obj.number,
+            "num_pages": paginator.num_pages,
+            "count": paginator.count,
+        })
 
     return render(request, "accounts/news.html", context)
 def news_detail(request, article_id):
@@ -7388,21 +7457,37 @@ def send_message(request):
     message.save()
     chat.updated_at = timezone.now()
     chat.save()
-    return JsonResponse(
-        {
-            "success": True,
-            "message": {
-                "message_id": message.message_id,
-                "sender_id": request.user.user_id,
-                "sender_name": f"{request.user.first_name} {request.user.last_name}",
-                "message_text": message.message_text,
-                "created_at": message.created_at.strftime("%d.%m.%Y %H:%M"),
-                "created_at_iso": message.created_at.isoformat(),
-                "is_read": message.is_read(),
-                "is_own": True,
-            },
-        }
-    )
+
+    msg_data = {
+        "message_id": message.message_id,
+        "sender_id": request.user.user_id,
+        "sender_name": f"{request.user.first_name} {request.user.last_name}",
+        "message_text": message.message_text,
+        "created_at": message.created_at.strftime("%d.%m.%Y %H:%M"),
+        "created_at_iso": message.created_at.isoformat(),
+        "is_read": message.is_read(),
+        "is_own": True,
+    }
+
+    # Уведомляем WebSocket-клиентов о новом сообщении
+    try:
+        from channels.layers import get_channel_layer
+        from asgiref.sync import async_to_sync
+
+        channel_layer = get_channel_layer()
+        if channel_layer:
+            async_to_sync(channel_layer.group_send)(
+                f"chat_{chat_id}",
+                {
+                    "type": "chat_new_message",
+                    "message": msg_data,
+                    "sender_id": request.user.user_id,
+                },
+            )
+    except Exception:
+        pass  # WebSocket недоступен — не блокируем HTTP-ответ
+
+    return JsonResponse({"success": True, "message": msg_data})
 
 
 @login_required
@@ -8063,7 +8148,7 @@ def change_owner(request, startup_id):
         logger.warning(f"Invalid method {request.method} for change_owner")
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
 
-    if not getattr(request.user, "role", None) or (request.user.role.role_name or "").lower() != "moderator":
+    if not is_moderator(request.user):
         logger.warning(f"User {request.user.user_id} does not have moderator role")
         return JsonResponse(
             {"success": False, "error": "У вас нет прав для этого действия"}
@@ -8218,7 +8303,7 @@ def add_investor(request, startup_id):
 def edit_investment(request, startup_id, user_id):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
-    if not getattr(request.user, "role", None) or (request.user.role.role_name or "").lower() != "moderator":
+    if not is_moderator(request.user):
         return JsonResponse(
             {"success": False, "error": "У вас нет прав для этого действия"}
         )
@@ -8322,16 +8407,11 @@ def delete_investment(request, startup_id, user_id):
 
 @login_required
 def support_orders_view(request):
-    if (
-        request.user.is_authenticated
-        and request.user.role
-        and request.user.role.role_name == "moderator"
-    ):
+    user_is_mod = is_moderator(request.user)
+    if user_is_mod:
         orders = SupportTicket.objects.all().order_by("-created_at")
-        is_moderator = True
     else:
         orders = SupportTicket.objects.filter(user=request.user).order_by("-created_at")
-        is_moderator = False
 
 
     page_number = request.GET.get('page', 1)
@@ -8342,7 +8422,7 @@ def support_orders_view(request):
         "orders": page_obj,
         "page_obj": page_obj,
         "paginator": paginator,
-        "is_moderator": is_moderator
+        "is_moderator": user_is_mod
     }
     return render(request, "accounts/support_orders.html", context)
 
@@ -8351,19 +8431,17 @@ def support_orders_view(request):
 def support_ticket_detail(request, ticket_id):
     ticket = get_object_or_404(SupportTicket, pk=ticket_id)
     user = request.user
-    is_moderator = (
-        user.is_authenticated and user.role and user.role.role_name == "moderator"
-    )
-    if not (user == ticket.user or is_moderator):
+    user_is_mod = is_moderator(user)
+    if not (user == ticket.user or user_is_mod):
         return HttpResponseForbidden("У вас нет доступа к этой заявке.")
 
-    if is_moderator:
+    if user_is_mod:
         all_tickets = SupportTicket.objects.all().order_by("-created_at")
     else:
         all_tickets = SupportTicket.objects.filter(user=user).order_by("-created_at")
 
     form = None
-    if is_moderator:
+    if user_is_mod:
         if request.method == "POST":
             form = ModeratorTicketForm(request.POST, instance=ticket)
             if form.is_valid():
@@ -8377,7 +8455,7 @@ def support_ticket_detail(request, ticket_id):
     context = {
         "ticket": ticket,
         "form": form,
-        "is_moderator": is_moderator,
+        "is_moderator": user_is_mod,
         "all_tickets": all_tickets,
     }
     return render(request, "accounts/support_ticket_detail.html", context)
@@ -8390,12 +8468,9 @@ def close_support_ticket(request, ticket_id):
 
     ticket = get_object_or_404(SupportTicket, pk=ticket_id)
     user = request.user
+    user_is_mod = is_moderator(user)
 
-    is_moderator = (
-        user.is_authenticated and user.role and user.role.role_name == "moderator"
-    )
-
-    if not (user == ticket.user or is_moderator):
+    if not (user == ticket.user or user_is_mod):
         return JsonResponse({"success": False, "error": "У вас нет доступа к этой заявке"}, status=403)
 
     try:
@@ -8413,12 +8488,9 @@ def update_ticket_status(request, ticket_id):
 
     ticket = get_object_or_404(SupportTicket, pk=ticket_id)
     user = request.user
+    user_is_mod = is_moderator(user)
 
-    is_moderator = (
-        user.is_authenticated and user.role and user.role.role_name == "moderator"
-    )
-
-    if not is_moderator:
+    if not user_is_mod:
         return JsonResponse({"success": False, "error": "У вас нет прав для изменения статуса"}, status=403)
 
     try:
@@ -8782,43 +8854,33 @@ def download_startups_report(request):
         return HttpResponse("Ошибка при генерации отчета", status=500)
 
 def approve_franchise(request, franchise_id):
-    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+    if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
     franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
     if request.method == "POST":
+        from accounts.moderation import approve_entity
         moderator_comment = request.POST.get("moderator_comment", "")
-        franchise.moderator_comment = moderator_comment
-        franchise.status = "approved"
-        try:
-            franchise.status_id = ReviewStatuses.objects.get(status_name="Approved")
-        except ReviewStatuses.DoesNotExist:
-            raise ValueError("Статус 'Approved' не найден в базе данных.")
-        franchise.save()
+        approve_entity(franchise, request.user, "franchise", moderator_comment)
         messages.success(request, "Франшиза одобрена.")
     return redirect("moderator_dashboard")
 
 
 def reject_franchise(request, franchise_id):
-    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+    if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
     franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
     if request.method == "POST":
+        from accounts.moderation import reject_entity
         moderator_comment = request.POST.get("moderator_comment", "")
-        franchise.moderator_comment = moderator_comment
-        franchise.status = "rejected"
-        try:
-            franchise.status_id = ReviewStatuses.objects.get(status_name="Rejected")
-        except ReviewStatuses.DoesNotExist:
-            raise ValueError("Статус 'Rejected' не найден в базе данных.")
-        franchise.save()
+        reject_entity(franchise, request.user, "franchise", moderator_comment)
         messages.success(request, "Франшиза отклонена.")
     return redirect("moderator_dashboard")
 
 
 def approve_agency(request, agency_id):
-    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+    if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
     agency = Agencies.objects.filter(agency_id=agency_id).first()
@@ -8826,16 +8888,15 @@ def approve_agency(request, agency_id):
         messages.error(request, "Агентство не найдено.")
         return redirect("moderator_dashboard")
     if request.method == "POST":
+        from accounts.moderation import approve_entity
         moderator_comment = request.POST.get("moderator_comment", "")
-        agency.moderator_comment = moderator_comment
-        agency.status = "approved"
-        agency.save()
+        approve_entity(agency, request.user, "agency", moderator_comment)
         messages.success(request, "Агентство одобрено.")
     return redirect("moderator_dashboard")
 
 
 def reject_agency(request, agency_id):
-    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+    if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
     agency = Agencies.objects.filter(agency_id=agency_id).first()
@@ -8843,16 +8904,15 @@ def reject_agency(request, agency_id):
         messages.error(request, "Агентство не найдено.")
         return redirect("moderator_dashboard")
     if request.method == "POST":
+        from accounts.moderation import reject_entity
         moderator_comment = request.POST.get("moderator_comment", "")
-        agency.moderator_comment = moderator_comment
-        agency.status = "rejected"
-        agency.save()
+        reject_entity(agency, request.user, "agency", moderator_comment)
         messages.success(request, "Агентство отклонено.")
     return redirect("moderator_dashboard")
 
 
 def approve_specialist(request, specialist_id):
-    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+    if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
     spec = Specialists.objects.filter(specialist_id=specialist_id).first()
@@ -8860,16 +8920,15 @@ def approve_specialist(request, specialist_id):
         messages.error(request, "Специалист не найден.")
         return redirect("moderator_dashboard")
     if request.method == "POST":
+        from accounts.moderation import approve_entity
         moderator_comment = request.POST.get("moderator_comment", "")
-        spec.moderator_comment = moderator_comment
-        spec.status = "approved"
-        spec.save()
+        approve_entity(spec, request.user, "specialist", moderator_comment)
         messages.success(request, "Специалист одобрен.")
     return redirect("moderator_dashboard")
 
 
 def reject_specialist(request, specialist_id):
-    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
+    if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
         return redirect("home")
     spec = Specialists.objects.filter(specialist_id=specialist_id).first()
@@ -8877,10 +8936,9 @@ def reject_specialist(request, specialist_id):
         messages.error(request, "Специалист не найден.")
         return redirect("moderator_dashboard")
     if request.method == "POST":
+        from accounts.moderation import reject_entity
         moderator_comment = request.POST.get("moderator_comment", "")
-        spec.moderator_comment = moderator_comment
-        spec.status = "rejected"
-        spec.save()
+        reject_entity(spec, request.user, "specialist", moderator_comment)
         messages.success(request, "Специалист отклонен.")
     return redirect("moderator_dashboard")
 
@@ -8890,21 +8948,33 @@ def vote_franchise(request, franchise_id):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
     franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
-    rating = int(request.POST.get("rating", 0))
+    try:
+        rating = int(request.POST.get("rating", 0))
+    except (TypeError, ValueError):
+        return JsonResponse({"success": False, "error": "Некорректное значение рейтинга"})
     if not 1 <= rating <= 5:
         return JsonResponse(
             {"success": False, "error": "Недопустимое значение рейтинга"}
         )
-    if FranchiseVotes.objects.filter(user=request.user, franchise=franchise).exists():
-        return JsonResponse(
-            {"success": False, "error": "Вы уже голосовали за эту франшизу"}
-        )
-    FranchiseVotes.objects.create(
-        user=request.user, franchise=franchise, rating=rating, created_at=timezone.now()
-    )
-    franchise.total_voters += 1
-    franchise.sum_votes += rating
-    franchise.save()
+    from django.db import transaction
+    try:
+        with transaction.atomic():
+            vote, created = FranchiseVotes.objects.get_or_create(
+                user=request.user,
+                franchise=franchise,
+                defaults={"rating": rating, "created_at": timezone.now()},
+            )
+            if not created:
+                return JsonResponse(
+                    {"success": False, "error": "Вы уже голосовали за эту франшизу"}
+                )
+            Franchises.objects.filter(franchise_id=franchise_id).update(
+                total_voters=models.F("total_voters") + 1,
+                sum_votes=models.F("sum_votes") + rating,
+            )
+    except Exception:
+        return JsonResponse({"success": False, "error": "Ошибка при сохранении голоса"})
+    franchise.refresh_from_db(fields=["total_voters", "sum_votes"])
     average_rating = (
         franchise.sum_votes / franchise.total_voters if franchise.total_voters > 0 else 0
     )
@@ -8918,15 +8988,29 @@ def vote_agency(request, agency_id):
     agency = Agencies.objects.filter(agency_id=agency_id).first()
     if not agency:
         return JsonResponse({"success": False, "error": "Агентство не найдено"})
-    rating = int(request.POST.get("rating", 0))
+    try:
+        rating = int(request.POST.get("rating", 0))
+    except (TypeError, ValueError):
+        return JsonResponse({"success": False, "error": "Некорректное значение рейтинга"})
     if not 1 <= rating <= 5:
         return JsonResponse({"success": False, "error": "Недопустимое значение рейтинга"})
-    if AgencyVotes.objects.filter(user=request.user, agency=agency).exists():
-        return JsonResponse({"success": False, "error": "Вы уже голосовали за это агентство"})
-    AgencyVotes.objects.create(user=request.user, agency=agency, rating=rating, created_at=timezone.now())
-    agency.total_voters += 1
-    agency.sum_votes += rating
-    agency.save()
+    from django.db import transaction
+    try:
+        with transaction.atomic():
+            vote, created = AgencyVotes.objects.get_or_create(
+                user=request.user,
+                agency=agency,
+                defaults={"rating": rating, "created_at": timezone.now()},
+            )
+            if not created:
+                return JsonResponse({"success": False, "error": "Вы уже голосовали за это агентство"})
+            Agencies.objects.filter(agency_id=agency_id).update(
+                total_voters=models.F("total_voters") + 1,
+                sum_votes=models.F("sum_votes") + rating,
+            )
+    except Exception:
+        return JsonResponse({"success": False, "error": "Ошибка при сохранении голоса"})
+    agency.refresh_from_db(fields=["total_voters", "sum_votes"])
     average_rating = agency.sum_votes / agency.total_voters if agency.total_voters > 0 else 0
     return JsonResponse({"success": True, "average_rating": average_rating})
 
@@ -8935,15 +9019,29 @@ def vote_specialist(request, specialist_id):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
     specialist = get_object_or_404(Specialists, specialist_id=specialist_id)
-    rating = int(request.POST.get("rating", 0))
+    try:
+        rating = int(request.POST.get("rating", 0))
+    except (TypeError, ValueError):
+        return JsonResponse({"success": False, "error": "Некорректное значение рейтинга"})
     if not 1 <= rating <= 5:
         return JsonResponse({"success": False, "error": "Недопустимое значение рейтинга"})
-    if SpecialistVotes.objects.filter(user=request.user, specialist=specialist).exists():
-        return JsonResponse({"success": False, "error": "Вы уже голосовали за этого специалиста"})
-    SpecialistVotes.objects.create(user=request.user, specialist=specialist, rating=rating, created_at=timezone.now())
-    specialist.total_voters += 1
-    specialist.sum_votes += rating
-    specialist.save()
+    from django.db import transaction
+    try:
+        with transaction.atomic():
+            vote, created = SpecialistVotes.objects.get_or_create(
+                user=request.user,
+                specialist=specialist,
+                defaults={"rating": rating, "created_at": timezone.now()},
+            )
+            if not created:
+                return JsonResponse({"success": False, "error": "Вы уже голосовали за этого специалиста"})
+            Specialists.objects.filter(specialist_id=specialist_id).update(
+                total_voters=models.F("total_voters") + 1,
+                sum_votes=models.F("sum_votes") + rating,
+            )
+    except Exception:
+        return JsonResponse({"success": False, "error": "Ошибка при сохранении голоса"})
+    specialist.refresh_from_db(fields=["total_voters", "sum_votes"])
     average_rating = specialist.sum_votes / specialist.total_voters if specialist.total_voters > 0 else 0
     return JsonResponse({"success": True, "average_rating": average_rating})
 
@@ -10249,14 +10347,13 @@ def upload_description_media(request, entity_type, entity_id):
         
         # Проверяем права доступа
         is_owner = entity.owner and request.user == entity.owner
-        has_role = hasattr(request.user, 'role') and request.user.role
-        is_moderator = has_role and request.user.role.role_name == 'moderator' if has_role else False
-        
+        user_is_mod = is_moderator(request.user)
+
         owner_id = getattr(entity.owner, 'user_id', 'None') if entity.owner else 'None'
-        print(f"[UPLOAD] user={request.user.user_id} ({request.user.username}), owner={owner_id}, is_owner={is_owner}, has_role={has_role}, is_moderator={is_moderator}")
-        logger.info(f"Upload access check: user={request.user.user_id}, owner={owner_id}, is_owner={is_owner}, has_role={has_role}, is_moderator={is_moderator}")
-        
-        if not (is_owner or is_moderator):
+        print(f"[UPLOAD] user={request.user.user_id} ({request.user.username}), owner={owner_id}, is_owner={is_owner}, is_moderator={user_is_mod}")
+        logger.info(f"Upload access check: user={request.user.user_id}, owner={owner_id}, is_owner={is_owner}, is_moderator={user_is_mod}")
+
+        if not (is_owner or user_is_mod):
             print(f"[UPLOAD] PERMISSION DENIED for user {request.user.user_id} on {entity_type} {entity_id}")
             logger.warning(f"Upload permission denied for user {request.user.user_id} on {entity_type} {entity_id}")
             return JsonResponse({
@@ -10437,14 +10534,13 @@ def get_description_media(request, entity_type, entity_id):
         
         # Проверяем права доступа
         is_owner = entity.owner and request.user == entity.owner
-        has_role = hasattr(request.user, 'role') and request.user.role
-        is_moderator = has_role and request.user.role.role_name == 'moderator' if has_role else False
-        
-        if not (is_owner or is_moderator):
+        user_is_mod = is_moderator(request.user)
+
+        if not (is_owner or user_is_mod):
             return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
-        
+
         entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name=entity_type)
-        
+
         creative_storages = FileStorage.objects.filter(
             entity_type=entity_type_obj,
             entity_id=entity_id,
@@ -10599,12 +10695,11 @@ def delete_description_media(request, entity_type, entity_id, file_id):
         
         # Проверяем права доступа
         is_owner = entity.owner and request.user == entity.owner
-        has_role = hasattr(request.user, 'role') and request.user.role
-        is_moderator = has_role and request.user.role.role_name == 'moderator' if has_role else False
-        
-        if not (is_owner or is_moderator):
+        user_is_mod = is_moderator(request.user)
+
+        if not (is_owner or user_is_mod):
             return JsonResponse({'success': False, 'error': 'Permission denied'}, status=403)
-        
+
         entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name=entity_type)
         file_storage = get_object_or_404(
             FileStorage,

@@ -370,6 +370,11 @@ class Startups(models.Model):
     class Meta:
         managed = True
         db_table = "startups"
+        indexes = [
+            models.Index(fields=['status', '-created_at'], name='idx_startups_status_created'),
+            models.Index(fields=['owner', 'status'], name='idx_startups_owner_status'),
+            models.Index(fields=['status', 'direction'], name='idx_startups_status_dir'),
+        ]
     def get_average_rating(self):
         # Считаем реальный средний рейтинг из голосов
         from django.db.models import Avg
@@ -732,6 +737,11 @@ class Franchises(models.Model):
     class Meta:
         managed = True
         db_table = "franchises"
+        indexes = [
+            models.Index(fields=['status', '-created_at'], name='idx_franchises_status_created'),
+            models.Index(fields=['owner', 'status'], name='idx_franchises_owner_status'),
+            models.Index(fields=['status', 'direction'], name='idx_franchises_status_dir'),
+        ]
 
     def get_average_rating(self):
         if self.total_voters > 0:
@@ -805,6 +815,9 @@ class FranchiseComments(models.Model):
     class Meta:
         managed = True
         db_table = "franchise_comments"
+        indexes = [
+            models.Index(fields=['franchise', 'parent_comment', '-created_at'], name='idx_frcomments_fran_parent'),
+        ]
 
     def __str__(self) -> str:
         return f"FranchiseComment {self.comment_id} by {self.user}"
@@ -860,12 +873,16 @@ class Agencies(models.Model):
     class Meta:
         managed = True
         db_table = "agencies"
+        indexes = [
+            models.Index(fields=['status', '-created_at'], name='idx_agencies_status_created'),
+            models.Index(fields=['owner', 'status'], name='idx_agencies_owner_status'),
+        ]
 
     def get_average_rating(self):
         if self.total_voters > 0:
             return self.sum_votes / self.total_voters
         return 0
-    
+
     def get_catalog_card_image_url(self):
         if self.catalog_card_image:
             return f"{settings.AWS_S3_PUBLIC_BASE_URL}/catalog_cards/{self.catalog_card_image}"
@@ -903,12 +920,16 @@ class Specialists(models.Model):
     class Meta:
         managed = True
         db_table = "specialists"
+        indexes = [
+            models.Index(fields=['status', '-created_at'], name='idx_specialists_status_created'),
+            models.Index(fields=['owner', 'status'], name='idx_specialists_owner_status'),
+        ]
 
     def get_average_rating(self):
         if self.total_voters > 0:
             return self.sum_votes / self.total_voters
         return 0
-    
+
     def get_catalog_card_image_url(self):
         if self.catalog_card_image:
             return f"{settings.AWS_S3_PUBLIC_BASE_URL}/catalog_cards/{self.catalog_card_image}"
@@ -961,6 +982,9 @@ class SpecialistComments(models.Model):
     class Meta:
         managed = True
         db_table = "specialist_comments"
+        indexes = [
+            models.Index(fields=['specialist', 'parent_comment', '-created_at'], name='idx_spcomments_spec_parent'),
+        ]
 
     def __str__(self) -> str:
         return f"SpecialistComment {self.comment_id} by {self.user}"
@@ -1008,6 +1032,54 @@ class AgencyComments(models.Model):
     class Meta:
         managed = True
         db_table = "agency_comments"
+        indexes = [
+            models.Index(fields=['agency', 'parent_comment', '-created_at'], name='idx_agcomments_agency_parent'),
+        ]
 
     def __str__(self) -> str:
         return f"AgencyComment {self.comment_id} by {self.user}"
+
+
+class ModerationLog(models.Model):
+    """
+    Audit trail для всех действий модераторов.
+    Фиксирует: кто, когда, какое действие, над каким объектом.
+    """
+    ACTION_CHOICES = [
+        ("approve", "Одобрено"),
+        ("reject", "Отклонено"),
+        ("delete_comment", "Комментарий удалён"),
+        ("edit", "Отредактировано"),
+        ("status_change", "Статус изменён"),
+    ]
+    ENTITY_CHOICES = [
+        ("startup", "Стартап"),
+        ("franchise", "Франшиза"),
+        ("agency", "Агентство"),
+        ("specialist", "Специалист"),
+        ("comment", "Комментарий"),
+    ]
+
+    log_id = models.AutoField(primary_key=True)
+    moderator = models.ForeignKey(
+        "Users", on_delete=models.SET_NULL, null=True, related_name="moderation_logs"
+    )
+    action = models.CharField(max_length=30, choices=ACTION_CHOICES)
+    entity_type = models.CharField(max_length=30, choices=ENTITY_CHOICES)
+    entity_id = models.IntegerField()
+    entity_title = models.CharField(max_length=255, blank=True, default="")
+    comment = models.TextField(blank=True, default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = True
+        db_table = "moderation_log"
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["-created_at"], name="idx_modlog_created"),
+            models.Index(fields=["moderator", "-created_at"], name="idx_modlog_moderator"),
+            models.Index(fields=["entity_type", "entity_id"], name="idx_modlog_entity"),
+        ]
+
+    def __str__(self):
+        return f"{self.get_action_display()} {self.get_entity_type_display()} #{self.entity_id} — {self.moderator}"

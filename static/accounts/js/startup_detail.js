@@ -272,8 +272,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (response.ok && data && data.success) {
+          // Обновляем имя владельца на странице без перезагрузки
+          const ownerNameEl = document.querySelector('.author-name-unique, .owner-name, .startup-owner-name');
+          if (ownerNameEl && data.new_owner_name) {
+            ownerNameEl.textContent = data.new_owner_name;
+          }
+          const modal = document.querySelector('.change-owner-modal, #changeOwnerModal');
+          if (modal) {
+            modal.style.display = 'none';
+            if (typeof bootstrap !== 'undefined') {
+              const bsModal = bootstrap.Modal.getInstance(modal);
+              if (bsModal) bsModal.hide();
+            }
+          }
           alert('Владелец успешно изменён!');
-          location.reload();
         } else {
           const errMsg = (data && data.error) || 'Ошибка при смене владельца.';
           alert(errMsg);
@@ -335,6 +347,9 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
 
+        addInvestmentButton.disabled = true;
+        const originalBtnText = addInvestmentButton.textContent;
+        addInvestmentButton.textContent = 'Добавление...';
 
         fetch(`/add_investor/${startupId}/`, {
             method: 'POST',
@@ -360,7 +375,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (amountInput) {
                     amountInput.value = '';
                 }
-                loadCurrentInvestors().then(() => {
+                // Параллельная загрузка: обновляем инвесторов и финансы одновременно
+                Promise.all([
+                    loadCurrentInvestors(),
+                    Promise.resolve(updateStartupFinancials(data.new_investor_count, data.new_amount_raised))
+                ]).then(() => {
                     if (selectedInvestor) {
                         const addInvestmentButton = document.getElementById('addInvestmentButton');
                         if (addInvestmentButton) {
@@ -368,13 +387,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
                 });
-                updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
             } else {
                 const errMsg = (data && data.error) || 'Ошибка при добавлении инвестора.';
                 alert(errMsg);
             }
         })
         .catch(error => {
+            addInvestmentButton.disabled = false;
+            addInvestmentButton.textContent = originalBtnText;
             alert('Сетевая ошибка при добавлении инвестора.');
         });
     });
@@ -483,7 +503,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (data && data.success) {
                         alert('Инвестиция удалена.');
                         loadCurrentInvestors();
-                        updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
+                        updateStartupFinancials(data.new_investor_count, data.new_amount_raised);
                     } else {
                         alert(data?.error || 'Ошибка при удалении.');
                     }
@@ -647,13 +667,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  var ratingSubmitting = false;
   function submitRating(rating) {
 
+    if (ratingSubmitting) return;
     if (!csrfToken) {
       alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
       return;
     }
 
+    ratingSubmitting = true;
     fetch(`/vote-startup/${startupId}/`, {
       method: 'POST',
       headers: {
@@ -698,6 +721,9 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     .catch(error => {
       alert('Произошла ошибка при отправке оценки.');
+    })
+    .finally(() => {
+      ratingSubmitting = false;
     });
   }
 
@@ -1439,9 +1465,12 @@ function deleteImage(fileId) {
         imageOrderChanged = true;
         document.getElementById('saveOrderBtn').style.display = 'inline-block';
       }
-      
-      // Обновляем карусель на странице
-      location.reload();
+      // Обновляем карусель без перезагрузки: убираем соответствующий слайд
+      const carouselSlide = document.querySelector(`.startup-detail-carousel-slide [data-file-id="${fileId}"], .carousel-item [data-file-id="${fileId}"], .swiper-slide [data-file-id="${fileId}"]`);
+      if (carouselSlide) {
+        const slideParent = carouselSlide.closest('.startup-detail-carousel-slide, .carousel-item, .swiper-slide');
+        if (slideParent) slideParent.remove();
+      }
     } else {
       alert('Ошибка при удалении изображения: ' + (data.error || 'Неизвестная ошибка'));
     }
@@ -1473,9 +1502,6 @@ function saveImageOrder() {
       imageOrderChanged = false;
       document.getElementById('saveOrderBtn').style.display = 'none';
       alert('Порядок изображений сохранен!');
-      
-      // Обновляем карусель на странице
-      location.reload();
     } else {
       alert('Ошибка при сохранении порядка: ' + (data.error || 'Неизвестная ошибка'));
     }
@@ -1539,11 +1565,8 @@ function handleFileUpload(files) {
         progressFill.style.width = '0%';
         progressText.textContent = '0%';
         
-        // Обновляем список изображений
+        // Обновляем список изображений в менеджере
         loadCurrentImages();
-        
-        // Обновляем карусель на странице
-        location.reload();
       }, 1000);
     } else {
       alert('Ошибка при загрузке файлов: ' + (data.error || 'Неизвестная ошибка'));
@@ -1760,9 +1783,23 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (investModal) {
               investModal.style.display = 'none';
             }
-            
+
+            // Обновляем счётчики на странице без перезагрузки
+            if (data.new_amount_raised !== undefined) {
+              const amountEl = document.querySelector('.info-card-value-button.accent-blue-bg, .financial-value');
+              if (amountEl) amountEl.textContent = new Intl.NumberFormat('ru-RU').format(Math.floor(data.new_amount_raised)) + ' ₽';
+            }
+            if (data.new_investor_count !== undefined) {
+              const investorEl = document.getElementById('investor-count-display');
+              if (investorEl) investorEl.textContent = '(' + data.new_investor_count + ')';
+            }
+            if (data.new_progress !== undefined) {
+              const progressBar = document.querySelector('.progress-animation-container');
+              if (progressBar) progressBar.style.width = Math.min(data.new_progress, 100) + '%';
+              const progressText = document.querySelector('.progress-percentage');
+              if (progressText) progressText.textContent = Math.floor(data.new_progress) + '%';
+            }
             alert('Инвестирование успешно выполнено!');
-            location.reload();
           }
         } else {
           if (errorDiv) {

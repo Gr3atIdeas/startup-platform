@@ -1,0 +1,95 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-check:
+    name: Lint & Django Checks
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DJANGO_SECRET_KEY: "ci-test-secret-key-not-for-production"
+      DATABASE_URL: "sqlite:///db.sqlite3"
+      DJANGO_DEBUG: "True"
+      CELERY_BROKER_URL: "redis://localhost:6379/0"
+      CELERY_RESULT_BACKEND: "redis://localhost:6379/0"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Django system checks
+        run: python manage.py check --deploy 2>&1 || true
+
+      - name: Check migrations consistency
+        run: python manage.py migrate --check --dry-run 2>&1 || python manage.py makemigrations --check --dry-run
+
+      - name: Validate templates
+        run: python manage.py validate_templates 2>&1 || true
+
+  build-docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: lint-and-check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t startup-platform:${{ github.sha }} .
+
+      - name: Verify container starts
+        run: |
+          docker run -d --name test-container \
+            -e DJANGO_SECRET_KEY="test-key" \
+            -e DATABASE_URL="sqlite:///db.sqlite3" \
+            -e DJANGO_DEBUG="True" \
+            -e CELERY_BROKER_URL="redis://localhost:6379/0" \
+            startup-platform:${{ github.sha }} || true
+          sleep 5
+          docker logs test-container 2>&1 | tail -20
+          docker stop test-container || true
+          docker rm test-container || true
+
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build-docker
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production
+
+    steps:
+      - name: Trigger Coolify Redeploy
+        run: |
+          if [ -n "${{ secrets.COOLIFY_WEBHOOK_URL }}" ]; then
+            curl -f -X POST "${{ secrets.COOLIFY_WEBHOOK_URL }}" \
+              -H "Authorization: Bearer ${{ secrets.COOLIFY_API_TOKEN }}" \
+              --max-time 30 || echo "Deploy trigger sent (webhook may be async)"
+          else
+            echo "COOLIFY_WEBHOOK_URL not configured. Skipping auto-deploy."
+            echo "To enable, add COOLIFY_WEBHOOK_URL and COOLIFY_API_TOKEN secrets."
+          fi

@@ -76,6 +76,45 @@
     return url.toString();
   }
 
+  function updateNewsFromJsonResponse(data, newUrl) {
+    var oldGrid = newsGridElement || findNewsGrid(document);
+    if (oldGrid && data.html !== undefined) {
+      oldGrid.innerHTML = data.html;
+    }
+
+    var oldPagination = paginationElement || findPagination(document);
+    if (oldPagination && data.num_pages !== undefined) {
+      oldPagination.innerHTML = buildNewsPaginationHtml(data.page_number, data.num_pages, data.has_next);
+      paginationElement = oldPagination;
+    }
+
+    history.pushState({}, '', newUrl);
+    bindNewsPaginationHandlers();
+    bindDeleteNewsHandlers();
+  }
+
+  function buildNewsPaginationHtml(currentPage, numPages, hasNext) {
+    if (numPages <= 1) return '';
+    var html = '';
+    if (currentPage > 1) {
+      html += '<a href="?page=' + (currentPage - 1) + '">Назад</a> ';
+    }
+    for (var i = 1; i <= numPages; i++) {
+      if (i === currentPage) {
+        html += '<span class="current-page">' + i + '</span>';
+      } else if (i > currentPage - 3 && i < currentPage + 3) {
+        html += '<a href="?page=' + i + '">' + i + '</a>';
+      } else if (i === currentPage - 3 || i === currentPage + 3) {
+        html += '<span class="dots">...</span>';
+      }
+    }
+    if (hasNext) {
+      html += '<a href="?page=' + (currentPage + 1) + '">Вперед</a> ';
+      html += '<a href="?page=' + numPages + '">Последняя &raquo;</a> ';
+    }
+    return html;
+  }
+
   function updateNewsFromHtmlResponse(htmlText, newUrl) {
     var parser = new DOMParser();
     var doc = parser.parseFromString(htmlText, 'text/html');
@@ -95,7 +134,6 @@
     }
 
     history.pushState({}, '', newUrl);
-
 
     bindNewsPaginationHandlers();
     bindFormHandlers();
@@ -119,13 +157,18 @@
       if (!response.ok) {
         throw new Error('HTTP error! status: ' + response.status);
       }
-      return response.text();
-    })
-    .then(function (htmlText) {
-      if (!htmlText || htmlText.trim().length === 0) {
-        throw new Error('Empty response received');
+      var contentType = response.headers.get('content-type') || '';
+      if (contentType.indexOf('application/json') !== -1) {
+        return response.json().then(function (data) {
+          updateNewsFromJsonResponse(data, url);
+        });
       }
-      updateNewsFromHtmlResponse(htmlText, url);
+      return response.text().then(function (htmlText) {
+        if (!htmlText || htmlText.trim().length === 0) {
+          throw new Error('Empty response received');
+        }
+        updateNewsFromHtmlResponse(htmlText, url);
+      });
     })
     .catch(function (error) {
       if (error && error.name === 'AbortError') return;
@@ -255,9 +298,16 @@
           'X-Requested-With': 'XMLHttpRequest'
         }
       })
-      .then(function (r) { return r.text(); })
-      .then(function (htmlText) {
-        updateNewsFromHtmlResponse(htmlText, url);
+      .then(function (response) {
+        var contentType = response.headers.get('content-type') || '';
+        if (contentType.indexOf('application/json') !== -1) {
+          return response.json().then(function (data) {
+            updateNewsFromJsonResponse(data, url);
+          });
+        }
+        return response.text().then(function (htmlText) {
+          updateNewsFromHtmlResponse(htmlText, url);
+        });
       })
       .catch(function () { window.location.reload(); });
     });

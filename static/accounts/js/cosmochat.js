@@ -9,6 +9,105 @@ let startX
 let scrollLeft
 let selectedGroupChatUserIds = []
 let currentPage = 1
+
+// ── WebSocket ──────────────────────────────────────────────────────
+let chatSocket = null
+let wsReconnectAttempts = 0
+const WS_MAX_RECONNECT = 5
+const WS_RECONNECT_BASE_DELAY = 1000
+
+function connectWebSocket() {
+    if (chatSocket && (chatSocket.readyState === WebSocket.OPEN || chatSocket.readyState === WebSocket.CONNECTING)) {
+        return
+    }
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+    const wsUrl = protocol + '//' + window.location.host + '/ws/chat/'
+
+    try {
+        chatSocket = new WebSocket(wsUrl)
+    } catch (e) {
+        console.warn('WebSocket не поддерживается, используем polling')
+        startPolling()
+        return
+    }
+
+    chatSocket.onopen = function () {
+        console.log('WebSocket connected')
+        wsReconnectAttempts = 0
+        // Если есть активный чат — подписываемся
+        if (currentChatId) {
+            chatSocket.send(JSON.stringify({ type: 'chat.join', chat_id: currentChatId }))
+        }
+        // Останавливаем polling — WebSocket работает
+        if (pollingInterval) {
+            clearInterval(pollingInterval)
+            pollingInterval = null
+        }
+    }
+
+    chatSocket.onmessage = function (event) {
+        try {
+            var data = JSON.parse(event.data)
+        } catch (e) { return }
+
+        if (data.type === 'new_message') {
+            handleWsNewMessage(data.message)
+        } else if (data.type === 'messages_read') {
+            // Можно обновить UI прочитанных сообщений
+        } else if (data.type === 'chat_list_update') {
+            refreshChatListOnce()
+        }
+    }
+
+    chatSocket.onclose = function (event) {
+        console.log('WebSocket closed:', event.code)
+        chatSocket = null
+        if (wsReconnectAttempts < WS_MAX_RECONNECT) {
+            var delay = WS_RECONNECT_BASE_DELAY * Math.pow(2, wsReconnectAttempts)
+            wsReconnectAttempts++
+            console.log('WebSocket reconnect in', delay, 'ms (attempt', wsReconnectAttempts, ')')
+            setTimeout(connectWebSocket, delay)
+        } else {
+            console.warn('WebSocket: max reconnect attempts, fallback to polling')
+            startPolling()
+        }
+    }
+
+    chatSocket.onerror = function () {
+        // onclose будет вызван автоматически
+    }
+}
+
+function handleWsNewMessage(msg) {
+    if (!msg || !msg.message_id) return
+    // Если сообщение для текущего открытого чата — показываем
+    if (currentChatId && !displayedMessageIds.has(msg.message_id)) {
+        appendMessage(msg, false)
+        lastMessageTimestamp = msg.created_at_iso
+        if (chatMessagesArea) chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight
+    }
+    // Обновляем список чатов
+    updateChatListItem(msg)
+}
+
+function refreshChatListOnce() {
+    fetch('/cosmochat/chat-list/', {
+        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(function (response) { return response.json() })
+    .then(function (data) {
+        if (data.success) {
+            var container = document.getElementById('chatListContainer')
+            if (container) updateChatList(data.chats, container)
+        }
+    })
+    .catch(function () {})
+}
+
+function isWsConnected() {
+    return chatSocket && chatSocket.readyState === WebSocket.OPEN
+}
+// ── Конец WebSocket ────────────────────────────────────────────────
 const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value
 const chatListContainer = document.getElementById('chatListContainer')
 const chatWindowColumn = document.getElementById('chatWindowColumn')
@@ -48,7 +147,8 @@ const groupChatNameInput = document.getElementById('groupChatNameInput')
 const groupChatSelectedParticipantsList = document.getElementById('groupChatSelectedParticipantsList')
 const groupChatAddMoreParticipantsBtn = document.getElementById('groupChatAddMoreParticipantsBtn')
 document.addEventListener('DOMContentLoaded', function () {
-    startPolling();
+    // Пробуем WebSocket, при неудаче — fallback на polling
+    connectWebSocket();
     if (messageFormNew && !messageFormNew.dataset.eventListener) {
         messageFormNew.dataset.eventListener = 'true';
         messageFormNew.addEventListener('submit', handleSendMessage);
@@ -421,6 +521,12 @@ function loadChat(chatId) {
             clearInterval(pollingInterval);
         }
         displayedMessageIds.clear();
+
+        // Подписываемся на комнату через WebSocket
+        if (isWsConnected()) {
+            chatSocket.send(JSON.stringify({ type: 'chat.join', chat_id: chatId }))
+            chatSocket.send(JSON.stringify({ type: 'chat.mark_read', chat_id: chatId }))
+        }
         
         // Сбрасываем состояние кнопки "Покинуть" при переключении чатов
         resetLeaveChatButton();
@@ -512,33 +618,53 @@ function handleSendMessage(e) {
     }
     const messageText = messageTextInput.value.trim()
     if (!messageText) return
-    const formData = new FormData()
-    formData.append('chat_id', currentChatId)
-    formData.append('message_text', messageText)
-    fetch('/cosmochat/send-message/', {
-        method: 'POST',
-        body: formData,
-        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success) {
-                appendMessage(data.message, true)
-                updateChatListItem(data.message)
-                lastMessageTimestamp = data.message.created_at_iso
-                if (messageFormNew) messageFormNew.reset()
-                if (messageTextInput) messageTextInput.style.height = 'auto'
-            } else {
-                alert(data.error || 'Ошибка при отправке сообщения')
-            }
+
+    // Сразу очищаем поле ввода для отзывчивого UX
+    if (messageFormNew) messageFormNew.reset()
+    if (messageTextInput) messageTextInput.style.height = 'auto'
+
+    // Отправка через WebSocket (мгновенно) или HTTP (fallback)
+    if (isWsConnected()) {
+        chatSocket.send(JSON.stringify({
+            type: 'chat.message',
+            chat_id: currentChatId,
+            message_text: messageText
+        }))
+    } else {
+        const formData = new FormData()
+        formData.append('chat_id', currentChatId)
+        formData.append('message_text', messageText)
+        fetch('/cosmochat/send-message/', {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
         })
-        .catch((error) => {
-            alert('Произошла ошибка при отправке сообщения.')
-        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    appendMessage(data.message, true)
+                    updateChatListItem(data.message)
+                    lastMessageTimestamp = data.message.created_at_iso
+                } else {
+                    alert(data.error || 'Ошибка при отправке сообщения')
+                }
+            })
+            .catch((error) => {
+                alert('Произошла ошибка при отправке сообщения.')
+            })
+    }
 }
 function startPolling() {
+    // Не запускаем polling, если WebSocket работает
+    if (isWsConnected()) return;
     if (pollingInterval) clearInterval(pollingInterval);
     pollingInterval = setInterval(() => {
+        // Если WebSocket подключился — останавливаем polling
+        if (isWsConnected()) {
+            clearInterval(pollingInterval);
+            pollingInterval = null;
+            return;
+        }
         fetch('/cosmochat/chat-list/', {
             headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
         })

@@ -54,6 +54,8 @@ ALLOWED_HOSTS = [
 ]
 
 INSTALLED_APPS = [
+    "daphne",
+    "channels",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -99,6 +101,7 @@ ACCOUNT_LOGIN_METHODS = ['username', 'email']
 ACCOUNT_SIGNUP_FIELDS = ['email', 'password1*', 'password2*']
 ACCOUNT_USERNAME_REQUIRED = False
 MIDDLEWARE = [
+    "accounts.middleware.SlowRequestLoggingMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "accounts.middleware.SecurityMiddleware",
     "accounts.middleware.TelegramCallbackCompatMiddleware",
@@ -111,7 +114,13 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "accounts.middleware.QueryCountLoggingMiddleware",
 ]
+
+# Порог для логирования медленных запросов (мс)
+SLOW_REQUEST_THRESHOLD_MS = int(os.getenv("SLOW_REQUEST_THRESHOLD_MS", "500"))
+# Логировать количество SQL-запросов (для обнаружения N+1)
+QUERY_COUNT_LOGGING = os.getenv("QUERY_COUNT_LOGGING", "False") == "True"
 ROOT_URLCONF = "marketplace.urls"
 TEMPLATES = [
     {
@@ -130,6 +139,18 @@ TEMPLATES = [
     },
 ]
 WSGI_APPLICATION = "marketplace.wsgi.application"
+ASGI_APPLICATION = "marketplace.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")],
+            "capacity": 1500,
+            "expiry": 10,
+        },
+    },
+}
 DATABASES = {
     "default": dj_database_url.config(
         conn_max_age=600,
@@ -184,15 +205,33 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[{asctime}] {levelname} {name}: {message}",
+            "style": "{",
+        },
+        "performance": {
+            "format": "[{asctime}] PERF {message}",
+            "style": "{",
+        },
+    },
     "handlers": {
         "console": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
+            "formatter": "verbose",
         },
         "file": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
             "filename": "debug.log",
+            "formatter": "verbose",
+        },
+        "performance_file": {
+            "level": "WARNING",
+            "class": "logging.FileHandler",
+            "filename": "performance.log",
+            "formatter": "performance",
         },
     },
     "loggers": {
@@ -204,6 +243,16 @@ LOGGING = {
         "accounts": {
             "handlers": ["console", "file"],
             "level": "DEBUG",
+            "propagate": False,
+        },
+        "performance": {
+            "handlers": ["console", "performance_file"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        "django.db.backends": {
+            "handlers": ["performance_file"],
+            "level": os.getenv("SQL_LOG_LEVEL", "WARNING"),
             "propagate": False,
         },
         "allauth.socialaccount": {
@@ -285,6 +334,22 @@ CACHES = {
         "TIMEOUT": 86400,
     }
 }
+
+# ── django-silk (профилирование, только staging) ────────────────────
+if os.getenv("ENABLE_SILK", "False") == "True":
+    INSTALLED_APPS.append("silk")
+    MIDDLEWARE.insert(
+        MIDDLEWARE.index("django.middleware.csrf.CsrfViewMiddleware"),
+        "silk.middleware.SilkyMiddleware",
+    )
+    SILKY_PYTHON_PROFILER = True
+    SILKY_PYTHON_PROFILER_BINARY = True
+    SILKY_MAX_RECORDED_REQUESTS = 500
+    SILKY_MAX_RECORDED_REQUESTS_CHECK_PERCENT = 10
+    SILKY_META = True
+    # Silk доступен только для модераторов
+    SILKY_AUTHENTICATION = True
+    SILKY_AUTHORISATION = True
 
 logger.info("=== Проверка настроек Django ===")
 logger.info(f"STORAGES: {STORAGES}")

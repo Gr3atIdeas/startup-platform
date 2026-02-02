@@ -194,8 +194,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (response.ok && data && data.success) {
+          const ownerNameEl = document.querySelector('.author-name-unique, .owner-name, .agency-owner-name');
+          if (ownerNameEl && data.new_owner_name) {
+            ownerNameEl.textContent = data.new_owner_name;
+          }
+          const modal = document.querySelector('.change-owner-modal, #changeOwnerModal');
+          if (modal) {
+            modal.style.display = 'none';
+            if (typeof bootstrap !== 'undefined') {
+              const bsModal = bootstrap.Modal.getInstance(modal);
+              if (bsModal) bsModal.hide();
+            }
+          }
           alert('Владелец успешно изменён!');
-          location.reload();
         } else {
           const errMsg = (data && data.error) || 'Ошибка при смене владельца.';
           alert(errMsg);
@@ -304,13 +315,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  var ratingSubmitting = false;
   function submitRating(rating) {
 
+    if (ratingSubmitting) return;
     if (!csrfToken) {
       alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
       return;
     }
 
+    ratingSubmitting = true;
     fetch(`/vote-agency/${agencyId}/`, {
       method: 'POST',
       headers: {
@@ -355,6 +369,9 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     .catch(error => {
       alert('Произошла ошибка при отправке оценки.');
+    })
+    .finally(() => {
+      ratingSubmitting = false;
     });
   }
 

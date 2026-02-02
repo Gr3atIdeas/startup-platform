@@ -190,8 +190,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (response.ok && data && data.success) {
+          const ownerNameEl = document.querySelector('.author-name-unique, .owner-name, .franchise-owner-name');
+          if (ownerNameEl && data.new_owner_name) {
+            ownerNameEl.textContent = data.new_owner_name;
+          }
+          const modal = document.querySelector('.change-owner-modal, #changeOwnerModal');
+          if (modal) {
+            modal.style.display = 'none';
+            if (typeof bootstrap !== 'undefined') {
+              const bsModal = bootstrap.Modal.getInstance(modal);
+              if (bsModal) bsModal.hide();
+            }
+          }
           alert('Владелец успешно изменён!');
-          location.reload();
         } else {
           const errMsg = (data && data.error) || 'Ошибка при смене владельца.';
           alert(errMsg);
@@ -251,6 +262,12 @@ document.addEventListener('DOMContentLoaded', function () {
           return;
         }
 
+        const addBtn = document.getElementById('addInvestmentButton');
+        if (addBtn) {
+          addBtn.disabled = true;
+          addBtn.textContent = 'Добавление...';
+        }
+
         fetch(`/add_investor_franchise/${franchiseId}/`, {
             method: 'POST',
             headers: {
@@ -273,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('Инвестор успешно добавлен!');
                 loadCurrentInvestors();
                 resetAddInvestorForm();
-                updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
+                updateStartupFinancials(data.new_investor_count, data.new_amount_raised);
             } else {
                 const errMsg = (data && data.error) || 'Ошибка при добавлении инвестора.';
                 alert(errMsg);
@@ -281,6 +298,12 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => {
             alert('Сетевая ошибка при добавлении инвестора.');
+        })
+        .finally(() => {
+            if (addBtn) {
+              addBtn.disabled = false;
+              addBtn.textContent = 'Добавить инвестора';
+            }
         });
     });
     }
@@ -364,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (data.success) {
                         alert('Инвестиция удалена.');
                         loadCurrentInvestors();
-                        updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
+                        updateStartupFinancials(data.new_investor_count, data.new_amount_raised);
                     } else {
                         alert(data.error || 'Ошибка при удалении.');
                     }
@@ -388,7 +411,7 @@ document.addEventListener('DOMContentLoaded', function () {
             amountRaisedCard.textContent = `${new Intl.NumberFormat('ru-RU').format(Math.floor(amountRaised))} ₽`;
         }
 
-        const fundingGoal = parseFloat(pageDataElement.dataset.fundingGoal) || 0;
+        const fundingGoal = parseFloat(pageDataElement.dataset.investmentSize || pageDataElement.dataset.fundingGoal) || 0;
         const progressPercentage = fundingGoal > 0 ? (amountRaised / fundingGoal) * 100 : 0;
 
         const progressBar = document.querySelector('.progress-animation-container');
@@ -503,12 +526,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  var ratingSubmitting = false;
   function submitRating(rating) {
+    if (ratingSubmitting) return;
     if (!csrfToken) {
       alert('Ошибка безопасности. Попробуйте перезагрузить страницу.');
       return;
     }
 
+    ratingSubmitting = true;
     fetch(`/vote-franchise/${franchiseId}/`, {
       method: 'POST',
       headers: {
@@ -553,6 +579,9 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     .catch(error => {
       alert('Произошла ошибка при отправке оценки.');
+    })
+    .finally(() => {
+      ratingSubmitting = false;
     });
   }
 

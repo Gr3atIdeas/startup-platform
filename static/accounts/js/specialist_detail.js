@@ -58,11 +58,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  var ratingSubmitting = false;
   function submitRating(rating) {
+    if (ratingSubmitting) return;
     if (!csrfToken) {
       alert('Ошибка безопасности. Перезагрузите страницу.');
       return;
     }
+    ratingSubmitting = true;
     fetch(`/vote-specialist/${specialistId}/`, {
       method: 'POST',
       headers: {
@@ -91,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       })
       .catch(() => alert('Произошла ошибка при отправке оценки.'))
+      .finally(() => { ratingSubmitting = false; })
   }
 
   function setupRatingStars() {

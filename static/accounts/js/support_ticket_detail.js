@@ -63,8 +63,17 @@ function closeTicket() {
     })
     .then(data => {
         if (data.success) {
+            // Обновляем статус на странице без перезагрузки
+            const statusBadge = document.querySelector('.ticket-status, .status-badge');
+            if (statusBadge) {
+                statusBadge.textContent = 'Закрыта';
+                statusBadge.className = statusBadge.className.replace(/status-\w+/, 'status-closed');
+            }
+            const statusSelect = document.querySelector('.status-select');
+            if (statusSelect) statusSelect.value = 'closed';
+            const closeBtn = document.querySelector('.close-ticket-btn');
+            if (closeBtn) closeBtn.style.display = 'none';
             alert('Заявка успешно закрыта');
-            location.reload();
         } else {
             alert('Ошибка при закрытии заявки: ' + data.error);
         }
@@ -99,8 +108,18 @@ function updateTicketStatus(status) {
     })
     .then(data => {
         if (data.success) {
+            // Обновляем badge статуса без перезагрузки
+            const statusLabels = { 'new': 'Новая', 'in_progress': 'В обработке', 'closed': 'Закрыта' };
+            const statusBadge = document.querySelector('.ticket-status, .status-badge');
+            if (statusBadge) {
+                statusBadge.textContent = statusLabels[status] || status;
+                statusBadge.className = statusBadge.className.replace(/status-\w+/, 'status-' + status);
+            }
+            if (status === 'closed') {
+                const closeBtn = document.querySelector('.close-ticket-btn');
+                if (closeBtn) closeBtn.style.display = 'none';
+            }
             alert('Статус заявки успешно обновлен');
-            location.reload();
         } else {
             alert('Ошибка при обновлении статуса: ' + data.error);
         }

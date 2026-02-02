@@ -205,12 +205,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Обработка изменения статуса заявки
+    const statusLabels = { 'new': 'Новая', 'in_progress': 'В обработке', 'closed': 'Закрыта' };
     const statusSelect = document.querySelector('.status-select');
     if (statusSelect) {
         statusSelect.addEventListener('change', function() {
             const ticketId = this.dataset.ticketId;
             const newStatus = this.value;
-            
+
             fetch(`/support/ticket/${ticketId}/update-status/`, {
                 method: 'POST',
                 headers: {
@@ -222,7 +223,20 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    location.reload();
+                    // Обновляем badge текущего тикета в списке справа
+                    const currentTicketCard = document.querySelector('.ticket-card.active, .ticket-card[onclick*="/' + ticketId + '/"]');
+                    if (currentTicketCard) {
+                        const statusBadge = currentTicketCard.querySelector('.ticket-status-value');
+                        if (statusBadge) {
+                            statusBadge.textContent = statusLabels[newStatus] || newStatus;
+                            statusBadge.className = 'ticket-status-value ' + newStatus;
+                        }
+                    }
+                    if (newStatus === 'closed') {
+                        const closeBtnEl = document.querySelector('.close-ticket-btn');
+                        if (closeBtnEl) closeBtnEl.style.display = 'none';
+                    }
+                    alert('Статус заявки обновлён');
                 } else {
                     alert('Ошибка при обновлении статуса');
                 }
@@ -238,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (closeBtn) {
         closeBtn.addEventListener('click', function() {
             const ticketId = this.dataset.ticketId;
-            
+
             if (confirm('Вы уверены, что хотите закрыть эту заявку?')) {
                 fetch(`/support/ticket/${ticketId}/close/`, {
                     method: 'POST',
@@ -250,7 +264,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        location.reload();
+                        // Обновляем статус без перезагрузки
+                        const selectEl = document.querySelector('.status-select');
+                        if (selectEl) selectEl.value = 'closed';
+                        const currentTicketCard = document.querySelector('.ticket-card.active, .ticket-card[onclick*="/' + ticketId + '/"]');
+                        if (currentTicketCard) {
+                            const statusBadge = currentTicketCard.querySelector('.ticket-status-value');
+                            if (statusBadge) {
+                                statusBadge.textContent = 'Закрыта';
+                                statusBadge.className = 'ticket-status-value closed';
+                            }
+                        }
+                        this.style.display = 'none';
+                        alert('Заявка закрыта');
                     } else {
                         alert('Ошибка при закрытии заявки');
                     }
