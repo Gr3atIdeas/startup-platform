@@ -391,8 +391,25 @@
   animation: planet-self-spin 20s linear infinite reverse;
 }
 
-
-
+/* Planet self-rotation for standalone planetary page (startuper/investor) */
+.ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(1) .ultra_new_planetary_planet {
+  animation: planet-self-spin 12s linear infinite;
+}
+.ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(2) .ultra_new_planetary_planet {
+  animation: planet-self-spin 15s linear infinite;
+}
+.ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(3) .ultra_new_planetary_planet {
+  animation: planet-self-spin 18s linear infinite;
+}
+.ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(4) .ultra_new_planetary_planet {
+  animation: planet-self-spin 10s linear infinite reverse;
+}
+.ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(5) .ultra_new_planetary_planet {
+  animation: planet-self-spin 14s linear infinite;
+}
+.ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(6) .ultra_new_planetary_planet {
+  animation: planet-self-spin 20s linear infinite reverse;
+}
 
 
 @media (max-width: 768px) {

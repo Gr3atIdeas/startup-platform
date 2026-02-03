@@ -746,6 +746,12 @@
 
       planetObj.orientation.style.left = `${50 + (x / radius) * 50}%`;
       planetObj.orientation.style.top = `${50 + (y / radius) * 50}%`;
+
+      // Scale based on orbit position: larger when "closer" (bottom), smaller when "farther" (top)
+      const normalizedY = Math.sin(angleRad); // -1 (top/far) to 1 (bottom/close)
+      const scaleRange = 0.15 + (index * 0.03); // outer orbits get more scale variation
+      const scale = 1 + normalizedY * scaleRange;
+      planetObj.orientation.style.transform = `scale(${scale.toFixed(3)})`;
     });
   }
   function applyUltraNewPlanetaryFilter(categoryName) {
