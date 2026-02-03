@@ -125,7 +125,7 @@ ROOT_URLCONF = "marketplace.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "coworking" / "dist"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -184,6 +184,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
     BASE_DIR / "static/dist",
     BASE_DIR / "static/accounts",
+    ("coworking", BASE_DIR / "coworking" / "dist"),
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 VITE_APP_DIR = BASE_DIR / "static/src"

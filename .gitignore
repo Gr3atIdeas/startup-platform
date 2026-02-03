@@ -102,6 +102,9 @@ staticfiles/
 
 # --- Build assets (Vite) ---
 /static/dist
+/coworking/dist
+/coworking/node_modules
+!/coworking/public/media
 
 # Other
 /site
