@@ -1472,7 +1472,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 165px;
+  top: 185px;
   background: #050505;
   border-radius: 20px;
   padding: 9px 17px;
@@ -1594,7 +1594,7 @@
   .ultra_new_planetary_selected_label {
     left: 50%;
     transform: translateX(-50%);
-    top: 115px;
+    top: 125px;
     font-size: 10px;
     padding: 6px 12px;
   }
@@ -1664,7 +1664,7 @@
   }
 
   .ultra_new_planetary_selected_label {
-    top: 98px;
+    top: 108px;
     font-size: 9px;
     padding: 5px 10px;
   }
@@ -1734,7 +1734,7 @@
   }
 
   .ultra_new_planetary_selected_label {
-    top: 80px;
+    top: 88px;
     font-size: 8px;
     padding: 4px 8px;
   }
