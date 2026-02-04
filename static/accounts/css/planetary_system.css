@@ -399,6 +399,12 @@
   to   { background-position-x: -200%; }
 }
 
+/* Dynamic shadow rotation (light from sun at center) */
+@keyframes shadow-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 /* Base 3D planet appearance */
 .ultra_new_planetary_planet {
   overflow: hidden;
@@ -423,6 +429,7 @@
       transparent 60%);
   z-index: 2;
   pointer-events: none;
+  transform: rotate(var(--shadow-rotation, 0deg));
 }
 
 /* 3D shading overlay — terminator + shadow depth */
@@ -431,18 +438,19 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: linear-gradient(135deg,
+  background: linear-gradient(90deg,
     transparent 40%,
     rgba(0,0,0,0.15) 48%,
     rgba(0,0,0,0.25) 52%,
     rgba(0,0,0,0.5) 65%,
     rgba(0,0,0,0.7) 100%);
   box-shadow:
-    inset -8px -6px 20px rgba(0,0,0,0.7),
-    inset -3px -3px 10px rgba(0,0,0,0.4),
-    inset 3px 3px 8px rgba(255,255,255,0.1);
+    inset -8px -2px 20px rgba(0,0,0,0.7),
+    inset -4px -1px 10px rgba(0,0,0,0.4),
+    inset 4px 1px 8px rgba(255,255,255,0.1);
   z-index: 3;
   pointer-events: none;
+  transform: rotate(var(--shadow-rotation, 0deg));
 }
 
 /* ===== Planet Hover Tooltip ===== */
@@ -450,7 +458,7 @@
   position: absolute;
   bottom: var(--tooltip-offset, 40px);
   left: 0;
-  transform: translateX(-50%) translateY(4px);
+  transform: translateX(-50%) translateY(4px) rotateX(var(--ultra_new_planetary_planet_compensation, 0deg));
   display: flex;
   align-items: center;
   gap: 6px;
@@ -472,7 +480,7 @@
 .ultra_new_planetary_tooltip.ultra_new_planetary_tooltip_visible {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(-50%) translateY(0) rotateX(var(--ultra_new_planetary_planet_compensation, 0deg));
 }
 
 .ultra_new_planetary_tooltip_arrow {
@@ -531,6 +539,32 @@
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(7) .ultra_new_planetary_planet {
   background-image: url('/static/accounts/images/planetary_system/textures/2k_eris_fictional.jpg') !important;
   animation: planet-texture-spin 20s linear infinite reverse;
+}
+
+/* === Homepage dynamic shadow rotation (synced with orbit speed) === */
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(2) .ultra_new_planetary_planet::before,
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(2) .ultra_new_planetary_planet::after {
+  animation: shadow-rotate 80s linear infinite;
+}
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(3) .ultra_new_planetary_planet::before,
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(3) .ultra_new_planetary_planet::after {
+  animation: shadow-rotate 95s linear infinite;
+}
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(4) .ultra_new_planetary_planet::before,
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(4) .ultra_new_planetary_planet::after {
+  animation: shadow-rotate 110s linear infinite;
+}
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(5) .ultra_new_planetary_planet::before,
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(5) .ultra_new_planetary_planet::after {
+  animation: shadow-rotate 125s linear infinite;
+}
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(6) .ultra_new_planetary_planet::before,
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(6) .ultra_new_planetary_planet::after {
+  animation: shadow-rotate 140s linear infinite;
+}
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(7) .ultra_new_planetary_planet::before,
+#ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(7) .ultra_new_planetary_planet::after {
+  animation: shadow-rotate 160s linear infinite;
 }
 
 /* === Standalone page planet textures (startuper/investor) === */
@@ -1789,6 +1823,10 @@
   .ultra_new_planetary_planet {
     animation: none !important;
     background-position: 0 center !important;
+  }
+  .ultra_new_planetary_planet::before,
+  .ultra_new_planetary_planet::after {
+    animation: none !important;
   }
 }
 

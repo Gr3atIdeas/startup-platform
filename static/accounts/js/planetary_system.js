@@ -804,6 +804,10 @@
       const scaleRange = 0.15 + (index * 0.03); // outer orbits get more scale variation
       const scale = 1 + normalizedY * scaleRange;
       planetObj.orientation.style.transform = `scale(${scale.toFixed(3)})`;
+
+      // Dynamic shadow rotation: light always from sun at center
+      const shadowRotation = angle % 360;
+      planetObj.element.style.setProperty('--shadow-rotation', shadowRotation.toFixed(1) + 'deg');
     });
   }
   function applyUltraNewPlanetaryFilter(categoryName) {
