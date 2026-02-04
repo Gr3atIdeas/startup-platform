@@ -277,10 +277,12 @@
 .ultra_new_planetary_planet_orientation {
   position: absolute;
   transform-style: preserve-3d;
-  will-change: left, top;
+  will-change: transform, left, top;
   pointer-events: auto;
   z-index: 19;
   cursor: pointer;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .featured #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_planet_orientation {
@@ -318,52 +320,77 @@
   animation: orbit-rotation-6 160s linear infinite !important;
 }
 
+/* Orbit keyframes with 8 steps for smooth sinusoidal scale interpolation */
 @keyframes orbit-rotation-1 {
-  0%   { transform: translate(-50%, -50%) rotate(0deg)   translateX(100px) rotate(0deg)    scale(1.08); }
-  25%  { transform: translate(-50%, -50%) rotate(90deg)  translateX(100px) rotate(-90deg)  scale(0.95); }
-  50%  { transform: translate(-50%, -50%) rotate(180deg) translateX(100px) rotate(-180deg) scale(0.85); }
-  75%  { transform: translate(-50%, -50%) rotate(270deg) translateX(100px) rotate(-270deg) scale(0.95); }
-  100% { transform: translate(-50%, -50%) rotate(360deg) translateX(100px) rotate(-360deg) scale(1.08); }
+  0%     { transform: translate(-50%, -50%) rotate(0deg)    translateX(100px) rotate(0deg)    scale(1.08); }
+  12.5%  { transform: translate(-50%, -50%) rotate(45deg)   translateX(100px) rotate(-45deg)  scale(1.025); }
+  25%    { transform: translate(-50%, -50%) rotate(90deg)   translateX(100px) rotate(-90deg)  scale(0.965); }
+  37.5%  { transform: translate(-50%, -50%) rotate(135deg)  translateX(100px) rotate(-135deg) scale(0.89); }
+  50%    { transform: translate(-50%, -50%) rotate(180deg)  translateX(100px) rotate(-180deg) scale(0.85); }
+  62.5%  { transform: translate(-50%, -50%) rotate(225deg)  translateX(100px) rotate(-225deg) scale(0.89); }
+  75%    { transform: translate(-50%, -50%) rotate(270deg)  translateX(100px) rotate(-270deg) scale(0.965); }
+  87.5%  { transform: translate(-50%, -50%) rotate(315deg)  translateX(100px) rotate(-315deg) scale(1.025); }
+  100%   { transform: translate(-50%, -50%) rotate(360deg)  translateX(100px) rotate(-360deg) scale(1.08); }
 }
 
 @keyframes orbit-rotation-2 {
-  0%   { transform: translate(-50%, -50%) rotate(0deg)   translateX(150px) rotate(0deg)    scale(1.1); }
-  25%  { transform: translate(-50%, -50%) rotate(90deg)  translateX(150px) rotate(-90deg)  scale(0.95); }
-  50%  { transform: translate(-50%, -50%) rotate(180deg) translateX(150px) rotate(-180deg) scale(0.82); }
-  75%  { transform: translate(-50%, -50%) rotate(270deg) translateX(150px) rotate(-270deg) scale(0.95); }
-  100% { transform: translate(-50%, -50%) rotate(360deg) translateX(150px) rotate(-360deg) scale(1.1); }
+  0%     { transform: translate(-50%, -50%) rotate(0deg)    translateX(150px) rotate(0deg)    scale(1.1); }
+  12.5%  { transform: translate(-50%, -50%) rotate(45deg)   translateX(150px) rotate(-45deg)  scale(1.04); }
+  25%    { transform: translate(-50%, -50%) rotate(90deg)   translateX(150px) rotate(-90deg)  scale(0.96); }
+  37.5%  { transform: translate(-50%, -50%) rotate(135deg)  translateX(150px) rotate(-135deg) scale(0.88); }
+  50%    { transform: translate(-50%, -50%) rotate(180deg)  translateX(150px) rotate(-180deg) scale(0.82); }
+  62.5%  { transform: translate(-50%, -50%) rotate(225deg)  translateX(150px) rotate(-225deg) scale(0.88); }
+  75%    { transform: translate(-50%, -50%) rotate(270deg)  translateX(150px) rotate(-270deg) scale(0.96); }
+  87.5%  { transform: translate(-50%, -50%) rotate(315deg)  translateX(150px) rotate(-315deg) scale(1.04); }
+  100%   { transform: translate(-50%, -50%) rotate(360deg)  translateX(150px) rotate(-360deg) scale(1.1); }
 }
 
 @keyframes orbit-rotation-3 {
-  0%   { transform: translate(-50%, -50%) rotate(0deg)   translateX(200px) rotate(0deg)    scale(1.12); }
-  25%  { transform: translate(-50%, -50%) rotate(90deg)  translateX(200px) rotate(-90deg)  scale(0.93); }
-  50%  { transform: translate(-50%, -50%) rotate(180deg) translateX(200px) rotate(-180deg) scale(0.8); }
-  75%  { transform: translate(-50%, -50%) rotate(270deg) translateX(200px) rotate(-270deg) scale(0.93); }
-  100% { transform: translate(-50%, -50%) rotate(360deg) translateX(200px) rotate(-360deg) scale(1.12); }
+  0%     { transform: translate(-50%, -50%) rotate(0deg)    translateX(200px) rotate(0deg)    scale(1.12); }
+  12.5%  { transform: translate(-50%, -50%) rotate(45deg)   translateX(200px) rotate(-45deg)  scale(1.05); }
+  25%    { transform: translate(-50%, -50%) rotate(90deg)   translateX(200px) rotate(-90deg)  scale(0.96); }
+  37.5%  { transform: translate(-50%, -50%) rotate(135deg)  translateX(200px) rotate(-135deg) scale(0.87); }
+  50%    { transform: translate(-50%, -50%) rotate(180deg)  translateX(200px) rotate(-180deg) scale(0.8); }
+  62.5%  { transform: translate(-50%, -50%) rotate(225deg)  translateX(200px) rotate(-225deg) scale(0.87); }
+  75%    { transform: translate(-50%, -50%) rotate(270deg)  translateX(200px) rotate(-270deg) scale(0.96); }
+  87.5%  { transform: translate(-50%, -50%) rotate(315deg)  translateX(200px) rotate(-315deg) scale(1.05); }
+  100%   { transform: translate(-50%, -50%) rotate(360deg)  translateX(200px) rotate(-360deg) scale(1.12); }
 }
 
 @keyframes orbit-rotation-4 {
-  0%   { transform: translate(-50%, -50%) rotate(0deg)   translateX(250px) rotate(0deg)    scale(1.15); }
-  25%  { transform: translate(-50%, -50%) rotate(90deg)  translateX(250px) rotate(-90deg)  scale(0.92); }
-  50%  { transform: translate(-50%, -50%) rotate(180deg) translateX(250px) rotate(-180deg) scale(0.78); }
-  75%  { transform: translate(-50%, -50%) rotate(270deg) translateX(250px) rotate(-270deg) scale(0.92); }
-  100% { transform: translate(-50%, -50%) rotate(360deg) translateX(250px) rotate(-360deg) scale(1.15); }
+  0%     { transform: translate(-50%, -50%) rotate(0deg)    translateX(250px) rotate(0deg)    scale(1.15); }
+  12.5%  { transform: translate(-50%, -50%) rotate(45deg)   translateX(250px) rotate(-45deg)  scale(1.07); }
+  25%    { transform: translate(-50%, -50%) rotate(90deg)   translateX(250px) rotate(-90deg)  scale(0.965); }
+  37.5%  { transform: translate(-50%, -50%) rotate(135deg)  translateX(250px) rotate(-135deg) scale(0.86); }
+  50%    { transform: translate(-50%, -50%) rotate(180deg)  translateX(250px) rotate(-180deg) scale(0.78); }
+  62.5%  { transform: translate(-50%, -50%) rotate(225deg)  translateX(250px) rotate(-225deg) scale(0.86); }
+  75%    { transform: translate(-50%, -50%) rotate(270deg)  translateX(250px) rotate(-270deg) scale(0.965); }
+  87.5%  { transform: translate(-50%, -50%) rotate(315deg)  translateX(250px) rotate(-315deg) scale(1.07); }
+  100%   { transform: translate(-50%, -50%) rotate(360deg)  translateX(250px) rotate(-360deg) scale(1.15); }
 }
 
 @keyframes orbit-rotation-5 {
-  0%   { transform: translate(-50%, -50%) rotate(0deg)   translateX(300px) rotate(0deg)    scale(1.18); }
-  25%  { transform: translate(-50%, -50%) rotate(90deg)  translateX(300px) rotate(-90deg)  scale(0.9); }
-  50%  { transform: translate(-50%, -50%) rotate(180deg) translateX(300px) rotate(-180deg) scale(0.75); }
-  75%  { transform: translate(-50%, -50%) rotate(270deg) translateX(300px) rotate(-270deg) scale(0.9); }
-  100% { transform: translate(-50%, -50%) rotate(360deg) translateX(300px) rotate(-360deg) scale(1.18); }
+  0%     { transform: translate(-50%, -50%) rotate(0deg)    translateX(300px) rotate(0deg)    scale(1.18); }
+  12.5%  { transform: translate(-50%, -50%) rotate(45deg)   translateX(300px) rotate(-45deg)  scale(1.09); }
+  25%    { transform: translate(-50%, -50%) rotate(90deg)   translateX(300px) rotate(-90deg)  scale(0.965); }
+  37.5%  { transform: translate(-50%, -50%) rotate(135deg)  translateX(300px) rotate(-135deg) scale(0.845); }
+  50%    { transform: translate(-50%, -50%) rotate(180deg)  translateX(300px) rotate(-180deg) scale(0.75); }
+  62.5%  { transform: translate(-50%, -50%) rotate(225deg)  translateX(300px) rotate(-225deg) scale(0.845); }
+  75%    { transform: translate(-50%, -50%) rotate(270deg)  translateX(300px) rotate(-270deg) scale(0.965); }
+  87.5%  { transform: translate(-50%, -50%) rotate(315deg)  translateX(300px) rotate(-315deg) scale(1.09); }
+  100%   { transform: translate(-50%, -50%) rotate(360deg)  translateX(300px) rotate(-360deg) scale(1.18); }
 }
 
 @keyframes orbit-rotation-6 {
-  0%   { transform: translate(-50%, -50%) rotate(0deg)   translateX(350px) rotate(0deg)    scale(1.2); }
-  25%  { transform: translate(-50%, -50%) rotate(90deg)  translateX(350px) rotate(-90deg)  scale(0.88); }
-  50%  { transform: translate(-50%, -50%) rotate(180deg) translateX(350px) rotate(-180deg) scale(0.72); }
-  75%  { transform: translate(-50%, -50%) rotate(270deg) translateX(350px) rotate(-270deg) scale(0.88); }
-  100% { transform: translate(-50%, -50%) rotate(360deg) translateX(350px) rotate(-360deg) scale(1.2); }
+  0%     { transform: translate(-50%, -50%) rotate(0deg)    translateX(350px) rotate(0deg)    scale(1.2); }
+  12.5%  { transform: translate(-50%, -50%) rotate(45deg)   translateX(350px) rotate(-45deg)  scale(1.1); }
+  25%    { transform: translate(-50%, -50%) rotate(90deg)   translateX(350px) rotate(-90deg)  scale(0.965); }
+  37.5%  { transform: translate(-50%, -50%) rotate(135deg)  translateX(350px) rotate(-135deg) scale(0.835); }
+  50%    { transform: translate(-50%, -50%) rotate(180deg)  translateX(350px) rotate(-180deg) scale(0.72); }
+  62.5%  { transform: translate(-50%, -50%) rotate(225deg)  translateX(350px) rotate(-225deg) scale(0.835); }
+  75%    { transform: translate(-50%, -50%) rotate(270deg)  translateX(350px) rotate(-270deg) scale(0.965); }
+  87.5%  { transform: translate(-50%, -50%) rotate(315deg)  translateX(350px) rotate(-315deg) scale(1.1); }
+  100%   { transform: translate(-50%, -50%) rotate(360deg)  translateX(350px) rotate(-360deg) scale(1.2); }
 }
 
 /* Planet texture rotation (3D spinning globe effect via background-position scroll) */
@@ -608,11 +635,9 @@
   image-rendering: high-quality;
   image-rendering: -webkit-optimize-contrast;
 
-  /* Drop shadow for floating-in-space effect */
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+  filter: none;
 
-
-  will-change: background-position;
+  will-change: background-position, transform;
 
 
   outline: none;
