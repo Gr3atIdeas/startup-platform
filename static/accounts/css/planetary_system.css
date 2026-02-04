@@ -155,32 +155,7 @@
   pointer-events: none;
 }
 
-/* Sun glow via radial-gradient — counter-rotated to stay flat (avoids 3D compositing rectangle) */
-#ultra_new_planetary_sun_container::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 300px;
-  height: 300px;
-  /* Counter-rotate to cancel parent's rotateX → renders as flat 2D layer */
-  transform: translate(-50%, -50%) rotateX(calc(-1 * var(--ultra_new_planetary_sun_compensation, 0deg)));
-  border-radius: 50%;
-  background: radial-gradient(circle,
-    rgba(255, 200, 50, 0.6) 0%,
-    rgba(255, 180, 30, 0.4) 15%,
-    rgba(255, 239, 43, 0.25) 30%,
-    rgba(250, 247, 219, 0.1) 50%,
-    transparent 70%);
-  z-index: -1;
-  pointer-events: none;
-  animation: ultra_new_planetary_sun_glow 3s ease-in-out infinite alternate;
-}
-
-@keyframes ultra_new_planetary_sun_glow {
-  0% { scale: 1; }
-  100% { scale: 1.3; }
-}
+/* Sun glow removed — causes rectangular compositing artifact in 3D context */
 
 #ultra_new_planetary_sun_image {
   width: 100%;
@@ -1319,9 +1294,9 @@
   left: 50%;
   transform: translateX(-50%);
   width: 900px;
-  height: 120px;
+  height: 160px;
   z-index: 100;
-  overflow: visible; 
+  overflow: visible;
 }
 
 
@@ -1329,17 +1304,17 @@
 
 .ultra_new_planetary_categories_container {
   position: absolute;
-  
-  width: 805px; 
-  height: 100px;
+
+  width: 805px;
+  height: 140px;
   left: 50%;
   top: 0;
-  transform: translateX(-50%); 
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 4px; 
-  scroll-behavior: smooth; 
+  gap: 8px;
+  scroll-behavior: smooth;
 }
 
 .ultra_new_planetary_categories_container {
@@ -1368,8 +1343,8 @@
 
 
 .ultra_new_planetary_category_item.category-all.selected .ultra_new_planetary_category_bg {
-  width: 135px;
-  height: 55px;
+  width: 130px;
+  height: 110px;
   object-fit: cover;
 }
 
@@ -1382,10 +1357,10 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  margin-right: 0; 
+  margin-right: 0;
   flex: 0 0 auto;
-  width: 55px;
-  height: 55px;
+  width: 110px;
+  height: 110px;
   overflow: visible !important;
 }
 
@@ -1398,8 +1373,8 @@
 
 .ultra_new_planetary_category_item.selected {
   z-index: 104;
-  width: 105px !important;
-  height: 55px !important;
+  width: 130px !important;
+  height: 110px !important;
   overflow: visible !important;
 }
 
@@ -1418,8 +1393,8 @@
 
 
 .ultra_new_planetary_category_item.category-all.selected {
-  width: 70px !important;
-  height: 40px !important;
+  width: 130px !important;
+  height: 110px !important;
 }
 
 
@@ -1432,25 +1407,14 @@
 
 
 .ultra_new_planetary_category_bg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  z-index: 1;
-  pointer-events: none;
-  left: 0;
-  top: 0;
-  /* Используем WebP для оптимизации */
-  background-image: url('/static/accounts/images/planetary_system/categories/category_bg.webp');
-  background-size: cover;
-  background-position: center;
+  display: none;
 }
 
 
 .ultra_new_planetary_category_icon {
   position: relative;
-  width: 80%;
-  height: 80%;
+  width: 90%;
+  height: 90%;
   object-fit: contain;
   z-index: 2;
 }
@@ -1458,7 +1422,7 @@
 
 .ultra_new_planetary_nav_arrow {
   position: absolute;
-  top: 35px;
+  top: 55px;
   width: 31.17px;
   height: 31.17px;
   background: #FFEF2B;
@@ -1511,7 +1475,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 95px;
+  top: 135px;
   background: #050505;
   border-radius: 20px;
   padding: 9px 17px;
@@ -1586,31 +1550,31 @@
 
   #ultra_new_planetary_galaxy_selector {
     width: 350px;
-    height: 80px;
+    height: 120px;
     bottom: 5px;
   }
-  
+
   .ultra_new_planetary_categories_container {
-    width: 330px; 
-    height: 50px;
-    gap: 3px; 
+    width: 330px;
+    height: 90px;
+    gap: 5px;
     padding-left: 4px;
   }
-  
+
   .ultra_new_planetary_category_item {
-    width: 40px !important;
-    height: 40px !important;
+    width: 75px !important;
+    height: 75px !important;
   }
 
   .ultra_new_planetary_category_item.selected {
-    width: 70px !important;
-    height: 37px !important;
+    width: 90px !important;
+    height: 75px !important;
   }
 
   .ultra_new_planetary_nav_arrow {
     width: 25px;
     height: 25px;
-    top: 25px;
+    top: 35px;
   }
 
   .ultra_new_planetary_nav_left {
@@ -1629,7 +1593,7 @@
   .ultra_new_planetary_selected_label {
     left: 50%;
     transform: translateX(-50%);
-    top: 70px;
+    top: 95px;
     font-size: 10px;
     padding: 6px 12px;
   }
@@ -1662,31 +1626,31 @@
 
   #ultra_new_planetary_galaxy_selector {
     width: 280px;
-    height: 70px;
+    height: 100px;
     bottom: 3px;
   }
-  
+
   .ultra_new_planetary_categories_container {
-    width: 260px; 
-    height: 45px;
-    gap: 2px; 
+    width: 260px;
+    height: 75px;
+    gap: 3px;
     padding-left: 3px;
   }
-  
+
   .ultra_new_planetary_category_item {
-    width: 35px !important;
-    height: 35px !important;
+    width: 60px !important;
+    height: 60px !important;
   }
 
   .ultra_new_planetary_category_item.selected {
-    width: 60px !important;
-    height: 31px !important;
+    width: 75px !important;
+    height: 60px !important;
   }
 
   .ultra_new_planetary_nav_arrow {
     width: 20px;
     height: 20px;
-    top: 20px;
+    top: 30px;
   }
 
   .ultra_new_planetary_nav_arrow_icon {
@@ -1695,7 +1659,7 @@
   }
 
   .ultra_new_planetary_selected_label {
-    top: 58px;
+    top: 78px;
     font-size: 9px;
     padding: 5px 10px;
   }
@@ -1728,31 +1692,31 @@
 
   #ultra_new_planetary_galaxy_selector {
     width: 250px;
-    height: 60px;
+    height: 85px;
     bottom: 2px;
   }
-  
+
   .ultra_new_planetary_categories_container {
-    width: 230px; 
-    height: 40px;
-    gap: 1px; 
+    width: 230px;
+    height: 60px;
+    gap: 2px;
     padding-left: 2px;
   }
-  
+
   .ultra_new_planetary_category_item {
-    width: 30px !important;
-    height: 30px !important;
+    width: 50px !important;
+    height: 50px !important;
   }
 
   .ultra_new_planetary_category_item.selected {
-    width: 52px !important;
-    height: 27px !important;
+    width: 60px !important;
+    height: 50px !important;
   }
 
   .ultra_new_planetary_nav_arrow {
     width: 18px;
     height: 18px;
-    top: 18px;
+    top: 25px;
   }
 
   .ultra_new_planetary_nav_arrow_icon {
@@ -1761,7 +1725,7 @@
   }
 
   .ultra_new_planetary_selected_label {
-    top: 52px;
+    top: 65px;
     font-size: 8px;
     padding: 4px 8px;
   }
