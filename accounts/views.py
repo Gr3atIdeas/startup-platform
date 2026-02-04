@@ -6142,8 +6142,11 @@ def startuper_main(request):
                 owner_avatar = static('accounts/images/default_icon.svg')
 
 
-            rating = getattr(startup, 'rating_avg', 0.0)
-            rating_formatted = str(round(rating)) if rating else "0"
+            try:
+                rating = startup.get_average_rating() or 0
+            except Exception:
+                rating = 0
+            rating_formatted = str(round(rating))
 
 
             description = getattr(startup, 'short_description', '') or getattr(startup, 'description', '')
