@@ -1294,7 +1294,7 @@
   left: 50%;
   transform: translateX(-50%);
   width: 900px;
-  height: 160px;
+  height: 180px;
   z-index: 100;
   overflow: visible;
 }
@@ -1304,8 +1304,7 @@
 
 .ultra_new_planetary_categories_container {
   position: absolute;
-
-  width: 805px;
+  width: 880px;
   height: 140px;
   left: 50%;
   top: 0;
@@ -1417,20 +1416,12 @@
   height: 90%;
   object-fit: contain;
   z-index: 2;
+  border-radius: 50%;
 }
 
 
 .ultra_new_planetary_nav_arrow {
-  position: absolute;
-  top: 55px;
-  width: 31.17px;
-  height: 31.17px;
-  background: #FFEF2B;
-  border-radius: 99px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  z-index: 101;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   border: none;
@@ -1475,7 +1466,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 135px;
+  top: 150px;
   background: #050505;
   border-radius: 20px;
   padding: 9px 17px;
@@ -1593,7 +1584,7 @@
   .ultra_new_planetary_selected_label {
     left: 50%;
     transform: translateX(-50%);
-    top: 95px;
+    top: 105px;
     font-size: 10px;
     padding: 6px 12px;
   }
@@ -1659,7 +1650,7 @@
   }
 
   .ultra_new_planetary_selected_label {
-    top: 78px;
+    top: 88px;
     font-size: 9px;
     padding: 5px 10px;
   }
@@ -1725,7 +1716,7 @@
   }
 
   .ultra_new_planetary_selected_label {
-    top: 65px;
+    top: 72px;
     font-size: 8px;
     padding: 4px 8px;
   }
