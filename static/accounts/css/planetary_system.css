@@ -37,10 +37,8 @@
   height: 708px;
   padding: 45px 71px;
   position: relative;
-  background: linear-gradient(180deg, black 0%, #004E9F 100%);
-  box-shadow: 0 0 30px rgba(30, 58, 138, 0.5), 0 0 60px rgba(0, 78, 159, 0.2);
+  background: transparent;
   overflow: hidden;
-  border-radius: 10px;
 }
 
 .ultra_new_planetary_system_container {
@@ -56,10 +54,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, #0B1426 0%, #1E3A8A 100%);
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 813"><defs><radialGradient id="spaceGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(255,255,255,0.3)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><rect width="100%" height="100%" fill="url(%23spaceGrad)"/></svg>');
-  background-size: cover;
-  background-position: center;
+  background: radial-gradient(ellipse at 50% 45%, rgba(255,255,255,0.04) 0%, transparent 60%);
   z-index: 1;
   pointer-events: none;
 }
@@ -166,7 +161,7 @@
   -webkit-border-radius: 50% !important;
   -moz-border-radius: 50% !important;
   background-color: #FAF7DB;
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_sun.jpg');
+  background-image: url('/static/accounts/images/planetary_system/textures/2k_sun.webp');
   background-size: 200% 100%;
   background-repeat: repeat-x;
   animation: planet-texture-spin 30s linear infinite, ultra_new_planetary_sun_glow 3s ease-in-out infinite alternate;
@@ -180,23 +175,7 @@
   -moz-backface-visibility: hidden;
 }
 
-#ultra_new_planetary_sun_image::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
-  background: #FAF7DB;
-  border-radius: 50% !important;
-  -webkit-border-radius: 50% !important;
-  -moz-border-radius: 50% !important;
-  filter: blur(12.5px);
-  box-shadow: 25px 25px 25px rgba(250, 247, 219, 0.3);
-  z-index: -1;
-  border: none !important;
-  outline: none !important;
-}
+/* Sun glow handled by ultra_new_planetary_sun_glow animation on box-shadow */
 
 @keyframes ultra_new_planetary_sun_glow {
   0% { 
@@ -516,27 +495,27 @@
 
 /* === Homepage planet textures === */
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(2) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_venus_surface.jpg') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/2k_venus_surface.webp') !important;
   animation: planet-texture-spin 12s linear infinite;
 }
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(3) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_mars.jpg') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/2k_mars.webp') !important;
   animation: planet-texture-spin 15s linear infinite;
 }
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(4) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_neptune.jpg') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/2k_neptune.webp') !important;
   animation: planet-texture-spin 18s linear infinite;
 }
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(5) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_makemake_fictional.jpg') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/2k_makemake_fictional.webp') !important;
   animation: planet-texture-spin 10s linear infinite reverse;
 }
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(6) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_uranus.jpg') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/2k_uranus.webp') !important;
   animation: planet-texture-spin 14s linear infinite;
 }
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(7) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_eris_fictional.jpg') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/2k_eris_fictional.webp') !important;
   animation: planet-texture-spin 20s linear infinite reverse;
 }
 
@@ -568,27 +547,27 @@
 
 /* === Standalone page planet textures (startuper/investor) === */
 .ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(1) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_venus_surface.jpg') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/2k_venus_surface.webp') !important;
   animation: planet-texture-spin 12s linear infinite;
 }
 .ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(2) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_mars.jpg') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/2k_mars.webp') !important;
   animation: planet-texture-spin 15s linear infinite;
 }
 .ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(3) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_neptune.jpg') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/2k_neptune.webp') !important;
   animation: planet-texture-spin 18s linear infinite;
 }
 .ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(4) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_makemake_fictional.jpg') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/2k_makemake_fictional.webp') !important;
   animation: planet-texture-spin 10s linear infinite reverse;
 }
 .ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(5) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_uranus.jpg') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/2k_uranus.webp') !important;
   animation: planet-texture-spin 14s linear infinite;
 }
 .ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(6) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_eris_fictional.jpg') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/2k_eris_fictional.webp') !important;
   animation: planet-texture-spin 20s linear infinite reverse;
 }
 
