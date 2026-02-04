@@ -1334,7 +1334,7 @@
 
 .ultra_new_planetary_category_item.category-all {
   position: relative !important;
-  order: -1; 
+  order: -1;
   margin-right: 0;
   left: auto !important;
   top: auto !important;
@@ -1342,6 +1342,10 @@
   margin: 0;
   z-index: 200;
   background: none;
+}
+
+.ultra_new_planetary_category_item.category-all .ultra_new_planetary_category_icon {
+  mix-blend-mode: screen;
 }
 
 
