@@ -148,43 +148,39 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotateX(var(--ultra_new_planetary_sun_compensation));
-  width: 97px;
-  height: 95px;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
   z-index: 10;
   pointer-events: none;
+  animation: ultra_new_planetary_sun_glow 3s ease-in-out infinite alternate;
 }
 
 #ultra_new_planetary_sun_image {
   width: 100%;
   height: 100%;
-  border-radius: 50% !important;
-  -webkit-border-radius: 50% !important;
-  -moz-border-radius: 50% !important;
-  background-color: #FAF7DB;
+  border-radius: 50%;
   background-image: url('/static/accounts/images/planetary_system/textures/2k_sun.webp');
   background-size: 200% 100%;
   background-repeat: repeat-x;
-  animation: planet-texture-spin 30s linear infinite, ultra_new_planetary_sun_glow 3s ease-in-out infinite alternate;
+  animation: planet-texture-spin 30s linear infinite;
   position: relative;
   overflow: hidden;
-  border: none !important;
-  outline: none !important;
-  will-change: background-position, box-shadow;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
+  will-change: background-position;
 }
 
-/* Sun glow handled by ultra_new_planetary_sun_glow animation on box-shadow */
+#ultra_new_planetary_sun_image::before,
+#ultra_new_planetary_sun_image::after {
+  content: none;
+  display: none;
+}
 
 @keyframes ultra_new_planetary_sun_glow {
-  0% { 
+  0% {
     box-shadow: 0 0 50px rgba(250, 247, 219, 0.8), 0 0 100px rgba(255, 239, 43, 0.4);
-    border-radius: 50% !important;
   }
-  100% { 
+  100% {
     box-shadow: 0 0 80px rgba(250, 247, 219, 1), 0 0 150px rgba(255, 239, 43, 0.6);
-    border-radius: 50% !important;
   }
 }
 
