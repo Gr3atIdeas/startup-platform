@@ -1,33 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from '../../utils/gsapSetup'
 
-/* Simple rocket SVG inspired by the Gi mural */
-function Rocket({ style }: { style?: React.CSSProperties }) {
-  return (
-    <svg viewBox="0 0 200 320" fill="none" style={style}>
-      {/* Flame */}
-      <ellipse cx="100" cy="295" rx="22" ry="25" fill="#FFD233" opacity="0.9" />
-      <ellipse cx="100" cy="300" rx="14" ry="18" fill="#E84B5A" opacity="0.85" />
-      {/* Body */}
-      <path d="M70 260 C70 260 65 140 100 50 C135 140 130 260 130 260 Z" fill="#4A90D9" />
-      <path d="M80 260 C80 260 78 150 100 65 C122 150 120 260 120 260 Z" fill="#5BA0E8" />
-      {/* Nose cone */}
-      <ellipse cx="100" cy="68" rx="18" ry="22" fill="#E84B5A" />
-      <ellipse cx="100" cy="62" rx="12" ry="14" fill="#F06070" />
-      {/* Window */}
-      <circle cx="100" cy="140" r="22" fill="#1E1E2F" />
-      <circle cx="100" cy="140" r="17" fill="#6B4BCC" />
-      <circle cx="100" cy="140" r="12" fill="#EDE8FC" />
-      <ellipse cx="95" cy="135" rx="5" ry="6" fill="#fff" opacity="0.6" />
-      {/* Fins */}
-      <path d="M70 230 L45 270 L70 260 Z" fill="#E84B5A" />
-      <path d="M130 230 L155 270 L130 260 Z" fill="#E84B5A" />
-      {/* Stripe details */}
-      <rect x="85" y="180" width="30" height="4" rx="2" fill="#FFD233" />
-      <rect x="85" y="195" width="30" height="4" rx="2" fill="#FFD233" />
-    </svg>
-  )
-}
+const BASE = import.meta.env.BASE_URL
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -168,7 +142,7 @@ export default function Hero() {
 
         {/* Rocket illustration */}
         <div className="hero-rocket" style={{ opacity: 0 }}>
-          <Rocket style={{ width: '200px', height: 'auto' }} />
+          <img src={`${BASE}media/rocket.svg`} alt="Rocket" style={{ width: '200px', height: 'auto' }} />
         </div>
       </div>
 
@@ -176,7 +150,7 @@ export default function Hero() {
         @media (max-width: 768px) {
           .container { grid-template-columns: 1fr !important; }
           .hero-rocket { display: flex; justify-content: center; }
-          .hero-rocket svg { width: 140px !important; }
+          .hero-rocket img { width: 140px !important; }
         }
       `}</style>
     </section>

@@ -79,7 +79,7 @@ export default function Contacts() {
           <div className="contacts-map" style={{ opacity: 0 }}>
             <div style={{ borderRadius: 'var(--border-radius)', overflow: 'hidden', boxShadow: 'var(--shadow)' }}>
               <iframe
-                src="https://yandex.ru/map-widget/v1/?ll=38.976383%2C45.035470&z=16&pt=38.976383%2C45.035470%2Cpm2blm"
+                src="https://yandex.ru/map-widget/v1/?ll=39.045355%2C45.032566&z=16&pt=39.045355%2C45.032566%2Cpm2blm"
                 width="100%"
                 height="400"
                 style={{ border: 0, display: 'block' }}

@@ -46,7 +46,7 @@ export default function Gallery() {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          gridAutoRows: '200px',
+          gridAutoRows: 'auto',
           gap: '16px',
         }} className="gallery-grid">
           {mediaItems.map((item, i) => (
@@ -83,7 +83,7 @@ export default function Gallery() {
                     muted
                     loop
                     playsInline
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
                     ref={(el) => { if (el && activeVideo) el.play() }}
                   />
                   {!activeVideo && (
@@ -118,13 +118,13 @@ export default function Gallery() {
                   <img
                     src={item.src}
                     alt={item.label}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
                   />
                   <div style={{
-                    position: 'absolute', inset: 0,
-                    background: 'linear-gradient(180deg, transparent 55%, rgba(30,30,47,0.65) 100%)',
+                    position: 'absolute', bottom: 0, left: 0, right: 0,
+                    background: 'linear-gradient(180deg, transparent 0%, rgba(30,30,47,0.65) 100%)',
                     pointerEvents: 'none',
-                    display: 'flex', alignItems: 'flex-end', padding: '16px',
+                    padding: '16px',
                   }}>
                     <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#fff' }}>
                       {item.label}
@@ -138,10 +138,10 @@ export default function Gallery() {
 
         <style>{`
           @media (max-width: 768px) {
-            .gallery-grid { grid-template-columns: repeat(2, 1fr) !important; grid-auto-rows: 180px !important; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr) !important; grid-auto-rows: auto !important; }
           }
           @media (max-width: 480px) {
-            .gallery-grid { grid-template-columns: 1fr !important; grid-auto-rows: 220px !important; }
+            .gallery-grid { grid-template-columns: 1fr !important; grid-auto-rows: auto !important; }
           }
         `}</style>
       </div>

@@ -133,6 +133,8 @@ export default function VideoShowcase() {
           <video
             ref={videoRef}
             src={`${BASE}media/tour.mp4`}
+            poster={`${BASE}media/tour_poster.jpg`}
+            preload="metadata"
             muted
             loop
             playsInline

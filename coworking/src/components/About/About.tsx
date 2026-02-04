@@ -81,8 +81,7 @@ export default function About() {
                 alt="Интерьер Gi-коворкинга"
                 style={{
                   width: '100%',
-                  height: '480px',
-                  objectFit: 'cover',
+                  height: 'auto',
                   display: 'block',
                 }}
               />

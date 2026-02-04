@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback } from 'react'
 import { useScrollTrigger } from '../../hooks/useScrollTrigger'
 
 const YCLIENTS_COMPANY_ID = '1521273'
+const BOOKING_URL = `https://n1701102.yclients.com/company/${YCLIENTS_COMPANY_ID}/personal/select-services?o=m`
 
 export default function Booking() {
-  const widgetRef = useRef<HTMLDivElement>(null)
-
   const animation = useCallback((el: HTMLElement, tl: gsap.core.Timeline) => {
     tl.fromTo(
       el.querySelector('.booking-content'),
@@ -16,26 +15,6 @@ export default function Booking() {
 
   const ref = useScrollTrigger<HTMLElement>({ animation, start: 'top 80%' })
 
-  useEffect(() => {
-    // Load YClients widget script
-    const existingScript = document.querySelector('script[src*="yclients.com"]')
-    if (existingScript) return
-
-    const script = document.createElement('script')
-    script.src = 'https://w.yclients.com/widget/loader.js'
-    script.async = true
-    script.onload = () => {
-      // Initialize widget after script loads
-      if ((window as any).YCWidget) {
-        (window as any).YCWidget.init({
-          company_id: YCLIENTS_COMPANY_ID,
-          container: '#yclients-widget',
-        })
-      }
-    }
-    document.body.appendChild(script)
-  }, [])
-
   return (
     <section id="booking" ref={ref} className="section" style={{ background: 'var(--color-bg-alt)' }}>
       <div className="container">
@@ -45,26 +24,25 @@ export default function Booking() {
             Забронируйте рабочее место или переговорную онлайн
           </p>
 
-          {/* YClients widget container */}
-          <div
-            id="yclients-widget"
-            ref={widgetRef}
-            style={{
-              background: 'var(--color-white)',
-              borderRadius: 'var(--border-radius)',
-              boxShadow: 'var(--shadow)',
-              padding: '24px',
-              minHeight: '400px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          />
+          {/* YClients inline booking form */}
+          <div style={{
+            borderRadius: 'var(--border-radius)',
+            overflow: 'hidden',
+            boxShadow: 'var(--shadow)',
+          }}>
+            <iframe
+              src={BOOKING_URL}
+              width="100%"
+              height="700"
+              style={{ border: 0, display: 'block' }}
+              title="Онлайн-запись — Gi-коворкинг"
+              allow="payment"
+            />
+          </div>
 
-          {/* Fallback link button */}
+          {/* Fallback link in case iframe is blocked */}
           <a
-            href={`https://n1701102.yclients.com/company/${YCLIENTS_COMPANY_ID}/personal/select-services?o=m`}
+            href={BOOKING_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-primary"
