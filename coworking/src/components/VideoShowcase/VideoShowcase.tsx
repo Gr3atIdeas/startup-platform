@@ -49,11 +49,13 @@ export default function VideoShowcase() {
         background: '#1E1E2F',
       }}
     >
+      <div className="container" style={{ padding: '64px 20px' }}>
       <div style={{
         display: 'grid',
         gridTemplateColumns: '380px 1fr',
-        height: '70vh',
         maxHeight: '700px',
+        borderRadius: 'var(--border-radius)',
+        overflow: 'hidden',
       }} className="vs-grid">
         {/* Text side */}
         <div
@@ -155,6 +157,7 @@ export default function VideoShowcase() {
           }} />
         </div>
       </div>
+      </div>
 
       <style>{`
         @keyframes livePulse {
@@ -164,7 +167,6 @@ export default function VideoShowcase() {
         @media (max-width: 768px) {
           .vs-grid {
             grid-template-columns: 1fr !important;
-            min-height: auto !important;
           }
           .vs-video {
             height: 350px;
