@@ -142,7 +142,7 @@ export default function Hero() {
 
         {/* Rocket illustration */}
         <div className="hero-rocket" style={{ opacity: 0 }}>
-          <img src={`${BASE}media/rocket.svg`} alt="Rocket" style={{ width: '200px', height: 'auto' }} />
+          <img src={`${BASE}media/rocket.svg`} alt="Rocket" style={{ width: '400px', height: 'auto' }} />
         </div>
       </div>
 
@@ -150,7 +150,7 @@ export default function Hero() {
         @media (max-width: 768px) {
           .container { grid-template-columns: 1fr !important; }
           .hero-rocket { display: flex; justify-content: center; }
-          .hero-rocket img { width: 140px !important; }
+          .hero-rocket img { width: 280px !important; }
         }
       `}</style>
     </section>

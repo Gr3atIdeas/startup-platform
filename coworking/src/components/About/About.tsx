@@ -77,7 +77,7 @@ export default function About() {
               boxShadow: 'var(--shadow-lg)',
             }}>
               <img
-                src={`${import.meta.env.BASE_URL}media/photo2.jpg`}
+                src={`${import.meta.env.BASE_URL}media/photo2.webp`}
                 alt="Интерьер Gi-коворкинга"
                 style={{
                   width: '100%',

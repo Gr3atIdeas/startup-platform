@@ -4,11 +4,11 @@ import { useScrollTrigger } from '../../hooks/useScrollTrigger'
 const BASE = import.meta.env.BASE_URL
 
 const mediaItems = [
-  { type: 'photo' as const, src: `${BASE}media/photo1.jpg`, label: 'Индустриальный интерьер', span: 'tall' },
-  { type: 'photo' as const, src: `${BASE}media/photo3.jpg`, label: 'Дизайн пространства', span: 'normal' },
+  { type: 'photo' as const, src: `${BASE}media/photo1.webp`, label: 'Индустриальный интерьер', span: 'tall' },
+  { type: 'photo' as const, src: `${BASE}media/photo3.webp`, label: 'Дизайн пространства', span: 'normal' },
   { type: 'video' as const, src: `${BASE}media/tour.mp4`, label: 'Обзор коворкинга', span: 'tall' },
-  { type: 'photo' as const, src: `${BASE}media/photo4.jpg`, label: 'Архитектура лофта', span: 'normal' },
-  { type: 'photo' as const, src: `${BASE}media/photo2.jpg`, label: 'Технологии и стиль', span: 'normal' },
+  { type: 'photo' as const, src: `${BASE}media/photo4.webp`, label: 'Архитектура лофта', span: 'normal' },
+  { type: 'photo' as const, src: `${BASE}media/photo2.webp`, label: 'Технологии и стиль', span: 'normal' },
 ]
 
 export default function Gallery() {
