@@ -377,7 +377,6 @@
   overflow: hidden;
   background-size: 200% 100% !important;
   background-repeat: repeat-x !important;
-  background-position: 0 center !important;
 }
 
 /* 3D shading overlay — specular highlight */
@@ -511,9 +510,6 @@
   margin-top: calc(-0.5 * var(--computed-planet-size, var(--planet-size)));
 
   border-radius: 50% !important;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   z-index: 20;
   transition: transform 0.3s ease, filter 0.3s ease;
   border: none !important;
