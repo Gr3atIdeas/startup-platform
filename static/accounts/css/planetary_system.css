@@ -34,7 +34,7 @@
   width: 100%;
   max-width: 1303px;
   margin: 0 auto;
-  height: 708px;
+  height: 830px;
   padding: 45px 71px;
   position: relative;
   background: transparent;
@@ -1290,11 +1290,11 @@
 
 #ultra_new_planetary_galaxy_selector {
   position: absolute;
-  bottom: 2px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   width: 900px;
-  height: 180px;
+  height: 200px;
   z-index: 100;
   overflow: visible;
 }
@@ -1360,7 +1360,8 @@
   flex: 0 0 auto;
   width: 110px;
   height: 110px;
-  overflow: visible !important;
+  overflow: hidden;
+  border-radius: 50%;
 }
 
 
@@ -1374,7 +1375,7 @@
   z-index: 104;
   width: 130px !important;
   height: 110px !important;
-  overflow: visible !important;
+  overflow: hidden;
 }
 
 
@@ -1412,20 +1413,17 @@
 
 .ultra_new_planetary_category_icon {
   position: relative;
-  width: 90%;
-  height: 90%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   z-index: 2;
   border-radius: 50%;
+  clip-path: circle(50%);
 }
 
 
 .ultra_new_planetary_nav_arrow {
-  display: none;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  box-shadow: 0 2px 8px rgba(255, 239, 43, 0.3);
+  display: none !important;
 }
 
 .ultra_new_planetary_nav_left {
@@ -1466,7 +1464,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 150px;
+  top: 165px;
   background: #050505;
   border-radius: 20px;
   padding: 9px 17px;
@@ -1516,7 +1514,7 @@
 
 @media (max-width: 768px) {
   .ultra_new_planetary_system_wrapper {
-    height: 500px;
+    height: 580px;
     padding: 20px;
   }
 
@@ -1584,7 +1582,7 @@
   .ultra_new_planetary_selected_label {
     left: 50%;
     transform: translateX(-50%);
-    top: 105px;
+    top: 115px;
     font-size: 10px;
     padding: 6px 12px;
   }
@@ -1592,7 +1590,7 @@
 
 @media (max-width: 480px) {
   .ultra_new_planetary_system_wrapper {
-    height: 400px;
+    height: 470px;
     padding: 15px;
   }
 
@@ -1650,7 +1648,7 @@
   }
 
   .ultra_new_planetary_selected_label {
-    top: 88px;
+    top: 98px;
     font-size: 9px;
     padding: 5px 10px;
   }
@@ -1658,7 +1656,7 @@
 
 @media (max-width: 360px) {
   .ultra_new_planetary_system_wrapper {
-    height: 350px;
+    height: 410px;
     padding: 10px;
   }
 
@@ -1716,7 +1714,7 @@
   }
 
   .ultra_new_planetary_selected_label {
-    top: 72px;
+    top: 80px;
     font-size: 8px;
     padding: 4px 8px;
   }
