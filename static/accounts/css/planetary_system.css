@@ -155,7 +155,7 @@
   pointer-events: none;
 }
 
-/* Sun glow via radial-gradient (box-shadow renders as rectangle in 3D context) */
+/* Sun glow via radial-gradient — counter-rotated to stay flat (avoids 3D compositing rectangle) */
 #ultra_new_planetary_sun_container::before {
   content: '';
   position: absolute;
@@ -163,7 +163,8 @@
   left: 50%;
   width: 300px;
   height: 300px;
-  transform: translate(-50%, -50%);
+  /* Counter-rotate to cancel parent's rotateX → renders as flat 2D layer */
+  transform: translate(-50%, -50%) rotateX(calc(-1 * var(--ultra_new_planetary_sun_compensation, 0deg)));
   border-radius: 50%;
   background: radial-gradient(circle,
     rgba(255, 200, 50, 0.6) 0%,
@@ -177,8 +178,8 @@
 }
 
 @keyframes ultra_new_planetary_sun_glow {
-  0% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+  0% { scale: 1; }
+  100% { scale: 1.3; }
 }
 
 #ultra_new_planetary_sun_image {
