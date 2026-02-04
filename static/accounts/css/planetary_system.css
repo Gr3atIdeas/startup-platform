@@ -38,11 +38,9 @@
   padding: 45px 71px;
   position: relative;
   background: linear-gradient(180deg, black 0%, #004E9F 100%);
-  box-shadow: 6px 6px 10px rgba(123, 97, 255, 0.25);
+  box-shadow: 0 0 30px rgba(30, 58, 138, 0.5), 0 0 60px rgba(0, 78, 159, 0.2);
   overflow: hidden;
   border-radius: 10px;
-  outline: 1px #C6BBFE solid;
-  outline-offset: -1px;
 }
 
 .ultra_new_planetary_system_container {
