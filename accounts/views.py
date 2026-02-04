@@ -526,7 +526,8 @@ def home(request):
                 "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не указано",
                 "investors": startup.total_investors if hasattr(startup, 'total_investors') else startup.get_investors_count(),
                 "progress": round(startup.progress, 2) if hasattr(startup, 'progress') and startup.progress is not None else startup.get_progress_percentage(),
-                "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
+                "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование"),
+                "logo": startup.get_logo_url(),
             })
 
 
@@ -5871,6 +5872,7 @@ def investor_main(request):
             "startup_id": startup.startup_id,
             "description": startup.short_description,
             "investment_type": investment_type,
+            "logo": startup.get_logo_url(),
         })
     is_authenticated = request.user.is_authenticated
     is_startuper = is_authenticated and hasattr(request.user, 'role') and request.user.role and request.user.role.role_name == 'startuper'
@@ -5937,6 +5939,7 @@ def investor_main(request):
             "startup_id": startup.startup_id,
             "description": startup.short_description,
             "investment_type": investment_type,
+            "logo": startup.get_logo_url(),
         })
     context = {
         "planets_data": planets_data_for_template,
@@ -6045,6 +6048,7 @@ def startuper_main(request):
             "startup_id": startup.startup_id,
             "description": startup.short_description,
             "investment_type": investment_type,
+            "logo": startup.get_logo_url(),
         })
     is_authenticated = request.user.is_authenticated
     is_startuper = is_authenticated and hasattr(request.user, 'role') and request.user.role and request.user.role.role_name == 'startuper'
@@ -6108,6 +6112,7 @@ def startuper_main(request):
             "startup_id": startup.startup_id,
             "description": startup.short_description,
             "investment_type": investment_type,
+            "logo": startup.get_logo_url(),
         })
 
     try:
@@ -7739,7 +7744,8 @@ def planetary_system(request):
             "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не указано",
             "investors": startup.get_investors_count(),
             "progress": startup.get_progress_percentage(),
-            "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
+            "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование"),
+            "logo": startup.get_logo_url(),
         })
     all_approved_startups = list(Startups.objects.filter(status="approved").select_related("direction", "owner").order_by("-created_at"))
     all_startups_data = []
@@ -7779,7 +7785,8 @@ def planetary_system(request):
             "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не указано",
             "investors": startup.get_investors_count(),
             "progress": startup.get_progress_percentage(),
-            "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
+            "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование"),
+            "logo": startup.get_logo_url(),
         })
     logo_data = {
         "image": "/static/accounts/images/logo.png"

@@ -399,9 +399,14 @@
     });
     const planets = document.querySelectorAll('.ultra_new_planetary_planet');
     const planetSize = Math.max(44, Math.min(72, Math.floor(base * 0.08)));
+    const tooltipOffset = Math.floor(planetSize / 2) + 10;
     planets.forEach(p => {
       p.style.setProperty('--planet-size', planetSize + 'px');
       p.style.setProperty('--computed-planet-size', planetSize + 'px');
+    });
+    const orientations = document.querySelectorAll('.ultra_new_planetary_planet_orientation');
+    orientations.forEach(o => {
+      o.style.setProperty('--tooltip-offset', tooltipOffset + 'px');
     });
   }
   function updateUltraNewPlanetaryPlanets(startups) {
@@ -459,12 +464,54 @@
     planet.setAttribute('data-startup-name', startup.name || 'Пустая орбита');
     planet.setAttribute('data-startup-data', JSON.stringify(startup));
 
+    // --- Tooltip creation ---
+    const orientationWrapper = planet.parentElement;
+    if (orientationWrapper) {
+      const existingTooltip = orientationWrapper.querySelector('.ultra_new_planetary_tooltip');
+      if (existingTooltip) existingTooltip.remove();
+
+      const startupName = startup.name || '';
+      if (startupName && startupName !== 'Пустая орбита') {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'ultra_new_planetary_tooltip';
+        let tooltipHTML = '';
+        const logoUrl = startup.logo || null;
+        if (logoUrl) {
+          tooltipHTML += '<img class="ultra_new_planetary_tooltip_logo" src="' + logoUrl + '" alt="" />';
+        }
+        tooltipHTML += '<span class="ultra_new_planetary_tooltip_name">' + startupName + '</span>';
+        tooltipHTML += '<div class="ultra_new_planetary_tooltip_arrow"></div>';
+        tooltip.innerHTML = tooltipHTML;
+        orientationWrapper.appendChild(tooltip);
+      }
+    }
+
     const newPlanet = planet.cloneNode(true);
     planet.parentNode.replaceChild(newPlanet, planet);
 
+    // Mobile two-tap: first tap = tooltip, second = modal
+    let tooltipShownByTap = false;
     const clickHandler = function(e) {
       e.preventDefault();
       e.stopPropagation();
+      const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      if (isTouchDevice && orientationWrapper) {
+        const tooltipEl = orientationWrapper.querySelector('.ultra_new_planetary_tooltip');
+        if (tooltipEl && !tooltipShownByTap) {
+          tooltipShownByTap = true;
+          tooltipEl.classList.add('ultra_new_planetary_tooltip_visible');
+          setTimeout(function() {
+            tooltipShownByTap = false;
+            if (tooltipEl) tooltipEl.classList.remove('ultra_new_planetary_tooltip_visible');
+          }, 3000);
+          return;
+        }
+      }
+      tooltipShownByTap = false;
+      if (orientationWrapper) {
+        const tooltipEl2 = orientationWrapper.querySelector('.ultra_new_planetary_tooltip');
+        if (tooltipEl2) tooltipEl2.classList.remove('ultra_new_planetary_tooltip_visible');
+      }
       showUltraNewPlanetaryModal(startup, imageUrl);
     };
     newPlanet.addEventListener('click', clickHandler, { passive: false });
@@ -476,6 +523,11 @@
   function setupUltraNewPlanetaryEmptyPlanet(planet, index) {
     if (!planet) return;
     planet.style.display = 'none';
+    const orientationWrapper = planet.parentElement;
+    if (orientationWrapper) {
+      const tooltip = orientationWrapper.querySelector('.ultra_new_planetary_tooltip');
+      if (tooltip) tooltip.remove();
+    }
   }
   function getUltraNewPlanetaryFallbackImage(index) {
     const folderChoice = Math.random() < 0.5 ? 'round' : 'ring';
