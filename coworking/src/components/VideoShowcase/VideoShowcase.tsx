@@ -111,9 +111,8 @@ export default function VideoShowcase() {
 
           <div style={{ display: 'flex', gap: '24px' }}>
             {[
-              { num: '50+', label: 'рабочих мест' },
-              { num: '3', label: 'переговорных' },
-              { num: '24/7', label: 'доступ' },
+              { num: '20+', label: 'рабочих мест' },
+              { num: '1', label: 'переговорная' },
             ].map((stat) => (
               <div key={stat.label}>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#FFD233' }}>{stat.num}</div>

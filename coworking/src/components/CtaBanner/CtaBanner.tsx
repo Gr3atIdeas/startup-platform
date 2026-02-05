@@ -13,7 +13,7 @@ export default function CtaBanner() {
   const ref = useScrollTrigger<HTMLElement>({ animation, start: 'top 85%' })
 
   return (
-    <section ref={ref} style={{ padding: '40px 0 0' }}>
+    <section ref={ref} style={{ padding: '40px 0 0', background: 'var(--color-bg-alt)' }}>
       <div className="container">
         <div
           className="cta-inner"
