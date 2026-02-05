@@ -37,9 +37,8 @@ export default function Footer() {
           </div>
           <div>
             <div style={{ fontWeight: 600, color: '#fff', marginBottom: '12px' }}>Контакты</div>
-            <p style={{ fontSize: '0.875rem', marginBottom: '4px' }}>Краснодар, Уральская 75/6</p>
-            <p style={{ fontSize: '0.875rem', marginBottom: '4px' }}>Пн-Пт: 9:00 — 21:00</p>
-            <p style={{ fontSize: '0.875rem' }}>Сб-Вс: 10:00 — 18:00</p>
+            <p style={{ fontSize: '0.875rem', marginBottom: '4px' }}>Краснодар, Уральская 75/6, 2 этаж</p>
+            <p style={{ fontSize: '0.875rem' }}>8:00 — 22:00, без выходных</p>
           </div>
         </div>
         <div style={{
