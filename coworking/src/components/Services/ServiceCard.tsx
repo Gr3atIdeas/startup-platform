@@ -16,6 +16,8 @@ export default function ServiceCard({ icon, title, description, price, accent = 
       transition: 'transform 0.3s, box-shadow 0.3s',
       cursor: 'default',
       opacity: 0,
+      display: 'flex',
+      flexDirection: 'column',
     }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-4px)'
@@ -43,8 +45,13 @@ export default function ServiceCard({ icon, title, description, price, accent = 
       <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9375rem', lineHeight: 1.6, marginBottom: '16px' }}>
         {description}
       </p>
-      <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--color-primary)' }}>
-        {price}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
+        <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--color-primary)' }}>
+          {price}
+        </div>
+        <a href="#booking" className="btn btn-primary" style={{ padding: '8px 20px', fontSize: '0.8125rem' }}>
+          Выбрать
+        </a>
       </div>
     </div>
   )

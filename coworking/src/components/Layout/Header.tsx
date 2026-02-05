@@ -61,6 +61,9 @@ export default function Header() {
               {link.label}
             </a>
           ))}
+          <a href="#booking" className="btn btn-primary" style={{ padding: '10px 24px', fontSize: '0.875rem' }}>
+            Забронировать
+          </a>
         </nav>
 
         <button
