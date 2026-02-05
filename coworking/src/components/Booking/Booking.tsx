@@ -28,7 +28,10 @@ export default function Booking() {
   const openPopup = () => {
     const YC = (window as any).YCWidget
     if (YC) {
-      YC.init(YCLIENTS_COMPANY_ID)
+      YC.init({
+        id: YCLIENTS_COMPANY_ID,
+        autoOpen: true,
+      })
     } else {
       window.open(BOOKING_URL, '_blank')
     }
