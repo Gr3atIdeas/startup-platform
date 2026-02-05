@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useScrollTrigger } from '../../hooks/useScrollTrigger'
 
 const YCLIENTS_COMPANY_ID = '1521273'
@@ -14,26 +14,37 @@ export default function Booking() {
   }, [])
 
   const ref = useScrollTrigger<HTMLElement>({ animation, start: 'top 80%' })
+  const widgetReady = useRef(false)
 
-  // Load YClients widget script for popup mode
+  // Load YClients widget script and init once on load
   useEffect(() => {
     if (document.getElementById('yc-widget-script')) return
     const script = document.createElement('script')
     script.id = 'yc-widget-script'
     script.src = 'https://w.yclients.com/widget/loader.js'
     script.async = true
+    script.onload = () => {
+      const YC = (window as any).YCWidget
+      if (YC) {
+        YC.init({ id: YCLIENTS_COMPANY_ID })
+        widgetReady.current = true
+      }
+    }
     document.head.appendChild(script)
   }, [])
 
   const openPopup = () => {
     const YC = (window as any).YCWidget
-    if (YC) {
-      YC.init({
-        id: YCLIENTS_COMPANY_ID,
-        autoOpen: true,
-      })
+    if (widgetReady.current && YC?.open) {
+      YC.open()
+    } else if (YC) {
+      YC.init({ id: YCLIENTS_COMPANY_ID, autoOpen: true })
     } else {
-      window.open(BOOKING_URL, '_blank')
+      // Fallback: centered popup window
+      const w = 700, h = 800
+      const left = (screen.width - w) / 2
+      const top = (screen.height - h) / 2
+      window.open(BOOKING_URL, 'yclients', `width=${w},height=${h},left=${left},top=${top},scrollbars=yes`)
     }
   }
 
