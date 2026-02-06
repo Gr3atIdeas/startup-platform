@@ -31,16 +31,16 @@ export default function CtaBanner() {
             color: '#fff',
             marginBottom: '12px',
           }}>
-            Готовы попробовать?
+            Акция 1+1!
           </h2>
           <p style={{
             fontSize: '1.0625rem',
             color: 'rgba(255,255,255,0.75)',
-            maxWidth: '500px',
+            maxWidth: '600px',
             margin: '0 auto 28px',
             lineHeight: 1.6,
           }}>
-            Первый день — бесплатно. Приходите, оцените пространство и решите сами.
+            При покупке часовой или дневной брони — вторая бронь в подарок. Приходите и оцените пространство.
           </p>
           <a
             href="#booking"
@@ -66,7 +66,7 @@ export default function CtaBanner() {
               e.currentTarget.style.boxShadow = 'none'
             }}
           >
-            Забронировать бесплатный день
+            Забронировать
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
