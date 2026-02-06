@@ -5,9 +5,10 @@ interface ServiceCardProps {
   price: string
   accent?: string
   accentDark?: string
+  showButton?: boolean
 }
 
-export default function ServiceCard({ icon, title, description, price, accent = 'var(--color-primary-light)', accentDark = 'var(--color-primary)' }: ServiceCardProps) {
+export default function ServiceCard({ icon, title, description, price, accent = 'var(--color-primary-light)', accentDark = 'var(--color-primary)', showButton = false }: ServiceCardProps) {
   return (
     <div className="service-card" style={{
       background: 'var(--color-white)',
@@ -81,20 +82,31 @@ export default function ServiceCard({ icon, title, description, price, accent = 
           </span>
         </div>
 
-        {/* Contact info */}
-        <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid var(--color-border)' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>
-            Бронирование
+        {/* CTA button or Contact info */}
+        {showButton ? (
+          <a href="#booking" className="btn btn-primary" style={{
+            padding: '12px 28px',
+            fontSize: '0.9375rem',
+            marginTop: 'auto',
+            alignSelf: 'flex-start',
+          }}>
+            Выбрать
+          </a>
+        ) : (
+          <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid var(--color-border)' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>
+              Бронирование
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <a href="https://t.me/Gi_Great_ideas" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.9375rem', color: 'var(--color-primary)', textDecoration: 'none', fontWeight: 600 }}>
+                @Gi_Great_ideas
+              </a>
+              <a href="tel:+79182119418" style={{ fontSize: '0.9375rem', color: 'var(--color-text)', textDecoration: 'none' }}>
+                +7 (918) 211-94-18
+              </a>
+            </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <a href="https://t.me/Gi_Great_ideas" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.9375rem', color: 'var(--color-primary)', textDecoration: 'none', fontWeight: 600 }}>
-              @Gi_Great_ideas
-            </a>
-            <a href="tel:+79182119418" style={{ fontSize: '0.9375rem', color: 'var(--color-text)', textDecoration: 'none' }}>
-              +7 (918) 211-94-18
-            </a>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Large decorative background icon */}

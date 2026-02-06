@@ -15,6 +15,7 @@ const services = [
     price: 'от 400 ₽/час · 1 300 ₽/день',
     accent: 'var(--color-primary-light)',
     accentDark: 'var(--color-primary)',
+    showButton: true,
   },
   {
     icon: (
@@ -44,6 +45,7 @@ const services = [
     price: 'от 1 500 ₽/час · 7 000 ₽/сутки',
     accent: '#FDEAEC',
     accentDark: '#E84B5A',
+    showButton: true,
   },
 ]
 
