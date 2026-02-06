@@ -104,7 +104,7 @@ export default function Hero() {
               letterSpacing: '-0.02em',
             }}
           >
-            Gi-коворкинг
+            Коворкинг
             <br />
             <span style={{ color: 'var(--color-primary)' }}>
               Great Ideas
