@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from '../../utils/gsapSetup'
+import { trackButtonClick } from '../../utils/metrika'
 
 const BASE = import.meta.env.BASE_URL
 
@@ -128,13 +129,22 @@ export default function Hero() {
           </p>
 
           <div className="hero-actions" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', opacity: 0 }}>
-            <a href="#booking" className="btn btn-primary" style={{
-              fontSize: '1.0625rem',
-              padding: '16px 36px',
-            }}>
+            <a
+              href="#booking"
+              className="btn btn-primary"
+              style={{
+                fontSize: '1.0625rem',
+                padding: '16px 36px',
+              }}
+              onClick={() => trackButtonClick('hero_booking')}
+            >
               Забронировать место
             </a>
-            <a href="#gallery" className="btn btn-outline">
+            <a
+              href="#gallery"
+              className="btn btn-outline"
+              onClick={() => trackButtonClick('hero_gallery')}
+            >
               Смотреть обзор
             </a>
           </div>

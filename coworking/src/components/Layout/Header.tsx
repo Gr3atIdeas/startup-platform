@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { trackButtonClick } from '../../utils/metrika'
 
 const navLinks = [
   { href: '#about', label: 'О нас' },
@@ -61,7 +62,12 @@ export default function Header() {
               {link.label}
             </a>
           ))}
-          <a href="#booking" className="btn btn-primary" style={{ padding: '10px 24px', fontSize: '0.875rem' }}>
+          <a
+            href="#booking"
+            className="btn btn-primary"
+            style={{ padding: '10px 24px', fontSize: '0.875rem' }}
+            onClick={() => trackButtonClick('header_booking')}
+          >
             Забронировать
           </a>
         </nav>

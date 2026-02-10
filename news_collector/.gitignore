@@ -1,0 +1,5 @@
+.env
+data/*.session
+data/*.db
+__pycache__/
+*.pyc
