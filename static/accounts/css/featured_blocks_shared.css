@@ -163,15 +163,59 @@
   box-sizing: border-box;
 }
 
-/* Маленькая планетка в левом нижнем углу */
+/* Маленькая 3D-планетка в левом нижнем углу */
 .featured5 .startup-planet-badge {
   position: absolute;
   bottom: -5px;
   left: -5px;
   width: 45px;
   height: 45px;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  border-radius: 50%;
+  background-size: 200% 100%;
+  background-repeat: repeat-x;
+  animation: planet-badge-spin 12s linear infinite;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  overflow: hidden;
+}
+
+/* 3D specular highlight */
+.featured5 .startup-planet-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%,
+      rgba(255,255,255,0.5) 0%,
+      rgba(255,255,255,0.2) 12%,
+      rgba(255,255,255,0.04) 30%,
+      transparent 50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* 3D terminator shadow */
+.featured5 .startup-planet-badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(90deg,
+    transparent 40%,
+    rgba(0,0,0,0.12) 48%,
+    rgba(0,0,0,0.22) 52%,
+    rgba(0,0,0,0.45) 65%,
+    rgba(0,0,0,0.65) 100%);
+  box-shadow:
+    inset -5px -1px 12px rgba(0,0,0,0.6),
+    inset -3px -1px 6px rgba(0,0,0,0.3);
+  z-index: 3;
+  pointer-events: none;
+}
+
+@keyframes planet-badge-spin {
+  from { background-position-x: 0; }
+  to   { background-position-x: -200%; }
 }
 
 .featured5 .content {

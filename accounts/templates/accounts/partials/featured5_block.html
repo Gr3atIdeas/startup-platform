@@ -34,7 +34,7 @@
                             <div class="startup-image-container">
                                 <img class="frame-child9 {% if startup.has_logo %}startup-logo{% endif %}" alt="{{ startup.name }}" src="{{ startup.image }}">
                                 {% if startup.has_logo and startup.planet_image %}
-                                <img class="startup-planet-badge" alt="Planet" src="{{ startup.planet_image }}">
+                                <div class="startup-planet-badge" style="background-image: url('{{ startup.planet_image }}');"></div>
                                 {% endif %}
                             </div>
                             <div class="content">
