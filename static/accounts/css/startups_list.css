@@ -871,7 +871,6 @@ body {
 .startup-card {
   position: relative;
   width: 329px;
-  height: 490px;
   background: #FFFFFF;
   border-radius: 9px;
   overflow: visible;
@@ -887,7 +886,7 @@ body {
 .startup-card-header {
   position: relative;
   width: 100%;
-  height: 110px;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 9px 9px 0 0;
 }
@@ -895,9 +894,8 @@ body {
 .startup-header-image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
-  background: #F5F5F5;
 }
 
 .startup-header-placeholder {
@@ -914,7 +912,7 @@ body {
 
 .planet-miniature-container {
   position: absolute;
-  top: 62px;
+  top: 150px;
   right: 10px;
   width: 70px;
   height: 71px;
@@ -1274,11 +1272,15 @@ body {
     width: 100%;
     max-width: 297px;
   }
-  
+
   .startup-card-content {
     padding: 8px;
   }
-  
+
+  .planet-miniature-container {
+    top: 132px;
+  }
+
   .startup-progress-container {
     width: 95%;
   }
