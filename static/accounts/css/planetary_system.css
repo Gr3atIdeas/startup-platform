@@ -71,6 +71,7 @@
   animation: ultra_new_planetary_star_scroll 40s linear infinite;
   z-index: 2;
   pointer-events: none;
+  will-change: background-position;
 }
 
 @keyframes ultra_new_planetary_star_scroll {
@@ -380,6 +381,7 @@
   overflow: hidden;
   background-size: 200% 100% !important;
   background-repeat: repeat-x !important;
+  will-change: background-position;
 }
 
 /* 3D shading overlay — specular highlight */

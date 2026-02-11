@@ -43,7 +43,7 @@
 
     <div class="rocket-showcase">
         <div class="rocket-showcase__video-wrap">
-            <video class="rocket-showcase__video" autoplay muted loop playsinline>
+            <video class="rocket-showcase__video" autoplay muted loop playsinline preload="metadata">
                 <source src="{{ S3_PUBLIC_BASE_URL }}/%D0%97%D0%B0%D0%B3%D0%BB%D1%83%D1%88%D0%BA%D0%B0.mp4" type="video/mp4">
             </video>
         </div>
@@ -94,7 +94,7 @@
 
     <div class="featured3">
         <div class="frame-parent">
-            <img class="icon9" alt="Стартаперы создают планету" src="{% static 'accounts/images/main_page/3rd_block_main.webp' %}">
+            <img class="icon9" alt="Стартаперы создают планету" src="{% static 'accounts/images/main_page/3rd_block_main.webp' %}" loading="lazy" decoding="async">
             <div class="parent4">
                 <div class="gradient-overlay"></div>
                 <div class="heading1">
@@ -165,7 +165,7 @@
                     <img class="icon" alt="Eye" src="{% static 'accounts/images/main_page/button_eye.svg' %}">
                 </a>
             </div>
-            <img class="icon10" alt="Инвесторы находят звезду" src="{% static 'accounts/images/main_page/4th_block_main_background.webp' %}">
+            <img class="icon10" alt="Инвесторы находят звезду" src="{% static 'accounts/images/main_page/4th_block_main_background.webp' %}" loading="lazy" decoding="async">
         </div>
     </div>
 
@@ -178,26 +178,22 @@
             <div class="galaxy-carousel">
                 <div class="galaxy-step-card">
                     <span class="galaxy-step-data" data-step-title="Регистрация компании" data-step-number="1"></span>
-                    <video class="frame-child12" alt="Регистрация компании" autoplay muted loop playsinline>
-                        <source src="{% static 'accounts/images/main_page/1_step.mp4' %}" type="video/mp4">
+                    <video class="frame-child12" alt="Регистрация компании" muted loop playsinline preload="none" data-src="{% static 'accounts/images/main_page/1_step.mp4' %}">
                     </video>
                 </div>
                 <div class="galaxy-step-card">
                     <span class="galaxy-step-data" data-step-title="Верификация проекта" data-step-number="2"></span>
-                    <video class="frame-child12" alt="Верификация проекта" autoplay muted loop playsinline>
-                        <source src="{% static 'accounts/images/main_page/2_step.mp4' %}" type="video/mp4">
+                    <video class="frame-child12" alt="Верификация проекта" muted loop playsinline preload="none" data-src="{% static 'accounts/images/main_page/2_step.mp4' %}">
                     </video>
                 </div>
                 <div class="galaxy-step-card">
                     <span class="galaxy-step-data" data-step-title="Поиск партнеров, клиентов и специалистов для развития бизнеса" data-step-number="3"></span>
-                    <video class="frame-child12" alt="Поиск партнеров, клиентов и специалистов для развития бизнеса" autoplay muted loop playsinline>
-                        <source src="{% static 'accounts/images/main_page/3_step.mp4' %}" type="video/mp4">
+                    <video class="frame-child12" alt="Поиск партнеров, клиентов и специалистов для развития бизнеса" muted loop playsinline preload="none" data-src="{% static 'accounts/images/main_page/3_step.mp4' %}">
                     </video>
                 </div>
                 <div class="galaxy-step-card">
                     <span class="galaxy-step-data" data-step-title="Все в плюсе!" data-step-number="4"></span>
-                    <video class="frame-child12" alt="Все в плюсе!" autoplay muted loop playsinline>
-                        <source src="{% static 'accounts/images/main_page/4_step.mp4' %}" type="video/mp4">
+                    <video class="frame-child12" alt="Все в плюсе!" muted loop playsinline preload="none" data-src="{% static 'accounts/images/main_page/4_step.mp4' %}">
                     </video>
                 </div>
             </div>
@@ -223,6 +219,7 @@
             </div>
         </div>
     </div>
+    {% comment "Секции featured8 и featured9 временно отключены — экономия ~1 МБ трафика" %}
     <div class="featured8 success-stories-carousel-outer" style="display: none;">
         <div class="parent21">
             <div class="faq">Истории успеха </div>
@@ -458,6 +455,7 @@
             </div>
         </div>
     </div>
+    {% endcomment %}
     <div class="featured10">
         <div class="subscription-card">
             <div class="subscription-bg-blur-1"></div>
@@ -678,7 +676,7 @@
             </a>
         </div>
     </div>
-    <img class="final-cta-image" src="{% static 'accounts/images/main_page/cta_main_image.webp' %}" alt="Call to action illustration">
+    <img class="final-cta-image" src="{% static 'accounts/images/main_page/cta_main_image.webp' %}" alt="Call to action illustration" loading="lazy" decoding="async">
 </div>
 
 <script type="application/json" id="faqData">

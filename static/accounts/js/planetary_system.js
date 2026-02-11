@@ -78,7 +78,10 @@
       setTimeout(() => {
         initializeUltraNewPlanetaryObjects();
         applyResponsiveOrbits();
-        startUltraNewPlanetaryAnimation();
+        // On homepage, CSS handles all planet animations — no need for rAF loop
+        if (getCurrentPage() !== 'home') {
+          startUltraNewPlanetaryAnimation();
+        }
       }, 100);
       if (window.innerWidth < 340 || (navigator.deviceMemory && navigator.deviceMemory <= 2)) {
         const orbits = document.querySelectorAll('.ultra_new_planetary_orbit');

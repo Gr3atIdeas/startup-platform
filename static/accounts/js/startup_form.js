@@ -751,6 +751,12 @@ document.addEventListener('DOMContentLoaded', function () {
       planetIndex=(planetIndex+(dir==='next'?1:-1)+total)%total
       setSrc()
     }
+    // Preload all planet textures so switching is instant
+    planetChoices.forEach(function(name){
+      var img = new Image()
+      img.src = (planetBaseUrl||'') + name
+    })
+
     if(planetRibbon){ build() }
     if(prevBtn) prevBtn.addEventListener('click', function(){ shift('prev') })
     if(nextBtn) nextBtn.addEventListener('click', function(){ shift('next') })

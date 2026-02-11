@@ -164,7 +164,7 @@ body > main.content::after {
   align-items: flex-start;
   padding: 0;
   box-sizing: border-box;
-  background-image: url('../images/main_page/main_bg.jpg');
+  background-image: url('../images/main_page/main_bg.webp');
   background-size: cover;
   background-position: center;
   border-radius: 10px;
@@ -1744,7 +1744,6 @@ body > main.content::after {
   justify-content: flex-start;
   gap: 60px;
   width: 100%;
-  background-image: url('../images/main_page/7blockmain.webp');
   background-size: cover;
   background-position: center;
   border-radius: 10px;
@@ -1836,11 +1835,16 @@ body > main.content::after {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url('../images/main_page/7blockastron.webp');
   background-size: cover;
   background-position: center;
   opacity: 1;
   z-index: 1;
+}
+.featured7.bg-loaded {
+  background-image: url('../images/main_page/7blockmain.webp');
+}
+.featured7.bg-loaded .card-industry::before {
+  background-image: url('../images/main_page/7blockastron.webp');
 }
 
 .featured7 .div57 {
@@ -2343,6 +2347,8 @@ body > main.content::after {
   border-radius: 20px;
   background-size: cover;
   background-position: center;
+}
+.featured10.bg-loaded {
   background-image: url('../images/main_page/10block_bg.webp');
 }
 

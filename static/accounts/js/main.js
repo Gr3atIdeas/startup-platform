@@ -150,9 +150,27 @@ document.addEventListener('DOMContentLoaded', function () {
       let currentGalaxyIndex = 0
       const totalGalaxyCards = galaxyCards.length
       let galaxyAutoplayInterval = null
+      let galaxySectionVisible = false
+      function loadAndPlayVideo(card) {
+        var video = card.querySelector('video[data-src]')
+        if (video && !video.src) {
+          video.src = video.dataset.src
+          video.load()
+        }
+        if (video) video.play().catch(function(){})
+      }
+      function pauseVideo(card) {
+        var video = card.querySelector('video')
+        if (video) video.pause()
+      }
       function updateGalaxyCarousel() {
         galaxyCards.forEach((card, index) => {
-          card.classList.toggle('active-step', index === currentGalaxyIndex)
+          var isActive = index === currentGalaxyIndex
+          card.classList.toggle('active-step', isActive)
+          if (galaxySectionVisible) {
+            if (isActive) loadAndPlayVideo(card)
+            else pauseVideo(card)
+          }
         })
         const currentCardData =
           galaxyCards[currentGalaxyIndex].querySelector('.galaxy-step-data')
@@ -191,7 +209,23 @@ document.addEventListener('DOMContentLoaded', function () {
       )
       galaxyWrapper.addEventListener('mouseleave', () => resetAutoplay())
       updateGalaxyCarousel()
-      resetAutoplay()
+      if ('IntersectionObserver' in window) {
+        var galaxyObs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(e) {
+            if (e.isIntersecting && !galaxySectionVisible) {
+              galaxySectionVisible = true
+              loadAndPlayVideo(galaxyCards[currentGalaxyIndex])
+              resetAutoplay()
+              galaxyObs.unobserve(e.target)
+            }
+          })
+        }, { rootMargin: '200px' })
+        galaxyObs.observe(galaxyWrapper)
+      } else {
+        galaxySectionVisible = true
+        loadAndPlayVideo(galaxyCards[currentGalaxyIndex])
+        resetAutoplay()
+      }
     } else {
     }
   } else {
@@ -302,7 +336,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const startupData = demoStartupsData[i - 1];
         if (startupData) {
-            planet.style.backgroundImage = `url('${startupData.image}')`;
+            // Don't set backgroundImage here — CSS handles textures via !important
+            // Setting it would trigger unnecessary S3 downloads
             planet.setAttribute('data-startup-id', startupData.id);
             planet.setAttribute('data-startup-name', startupData.name);
             planet.setAttribute('data-startup-data', JSON.stringify(startupData));
@@ -311,8 +346,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             planet.title = startupData.name;
         } else {
-            const _fp = [3, 5, 6]; const fallbackImage = `/static/accounts/images/planetary_system/textures/planet_${_fp[Math.floor(Math.random() * 3)]}.webp`;
-            planet.style.backgroundImage = `url('${fallbackImage}')`;
             planet.title = 'Декоративная планета';
         }
 
@@ -425,5 +458,21 @@ document.addEventListener('DOMContentLoaded', function () {
         requestAnimationFrame(updatePlanets);
     }
     updatePlanets();
+  }
+
+  // Lazy CSS backgrounds for below-fold sections
+  var bgSections = document.querySelectorAll('.featured7, .featured10')
+  if (bgSections.length && 'IntersectionObserver' in window) {
+    var bgObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('bg-loaded')
+          bgObs.unobserve(e.target)
+        }
+      })
+    }, { rootMargin: '300px' })
+    bgSections.forEach(function(s) { bgObs.observe(s) })
+  } else {
+    bgSections.forEach(function(s) { s.classList.add('bg-loaded') })
   }
 })
