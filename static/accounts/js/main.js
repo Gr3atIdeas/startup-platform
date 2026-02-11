@@ -316,28 +316,11 @@ document.addEventListener('DOMContentLoaded', function () {
       } catch (error) {
       }
     }
-    const planetObjects = [];
-    const galaxyTiltAngle = 60;
-    const numOrbits = Math.max(6, demoStartupsData.length);
-
-    for (let i = 1; i <= numOrbits; i++) {
-        const orbit = document.createElement('div');
-        orbit.className = 'ultra_new_planetary_orbit';
-        const orbitSize = 200 + i * 100;
-        orbit.style.setProperty('--orbit-size', `${orbitSize}px`);
-
-        const planetOrientation = document.createElement('div');
-        planetOrientation.className = 'ultra_new_planetary_planet_orientation';
-
-        const planet = document.createElement('div');
-        planet.className = 'ultra_new_planetary_planet';
-        const planetSize = 60 + Math.random() * 20;
-        planet.style.setProperty('--planet-size', `${planetSize}px`);
-
-        const startupData = demoStartupsData[i - 1];
+    // Bind startup data to existing HTML orbits (CSS handles textures & orbital animation)
+    const existingPlanets = galaxyContainer.querySelectorAll('.ultra_new_planetary_orbit .ultra_new_planetary_planet');
+    existingPlanets.forEach(function(planet, index) {
+        const startupData = demoStartupsData[index];
         if (startupData) {
-            // Don't set backgroundImage here — CSS handles textures via !important
-            // Setting it would trigger unnecessary S3 downloads
             planet.setAttribute('data-startup-id', startupData.id);
             planet.setAttribute('data-startup-name', startupData.name);
             planet.setAttribute('data-startup-data', JSON.stringify(startupData));
@@ -345,31 +328,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 showStartupInfo(startupData);
             });
             planet.title = startupData.name;
-        } else {
-            planet.title = 'Декоративная планета';
         }
-
-        planetOrientation.appendChild(planet);
-        orbit.appendChild(planetOrientation);
-
-        const orbitTime = 80 + i * 20 + (Math.random() - 0.5) * 40;
-        const initialAngle = Math.random() * 360;
-        const speedFactor = 0.8 + Math.random() * 0.4;
-
-        planetObjects.push({
-            element: planet,
-            orientation: planetOrientation,
-            orbit: orbit,
-            size: planetSize,
-            orbitSize: orbitSize,
-            orbitTime: orbitTime,
-            angle: initialAngle,
-            speedFactor: speedFactor,
-            startTime: Date.now() - Math.random() * orbitTime * 1000,
-        });
-
-        galaxyContainer.appendChild(orbit);
-    }
+    });
     function showStartupInfo(startupData) {
         const modal = document.getElementById('demo_planetary_modal');
         if (!modal) return;
@@ -439,25 +399,7 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
         setupModalHandlers();
     }
-    function updatePlanets() {
-        const now = Date.now();
-        planetObjects.forEach((planetObj, index) => {
-            const elapsedSeconds = (now - planetObj.startTime) / 1000;
-            const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
-            const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
-            const angle = planetObj.angle + progress * 360;
-            const angleRad = angle * Math.PI / 180;
-            const radius = planetObj.orbitSize / 2;
-
-            const x = Math.cos(angleRad) * radius;
-            const y = Math.sin(angleRad) * radius;
-            planetObj.orientation.style.transform = `translate(${x}px, ${y}px)`;
-
-
-        });
-        requestAnimationFrame(updatePlanets);
-    }
-    updatePlanets();
+    // CSS handles orbital animation via orbit-rotation keyframes — no JS rAF needed
   }
 
   // Lazy CSS backgrounds for below-fold sections
