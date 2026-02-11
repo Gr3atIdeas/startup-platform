@@ -42,7 +42,7 @@
                         <div class="planet-orientation">
                           <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px;" data-id="{{ investment.startup_id }}">
                             {% if investment.planet_image %}
-                              <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ investment.planet_image }}" alt="{{ investment.name|escape }}" class="planet-img" onerror="this.src='{{ S3_PUBLIC_BASE_URL }}/choosable_planets/0.png'">
+                              <img src="{{ investment.planet_image|planet_url }}" alt="{{ investment.name|escape }}" class="planet-img" onerror="this.src='/static/accounts/images/planetary_system/textures/planet_3.webp'">
                             {% else %}
                               <img src="{% static 'accounts/images/planetary_system/textures/planet_1.webp' %}" alt="Планета по умолчанию" class="planet-img">
                             {% endif %}
@@ -161,7 +161,7 @@
               <div class="startup-card-left">
                 <div class="startup-planet-placeholder" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px; overflow: hidden; position: relative;">
                   {% if investment.startup.planet_image %}
-                    <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="{{ investment.startup.planet_image|planet_url }}" alt="{{ investment.startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
                   {% else %}
                     <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" style="width: 100%; height: 100%; object-fit: cover;">
                   {% endif %}
@@ -230,7 +230,7 @@
               <div class="startup-card-left">
                 <div class="startup-planet-placeholder" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px; overflow: hidden; position: relative;">
                   {% if startup.planet_image %}
-                    <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="{{ startup.planet_image|planet_url }}" alt="{{ startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
                   {% else %}
                     <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" style="width: 100%; height: 100%; object-fit: cover;">
                   {% endif %}
@@ -298,7 +298,7 @@
               <div class="startup-card-left">
                 <div class="startup-planet-placeholder" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px; overflow: hidden; position: relative;">
                   {% if investment.startup.planet_image %}
-                    <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="{{ investment.startup.planet_image|planet_url }}" alt="{{ investment.startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
                   {% else %}
                     <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" style="width: 100%; height: 100%; object-fit: cover;">
                   {% endif %}
@@ -364,7 +364,7 @@
               <div class="startup-card-left">
                 <div class="startup-planet-placeholder" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px; overflow: hidden; position: relative;">
                   {% if startup.planet_image %}
-                    <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="{{ startup.planet_image|planet_url }}" alt="{{ startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
                   {% else %}
                     <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" style="width: 100%; height: 100%; object-fit: cover;">
                   {% endif %}
@@ -1017,7 +1017,7 @@
                 if (s && s.startup_id && s.startup_id !== 'null' && s.startup_id !== null) {
                   startups[s.startup_id.toString()] = {
                     startup_id: s.startup_id,
-                    image: s.planet_image && s.planet_image !== '0.png' ? `{{ S3_PUBLIC_BASE_URL }}/choosable_planets/${s.planet_image}` : null,
+                    image: s.planet_image && s.planet_image !== '0.png' ? (s.planet_image.match(/^planet_[1-9]\.webp$/) ? `/static/accounts/images/planetary_system/textures/${s.planet_image}` : `/static/accounts/images/planetary_system/textures/planet_${[3,5,6][[...s.planet_image].reduce((a,c)=>a+c.charCodeAt(0),0)%3]}.webp`) : null,
                     name: s.name || 'Без названия',
                     rating: s.rating || '0/5 (0)',
                     comment_count: s.comment_count || 0,
@@ -1113,7 +1113,7 @@
                   planet.style.backgroundColor = 'transparent';
                   const img = planet.querySelector('.planet-img');
                   if (img) {
-                    if (startups[id].image && startups[id].image !== '{{ S3_PUBLIC_BASE_URL }}/choosable_planets/0.png') {
+                    if (startups[id].image && startups[id].image) {
                       img.src = startups[id].image;
                     } else {
                       const _fp = [3, 5, 6]; const randomPlanetNum = _fp[Math.floor(Math.random() * 3)];

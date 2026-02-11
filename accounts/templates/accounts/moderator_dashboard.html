@@ -447,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="startup-card-item-content">
                         <div class="startup-card-main-info">
                                 {% if startup.planet_image %}
-                                <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title }} planet" class="startup-card-image">
+                                <img src="{{ startup.planet_image|planet_url }}" alt="{{ startup.title }} planet" class="startup-card-image">
                             {% else %}
                                 <div class="startup-card-image-placeholder">Нет изображения</div>
                             {% endif %}
@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="startup-card-item-content">
                         <div class="startup-card-main-info">
                             {% if franchise.planet_image %}
-                                <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ franchise.planet_image }}" alt="{{ franchise.title }} planet" class="startup-card-image">
+                                <img src="{{ franchise.planet_image|planet_url }}" alt="{{ franchise.title }} planet" class="startup-card-image">
                             {% else %}
                                 <div class="startup-card-image-placeholder">Нет изображения</div>
                             {% endif %}
@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="startup-card-item-content">
                         <div class="startup-card-main-info">
                             {% if agency.planet_image %}
-                                <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ agency.planet_image }}" alt="{{ agency.title }} planet" class="startup-card-image">
+                                <img src="{{ agency.planet_image|planet_url }}" alt="{{ agency.title }} planet" class="startup-card-image">
                             {% else %}
                                 <div class="startup-card-image-placeholder">Нет изображения</div>
                             {% endif %}
@@ -691,7 +691,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="startup-card-item-content">
                         <div class="startup-card-main-info">
                             {% if specialist.planet_image %}
-                                <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ specialist.planet_image }}" alt="{{ specialist.title }} planet" class="startup-card-image">
+                                <img src="{{ specialist.planet_image|planet_url }}" alt="{{ specialist.title }} planet" class="startup-card-image">
                             {% else %}
                                 <div class="startup-card-image-placeholder">Нет изображения</div>
                             {% endif %}

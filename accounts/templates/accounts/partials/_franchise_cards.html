@@ -24,7 +24,7 @@
     <!-- Планетка -->
     {% if franchise.planet_image %}
       <div class="planet-miniature-container">
-        <div class="planet-miniature-3d" style="background-image: url('{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ franchise.planet_image }}')"></div>
+        <div class="planet-miniature-3d" style="background-image: url('{{ franchise.planet_image|planet_url }}')"></div>
       </div>
     {% endif %}
 

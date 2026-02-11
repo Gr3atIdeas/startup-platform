@@ -325,7 +325,7 @@ FileUploadUtils.init({ staticUrl: "{% static 'accounts/images/creat_startup/' %}
 <script>
 window.STARTUP_FORM_CONFIG = {
   planetChoices: [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
-  planetBaseUrl: "{{ S3_PUBLIC_BASE_URL }}/choosable_planets/",
+  planetBaseUrl: "/static/accounts/images/planetary_system/textures/",
 };
 
 // Инициализация модального окна для медиа

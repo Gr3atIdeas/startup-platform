@@ -1,9 +1,26 @@
 import json
+import re
 from django import template
 from django.utils.safestring import mark_safe
 from allauth.socialaccount.templatetags.socialaccount import provider_login_url as allauth_provider_login_url
 from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 register = template.Library()
+
+_PLANET_WEBP_RE = re.compile(r'^planet_[1-9]\.webp$')
+_PLANET_CHOICES = ['planet_3.webp', 'planet_5.webp', 'planet_6.webp']
+
+@register.filter(name="planet_url")
+def planet_url(planet_image_filename):
+    """Convert a planet_image filename to the correct static URL.
+    Old filenames (1.png, 2-2.png etc.) are mapped to new planet_N.webp textures."""
+    if not planet_image_filename:
+        return '/static/accounts/images/planetary_system/textures/planet_3.webp'
+    filename = str(planet_image_filename)
+    if _PLANET_WEBP_RE.match(filename):
+        return f'/static/accounts/images/planetary_system/textures/{filename}'
+    # Old filename — deterministic map to one of 3 textures
+    idx = sum(ord(c) for c in filename) % 3
+    return f'/static/accounts/images/planetary_system/textures/{_PLANET_CHOICES[idx]}'
 @register.filter(name="translate_category")
 def translate_category(name):
     """Переводит английское/транслитерированное название категории на русский (без учета регистра)."""

@@ -87,7 +87,7 @@
           
           <div class="carousel-planet-thumbnail">
             {% if franchise.planet_image %}
-              <div class="planet-detail-3d" style="background-image: url('{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ franchise.planet_image }}')"></div>
+              <div class="planet-detail-3d" style="background-image: url('{{ franchise.planet_image|planet_url }}')"></div>
             {% else %}
               <img src="{% static 'accounts/images/icons/planet_placeholder.svg' %}" alt="Планета не выбрана" class="planet-thumbnail-placeholder">
             {% endif %}
@@ -99,7 +99,7 @@
             <div class="franchise-detail-default-planet-display">
               <div class="space-background"></div>
               {% if franchise.planet_image %}
-                <div class="planet-detail-3d planet-detail-3d--large" style="background-image: url('{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ franchise.planet_image }}')"></div>
+                <div class="planet-detail-3d planet-detail-3d--large" style="background-image: url('{{ franchise.planet_image|planet_url }}')"></div>
               {% else %}
                 <img src="{% static 'accounts/images/icons/planet_placeholder.svg' %}" alt="Планета не выбрана" class="planet-placeholder">
               {% endif %}
