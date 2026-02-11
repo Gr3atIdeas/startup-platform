@@ -91,6 +91,13 @@ body {
   letter-spacing: -0.28px;
 }
 
+.sidebar-column {
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+  min-width: 0;
+}
+
 .startups-content {
   display: flex;
   flex-direction: column;
@@ -99,8 +106,6 @@ body {
   box-sizing: border-box;
   min-width: 0;
   gap: 21px;
-  grid-row: 1 / span 2;
-  grid-column: 2;
 }
 
 .catalog-search-wrapper {
@@ -220,8 +225,7 @@ body {
 
 /* ========== Sidebar Ad Block ========== */
 .sidebar-ad {
-  grid-column: 1;
-  width: 254px;
+  width: 100%;
   box-sizing: border-box;
   background: linear-gradient(135deg, #0a1628 0%, #0d2244 50%, #0a1628 100%);
   border: 1px dashed rgba(255, 255, 255, 0.12);
@@ -665,10 +669,6 @@ body {
     height: auto;
   }
 
-  .sidebar-ad {
-    width: 220px;
-  }
-
   .startups-grid {
     gap: 15px;
     justify-content: center;
@@ -705,22 +705,18 @@ body {
   .sidebar.mobile-collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; }
   .sidebar.mobile-open { max-height: 2000px; padding: 20px 20px 30px 20px; }
 
+  .sidebar-column {
+    display: contents;
+  }
+
   .startups-content {
     width: 100%;
     align-items: center;
-    grid-row: auto;
-    grid-column: auto;
   }
 
   .sidebar-ad {
-    width: 100%;
-    grid-column: auto;
     order: 3;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
     padding: 24px 30px;
-    gap: 8px 16px;
   }
 
   .sidebar-ad__title {

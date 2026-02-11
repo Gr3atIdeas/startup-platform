@@ -14,8 +14,9 @@
 {% block content %}
 
   <div class="catalog-container">
-    
-    <aside class="sidebar"> 
+
+    <div class="sidebar-column">
+    <aside class="sidebar">
       <form method="get" id="filterForm">
         
         <div class="sort-dropdown">
@@ -98,7 +99,16 @@
       </form>
     </aside>
 
-    
+    <div class="sidebar-ad">
+      <div class="sidebar-ad__icon">
+        <img src="{% static 'accounts/images/planetary_system/gi.svg' %}" alt="GI">
+      </div>
+      <h3 class="sidebar-ad__title">Здесь может быть ваша реклама</h3>
+      <p class="sidebar-ad__desc">Разместите промо вашего стартапа на платформе Great Ideas</p>
+      <a href="https://t.me/yourgreatideas" target="_blank" class="sidebar-ad__btn">Связаться</a>
+    </div>
+    </div>
+
     <div class="startups-content">
       
       <div class="catalog-search-wrapper">
@@ -166,15 +176,6 @@
       </div>
       
 
-    </div>
-
-    <div class="sidebar-ad">
-      <div class="sidebar-ad__icon">
-        <img src="{% static 'accounts/images/planetary_system/gi.svg' %}" alt="GI">
-      </div>
-      <h3 class="sidebar-ad__title">Здесь может быть ваша реклама</h3>
-      <p class="sidebar-ad__desc">Разместите промо вашего стартапа на платформе Great Ideas</p>
-      <a href="https://t.me/yourgreatideas" target="_blank" class="sidebar-ad__btn">Связаться</a>
     </div>
   </div>
 
