@@ -91,13 +91,6 @@ body {
   letter-spacing: -0.28px;
 }
 
-.sidebar-column {
-  display: flex;
-  flex-direction: column;
-  gap: 21px;
-  min-width: 0;
-}
-
 .startups-content {
   display: flex;
   flex-direction: column;
@@ -210,12 +203,14 @@ body {
 .sidebar {
   background: #fff;
   width: 254px;
-  height: 750px;
-  padding: 53px 28px 63px 28px;
+  height: auto;
+  padding: 53px 28px 30px 28px;
   border-radius: 10px;
   box-sizing: border-box;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
   overflow-y: auto;
   transition:
     transform 0.2s ease,
@@ -225,17 +220,19 @@ body {
 
 /* ========== Sidebar Ad Block ========== */
 .sidebar-ad {
-  width: 100%;
+  width: calc(100% + 56px);
+  margin-left: -28px;
+  margin-right: -28px;
+  margin-bottom: -30px;
   box-sizing: border-box;
   background: linear-gradient(135deg, #0a1628 0%, #0d2244 50%, #0a1628 100%);
-  border: 1px dashed rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  padding: 30px 20px;
+  border-radius: 0 0 10px 10px;
+  padding: 24px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .sidebar-ad__icon {
@@ -665,8 +662,15 @@ body {
 
   .sidebar {
     width: 220px;
-    padding: 30px 20px 40px 20px;
+    padding: 30px 20px 25px 20px;
     height: auto;
+  }
+
+  .sidebar-ad {
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-bottom: -25px;
   }
 
   .startups-grid {
@@ -705,26 +709,16 @@ body {
   .sidebar.mobile-collapsed { max-height: 0; padding-top: 0; padding-bottom: 0; }
   .sidebar.mobile-open { max-height: 2000px; padding: 20px 20px 30px 20px; }
 
-  .sidebar-column {
-    display: contents;
-  }
-
   .startups-content {
     width: 100%;
     align-items: center;
   }
 
   .sidebar-ad {
-    order: 3;
-    padding: 24px 30px;
-  }
-
-  .sidebar-ad__title {
-    font-size: 16px;
-  }
-
-  .sidebar-ad__desc {
-    font-size: 12px;
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-bottom: -30px;
   }
 
   .startups-grid {
