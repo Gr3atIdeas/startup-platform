@@ -85,19 +85,19 @@
           
           <div class="carousel-planet-thumbnail">
             {% if specialist.planet_image %}
-              <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ specialist.planet_image }}" alt="Планета {{ specialist.title }}" class="planet-thumbnail-img">
+              <div class="planet-detail-3d" style="background-image: url('{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ specialist.planet_image }}')"></div>
             {% else %}
               <img src="{% static 'accounts/images/icons/planet_placeholder.svg' %}" alt="Планета не выбрана" class="planet-thumbnail-placeholder">
             {% endif %}
           </div>
         {% endif %}
-        
-        
+
+
         {% if not slider_images %}
             <div class="specialist-detail-default-planet-display">
               <div class="space-background"></div>
               {% if specialist.planet_image %}
-                <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ specialist.planet_image }}" alt="Планета {{ specialist.title }}" class="planet-image">
+                <div class="planet-detail-3d planet-detail-3d--large" style="background-image: url('{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ specialist.planet_image }}')"></div>
               {% else %}
                 <img src="{% static 'accounts/images/icons/planet_placeholder.svg' %}" alt="Планета не выбрана" class="planet-placeholder">
               {% endif %}

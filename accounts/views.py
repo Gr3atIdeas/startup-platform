@@ -461,13 +461,8 @@ def home(request):
             demo_startups = random.sample(all_startups, num_startups)
         startups_data = []
         for startup in demo_startups:
-            folder_choice = random.choice(['planets_round', 'planets_ring'])
-            if folder_choice == 'planets_round':
-                planet_num = random.randint(1, 15)
-                planet_image_url = static(f"accounts/images/planetary_system/planets_round/{planet_num}.png")
-            else:
-                planet_num = random.randint(1, 6)
-                planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{planet_num}.png")
+            planet_num = random.randint(1, 9)
+            planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{planet_num}.webp")
             startups_data.append({
                 "id": startup.startup_id,
                 "name": startup.title,
@@ -499,13 +494,8 @@ def home(request):
 
             if not planet_image_url:
                 import random
-                folder_choice = random.choice(['planets_round', 'planets_ring'])
-                if folder_choice == 'planets_round':
-                    planet_image_num = (i % 15) + 1
-                    planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
-                else:
-                    planet_image_num = (i % 6) + 1
-                    planet_image_url = f"/static/accounts/images/planetary_system/planets_ring/{planet_image_num}.png"
+                planet_image_num = (i % 9) + 1
+                planet_image_url = f"/static/accounts/images/planetary_system/textures/planet_{planet_image_num}.webp"
 
             direction_original = 'Не указано'
             if startup.direction:
@@ -667,13 +657,8 @@ def home(request):
                     planet_image = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
                 else:
                     import random
-                    folder_choice = random.choice(['planets_round', 'planets_ring'])
-                    if folder_choice == 'planets_round':
-                        planet_num = random.randint(1, 15)
-                        planet_image = static(f"accounts/images/planetary_system/planets_round/{planet_num}.webp")
-                    else:
-                        planet_num = random.randint(1, 6)
-                        planet_image = static(f"accounts/images/planetary_system/planets_ring/{planet_num}.webp")
+                    planet_num = random.randint(1, 9)
+                    planet_image = static(f"accounts/images/planetary_system/textures/planet_{planet_num}.webp")
                 
                 # Основное изображение - логотип если есть, иначе планета
                 startup_image = startup_logo if startup_logo else planet_image
@@ -722,7 +707,7 @@ def home(request):
                         'rating': '4',
                         'description': 'VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...',
                         'image': static('accounts/images/main_page/volt_forge.webp'),
-                        'planet_image': static('accounts/images/planetary_system/planets_round/1.webp'),
+                        'planet_image': static('accounts/images/planetary_system/textures/planet_1.webp'),
                         'has_logo': False,
                         'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
                         'url': '/startups_list/'
@@ -733,7 +718,7 @@ def home(request):
                         'rating': '5',
                         'description': 'NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны...',
                         'image': static('accounts/images/main_page/neuro_bloom.webp'),
-                        'planet_image': static('accounts/images/planetary_system/planets_round/2.webp'),
+                        'planet_image': static('accounts/images/planetary_system/textures/planet_2.webp'),
                         'has_logo': False,
                         'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
                         'url': '/startups_list/'
@@ -744,7 +729,7 @@ def home(request):
                         'rating': '4',
                         'description': 'BioCrop Nexus создает генетически оптимизированные семена, устойчивые к климату...',
                         'image': static('accounts/images/main_page/biocrop_nexus.webp'),
-                        'planet_image': static('accounts/images/planetary_system/planets_round/3.webp'),
+                        'planet_image': static('accounts/images/planetary_system/textures/planet_3.webp'),
                         'has_logo': False,
                         'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
                         'url': '/startups_list/'
@@ -761,7 +746,7 @@ def home(request):
                     'rating': '4',
                     'description': 'VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...',
                     'image': static('accounts/images/main_page/volt_forge.webp'),
-                    'planet_image': static('accounts/images/planetary_system/planets_round/1.webp'),
+                    'planet_image': static('accounts/images/planetary_system/textures/planet_1.webp'),
                     'has_logo': False,
                     'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
                     'url': '/startups_list/'
@@ -772,7 +757,7 @@ def home(request):
                     'rating': '5',
                     'description': 'NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны...',
                     'image': static('accounts/images/main_page/neuro_bloom.webp'),
-                    'planet_image': static('accounts/images/planetary_system/planets_round/2.webp'),
+                    'planet_image': static('accounts/images/planetary_system/textures/planet_2.webp'),
                     'has_logo': False,
                     'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
                     'url': '/startups_list/'
@@ -783,7 +768,7 @@ def home(request):
                     'rating': '4',
                     'description': 'BioCrop Nexus создает генетически оптимизированные семена, устойчивые к климату...',
                     'image': static('accounts/images/main_page/biocrop_nexus.webp'),
-                    'planet_image': static('accounts/images/planetary_system/planets_round/3.webp'),
+                    'planet_image': static('accounts/images/planetary_system/textures/planet_3.webp'),
                     'has_logo': False,
                     'owner_avatar': static('accounts/images/avatars/default_avatar_ufo.png'),
                     'url': '/startups_list/'
@@ -5832,14 +5817,8 @@ def investor_main(request):
         if startup.planet_image:
             image_path = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
         else:
-            folder_choice = random.choice(['planets_round', 'planets_ring'])
-            if folder_choice == 'planets_round':
-                random_planet_num = random.randint(1, 15)
-                image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
-            else:
-                random_planet_num = random.randint(1, 6)
-                image_path = f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png"
-            image_path = static(image_path)
+            random_planet_num = random.randint(1, 9)
+            image_path = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
         planets_data_for_template.append(
             {
                 "id": startup.startup_id,
@@ -5863,8 +5842,8 @@ def investor_main(request):
         if startup.planet_image:
             planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
         else:
-            random_planet_num = random.randint(1, 8)
-            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+            random_planet_num = random.randint(1, 9)
+            planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
         planets_data_json.append({
             "id": startup.startup_id,
             "name": startup.title,
@@ -5911,13 +5890,8 @@ def investor_main(request):
         if startup.planet_image:
             planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
         else:
-            folder_choice = random.choice(['planets_round', 'planets_ring'])
-            if folder_choice == 'planets_round':
-                random_planet_num = random.randint(1, 15)
-                planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
-            else:
-                random_planet_num = random.randint(1, 6)
-                planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
+            random_planet_num = random.randint(1, 9)
+            planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
         # Нормализуем здоровье в одну категорию 'Health'
         if direction_name in ['Healthcare', 'Medicine']:
@@ -6003,14 +5977,8 @@ def startuper_main(request):
         if startup.planet_image:
             image_path = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
         else:
-            folder_choice = random.choice(['planets_round', 'planets_ring'])
-            if folder_choice == 'planets_round':
-                random_planet_num = random.randint(1, 15)
-                image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
-            else:
-                random_planet_num = random.randint(1, 6)
-                image_path = f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png"
-            image_path = static(image_path)
+            random_planet_num = random.randint(1, 9)
+            image_path = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
         planets_data_for_template.append(
             {
                 "id": startup.startup_id,
@@ -6034,13 +6002,8 @@ def startuper_main(request):
         if startup.planet_image:
             planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
         else:
-            folder_choice = random.choice(['planets_round', 'planets_ring'])
-            if folder_choice == 'planets_round':
-                random_planet_num = random.randint(1, 15)
-                planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
-            else:
-                random_planet_num = random.randint(1, 6)
-                planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
+            random_planet_num = random.randint(1, 9)
+            planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
         planets_data_json.append({
             "id": startup.startup_id,
             "name": startup.title,
@@ -6087,13 +6050,8 @@ def startuper_main(request):
         if startup.planet_image:
             planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
         else:
-            folder_choice = random.choice(['planets_round', 'planets_ring'])
-            if folder_choice == 'planets_round':
-                random_planet_num = random.randint(1, 15)
-                planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
-            else:
-                random_planet_num = random.randint(1, 6)
-                planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
+            random_planet_num = random.randint(1, 9)
+            planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
         russian_direction = DIRECTION_TRANSLATIONS.get(direction_name, direction_name)
         original_direction = None
@@ -6136,7 +6094,8 @@ def startuper_main(request):
             if startup.planet_image:
                 planet_image = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
             else:
-                planet_image = static('accounts/images/main_page/volt_forge.webp')
+                import random as _rnd
+                planet_image = static(f'accounts/images/planetary_system/textures/planet_{_rnd.randint(1, 9)}.webp')
             
             # Основное изображение - логотип если есть, иначе планета
             startup_image = startup_logo if startup_logo else planet_image
@@ -6192,7 +6151,7 @@ def startuper_main(request):
                 'rating': '4',
                 'description': 'VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...',
                 'image': static('accounts/images/main_page/volt_forge.webp'),
-                'planet_image': static('accounts/images/planetary_system/planets_round/1.webp'),
+                'planet_image': static('accounts/images/planetary_system/textures/planet_1.webp'),
                 'has_logo': False,
                 'owner_avatar': static('accounts/images/default_icon.svg'),
                 'url': '/startups_list/'
@@ -6203,7 +6162,7 @@ def startuper_main(request):
                 'rating': '5',
                 'description': 'NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны для раннего выявления тревоги, депрессии и выгорания.',
                 'image': static('accounts/images/main_page/neuro_bloom.webp'),
-                'planet_image': static('accounts/images/planetary_system/planets_round/2.webp'),
+                'planet_image': static('accounts/images/planetary_system/textures/planet_2.webp'),
                 'has_logo': False,
                 'owner_avatar': static('accounts/images/default_icon.svg'),
                 'url': '/startups_list/'
@@ -6214,7 +6173,7 @@ def startuper_main(request):
                 'rating': '4',
                 'description': 'BioCrop Nexus создает генетически оптимизированные семена, устойчивые к экстремальным климатическим условиям и вредителям.',
                 'image': static('accounts/images/main_page/biocrop_nexus.webp'),
-                'planet_image': static('accounts/images/planetary_system/planets_round/3.webp'),
+                'planet_image': static('accounts/images/planetary_system/textures/planet_3.webp'),
                 'has_logo': False,
                 'owner_avatar': static('accounts/images/default_icon.svg'),
                 'url': '/startups_list/'
@@ -7725,13 +7684,8 @@ def planetary_system(request):
 
         if not planet_image_url:
             import random
-            folder_choice = random.choice(['planets_round', 'planets_ring'])
-            if folder_choice == 'planets_round':
-                planet_image_num = (i % 15) + 1
-                planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
-            else:
-                planet_image_num = (i % 6) + 1
-                planet_image_url = f"/static/accounts/images/planetary_system/planets_ring/{planet_image_num}.png"
+            planet_image_num = (i % 9) + 1
+            planet_image_url = f"/static/accounts/images/planetary_system/textures/planet_{planet_image_num}.webp"
 
         direction_original = 'Не указано'
         if startup.direction:
@@ -7766,13 +7720,8 @@ def planetary_system(request):
 
         if not planet_image_url:
             import random
-            folder_choice = random.choice(['planets_round', 'planets_ring'])
-            if folder_choice == 'planets_round':
-                planet_image_num = (idx % 15) + 1
-                planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
-            else:
-                planet_image_num = (idx % 6) + 1
-                planet_image_url = f"/static/accounts/images/planetary_system/planets_ring/{planet_image_num}.png"
+            planet_image_num = (idx % 9) + 1
+            planet_image_url = f"/static/accounts/images/planetary_system/textures/planet_{planet_image_num}.webp"
 
         direction_original = 'Не указано'
         if startup.direction:

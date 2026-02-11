@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             planet.title = startupData.name;
         } else {
-            const fallbackImage = `/static/accounts/images/planetary_system/planets_round/${Math.floor(Math.random() * 15) + 1}.png`;
+            const fallbackImage = `/static/accounts/images/planetary_system/textures/planet_${Math.floor(Math.random() * 9) + 1}.webp`;
             planet.style.backgroundImage = `url('${fallbackImage}')`;
             planet.title = 'Декоративная планета';
         }

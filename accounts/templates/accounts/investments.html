@@ -44,7 +44,7 @@
                             {% if investment.planet_image %}
                               <img src="{{ S3_PUBLIC_BASE_URL }}/choosable_planets/{{ investment.planet_image }}" alt="{{ investment.name|escape }}" class="planet-img" onerror="this.src='{{ S3_PUBLIC_BASE_URL }}/choosable_planets/0.png'">
                             {% else %}
-                              <img src="{% static 'accounts/images/planetary_system/planets_round/1.png' %}" alt="Планета по умолчанию" class="planet-img">
+                              <img src="{% static 'accounts/images/planetary_system/textures/planet_1.webp' %}" alt="Планета по умолчанию" class="planet-img">
                             {% endif %}
                           </div>
                         </div>
@@ -1116,13 +1116,12 @@
                     if (startups[id].image && startups[id].image !== '{{ S3_PUBLIC_BASE_URL }}/choosable_planets/0.png') {
                       img.src = startups[id].image;
                     } else {
-                      // Используем рандомную планету из папки planetary_system
-                      const randomPlanetNum = Math.floor(Math.random() * 15) + 1;
-                      img.src = '{% static "accounts/images/planetary_system/planets_round/" %}' + randomPlanetNum + '.png';
+                      const randomPlanetNum = Math.floor(Math.random() * 9) + 1;
+                      img.src = '{% static "accounts/images/planetary_system/textures/planet_" %}' + randomPlanetNum + '.webp';
                     }
                     img.onerror = () => {
-                      const fallbackPlanetNum = Math.floor(Math.random() * 15) + 1;
-                      img.src = '{% static "accounts/images/planetary_system/planets_round/" %}' + fallbackPlanetNum + '.png';
+                      const fallbackPlanetNum = Math.floor(Math.random() * 9) + 1;
+                      img.src = '{% static "accounts/images/planetary_system/textures/planet_" %}' + fallbackPlanetNum + '.webp';
                     };
                   }
                 }

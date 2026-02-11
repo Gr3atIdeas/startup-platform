@@ -943,6 +943,52 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+.planet-miniature-3d {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-size: 200% 100%;
+  background-repeat: repeat-x;
+  animation: planet-card-spin 12s linear infinite;
+  position: relative;
+  overflow: hidden;
+  border: 4px solid #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+.planet-miniature-3d::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%,
+      rgba(255,255,255,0.45) 0%,
+      rgba(255,255,255,0.2) 12%,
+      rgba(255,255,255,0.04) 30%,
+      transparent 50%);
+  z-index: 2;
+  pointer-events: none;
+}
+.planet-miniature-3d::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(90deg,
+    transparent 40%,
+    rgba(0,0,0,0.12) 48%,
+    rgba(0,0,0,0.2) 52%,
+    rgba(0,0,0,0.4) 65%,
+    rgba(0,0,0,0.6) 100%);
+  box-shadow: inset -6px -2px 15px rgba(0,0,0,0.5);
+  z-index: 3;
+  pointer-events: none;
+}
+@keyframes planet-card-spin {
+  from { background-position-x: 0; }
+  to   { background-position-x: -200%; }
+}
 
 .category-tag {
   display: inline-flex;

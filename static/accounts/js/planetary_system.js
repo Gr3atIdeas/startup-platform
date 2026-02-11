@@ -14,30 +14,17 @@
   let ultraNewPlanetaryAllStartupsData = [];
   let ultraNewPlanetaryFallbackImages = {
     round: [
-      '/static/accounts/images/planetary_system/planets_round/1.png',
-      '/static/accounts/images/planetary_system/planets_round/2.png',
-      '/static/accounts/images/planetary_system/planets_round/3.png',
-      '/static/accounts/images/planetary_system/planets_round/4.png',
-      '/static/accounts/images/planetary_system/planets_round/5.png',
-      '/static/accounts/images/planetary_system/planets_round/6.png',
-      '/static/accounts/images/planetary_system/planets_round/7.png',
-      '/static/accounts/images/planetary_system/planets_round/8.png',
-      '/static/accounts/images/planetary_system/planets_round/9.png',
-      '/static/accounts/images/planetary_system/planets_round/10.png',
-      '/static/accounts/images/planetary_system/planets_round/11.png',
-      '/static/accounts/images/planetary_system/planets_round/12.png',
-      '/static/accounts/images/planetary_system/planets_round/13.png',
-      '/static/accounts/images/planetary_system/planets_round/14.png',
-      '/static/accounts/images/planetary_system/planets_round/15.png'
+      '/static/accounts/images/planetary_system/textures/planet_1.webp',
+      '/static/accounts/images/planetary_system/textures/planet_2.webp',
+      '/static/accounts/images/planetary_system/textures/planet_3.webp',
+      '/static/accounts/images/planetary_system/textures/planet_4.webp',
+      '/static/accounts/images/planetary_system/textures/planet_5.webp',
+      '/static/accounts/images/planetary_system/textures/planet_6.webp',
+      '/static/accounts/images/planetary_system/textures/planet_7.webp',
+      '/static/accounts/images/planetary_system/textures/planet_8.webp',
+      '/static/accounts/images/planetary_system/textures/planet_9.webp'
     ],
-    ring: [
-      '/static/accounts/images/planetary_system/planets_ring/1.png',
-      '/static/accounts/images/planetary_system/planets_ring/2.png',
-      '/static/accounts/images/planetary_system/planets_ring/3.png',
-      '/static/accounts/images/planetary_system/planets_ring/4.png',
-      '/static/accounts/images/planetary_system/planets_ring/5.png',
-      '/static/accounts/images/planetary_system/planets_ring/6.png'
-    ]
+    ring: []
   };
   let ultraNewPlanetaryGalaxyScale = 1;
   let ultraNewPlanetaryGalaxyX = 0;
@@ -447,9 +434,7 @@
       planet.style.backgroundImage = `url(${imageUrl})`;
 
       const img = new Image();
-      img.onload = function() {
-
-      };
+      img.onload = function() {};
       img.onerror = function() {
         const fallbackUrl = getUltraNewPlanetaryFallbackImage(index);
         planet.style.backgroundImage = `url(${fallbackUrl})`;
@@ -459,6 +444,13 @@
       const fallbackUrl = getUltraNewPlanetaryFallbackImage(index);
       planet.style.backgroundImage = `url(${fallbackUrl})`;
     }
+
+    // Enable 3D spinning texture effect
+    planet.style.backgroundSize = '200% 100%';
+    planet.style.backgroundRepeat = 'repeat-x';
+    var spinSpeed = 10 + (index % 5) * 3;
+    var spinDir = (index % 2 === 0) ? '' : ' reverse';
+    planet.style.animation = 'planet-texture-spin ' + spinSpeed + 's linear infinite' + spinDir;
 
     planet.setAttribute('data-startup-id', startup.id || startup.startup_id || 0);
     planet.setAttribute('data-startup-name', startup.name || 'Пустая орбита');
@@ -530,9 +522,8 @@
     }
   }
   function getUltraNewPlanetaryFallbackImage(index) {
-    const folderChoice = Math.random() < 0.5 ? 'round' : 'ring';
-    const images = ultraNewPlanetaryFallbackImages[folderChoice] || [];
-    return images[index % images.length] || '/static/accounts/images/planetary_system/planets_round/1.png';
+    const images = ultraNewPlanetaryFallbackImages.round || [];
+    return images[index % images.length] || '/static/accounts/images/planetary_system/textures/planet_1.webp';
   }
   function showUltraNewPlanetaryModal(startup, planetImageUrl) {
     const modal = document.getElementById('ultra_new_planetary_modal');
@@ -546,7 +537,7 @@
     const fundingAmountElement = document.getElementById('ultra_new_planetary_modal_funding_amount');
     const valuationAmountElement = document.getElementById('ultra_new_planetary_modal_valuation_amount');
     const investorsCountElement = document.getElementById('ultra_new_planetary_modal_investors_count');
-    const planetImageElement = document.getElementById('ultra_new_planetary_modal_planet_img');
+    const planetImageElement = document.getElementById('ultra_new_planetary_modal_planet_3d');
     const detailsBtn = document.getElementById('ultra_new_planetary_modal_details_btn');
     const investmentBtn = document.getElementById('ultra_new_planetary_modal_investment_btn');
     if (nameElement) nameElement.textContent = startup.name || 'Без названия';
@@ -587,11 +578,7 @@
     }
     if (planetImageElement) {
       const modalImageUrl = planetImageUrl || startup.image || getUltraNewPlanetaryFallbackImage(0);
-      planetImageElement.src = modalImageUrl;
-
-      planetImageElement.onerror = function() {
-        this.src = getUltraNewPlanetaryFallbackImage(0);
-      };
+      planetImageElement.style.backgroundImage = 'url(' + modalImageUrl + ')';
     }
     const progressPercentageElement = document.getElementById('ultra_new_planetary_modal_progress_percentage');
     const progressBarVisual = document.querySelector('.ultra_new_planetary_modal_progress_bar_visual');

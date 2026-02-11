@@ -701,7 +701,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Кнопки выбора файлов уже имеют inline onclick в шаблоне — дублирующее навешивание убрано
 
-  // Планеты (оптимизация: один IMG)
+  // Планеты (3D вращающийся div)
   try {
     var cfg = (window.STARTUP_FORM_CONFIG||{})
     var planetChoices = Array.isArray(cfg.planetChoices)?cfg.planetChoices:[]
@@ -712,29 +712,37 @@ document.addEventListener('DOMContentLoaded', function () {
     var prevBtn = document.querySelector('.planet-nav-button.prev-planet')
     var nextBtn = document.querySelector('.planet-nav-button.next-planet')
     var planetIndex = 0
-    var imgEl
-    
+    var planetDiv
+
     if(currentPlanet && planetChoices.length > 0){
       var foundIndex = planetChoices.indexOf(currentPlanet)
       if(foundIndex !== -1){
         planetIndex = foundIndex
       }
     }
-    
+
     function setSrc(){
-      if(!imgEl) return
-      var name=(planetChoices && planetChoices.length)?planetChoices[planetIndex]:'placeholder.svg'
-      imgEl.src=(planetBaseUrl||'')+name
+      if(!planetDiv) return
+      var name=(planetChoices && planetChoices.length)?planetChoices[planetIndex]:''
+      if(name){
+        planetDiv.style.backgroundImage='url('+(planetBaseUrl||'')+name+')'
+      }
       if(planetInput){ planetInput.value=(planetChoices && planetChoices.length)?name:'' }
     }
     function build(){
       if(!planetRibbon) return
       planetRibbon.innerHTML=''
-      imgEl=document.createElement('img')
-      imgEl.className='planet-ribbon-item'
-      imgEl.loading='lazy'; imgEl.decoding='async'
-      imgEl.onerror=function(){ imgEl.src='https://via.placeholder.com/520x520?text=Planet' }
-      planetRibbon.appendChild(imgEl)
+      planetDiv=document.createElement('div')
+      planetDiv.className='planet-ribbon-3d'
+      planetDiv.style.width='100%'
+      planetDiv.style.height='100%'
+      planetDiv.style.borderRadius='50%'
+      planetDiv.style.backgroundSize='200% 100%'
+      planetDiv.style.backgroundRepeat='repeat-x'
+      planetDiv.style.animation='planet-chooser-spin 12s linear infinite'
+      planetDiv.style.position='relative'
+      planetDiv.style.overflow='hidden'
+      planetRibbon.appendChild(planetDiv)
       setSrc()
     }
     function shift(dir){
