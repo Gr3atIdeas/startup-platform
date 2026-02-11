@@ -220,8 +220,8 @@ if (window.FileUploadUtils) {
 <style>
 /* Небольшие правки для стабильности в редактировании */
 .presentation-finance-group .form-control { max-width: 100% !important; }
-.file-preview-item p,
-.file-preview-item a { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
+.file-preview-item p { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-preview-item a { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .file-preview-item img,
 .file-preview-item video { max-width: 200px; max-height: 150px; object-fit: contain; }
 </style>
@@ -555,29 +555,30 @@ window.STARTUP_FORM_CONFIG = {
 </script>
 <script>
 document.addEventListener('click', function(event) {
-  if (event.target.classList && event.target.classList.contains('delete-existing-file-btn')) {
-    var fileId = event.target.getAttribute('data-file-id');
-    var fileType = event.target.getAttribute('data-file-type');
-    var fileItem = event.target.closest('.file-preview-item');
-    if (!fileId || !fileType || !fileItem) return;
-    if (confirm('Вы уверены, что хотите удалить этот файл?')) {
-      fileItem.remove();
-      var deletedFilesInput = document.getElementById('deleted-files-input') || (function(){
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.id = 'deleted-files-input';
-        input.name = 'deleted_files';
-        input.value = '[]';
-        var form = document.getElementById('startupForm');
-        if (form) form.appendChild(input);
-        return input;
-      })();
-      try {
-        var arr = JSON.parse(deletedFilesInput.value || '[]');
-        arr.push({ id: fileId, type: fileType });
-        deletedFilesInput.value = JSON.stringify(arr);
-      } catch (_) {}
-    }
+  var btn = event.target.closest ? event.target.closest('.delete-existing-file-btn') : null;
+  if (!btn) return;
+  var fileId = btn.getAttribute('data-file-id');
+  var fileType = btn.getAttribute('data-file-type');
+  var fileItem = btn.closest('.file-preview-item') || btn.parentElement;
+  if (!fileId || !fileType || !fileItem) return;
+  event.stopPropagation();
+  if (confirm('Вы уверены, что хотите удалить этот файл?')) {
+    fileItem.remove();
+    var deletedFilesInput = document.getElementById('deleted-files-input') || (function(){
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.id = 'deleted-files-input';
+      input.name = 'deleted_files';
+      input.value = '[]';
+      var form = document.getElementById('startupForm');
+      if (form) form.appendChild(input);
+      return input;
+    })();
+    try {
+      var arr = JSON.parse(deletedFilesInput.value || '[]');
+      arr.push({ id: fileId, type: fileType });
+      deletedFilesInput.value = JSON.stringify(arr);
+    } catch (_) {}
   }
 });
 

@@ -442,7 +442,7 @@ window.FileUploadUtils = (function() {
         // Обработчик клика ТОЛЬКО по кнопке загрузки
         dropArea.addEventListener('click', function(e) {
             // Игнорируем клики по кнопкам удаления/редактирования
-            if (e.target.closest('.delete-file-btn') || e.target.closest('.edit-file-btn')) {
+            if (e.target.closest('.delete-file-btn') || e.target.closest('.delete-existing-file-btn') || e.target.closest('.edit-file-btn')) {
                 return;
             }
             // Открываем диалог выбора файлов ТОЛЬКО при клике на кнопку

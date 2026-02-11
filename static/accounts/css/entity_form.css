@@ -1404,11 +1404,37 @@ textarea.form-control.input-error {
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px;
-  border: 1px solid #e0e0e0; 
-  border-radius: 6px; 
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
   margin-bottom: 8px;
-  background-color: transparent; 
-  box-shadow: 0 1px 2px rgb(0 0 0 / 5%); 
+  background-color: transparent;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 5%);
+}
+
+.file-preview-item.existing-file {
+  gap: 12px;
+  background-color: #f9fafb;
+}
+
+.file-preview-item.existing-file .file-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.file-preview-item.existing-file p {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-preview-item.existing-file .delete-existing-file-btn {
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .file-preview-item .file-info {
@@ -1435,7 +1461,7 @@ textarea.form-control.input-error {
 
 .file-preview-item .file-name-display {
   font-weight: 500;
-  color: #ffffff !important;
+  color: #1e1e1e;
   margin: 0;
   font-size: 0.9rem;
   white-space: nowrap;
@@ -1445,20 +1471,20 @@ textarea.form-control.input-error {
 
 
 .file-preview-area .file-preview-item p {
-  color: #ffffff !important;
+  color: #1e1e1e;
   margin: 0;
   font-size: 0.9rem;
   font-weight: 500;
 }
 
 .file-preview-area .file-preview-item a {
-  color: #ffffff !important;
+  color: #2563eb;
   text-decoration: none;
   font-weight: 500;
 }
 
 .file-preview-item a:hover {
-  color: #3498db !important;
+  color: #1d4ed8;
   text-decoration: underline;
 }
 
@@ -2217,7 +2243,8 @@ input[type=number] {
     text-align: center;
   }
   .file-preview-item {
-    display: contents;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   .form-top-card { padding: 10px; }
   .catalog-card-image-group { margin-top: 16px; margin-left: 2px; }
