@@ -2593,6 +2593,208 @@ body > main.content::after {
   border-radius: 8px;
 }
 
+/* ===== Promo Video Showcase ===== */
+.promo-video-showcase {
+  width: 100%;
+  max-width: 1303px;
+  margin: 60px auto 0;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.promo-video-showcase__wrap {
+  width: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 16 / 7;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.promo-video-showcase__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.promo-video-showcase__overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px 40px;
+  background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 2;
+}
+
+.promo-video-showcase__badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 4px 12px;
+  background: rgba(255, 239, 43, 0.15);
+  border: 1px solid rgba(255, 239, 43, 0.4);
+  border-radius: 20px;
+  color: #ffef2b;
+  font-family: Unbounded, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+.promo-video-showcase__title {
+  color: #fff;
+  font-family: Unbounded, sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  margin: 4px 0 0;
+}
+
+.promo-video-showcase__desc {
+  color: rgba(255, 255, 255, 0.7);
+  font-family: Unbounded, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+  max-width: 500px;
+  margin: 0;
+}
+
+.promo-video-showcase__link {
+  display: inline-block;
+  width: fit-content;
+  margin-top: 8px;
+  padding: 10px 24px;
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+  border-radius: 30px;
+  color: #0a0a1e;
+  font-family: Unbounded, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.promo-video-showcase__link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(255, 239, 43, 0.3);
+}
+
+/* Ad placeholder block */
+.promo-video-showcase--ad .promo-video-showcase__wrap {
+  background: linear-gradient(135deg, #0a1628 0%, #0d2244 50%, #0a1628 100%);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.promo-video-showcase__ad-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px;
+  text-align: center;
+}
+
+.promo-video-showcase__ad-icon {
+  width: 64px;
+  height: 64px;
+  opacity: 0.3;
+}
+
+.promo-video-showcase__ad-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.promo-video-showcase__ad-title {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: Unbounded, sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0;
+  max-width: 600px;
+}
+
+.promo-video-showcase__ad-desc {
+  color: rgba(255, 255, 255, 0.3);
+  font-family: Unbounded, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 0;
+}
+
+.promo-video-showcase__ad-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 12px 32px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: Unbounded, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.promo-video-showcase__ad-btn:hover {
+  border-color: rgba(255, 239, 43, 0.5);
+  color: #ffef2b;
+  background: rgba(255, 239, 43, 0.05);
+}
+
+@media (max-width: 768px) {
+  .promo-video-showcase {
+    padding: 0 15px;
+  }
+  .promo-video-showcase__wrap {
+    border-radius: 16px;
+    aspect-ratio: 16 / 9;
+  }
+  .promo-video-showcase__overlay {
+    padding: 24px;
+  }
+  .promo-video-showcase__title {
+    font-size: 22px;
+  }
+  .promo-video-showcase__desc {
+    font-size: 12px;
+  }
+  .promo-video-showcase__ad-title {
+    font-size: 18px;
+  }
+  .promo-video-showcase__ad-desc {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .promo-video-showcase__wrap {
+    border-radius: 12px;
+    aspect-ratio: 9 / 10;
+  }
+  .promo-video-showcase__overlay {
+    padding: 20px;
+  }
+  .promo-video-showcase__title {
+    font-size: 18px;
+  }
+  .promo-video-showcase__badge {
+    font-size: 10px;
+  }
+  .promo-video-showcase__ad-title {
+    font-size: 16px;
+  }
+}
 
 .final-cta-section {
   width: 100vw;
