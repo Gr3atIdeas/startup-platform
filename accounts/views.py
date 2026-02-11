@@ -111,6 +111,7 @@ from .models import (
     NewsViews,
     PaymentMethods,
     ReviewStatuses,
+    Roles,
     Startups,
     StartupTimeline,
     SupportTicket,
@@ -922,8 +923,13 @@ def register(request):
                 default_role = Roles.objects.get(pk=1)
                 user.role = default_role
             except Roles.DoesNotExist:
-                pass
-            user.save()
+                logger.warning("Role with pk=1 not found, skipping default role assignment")
+            try:
+                user.save()
+            except Exception as e:
+                logger.error(f"Failed to save new user (email={form.cleaned_data.get('email')}): {e}", exc_info=True)
+                messages.error(request, "Произошла ошибка при регистрации. Попробуйте позже.")
+                return render(request, "accounts/register.html", {"form": form, "next": next_url})
             _reset_limits(request.session, prefix)
             messages.success(
                 request, "Регистрация прошла успешно! Теперь вы можете войти."

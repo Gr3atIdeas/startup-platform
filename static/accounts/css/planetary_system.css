@@ -487,11 +487,11 @@
 
 /* === Homepage planet textures === */
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(2) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_venus_surface.webp') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/test_blue_gold.png') !important;
   animation: planet-texture-spin 12s linear infinite;
 }
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(3) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_mars.webp') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/test_red.png') !important;
   animation: planet-texture-spin 15s linear infinite;
 }
 #ultra_new_planetary_solar_system.home-page-planetary .ultra_new_planetary_orbit:nth-child(4) .ultra_new_planetary_planet {
@@ -539,11 +539,11 @@
 
 /* === Standalone page planet textures (startuper/investor) === */
 .ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(1) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_venus_surface.webp') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/test_blue_gold.png') !important;
   animation: planet-texture-spin 12s linear infinite;
 }
 .ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(2) .ultra_new_planetary_planet {
-  background-image: url('/static/accounts/images/planetary_system/textures/2k_mars.webp') !important;
+  background-image: url('/static/accounts/images/planetary_system/textures/test_red.png') !important;
   animation: planet-texture-spin 15s linear infinite;
 }
 .ultra_new_planetary_system_wrapper .ultra_new_planetary_orbit:nth-child(3) .ultra_new_planetary_planet {
