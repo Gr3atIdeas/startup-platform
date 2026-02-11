@@ -64,10 +64,12 @@
 
       <!-- Прогресс-бар -->
       <div class="startup-progress-container">
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" style="width: {{ startup.get_progress_percentage|default:0 }}%"></div>
+        <div class="progress-bar-visual">
+          <div class="progress-animation-container" style="width: {{ startup.get_progress_percentage|default:0 }}%;">
+            <div class="progress-planets"></div>
+          </div>
+          <span class="progress-percentage">{{ startup.get_progress_percentage|default:0|floatformat:0 }}%</span>
         </div>
-        <div class="progress-percentage">{{ startup.get_progress_percentage|default:0|floatformat:0 }}%</div>
         <div class="investors-counter">
           <div class="investors-icon">
             <img src="{% static 'accounts/images/icons/groups.svg' %}" alt="Инвесторы" width="16" height="16">
