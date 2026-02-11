@@ -1116,11 +1116,11 @@
                     if (startups[id].image && startups[id].image !== '{{ S3_PUBLIC_BASE_URL }}/choosable_planets/0.png') {
                       img.src = startups[id].image;
                     } else {
-                      const randomPlanetNum = Math.floor(Math.random() * 9) + 1;
+                      const _fp = [3, 5, 6]; const randomPlanetNum = _fp[Math.floor(Math.random() * 3)];
                       img.src = '{% static "accounts/images/planetary_system/textures/planet_" %}' + randomPlanetNum + '.webp';
                     }
                     img.onerror = () => {
-                      const fallbackPlanetNum = Math.floor(Math.random() * 9) + 1;
+                      const _fp2 = [3, 5, 6]; const fallbackPlanetNum = _fp2[Math.floor(Math.random() * 3)];
                       img.src = '{% static "accounts/images/planetary_system/textures/planet_" %}' + fallbackPlanetNum + '.webp';
                     };
                   }

@@ -307,6 +307,17 @@ def is_uuid(value):
         return True
     except ValueError:
         return False
+import re
+_PLANET_WEBP_RE = re.compile(r'^planet_[1-9]\.webp$')
+
+def get_planet_image_url(planet_image_filename):
+    """Return URL for a planet image. Uses static path for planet_N.webp to leverage browser cache."""
+    if planet_image_filename and _PLANET_WEBP_RE.match(planet_image_filename):
+        return f"/static/accounts/images/planetary_system/textures/{planet_image_filename}"
+    if planet_image_filename:
+        return f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{planet_image_filename}"
+    return None
+
 def get_planet_urls():
     s3_client = boto3.client(
         "s3",
@@ -328,8 +339,8 @@ def get_planet_urls():
             if not key or key == prefix:
                 continue
             filename = key.split("/")[-1]
-            stem = filename.rsplit(".", 1)[0].lower()
-            if stem == "0" or "plus" in stem:
+            # Only show new planet_N.webp textures in the chooser
+            if not (filename.startswith("planet_") and filename.endswith(".webp")):
                 continue
             planets.append(filename)
         return planets

@@ -14,15 +14,9 @@
   let ultraNewPlanetaryAllStartupsData = [];
   let ultraNewPlanetaryFallbackImages = {
     round: [
-      '/static/accounts/images/planetary_system/textures/planet_1.webp',
-      '/static/accounts/images/planetary_system/textures/planet_2.webp',
       '/static/accounts/images/planetary_system/textures/planet_3.webp',
-      '/static/accounts/images/planetary_system/textures/planet_4.webp',
       '/static/accounts/images/planetary_system/textures/planet_5.webp',
-      '/static/accounts/images/planetary_system/textures/planet_6.webp',
-      '/static/accounts/images/planetary_system/textures/planet_7.webp',
-      '/static/accounts/images/planetary_system/textures/planet_8.webp',
-      '/static/accounts/images/planetary_system/textures/planet_9.webp'
+      '/static/accounts/images/planetary_system/textures/planet_6.webp'
     ],
     ring: []
   };

@@ -27,7 +27,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.core.serializers.json import DjangoJSONEncoder
 from .tasks import upload_video_to_s3
-from .utils import process_uploaded_image, send_telegram_new_entity_notification
+from .utils import process_uploaded_image, send_telegram_new_entity_notification, get_planet_image_url
 from django.db import (
     models,
     transaction,
@@ -203,8 +203,8 @@ def _should_require_captcha(session, prefix: str) -> bool:
 
 def _generate_captcha(session, prefix: str) -> None:
     import random
-    a = random.randint(1, 9)
-    b = random.randint(1, 9)
+    a = random.choice([3, 5, 6])
+    b = random.choice([3, 5, 6])
     session[_session_key(prefix, "captcha_question")] = f"Сколько будет {a} + {b}?"
     session[_session_key(prefix, "captcha_expected")] = str(a + b)
     session[_session_key(prefix, "captcha_required")] = True
@@ -461,7 +461,7 @@ def home(request):
             demo_startups = random.sample(all_startups, num_startups)
         startups_data = []
         for startup in demo_startups:
-            planet_num = random.randint(1, 9)
+            planet_num = random.choice([3, 5, 6])
             planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{planet_num}.webp")
             startups_data.append({
                 "id": startup.startup_id,
@@ -490,7 +490,7 @@ def home(request):
             planet_image_url = None
 
             if startup.planet_image:
-                planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+                planet_image_url = get_planet_image_url(startup.planet_image)
 
             if not planet_image_url:
                 import random
@@ -654,10 +654,10 @@ def home(request):
                 # Получаем планету для декоративного отображения
                 planet_image = None
                 if hasattr(startup, 'planet_image') and startup.planet_image:
-                    planet_image = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+                    planet_image = get_planet_image_url(startup.planet_image)
                 else:
                     import random
-                    planet_num = random.randint(1, 9)
+                    planet_num = random.choice([3, 5, 6])
                     planet_image = static(f"accounts/images/planetary_system/textures/planet_{planet_num}.webp")
                 
                 # Основное изображение - логотип если есть, иначе планета
@@ -5815,9 +5815,9 @@ def investor_main(request):
     import random
     for idx, startup in enumerate(startups_filtered):
         if startup.planet_image:
-            image_path = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+            image_path = get_planet_image_url(startup.planet_image)
         else:
-            random_planet_num = random.randint(1, 9)
+            random_planet_num = random.choice([3, 5, 6])
             image_path = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
         planets_data_for_template.append(
             {
@@ -5840,9 +5840,9 @@ def investor_main(request):
             else "Не указано"
         )
         if startup.planet_image:
-            planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+            planet_image_url = get_planet_image_url(startup.planet_image)
         else:
-            random_planet_num = random.randint(1, 9)
+            random_planet_num = random.choice([3, 5, 6])
             planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
         planets_data_json.append({
             "id": startup.startup_id,
@@ -5888,9 +5888,9 @@ def investor_main(request):
             else "Не указано"
         )
         if startup.planet_image:
-            planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+            planet_image_url = get_planet_image_url(startup.planet_image)
         else:
-            random_planet_num = random.randint(1, 9)
+            random_planet_num = random.choice([3, 5, 6])
             planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
         # Нормализуем здоровье в одну категорию 'Health'
@@ -5975,9 +5975,9 @@ def startuper_main(request):
     import random
     for idx, startup in enumerate(startups_filtered):
         if startup.planet_image:
-            image_path = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+            image_path = get_planet_image_url(startup.planet_image)
         else:
-            random_planet_num = random.randint(1, 9)
+            random_planet_num = random.choice([3, 5, 6])
             image_path = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
         planets_data_for_template.append(
             {
@@ -6000,9 +6000,9 @@ def startuper_main(request):
             else "Не указано"
         )
         if startup.planet_image:
-            planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+            planet_image_url = get_planet_image_url(startup.planet_image)
         else:
-            random_planet_num = random.randint(1, 9)
+            random_planet_num = random.choice([3, 5, 6])
             planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
         planets_data_json.append({
             "id": startup.startup_id,
@@ -6048,9 +6048,9 @@ def startuper_main(request):
             else "Не указано"
         )
         if startup.planet_image:
-            planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+            planet_image_url = get_planet_image_url(startup.planet_image)
         else:
-            random_planet_num = random.randint(1, 9)
+            random_planet_num = random.choice([3, 5, 6])
             planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
         russian_direction = DIRECTION_TRANSLATIONS.get(direction_name, direction_name)
@@ -6092,7 +6092,7 @@ def startuper_main(request):
 
             # Получаем планету
             if startup.planet_image:
-                planet_image = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+                planet_image = get_planet_image_url(startup.planet_image)
             else:
                 import random as _rnd
                 planet_image = static(f'accounts/images/planetary_system/textures/planet_{_rnd.randint(1, 9)}.webp')
@@ -7680,7 +7680,7 @@ def planetary_system(request):
         planet_image_url = None
 
         if startup.planet_image:
-            planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+            planet_image_url = get_planet_image_url(startup.planet_image)
 
         if not planet_image_url:
             import random
@@ -7716,7 +7716,7 @@ def planetary_system(request):
         planet_image_url = None
 
         if startup.planet_image:
-            planet_image_url = f"{settings.S3_PUBLIC_BASE_URL}/choosable_planets/{startup.planet_image}"
+            planet_image_url = get_planet_image_url(startup.planet_image)
 
         if not planet_image_url:
             import random
