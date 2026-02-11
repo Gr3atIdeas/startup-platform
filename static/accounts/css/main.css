@@ -2353,37 +2353,12 @@ body > main.content::after {
   width: 1303px;
   height: 576px;
   position: relative;
-  background-color: black;
-  box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);
   overflow: hidden;
-  border-radius: 20px;
-  background-size: cover;
-  background-position: center;
-}
-.featured10.bg-loaded {
-  background-image: url('../images/main_page/10block_bg.webp');
 }
 
-.subscription-bg-blur-1 {
-  width: 854px;
-  height: 854px;
-  left: 1013px;
-  top: -39px;
-  position: absolute;
-  background: rgb(97 165 255 / 45%);
-  border-radius: 9999px;
-  filter: blur(250px);
-}
-
+.subscription-bg-blur-1,
 .subscription-bg-blur-2 {
-  width: 590px;
-  height: 590px;
-  left: -83px;
-  top: -295px;
-  position: absolute;
-  background: #004e9f;
-  border-radius: 9999px;
-  filter: blur(250px);
+  display: none;
 }
 
 .subscription-form-wrapper {
@@ -2563,13 +2538,13 @@ body > main.content::after {
 }
 
 .subscription-bonus {
-  left: 810px;
-  top: 350px;
   position: absolute;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
-  gap: 17px;
+  justify-content: center;
+  align-items: center;
 }
 
 .bonus-text-content {
@@ -2601,14 +2576,15 @@ body > main.content::after {
 }
 
 .bonus-image-placeholder {
-  width: 169px;
-  height: 169px;
+  width: 280px;
+  height: 280px;
   background: white;
-  border-radius: 10px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 12px;
 }
 
 .bonus-image-placeholder img {
