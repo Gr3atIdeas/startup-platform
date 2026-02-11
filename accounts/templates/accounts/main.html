@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static 'accounts/css/featured_blocks_shared.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/faq.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}">
-    <link rel="stylesheet" href="{% static 'accounts/css/planetary_system.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/planetary_system.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
@@ -770,6 +770,6 @@
 </script>
 
 <script src="{% static 'accounts/js/main.js' %}"></script>
-<script src="{% static 'accounts/js/planetary_system.js' %}"></script>
+<script src="{% static 'accounts/js/planetary_system.js' %}?v={% now 'U' %}"></script>
 <script src="{% static 'accounts/js/faq.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/investor_main.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/faq.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}">
-    <link rel="stylesheet" href="{% static 'accounts/css/planetary_system.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/planetary_system.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
@@ -631,5 +631,5 @@
 
 <script src="{% static 'accounts/js/investor_main.js' %}?v={% now 'U' %}"></script>
 <script src="{% static 'accounts/js/faq.js' %}?v={% now 'U' %}"></script>
-<script src="{% static 'accounts/js/planetary_system.js' %}"></script>
+<script src="{% static 'accounts/js/planetary_system.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

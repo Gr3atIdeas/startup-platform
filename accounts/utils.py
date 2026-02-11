@@ -307,7 +307,7 @@ def is_uuid(value):
         return True
     except ValueError:
         return False
-import re
+
 _PLANET_WEBP_RE = re.compile(r'^planet_[1-9]\.webp$')
 
 def get_planet_image_url(planet_image_filename):
