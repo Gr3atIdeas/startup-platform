@@ -11,6 +11,7 @@
     format('truetype-variations');
   font-weight: 200 900;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {

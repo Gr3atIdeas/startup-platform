@@ -12,6 +12,7 @@
 {% endblock %}
 
 {% block content %}
+<canvas id="particles-canvas"></canvas>
 <div class="div">
     
     {% include 'accounts/partials/planetary_system.html' %}
@@ -502,4 +503,5 @@
     <script src="{% static 'accounts/js/startuper_main.js' %}?v={% now 'U' %}"></script>
 <script src="{% static 'accounts/js/faq.js' %}?v={% now 'U' %}"></script>
 <script src="{% static 'accounts/js/planetary_system.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'accounts/js/particles.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

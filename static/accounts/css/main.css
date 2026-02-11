@@ -78,16 +78,6 @@ html {
   overflow-x: hidden;
 }
 
-#particles-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 9999;
-  pointer-events: none;
-}
-
 .btn--yellow-gradient,
 .btn--yellow-gradient:visited {
   background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%) !important;
@@ -1638,8 +1628,27 @@ body > main.content::after {
 
 .featured6 .galaxy-step-card.active-step {
   opacity: 1;
-  pointer-events: auto; 
-  z-index: 1; 
+  pointer-events: auto;
+  z-index: 1;
+}
+
+/* Loading spinner while video buffers */
+.featured6 .galaxy-step-card.video-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 48px;
+  height: 48px;
+  margin: -24px 0 0 -24px;
+  border: 3px solid rgba(255,255,255,0.15);
+  border-top-color: rgba(255,255,255,0.8);
+  border-radius: 50%;
+  animation: galaxy-spinner 0.8s linear infinite;
+  z-index: 2;
+}
+@keyframes galaxy-spinner {
+  to { transform: rotate(360deg); }
 }
 
 .featured6 .galaxy-step-card .frame-child12 {

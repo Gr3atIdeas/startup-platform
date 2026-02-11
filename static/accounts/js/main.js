@@ -151,12 +151,24 @@ document.addEventListener('DOMContentLoaded', function () {
       const totalGalaxyCards = galaxyCards.length
       let galaxyAutoplayInterval = null
       let galaxySectionVisible = false
-      function loadAndPlayVideo(card) {
+      function preloadVideo(card) {
         var video = card.querySelector('video[data-src]')
         if (video && !video.src) {
           video.src = video.dataset.src
           video.load()
+          card.classList.add('video-loading')
+          video.addEventListener('loadeddata', function() {
+            card.classList.remove('video-loading')
+            card.classList.add('video-ready')
+          }, { once: true })
         }
+      }
+      function preloadAllVideos() {
+        galaxyCards.forEach(function(card) { preloadVideo(card) })
+      }
+      function loadAndPlayVideo(card) {
+        preloadVideo(card)
+        var video = card.querySelector('video')
         if (video) video.play().catch(function(){})
       }
       function pauseVideo(card) {
@@ -214,15 +226,17 @@ document.addEventListener('DOMContentLoaded', function () {
           entries.forEach(function(e) {
             if (e.isIntersecting && !galaxySectionVisible) {
               galaxySectionVisible = true
+              preloadAllVideos()
               loadAndPlayVideo(galaxyCards[currentGalaxyIndex])
               resetAutoplay()
               galaxyObs.unobserve(e.target)
             }
           })
-        }, { rootMargin: '200px' })
+        }, { rootMargin: '400px' })
         galaxyObs.observe(galaxyWrapper)
       } else {
         galaxySectionVisible = true
+        preloadAllVideos()
         loadAndPlayVideo(galaxyCards[currentGalaxyIndex])
         resetAutoplay()
       }
@@ -306,101 +320,7 @@ document.addEventListener('DOMContentLoaded', function () {
       })
     }
   }
-  const galaxyContainer = document.getElementById('ultra_new_planetary_galaxy');
-  if (galaxyContainer) {
-    let demoStartupsData = [];
-    const demoDataScript = document.getElementById('demo-startups-data');
-    if (demoDataScript) {
-      try {
-        demoStartupsData = JSON.parse(demoDataScript.textContent);
-      } catch (error) {
-      }
-    }
-    // Bind startup data to existing HTML orbits (CSS handles textures & orbital animation)
-    const existingPlanets = galaxyContainer.querySelectorAll('.ultra_new_planetary_orbit .ultra_new_planetary_planet');
-    existingPlanets.forEach(function(planet, index) {
-        const startupData = demoStartupsData[index];
-        if (startupData) {
-            planet.setAttribute('data-startup-id', startupData.id);
-            planet.setAttribute('data-startup-name', startupData.name);
-            planet.setAttribute('data-startup-data', JSON.stringify(startupData));
-            planet.addEventListener('click', function() {
-                showStartupInfo(startupData);
-            });
-            planet.title = startupData.name;
-        }
-    });
-    function showStartupInfo(startupData) {
-        const modal = document.getElementById('demo_planetary_modal');
-        if (!modal) return;
-        if (!startupData || startupData.id === 0) {
-            return;
-        } else {
-            document.getElementById('demo_planetary_modal_name').textContent = startupData.name;
-            document.getElementById('demo_planetary_modal_rating').textContent = `Рейтинг ${startupData.rating}/5 (${startupData.voters_count})`;
-            document.getElementById('demo_planetary_modal_comments_count').textContent = startupData.comment_count;
-
-            let categoryDisplayName = startupData.direction || 'Не указана';
-            document.getElementById('demo_planetary_modal_category').textContent = categoryDisplayName;
-            document.getElementById('demo_planetary_modal_description').textContent = startupData.description;
-            document.getElementById('demo_planetary_modal_funding_amount').textContent = startupData.funding_goal;
-            document.getElementById('demo_planetary_modal_valuation_amount').textContent = startupData.valuation;
-            document.getElementById('demo_planetary_modal_investors_count').textContent = `Инвестировало (${startupData.investors})`;
-            document.getElementById('demo_planetary_modal_progress_percentage').textContent = `${startupData.progress}%`;
-            document.querySelector('#demo_planetary_modal .ultra_new_planetary_modal_progress_bar_visual').style.width = `${startupData.progress}%`;
-            document.getElementById('demo_planetary_modal_details_btn').onclick = function() {
-                window.location.href = `/startups/${startupData.id}/`;
-            };
-            document.getElementById('demo_planetary_modal_investment_btn').onclick = function() {
-                window.location.href = `/invest/${startupData.id}/`;
-            };
-        }
-        document.getElementById('demo_planetary_modal_planet_img').src = startupData.image;
-        modal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        const closeBtn = document.getElementById('demo_planetary_modal_close');
-        if (closeBtn) {
-            closeBtn.onclick = hideDemoModal;
-        }
-        modal.onclick = function(e) {
-            if (e.target === modal) {
-                hideDemoModal();
-            }
-        };
-    }
-    function hideDemoModal() {
-        const modal = document.getElementById('demo_planetary_modal');
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-    }
-    function setupModalHandlers() {
-        const modal = document.getElementById('demo_planetary_modal');
-        const closeBtn = document.getElementById('demo_planetary_modal_close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', hideDemoModal);
-        }
-        if (modal) {
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    hideDemoModal();
-                }
-            });
-        }
-    }
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            hideDemoModal();
-        }
-    });
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setupModalHandlers);
-    } else {
-        setupModalHandlers();
-    }
-    // CSS handles orbital animation via orbit-rotation keyframes — no JS rAF needed
-  }
+  // Planet tooltips, click popups, and modal are handled by planetary_system.js
 
   // Lazy CSS backgrounds for below-fold sections
   var bgSections = document.querySelectorAll('.featured7, .featured10')

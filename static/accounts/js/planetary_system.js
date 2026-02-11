@@ -130,11 +130,16 @@
   }
   function setupUltraNewPlanetarySystem() {
     const container = document.querySelector('.ultra_new_planetary_system_wrapper');
-    if (!container) return;
-    setupUltraNewPlanetaryMouseEvents();
-    setupUltraNewPlanetaryControls();
-    setupUltraNewPlanetaryGalaxySelector();
-    loadUltraNewPlanetaryGalaxy();
+    if (container) {
+      setupUltraNewPlanetaryMouseEvents();
+      setupUltraNewPlanetaryControls();
+      setupUltraNewPlanetaryGalaxySelector();
+      loadUltraNewPlanetaryGalaxy();
+    } else if (getCurrentPage() === 'home') {
+      // Home page: set up planets with tooltips + click → modal (no drag/zoom/category selector)
+      const currentStartups = ultraNewPlanetaryStartupsData || [];
+      updateUltraNewPlanetaryPlanets(currentStartups);
+    }
   }
   function setupUltraNewPlanetaryMouseEvents() {
     const solarSystem = document.getElementById('ultra_new_planetary_solar_system');
