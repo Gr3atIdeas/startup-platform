@@ -170,9 +170,6 @@ body > main.content::after {
   align-items: flex-start;
   padding: 0;
   box-sizing: border-box;
-  background-image: url('../images/main_page/main_bg.webp');
-  background-size: cover;
-  background-position: center;
   border-radius: 10px;
   z-index: 1;
   overflow: hidden;
