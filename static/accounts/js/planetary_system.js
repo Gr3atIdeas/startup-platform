@@ -430,21 +430,27 @@
   }
   function setupUltraNewPlanetaryPlanet(planet, startup, index) {
     if (!planet || !startup) return;
-    const imageUrl = startup.image || getUltraNewPlanetaryFallbackImage(index);
+    const orientationWrapper = planet.parentElement;
+    let activeImageUrl = startup.image || getUltraNewPlanetaryFallbackImage(index);
 
-    if (imageUrl && imageUrl !== 'null' && imageUrl !== 'undefined') {
-      planet.style.backgroundImage = `url(${imageUrl})`;
+    if (activeImageUrl && activeImageUrl !== 'null' && activeImageUrl !== 'undefined') {
+      planet.style.backgroundImage = `url(${activeImageUrl})`;
 
       const img = new Image();
       img.onload = function() {};
       img.onerror = function() {
         const fallbackUrl = getUltraNewPlanetaryFallbackImage(index);
-        planet.style.backgroundImage = `url(${fallbackUrl})`;
+        activeImageUrl = fallbackUrl;
+        // Update the clone in DOM (not the detached original)
+        var currentPlanet = orientationWrapper ? orientationWrapper.querySelector('.ultra_new_planetary_planet') : null;
+        if (currentPlanet) {
+          currentPlanet.style.backgroundImage = `url(${fallbackUrl})`;
+        }
       };
-      img.src = imageUrl;
+      img.src = activeImageUrl;
     } else {
-      const fallbackUrl = getUltraNewPlanetaryFallbackImage(index);
-      planet.style.backgroundImage = `url(${fallbackUrl})`;
+      activeImageUrl = getUltraNewPlanetaryFallbackImage(index);
+      planet.style.backgroundImage = `url(${activeImageUrl})`;
     }
 
     // Enable 3D spinning texture effect
@@ -457,9 +463,6 @@
     planet.setAttribute('data-startup-id', startup.id || startup.startup_id || 0);
     planet.setAttribute('data-startup-name', startup.name || 'Пустая орбита');
     planet.setAttribute('data-startup-data', JSON.stringify(startup));
-
-    // --- Tooltip creation ---
-    const orientationWrapper = planet.parentElement;
     if (orientationWrapper) {
       const existingTooltip = orientationWrapper.querySelector('.ultra_new_planetary_tooltip');
       if (existingTooltip) existingTooltip.remove();
@@ -506,7 +509,7 @@
         const tooltipEl2 = orientationWrapper.querySelector('.ultra_new_planetary_tooltip');
         if (tooltipEl2) tooltipEl2.classList.remove('ultra_new_planetary_tooltip_visible');
       }
-      showUltraNewPlanetaryModal(startup, imageUrl);
+      showUltraNewPlanetaryModal(startup, activeImageUrl);
     };
     newPlanet.addEventListener('click', clickHandler, { passive: false });
     newPlanet.addEventListener('touchend', clickHandler, { passive: false });

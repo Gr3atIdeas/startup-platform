@@ -27,7 +27,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.core.serializers.json import DjangoJSONEncoder
 from .tasks import upload_video_to_s3
-from .utils import process_uploaded_image, send_telegram_new_entity_notification, get_planet_image_url
+from .utils import process_uploaded_image, send_telegram_new_entity_notification, get_planet_image_url, get_fallback_planet_url
 from django.db import (
     models,
     transaction,
@@ -461,8 +461,7 @@ def home(request):
             demo_startups = random.sample(all_startups, num_startups)
         startups_data = []
         for startup in demo_startups:
-            planet_num = random.choice([3, 5, 6])
-            planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{planet_num}.webp")
+            planet_image_url = get_planet_image_url(startup.planet_image) if startup.planet_image else get_fallback_planet_url(startup.startup_id)
             startups_data.append({
                 "id": startup.startup_id,
                 "name": startup.title,
@@ -493,9 +492,7 @@ def home(request):
                 planet_image_url = get_planet_image_url(startup.planet_image)
 
             if not planet_image_url:
-                import random
-                planet_image_num = (i % 9) + 1
-                planet_image_url = f"/static/accounts/images/planetary_system/textures/planet_{planet_image_num}.webp"
+                planet_image_url = get_fallback_planet_url(startup.startup_id)
 
             direction_original = 'Не указано'
             if startup.direction:
@@ -656,9 +653,7 @@ def home(request):
                 if hasattr(startup, 'planet_image') and startup.planet_image:
                     planet_image = get_planet_image_url(startup.planet_image)
                 else:
-                    import random
-                    planet_num = random.choice([3, 5, 6])
-                    planet_image = static(f"accounts/images/planetary_system/textures/planet_{planet_num}.webp")
+                    planet_image = get_fallback_planet_url(startup.startup_id)
                 
                 # Основное изображение - логотип если есть, иначе планета
                 startup_image = startup_logo if startup_logo else planet_image
@@ -5817,8 +5812,7 @@ def investor_main(request):
         if startup.planet_image:
             image_path = get_planet_image_url(startup.planet_image)
         else:
-            random_planet_num = random.choice([3, 5, 6])
-            image_path = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
+            image_path = get_fallback_planet_url(startup.startup_id)
         planets_data_for_template.append(
             {
                 "id": startup.startup_id,
@@ -5842,8 +5836,7 @@ def investor_main(request):
         if startup.planet_image:
             planet_image_url = get_planet_image_url(startup.planet_image)
         else:
-            random_planet_num = random.choice([3, 5, 6])
-            planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
+            planet_image_url = get_fallback_planet_url(startup.startup_id)
         planets_data_json.append({
             "id": startup.startup_id,
             "name": startup.title,
@@ -5890,8 +5883,7 @@ def investor_main(request):
         if startup.planet_image:
             planet_image_url = get_planet_image_url(startup.planet_image)
         else:
-            random_planet_num = random.choice([3, 5, 6])
-            planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
+            planet_image_url = get_fallback_planet_url(startup.startup_id)
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
         # Нормализуем здоровье в одну категорию 'Health'
         if direction_name in ['Healthcare', 'Medicine']:
@@ -5977,8 +5969,7 @@ def startuper_main(request):
         if startup.planet_image:
             image_path = get_planet_image_url(startup.planet_image)
         else:
-            random_planet_num = random.choice([3, 5, 6])
-            image_path = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
+            image_path = get_fallback_planet_url(startup.startup_id)
         planets_data_for_template.append(
             {
                 "id": startup.startup_id,
@@ -6002,8 +5993,7 @@ def startuper_main(request):
         if startup.planet_image:
             planet_image_url = get_planet_image_url(startup.planet_image)
         else:
-            random_planet_num = random.choice([3, 5, 6])
-            planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
+            planet_image_url = get_fallback_planet_url(startup.startup_id)
         planets_data_json.append({
             "id": startup.startup_id,
             "name": startup.title,
@@ -6050,8 +6040,7 @@ def startuper_main(request):
         if startup.planet_image:
             planet_image_url = get_planet_image_url(startup.planet_image)
         else:
-            random_planet_num = random.choice([3, 5, 6])
-            planet_image_url = static(f"accounts/images/planetary_system/textures/planet_{random_planet_num}.webp")
+            planet_image_url = get_fallback_planet_url(startup.startup_id)
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
         russian_direction = DIRECTION_TRANSLATIONS.get(direction_name, direction_name)
         original_direction = None
@@ -6094,8 +6083,7 @@ def startuper_main(request):
             if startup.planet_image:
                 planet_image = get_planet_image_url(startup.planet_image)
             else:
-                import random as _rnd
-                planet_image = static(f'accounts/images/planetary_system/textures/planet_{_rnd.randint(1, 9)}.webp')
+                planet_image = get_fallback_planet_url(startup.startup_id)
             
             # Основное изображение - логотип если есть, иначе планета
             startup_image = startup_logo if startup_logo else planet_image
@@ -7683,9 +7671,7 @@ def planetary_system(request):
             planet_image_url = get_planet_image_url(startup.planet_image)
 
         if not planet_image_url:
-            import random
-            planet_image_num = (i % 9) + 1
-            planet_image_url = f"/static/accounts/images/planetary_system/textures/planet_{planet_image_num}.webp"
+            planet_image_url = get_fallback_planet_url(startup.startup_id)
 
         direction_original = 'Не указано'
         if startup.direction:
@@ -7719,9 +7705,7 @@ def planetary_system(request):
             planet_image_url = get_planet_image_url(startup.planet_image)
 
         if not planet_image_url:
-            import random
-            planet_image_num = (idx % 9) + 1
-            planet_image_url = f"/static/accounts/images/planetary_system/textures/planet_{planet_image_num}.webp"
+            planet_image_url = get_fallback_planet_url(startup.startup_id)
 
         direction_original = 'Не указано'
         if startup.direction:

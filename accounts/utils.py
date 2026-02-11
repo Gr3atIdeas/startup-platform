@@ -322,6 +322,12 @@ def get_planet_image_url(planet_image_filename):
     idx = sum(ord(c) for c in filename) % 3
     return f"/static/accounts/images/planetary_system/textures/{_PLANET_CHOICES[idx]}"
 
+def get_fallback_planet_url(entity_id):
+    """Return a deterministic fallback planet texture URL based on entity ID.
+    Uses all 9 planet textures (planet_1 through planet_9)."""
+    planet_num = (int(entity_id) % 9) + 1
+    return f"/static/accounts/images/planetary_system/textures/planet_{planet_num}.webp"
+
 def get_planet_urls():
     s3_client = boto3.client(
         "s3",
