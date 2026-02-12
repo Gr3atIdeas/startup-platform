@@ -775,9 +775,12 @@ def home(request):
             ]
             logger.info("Using fallback startup data")
 
-        latest_news = NewsArticles.objects.filter(
-            status="published"
-        ).select_related("author").order_by("-published_at")[:5]
+        try:
+            latest_news = list(NewsArticles.objects.filter(
+                status="published"
+            ).select_related("author").order_by("-published_at")[:5])
+        except Exception:
+            latest_news = []
 
         context = {
             "demo_startups_data": json.dumps(startups_data, cls=DjangoJSONEncoder),
@@ -5877,9 +5880,12 @@ def investor_main(request):
             "investment_type": investment_type,
             "logo": startup.get_logo_url(),
         })
-    latest_news = NewsArticles.objects.filter(
-        status="published"
-    ).select_related("author").order_by("-published_at")[:5]
+    try:
+        latest_news = list(NewsArticles.objects.filter(
+            status="published"
+        ).select_related("author").order_by("-published_at")[:5])
+    except Exception:
+        latest_news = []
 
     context = {
         "planets_data": planets_data_for_template,
@@ -6197,9 +6203,12 @@ def startuper_main(request):
             }
         ]
 
-    latest_news = NewsArticles.objects.filter(
-        status="published"
-    ).select_related("author").order_by("-published_at")[:5]
+    try:
+        latest_news = list(NewsArticles.objects.filter(
+            status="published"
+        ).select_related("author").order_by("-published_at")[:5])
+    except Exception:
+        latest_news = []
 
     context = {
         "planets_data": planets_data_for_template,
@@ -6803,12 +6812,10 @@ def news_detail(request, article_id):
 
     user = request.user if request.user.is_authenticated else None
 
-    # Трекинг просмотров
+    # Трекинг просмотров (только авторизованные)
     if user:
         if not NewsViews.objects.filter(article=article, user=user).exists():
             NewsViews.objects.create(article=article, user=user)
-    else:
-        NewsViews.objects.create(article=article, user=None)
 
     # Счётчики
     views_count = NewsViews.objects.filter(article=article).count()
