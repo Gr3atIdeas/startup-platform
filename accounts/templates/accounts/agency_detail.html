@@ -238,7 +238,7 @@
                     {% if agency.customization_data.agency_additional_info %}
                       <div class="additional-info">
                         <p><strong>Основные услуги:</strong></p>
-                        {{ agency.customization_data.agency_additional_info|safe }}
+                        {{ agency.customization_data.agency_additional_info|sanitize_html|safe }}
                       </div>
                     {% endif %}
                   </div>

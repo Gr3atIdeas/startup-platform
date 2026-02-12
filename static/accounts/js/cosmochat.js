@@ -1,3 +1,9 @@
+// HTML escape utility to prevent XSS
+function escapeHTML(str) {
+  if (!str) return ''
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')
+}
+
 let currentChatId = null
 let currentProfileUserId = null
 let lastMessageTimestamp = null
@@ -1051,13 +1057,13 @@ function appendMessage(msg, isOwnMessageSentJustNow) {
   messageDiv.dataset.messageId = msg.message_id
   let senderNameHTML = ''
   if (!isOwn && msg.sender_name && !msg.is_system) {
-    senderNameHTML = `<div class="message-sender-name">${msg.sender_name}</div>`
+    senderNameHTML = `<div class="message-sender-name">${escapeHTML(msg.sender_name)}</div>`
   }
   messageDiv.innerHTML = `
         ${senderNameHTML}
-        <div class="message-text-content">${msg.message_text}</div>
+        <div class="message-text-content">${escapeHTML(msg.message_text)}</div>
         <div class="message-meta-info">
-            ${msg.created_at_time || msg.created_at} <!-- Предполагаем, что есть created_at_time -->
+            ${escapeHTML(msg.created_at_time || msg.created_at)}
             ${isOwn && !msg.is_system ? `<span class="status-icon">${msg.is_read ? '✓✓' : '✓'}</span>` : ''}
         </div>
     `
@@ -2438,19 +2444,20 @@ function createChatItemElement(chat) {
         unreadBadgeHtml = `<span class="unread-badge-chat" style="display: none;"></span>`;
     }
 
+    var chatNameSafe = escapeHTML((chat.name || `Чат ${chat.conversation_id}`).substring(0, 25)) + ((chat.name || `Чат ${chat.conversation_id}`).length > 25 ? '...' : '');
     chatItem.innerHTML = `
-        <img src="${avatarUrl}" alt="${avatarAlt}" class="chat-avatar-img">
+        <img src="${escapeHTML(avatarUrl)}" alt="${escapeHTML(avatarAlt)}" class="chat-avatar-img">
         <div class="chat-item-info-new">
             <h4>
-                ${(chat.name || `Чат ${chat.conversation_id}`).substring(0, 25)}${(chat.name || `Чат ${chat.conversation_id}`).length > 25 ? '...' : ''}
+                ${chatNameSafe}
                 ${chat.is_deal ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : ''}
             </h4>
-            <p class="last-message-preview">${lastMessageText}</p>
+            <p class="last-message-preview">${escapeHTML(lastMessageText)}</p>
         </div>
         <div class="chat-item-meta-new">
-            <span class="timestamp-chat">${timestampText}</span>
+            <span class="timestamp-chat">${escapeHTML(timestampText)}</span>
             ${unreadBadgeHtml}
-            <span class="date-chat-preview">${dateText}</span>
+            <span class="date-chat-preview">${escapeHTML(dateText)}</span>
         </div>
     `;
     chatItem.addEventListener('click', function () {

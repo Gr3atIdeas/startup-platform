@@ -265,7 +265,7 @@
                     {% if startup.additional_info %}
                       <div class="additional-info">
                         <p><strong>Основные функции:</strong></p>
-                        {{ startup.additional_info|safe }}
+                        {{ startup.additional_info|sanitize_html|safe }}
                       </div>
                     {% endif %}
                   </div>

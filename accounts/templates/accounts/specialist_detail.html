@@ -223,7 +223,7 @@
                     {% if specialist.additional_info %}
                       <div class="additional-info">
                         <p><strong>Основные функции:</strong></p>
-                        {{ specialist.additional_info|safe }}
+                        {{ specialist.additional_info|sanitize_html|safe }}
                       </div>
                     {% endif %}
                   </div>

@@ -848,6 +848,10 @@ class DescriptionMediaModal {
     }
     
     getCSRFToken() {
+        // Try hidden input first (works with CSRF_USE_SESSIONS=True)
+        const input = document.querySelector('input[name="csrfmiddlewaretoken"]');
+        if (input) return input.value;
+        // Fallback to cookie
         const cookies = document.cookie.split(';');
         for (let cookie of cookies) {
             const [name, value] = cookie.trim().split('=');

@@ -5496,51 +5496,10 @@ def edit_startup(request, startup_id):
                         )
             else:
                 logger.info("Видео не загружено")
-            logger.info("=== Переменные окружения ===")
-            for key, value in os.environ.items():
-                logger.info(f"{key}: {value}")
-            logger.info("=== Настройки Yandex Object Storage ===")
-            logger.info(
-                f"AWS_ACCESS_KEY_ID: {getattr(settings, 'AWS_ACCESS_KEY_ID', 'Не задано')}"
-            )
-            logger.info(
-                f"AWS_SECRET_ACCESS_KEY: {getattr(settings, 'AWS_SECRET_ACCESS_KEY', 'Не задано')}"
-            )
-            logger.info(
-                f"AWS_STORAGE_BUCKET_NAME: {getattr(settings, 'AWS_STORAGE_BUCKET_NAME', 'Не задано')}"
-            )
-            logger.info(
-                f"AWS_S3_ENDPOINT_URL: {getattr(settings, 'AWS_S3_ENDPOINT_URL', 'Не задано')}"
-            )
-            logger.info(
-                f"AWS_DEFAULT_ACL: {getattr(settings, 'AWS_DEFAULT_ACL', 'Не задано')}"
-            )
-            logger.info("=== Проверка STORAGES ===")
-            logger.info(
-                f"STORAGES['default']['BACKEND']: {settings.STORAGES['default']['BACKEND']}"
-            )
-            logger.info(f"default_storage: {default_storage.__class__.__name__}")
-            logger.info("=== Проверка подключения к Yandex Object Storage ===")
-            try:
-                from django.core.files.base import ContentFile
-                from storages.backends.s3boto3 import S3Boto3Storage
-                storage = S3Boto3Storage()
-                test_file_name = f"test/test_file_{startup.startup_id}.txt"
-                test_content = (
-                    "This is a test file to check Yandex Object Storage connection."
-                )
-                test_file = ContentFile(test_content.encode("utf-8"))
-                storage.save(test_file_name, test_file)
-                logger.info(f"Тестовый файл успешно сохранён: {test_file_name}")
-                test_file_url = storage.url(test_file_name)
-                logger.info(f"URL тестового файла: {test_file_url}")
-                storage.delete(test_file_name)
-                logger.info(f"Тестовый файл удалён: {test_file_name}")
-            except Exception as e:
-                logger.error(
-                    f"Ошибка подключения к Yandex Object Storage: {str(e)}",
-                    exc_info=True,
-                )
+            logger.info("=== S3 storage check ===")
+            logger.info(f"Storage backend: {default_storage.__class__.__name__}")
+            logger.info(f"S3 endpoint configured: {'yes' if getattr(settings, 'AWS_S3_ENDPOINT_URL', None) else 'no'}")
+            logger.info(f"S3 bucket configured: {'yes' if getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None) else 'no'}")
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 # Собираем информацию о файлах
                 files_info = {
@@ -6241,7 +6200,11 @@ def startuper_main(request):
     return render(request, "accounts/startuper_main.html", context)
 
 
+@login_required
 def moderator_dashboard(request):
+    if not is_moderator(request.user):
+        messages.error(request, "У вас нет прав для этого действия.")
+        return redirect("home")
     pending_startups_list = Startups.objects.filter(status="pending").select_related("owner", "direction", "stage")
     pending_franchises_list = Franchises.objects.filter(status="pending").select_related("owner", "direction", "stage")
     pending_agencies_list = Agencies.objects.filter(status="pending").select_related("owner", "direction").distinct()
@@ -6391,6 +6354,7 @@ def moderator_dashboard(request):
         "search_query": search_query,
     }
     return render(request, "accounts/moderator_dashboard.html", context)
+@login_required
 def approve_startup(request, startup_id):
     if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
@@ -6402,6 +6366,7 @@ def approve_startup(request, startup_id):
         approve_entity(startup, request.user, "startup", moderator_comment)
         messages.success(request, "Стартап одобрен.")
     return redirect("moderator_dashboard")
+@login_required
 def reject_startup(request, startup_id):
     if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
@@ -6894,6 +6859,7 @@ def create_news(request):
     else:
         form = NewsForm()
     return render(request, "accounts/create_news.html", {"form": form})
+@login_required
 def delete_news(request, article_id):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
@@ -8903,6 +8869,7 @@ def download_startups_report(request):
         logger.error(f"Ошибка при генерации отчета: {e}", exc_info=True)
         return HttpResponse("Ошибка при генерации отчета", status=500)
 
+@login_required
 def approve_franchise(request, franchise_id):
     if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
@@ -8916,6 +8883,7 @@ def approve_franchise(request, franchise_id):
     return redirect("moderator_dashboard")
 
 
+@login_required
 def reject_franchise(request, franchise_id):
     if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
@@ -8929,6 +8897,7 @@ def reject_franchise(request, franchise_id):
     return redirect("moderator_dashboard")
 
 
+@login_required
 def approve_agency(request, agency_id):
     if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
@@ -8945,6 +8914,7 @@ def approve_agency(request, agency_id):
     return redirect("moderator_dashboard")
 
 
+@login_required
 def reject_agency(request, agency_id):
     if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
@@ -8961,6 +8931,7 @@ def reject_agency(request, agency_id):
     return redirect("moderator_dashboard")
 
 
+@login_required
 def approve_specialist(request, specialist_id):
     if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
@@ -8977,6 +8948,7 @@ def approve_specialist(request, specialist_id):
     return redirect("moderator_dashboard")
 
 
+@login_required
 def reject_specialist(request, specialist_id):
     if not is_moderator(request.user):
         messages.error(request, "У вас нет прав для этого действия.")
@@ -10368,7 +10340,6 @@ def delete_investment_franchise(request, franchise_id, user_id):
 
 
 @login_required
-@csrf_exempt
 def upload_description_media(request, entity_type, entity_id):
     """
     API endpoint для загрузки медиа-контента в описание
@@ -10722,7 +10693,6 @@ def get_description_media(request, entity_type, entity_id):
 
 
 @login_required
-@csrf_exempt
 def delete_description_media(request, entity_type, entity_id, file_id):
     print(f"[DELETE] Request received: user={request.user.username}, entity_type={entity_type}, entity_id={entity_id}, file_id={file_id}")
     

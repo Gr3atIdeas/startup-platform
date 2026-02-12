@@ -259,7 +259,7 @@
                     {% if franchise.additional_info %}
                       <div class="additional-info">
                         <p><strong>Основные функции:</strong></p>
-                        {{ franchise.additional_info|safe }}
+                        {{ franchise.additional_info|sanitize_html|safe }}
                       </div>
                     {% endif %}
                   </div>
