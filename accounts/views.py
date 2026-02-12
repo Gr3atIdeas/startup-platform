@@ -106,7 +106,11 @@ from .models import (
     InvestmentTransactions,
     Messages,
     MessageStatuses,
+    ModerationLog,
     NewsArticles,
+    NewsCategories,
+    NewsComments,
+    NewsDislikes,
     NewsLikes,
     NewsViews,
     PaymentMethods,
@@ -771,6 +775,10 @@ def home(request):
             ]
             logger.info("Using fallback startup data")
 
+        latest_news = NewsArticles.objects.filter(
+            status="published"
+        ).select_related("author").order_by("-published_at")[:5]
+
         context = {
             "demo_startups_data": json.dumps(startups_data, cls=DjangoJSONEncoder),
             "planets_data_json": json.dumps(planets_data, ensure_ascii=False),
@@ -778,6 +786,7 @@ def home(request):
             "directions": directions_data,
             "random_startupers": random_startupers,
             "random_startups": random_startups,
+            "latest_news": latest_news,
         }
 
         response = render(request, "accounts/main.html", context)
@@ -5868,6 +5877,10 @@ def investor_main(request):
             "investment_type": investment_type,
             "logo": startup.get_logo_url(),
         })
+    latest_news = NewsArticles.objects.filter(
+        status="published"
+    ).select_related("author").order_by("-published_at")[:5]
+
     context = {
         "planets_data": planets_data_for_template,
         "logo_data": logo_data,
@@ -5877,6 +5890,7 @@ def investor_main(request):
         "directions_data_json": json.dumps(directions_data_json, cls=DjangoJSONEncoder),
         "all_startups_data_json": json.dumps(all_startups_data, cls=DjangoJSONEncoder),
         "is_startuper": is_startuper,
+        "latest_news": latest_news,
     }
     return render(request, "accounts/investor_main.html", context)
 @login_required
@@ -6183,6 +6197,10 @@ def startuper_main(request):
             }
         ]
 
+    latest_news = NewsArticles.objects.filter(
+        status="published"
+    ).select_related("author").order_by("-published_at")[:5]
+
     context = {
         "planets_data": planets_data_for_template,
         "logo_data": logo_data,
@@ -6194,8 +6212,8 @@ def startuper_main(request):
         "is_startuper": is_startuper,
         "random_startups": random_startups_data,
         "random_startupers": random_startupers_data,
+        "latest_news": latest_news,
     }
-
 
     return render(request, "accounts/startuper_main.html", context)
 
@@ -6673,11 +6691,9 @@ def invest_franchise(request, franchise_id):
             {"success": False, "error": "Произошла ошибка при инвестировании"}
         )
 
-class NewsForm(forms.Form):
-    title = forms.CharField(max_length=255, label="Заголовок")
-    content = forms.CharField(widget=forms.Textarea, label="Текст новости")
-    image = forms.ImageField(label="Картинка", required=False)
 def news(request):
+    from .forms import NewsForm
+
     if request.method == "POST":
         if (
             not request.user.is_authenticated
@@ -6688,14 +6704,12 @@ def news(request):
             )
         form = NewsForm(request.POST, request.FILES)
         if form.is_valid():
-            article = NewsArticles(
-                title=form.cleaned_data["title"],
-                content=form.cleaned_data["content"],
-                author=request.user,
-                published_at=timezone.now(),
-                updated_at=timezone.now(),
-                tags="Администрация",
-            )
+            article = form.save(commit=False)
+            article.author = request.user
+            article.published_at = timezone.now()
+            article.updated_at = timezone.now()
+            if not article.tags:
+                article.tags = "Администрация"
             article.save()
             image = form.cleaned_data.get("image")
             if image:
@@ -6708,49 +6722,26 @@ def news(request):
         else:
             return JsonResponse({"success": False, "error": "Форма содержит ошибки."})
 
+    articles = NewsArticles.objects.filter(
+        status="published"
+    ).select_related("author", "category")
 
-    articles = NewsArticles.objects.all()
-
+    articles = articles.annotate(
+        likes_count_agg=Count("newslikes", distinct=True),
+        comments_count_agg=Count("comments", distinct=True),
+    )
 
     sort_order = request.GET.get("sort", "new")
     if sort_order == "old":
         articles = articles.order_by("published_at")
     elif sort_order == "rating":
-        articles = articles.order_by("-rating_agg", "-published_at")
+        articles = articles.order_by("-likes_count_agg", "-published_at")
     else:
         articles = articles.order_by("-published_at")
 
-
     selected_categories = request.GET.getlist("category")
     if selected_categories:
-
-
-        pass
-
-
-    micro_investment = request.GET.get("micro_investment")
-    if micro_investment == "1":
-
-
-        pass
-
-
-    min_rating = request.GET.get("min_rating")
-    max_rating = request.GET.get("max_rating")
-    if min_rating:
-        try:
-            min_rating_val = float(min_rating)
-            articles = articles.filter(rating_agg__gte=min_rating_val)
-        except ValueError:
-            pass
-
-    if max_rating:
-        try:
-            max_rating_val = float(max_rating)
-            articles = articles.filter(rating_agg__lte=max_rating_val)
-        except ValueError:
-            pass
-
+        articles = articles.filter(category__slug__in=selected_categories)
 
     search_query = request.GET.get("search")
     if search_query:
@@ -6759,7 +6750,6 @@ def news(request):
             Q(content__icontains=search_query) |
             Q(tags__icontains=search_query)
         )
-
 
     try:
         page_number = int(request.GET.get("page", 1))
@@ -6770,11 +6760,12 @@ def news(request):
 
     paginator = Paginator(articles, 12)
 
-
     if page_number > paginator.num_pages and paginator.num_pages > 0:
         page_number = paginator.num_pages
 
     page_obj = paginator.get_page(page_number)
+
+    all_categories = NewsCategories.objects.all().order_by("sort_order")
 
     context = {
         "articles": page_obj,
@@ -6782,9 +6773,7 @@ def news(request):
         "paginator": paginator,
         "sort_order": sort_order,
         "selected_categories": selected_categories,
-        "micro_investment": micro_investment == "1",
-        "min_rating": min_rating,
-        "max_rating": max_rating,
+        "all_categories": all_categories,
         "search_query": search_query,
     }
 
@@ -6801,26 +6790,98 @@ def news(request):
 
     return render(request, "accounts/news.html", context)
 def news_detail(request, article_id):
+    from .forms import NewsCommentForm
+
     article = get_object_or_404(NewsArticles, article_id=article_id)
+
+    # Не показывать черновики/архив обычным пользователям
+    if article.status != "published":
+        is_mod = request.user.is_authenticated and (request.user.role.role_name or "").lower() == "moderator"
+        is_author = request.user.is_authenticated and article.author_id == request.user.user_id
+        if not is_mod and not is_author:
+            return redirect("news")
+
     user = request.user if request.user.is_authenticated else None
-    if not NewsViews.objects.filter(article=article, user=user).exists():
-        NewsViews.objects.create(article=article, user=user, viewed_at=timezone.now())
+
+    # Трекинг просмотров
+    if user:
+        if not NewsViews.objects.filter(article=article, user=user).exists():
+            NewsViews.objects.create(article=article, user=user)
+    else:
+        NewsViews.objects.create(article=article, user=None)
+
+    # Счётчики
     views_count = NewsViews.objects.filter(article=article).count()
     likes_count = NewsLikes.objects.filter(article=article).count()
-    user_liked = (
-        NewsLikes.objects.filter(article=article, user=user).exists() if user else False
-    )
-    if (
-        request.method == "POST"
-        and request.user.is_authenticated
-        and "like" in request.POST
-    ):
-        if not user_liked:
-            NewsLikes.objects.create(
-                article=article, user=request.user, created_at=timezone.now()
-            )
-            likes_count += 1
-            user_liked = True
+    dislikes_count = NewsDislikes.objects.filter(article=article).count()
+    user_liked = NewsLikes.objects.filter(article=article, user=user).exists() if user else False
+    user_disliked = NewsDislikes.objects.filter(article=article, user=user).exists() if user else False
+
+    # POST: лайк / дизлайк / комментарий
+    if request.method == "POST" and user:
+        if "like" in request.POST:
+            if user_liked:
+                NewsLikes.objects.filter(article=article, user=user).delete()
+            else:
+                NewsLikes.objects.get_or_create(article=article, user=user)
+                NewsDislikes.objects.filter(article=article, user=user).delete()
+            return redirect("news_detail", article_id=article.article_id)
+
+        elif "dislike" in request.POST:
+            if user_disliked:
+                NewsDislikes.objects.filter(article=article, user=user).delete()
+            else:
+                NewsDislikes.objects.get_or_create(article=article, user=user)
+                NewsLikes.objects.filter(article=article, user=user).delete()
+            return redirect("news_detail", article_id=article.article_id)
+
+        elif "comment" in request.POST:
+            comment_form = NewsCommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.article = article
+                comment.user = user
+                parent_id = request.POST.get("parent_comment_id")
+                if parent_id:
+                    try:
+                        comment.parent_comment_id = int(parent_id)
+                    except (ValueError, TypeError):
+                        pass
+                comment.save()
+                return redirect("news_detail", article_id=article.article_id)
+
+    # Комментарии (top-level)
+    comments = NewsComments.objects.filter(
+        article=article, parent_comment__isnull=True
+    ).select_related("user").order_by("-created_at")
+
+    # Ответы на комментарии
+    all_replies = NewsComments.objects.filter(
+        article=article, parent_comment__isnull=False
+    ).select_related("user").order_by("created_at")
+    replies_by_parent = {}
+    for reply in all_replies:
+        replies_by_parent.setdefault(reply.parent_comment_id, []).append(reply)
+
+    comments_count = NewsComments.objects.filter(article=article).count()
+
+    # Похожие статьи (по категории, потом рандом)
+    similar = NewsArticles.objects.filter(
+        status="published"
+    ).exclude(article_id=article.article_id).select_related("author")
+
+    if article.category_id:
+        similar_by_cat = list(similar.filter(category_id=article.category_id).order_by("-published_at")[:3])
+    else:
+        similar_by_cat = []
+
+    if len(similar_by_cat) < 3:
+        exclude_ids = [article.article_id] + [a.article_id for a in similar_by_cat]
+        extra = list(similar.exclude(article_id__in=exclude_ids).order_by("-published_at")[:3 - len(similar_by_cat)])
+        similar_by_cat.extend(extra)
+
+    comment_form = NewsCommentForm()
+
     return render(
         request,
         "accounts/news_detail.html",
@@ -6828,37 +6889,81 @@ def news_detail(request, article_id):
             "article": article,
             "views_count": views_count,
             "likes_count": likes_count,
+            "dislikes_count": dislikes_count,
             "user_liked": user_liked,
+            "user_disliked": user_disliked,
+            "comments": comments,
+            "replies_by_parent": replies_by_parent,
+            "comments_count": comments_count,
+            "similar_articles": similar_by_cat,
+            "comment_form": comment_form,
         },
     )
 @login_required
-def create_news(request):
-    if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
-        messages.error(request, "У вас нет прав для этого действия.")
-        return redirect("news")
+def edit_news(request, article_id):
+    from .forms import NewsEditForm
+
+    article = get_object_or_404(NewsArticles, article_id=article_id)
+    is_mod = (request.user.role.role_name or "").lower() == "moderator"
+    is_author = article.author_id == request.user.user_id
+    if not is_mod and not is_author:
+        return JsonResponse({"success": False, "error": "Нет прав для редактирования."})
+
     if request.method == "POST":
-        form = NewsForm(request.POST, request.FILES)
+        form = NewsEditForm(request.POST, request.FILES, instance=article)
         if form.is_valid():
-            article = NewsArticles(
-                title=form.cleaned_data["title"],
-                content=form.cleaned_data["content"],
-                author=request.user,
-                published_at=timezone.now(),
-                updated_at=timezone.now(),
-                tags="Администрация",
-            )
+            article = form.save(commit=False)
+            article.updated_at = timezone.now()
             image = form.cleaned_data.get("image")
             if image:
+                # Удаляем старую картинку
+                if article.image_url:
+                    try:
+                        default_storage.delete(article.image_url)
+                    except Exception:
+                        pass
                 image_id = str(uuid.uuid4())
-                file_path = f"news/{image_id}_{image.name}"
+                file_path = f"news/{article.article_id}/{image_id}_{image.name}"
                 default_storage.save(file_path, image)
                 article.image_url = file_path
             article.save()
-            messages.success(request, "Новость успешно создана!")
-            return redirect("news")
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({"success": True})
+            messages.success(request, "Новость обновлена!")
+            return redirect("news_detail", article_id=article.article_id)
+        else:
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return JsonResponse({"success": False, "errors": form.errors})
     else:
-        form = NewsForm()
-    return render(request, "accounts/create_news.html", {"form": form})
+        form = NewsEditForm(instance=article)
+
+    return render(request, "accounts/edit_news.html", {"form": form, "article": article})
+
+
+@login_required
+def delete_news_comment(request, comment_id):
+    comment = get_object_or_404(NewsComments, comment_id=comment_id)
+    is_mod = (request.user.role.role_name or "").lower() == "moderator"
+    is_comment_author = comment.user_id == request.user.user_id
+    if not is_mod and not is_comment_author:
+        return JsonResponse({"success": False, "error": "Нет прав для удаления комментария."})
+
+    if request.method == "POST":
+        article_id = comment.article_id
+        comment.delete()
+        if is_mod:
+            ModerationLog.objects.create(
+                moderator=request.user,
+                action="delete_comment",
+                entity_type="news_article",
+                entity_id=article_id,
+                entity_title=f"Комментарий #{comment_id}",
+                comment=f"Удалён комментарий к новости #{article_id}",
+            )
+        return JsonResponse({"success": True})
+    return JsonResponse({"success": False, "error": "Требуется метод POST."})
+
+
 @login_required
 def delete_news(request, article_id):
     if request.method != "POST":

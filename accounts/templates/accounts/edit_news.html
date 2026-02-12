@@ -1,0 +1,84 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block title %}Редактировать: {{ article.title }}{% endblock %}
+
+{% block head_extra %}
+  <link rel="stylesheet" href="{% static 'accounts/css/news.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="news-page-container">
+  <div class="main-content-area" style="justify-content: center;">
+    <div class="news-feed-column" style="max-width: 800px;">
+
+      <div class="back-button-container" style="margin-bottom: 20px;">
+        <a href="{% url 'news_detail' article.article_id %}" class="back-button">
+          <div class="back-button-arrow">
+            <div class="back-button-arrow-inner"></div>
+          </div>
+          <div class="back-button-text">Назад к статье</div>
+        </a>
+      </div>
+
+      <h1 style="color: #fff; margin-bottom: 24px;">Редактировать новость</h1>
+
+      <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 16px;">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="id_title" style="color: #ccc; margin-bottom: 6px; display: block;">Заголовок</label>
+          <input type="text" name="title" id="id_title" value="{{ form.title.value|default_if_none:'' }}"
+                 class="form-control" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #1a1a2e; color: #fff;" required>
+        </div>
+
+        <div class="form-group">
+          <label for="id_content" style="color: #ccc; margin-bottom: 6px; display: block;">Текст новости</label>
+          <textarea name="content" id="id_content" rows="12"
+                    class="form-control" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #1a1a2e; color: #fff;" required>{{ form.content.value|default_if_none:'' }}</textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="id_category" style="color: #ccc; margin-bottom: 6px; display: block;">Категория</label>
+          {{ form.category }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_tags" style="color: #ccc; margin-bottom: 6px; display: block;">Теги (через запятую)</label>
+          <input type="text" name="tags" id="id_tags" value="{{ form.tags.value|default_if_none:'' }}"
+                 class="form-control" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #1a1a2e; color: #fff;"
+                 placeholder="AI, стартапы, инвестиции">
+        </div>
+
+        <div class="form-group">
+          <label for="id_status" style="color: #ccc; margin-bottom: 6px; display: block;">Статус</label>
+          {{ form.status }}
+        </div>
+
+        {% if user.role.role_name == 'moderator' %}
+        <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" name="is_featured" id="id_is_featured" {% if form.is_featured.value %}checked{% endif %}>
+          <label for="id_is_featured" style="color: #ccc;">Закрепить на главной</label>
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+          <label style="color: #ccc; margin-bottom: 6px; display: block;">Текущее изображение</label>
+          {% if article.get_image_url %}
+            <img src="{{ article.get_image_url }}" alt="Текущее изображение" style="max-width: 300px; border-radius: 8px; margin-bottom: 10px;">
+          {% else %}
+            <p style="color: #777;">Нет изображения</p>
+          {% endif %}
+          <label for="id_image" style="color: #ccc; margin-top: 8px; display: block;">Заменить изображение</label>
+          <input type="file" name="image" id="id_image" accept="image/*" style="color: #ccc;">
+        </div>
+
+        <button type="submit" class="submit-btn btn btn--blue" style="align-self: flex-start; padding: 12px 32px;">
+          Сохранить изменения
+        </button>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

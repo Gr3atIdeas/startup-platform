@@ -47,7 +47,7 @@
           />
         </div>
       </div>
-      <div v-if="isDebug" class="card news-card">
+      <div class="card news-card">
         <div class="card-inner">
           <div class="card-content left-align">
             <h3>Новости</h3>

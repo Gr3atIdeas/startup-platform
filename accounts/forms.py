@@ -949,6 +949,73 @@ class SpecialistCommentForm(forms.ModelForm):
             ),
             "user_rating": forms.HiddenInput(),
         }
+class NewsForm(forms.ModelForm):
+    image = forms.ImageField(label="Картинка", required=False)
+
+    class Meta:
+        from .models import NewsArticles
+        model = NewsArticles
+        fields = ["title", "content", "category", "tags"]
+        widgets = {
+            "title": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Заголовок новости"}
+            ),
+            "content": forms.Textarea(
+                attrs={"class": "form-control", "rows": 8, "placeholder": "Текст новости"}
+            ),
+            "tags": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "AI, стартапы, инвестиции"}
+            ),
+            "category": forms.Select(attrs={"class": "form-control"}),
+        }
+        labels = {
+            "title": "Заголовок",
+            "content": "Текст новости",
+            "category": "Категория",
+            "tags": "Теги (через запятую)",
+        }
+
+
+class NewsEditForm(forms.ModelForm):
+    image = forms.ImageField(label="Картинка", required=False)
+
+    class Meta:
+        from .models import NewsArticles
+        model = NewsArticles
+        fields = ["title", "content", "category", "tags", "status", "is_featured"]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "content": forms.Textarea(attrs={"class": "form-control", "rows": 10}),
+            "tags": forms.TextInput(attrs={"class": "form-control"}),
+            "category": forms.Select(attrs={"class": "form-control"}),
+            "status": forms.Select(attrs={"class": "form-control"}),
+        }
+        labels = {
+            "title": "Заголовок",
+            "content": "Текст новости",
+            "category": "Категория",
+            "tags": "Теги (через запятую)",
+            "status": "Статус",
+            "is_featured": "Закрепить на главной",
+        }
+
+
+class NewsCommentForm(forms.ModelForm):
+    class Meta:
+        from .models import NewsComments
+        model = NewsComments
+        fields = ["content"]
+        widgets = {
+            "content": forms.Textarea(
+                attrs={
+                    "rows": 4,
+                    "placeholder": "Напишите ваш комментарий...",
+                    "class": "form-control",
+                }
+            ),
+        }
+
+
 class MessageForm(forms.Form):
     message_text = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 2, "placeholder": "Введите сообщение..."}),

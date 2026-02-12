@@ -5,8 +5,6 @@
 
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/news.css' %}">
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" referrerpolicy="no-referrer" />
 {% endblock %}
 
 {% block content %}
@@ -30,38 +28,14 @@
       <div class="sidebar-block">
         <h3 class="sidebar-title">Категории</h3>
         <ul class="category-list">
-          <li><input type="checkbox" id="cat-medicine" name="category" value="medicine" {% if 'medicine' in selected_categories %}checked{% endif %}> <label for="cat-medicine">Медицина</label></li>
-          <li><input type="checkbox" id="cat-auto" name="category" value="auto" {% if 'auto' in selected_categories %}checked{% endif %}> <label for="cat-auto">Автомобили</label></li>
-          <li><input type="checkbox" id="cat-delivery" name="category" value="delivery" {% if 'delivery' in selected_categories %}checked{% endif %}> <label for="cat-delivery">Доставка</label></li>
-          <li><input type="checkbox" id="cat-cafe" name="category" value="cafe" {% if 'cafe' in selected_categories %}checked{% endif %}> <label for="cat-cafe">Кафе/рестораны</label></li>
-          <li><input type="checkbox" id="cat-fastfood" name="category" value="fastfood" {% if 'fastfood' in selected_categories %}checked{% endif %}> <label for="cat-fastfood">Фастфуд</label></li>
-          <li><input type="checkbox" id="cat-health" name="category" value="health" {% if 'health' in selected_categories %}checked{% endif %}> <label for="cat-health">Здоровье</label></li>
-          <li><input type="checkbox" id="cat-beauty" name="category" value="beauty" {% if 'beauty' in selected_categories %}checked{% endif %}> <label for="cat-beauty">Красота</label></li>
-          <li><input type="checkbox" id="cat-transport" name="category" value="transport" {% if 'transport' in selected_categories %}checked{% endif %}> <label for="cat-transport">Транспорт</label></li>
-          <li><input type="checkbox" id="cat-sport" name="category" value="sport" {% if 'sport' in selected_categories %}checked{% endif %}> <label for="cat-sport">Спорт</label></li>
-          <li><input type="checkbox" id="cat-psychology" name="category" value="psychology" {% if 'psychology' in selected_categories %}checked{% endif %}> <label for="cat-psychology">Психология</label></li>
-          <li><input type="checkbox" id="cat-ai" name="category" value="ai" {% if 'ai' in selected_categories %}checked{% endif %}> <label for="cat-ai">ИИ</label></li>
+          {% for cat in all_categories %}
+            <li>
+              <input type="checkbox" id="cat-{{ cat.slug }}" name="category" value="{{ cat.slug }}"
+                     {% if cat.slug in selected_categories %}checked{% endif %}>
+              <label for="cat-{{ cat.slug }}">{{ cat.name }}</label>
+            </li>
+          {% endfor %}
         </ul>
-      </div>
-      <div class="sidebar-block microinvest-block">
-        <label for="microinvest" class="sidebar-label">Микроинвестиции</label>
-        <span class="help-icon" title="Информация о микроинвестициях">?</span>
-        <label class="switch">
-          <input type="checkbox" id="microinvest" {% if micro_investment %}checked{% endif %}>
-          <span class="slider round"></span>
-        </label>
-      </div>
-      
-      
-      <div class="sidebar-block rating-filter">
-        <div class="rating-header">
-          <label class="sidebar-label">Рейтинг</label>
-          <span id="newsRatingValueDisplay" class="rating-value">{{ min_rating|default:0|floatformat:1 }}-{{ max_rating|default:5|floatformat:1 }}</span> 
-        </div>
-        <div id="newsRatingSlider"></div> 
-        <input type="hidden" name="min_rating" id="newsMinRatingInput" value="{{ min_rating|default:0|floatformat:1 }}"> 
-        <input type="hidden" name="max_rating" id="newsMaxRatingInput" value="{{ max_rating|default:5|floatformat:1 }}"> 
-        <span class="rating-range-label">Диапазон</span>
       </div>
 
       <div class="sidebar-block">
@@ -70,18 +44,17 @@
     </aside>
 
     <div class="news-feed-column">
-      
+
       <div class="search-bar-container">
-        <input type="text" placeholder="Поиск по каталогу" class="search-input" value="{{ search_query|default_if_none:'' }}">
+        <input type="text" placeholder="Поиск по новостям" class="search-input" value="{{ search_query|default_if_none:'' }}">
         <button class="search-button">
           <img src="{% static 'accounts/images/search.svg' %}" alt="Поиск">
         </button>
       </div>
 
-      
       <div class="popup-overlay modal-overlay" id="newsPopup" aria-hidden="true" role="dialog">
         <div class="popup modal-popup glass-panel" role="document">
-          <button class="popup-close modal-close-button" onclick="closePopup()" aria-label="Закрыть">×</button>
+          <button class="popup-close modal-close-button" onclick="closePopup()" aria-label="Закрыть">&times;</button>
           <h2 class="modal-title">Создать новость</h2>
           <form id="newsForm" enctype="multipart/form-data" autocomplete="off">
             {% csrf_token %}
@@ -92,6 +65,19 @@
             <div class="form-group">
               <label for="id_content">Текст новости</label>
               <textarea name="content" id="id_content" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="id_category">Категория</label>
+              <select name="category" id="id_category" class="sidebar-select">
+                <option value="">— Без категории —</option>
+                {% for cat in all_categories %}
+                  <option value="{{ cat.category_id }}">{{ cat.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="id_tags">Теги (через запятую)</label>
+              <input type="text" name="tags" id="id_tags" placeholder="AI, стартапы, инвестиции">
             </div>
             <div class="form-group">
               <label for="id_image">Картинка</label>
@@ -105,13 +91,10 @@
 
       {% include 'accounts/partials/_news_cards.html' with articles=articles page_obj=page_obj paginator=paginator %}
 
-    </div> 
-  </div> 
-</div> 
+    </div>
+  </div>
+</div>
 
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js" referrerpolicy="no-referrer"></script>
   <script src="{% static 'accounts/js/news_filters.js' %}" defer></script>
 <script>
   function openPopup() {
@@ -149,7 +132,7 @@
     .then(data => {
       if (data.success) {
         if (typeof window.showNotification === 'function') {
-          window.showNotification('Новость отправлена на модерацию', 'success', 3000);
+          window.showNotification('Новость успешно создана', 'success', 3000);
         }
         closePopup();
         location.reload();
@@ -157,7 +140,7 @@
         if (typeof window.showNotification === 'function') {
           window.showNotification(data.error || 'Ошибка при создании новости', 'error', 4000);
         } else {
-          alert(data.error || 'Ошибка при создании новости: ' + JSON.stringify(data.errors));
+          alert(data.error || 'Ошибка при создании новости');
         }
       }
     })
@@ -207,75 +190,6 @@
     })
     .catch(error => {
       alert('Произошла ошибка при удалении новости');
-    });
-  }
-
-  // Initialize noUiSlider for News Page Rating
-  document.addEventListener('DOMContentLoaded', function() {
-    var newsRatingSlider = document.getElementById('newsRatingSlider');
-    var newsRatingValueDisplay = document.getElementById('newsRatingValueDisplay');
-    var newsMinRatingInput = document.getElementById('newsMinRatingInput');
-    var newsMaxRatingInput = document.getElementById('newsMaxRatingInput');
-
-    if (newsRatingSlider && newsRatingValueDisplay && newsMinRatingInput && newsMaxRatingInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
-        var initialMin = parseFloat(newsMinRatingInput.value) || 0;
-        var initialMax = parseFloat(newsMaxRatingInput.value) || 5;
-        
-        // Обновляем отображение
-        newsRatingValueDisplay.textContent = initialMin + '-' + initialMax;
-
-        noUiSlider.create(newsRatingSlider, {
-            start: [initialMin, initialMax],
-            connect: true,
-            range: {
-                'min': 0,
-                'max': 5
-            },
-            step: 0.1,
-            format: wNumb({
-                decimals: 1,
-                thousand: '',
-                suffix: ''
-            }),
-            tooltips: false, //툴크을 사용하지 않음
-            behaviour: 'tap-drag',
-            pips: false
-        });
-
-        newsRatingSlider.noUiSlider.on('update', function (values, handle) {
-            var minValue = values[0];
-            var maxValue = values[1];
-            newsRatingValueDisplay.textContent = minValue + ' - ' + maxValue;
-            newsMinRatingInput.value = minValue;
-            newsMaxRatingInput.value = maxValue;
-            // If this needs to trigger form submission or filtering, add here
-        });
-    } else {
-    }
-
-    // Инициализация пагинации для новостей
-    bindNewsPaginationHandlers();
-  });
-
-  // Функция для обработки пагинации новостей
-  function bindNewsPaginationHandlers() {
-    var paginationContainer = document.querySelector('.pagination');
-    if (!paginationContainer) return;
-    
-    var pageLinks = paginationContainer.querySelectorAll('a[href]');
-    pageLinks.forEach(function(link) {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        var href = this.getAttribute('href');
-        if (href && href.includes('page=')) {
-          var url = new URL(window.location.href);
-          var pageParam = new URLSearchParams(href.substring(1)).get('page');
-          if (pageParam) {
-            url.searchParams.set('page', pageParam);
-            window.location.href = url.toString();
-          }
-        }
-      });
     });
   }
 

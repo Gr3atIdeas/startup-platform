@@ -14,6 +14,9 @@ from .models import (
     ModerationLog,
     Directions,
     ReviewStatuses,
+    NewsArticles,
+    NewsCategories,
+    NewsComments,
 )
 from .moderation import approve_entity, reject_entity
 
@@ -389,3 +392,95 @@ class DirectionsAdmin(admin.ModelAdmin):
 @admin.register(ReviewStatuses)
 class ReviewStatusesAdmin(admin.ModelAdmin):
     list_display = ("status_id", "status_name")
+
+
+# ── News ──────────────────────────────────────────────────────────
+
+class NewsCommentsInline(admin.TabularInline):
+    model = NewsComments
+    fk_name = "article"
+    extra = 0
+    readonly_fields = ("comment_id", "user", "content", "user_rating", "created_at")
+    fields = ("user", "content", "user_rating", "created_at")
+    can_delete = True
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(NewsArticles)
+class NewsArticlesAdmin(admin.ModelAdmin):
+    list_display = ("title", "author", "status_badge", "category", "is_featured", "published_at")
+    list_filter = ("status", "category", "is_featured", "published_at")
+    search_fields = ("title", "content", "tags", "author__first_name", "author__last_name")
+    readonly_fields = ("article_id", "published_at", "updated_at", "views_count", "likes_count")
+    raw_id_fields = ("author",)
+    date_hierarchy = "published_at"
+    list_per_page = 30
+    save_on_top = True
+    inlines = [NewsCommentsInline]
+
+    fieldsets = (
+        ("Основное", {
+            "fields": ("title", "slug", "content", "author"),
+        }),
+        ("Классификация", {
+            "fields": ("category", "tags", "is_featured"),
+        }),
+        ("Статус", {
+            "fields": ("status", "scheduled_at"),
+        }),
+        ("Медиа", {
+            "fields": ("image_url",),
+        }),
+        ("Статистика", {
+            "fields": ("views_count", "likes_count"),
+            "classes": ("collapse",),
+        }),
+        ("Метаданные", {
+            "fields": ("article_id", "published_at", "updated_at"),
+            "classes": ("collapse",),
+        }),
+    )
+
+    def status_badge(self, obj):
+        colors = {
+            "published": "#28a745",
+            "draft": "#ffc107",
+            "archived": "#6c757d",
+        }
+        labels = {
+            "published": "Опубликована",
+            "draft": "Черновик",
+            "archived": "В архиве",
+        }
+        color = colors.get(obj.status, "#6c757d")
+        label = labels.get(obj.status, obj.status)
+        return format_html(
+            '<span style="background:{};color:#fff;padding:3px 8px;border-radius:4px;font-size:11px">{}</span>',
+            color, label,
+        )
+    status_badge.short_description = "Статус"
+    status_badge.admin_order_field = "status"
+
+    def views_count(self, obj):
+        from .models import NewsViews
+        return NewsViews.objects.filter(article=obj).count()
+    views_count.short_description = "Просмотры"
+
+    def likes_count(self, obj):
+        from .models import NewsLikes
+        return NewsLikes.objects.filter(article=obj).count()
+    likes_count.short_description = "Лайки"
+
+
+@admin.register(NewsCategories)
+class NewsCategoriesAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug", "sort_order", "articles_count")
+    search_fields = ("name", "slug")
+    prepopulated_fields = {"slug": ("name",)}
+    ordering = ("sort_order",)
+
+    def articles_count(self, obj):
+        return NewsArticles.objects.filter(category=obj, status="published").count()
+    articles_count.short_description = "Статей"

@@ -122,7 +122,7 @@
                 <div class="profile-main-startups-section">
                     <div class="profile-main-tabs">
                         <div class="profile-main-tab-item active-tab" data-tab="startups">Стартапы</div>
-                        {% if DEBUG %}<div class="profile-main-tab-item" data-tab="news">Новости</div>{% endif %}
+                        <div class="profile-main-tab-item" data-tab="news">Новости</div>
                     </div>
                     
                     <div class="profile-main-content-tab active-content" id="startupsContent">
@@ -188,7 +188,6 @@
                         {% endif %}
                     </div>
 
-                    {% if DEBUG %}
                     <div class="profile-main-content-tab" id="newsContent">
                         <div class="profile-news-items-container">
                             {% if news_page %}
@@ -201,7 +200,7 @@
                                         </div>
                                     </a>
                                 {% endfor %}
-                                
+
                                 {% if news_page.paginator.num_pages > 1 %}
                                     <div class="pagination">
                                         {% if news_page.has_previous %}
@@ -224,7 +223,6 @@
                             {% endif %}
                         </div>
                     </div>
-                    {% endif %}
                 </div>
             </div>
             <div id="profileEditBlock" class="profile-edit-animated" style="display:none; opacity:0; pointer-events:none;">

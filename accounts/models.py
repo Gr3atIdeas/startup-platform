@@ -541,22 +541,70 @@ class Users(AbstractBaseUser):
     def update_last_login(self):
         self.last_login = timezone.now()
         self.save(update_fields=['last_login'])
+class NewsCategories(models.Model):
+    category_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=120, unique=True)
+    sort_order = models.IntegerField(default=0)
+
+    class Meta:
+        managed = False
+        db_table = "news_categories"
+        ordering = ["sort_order", "name"]
+
+    def __str__(self):
+        return self.name
+
+
 class NewsArticles(models.Model):
+    STATUS_CHOICES = [
+        ("draft", "Черновик"),
+        ("published", "Опубликована"),
+        ("archived", "В архиве"),
+    ]
+
     article_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     content = models.TextField()
     author = models.ForeignKey("Users", models.DO_NOTHING, blank=True, null=True)
     published_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
-    image_url = models.CharField(
-        max_length=1000, blank=True, null=True
+    image_url = models.CharField(max_length=1000, blank=True, null=True)
+    tags = models.CharField(max_length=255, blank=True, null=True)
+    slug = models.SlugField(max_length=280, unique=True, blank=True, null=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="published")
+    category = models.ForeignKey(
+        "NewsCategories",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        db_column="category_id",
+        related_name="articles",
     )
-    tags = models.CharField(
-        max_length=255, blank=True, null=True
-    )
+    is_featured = models.BooleanField(default=False)
+    scheduled_at = models.DateTimeField(blank=True, null=True)
+
     class Meta:
         managed = False
         db_table = "news_articles"
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            import uuid
+            base_slug = slugify(self.title, allow_unicode=True)[:250]
+            if not base_slug:
+                base_slug = "article"
+            self.slug = f"{base_slug}-{uuid.uuid4().hex[:8]}"
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse("news_detail", kwargs={"article_id": self.article_id})
+
     def get_image_url(self):
         """Генерирует полный URL для картинки новости."""
         if self.image_url:
@@ -564,6 +612,12 @@ class NewsArticles(models.Model):
             base_url = getattr(settings, "S3_PUBLIC_BASE_URL", "") + "/"
             return f"{base_url}{self.image_url}"
         return None
+
+    def get_tags_list(self):
+        """Возвращает теги как список."""
+        if self.tags:
+            return [t.strip() for t in self.tags.split(",") if t.strip()]
+        return []
 
 
 class NewsLikes(models.Model):
@@ -590,6 +644,46 @@ class NewsViews(models.Model):
         managed = False
         db_table = "news_views"
 
+
+class NewsComments(models.Model):
+    comment_id = models.AutoField(primary_key=True)
+    article = models.ForeignKey(
+        "NewsArticles",
+        on_delete=models.CASCADE,
+        db_column="article_id",
+        related_name="comments",
+    )
+    user = models.ForeignKey("Users", on_delete=models.CASCADE, db_column="user_id")
+    content = models.TextField()
+    user_rating = models.IntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    parent_comment = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        db_column="parent_comment_id",
+    )
+
+    class Meta:
+        managed = False
+        db_table = "news_comments"
+
+    def __str__(self):
+        return f"NewsComment {self.comment_id} by {self.user}"
+
+
+class NewsDislikes(models.Model):
+    dislike_id = models.AutoField(primary_key=True)
+    article = models.ForeignKey("NewsArticles", models.CASCADE, db_column="article_id")
+    user = models.ForeignKey("Users", models.CASCADE, db_column="user_id")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = "news_dislikes"
+        unique_together = (("article", "user"),)
 
 
 class ChatConversations(models.Model):
@@ -1058,6 +1152,7 @@ class ModerationLog(models.Model):
         ("agency", "Агентство"),
         ("specialist", "Специалист"),
         ("comment", "Комментарий"),
+        ("news_article", "Новость"),
     ]
 
     log_id = models.AutoField(primary_key=True)

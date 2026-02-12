@@ -1,19 +1,16 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
- 
 
 {% block title %}{{ article.title }}{% endblock %}
 
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/news_detail.css' %}">
-  
-  
 {% endblock %}
 
 {% block content %}
-<div class="page-content-wrapper-white"> 
+<div class="page-content-wrapper-white">
   <div class="news-detail-container">
-    
+
     <div class="back-button-container">
       <a href="{% if request.META.HTTP_REFERER %}{{ request.META.HTTP_REFERER }}{% else %}{% url 'news' %}{% endif %}" class="back-button">
         <div class="back-button-arrow">
@@ -24,13 +21,13 @@
     </div>
 
     <div class="news-content-layout">
-      
+
       <div class="news-article-main">
         <div class="news-article-header">
           <div class="article-meta-rating-row">
             <div class="author-info-block">
               <div class="author-details">
-                <img class="author-avatar" src="{{ article.author.profile.avatar.url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ article.author.email|default:'Автор' }}"/>
+                <img class="author-avatar" src="{{ article.author.get_profile_picture_url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ article.author.get_full_name|default:'Автор' }}"/>
                 <div class="author-name-time">
                   <div class="author-name">{{ article.author.get_full_name|default:article.author.email|default:"Аноним" }}</div>
                   <div class="publish-time">{{ article.published_at|timesince }} назад</div>
@@ -47,28 +44,27 @@
                   </form>
                 </div>
                 <div class="stat-item">
+                  <form method="post" style="margin: 0; display: flex;">
+                    {% csrf_token %}
+                    <button type="submit" name="dislike" class="like-button {% if user_disliked %}liked{% endif %}">
+                      <i class="fas fa-thumbs-down"></i>
+                      <span class="like-count">{{ dislikes_count }}</span>
+                    </button>
+                  </form>
+                </div>
+                <div class="stat-item">
                   <div class="stat-icon">
                     <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
                   </div>
-                  <div class="stat-text">{{ article.comments_count|default:0 }}</div>
+                  <div class="stat-text">{{ comments_count }}</div>
                 </div>
               </div>
             </div>
+            {% if article.category %}
             <div class="rating-block">
-              {% with simulated_rating=3 %} 
-              <div class="rating-text">Рейтинг {{ simulated_rating }}/5</div>
-              <div class="rating-icons">
-                  <div class="rating-stars" data-rating="{{ simulated_rating }}">
-                      {% for i in "12345" %}
-                          <span class="rating-icon-container {% if forloop.counter <= simulated_rating %}is-filled{% else %}is-empty{% endif %}">
-                              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Планета закрашенная" class="icon-filled">
-                              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Планета контур" class="icon-empty"> 
-                          </span>
-                      {% endfor %}
-                  </div>
-              </div>
-              {% endwith %}
+              <span class="category-badge">{{ article.category.name }}</span>
             </div>
+            {% endif %}
           </div>
 
           {% if article.get_image_url %}
@@ -79,6 +75,9 @@
 
           <div class="article-title-large">
             {{ article.title }}
+            {% if user.is_authenticated and user.role.role_name == 'moderator' or user == article.author %}
+              <a href="{% url 'edit_news' article.article_id %}" class="edit-news-btn" style="margin-left: 10px; font-size: 14px; color: #004E9F;">Редактировать</a>
+            {% endif %}
             {% if user.is_authenticated and user.role.role_name == 'moderator' %}
               <button class="delete-news-btn" onclick="deleteNews({{ article.article_id }})">Удалить</button>
             {% endif %}
@@ -88,37 +87,6 @@
         <div class="article-content-body">
           <div class="content-text-full-width">
               {{ article.content|linebreaksbr }}
-          </div>
-
-          
-          <div class="content-row">
-            <div class="content-image-block">
-              <img class="content-image" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Ромашка шкаф/стеллаж">
-              <div class="image-caption">Ромашка шкаф/стеллаж</div>
-            </div>
-            <div class="content-text">
-              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...<br/><br/>Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
-            </div>
-          </div>
-          
-          <div class="content-row">
-            <div class="content-text">
-              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...<br/><br/>Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
-            </div>
-            <div class="content-image-block">
-              <img class="content-image" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Ромашка шкаф/стеллаж">
-              <div class="image-caption">Ромашка шкаф/стеллаж</div>
-            </div>
-          </div>
-
-          <div class="content-text-full-width">
-              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
-          </div>
-          
-          <img class="content-image-large" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Большое изображение в тексте">
-          
-          <div class="content-text-full-width">
-              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
           </div>
         </div>
 
@@ -139,93 +107,130 @@
             <div class="stat-icon">
               <img src="{% static 'accounts/images/news/thumbs-down.svg' %}" alt="Дизлайки">
             </div>
-            <div class="stat-text">{{ article.dislikes_count|default:0 }}</div> 
+            <div class="stat-text">{{ dislikes_count }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-icon">
               <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
             </div>
-            <div class="stat-text">{{ article.comments_count|default:0 }}</div>
+            <div class="stat-text">{{ comments_count }}</div>
           </div>
         </div>
 
-        
+        <!-- Комментарии -->
         <div class="comments-section">
             <div class="comments-header">
-                <h2 class="comments-title">Комментарии</h2>
+                <h2 class="comments-title">Комментарии ({{ comments_count }})</h2>
             </div>
 
             <div class="comments-list-container">
                 <div class="comments-list">
-                    {% for i in "123" %} 
-                    <div class="comment-item">
+                    {% for comment in comments %}
+                    <div class="comment-item" id="comment-{{ comment.comment_id }}">
                         <div class="comment-content">
-                            <img class="comment-avatar" src="/static/accounts/images/avatars/default_avatar_ufo.png" alt="Аватар пользователя"/>
+                            <img class="comment-avatar" src="{{ comment.user.get_profile_picture_url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ comment.user.get_full_name }}"/>
                             <div class="comment-text-block">
-                                <div class="comment-author-name">
-                                    {% if i == '1' %}Виктор
-                                    {% elif i == '2' %}Сергей
-                                    {% else %}Анна{% endif %}
-                                </div>
-                                <div class="comment-text">Само направление сейчас актуально и я уже инвестировала в похожий стартап. Советую!</div>
+                                <div class="comment-author-name">{{ comment.user.get_full_name|default:comment.user.email }}</div>
+                                <div class="comment-text">{{ comment.content }}</div>
                             </div>
                         </div>
                         <div class="comment-meta">
-                            <div class="comment-date">25/07/2024</div>
+                            <div class="comment-date">{{ comment.created_at|date:"d/m/Y H:i" }}</div>
+                            {% if user.is_authenticated %}
+                            <button class="reply-btn" onclick="showReplyForm({{ comment.comment_id }})">Ответить</button>
+                            {% endif %}
+                            {% if user.is_authenticated and user.role.role_name == 'moderator' or user == comment.user %}
+                            <button class="delete-comment-btn" onclick="deleteComment({{ comment.comment_id }})">Удалить</button>
+                            {% endif %}
+                        </div>
+
+                        <!-- Ответы -->
+                        {% for reply in replies_by_parent|default_if_none:"" %}{% endfor %}
+                        {% with replies=replies_by_parent %}
+                        {% if replies %}
+                        <div class="comment-replies">
+                            {% for reply_id, reply_list in replies.items %}
+                                {% if reply_id == comment.comment_id %}
+                                    {% for reply in reply_list %}
+                                    <div class="comment-item reply-item" id="comment-{{ reply.comment_id }}">
+                                        <div class="comment-content">
+                                            <img class="comment-avatar" src="{{ reply.user.get_profile_picture_url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ reply.user.get_full_name }}"/>
+                                            <div class="comment-text-block">
+                                                <div class="comment-author-name">{{ reply.user.get_full_name|default:reply.user.email }}</div>
+                                                <div class="comment-text">{{ reply.content }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="comment-meta">
+                                            <div class="comment-date">{{ reply.created_at|date:"d/m/Y H:i" }}</div>
+                                            {% if user.is_authenticated and user.role.role_name == 'moderator' or user == reply.user %}
+                                            <button class="delete-comment-btn" onclick="deleteComment({{ reply.comment_id }})">Удалить</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+
+                        <!-- Форма ответа (скрытая) -->
+                        <div class="reply-form-container" id="reply-form-{{ comment.comment_id }}" style="display: none;">
+                            {% if user.is_authenticated %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="comment" value="1">
+                                <input type="hidden" name="parent_comment_id" value="{{ comment.comment_id }}">
+                                <textarea name="content" class="add-comment-textarea" placeholder="Ответить на комментарий..." required></textarea>
+                                <button type="submit" class="add-comment-submit-btn">
+                                    <span class="add-comment-submit-text">Ответить</span>
+                                </button>
+                            </form>
+                            {% endif %}
                         </div>
                     </div>
+                    {% empty %}
+                    <div class="no-comments">Комментариев пока нет. Будьте первым!</div>
                     {% endfor %}
-                    
-                    <div class="comments-show-more-btn-container">
-                        <button type="button" class="comments-show-more-btn">
-                            <span class="comments-show-more-text">Показать еще</span>
-                            <span class="comments-show-more-icon">
-                                <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M1.41 0.589966L6 5.16997L10.59 0.589966L12 1.99997L6 7.99997L0 1.99997L1.41 0.589966Z" fill="#004E9F"/>
-                                </svg>
-                            </span>
-                        </button>
-                    </div>
                 </div>
-                
             </div>
 
-            <div class="add-comment-form-container">
-                <textarea class="add-comment-textarea" placeholder="Написать комментарий..."></textarea>
-                <button type="button" class="add-comment-submit-btn">
+            {% if user.is_authenticated %}
+            <form method="post" class="add-comment-form-container">
+                {% csrf_token %}
+                <input type="hidden" name="comment" value="1">
+                <textarea name="content" class="add-comment-textarea" placeholder="Написать комментарий..." required></textarea>
+                <button type="submit" class="add-comment-submit-btn">
                     <span class="add-comment-submit-text">Оставить комментарий</span>
                 </button>
+            </form>
+            {% else %}
+            <div class="add-comment-form-container">
+                <p style="text-align: center; color: #777;"><a href="{% url 'login' %}">Войдите</a>, чтобы оставить комментарий</p>
             </div>
+            {% endif %}
         </div>
-        
 
-      </div> 
+      </div>
 
-      
+      <!-- Похожие статьи -->
       <div class="sidebar-similar-articles">
         <div class="sidebar-title">Похожие статьи</div>
-        {% for i in "123" %} 
-        <div class="similar-article-card">
-          <img class="similar-article-image" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Похожая статья {{forloop.counter}}">
-          
-          {% if forloop.counter == 2 %} 
-          <div class="ad-label-on-image">
-            <img src="{% static 'accounts/images/alert-circle.svg' %}" alt="Реклама"> Реклама
-          </div>
-          {% endif %}
-
+        {% for similar in similar_articles %}
+        <a href="{% url 'news_detail' similar.article_id %}" class="similar-article-card" style="text-decoration: none; color: inherit;">
+          <img class="similar-article-image" src="{% if similar.get_image_url %}{{ similar.get_image_url }}{% else %}{% static 'accounts/images/main_page/news_placeholder.webp' %}{% endif %}" alt="{{ similar.title }}">
           <div class="similar-article-content">
-              <div class="similar-article-title">Инвестиции будущего или как быть на волне трендов {{forloop.counter}}</div>
-              <div class="similar-article-description">
-              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям...
-              </div>
+              <div class="similar-article-title">{{ similar.title }}</div>
+              <div class="similar-article-description">{{ similar.content|truncatewords:20 }}</div>
           </div>
-        </div>
+        </a>
+        {% empty %}
+        <p style="color: #999; font-size: 14px;">Нет похожих статей</p>
         {% endfor %}
       </div>
     </div>
   </div>
-</div> 
+</div>
 
 <script>
   function deleteNews(articleId) {
@@ -233,7 +238,7 @@
       return;
     }
 
-    fetch(`/news/${articleId}/delete/`, { 
+    fetch(`/news/${articleId}/delete/`, {
       method: 'POST',
       headers: {
         'X-CSRFToken': '{{ csrf_token }}'
@@ -242,7 +247,7 @@
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        window.location.href = "{% url 'news' %}"; 
+        window.location.href = "{% url 'news' %}";
       } else {
         alert(data.error || 'Ошибка при удалении новости');
       }
@@ -250,6 +255,34 @@
     .catch(error => {
       alert('Произошла ошибка при удалении новости');
     });
+  }
+
+  function deleteComment(commentId) {
+    if (!confirm('Удалить комментарий?')) return;
+
+    fetch(`/news/comment/${commentId}/delete/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const el = document.getElementById('comment-' + commentId);
+        if (el) el.remove();
+      } else {
+        alert(data.error || 'Ошибка при удалении комментария');
+      }
+    })
+    .catch(() => alert('Ошибка при удалении комментария'));
+  }
+
+  function showReplyForm(commentId) {
+    const form = document.getElementById('reply-form-' + commentId);
+    if (form) {
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
   }
 </script>
 {% endblock %}

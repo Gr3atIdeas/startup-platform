@@ -25,7 +25,10 @@
            </div>
         </div>
         <div class="news-tags">
-          Теги: {{ article.tags|default:"Нет тегов" }}
+          {% if article.category %}
+            <span class="category-badge" style="background: #004E9F; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-right: 6px;">{{ article.category.name }}</span>
+          {% endif %}
+          {% if article.tags %}Теги: {{ article.tags }}{% endif %}
         </div>
         <div class="news-excerpt">
           {{ article.content|truncatewords:25|default:"Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям..." }}

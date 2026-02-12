@@ -32,26 +32,6 @@
     });
 
 
-    var microCheckbox = document.getElementById('microinvest');
-    if (microCheckbox && microCheckbox.checked) {
-      params.set('micro_investment', '1');
-    }
-
-
-    var minRatingInput = document.getElementById('newsMinRatingInput');
-    var maxRatingInput = document.getElementById('newsMaxRatingInput');
-    if (minRatingInput && maxRatingInput) {
-      var minRating = parseFloat(minRatingInput.value);
-      var maxRating = parseFloat(maxRatingInput.value);
-      if (!isNaN(minRating) && minRating > 0) {
-        params.set('min_rating', minRating);
-      }
-      if (!isNaN(maxRating) && maxRating < 5) {
-        params.set('max_rating', maxRating);
-      }
-    }
-
-
     var searchInput = document.querySelector('.search-input');
     if (searchInput && searchInput.value.trim()) {
       params.set('search', searchInput.value.trim());
@@ -207,12 +187,6 @@
     categoryCheckboxes.forEach(function(checkbox) {
       checkbox.addEventListener('change', debouncedFormChange);
     });
-
-
-    var microCheckbox = document.getElementById('microinvest');
-    if (microCheckbox) {
-      microCheckbox.addEventListener('change', debouncedFormChange);
-    }
 
 
     var searchInput = document.querySelector('.search-input');
