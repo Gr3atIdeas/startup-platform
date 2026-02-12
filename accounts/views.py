@@ -1029,7 +1029,6 @@ def user_logout(request):
     return redirect("home")
 
 @vary_on_headers('X-Requested-With')
-@cache_page(60 * 3)  # Кэш 3 минуты
 def startups_list(request):
     # Формируем список направлений для сайдбара каталога: объединяем три категории здоровья в одну визуальную «Health»
     health_group = ['Health', 'Healthcare', 'Medicine']
@@ -1189,7 +1188,6 @@ def startups_list(request):
         return render(request, "accounts/startups_list.html", context)
 
 @vary_on_headers('X-Requested-With')
-@cache_page(60 * 3)  # Кэш 3 минуты
 def franchises_list(request):
 
     existing_dir_ids = (
@@ -1339,7 +1337,6 @@ def franchises_list(request):
         }
         return render(request, "accounts/franchises_list.html", context)
 @vary_on_headers('X-Requested-With')
-@cache_page(60 * 3)  # Кэш 3 минуты
 def agencies_list(request):
     # Используем distinct() для предотвращения дубликатов (проблема с PRIMARY KEY в таблице agencies)
     agencies_qs = Agencies.objects.filter(status="approved").select_related("owner", "direction").distinct()
@@ -1446,7 +1443,6 @@ def agencies_list(request):
         return render(request, "accounts/agencies_list.html", context)
 
 @vary_on_headers('X-Requested-With')
-@cache_page(60 * 3)  # Кэш 3 минуты
 def specialists_list(request):
     specialists_qs = Specialists.objects.filter(status="approved").select_related("owner", "direction")
     specialist_categories = [
