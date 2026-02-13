@@ -737,9 +737,9 @@ document.addEventListener('DOMContentLoaded', function () {
       planetDiv.style.width='100%'
       planetDiv.style.height='100%'
       planetDiv.style.borderRadius='50%'
-      planetDiv.style.backgroundSize='300% 100%'
-      planetDiv.style.backgroundRepeat='no-repeat'
-      planetDiv.style.animation='planet-chooser-spin 20s ease-in-out infinite alternate'
+      planetDiv.style.backgroundSize='200% 100%'
+      planetDiv.style.backgroundRepeat='repeat-x'
+      planetDiv.style.animation='planet-chooser-spin 12s linear infinite'
       planetDiv.style.position='relative'
       planetDiv.style.overflow='hidden'
       planetRibbon.appendChild(planetDiv)
