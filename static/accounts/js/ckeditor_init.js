@@ -32,7 +32,6 @@ function getCSRFToken() {
 
 /* ── Configs ─────────────────────────────────────────────── */
 var FULL_CONFIG = {
-  licenseKey: 'GPL',
   plugins: [
     Essentials, Bold, Italic, Underline, Strikethrough,
     Link, Heading, List, BlockQuote,
@@ -71,7 +70,6 @@ var FULL_CONFIG = {
 };
 
 var SIMPLE_CONFIG = {
-  licenseKey: 'GPL',
   plugins: [
     Essentials, Bold, Italic, Link, List, Paragraph, Undo
   ],
