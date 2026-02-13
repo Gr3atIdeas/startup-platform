@@ -95,6 +95,7 @@ body.cosmochat-body {
   gap: 60px;
   padding-top: 45px;
   padding-bottom: 60px;
+  order: 2;
 }
 
 .users-main-area-new {
@@ -529,8 +530,9 @@ body.cosmochat-body {
   padding: 36px 38px;
   display: flex;
   gap: 61px;
-  color: black; 
+  color: black;
   box-sizing: border-box;
+  order: 1;
 }
 
 .chat-list-column-new {
