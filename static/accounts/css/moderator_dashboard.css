@@ -200,12 +200,64 @@ div.moderator-page-container
   flex-direction: row; 
 }
 
+@keyframes planet-texture-spin {
+  from { background-position-x: 0; }
+  to   { background-position-x: -200%; }
+}
+
+.startup-card-planet {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-size: 200% 100%;
+  background-repeat: repeat-x;
+  animation: planet-texture-spin 12s linear infinite;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    -2px -2px 8px 1px rgba(140, 180, 255, 0.15),
+    0 0 12px 2px rgba(100, 150, 255, 0.08);
+  will-change: background-position;
+  align-self: center;
+}
+
+.startup-card-planet::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(255, 255, 255, 0.08) 30%,
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.startup-card-planet::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 65% 55%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.25) 70%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
 .startup-card-image {
-  width: 250px; 
-  height: 180px; 
+  width: 250px;
+  height: 180px;
   border-radius: 7px;
-  object-fit: cover; 
-  flex-shrink: 0; 
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 .startup-card-image-placeholder {
@@ -584,7 +636,12 @@ div.startup-card-item
   .startup-card-image,
   .startup-card-image-placeholder {
     width: 100%;
-    max-width: 250px; 
+    max-width: 250px;
+  }
+
+  .startup-card-planet {
+    width: 140px;
+    height: 140px;
   }
 
   .startup-card-details {
@@ -676,8 +733,13 @@ div.startup-card-item
     max-width: none;
   }
 
+  .startup-card-planet {
+    width: 120px;
+    height: 120px;
+  }
+
   .startup-card-details {
-    min-width: 0; 
+    min-width: 0;
   }
 
   div.startup-card-item
@@ -788,6 +850,11 @@ div.startup-card-item
   
   .startup-card-image,
   .startup-card-image-placeholder {
+    width: 80px;
+    height: 80px;
+  }
+
+  .startup-card-planet {
     width: 80px;
     height: 80px;
   }
