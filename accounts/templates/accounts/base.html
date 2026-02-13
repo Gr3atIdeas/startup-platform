@@ -118,8 +118,12 @@
   <header id="main-header">
     <div class="header-content-wrapper">
         <a href="{% url 'home' %}" class="header-logo-link">
-            <img src="{% static 'accounts/images/white_logo_header.svg' %}" alt="Great Ideas Logo" class="header-logo-icon-img" style="height: 50px; width: auto;"> 
+            <img src="{% static 'accounts/images/white_logo_header.svg' %}" alt="Great Ideas Logo" class="header-logo-icon-img" style="height: 50px; width: auto;">
       </a>
+        <button class="burger-menu-btn" aria-label="Меню" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="burger-overlay"></div>
         <div class="header-search-bar">
             <img src="{% static 'accounts/images/search.svg' %}" alt="Search" class="header-search-icon-img">
             <input type="text" placeholder="Поиск" class="header-search-input">

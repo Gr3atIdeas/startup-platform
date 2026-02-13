@@ -7,6 +7,19 @@ document.addEventListener('DOMContentLoaded', function () {
     'img, video, svg { shape-rendering: geometricPrecision; image-rendering: -webkit-optimize-contrast; } ' +
     'button, .btn, input, .wave-effect { backface-visibility: hidden; -webkit-backface-visibility: hidden; }'
   document.head.appendChild(style)
+  // Burger menu elements
+  const burgerBtn = document.querySelector('.burger-menu-btn');
+  const navMenu = document.querySelector('.nav-menu');
+  const burgerOverlay = document.querySelector('.burger-overlay');
+
+  function closeBurgerMenu() {
+    if (burgerBtn) burgerBtn.classList.remove('open');
+    if (burgerBtn) burgerBtn.setAttribute('aria-expanded', 'false');
+    if (navMenu) navMenu.classList.remove('mobile-open');
+    if (burgerOverlay) burgerOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
   const dropdownContainer = document.querySelector(
     '.profile-dropdown-container'
   )
@@ -27,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     document.body.classList.remove('create-menu-open')
     if (dropdownContainer) dropdownContainer.classList.remove('open')
+    closeBurgerMenu();
   }
   if (dropdownButton) {
     dropdownButton.addEventListener('click', function (event) {
@@ -160,6 +174,8 @@ document.addEventListener('DOMContentLoaded', function () {
                   }
               }
           });
+
+          closeBurgerMenu();
       }
   });
 
@@ -230,4 +246,28 @@ document.addEventListener('DOMContentLoaded', function () {
           document.body.classList.remove('create-menu-open');
       });
   });
+
+  // Burger menu toggle
+  if (burgerBtn && navMenu) {
+    burgerBtn.addEventListener('click', function (event) {
+      event.stopPropagation();
+      const isOpen = navMenu.classList.toggle('mobile-open');
+      burgerBtn.classList.toggle('open', isOpen);
+      burgerBtn.setAttribute('aria-expanded', String(isOpen));
+      if (burgerOverlay) burgerOverlay.classList.toggle('active', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+  }
+
+  // Close burger on overlay click
+  if (burgerOverlay) {
+    burgerOverlay.addEventListener('click', closeBurgerMenu);
+  }
+
+  // Close burger when clicking a regular nav link (not dropdown toggles)
+  if (navMenu) {
+    navMenu.querySelectorAll('a.header-nav-link').forEach(function (link) {
+      link.addEventListener('click', closeBurgerMenu);
+    });
+  }
 })
