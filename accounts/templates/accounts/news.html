@@ -69,7 +69,7 @@
             </div>
             <div class="form-group">
               <label for="id_content">Текст новости</label>
-              <textarea name="content" id="id_content" required></textarea>
+              <textarea name="content" id="id_content" class="ckeditor-full" required></textarea>
             </div>
             <div class="form-group">
               <label for="id_category">Категория</label>
@@ -206,4 +206,5 @@
     if (e.target === this) closePopup();
   });
 </script>
+<script type="module" src="{% static 'accounts/js/ckeditor_init.js' %}"></script>
 {% endblock %}

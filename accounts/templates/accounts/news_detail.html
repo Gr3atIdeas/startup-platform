@@ -1,5 +1,6 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
+{% load html_sanitizer %}
 
 {% block title %}{{ article.title }}{% endblock %}
 
@@ -86,7 +87,7 @@
 
         <div class="article-content-body">
           <div class="content-text-full-width">
-              {{ article.content|linebreaksbr }}
+              {{ article.content|sanitize_html|safe }}
           </div>
         </div>
 

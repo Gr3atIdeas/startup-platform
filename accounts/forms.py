@@ -153,7 +153,7 @@ class StartupEditForm(forms.ModelForm):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
         if description:
-            description = convert_newlines_to_html(description)
+            pass  # CKEditor уже генерирует HTML
         return description
     
     class Meta:
@@ -187,7 +187,7 @@ class StartupEditForm(forms.ModelForm):
         
         if self.instance and self.instance.pk and hasattr(self.instance, 'description'):
             if self.instance.description:
-                self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
+                pass  # CKEditor принимает HTML напрямую
         
         allowed_startup_directions = [
             'Technology', 'Finance', 'Education', 'Entertainment',
@@ -562,7 +562,7 @@ class FranchiseForm(forms.ModelForm):
         
         if self.instance and self.instance.pk and hasattr(self.instance, 'description'):
             if self.instance.description:
-                self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
+                pass  # CKEditor принимает HTML напрямую
         
         try:
             self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
@@ -574,7 +574,7 @@ class FranchiseForm(forms.ModelForm):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
         if description:
-            description = convert_newlines_to_html(description)
+            pass  # CKEditor уже генерирует HTML
         return description
 
     class Meta:
@@ -699,7 +699,7 @@ class AgencyForm(forms.ModelForm):
         
         if self.instance and self.instance.pk and hasattr(self.instance, 'description'):
             if self.instance.description:
-                self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
+                pass  # CKEditor принимает HTML напрямую
         
         try:
             self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
@@ -711,7 +711,7 @@ class AgencyForm(forms.ModelForm):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
         if description:
-            description = convert_newlines_to_html(description)
+            pass  # CKEditor уже генерирует HTML
         return description
 
     class Meta:
@@ -819,7 +819,7 @@ class SpecialistForm(forms.ModelForm):
         
         if self.instance and self.instance.pk and hasattr(self.instance, 'description'):
             if self.instance.description:
-                self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
+                pass  # CKEditor принимает HTML напрямую
         
         try:
             self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
@@ -831,7 +831,7 @@ class SpecialistForm(forms.ModelForm):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
         if description:
-            description = convert_newlines_to_html(description)
+            pass  # CKEditor уже генерирует HTML
         return description
 
     class Meta:
@@ -1204,7 +1204,7 @@ class FranchiseEditForm(forms.ModelForm):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
         if description:
-            description = convert_newlines_to_html(description)
+            pass  # CKEditor уже генерирует HTML
         return description
 
 
@@ -1287,7 +1287,7 @@ class AgencyEditForm(forms.ModelForm):
         
         if self.instance and self.instance.pk:
             if hasattr(self.instance, 'description') and self.instance.description:
-                self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
+                pass  # CKEditor принимает HTML напрямую
             
             if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
                 self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects')
@@ -1303,7 +1303,7 @@ class AgencyEditForm(forms.ModelForm):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
         if description:
-            description = convert_newlines_to_html(description)
+            pass  # CKEditor уже генерирует HTML
         return description
 
 
@@ -1397,7 +1397,7 @@ class SpecialistEditForm(forms.ModelForm):
         # Инициализируем successful_projects из customization_data
         if self.instance and self.instance.pk:
             if hasattr(self.instance, 'description') and self.instance.description:
-                self.fields['description'].initial = convert_html_to_newlines(self.instance.description)
+                pass  # CKEditor принимает HTML напрямую
             
             if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
                 self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects')
@@ -1407,5 +1407,5 @@ class SpecialistEditForm(forms.ModelForm):
         """Разрешаем HTML теги в описании для вставки изображений/видео"""
         description = self.cleaned_data.get('description', '')
         if description:
-            description = convert_newlines_to_html(description)
+            pass  # CKEditor уже генерирует HTML
         return description

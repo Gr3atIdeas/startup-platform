@@ -9,8 +9,11 @@ def sanitize_description_html(html_content):
         return ""
     
     allowed_tags = [
-        'img', 'video', 'p', 'br', 'strong', 'em', 'b', 'i', 'u', 'ul', 'ol', 'li',
-        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'blockquote', 'a'
+        'img', 'video', 'p', 'br', 'strong', 'em', 'b', 'i', 'u', 's',
+        'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'div', 'span', 'blockquote', 'a',
+        'figure', 'figcaption',
+        'table', 'thead', 'tbody', 'tr', 'th', 'td',
     ]
     
     allowed_attributes = {

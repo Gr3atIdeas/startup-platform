@@ -35,7 +35,7 @@
         <div class="form-group">
           <label for="id_content" style="color: #ccc; margin-bottom: 6px; display: block;">Текст новости</label>
           <textarea name="content" id="id_content" rows="12"
-                    class="form-control" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #1a1a2e; color: #fff;" required>{{ form.content.value|default_if_none:'' }}</textarea>
+                    class="form-control ckeditor-full" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #1a1a2e; color: #fff;" required>{{ form.content.value|default_if_none:'' }}</textarea>
         </div>
 
         <div class="form-group">
@@ -81,4 +81,5 @@
     </div>
   </div>
 </div>
+<script type="module" src="{% static 'accounts/js/ckeditor_init.js' %}"></script>
 {% endblock %}

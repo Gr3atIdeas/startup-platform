@@ -10452,6 +10452,32 @@ def delete_investment_franchise(request, franchise_id, user_id):
 
 
 @login_required
+def ckeditor_upload(request):
+    """CKEditor 5 SimpleUploadAdapter endpoint — загрузка изображений в S3."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Only POST allowed'}, status=405)
+
+    uploaded = request.FILES.get('upload')
+    if not uploaded:
+        return JsonResponse({'error': {'message': 'Файл не предоставлен'}}, status=400)
+
+    # Валидация: только изображения, макс 5 MB
+    allowed_types = ('image/jpeg', 'image/png', 'image/gif', 'image/webp')
+    if uploaded.content_type not in allowed_types:
+        return JsonResponse({'error': {'message': 'Допустимы только изображения (JPEG, PNG, GIF, WebP)'}}, status=400)
+    if uploaded.size > 5 * 1024 * 1024:
+        return JsonResponse({'error': {'message': 'Максимальный размер файла — 5 МБ'}}, status=400)
+
+    # Уникальное имя файла
+    ext = os.path.splitext(uploaded.name)[1].lower() or '.jpg'
+    filename = f'ckeditor/{uuid.uuid4().hex}{ext}'
+    saved_path = default_storage.save(filename, uploaded)
+    file_url = default_storage.url(saved_path)
+
+    return JsonResponse({'url': file_url})
+
+
+@login_required
 def upload_description_media(request, entity_type, entity_id):
     """
     API endpoint для загрузки медиа-контента в описание

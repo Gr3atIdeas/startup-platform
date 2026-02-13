@@ -315,25 +315,19 @@ if (window.FileUploadUtils) {
             <div class="form-content-section">
                 <div class="form-group full-width">
                     <label for="{{ form.short_description.id_for_label }}">*{{ form.short_description.label|cut:"*" }}</label>
-                    {{ form.short_description|add_class:"form-control"|attr:"placeholder:Краткое описание агентства" }}
+                    {{ form.short_description|add_class:"form-control ckeditor-simple"|attr:"placeholder:Краткое описание агентства" }}
                     <div class="small-text">Краткое описание вашего агентства, основные услуги.</div>
                     {% if form.short_description.errors %}<span class="error-message">{{ form.short_description.errors|first }}</span>{% endif %}
                 </div>
                 <div class="form-group full-width">
                     <label for="{{ form.description.id_for_label }}">*{{ form.description.label|cut:"*" }}</label>
-                    <div class="description-field-wrapper">
-                        {{ form.description|add_class:"form-control"|attr:"placeholder:Подробное описание агентства" }}
-                        <button type="button" class="btn-get-link" id="getMediaLinkBtn" data-entity-type="agency" data-entity-id="{{ agency.agency_id }}">
-                            <img src="{% static 'accounts/images/icons/link.svg' %}" alt="Link" class="btn-icon">
-                            Получить ссылку
-                        </button>
-                    </div>
-                    <div class="small-text">Подробное описание вашего агентства. Расскажите о команде, опыте и услугах. Поддерживаются теги &lt;img&gt; и &lt;video&gt;.</div>
+                    {{ form.description|add_class:"form-control ckeditor-full"|attr:"placeholder:Подробное описание агентства" }}
+                    <div class="small-text">Подробное описание вашего агентства. Расскажите о команде, опыте и услугах.</div>
                     {% if form.description.errors %}<span class="error-message">{{ form.description.errors|first }}</span>{% endif %}
                 </div>
                 <div class="form-group full-width">
                     <label for="{{ form.agency_services.id_for_label }}">{{ form.agency_services.label }}</label>
-                    {{ form.agency_services|add_class:"form-control"|attr:"placeholder:Подробное описание услуг" }}
+                    {{ form.agency_services|add_class:"form-control ckeditor-full"|attr:"placeholder:Подробное описание услуг" }}
                     <div class="small-text">Подробное описание услуг для отображения в табе "Услуги".</div>
                     {% if form.agency_services.errors %}<span class="error-message">{{ form.agency_services.errors|first }}</span>{% endif %}
                 </div>
@@ -416,7 +410,7 @@ if (window.FileUploadUtils) {
             <div class="form-content-section">
                 <div class="form-group full-width">
                     <label for="{{ form.terms.id_for_label }}">{{ form.terms.label|cut:"*" }}</label>
-                    {{ form.terms|add_class:"form-control"|attr:"placeholder:Этапы работ" }}
+                    {{ form.terms|add_class:"form-control ckeditor-full"|attr:"placeholder:Этапы работ" }}
                     <div class="small-text">Этапы работ, если они уже определены.</div>
                     {% if form.terms.errors %}<span class="error-message">{{ form.terms.errors|first }}</span>{% endif %}
                 </div>
@@ -563,4 +557,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<script type="module" src="{% static 'accounts/js/ckeditor_init.js' %}"></script>
 {% endblock %}

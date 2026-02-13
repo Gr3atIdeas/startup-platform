@@ -1,0 +1,185 @@
+/* CKEditor 5 — Dark theme override for GreatIdeas platform */
+
+/* Core editor colours */
+:root {
+  --ck-color-base-background: #1a1a2e;
+  --ck-color-base-text: #e0e0e0;
+  --ck-color-base-border: #1d3059;
+  --ck-color-base-action: #7b61ff;
+  --ck-color-base-focus: #7b61ff;
+  --ck-color-focus-border: #7b61ff;
+  --ck-color-focus-outer-shadow: rgba(123, 97, 255, 0.3);
+
+  /* Toolbar */
+  --ck-color-toolbar-background: #16213e;
+  --ck-color-toolbar-border: #1d3059;
+
+  /* Buttons */
+  --ck-color-button-default-background: transparent;
+  --ck-color-button-default-hover-background: #1d3059;
+  --ck-color-button-default-active-background: #243b6a;
+  --ck-color-button-on-background: #243b6a;
+  --ck-color-button-on-hover-background: #2d4a80;
+  --ck-color-button-on-active-background: #2d4a80;
+  --ck-color-button-on-color: #ffc85e;
+
+  /* Dropdown */
+  --ck-color-dropdown-panel-background: #16213e;
+  --ck-color-dropdown-panel-border: #1d3059;
+  --ck-color-list-background: #16213e;
+  --ck-color-list-button-hover-background: #1d3059;
+  --ck-color-list-button-on-background: #243b6a;
+  --ck-color-list-button-on-text: #ffc85e;
+
+  /* Input */
+  --ck-color-input-background: #0f1a30;
+  --ck-color-input-border: #1d3059;
+  --ck-color-input-text: #e0e0e0;
+
+  /* Border radius */
+  --ck-border-radius: 8px;
+}
+
+/* Editable area */
+.ck.ck-editor__editable_inline {
+  min-height: 200px;
+  max-height: 500px;
+  color: #e0e0e0 !important;
+  background: #1a1a2e !important;
+  border-color: #1d3059 !important;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 16px !important;
+}
+
+.ck.ck-editor__editable_inline:focus {
+  border-color: #7b61ff !important;
+  box-shadow: 0 0 0 2px rgba(123, 97, 255, 0.25) !important;
+}
+
+/* Placeholder text */
+.ck.ck-editor__editable_inline .ck-placeholder::before {
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Toolbar styling */
+.ck.ck-toolbar {
+  background: #16213e !important;
+  border-color: #1d3059 !important;
+  border-radius: 8px 8px 0 0 !important;
+}
+
+.ck.ck-toolbar .ck-toolbar__separator {
+  background: #1d3059 !important;
+}
+
+/* Button icons and text in toolbar */
+.ck.ck-button,
+.ck.ck-button.ck-off {
+  color: #e0e0e0 !important;
+}
+
+.ck.ck-button.ck-on {
+  color: #ffc85e !important;
+}
+
+.ck.ck-button:hover {
+  background: #1d3059 !important;
+}
+
+/* Dropdown panel */
+.ck.ck-dropdown__panel {
+  background: #16213e !important;
+  border-color: #1d3059 !important;
+}
+
+.ck-dropdown__panel .ck-list__item .ck-button:hover {
+  background: #1d3059 !important;
+}
+
+/* Links in the editor */
+.ck.ck-editor__editable a {
+  color: #7b61ff;
+}
+
+/* Headings inside editor */
+.ck.ck-editor__editable h2 {
+  font-size: 20px;
+  color: #ffc85e;
+  margin-top: 16px;
+}
+
+.ck.ck-editor__editable h3 {
+  font-size: 17px;
+  color: #e0e0e0;
+  margin-top: 12px;
+}
+
+.ck.ck-editor__editable h4 {
+  font-size: 15px;
+  color: #e0e0e0;
+}
+
+/* Blockquote */
+.ck.ck-editor__editable blockquote {
+  border-left: 3px solid #7b61ff;
+  padding-left: 16px;
+  color: rgba(255, 255, 255, 0.75);
+  font-style: italic;
+}
+
+/* Lists */
+.ck.ck-editor__editable ul,
+.ck.ck-editor__editable ol {
+  padding-left: 20px;
+}
+
+/* Images */
+.ck.ck-editor__editable figure.image {
+  margin: 16px 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ck.ck-editor__editable figure.image img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+/* Simple editor variant — smaller height */
+.ckeditor-simple + .ck.ck-editor .ck.ck-editor__editable_inline,
+.ck-editor-simple .ck.ck-editor__editable_inline {
+  min-height: 100px;
+  max-height: 250px;
+}
+
+/* Balloon panel (link editing, etc.) */
+.ck.ck-balloon-panel {
+  background: #16213e !important;
+  border-color: #1d3059 !important;
+}
+
+.ck.ck-balloon-panel .ck-input {
+  background: #0f1a30 !important;
+  color: #e0e0e0 !important;
+  border-color: #1d3059 !important;
+}
+
+/* Labeled field */
+.ck.ck-labeled-field-view .ck-label {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ck.ck-editor__editable_inline {
+    min-height: 150px;
+    font-size: 13px;
+    padding: 12px !important;
+  }
+
+  .ck.ck-toolbar {
+    flex-wrap: wrap;
+  }
+}
