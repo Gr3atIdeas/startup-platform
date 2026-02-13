@@ -18,9 +18,9 @@ import {
   Paragraph,
   Undo,
   SimpleUploadAdapter
-} from 'ckeditor5';
+} from 'https://cdn.ckeditor.com/ckeditor5/47.5.0/ckeditor5.js';
 
-import { translations } from 'ckeditor5/translations/ru.js';
+import ruTranslations from 'https://cdn.ckeditor.com/ckeditor5/47.5.0/translations/ru.js';
 
 /* ── CSRF helper ─────────────────────────────────────────── */
 function getCSRFToken() {
@@ -67,7 +67,7 @@ var FULL_CONFIG = {
     previewsInData: true
   },
   language: 'ru',
-  translations: [translations]
+  translations: [ruTranslations]
 };
 
 var SIMPLE_CONFIG = {
@@ -83,7 +83,7 @@ var SIMPLE_CONFIG = {
     ]
   },
   language: 'ru',
-  translations: [translations]
+  translations: [ruTranslations]
 };
 
 /* ── Init all editors on page ────────────────────────────── */
@@ -112,10 +112,10 @@ document.querySelectorAll('textarea.ckeditor-simple').forEach(function(textarea)
 /* Expose for external use (e.g. popup forms) */
 window.CKEditorInstances = editors;
 window.initCKEditor = function(textarea, type) {
-  var config = type === 'simple' ? SIMPLE_CONFIG : FULL_CONFIG;
+  var config = type === 'simple' ? Object.assign({}, SIMPLE_CONFIG) : Object.assign({}, FULL_CONFIG);
   /* Refresh CSRF token for dynamically created editors */
   if (config.simpleUpload) {
-    config.simpleUpload.headers['X-CSRFToken'] = getCSRFToken();
+    config.simpleUpload.headers = { 'X-CSRFToken': getCSRFToken() };
   }
   return ClassicEditor.create(textarea, config).then(function(editor) {
     editors.push(editor);
