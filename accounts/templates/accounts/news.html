@@ -45,6 +45,11 @@
 
     <div class="news-feed-column">
 
+      <a href="#" class="suggest-news-btn mobile-suggest-btn" onclick="openPopup()">
+        Предложить новость
+        <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="Добавить новость">
+      </a>
+
       <div class="search-bar-container">
         <input type="text" placeholder="Поиск по новостям" class="search-input" value="{{ search_query|default_if_none:'' }}">
         <button class="search-button">
