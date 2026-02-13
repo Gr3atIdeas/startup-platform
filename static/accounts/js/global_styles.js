@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     document.body.classList.remove('create-menu-open')
     if (dropdownContainer) dropdownContainer.classList.remove('open')
-    closeBurgerMenu();
   }
   if (dropdownButton) {
     dropdownButton.addEventListener('click', function (event) {

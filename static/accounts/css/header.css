@@ -771,6 +771,9 @@ nav.nav-menu
 .burger-menu-btn {
   display: none;
 }
+.profile-button-label {
+  display: none;
+}
 .burger-overlay {
   display: none;
 }
@@ -1068,6 +1071,13 @@ nav.nav-menu
     justify-content: flex-start;
   }
 
+  .profile-button-label {
+    display: inline;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 15px;
+    font-weight: 500;
+  }
+
   .profile-avatar-wrapper {
     width: 36px !important;
     height: 36px !important;
@@ -1087,6 +1097,15 @@ nav.nav-menu
     box-shadow: none !important;
     border: none !important;
     padding: 0 !important;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.25s ease, max-height 0.3s ease;
+  }
+
+  .profile-dropdown-container.open .profile-dropdown-menu {
+    opacity: 1;
+    max-height: 500px;
   }
 
   .profile-dropdown-item {

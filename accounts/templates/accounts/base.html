@@ -274,6 +274,7 @@
                             <div class="profile-avatar-wrapper">
                                 <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" class="profile-dropdown-avatar">
                             </div>
+                            <span class="profile-button-label">Профиль</span>
                         </button>
                         <div class="profile-dropdown-menu">
                             <a href="{% url 'notifications_page' %}" class="profile-dropdown-item profile-dropdown-notifications" style="display: none !important;">
