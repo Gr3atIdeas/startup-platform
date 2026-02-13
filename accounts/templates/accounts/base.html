@@ -57,17 +57,9 @@
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="{% static 'accounts/css/global_search.css' %}">
-  <link rel="preconnect" href="https://cdn.ckeditor.com" crossorigin>
-  <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/47.5.0/ckeditor5.css">
-  <link rel="stylesheet" href="{% static 'accounts/css/ckeditor_theme.css' %}?v={% now 'U' %}">
-  <script type="importmap">
-  {
-    "imports": {
-      "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/47.5.0/ckeditor5.js",
-      "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/47.5.0/"
-    }
-  }
-  </script>
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'accounts/css/quill_theme.css' %}?v={% now 'U' %}">
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
   {% block custom_styles %}{% endblock %}
   
