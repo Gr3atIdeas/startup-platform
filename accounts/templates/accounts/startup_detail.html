@@ -343,11 +343,11 @@
                     {% for event in timeline_events %}
                     <div class="timeline-step {% if event.step_number == startup.step_number %}active-step-display{% elif event.step_number < startup.step_number %}completed-step-display{% endif %}" data-step="{{ event.step_number }}">
                         <div class="step-number-wrapper">
-                             {% if event.step_number == 1 %}<img src="{% static 'accounts/images/creat_startup/Frame 996.svg' %}" alt="Иконка Этап 1" class="step-icon">{% endif %}
-                             {% if event.step_number == 2 %}<img src="{% static 'accounts/images/creat_startup/Frame 995.svg' %}" alt="Иконка Этап 2" class="step-icon">{% endif %}
-                             {% if event.step_number == 3 %}<img src="{% static 'accounts/images/creat_startup/Frame 994.svg' %}" alt="Иконка Этап 3" class="step-icon">{% endif %}
-                             {% if event.step_number == 4 %}<img src="{% static 'accounts/images/creat_startup/Frame 993.svg' %}" alt="Иконка Этап 4" class="step-icon">{% endif %}
-                             {% if event.step_number == 5 %}<img src="{% static 'accounts/images/creat_startup/Frame 992.svg' %}" alt="Иконка Этап 5" class="step-icon">{% endif %}
+                            {% if startup.planet_image %}
+                                <div class="step-planet-3d" style="background-image: url('{{ startup.planet_image|planet_url }}');"></div>
+                            {% else %}
+                                <div class="step-planet-3d step-planet-placeholder"></div>
+                            {% endif %}
                         </div>
                         <div class="step-text">{{ event.title|default:event.step_number }}</div>
                     </div>
