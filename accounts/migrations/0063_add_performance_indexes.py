@@ -145,7 +145,7 @@ class Migration(migrations.Migration):
             sql=[
                 "CREATE INDEX IF NOT EXISTS idx_invest_tx_investor ON investment_transactions (investor_id);",
                 "CREATE INDEX IF NOT EXISTS idx_invest_tx_startup ON investment_transactions (startup_id);",
-                "CREATE INDEX IF NOT EXISTS idx_invest_tx_franchise ON investment_transactions (franchise_id);",
+                "DO $$ BEGIN IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='investment_transactions' AND column_name='franchise_id') THEN CREATE INDEX IF NOT EXISTS idx_invest_tx_franchise ON investment_transactions (franchise_id); END IF; END $$;",
                 "CREATE INDEX IF NOT EXISTS idx_invest_tx_created ON investment_transactions (created_at DESC);",
                 "CREATE INDEX IF NOT EXISTS idx_invest_tx_startup_amount ON investment_transactions (startup_id, amount);",
             ],
