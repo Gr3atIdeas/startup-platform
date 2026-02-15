@@ -206,7 +206,11 @@ def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type
             file_content_type = webp_content_type
             logger.info(f"Файл сконвертирован в WebP: {webp_filename}")
         
-        file_path = f"{entity_folder}/{entity_id}/{file_type_folder}/{file_id}_{original_filename}"
+        # Специальный путь для catalog_card_image — хранится в catalog_cards/ без entity_id
+        if file_type_name == 'catalog_card_image':
+            file_path = f"catalog_cards/{file_id}_{original_filename}"
+        else:
+            file_path = f"{entity_folder}/{entity_id}/{file_type_folder}/{file_id}_{original_filename}"
         
         logger.info(f"Начало загрузки файла: {file_path}")
         
@@ -290,9 +294,9 @@ def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type
                 with transaction.atomic():
                     entity = entity_model.objects.select_for_update().filter(pk=entity_id).first()
                     if entity:
-                        entity.catalog_card_image = file_id
+                        entity.catalog_card_image = f"{file_id}_{original_filename}"
                         entity.save(update_fields=['catalog_card_image'])
-                        logger.info(f"✅ file_id {file_id} добавлен в {entity_type_name}.catalog_card_image")
+                        logger.info(f"✅ {file_id}_{original_filename} добавлен в {entity_type_name}.catalog_card_image")
                     else:
                         logger.error(f"Entity {entity_type_name} с id={entity_id} не найден при сохранении catalog_card_image")
         

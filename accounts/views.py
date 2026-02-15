@@ -3555,61 +3555,54 @@ def create_startup(request):
             logo = form.cleaned_data.get("logo") or request.FILES.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
-                # Конвертируем изображение в WebP для экономии места
-                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
-                base_name = os.path.splitext(processed_name)[0]
-                ext = os.path.splitext(processed_name)[1]
-                safe_base_name = "".join(
-                    c for c in base_name if c.isalnum() or c in ("-", "_")
-                )
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{safe_name}"
-                logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="startup")
                 try:
-                    logger.info(f"Попытка сохранить логотип по пути: {file_path}")
-                    if not try_save_file(processed_logo, file_path):
-                        raise Exception("Не удалось сохранить логотип")
-                    logger.info(f"Логотип успешно сохранён по пути: {file_path}")
-                    logo_ids.append(logo_id)
-                    safe_create_file_storage(
-                        entity_type=entity_type,
+                    file_data = logo.read()
+                    content_type = getattr(logo, 'content_type', 'image/jpeg')
+                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                    unique_filename = get_unique_filename(logo.name, startup.startup_id, "logo")
+
+                    from .tasks import upload_file_to_s3
+                    upload_file_to_s3.delay(
+                        file_data=file_data_b64,
+                        file_name=logo.name,
+                        file_content_type=content_type,
+                        entity_type_name='startup',
                         entity_id=startup.startup_id,
-                        file_type=logo_type,
-                        file_url=logo_id,
-                        uploaded_at=timezone.now(),
-                        startup=startup,
-                        original_file_name=processed_name,
+                        file_type_name='logo',
+                        original_filename=unique_filename,
+                        file_id=logo_id
                     )
-                    logger.info(f"Логотип сохранён: {file_path}")
+                    logo_ids.append(logo_id)
+                    logger.info(f"Логотип стартапа отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
                 except Exception as e:
-                    logger.error(f"Ошибка сохранения логотипа: {e}", exc_info=True)
+                    logger.error(f"Ошибка отправки логотипа в очередь: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить логотип, но стартап создан.")
                     file_save_errors.append({"field": "logo", "error": str(e)})
             
-            # Сохранение catalog_card_image
+            # Асинхронная загрузка catalog_card_image через Celery
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
-                # Конвертируем в WebP
-                processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
-                base_name = os.path.splitext(processed_catalog_name)[0]
-                ext = os.path.splitext(processed_catalog_name)[1]
-                safe_base_name = "".join(
-                    c for c in base_name if c.isalnum() or c in ("-", "_")
-                )
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
                 try:
-                    logger.info(f"Попытка сохранить изображение карточки по пути: {file_path}")
-                    if not try_save_file(processed_catalog_image, file_path):
-                        raise Exception("Не удалось сохранить изображение карточки")
-                    logger.info(f"Изображение карточки успешно сохранено по пути: {file_path}")
-                    startup.catalog_card_image = f"{catalog_card_id}_{safe_name}"
-                    startup.save(update_fields=['catalog_card_image'])
-                    logger.info(f"Изображение карточки сохранено: {file_path}")
+                    file_data = catalog_card_image.read()
+                    content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
+                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                    unique_filename = get_unique_filename(catalog_card_image.name, startup.startup_id, "catalog_card_image")
+
+                    from .tasks import upload_file_to_s3
+                    upload_file_to_s3.delay(
+                        file_data=file_data_b64,
+                        file_name=catalog_card_image.name,
+                        file_content_type=content_type,
+                        entity_type_name='startup',
+                        entity_id=startup.startup_id,
+                        file_type_name='catalog_card_image',
+                        original_filename=unique_filename,
+                        file_id=catalog_card_id
+                    )
+                    logger.info(f"Изображение карточки стартапа отправлено в очередь Celery: {catalog_card_image.name}, размер: {len(file_data)} байт")
                 except Exception as e:
-                    logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
+                    logger.error(f"Ошибка отправки изображения карточки в очередь: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но стартап создан.")
                     file_save_errors.append({"field": "catalog_card_image", "error": str(e)})
             
@@ -3716,11 +3709,11 @@ def create_startup(request):
                         logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
                         file_save_errors.append({"field": "video", "file": getattr(video, "name", ""), "error": str(e)})
-            startup.logo_urls = logo_ids
+            startup.logo_urls = []
             startup.creatives_urls = []
             startup.proofs_urls = []
             startup.video_urls = []
-            logger.info("Файлы загружаются асинхронно через Celery, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
+            logger.info("Все файлы загружаются асинхронно через Celery, logo_urls, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
             
             # При создании автоматически добавляем первые 4 креатива в слайдер
             # (при редактировании пользователь может выбрать вручную через чекбоксы)
@@ -3897,48 +3890,53 @@ def create_franchise(request):
             logo = form.cleaned_data.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
-                # Конвертируем в WebP
-                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
-                base_name = os.path.splitext(processed_name)[0]
-                ext = os.path.splitext(processed_name)[1]
-                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"franchises/{franchise.franchise_id}/logos/{logo_id}_{safe_name}"
-                logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 try:
-                    default_storage.save(file_path, processed_logo)
-                    logo_ids.append(logo_id)
-                    safe_create_file_storage(
-                        entity_type=entity_type,
+                    file_data = logo.read()
+                    content_type = getattr(logo, 'content_type', 'image/jpeg')
+                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                    unique_filename = get_unique_filename(logo.name, franchise.franchise_id, "logo")
+
+                    from .tasks import upload_file_to_s3
+                    upload_file_to_s3.delay(
+                        file_data=file_data_b64,
+                        file_name=logo.name,
+                        file_content_type=content_type,
+                        entity_type_name='franchise',
                         entity_id=franchise.franchise_id,
-                        file_type=logo_type,
-                        file_url=logo_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=processed_name,
+                        file_type_name='logo',
+                        original_filename=unique_filename,
+                        file_id=logo_id
                     )
-                except Exception:
+                    logo_ids.append(logo_id)
+                    logger.info(f"Логотип франшизы отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
+                except Exception as e:
+                    logger.error(f"Ошибка отправки логотипа франшизы в очередь: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить логотип, но франшиза создана.")
 
-            # Сохранение catalog_card_image
+            # Асинхронная загрузка catalog_card_image через Celery
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
-                # Конвертируем в WebP
-                processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
-                base_name = os.path.splitext(processed_catalog_name)[0]
-                ext = os.path.splitext(processed_catalog_name)[1]
-                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
                 try:
-                    if not try_save_file(processed_catalog_image, file_path):
-                        raise Exception("Не удалось сохранить изображение карточки")
-                    franchise.catalog_card_image = f"{catalog_card_id}_{safe_name}"
-                    franchise.save(update_fields=['catalog_card_image'])
+                    file_data = catalog_card_image.read()
+                    content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
+                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                    unique_filename = get_unique_filename(catalog_card_image.name, franchise.franchise_id, "catalog_card_image")
+
+                    from .tasks import upload_file_to_s3
+                    upload_file_to_s3.delay(
+                        file_data=file_data_b64,
+                        file_name=catalog_card_image.name,
+                        file_content_type=content_type,
+                        entity_type_name='franchise',
+                        entity_id=franchise.franchise_id,
+                        file_type_name='catalog_card_image',
+                        original_filename=unique_filename,
+                        file_id=catalog_card_id
+                    )
+                    logger.info(f"Изображение карточки франшизы отправлено в очередь Celery: {catalog_card_image.name}, размер: {len(file_data)} байт")
                 except Exception as e:
-                    logger.error(f"Ошибка сохранения изображения карточки франшизы: {e}", exc_info=True)
+                    logger.error(f"Ошибка отправки изображения карточки франшизы в очередь: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но франшиза создана.")
 
             creatives = request.FILES.getlist("creatives")
@@ -4042,11 +4040,11 @@ def create_franchise(request):
                         logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
 
-            franchise.logo_urls = logo_ids
+            franchise.logo_urls = []
             franchise.creatives_urls = []
             franchise.proofs_urls = []
             franchise.video_urls = []
-            logger.info("Файлы загружаются асинхронно через Celery, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
+            logger.info("Все файлы загружаются асинхронно через Celery, logo_urls, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
             
             # При создании автоматически добавляем первые 4 креатива в слайдер
             # (при редактировании пользователь может выбрать вручную через чекбоксы)
@@ -4233,83 +4231,88 @@ def create_agency(request):
             logo = form.cleaned_data.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
-                # Конвертируем в WebP
-                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
-                base_name = os.path.splitext(processed_name)[0]
-                ext = os.path.splitext(processed_name)[1]
-                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"agencies/{agency.agency_id}/logos/{logo_id}_{safe_name}"
-                logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
                 try:
-                    default_storage.save(file_path, processed_logo)
-                    logo_ids.append(logo_id)
-                    safe_create_file_storage(
-                        entity_type=entity_type,
+                    file_data = logo.read()
+                    content_type = getattr(logo, 'content_type', 'image/jpeg')
+                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                    unique_filename = get_unique_filename(logo.name, agency.agency_id, "logo")
+
+                    from .tasks import upload_file_to_s3
+                    upload_file_to_s3.delay(
+                        file_data=file_data_b64,
+                        file_name=logo.name,
+                        file_content_type=content_type,
+                        entity_type_name='agency',
                         entity_id=agency.agency_id,
-                        file_type=logo_type,
-                        file_url=logo_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=processed_name,
+                        file_type_name='logo',
+                        original_filename=unique_filename,
+                        file_id=logo_id
                     )
-                except Exception:
+                    logo_ids.append(logo_id)
+                    logger.info(f"Логотип агентства отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
+                except Exception as e:
+                    logger.error(f"Ошибка отправки логотипа агентства в очередь: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить логотип, но агентство создано.")
 
-            # Сохранение catalog_card_image
+            # Асинхронная загрузка catalog_card_image через Celery
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
-                # Конвертируем в WebP
-                processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
-                base_name = os.path.splitext(processed_catalog_name)[0]
-                ext = os.path.splitext(processed_catalog_name)[1]
-                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
                 try:
-                    if not try_save_file(processed_catalog_image, file_path):
-                        raise Exception("Не удалось сохранить изображение карточки")
-                    agency.catalog_card_image = f"{catalog_card_id}_{safe_name}"
+                    file_data = catalog_card_image.read()
+                    content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
+                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                    unique_filename = get_unique_filename(catalog_card_image.name, agency.agency_id, "catalog_card_image")
+
+                    from .tasks import upload_file_to_s3
+                    upload_file_to_s3.delay(
+                        file_data=file_data_b64,
+                        file_name=catalog_card_image.name,
+                        file_content_type=content_type,
+                        entity_type_name='agency',
+                        entity_id=agency.agency_id,
+                        file_type_name='catalog_card_image',
+                        original_filename=unique_filename,
+                        file_id=catalog_card_id
+                    )
+                    logger.info(f"Изображение карточки агентства отправлено в очередь Celery: {catalog_card_image.name}, размер: {len(file_data)} байт")
                 except Exception as e:
-                    logger.error(f"Ошибка сохранения изображения карточки агентства: {e}", exc_info=True)
+                    logger.error(f"Ошибка отправки изображения карточки агентства в очередь: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но агентство создано.")
 
-            # Синхронная загрузка creatives (как у logo, чтобы файлы были доступны сразу)
+            # Асинхронная загрузка creatives через Celery
             creatives = request.FILES.getlist("creatives")
             if not creatives:
                 creatives = form.cleaned_data.get("creatives", [])
                 if creatives and not isinstance(creatives, list):
                     creatives = [creatives]
             if creatives:
-                creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
                         continue
                     try:
                         unique_filename = get_unique_filename(creative_file.name, agency.agency_id, "creative")
                         creative_id = str(uuid.uuid4())
-                        file_path = f"agencies/{agency.agency_id}/creatives/{creative_id}_{unique_filename}"
-                        
-                        # Синхронная загрузка в S3
-                        default_storage.save(file_path, creative_file)
-                        
-                        # Сохраняем в FileStorage
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        file_data = creative_file.read()
+                        content_type = getattr(creative_file, 'content_type', 'image/jpeg')
+
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=creative_file.name,
+                            file_content_type=content_type,
+                            entity_type_name='agency',
                             entity_id=agency.agency_id,
-                            file_type=creative_type,
-                            file_url=creative_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=creative_file.name,
+                            file_type_name='creative',
+                            original_filename=unique_filename,
+                            file_id=creative_id
                         )
                         creatives_ids.append(creative_id)
-                        logger.info(f"Изображение агентства загружено синхронно: {creative_file.name}")
+                        logger.info(f"Изображение агентства отправлено в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
-                        logger.error(f"Ошибка загрузки изображения агентства: {e}", exc_info=True)
+                        logger.error(f"Ошибка отправки изображения агентства в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось загрузить изображение {creative_file.name}.")
 
             # Асинхронная загрузка proofs через Celery
@@ -4376,11 +4379,11 @@ def create_agency(request):
                         logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
 
-            agency.logo_urls = logo_ids
-            agency.creatives_urls = creatives_ids  # Синхронно загруженные creatives
+            agency.logo_urls = []
+            agency.creatives_urls = []
             agency.proofs_urls = []
             agency.video_urls = []
-            logger.info(f"Creatives загружены синхронно: {creatives_ids}")
+            logger.info("Все файлы загружаются асинхронно через Celery, logo_urls, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
             
             # При создании автоматически добавляем первые 4 креатива в слайдер
             # (при редактировании пользователь может выбрать вручную через чекбоксы)
@@ -4572,47 +4575,53 @@ def create_specialist(request):
             logo = form.cleaned_data.get("logo")
             if logo:
                 logo_id = str(uuid.uuid4())
-                # Конвертируем в WebP
-                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
-                base_name = os.path.splitext(processed_name)[0]
-                ext = os.path.splitext(processed_name)[1]
-                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"specialists/{spec.specialist_id}/logos/{logo_id}_{safe_name}"
-                logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 try:
-                    default_storage.save(file_path, processed_logo)
-                    logo_ids.append(logo_id)
-                    safe_create_file_storage(
-                        entity_type=entity_type,
+                    file_data = logo.read()
+                    content_type = getattr(logo, 'content_type', 'image/jpeg')
+                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                    unique_filename = get_unique_filename(logo.name, spec.specialist_id, "logo")
+
+                    from .tasks import upload_file_to_s3
+                    upload_file_to_s3.delay(
+                        file_data=file_data_b64,
+                        file_name=logo.name,
+                        file_content_type=content_type,
+                        entity_type_name='specialist',
                         entity_id=spec.specialist_id,
-                        file_type=logo_type,
-                        file_url=logo_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=processed_name,
+                        file_type_name='logo',
+                        original_filename=unique_filename,
+                        file_id=logo_id
                     )
-                except Exception:
+                    logo_ids.append(logo_id)
+                    logger.info(f"Логотип специалиста отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
+                except Exception as e:
+                    logger.error(f"Ошибка отправки логотипа специалиста в очередь: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить логотип, но профиль специалиста создан.")
 
-            # Сохранение catalog_card_image
+            # Асинхронная загрузка catalog_card_image через Celery
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
-                # Конвертируем в WebP
-                processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
-                base_name = os.path.splitext(processed_catalog_name)[0]
-                ext = os.path.splitext(processed_catalog_name)[1]
-                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
                 try:
-                    if not try_save_file(processed_catalog_image, file_path):
-                        raise Exception("Не удалось сохранить изображение карточки")
-                    spec.catalog_card_image = f"{catalog_card_id}_{safe_name}"
+                    file_data = catalog_card_image.read()
+                    content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
+                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                    unique_filename = get_unique_filename(catalog_card_image.name, spec.specialist_id, "catalog_card_image")
+
+                    from .tasks import upload_file_to_s3
+                    upload_file_to_s3.delay(
+                        file_data=file_data_b64,
+                        file_name=catalog_card_image.name,
+                        file_content_type=content_type,
+                        entity_type_name='specialist',
+                        entity_id=spec.specialist_id,
+                        file_type_name='catalog_card_image',
+                        original_filename=unique_filename,
+                        file_id=catalog_card_id
+                    )
+                    logger.info(f"Изображение карточки специалиста отправлено в очередь Celery: {catalog_card_image.name}, размер: {len(file_data)} байт")
                 except Exception as e:
-                    logger.error(f"Ошибка сохранения изображения карточки специалиста: {e}", exc_info=True)
+                    logger.error(f"Ошибка отправки изображения карточки специалиста в очередь: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но профиль специалиста создан.")
 
             # Асинхронная загрузка creatives через Celery
@@ -4716,11 +4725,11 @@ def create_specialist(request):
                         logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
 
-            spec.logo_urls = logo_ids
+            spec.logo_urls = []
             spec.creatives_urls = []
             spec.proofs_urls = []
             spec.video_urls = []
-            logger.info("Файлы загружаются асинхронно через Celery, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
+            logger.info("Все файлы загружаются асинхронно через Celery, logo_urls, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
             
             # При создании автоматически добавляем первые 4 креатива в слайдер
             # (при редактировании пользователь может выбрать вручную через чекбоксы)
@@ -5182,17 +5191,34 @@ def edit_startup(request, startup_id):
             proofs_ids = startup.proofs_urls or []  # Существующие документы
             video_ids = startup.video_urls or []  # Существующие видео
             logger.info("Переменные инициализированы")
-            # Обработка логотипа
+            # Обработка логотипа — асинхронно через Celery
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
-                # Конвертируем в WebP
-                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
-                file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{processed_name}"
-                default_storage.save(file_path, processed_logo)
-                # Заменяем логотип (не добавляем)
-                logo_ids = [logo_id]
-                logger.info(f"Логотип сохранён с ID: {logo_id}")
+                try:
+                    file_data = logo.read()
+                    content_type = getattr(logo, 'content_type', 'image/jpeg')
+                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                    unique_filename = get_unique_filename(logo.name, startup.startup_id, "logo")
+
+                    from .tasks import upload_file_to_s3
+                    upload_file_to_s3.delay(
+                        file_data=file_data_b64,
+                        file_name=logo.name,
+                        file_content_type=content_type,
+                        entity_type_name='startup',
+                        entity_id=startup.startup_id,
+                        file_type_name='logo',
+                        original_filename=unique_filename,
+                        file_id=logo_id
+                    )
+                    # Заменяем логотип — очищаем, Celery добавит новый через atomic append
+                    logo_ids = []
+                    logger.info(f"Логотип стартапа отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
+                except Exception as e:
+                    logger.error(f"Ошибка отправки логотипа стартапа в очередь: {e}", exc_info=True)
+                    messages.warning(request, f"Не удалось сохранить логотип: {e}")
+                    logo_ids = startup.logo_urls or []
             else:
                 logo_ids = startup.logo_urls or []
             # Обработка креативов
@@ -5223,14 +5249,14 @@ def edit_startup(request, startup_id):
                 creative_type = FileTypes.objects.get(type_name="creative")
                 entity_type = EntityTypes.objects.get(type_name="startup")
                 creative_ids = []  # Инициализируем список для новых файлов
-                # Не очищаем существующие файлы, добавляем новые
+                # Не очищаем существующие файлы, Celery добавит новые через atomic append
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
                         logger.warning(
                             f"Пропущен креатив, так как это не файл: {creative_file}"
                         )
                         continue
-                    
+
                     # Проверяем, не существует ли уже файл с таким именем
                     existing_file = FileStorage.objects.filter(
                         entity_type=entity_type,
@@ -5238,75 +5264,83 @@ def edit_startup(request, startup_id):
                         file_type=creative_type,
                         original_file_name=creative_file.name
                     ).first()
-                    
+
                     if existing_file:
                         logger.warning(f"Креатив {creative_file.name} уже существует, пропускаем создание")
                         continue
-                    
-                    unique_filename = get_unique_filename(creative_file.name, startup.startup_id, "creative")
-                    creative_id = str(uuid.uuid4())
-                    file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{creative_file.name}"
-                    default_storage.save(file_path, creative_file)
-                    creative_ids.append(creative_id)
-                    safe_create_file_storage(
-                        entity_type=entity_type,
-                        entity_id=startup.startup_id,
-                        file_type=creative_type,
-                        file_url=creative_id,
-                        uploaded_at=timezone.now(),
-                        startup=startup,
-                        original_file_name=creative_file.name,
-                    )
-                    logger.info(f"Креатив сохранён с ID: {creative_id}")
-                # creatives_ids будут добавлены в конце функции
+
+                    try:
+                        unique_filename = get_unique_filename(creative_file.name, startup.startup_id, "creative")
+                        creative_id = str(uuid.uuid4())
+                        file_data = creative_file.read()
+                        content_type = getattr(creative_file, 'content_type', 'image/jpeg')
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=creative_file.name,
+                            file_content_type=content_type,
+                            entity_type_name='startup',
+                            entity_id=startup.startup_id,
+                            file_type_name='creative',
+                            original_filename=unique_filename,
+                            file_id=creative_id
+                        )
+                        creative_ids.append(creative_id)
+                        logger.info(f"Креатив стартапа отправлен в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
+                    except Exception as e:
+                        logger.error(f"Ошибка отправки креатива стартапа в очередь: {e}", exc_info=True)
+                        messages.warning(request, f"Не удалось сохранить изображение {creative_file.name}")
             else:
                 creative_ids = startup.creatives_urls or []
             if proofs:
                 proof_type = FileTypes.objects.get(type_name="proof")
                 entity_type = EntityTypes.objects.get(type_name="startup")
                 proofs_ids = []  # Инициализируем список для новых файлов
-                # Не очищаем существующие файлы, добавляем новые
+                # Не очищаем существующие файлы, Celery добавит через atomic append
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
                         logger.warning(
                             f"Пропущен пруф, так как это не файл: {proof_file}"
                         )
                         continue
-                    
-                    # Проверяем, не существует ли уже файл с таким именем и размером
-                    file_size = proof_file.size
+
+                    # Проверяем, не существует ли уже файл с таким именем
                     existing_file = FileStorage.objects.filter(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=proof_type,
                         original_file_name=proof_file.name
                     ).first()
-                    
+
                     if existing_file:
                         logger.warning(f"Файл {proof_file.name} уже существует, пропускаем создание")
                         continue
-                    
-                    unique_filename = get_unique_filename(proof_file.name, startup.startup_id, "proof")
-                    proof_id = str(uuid.uuid4())
-                    file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{proof_file.name}"
-                    
+
                     try:
-                        default_storage.save(file_path, proof_file)
-                        proofs_ids.append(proof_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        unique_filename = get_unique_filename(proof_file.name, startup.startup_id, "proof")
+                        proof_id = str(uuid.uuid4())
+                        file_data = proof_file.read()
+                        content_type = getattr(proof_file, 'content_type', 'application/pdf')
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=proof_file.name,
+                            file_content_type=content_type,
+                            entity_type_name='startup',
                             entity_id=startup.startup_id,
-                            file_type=proof_type,
-                            file_url=proof_id,
-                            uploaded_at=timezone.now(),
-                            startup=startup,
-                            original_file_name=proof_file.name,
+                            file_type_name='proof',
+                            original_filename=unique_filename,
+                            file_id=proof_id
                         )
-                        logger.info(f"Пруф сохранён с ID: {proof_id}")
+                        proofs_ids.append(proof_id)
+                        logger.info(f"Пруф стартапа отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
-                        logger.error(f"Ошибка сохранения пруфа {proof_file.name}: {e}")
+                        logger.error(f"Ошибка отправки пруфа стартапа в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить документ {proof_file.name}")
-                # proofs_ids будут добавлены в конце функции
             videos = request.FILES.getlist("video")
             if videos:
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
@@ -9367,102 +9401,112 @@ def edit_franchise(request, franchise_id):
             proofs_ids = franchise.proofs_urls or []
             video_ids = franchise.video_urls or []
             
-            # Обработка логотипа
+            # Обработка логотипа — асинхронно через Celery
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
-                # Конвертируем в WebP
-                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
-                base_name = os.path.splitext(processed_name)[0]
-                ext = os.path.splitext(processed_name)[1]
-                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"franchises/{franchise.franchise_id}/logos/{logo_id}_{safe_name}"
                 try:
-                    default_storage.save(file_path, processed_logo)
-                    logo_ids = [logo_id]
-                    logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
-                    entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
-                    safe_create_file_storage(
-                        entity_type=entity_type,
+                    file_data = logo.read()
+                    content_type = getattr(logo, 'content_type', 'image/jpeg')
+                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                    unique_filename = get_unique_filename(logo.name, franchise.franchise_id, "logo")
+
+                    from .tasks import upload_file_to_s3
+                    upload_file_to_s3.delay(
+                        file_data=file_data_b64,
+                        file_name=logo.name,
+                        file_content_type=content_type,
+                        entity_type_name='franchise',
                         entity_id=franchise.franchise_id,
-                        file_type=logo_type,
-                        file_url=logo_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=processed_name,
+                        file_type_name='logo',
+                        original_filename=unique_filename,
+                        file_id=logo_id
                     )
+                    # Заменяем логотип — очищаем, Celery добавит новый через atomic append
+                    logo_ids = []
+                    logger.info(f"Логотип франшизы отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
                 except Exception as e:
+                    logger.error(f"Ошибка отправки логотипа франшизы в очередь: {e}", exc_info=True)
                     messages.warning(request, f"Не удалось сохранить логотип: {e}")
-            
+
             # Обработка креативов
             creatives = request.FILES.getlist("creatives")
             proofs = request.FILES.getlist("proofs")
             videos = request.FILES.getlist("video")
-            
+
             # Проверка лимитов файлов
             if len(creatives) > 10:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Максимально 10 изображений"}, status=400)
                 messages.error(request, "Максимально 10 изображений")
                 return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
-            
+
             if len(proofs) > 15:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Максимально 15 документов"}, status=400)
                 messages.error(request, "Максимально 15 документов")
                 return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
-            
+
             if len(videos) > 1:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Максимально 1 видео"}, status=400)
                 messages.error(request, "Максимально 1 видео")
                 return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
-            
+
             if creatives:
-                creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
                         continue
-                    creative_id = str(uuid.uuid4())
-                    file_path = f"franchises/{franchise.franchise_id}/creatives/{creative_id}_{creative_file.name}"
                     try:
-                        default_storage.save(file_path, creative_file)
-                        creative_ids.append(creative_id)  # Добавляем к существующим
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        creative_id = str(uuid.uuid4())
+                        file_data = creative_file.read()
+                        content_type = getattr(creative_file, 'content_type', 'image/jpeg')
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                        unique_filename = get_unique_filename(creative_file.name, franchise.franchise_id, "creative")
+
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=creative_file.name,
+                            file_content_type=content_type,
+                            entity_type_name='franchise',
                             entity_id=franchise.franchise_id,
-                            file_type=creative_type,
-                            file_url=creative_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=creative_file.name,
+                            file_type_name='creative',
+                            original_filename=unique_filename,
+                            file_id=creative_id
                         )
+                        creative_ids.append(creative_id)
+                        logger.info(f"Креатив франшизы отправлен в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
+                        logger.error(f"Ошибка отправки креатива франшизы в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить креатив: {e}")
-            
+
             if proofs:
-                proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
                         continue
-                    proof_id = str(uuid.uuid4())
-                    file_path = f"franchises/{franchise.franchise_id}/proofs/{proof_id}_{proof_file.name}"
                     try:
-                        default_storage.save(file_path, proof_file)
-                        proofs_ids.append(proof_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        proof_id = str(uuid.uuid4())
+                        file_data = proof_file.read()
+                        content_type = getattr(proof_file, 'content_type', 'application/pdf')
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                        unique_filename = get_unique_filename(proof_file.name, franchise.franchise_id, "proof")
+
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=proof_file.name,
+                            file_content_type=content_type,
+                            entity_type_name='franchise',
                             entity_id=franchise.franchise_id,
-                            file_type=proof_type,
-                            file_url=proof_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=proof_file.name,
+                            file_type_name='proof',
+                            original_filename=unique_filename,
+                            file_id=proof_id
                         )
+                        proofs_ids.append(proof_id)
+                        logger.info(f"Пруф франшизы отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
+                        logger.error(f"Ошибка отправки пруфа франшизы в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить документ: {e}")
             
             if videos:
@@ -9694,102 +9738,112 @@ def edit_agency(request, agency_id):
             proofs_ids = agency.proofs_urls or []
             video_ids = agency.video_urls or []
             
-            # Обработка логотипа
+            # Обработка логотипа — асинхронно через Celery
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
-                # Конвертируем в WebP
-                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
-                base_name = os.path.splitext(processed_name)[0]
-                ext = os.path.splitext(processed_name)[1]
-                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"agencies/{agency.agency_id}/logos/{logo_id}_{safe_name}"
                 try:
-                    default_storage.save(file_path, processed_logo)
-                    logo_ids = [logo_id]
-                    logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
-                    entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
-                    safe_create_file_storage(
-                        entity_type=entity_type,
+                    file_data = logo.read()
+                    content_type = getattr(logo, 'content_type', 'image/jpeg')
+                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                    unique_filename = get_unique_filename(logo.name, agency.agency_id, "logo")
+
+                    from .tasks import upload_file_to_s3
+                    upload_file_to_s3.delay(
+                        file_data=file_data_b64,
+                        file_name=logo.name,
+                        file_content_type=content_type,
+                        entity_type_name='agency',
                         entity_id=agency.agency_id,
-                        file_type=logo_type,
-                        file_url=logo_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=processed_name,
+                        file_type_name='logo',
+                        original_filename=unique_filename,
+                        file_id=logo_id
                     )
+                    # Заменяем логотип — очищаем, Celery добавит новый через atomic append
+                    logo_ids = []
+                    logger.info(f"Логотип агентства отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
                 except Exception as e:
+                    logger.error(f"Ошибка отправки логотипа агентства в очередь: {e}", exc_info=True)
                     messages.warning(request, f"Не удалось сохранить логотип: {e}")
-            
+
             # Обработка креативов
             creatives = request.FILES.getlist("creatives")
             proofs = request.FILES.getlist("proofs")
             videos = request.FILES.getlist("video")
-            
+
             # Проверка лимитов файлов
             if len(creatives) > 10:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Максимально 10 изображений"}, status=400)
                 messages.error(request, "Максимально 10 изображений")
                 return render(request, "accounts/edit_agency.html", {"form": form, "agency": agency})
-            
+
             if len(proofs) > 15:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Максимально 15 документов"}, status=400)
                 messages.error(request, "Максимально 15 документов")
                 return render(request, "accounts/edit_agency.html", {"form": form, "agency": agency})
-            
+
             if len(videos) > 1:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Максимально 1 видео"}, status=400)
                 messages.error(request, "Максимально 1 видео")
                 return render(request, "accounts/edit_agency.html", {"form": form, "agency": agency})
-            
+
             if creatives:
-                creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
                         continue
-                    creative_id = str(uuid.uuid4())
-                    file_path = f"agencies/{agency.agency_id}/creatives/{creative_id}_{creative_file.name}"
                     try:
-                        default_storage.save(file_path, creative_file)
-                        creative_ids.append(creative_id)  # Добавляем к существующим
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        creative_id = str(uuid.uuid4())
+                        file_data = creative_file.read()
+                        content_type = getattr(creative_file, 'content_type', 'image/jpeg')
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                        unique_filename = get_unique_filename(creative_file.name, agency.agency_id, "creative")
+
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=creative_file.name,
+                            file_content_type=content_type,
+                            entity_type_name='agency',
                             entity_id=agency.agency_id,
-                            file_type=creative_type,
-                            file_url=creative_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=creative_file.name,
+                            file_type_name='creative',
+                            original_filename=unique_filename,
+                            file_id=creative_id
                         )
+                        creative_ids.append(creative_id)
+                        logger.info(f"Креатив агентства отправлен в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
+                        logger.error(f"Ошибка отправки креатива агентства в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить креатив: {e}")
-            
+
             if proofs:
-                proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="agency")
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
                         continue
-                    proof_id = str(uuid.uuid4())
-                    file_path = f"agencies/{agency.agency_id}/proofs/{proof_id}_{proof_file.name}"
                     try:
-                        default_storage.save(file_path, proof_file)
-                        proofs_ids.append(proof_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        proof_id = str(uuid.uuid4())
+                        file_data = proof_file.read()
+                        content_type = getattr(proof_file, 'content_type', 'application/pdf')
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                        unique_filename = get_unique_filename(proof_file.name, agency.agency_id, "proof")
+
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=proof_file.name,
+                            file_content_type=content_type,
+                            entity_type_name='agency',
                             entity_id=agency.agency_id,
-                            file_type=proof_type,
-                            file_url=proof_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=proof_file.name,
+                            file_type_name='proof',
+                            original_filename=unique_filename,
+                            file_id=proof_id
                         )
+                        proofs_ids.append(proof_id)
+                        logger.info(f"Пруф агентства отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
+                        logger.error(f"Ошибка отправки пруфа агентства в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить документ: {e}")
             
             if videos:
@@ -10018,102 +10072,112 @@ def edit_specialist(request, specialist_id):
             proofs_ids = specialist.proofs_urls or []
             video_ids = specialist.video_urls or []
             
-            # Обработка логотипа
+            # Обработка логотипа — асинхронно через Celery
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
-                # Конвертируем в WebP
-                processed_logo, processed_name, _ = process_uploaded_image(logo, quality=85)
-                base_name = os.path.splitext(processed_name)[0]
-                ext = os.path.splitext(processed_name)[1]
-                safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                safe_name = slugify(safe_base_name) + ext
-                file_path = f"specialists/{specialist.specialist_id}/logos/{logo_id}_{safe_name}"
                 try:
-                    default_storage.save(file_path, processed_logo)
-                    logo_ids = [logo_id]
-                    logo_type, _ = FileTypes.objects.get_or_create(type_name="logo")
-                    entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
-                    safe_create_file_storage(
-                        entity_type=entity_type,
+                    file_data = logo.read()
+                    content_type = getattr(logo, 'content_type', 'image/jpeg')
+                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                    unique_filename = get_unique_filename(logo.name, specialist.specialist_id, "logo")
+
+                    from .tasks import upload_file_to_s3
+                    upload_file_to_s3.delay(
+                        file_data=file_data_b64,
+                        file_name=logo.name,
+                        file_content_type=content_type,
+                        entity_type_name='specialist',
                         entity_id=specialist.specialist_id,
-                        file_type=logo_type,
-                        file_url=logo_id,
-                        uploaded_at=timezone.now(),
-                        startup=None,
-                        original_file_name=processed_name,
+                        file_type_name='logo',
+                        original_filename=unique_filename,
+                        file_id=logo_id
                     )
+                    # Заменяем логотип — очищаем, Celery добавит новый через atomic append
+                    logo_ids = []
+                    logger.info(f"Логотип специалиста отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
                 except Exception as e:
+                    logger.error(f"Ошибка отправки логотипа специалиста в очередь: {e}", exc_info=True)
                     messages.warning(request, f"Не удалось сохранить логотип: {e}")
-            
+
             # Обработка креативов
             creatives = request.FILES.getlist("creatives")
             proofs = request.FILES.getlist("proofs")
             videos = request.FILES.getlist("video")
-            
+
             # Проверка лимитов файлов
             if len(creatives) > 10:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Максимально 10 изображений"}, status=400)
                 messages.error(request, "Максимально 10 изображений")
                 return render(request, "accounts/edit_specialist.html", {"form": form, "specialist": specialist})
-            
+
             if len(proofs) > 15:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Максимально 15 документов"}, status=400)
                 messages.error(request, "Максимально 15 документов")
                 return render(request, "accounts/edit_specialist.html", {"form": form, "specialist": specialist})
-            
+
             if len(videos) > 1:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Максимально 1 видео"}, status=400)
                 messages.error(request, "Максимально 1 видео")
                 return render(request, "accounts/edit_specialist.html", {"form": form, "specialist": specialist})
-            
+
             if creatives:
-                creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 for creative_file in creatives:
                     if not hasattr(creative_file, "name"):
                         continue
-                    creative_id = str(uuid.uuid4())
-                    file_path = f"specialists/{specialist.specialist_id}/creatives/{creative_id}_{creative_file.name}"
                     try:
-                        default_storage.save(file_path, creative_file)
-                        creative_ids.append(creative_id)  # Добавляем к существующим
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        creative_id = str(uuid.uuid4())
+                        file_data = creative_file.read()
+                        content_type = getattr(creative_file, 'content_type', 'image/jpeg')
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                        unique_filename = get_unique_filename(creative_file.name, specialist.specialist_id, "creative")
+
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=creative_file.name,
+                            file_content_type=content_type,
+                            entity_type_name='specialist',
                             entity_id=specialist.specialist_id,
-                            file_type=creative_type,
-                            file_url=creative_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=creative_file.name,
+                            file_type_name='creative',
+                            original_filename=unique_filename,
+                            file_id=creative_id
                         )
+                        creative_ids.append(creative_id)
+                        logger.info(f"Креатив специалиста отправлен в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
+                        logger.error(f"Ошибка отправки креатива специалиста в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить креатив: {e}")
-            
+
             if proofs:
-                proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="specialist")
                 for proof_file in proofs:
                     if not hasattr(proof_file, "name"):
                         continue
-                    proof_id = str(uuid.uuid4())
-                    file_path = f"specialists/{specialist.specialist_id}/proofs/{proof_id}_{proof_file.name}"
                     try:
-                        default_storage.save(file_path, proof_file)
-                        proofs_ids.append(proof_id)
-                        safe_create_file_storage(
-                            entity_type=entity_type,
+                        proof_id = str(uuid.uuid4())
+                        file_data = proof_file.read()
+                        content_type = getattr(proof_file, 'content_type', 'application/pdf')
+                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
+                        unique_filename = get_unique_filename(proof_file.name, specialist.specialist_id, "proof")
+
+                        from .tasks import upload_file_to_s3
+                        upload_file_to_s3.delay(
+                            file_data=file_data_b64,
+                            file_name=proof_file.name,
+                            file_content_type=content_type,
+                            entity_type_name='specialist',
                             entity_id=specialist.specialist_id,
-                            file_type=proof_type,
-                            file_url=proof_id,
-                            uploaded_at=timezone.now(),
-                            startup=None,
-                            original_file_name=proof_file.name,
+                            file_type_name='proof',
+                            original_filename=unique_filename,
+                            file_id=proof_id
                         )
+                        proofs_ids.append(proof_id)
+                        logger.info(f"Пруф специалиста отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
+                        logger.error(f"Ошибка отправки пруфа специалиста в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить документ: {e}")
             
             if videos:

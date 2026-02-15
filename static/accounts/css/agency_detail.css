@@ -4051,11 +4051,11 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .moderator-review-section.card,
 .moderator-comment-display.card {
   display: flex;
-  width: 1303px;
+  width: 100%;
   max-width: 1303px;
-  padding: 20px 30px;
+  padding: 24px 30px;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 15px;
   flex-shrink: 0;
   border-radius: 10px;
@@ -4074,6 +4074,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   border: none;
   padding: 0;
   margin-bottom: 10px;
+  width: 100%;
 }
 
 .moderator-review-section .card-header h4,
@@ -4090,6 +4091,15 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   border: none;
   padding: 0;
   color: var(--text-primary);
+  width: 100%;
+}
+
+.moderator-review-section .card-body form {
+  width: 100%;
+}
+
+.moderator-review-section .card-body form .mb-3 {
+  width: 100%;
 }
 
 .moderator-review-section .form-label {
@@ -4099,14 +4109,17 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .moderator-review-section .moderator-comment-textarea {
+  width: 100%;
   background: rgb(255 255 255 / 10%);
   border: 1px solid rgb(255 255 255 / 20%);
   border-radius: 8px;
   color: var(--text-primary);
-  padding: 12px;
+  padding: 12px 16px;
   font-size: 14px;
+  font-family: Unbounded, sans-serif;
   resize: vertical;
-  min-height: 80px;
+  min-height: 100px;
+  box-sizing: border-box;
 }
 
 .moderator-review-section .moderator-comment-textarea:focus {
@@ -4120,7 +4133,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   background: transparent;
   border: 1px solid var(--text-secondary);
   color: var(--text-primary);
-  padding: 8px 16px;
+  padding: 10px 24px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
@@ -4145,6 +4158,26 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   font-size: 14px;
   line-height: 1.6;
   margin: 0;
+}
+
+@media (max-width: 768px) {
+  .moderator-review-section.card,
+  .moderator-comment-display.card {
+    padding: 16px;
+    margin: 30px 0 0 0;
+    border-radius: 8px;
+  }
+
+  .moderator-review-section .btn-success,
+  .moderator-review-section .btn-danger {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .moderator-review-section .btn-success {
+    margin-right: 0 !important;
+  }
 }
 
 .text-truncate-container {
