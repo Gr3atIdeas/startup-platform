@@ -11,50 +11,77 @@
     return m ? m[1] : '';
   }
 
-  /* ── Toolbar presets ─────────────────────────────────────── */
-  var FULL_TOOLBAR = [
-    [{ header: [2, 3, 4, false] }],
-    ['bold', 'italic', 'underline', 'strike'],
-    ['link', 'blockquote'],
-    [{ list: 'ordered' }, { list: 'bullet' }],
-    ['image', 'video'],
-    ['clean']
-  ];
+  /* ── Image upload handler (used as toolbar handler, `this` = toolbar) ── */
+  function handleImageUpload() {
+    var quill = this.quill;
+    var fileInput = document.createElement('input');
+    fileInput.setAttribute('type', 'file');
+    fileInput.setAttribute('accept', 'image/png, image/jpeg, image/gif, image/webp');
+    fileInput.style.display = 'none';
+    document.body.appendChild(fileInput);
 
-  var SIMPLE_TOOLBAR = [
-    ['bold', 'italic', 'link'],
-    [{ list: 'ordered' }, { list: 'bullet' }]
-  ];
-
-  /* ── Image upload handler ────────────────────────────────── */
-  function imageUploadHandler(quillInstance) {
-    var input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
-    input.click();
-    input.onchange = function () {
-      var file = input.files[0];
+    fileInput.addEventListener('change', function () {
+      var file = fileInput.files && fileInput.files[0];
+      document.body.removeChild(fileInput);
       if (!file) return;
+
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Максимальный размер изображения — 5 МБ');
+        return;
+      }
+
       var formData = new FormData();
       formData.append('upload', file);
+
+      var range = quill.getSelection(true);
+
       fetch('/api/ckeditor-upload/', {
         method: 'POST',
         headers: { 'X-CSRFToken': getCSRFToken() },
         body: formData
       })
-        .then(function (r) { return r.json(); })
+        .then(function (response) {
+          if (!response.ok) throw new Error('Upload failed: ' + response.status);
+          return response.json();
+        })
         .then(function (data) {
           if (data.url) {
-            var range = quillInstance.getSelection(true);
-            quillInstance.insertEmbed(range.index, 'image', data.url);
-            quillInstance.setSelection(range.index + 1);
+            quill.insertEmbed(range.index, 'image', data.url, 'user');
+            quill.setSelection(range.index + 1);
+          } else if (data.error) {
+            alert('Ошибка загрузки: ' + (data.error.message || data.error));
           }
         })
         .catch(function (err) {
           console.error('Image upload error:', err);
+          alert('Ошибка при загрузке изображения');
         });
-    };
+    });
+
+    fileInput.click();
   }
+
+  /* ── Toolbar presets ─────────────────────────────────────── */
+  var FULL_TOOLBAR = {
+    container: [
+      [{ header: [2, 3, 4, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      ['link', 'blockquote'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['image', 'video'],
+      ['clean']
+    ],
+    handlers: {
+      image: handleImageUpload
+    }
+  };
+
+  var SIMPLE_TOOLBAR = {
+    container: [
+      ['bold', 'italic', 'link'],
+      [{ list: 'ordered' }, { list: 'bullet' }]
+    ]
+  };
 
   /* ── Initialize one editor ───────────────────────────────── */
   function initEditor(textarea, isFull) {
@@ -70,23 +97,14 @@
     textarea.style.display = 'none';
     textarea.parentNode.insertBefore(container, textarea.nextSibling);
 
-    /* Determine toolbar & modules */
-    var toolbar = isFull ? FULL_TOOLBAR : SIMPLE_TOOLBAR;
-    var modules = { toolbar: toolbar };
-
     /* Create Quill instance */
     var quill = new Quill(container, {
       theme: 'snow',
-      modules: modules,
+      modules: {
+        toolbar: isFull ? FULL_TOOLBAR : SIMPLE_TOOLBAR
+      },
       placeholder: textarea.getAttribute('placeholder') || ''
     });
-
-    /* Custom image upload for full editor */
-    if (isFull) {
-      quill.getModule('toolbar').addHandler('image', function () {
-        imageUploadHandler(quill);
-      });
-    }
 
     /* Sync to textarea on every change */
     quill.on('text-change', function () {
