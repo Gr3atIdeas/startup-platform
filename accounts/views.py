@@ -10536,7 +10536,9 @@ def ckeditor_upload(request):
     ext = os.path.splitext(uploaded.name)[1].lower() or '.jpg'
     filename = f'ckeditor/{uuid.uuid4().hex}{ext}'
     saved_path = default_storage.save(filename, uploaded)
-    file_url = default_storage.url(saved_path)
+
+    # Публичный URL (без подписи) — не истекает, т.к. бакет public-read
+    file_url = f"{settings.S3_PUBLIC_BASE_URL}/{saved_path}"
 
     return JsonResponse({'url': file_url})
 

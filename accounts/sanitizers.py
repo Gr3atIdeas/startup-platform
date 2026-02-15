@@ -1,4 +1,5 @@
 import bleach
+from bleach.css_sanitizer import CSSSanitizer
 from django.conf import settings
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup
@@ -7,7 +8,7 @@ from bs4 import BeautifulSoup
 def sanitize_description_html(html_content):
     if not html_content:
         return ""
-    
+
     allowed_tags = [
         'img', 'video', 'p', 'br', 'strong', 'em', 'b', 'i', 'u', 's',
         'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
@@ -15,23 +16,24 @@ def sanitize_description_html(html_content):
         'figure', 'figcaption',
         'table', 'thead', 'tbody', 'tr', 'th', 'td',
     ]
-    
+
     allowed_attributes = {
         'img': ['src', 'alt', 'width', 'height', 'class'],
         'video': ['src', 'controls', 'width', 'height', 'class', 'poster'],
         'a': ['href', 'target', 'rel', 'title'],
         '*': ['class', 'style']
     }
-    
-    allowed_styles = [
-        'color', 'background-color', 'font-size', 'font-weight', 'text-align',
+
+    css_sanitizer = CSSSanitizer(allowed_css_properties=[
+        'font-size', 'font-weight', 'text-align',
         'margin', 'padding', 'width', 'height', 'max-width', 'max-height'
-    ]
-    
+    ])
+
     cleaned_html = bleach.clean(
         html_content,
         tags=allowed_tags,
         attributes=allowed_attributes,
+        css_sanitizer=css_sanitizer,
         strip=True
     )
     

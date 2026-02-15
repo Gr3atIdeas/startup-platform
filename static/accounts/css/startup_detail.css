@@ -5140,6 +5140,15 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .about-text em,
 .about-text i {
   font-style: italic;
+  color: #FFFFFF;
+}
+
+.about-text blockquote {
+  border-left: 3px solid #FFEF2B;
+  padding-left: 16px;
+  margin: 12px 0;
+  color: #FFFFFF;
+  font-style: italic;
 }
 
 .about-text a {
