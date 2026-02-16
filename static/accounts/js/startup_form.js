@@ -208,6 +208,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
   
+  // Копируем файл в память (ArrayBuffer → new File), чтобы избежать ERR_UPLOAD_FILE_CHANGED
+  function copyFileToMemory(file, fieldName) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      singleFileStorage[fieldName] = new File([e.target.result], file.name, {
+        type: file.type,
+        lastModified: file.lastModified
+      });
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
   // Функция синхронизации файла обратно в input (для FormData)
   function syncSingleFileToInput(inputId, file) {
     var input = document.getElementById(inputId);
@@ -225,8 +237,8 @@ document.addEventListener('DOMContentLoaded', function () {
     logoInput.addEventListener('change', function () {
       var file = logoInput.files && logoInput.files[0]
       if (!file) return
-      // Сохраняем в память
-      singleFileStorage.logo = file;
+      // Копируем файл в память (ArrayBuffer), чтобы не зависеть от файла на диске
+      copyFileToMemory(file, 'logo');
       var reader = new FileReader()
       reader.onload = function (e) {
         logoPreview.src = e.target.result
@@ -250,8 +262,8 @@ document.addEventListener('DOMContentLoaded', function () {
     catalogCardImageInput.addEventListener('change', function () {
       var file = catalogCardImageInput.files && catalogCardImageInput.files[0]
       if (!file) return
-      // Сохраняем в память
-      singleFileStorage.catalog_card_image = file;
+      // Копируем файл в память (ArrayBuffer), чтобы не зависеть от файла на диске
+      copyFileToMemory(file, 'catalog_card_image');
       var reader = new FileReader()
       reader.onload = function (e) {
         catalogCardImagePreview.src = e.target.result
@@ -615,6 +627,22 @@ document.addEventListener('DOMContentLoaded', function () {
           
           var loadingOverlay = document.getElementById('submission-loading-overlay')
           if (loadingOverlay) loadingOverlay.remove()
+          // Если это не серверный ответ (сетевая ошибка, ERR_UPLOAD_FILE_CHANGED и т.п.)
+          if (!err || typeof err !== 'object' || (!err.errors && !err.non_field_errors)) {
+            var msg = (err && err.message) ? err.message : 'Ошибка сети при отправке формы. Попробуйте ещё раз.'
+            console.error('Form submit error:', err)
+            var generalBox = document.getElementById('formGeneralErrors')
+            if (!generalBox) {
+              generalBox = document.createElement('div')
+              generalBox.id = 'formGeneralErrors'
+              generalBox.style.cssText = 'color:#e74c3c;margin:10px 0;padding:10px;border:1px solid #e74c3c;border-radius:6px;'
+              generalBox.setAttribute('role', 'alert')
+              startupForm.insertBefore(generalBox, startupForm.firstChild)
+            }
+            generalBox.innerHTML = '<div style="font-weight:600">' + msg + '</div>'
+            instantScrollIntoView(generalBox)
+            return
+          }
           // показать серверные ошибки без перезагрузки
           var errors = (err && err.errors) || {}
           var nonField = (err && err.non_field_errors) || []
