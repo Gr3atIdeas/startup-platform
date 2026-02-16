@@ -97,7 +97,12 @@ def try_save_file_to_s3(file_content, file_path, content_type='application/octet
 def upload_video_to_s3(self, video_data, video_name, video_content_type, entity_id, original_filename, entity_type_name='startup'):
     try:
         video_id = str(uuid.uuid4())
-        entity_folder = f"{entity_type_name}s" if not entity_type_name.endswith('s') else entity_type_name
+        entity_folder = {
+            'startup': 'startups',
+            'franchise': 'franchises',
+            'agency': 'agencies',
+            'specialist': 'specialists',
+        }.get(entity_type_name, f"{entity_type_name}s")
         file_path = f"{entity_folder}/{entity_id}/videos/{video_id}_{original_filename}"
         
         logger.info(f"Начало загрузки видео ({entity_type_name}): {file_path}, размер: {len(video_data)} байт")
@@ -185,7 +190,12 @@ def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type
     try:
         if file_id is None:
             file_id = str(uuid.uuid4())
-        entity_folder = f"{entity_type_name}s" if not entity_type_name.endswith('s') else entity_type_name
+        entity_folder = {
+            'startup': 'startups',
+            'franchise': 'franchises',
+            'agency': 'agencies',
+            'specialist': 'specialists',
+        }.get(entity_type_name, f"{entity_type_name}s")
         # Всегда добавляем 's' к типу файла для консистентности с utils._prefix_for
         file_type_folder = f"{file_type_name}s"
         
