@@ -28,10 +28,19 @@ def should_process(event, storage: PostStorage) -> bool:
         logger.debug("Skipping duplicate message %d from %s", message.id, channel_id)
         return False
 
-    # Keyword filter (if configured)
-    if KEYWORDS_LIST and message.text:
-        text_lower = message.text.lower()
-        if not any(kw in text_lower for kw in KEYWORDS_LIST):
+    text_lower = (message.text or "").lower()
+
+    # Spam filter — always active
+    spam_words = storage.get_spam_words()
+    if spam_words and text_lower:
+        if any(w in text_lower for w in spam_words):
+            logger.debug("Skipping spam message %d (matched spam word)", message.id)
+            return False
+
+    # Keyword filter — env + dynamic combined
+    all_keywords = list(set(KEYWORDS_LIST + storage.get_keywords()))
+    if all_keywords and message.text:
+        if not any(kw in text_lower for kw in all_keywords):
             logger.debug("Skipping message %d — no matching keywords", message.id)
             return False
 

@@ -15,9 +15,18 @@ NEWS_BOT_TOKEN = os.getenv("NEWS_BOT_TOKEN")
 TARGET_GROUP_ID = os.getenv("TARGET_GROUP_ID")
 SOURCE_CHANNELS = os.getenv("SOURCE_CHANNELS", "")
 KEYWORDS = os.getenv("KEYWORDS", "")
+ADMIN_ID = 911873673
 
 # Parse comma-separated lists
-SOURCE_CHANNELS_LIST = [ch.strip() for ch in SOURCE_CHANNELS.split(",") if ch.strip()]
+# Каналы могут быть юзернеймами (startupnews) или ID (-1001234567890)
+def _parse_channel(ch):
+    ch = ch.strip()
+    try:
+        return int(ch)
+    except ValueError:
+        return ch
+
+SOURCE_CHANNELS_LIST = [_parse_channel(ch) for ch in SOURCE_CHANNELS.split(",") if ch.strip()]
 KEYWORDS_LIST = [kw.strip().lower() for kw in KEYWORDS.split(",") if kw.strip()]
 
 # Session file path (persistent across restarts)

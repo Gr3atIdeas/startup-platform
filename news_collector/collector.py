@@ -18,6 +18,13 @@ def create_client() -> TelegramClient:
     )
 
 
+def get_all_channels(storage: PostStorage) -> set:
+    """Get combined set of env + dynamic channels."""
+    env_ch = set(config.SOURCE_CHANNELS_LIST)
+    db_ch = set(storage.get_channels())
+    return env_ch | db_ch
+
+
 def get_source_label(event) -> str:
     """Get readable channel name for source attribution."""
     chat = event.chat
@@ -49,7 +56,6 @@ async def handle_new_message(event, storage: PostStorage):
         elif message.document:
             doc_bytes = await message.download_media(bytes)
             filename = getattr(message.document, "file_name", None) or "document"
-            # If it's a GIF/animation, treat as document
             send_document(doc_bytes, filename, caption=text, source_name=source)
         elif text:
             send_message(text, source_name=source)
@@ -65,11 +71,26 @@ async def handle_new_message(event, storage: PostStorage):
 
 
 def register_handlers(client: TelegramClient, storage: PostStorage):
-    """Register event handlers for monitoring channels."""
-    channels = config.SOURCE_CHANNELS_LIST
+    """Register event handler that dynamically checks channel list."""
 
-    @client.on(events.NewMessage(chats=channels))
+    @client.on(events.NewMessage())
     async def on_new_message(event):
+        # Динамически проверяем, входит ли канал в отслеживаемый список
+        chat_id = event.chat_id
+        channels = get_all_channels(storage)
+
+        # Проверяем по числовому ID и по username
+        is_monitored = False
+        if chat_id in channels or str(chat_id) in channels:
+            is_monitored = True
+        elif hasattr(event.chat, "username") and event.chat.username:
+            if event.chat.username in channels:
+                is_monitored = True
+
+        if not is_monitored:
+            return
+
         await handle_new_message(event, storage)
 
-    logger.info("Registered handlers for channels: %s", ", ".join(channels))
+    all_ch = get_all_channels(storage)
+    logger.info("Registered handler for %d channels: %s", len(all_ch), ", ".join(str(ch) for ch in all_ch))
