@@ -3744,6 +3744,7 @@ def create_startup(request):
             except Exception as e:
                 logger.warning(f"Failed to send Telegram notification for startup {startup.startup_id}: {e}")
             
+            clear_temp_files(request, 'startupForm')
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
@@ -3774,6 +3775,8 @@ def create_startup(request):
             )
     else:
         form = StartupForm()
+        # Очищаем temp_files из сессии при свежем открытии формы
+        clear_temp_files(request, 'startupForm')
     return render(request, "accounts/create_startup.html", {"form": form})
 
 @login_required
@@ -4072,7 +4075,8 @@ def create_franchise(request):
                 )
             except Exception as e:
                 logger.warning(f"Failed to send Telegram notification for franchise {franchise.franchise_id}: {e}")
-            
+
+            clear_temp_files(request, 'franchiseForm')
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
@@ -4095,6 +4099,7 @@ def create_franchise(request):
             return render(request, "accounts/create_franchise.html", {"form": form})
     else:
         form = FranchiseForm()
+        clear_temp_files(request, 'franchiseForm')
     return render(request, "accounts/create_franchise.html", {"form": form})
 
 @login_required
@@ -4430,7 +4435,8 @@ def create_agency(request):
                 )
             except Exception as e:
                 logger.warning(f"Failed to send Telegram notification for agency {agency.agency_id}: {e}")
-            
+
+            clear_temp_files(request, 'agencyForm')
             messages.success(request, f'Агентство "{agency.title}" успешно создано и отправлено на модерацию!')
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
@@ -4453,6 +4459,7 @@ def create_agency(request):
             return render(request, "accounts/create_agency.html", {"form": form})
     else:
         form = AgencyForm()
+        clear_temp_files(request, 'agencyForm')
     return render(request, "accounts/create_agency.html", {"form": form})
 
 @login_required
@@ -4757,7 +4764,8 @@ def create_specialist(request):
                 )
             except Exception as e:
                 logger.warning(f"Failed to send Telegram notification for specialist {spec.specialist_id}: {e}")
-            
+
+            clear_temp_files(request, 'specialistForm')
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
@@ -4780,7 +4788,9 @@ def create_specialist(request):
             return render(request, "accounts/create_specialist.html", {"form": form})
     else:
         form = SpecialistForm()
+        clear_temp_files(request, 'specialistForm')
     return render(request, "accounts/create_specialist.html", {"form": form})
+
 @login_required
 def startup_creation_success(request):
     return render(request, "accounts/startup_creation_success.html")
