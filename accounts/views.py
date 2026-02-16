@@ -3711,11 +3711,11 @@ def create_startup(request):
                         logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
                         file_save_errors.append({"field": "video", "file": getattr(video, "name", ""), "error": str(e)})
-            startup.logo_urls = []
-            startup.creatives_urls = []
-            startup.proofs_urls = []
-            startup.video_urls = []
-            logger.info("Все файлы загружаются асинхронно через Celery, logo_urls, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
+            startup.logo_urls = logo_ids
+            startup.creatives_urls = creatives_ids
+            startup.proofs_urls = proofs_ids
+            startup.video_urls = video_ids
+            logger.info(f"UUID сохранены: logo={logo_ids}, creatives={creatives_ids}, proofs={proofs_ids}, videos={video_ids}. Файлы загружаются асинхронно через Celery.")
             
             # При создании автоматически добавляем первые 4 креатива в слайдер
             # (при редактировании пользователь может выбрать вручную через чекбоксы)
@@ -4047,11 +4047,11 @@ def create_franchise(request):
                         logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
 
-            franchise.logo_urls = []
-            franchise.creatives_urls = []
-            franchise.proofs_urls = []
-            franchise.video_urls = []
-            logger.info("Все файлы загружаются асинхронно через Celery, logo_urls, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
+            franchise.logo_urls = logo_ids
+            franchise.creatives_urls = creatives_ids
+            franchise.proofs_urls = proofs_ids
+            franchise.video_urls = video_ids
+            logger.info(f"UUID сохранены: logo={logo_ids}, creatives={creatives_ids}, proofs={proofs_ids}, videos={video_ids}. Файлы загружаются асинхронно через Celery.")
             
             # При создании автоматически добавляем первые 4 креатива в слайдер
             # (при редактировании пользователь может выбрать вручную через чекбоксы)
@@ -4390,11 +4390,11 @@ def create_agency(request):
                         logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
 
-            agency.logo_urls = []
-            agency.creatives_urls = []
-            agency.proofs_urls = []
-            agency.video_urls = []
-            logger.info("Все файлы загружаются асинхронно через Celery, logo_urls, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
+            agency.logo_urls = logo_ids
+            agency.creatives_urls = creatives_ids
+            agency.proofs_urls = proofs_ids
+            agency.video_urls = video_ids
+            logger.info(f"UUID сохранены: logo={logo_ids}, creatives={creatives_ids}, proofs={proofs_ids}, videos={video_ids}. Файлы загружаются асинхронно через Celery.")
             
             # При создании автоматически добавляем первые 4 креатива в слайдер
             # (при редактировании пользователь может выбрать вручную через чекбоксы)
@@ -4740,11 +4740,11 @@ def create_specialist(request):
                         logger.error(f"Ошибка отправки видео в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить видео {video.name} на загрузку.")
 
-            spec.logo_urls = []
-            spec.creatives_urls = []
-            spec.proofs_urls = []
-            spec.video_urls = []
-            logger.info("Все файлы загружаются асинхронно через Celery, logo_urls, creatives_urls, proofs_urls и video_urls обновятся при завершении загрузки")
+            spec.logo_urls = logo_ids
+            spec.creatives_urls = creatives_ids
+            spec.proofs_urls = proofs_ids
+            spec.video_urls = video_ids
+            logger.info(f"UUID сохранены: logo={logo_ids}, creatives={creatives_ids}, proofs={proofs_ids}, videos={video_ids}. Файлы загружаются асинхронно через Celery.")
             
             # При создании автоматически добавляем первые 4 креатива в слайдер
             # (при редактировании пользователь может выбрать вручную через чекбоксы)
