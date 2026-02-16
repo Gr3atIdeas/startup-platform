@@ -24,6 +24,12 @@ else
     echo "Fixing agencies duplicates..."
     python manage.py fix_agencies_duplicates || true
 
+    # News collector — запускаем в фоне если настроены Telegram-переменные
+    if [ -n "$TELEGRAM_API_ID" ] && [ -n "$NEWS_BOT_TOKEN" ]; then
+        echo "Starting news collector in background..."
+        python news_collector/main.py &
+    fi
+
     exec python -m gunicorn \
         --bind 0.0.0.0:3000 \
         --workers ${GUNICORN_WORKERS:-4} \
