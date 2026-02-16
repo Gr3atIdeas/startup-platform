@@ -298,7 +298,7 @@
             {% if agency.customization_data.agency_services %}
             <div class="services-wrapper">
                 <div class="services-content">
-                    {{ agency.customization_data.agency_services|linebreaksbr|default:"Информация об услугах пока не добавлена." }}
+                    {{ agency.customization_data.agency_services|sanitize_html|safe|default:"Информация об услугах пока не добавлена." }}
                 </div>
             </div>
             {% else %}

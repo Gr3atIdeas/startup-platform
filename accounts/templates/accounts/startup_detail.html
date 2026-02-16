@@ -393,7 +393,7 @@
           <div id="conditions-section" class="content-section">
             <h2 class="section-title">Условия</h2>
             
-            <p>{{ startup.terms|linebreaksbr|default:"Условия не указаны." }}</p>
+            <div class="about-text">{{ startup.terms|sanitize_html|safe|default:"Условия не указаны." }}</div>
           </div>
         </div> 
       </div> 

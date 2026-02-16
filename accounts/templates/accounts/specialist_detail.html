@@ -282,7 +282,7 @@
             <h2 class="section-title">Услуги</h2>
             <div class="profit-calculation-wrapper">
                 <div class="profit-calculation-content">
-                    {{ specialist.additional_info|default:"Описание услуг пока не добавлено."|linebreaksbr }}
+                    {{ specialist.additional_info|sanitize_html|safe|default:"Описание услуг пока не добавлено." }}
                 </div>
             </div>
           </div>
@@ -310,7 +310,7 @@
           
           <div id="conditions-section" class="content-section">
             <h2 class="section-title">Этапы работ</h2>
-            <p>{{ specialist.terms|linebreaksbr|default:"Этапы работ не указаны." }}</p>
+            <div class="about-text">{{ specialist.terms|sanitize_html|safe|default:"Этапы работ не указаны." }}</div>
           </div>
         </div> 
       </div> 
