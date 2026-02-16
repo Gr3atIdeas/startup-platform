@@ -10,9 +10,6 @@ elif [ "$CONTAINER_ROLE" = "websocket" ]; then
         --port 3001 \
         --workers 2 \
         --log-level info
-elif [ "$CONTAINER_ROLE" = "news_collector" ]; then
-    echo "Starting news collector..."
-    exec python news_collector/main.py
 else
     echo "Starting web server..."
     python manage.py collectstatic --noinput --clear
@@ -23,6 +20,12 @@ else
     # Исправляем дубликаты в таблице agencies (критически важно!)
     echo "Fixing agencies duplicates..."
     python manage.py fix_agencies_duplicates || true
+
+    # News collector — запускаем в фоне если настроены Telegram-переменные
+    if [ -n "$TELEGRAM_API_ID" ] && [ -n "$NEWS_BOT_TOKEN" ]; then
+        echo "Starting news collector in background..."
+        python news_collector/main.py &
+    fi
 
     exec python -m gunicorn \
         --bind 0.0.0.0:3000 \
