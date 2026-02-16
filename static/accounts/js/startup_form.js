@@ -1022,42 +1022,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   })
 
-  // Жёсткая привязка к лейблам чекбоксов (включая mousedown/touchstart)
-  ;(function(){
-    function bindLabel(labelSel, docNum){
-      var lbl=document.querySelector(labelSel)
-      if(!lbl) return
-      var fn=function(e){ e.preventDefault(); e.stopPropagation(); openConsentModalInstant(docNum) }
-      ;['click','mousedown','touchstart'].forEach(function(t){ lbl.addEventListener(t, fn, true) })
-      lbl.style.pointerEvents='auto'
-    }
-    bindLabel('label[for="id_agree_rules"]', 1)
-    bindLabel('label[for="id_agree_data_processing"]', 2)
-  })()
-  var agreeLabels=document.querySelectorAll('.agreement-section .custom-checkbox-label')
-  if(agreeLabels && agreeLabels.length){
-    agreeLabels.forEach(function(lbl){
-      lbl.addEventListener('click', function(e){
-        var inputId=this.getAttribute('for'); var input=document.getElementById(inputId)
-        // Всегда открываем соответствующий документ по клику на чекбокс
-        if(inputId==='id_agree_rules'){
-          e.preventDefault(); openConsentModalInstant(1)
-        } else if(inputId==='id_agree_data_processing'){
-          e.preventDefault(); openConsentModalInstant(2)
-        } else if(input && input.hasAttribute('disabled')){
-          e.preventDefault(); openConsentModalInstant(!doc1Read?1:2)
-        }
-      })
-    })
-  }
-  // Делегирование клика по любым лейблам согласий (на случай динамики/оверлеев)
-  document.addEventListener('click', function(e){
-    var lbl=e.target.closest && e.target.closest('.agreement-section .custom-checkbox-label')
-    if(!lbl) return
-    var inputId=lbl.getAttribute('for')
-    if(inputId==='id_agree_rules'){ e.preventDefault(); openConsentModalInstant(1) }
-    else if(inputId==='id_agree_data_processing'){ e.preventDefault(); openConsentModalInstant(2) }
-  }, true)
+  // Чекбоксы согласий переключаются напрямую (без модалки).
+  // Модалка открывается только по кнопкам "Политика" / "Согласие" (.consent-doc-btn).
 
   // Убираем плавный скролл — только мгновенный
   function instantScrollIntoView(node){ try{ node.scrollIntoView({behavior:'instant', block:'center'}) }catch(_){ node.scrollIntoView() } }
