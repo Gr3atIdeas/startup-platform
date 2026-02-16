@@ -3761,8 +3761,8 @@ def create_startup(request):
                 logger.warning(f"Form errors: {form.errors.as_json()}")
                 return JsonResponse({
                     "success": False,
-                    "errors": form.errors,
-                    "non_field_errors": form.non_field_errors(),
+                    "errors": {f: [x["message"] for x in e.get_json_data()] for f, e in form.errors.items()},
+                    "non_field_errors": [str(e) for e in form.non_field_errors()],
                 }, status=400)
             logger.warning(f"=== CREATE_STARTUP FORM INVALID === User: {request.user.user_id}")
             logger.warning(f"Form errors: {form.errors.as_json()}")
@@ -4086,8 +4086,8 @@ def create_franchise(request):
                 logger.warning(f"Form errors: {form.errors.as_json()}")
                 return JsonResponse({
                     "success": False,
-                    "errors": form.errors,
-                    "non_field_errors": form.non_field_errors(),
+                    "errors": {f: [x["message"] for x in e.get_json_data()] for f, e in form.errors.items()},
+                    "non_field_errors": [str(e) for e in form.non_field_errors()],
                 }, status=400)
             logger.warning(f"=== CREATE_FRANCHISE FORM INVALID === User: {request.user.user_id}")
             logger.warning(f"Form errors: {form.errors.as_json()}")
@@ -4444,8 +4444,8 @@ def create_agency(request):
                 logger.warning(f"Form errors: {form.errors.as_json()}")
                 return JsonResponse({
                     "success": False,
-                    "errors": form.errors,
-                    "non_field_errors": form.non_field_errors(),
+                    "errors": {f: [x["message"] for x in e.get_json_data()] for f, e in form.errors.items()},
+                    "non_field_errors": [str(e) for e in form.non_field_errors()],
                 }, status=400)
             logger.warning(f"=== CREATE_AGENCY FORM INVALID === User: {request.user.user_id}")
             logger.warning(f"Form errors: {form.errors.as_json()}")
@@ -4771,8 +4771,8 @@ def create_specialist(request):
                 logger.warning(f"Form errors: {form.errors.as_json()}")
                 return JsonResponse({
                     "success": False,
-                    "errors": form.errors,
-                    "non_field_errors": form.non_field_errors(),
+                    "errors": {f: [x["message"] for x in e.get_json_data()] for f, e in form.errors.items()},
+                    "non_field_errors": [str(e) for e in form.non_field_errors()],
                 }, status=400)
             logger.warning(f"=== CREATE_SPECIALIST FORM INVALID === User: {request.user.user_id}")
             logger.warning(f"Form errors: {form.errors.as_json()}")
@@ -5614,8 +5614,8 @@ def edit_startup(request, startup_id):
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": False,
-                    "errors": form.errors,
-                    "non_field_errors": form.non_field_errors(),
+                    "errors": {f: [x["message"] for x in e.get_json_data()] for f, e in form.errors.items()},
+                    "non_field_errors": [str(e) for e in form.non_field_errors()],
                 }, status=400)
             messages.error(request, "Форма содержит ошибки.")
             return render(
@@ -9643,8 +9643,8 @@ def edit_franchise(request, franchise_id):
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": False,
-                    "errors": form.errors,
-                    "non_field_errors": form.non_field_errors(),
+                    "errors": {f: [x["message"] for x in e.get_json_data()] for f, e in form.errors.items()},
+                    "non_field_errors": [str(e) for e in form.non_field_errors()],
                 }, status=400)
             messages.error(request, "Форма содержит ошибки.")
     else:
@@ -9980,8 +9980,8 @@ def edit_agency(request, agency_id):
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": False,
-                    "errors": form.errors,
-                    "non_field_errors": form.non_field_errors(),
+                    "errors": {f: [x["message"] for x in e.get_json_data()] for f, e in form.errors.items()},
+                    "non_field_errors": [str(e) for e in form.non_field_errors()],
                 }, status=400)
             messages.error(request, "Форма содержит ошибки.")
     else:
@@ -10314,8 +10314,8 @@ def edit_specialist(request, specialist_id):
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": False,
-                    "errors": form.errors,
-                    "non_field_errors": form.non_field_errors(),
+                    "errors": {f: [x["message"] for x in e.get_json_data()] for f, e in form.errors.items()},
+                    "non_field_errors": [str(e) for e in form.non_field_errors()],
                 }, status=400)
             messages.error(request, "Форма содержит ошибки.")
     else:

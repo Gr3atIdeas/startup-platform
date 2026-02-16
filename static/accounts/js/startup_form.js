@@ -420,7 +420,34 @@ document.addEventListener('DOMContentLoaded', function () {
         showFieldError(el, 'Это поле обязательно')
       }
     })
-    
+
+    // Валидация чекбоксов (обязательны на всех формах)
+    var checkboxSelectors = ["[name='agree_rules']", "[name='agree_data_processing']"]
+    checkboxSelectors.forEach(function (sel) {
+      var el = document.querySelector(sel)
+      if (!el) return
+      clearFieldError(el)
+      if (!el.checked) {
+        hasError = true
+        showFieldError(el, 'Необходимо отметить этот пункт')
+      }
+    })
+
+    // Валидация логотипа при создании
+    if (!isEditPage) {
+      var logoInput = document.getElementById('id_logo') || document.querySelector("[name='logo']")
+      if (logoInput) {
+        clearFieldError(logoInput)
+        var logoPreview = document.getElementById('logoPreview')
+        var hasLogo = (logoInput.files && logoInput.files.length > 0) ||
+                      (logoPreview && logoPreview.querySelector('img'))
+        if (!hasLogo) {
+          hasError = true
+          showFieldError(logoInput, 'Загрузите логотип')
+        }
+      }
+    }
+
     // Валидация файлов только для создания, не для редактирования
     if (!isEditPage) {
       var creativesInput = document.getElementById('id_creatives_input')
@@ -619,7 +646,29 @@ document.addEventListener('DOMContentLoaded', function () {
               ul.appendChild(li)
             })
           }
+          var fieldLabels = {
+            'title': 'Название',
+            'short_description': 'Короткое описание',
+            'description': 'Полное описание',
+            'logo': 'Логотип',
+            'creatives': 'Изображения',
+            'video': 'Видео',
+            'proofs': 'Документы',
+            'agree_rules': 'Согласие с правилами',
+            'agree_data_processing': 'Согласие с обработкой данных',
+            'direction': 'Категория',
+            'funding_goal': 'Цель финансирования',
+            'stage': 'Стадия',
+            'planet_image': 'Планета',
+            'catalog_card_image': 'Изображение для карточки',
+            'terms': 'Этапы работ',
+            'agency_category': 'Категория',
+            'agency_services': 'Услуги',
+            'specialist_category': 'Категория',
+            'pitch_deck_url': 'Ссылка на презентацию',
+          }
           function getLabelForField(el, fieldName) {
+            if (fieldLabels[fieldName]) return fieldLabels[fieldName]
             try {
               if (el && el.id) {
                 var direct = document.querySelector("label[for='" + el.id + "']")
