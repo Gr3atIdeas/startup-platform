@@ -2,7 +2,6 @@ import logging
 import uuid
 import base64
 from celery import shared_task
-from django.core.files.storage import default_storage
 from django.conf import settings
 from django.utils import timezone
 import boto3
@@ -70,30 +69,30 @@ def convert_to_webp_in_memory(file_data, file_name, content_type, quality=85):
 
 
 def try_save_file_to_s3(file_content, file_path, content_type='application/octet-stream'):
+    """Загружает файл в S3 напрямую через boto3 (без default_storage)."""
     try:
-        default_storage.save(file_path, file_content)
+        if hasattr(file_content, 'seek'):
+            file_content.seek(0)
+        # Читаем байты если это file-like объект
+        if hasattr(file_content, 'read'):
+            body = file_content.read()
+        else:
+            body = file_content
+        s3 = boto3.client(
+            's3',
+            endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+            aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+            aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+            region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+            config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
+        )
+        bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+        s3.put_object(Bucket=bucket, Key=file_path, Body=body, ContentType=content_type, ACL='public-read')
+        logger.info(f"Файл успешно загружен в S3: {file_path} ({len(body)} байт)")
         return True
     except Exception as e:
-        logger.error(f"Ошибка default_storage.save для {file_path}: {e}", exc_info=True)
-        try:
-            # Сбрасываем позицию BytesIO после неудачного чтения default_storage
-            if hasattr(file_content, 'seek'):
-                file_content.seek(0)
-            s3 = boto3.client(
-                's3',
-                endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
-                aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
-                aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
-                region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
-                config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
-            )
-            bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
-            s3.put_object(Bucket=bucket, Key=file_path, Body=file_content, ContentType=content_type, ACL='public-read')
-            logger.info(f"Файл успешно загружен через boto3: {file_path}")
-            return True
-        except Exception as e2:
-            logger.error(f"Ошибка загрузки через boto3 для {file_path}: {e2}", exc_info=True)
-            return False
+        logger.error(f"Ошибка загрузки в S3 для {file_path}: {e}", exc_info=True)
+        return False
 
 
 @shared_task(bind=True, max_retries=3)
