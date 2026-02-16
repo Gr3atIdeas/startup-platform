@@ -5231,8 +5231,7 @@ def edit_startup(request, startup_id):
                         original_filename=unique_filename,
                         file_id=logo_id
                     )
-                    # Заменяем логотип — очищаем, Celery добавит новый через atomic append
-                    logo_ids = []
+                    logo_ids = [logo_id]
                     logger.info(f"Логотип стартапа отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
                 except Exception as e:
                     logger.error(f"Ошибка отправки логотипа стартапа в очередь: {e}", exc_info=True)
@@ -9442,8 +9441,7 @@ def edit_franchise(request, franchise_id):
                         original_filename=unique_filename,
                         file_id=logo_id
                     )
-                    # Заменяем логотип — очищаем, Celery добавит новый через atomic append
-                    logo_ids = []
+                    logo_ids = [logo_id]
                     logger.info(f"Логотип франшизы отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
                 except Exception as e:
                     logger.error(f"Ошибка отправки логотипа франшизы в очередь: {e}", exc_info=True)
@@ -9780,8 +9778,7 @@ def edit_agency(request, agency_id):
                         original_filename=unique_filename,
                         file_id=logo_id
                     )
-                    # Заменяем логотип — очищаем, Celery добавит новый через atomic append
-                    logo_ids = []
+                    logo_ids = [logo_id]
                     logger.info(f"Логотип агентства отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
                 except Exception as e:
                     logger.error(f"Ошибка отправки логотипа агентства в очередь: {e}", exc_info=True)
@@ -10115,8 +10112,7 @@ def edit_specialist(request, specialist_id):
                         original_filename=unique_filename,
                         file_id=logo_id
                     )
-                    # Заменяем логотип — очищаем, Celery добавит новый через atomic append
-                    logo_ids = []
+                    logo_ids = [logo_id]
                     logger.info(f"Логотип специалиста отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
                 except Exception as e:
                     logger.error(f"Ошибка отправки логотипа специалиста в очередь: {e}", exc_info=True)
