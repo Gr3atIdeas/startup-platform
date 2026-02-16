@@ -3556,6 +3556,7 @@ def create_startup(request):
             if logo:
                 logo_id = str(uuid.uuid4())
                 try:
+                    logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
                     file_data_b64 = base64.b64encode(file_data).decode('utf-8')
@@ -3584,6 +3585,7 @@ def create_startup(request):
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 try:
+                    catalog_card_image.seek(0)
                     file_data = catalog_card_image.read()
                     content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
                     file_data_b64 = base64.b64encode(file_data).decode('utf-8')
@@ -3894,6 +3896,7 @@ def create_franchise(request):
             if logo:
                 logo_id = str(uuid.uuid4())
                 try:
+                    logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
                     file_data_b64 = base64.b64encode(file_data).decode('utf-8')
@@ -3921,6 +3924,7 @@ def create_franchise(request):
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 try:
+                    catalog_card_image.seek(0)
                     file_data = catalog_card_image.read()
                     content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
                     file_data_b64 = base64.b64encode(file_data).decode('utf-8')
@@ -4237,6 +4241,7 @@ def create_agency(request):
             if logo:
                 logo_id = str(uuid.uuid4())
                 try:
+                    logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
                     file_data_b64 = base64.b64encode(file_data).decode('utf-8')
@@ -4264,6 +4269,7 @@ def create_agency(request):
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 try:
+                    catalog_card_image.seek(0)
                     file_data = catalog_card_image.read()
                     content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
                     file_data_b64 = base64.b64encode(file_data).decode('utf-8')
@@ -4583,6 +4589,7 @@ def create_specialist(request):
             if logo:
                 logo_id = str(uuid.uuid4())
                 try:
+                    logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
                     file_data_b64 = base64.b64encode(file_data).decode('utf-8')
@@ -4610,6 +4617,7 @@ def create_specialist(request):
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 try:
+                    catalog_card_image.seek(0)
                     file_data = catalog_card_image.read()
                     content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
                     file_data_b64 = base64.b64encode(file_data).decode('utf-8')
@@ -5206,6 +5214,7 @@ def edit_startup(request, startup_id):
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
                 try:
+                    logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
                     file_data_b64 = base64.b64encode(file_data).decode('utf-8')
@@ -9416,6 +9425,7 @@ def edit_franchise(request, franchise_id):
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
                 try:
+                    logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
                     file_data_b64 = base64.b64encode(file_data).decode('utf-8')
@@ -9753,6 +9763,7 @@ def edit_agency(request, agency_id):
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
                 try:
+                    logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
                     file_data_b64 = base64.b64encode(file_data).decode('utf-8')
@@ -10087,6 +10098,7 @@ def edit_specialist(request, specialist_id):
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
                 try:
+                    logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
                     file_data_b64 = base64.b64encode(file_data).decode('utf-8')

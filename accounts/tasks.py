@@ -76,6 +76,9 @@ def try_save_file_to_s3(file_content, file_path, content_type='application/octet
     except Exception as e:
         logger.error(f"Ошибка default_storage.save для {file_path}: {e}", exc_info=True)
         try:
+            # Сбрасываем позицию BytesIO после неудачного чтения default_storage
+            if hasattr(file_content, 'seek'):
+                file_content.seek(0)
             s3 = boto3.client(
                 's3',
                 endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
