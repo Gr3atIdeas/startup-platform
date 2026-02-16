@@ -466,8 +466,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                             {% endwith %}
                                             <div class="author-text-details">
                                                 <span class="author-name">{{ startup.owner.get_full_name|default:startup.owner.email|default:"Не указан" }}</span>
-                                                <span class="author-rating">Рейтинг 4,2/5</span> 
-                                                <a href="#" class="author-reviews-link">Отзывы</a> 
                                             </div>
                                 {% else %}
                                             <div class="author-avatar-placeholder"></div>
@@ -514,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         <div class="startup-description-group">
                             <span class="detail-label">Описание</span>
-                            <p class="startup-description-text">{{ startup.description|default:startup.short_description|default:"Описание отсутствует."|truncatewords:30 }}</p>
+                            <p class="startup-description-text">{{ startup.description|default:startup.short_description|default:"Описание отсутствует."|striptags|truncatewords:30 }}</p>
                         </div>
                     </div> 
 
@@ -592,7 +590,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                         <div class="startup-description-group">
                             <span class="detail-label">Описание</span>
-                            <p class="startup-description-text">{{ franchise.description|default:franchise.short_description|default:"Описание отсутствует."|truncatewords:30 }}</p>
+                            <p class="startup-description-text">{{ franchise.description|default:franchise.short_description|default:"Описание отсутствует."|striptags|truncatewords:30 }}</p>
                         </div>
                     </div>
                     <div class="funding-info-actions">
@@ -648,7 +646,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 
                                 <div class="detail-group">
                                     <span class="detail-label">Тип заявки</span>
-                                    <span class="application-type">Агентство (ID: {{ agency.agency_id }})</span>
+                                    <span class="application-type">Агентство</span>
                                 </div>
                                 
                                 <div class="detail-group">
@@ -665,7 +663,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                         <div class="startup-description-group">
                             <span class="detail-label">Описание</span>
-                            <p class="startup-description-text">{{ agency.description|default:agency.short_description|default:"Описание отсутствует."|truncatewords:30 }}</p>
+                            <p class="startup-description-text">{{ agency.description|default:agency.short_description|default:"Описание отсутствует."|striptags|truncatewords:30 }}</p>
                         </div>
                     </div>
                     <div class="funding-info-actions">
@@ -738,7 +736,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                         <div class="startup-description-group">
                             <span class="detail-label">Описание</span>
-                            <p class="startup-description-text">{{ specialist.description|default:specialist.short_description|default:"Описание отсутствует."|truncatewords:30 }}</p>
+                            <p class="startup-description-text">{{ specialist.description|default:specialist.short_description|default:"Описание отсутствует."|striptags|truncatewords:30 }}</p>
                         </div>
                     </div>
                     <div class="funding-info-actions">
