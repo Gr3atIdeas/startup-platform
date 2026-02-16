@@ -27,7 +27,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.core.serializers.json import DjangoJSONEncoder
 from .tasks import upload_video_to_s3
-from .utils import process_uploaded_image, send_telegram_new_entity_notification, get_planet_image_url, get_fallback_planet_url
+from .utils import process_uploaded_image, send_telegram_new_entity_notification, get_planet_image_url, get_fallback_planet_url, upload_file_to_s3_sync
 from django.db import (
     models,
     transaction,
@@ -3559,24 +3559,27 @@ def create_startup(request):
                     logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
-                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                     unique_filename = get_unique_filename(logo.name, startup.startup_id, "logo")
 
-                    from .tasks import upload_file_to_s3
-                    upload_file_to_s3.delay(
-                        file_data=file_data_b64,
+                    result = upload_file_to_s3_sync(
+                        file_data=file_data,
                         file_name=logo.name,
-                        file_content_type=content_type,
+                        content_type=content_type,
                         entity_type_name='startup',
                         entity_id=startup.startup_id,
                         file_type_name='logo',
                         original_filename=unique_filename,
                         file_id=logo_id
                     )
-                    logo_ids.append(logo_id)
-                    logger.info(f"Логотип стартапа отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
+                    if result:
+                        logo_ids.append(logo_id)
+                        logger.info(f"Логотип стартапа загружен синхронно: {logo.name}, размер: {len(file_data)} байт")
+                    else:
+                        logger.error(f"Синхронная загрузка логотипа стартапа не удалась: {logo.name}")
+                        messages.warning(request, "Не удалось сохранить логотип, но стартап создан.")
+                        file_save_errors.append({"field": "logo", "error": "S3 upload failed"})
                 except Exception as e:
-                    logger.error(f"Ошибка отправки логотипа в очередь: {e}", exc_info=True)
+                    logger.error(f"Ошибка загрузки логотипа: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить логотип, но стартап создан.")
                     file_save_errors.append({"field": "logo", "error": str(e)})
             
@@ -3899,24 +3902,26 @@ def create_franchise(request):
                     logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
-                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                     unique_filename = get_unique_filename(logo.name, franchise.franchise_id, "logo")
 
-                    from .tasks import upload_file_to_s3
-                    upload_file_to_s3.delay(
-                        file_data=file_data_b64,
+                    result = upload_file_to_s3_sync(
+                        file_data=file_data,
                         file_name=logo.name,
-                        file_content_type=content_type,
+                        content_type=content_type,
                         entity_type_name='franchise',
                         entity_id=franchise.franchise_id,
                         file_type_name='logo',
                         original_filename=unique_filename,
                         file_id=logo_id
                     )
-                    logo_ids.append(logo_id)
-                    logger.info(f"Логотип франшизы отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
+                    if result:
+                        logo_ids.append(logo_id)
+                        logger.info(f"Логотип франшизы загружен синхронно: {logo.name}, размер: {len(file_data)} байт")
+                    else:
+                        logger.error(f"Синхронная загрузка логотипа франшизы не удалась: {logo.name}")
+                        messages.warning(request, "Не удалось сохранить логотип, но франшиза создана.")
                 except Exception as e:
-                    logger.error(f"Ошибка отправки логотипа франшизы в очередь: {e}", exc_info=True)
+                    logger.error(f"Ошибка загрузки логотипа франшизы: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить логотип, но франшиза создана.")
 
             # Асинхронная загрузка catalog_card_image через Celery
@@ -4244,24 +4249,26 @@ def create_agency(request):
                     logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
-                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                     unique_filename = get_unique_filename(logo.name, agency.agency_id, "logo")
 
-                    from .tasks import upload_file_to_s3
-                    upload_file_to_s3.delay(
-                        file_data=file_data_b64,
+                    result = upload_file_to_s3_sync(
+                        file_data=file_data,
                         file_name=logo.name,
-                        file_content_type=content_type,
+                        content_type=content_type,
                         entity_type_name='agency',
                         entity_id=agency.agency_id,
                         file_type_name='logo',
                         original_filename=unique_filename,
                         file_id=logo_id
                     )
-                    logo_ids.append(logo_id)
-                    logger.info(f"Логотип агентства отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
+                    if result:
+                        logo_ids.append(logo_id)
+                        logger.info(f"Логотип агентства загружен синхронно: {logo.name}, размер: {len(file_data)} байт")
+                    else:
+                        logger.error(f"Синхронная загрузка логотипа агентства не удалась: {logo.name}")
+                        messages.warning(request, "Не удалось сохранить логотип, но агентство создано.")
                 except Exception as e:
-                    logger.error(f"Ошибка отправки логотипа агентства в очередь: {e}", exc_info=True)
+                    logger.error(f"Ошибка загрузки логотипа агентства: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить логотип, но агентство создано.")
 
             # Асинхронная загрузка catalog_card_image через Celery
@@ -4592,24 +4599,26 @@ def create_specialist(request):
                     logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
-                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                     unique_filename = get_unique_filename(logo.name, spec.specialist_id, "logo")
 
-                    from .tasks import upload_file_to_s3
-                    upload_file_to_s3.delay(
-                        file_data=file_data_b64,
+                    result = upload_file_to_s3_sync(
+                        file_data=file_data,
                         file_name=logo.name,
-                        file_content_type=content_type,
+                        content_type=content_type,
                         entity_type_name='specialist',
                         entity_id=spec.specialist_id,
                         file_type_name='logo',
                         original_filename=unique_filename,
                         file_id=logo_id
                     )
-                    logo_ids.append(logo_id)
-                    logger.info(f"Логотип специалиста отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
+                    if result:
+                        logo_ids.append(logo_id)
+                        logger.info(f"Логотип специалиста загружен синхронно: {logo.name}, размер: {len(file_data)} байт")
+                    else:
+                        logger.error(f"Синхронная загрузка логотипа специалиста не удалась: {logo.name}")
+                        messages.warning(request, "Не удалось сохранить логотип, но профиль специалиста создан.")
                 except Exception as e:
-                    logger.error(f"Ошибка отправки логотипа специалиста в очередь: {e}", exc_info=True)
+                    logger.error(f"Ошибка загрузки логотипа специалиста: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить логотип, но профиль специалиста создан.")
 
             # Асинхронная загрузка catalog_card_image через Celery
@@ -5209,7 +5218,7 @@ def edit_startup(request, startup_id):
             proofs_ids = startup.proofs_urls or []  # Существующие документы
             video_ids = startup.video_urls or []  # Существующие видео
             logger.info("Переменные инициализированы")
-            # Обработка логотипа — асинхронно через Celery
+            # Обработка логотипа — синхронная загрузка в S3
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
@@ -5217,24 +5226,27 @@ def edit_startup(request, startup_id):
                     logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
-                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                     unique_filename = get_unique_filename(logo.name, startup.startup_id, "logo")
 
-                    from .tasks import upload_file_to_s3
-                    upload_file_to_s3.delay(
-                        file_data=file_data_b64,
+                    result = upload_file_to_s3_sync(
+                        file_data=file_data,
                         file_name=logo.name,
-                        file_content_type=content_type,
+                        content_type=content_type,
                         entity_type_name='startup',
                         entity_id=startup.startup_id,
                         file_type_name='logo',
                         original_filename=unique_filename,
                         file_id=logo_id
                     )
-                    logo_ids = [logo_id]
-                    logger.info(f"Логотип стартапа отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
+                    if result:
+                        logo_ids = [logo_id]
+                        logger.info(f"Логотип стартапа загружен синхронно: {logo.name}, размер: {len(file_data)} байт")
+                    else:
+                        logger.error(f"Синхронная загрузка логотипа стартапа не удалась: {logo.name}")
+                        messages.warning(request, "Не удалось сохранить логотип")
+                        logo_ids = startup.logo_urls or []
                 except Exception as e:
-                    logger.error(f"Ошибка отправки логотипа стартапа в очередь: {e}", exc_info=True)
+                    logger.error(f"Ошибка загрузки логотипа стартапа: {e}", exc_info=True)
                     messages.warning(request, f"Не удалось сохранить логотип: {e}")
                     logo_ids = startup.logo_urls or []
             else:
@@ -9419,7 +9431,7 @@ def edit_franchise(request, franchise_id):
             proofs_ids = franchise.proofs_urls or []
             video_ids = franchise.video_urls or []
             
-            # Обработка логотипа — асинхронно через Celery
+            # Обработка логотипа — синхронная загрузка в S3
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
@@ -9427,24 +9439,26 @@ def edit_franchise(request, franchise_id):
                     logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
-                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                     unique_filename = get_unique_filename(logo.name, franchise.franchise_id, "logo")
 
-                    from .tasks import upload_file_to_s3
-                    upload_file_to_s3.delay(
-                        file_data=file_data_b64,
+                    result = upload_file_to_s3_sync(
+                        file_data=file_data,
                         file_name=logo.name,
-                        file_content_type=content_type,
+                        content_type=content_type,
                         entity_type_name='franchise',
                         entity_id=franchise.franchise_id,
                         file_type_name='logo',
                         original_filename=unique_filename,
                         file_id=logo_id
                     )
-                    logo_ids = [logo_id]
-                    logger.info(f"Логотип франшизы отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
+                    if result:
+                        logo_ids = [logo_id]
+                        logger.info(f"Логотип франшизы загружен синхронно: {logo.name}, размер: {len(file_data)} байт")
+                    else:
+                        logger.error(f"Синхронная загрузка логотипа франшизы не удалась: {logo.name}")
+                        messages.warning(request, "Не удалось сохранить логотип")
                 except Exception as e:
-                    logger.error(f"Ошибка отправки логотипа франшизы в очередь: {e}", exc_info=True)
+                    logger.error(f"Ошибка загрузки логотипа франшизы: {e}", exc_info=True)
                     messages.warning(request, f"Не удалось сохранить логотип: {e}")
 
             # Обработка креативов
@@ -9756,7 +9770,7 @@ def edit_agency(request, agency_id):
             proofs_ids = agency.proofs_urls or []
             video_ids = agency.video_urls or []
             
-            # Обработка логотипа — асинхронно через Celery
+            # Обработка логотипа — синхронная загрузка в S3
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
@@ -9764,24 +9778,26 @@ def edit_agency(request, agency_id):
                     logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
-                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                     unique_filename = get_unique_filename(logo.name, agency.agency_id, "logo")
 
-                    from .tasks import upload_file_to_s3
-                    upload_file_to_s3.delay(
-                        file_data=file_data_b64,
+                    result = upload_file_to_s3_sync(
+                        file_data=file_data,
                         file_name=logo.name,
-                        file_content_type=content_type,
+                        content_type=content_type,
                         entity_type_name='agency',
                         entity_id=agency.agency_id,
                         file_type_name='logo',
                         original_filename=unique_filename,
                         file_id=logo_id
                     )
-                    logo_ids = [logo_id]
-                    logger.info(f"Логотип агентства отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
+                    if result:
+                        logo_ids = [logo_id]
+                        logger.info(f"Логотип агентства загружен синхронно: {logo.name}, размер: {len(file_data)} байт")
+                    else:
+                        logger.error(f"Синхронная загрузка логотипа агентства не удалась: {logo.name}")
+                        messages.warning(request, "Не удалось сохранить логотип")
                 except Exception as e:
-                    logger.error(f"Ошибка отправки логотипа агентства в очередь: {e}", exc_info=True)
+                    logger.error(f"Ошибка загрузки логотипа агентства: {e}", exc_info=True)
                     messages.warning(request, f"Не удалось сохранить логотип: {e}")
 
             # Обработка креативов
@@ -10090,7 +10106,7 @@ def edit_specialist(request, specialist_id):
             proofs_ids = specialist.proofs_urls or []
             video_ids = specialist.video_urls or []
             
-            # Обработка логотипа — асинхронно через Celery
+            # Обработка логотипа — синхронная загрузка в S3
             logo = request.FILES.get("logo")
             if logo and logo.size > 0:
                 logo_id = str(uuid.uuid4())
@@ -10098,24 +10114,26 @@ def edit_specialist(request, specialist_id):
                     logo.seek(0)
                     file_data = logo.read()
                     content_type = getattr(logo, 'content_type', 'image/jpeg')
-                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                     unique_filename = get_unique_filename(logo.name, specialist.specialist_id, "logo")
 
-                    from .tasks import upload_file_to_s3
-                    upload_file_to_s3.delay(
-                        file_data=file_data_b64,
+                    result = upload_file_to_s3_sync(
+                        file_data=file_data,
                         file_name=logo.name,
-                        file_content_type=content_type,
+                        content_type=content_type,
                         entity_type_name='specialist',
                         entity_id=specialist.specialist_id,
                         file_type_name='logo',
                         original_filename=unique_filename,
                         file_id=logo_id
                     )
-                    logo_ids = [logo_id]
-                    logger.info(f"Логотип специалиста отправлен в очередь Celery: {logo.name}, размер: {len(file_data)} байт")
+                    if result:
+                        logo_ids = [logo_id]
+                        logger.info(f"Логотип специалиста загружен синхронно: {logo.name}, размер: {len(file_data)} байт")
+                    else:
+                        logger.error(f"Синхронная загрузка логотипа специалиста не удалась: {logo.name}")
+                        messages.warning(request, "Не удалось сохранить логотип")
                 except Exception as e:
-                    logger.error(f"Ошибка отправки логотипа специалиста в очередь: {e}", exc_info=True)
+                    logger.error(f"Ошибка загрузки логотипа специалиста: {e}", exc_info=True)
                     messages.warning(request, f"Не удалось сохранить логотип: {e}")
 
             # Обработка креативов

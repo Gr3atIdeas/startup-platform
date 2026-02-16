@@ -116,6 +116,92 @@ def process_uploaded_image(uploaded_file, quality=85, max_size=None):
     return uploaded_file, getattr(uploaded_file, 'name', 'file'), getattr(uploaded_file, 'content_type', 'application/octet-stream')
 
 
+def upload_file_to_s3_sync(file_data, file_name, content_type, entity_type_name, entity_id, file_type_name, original_filename, file_id=None):
+    """
+    Синхронная загрузка файла в S3 (без Celery).
+    Используется для логотипов и других мелких файлов, которые должны быть доступны сразу.
+
+    Args:
+        file_data: bytes данные файла (НЕ base64)
+        file_name: оригинальное имя файла
+        content_type: MIME тип
+        entity_type_name: 'startup', 'franchise', 'agency', 'specialist'
+        entity_id: ID сущности
+        file_type_name: 'logo', 'creative', 'proof'
+        original_filename: уникальное имя файла для S3
+        file_id: UUID файла (генерируется если не передан)
+
+    Returns:
+        str: file_id если успешно, None при ошибке
+    """
+    if file_id is None:
+        file_id = str(uuid.uuid4())
+
+    entity_folder = {
+        'startup': 'startups',
+        'franchise': 'franchises',
+        'agency': 'agencies',
+        'specialist': 'specialists',
+    }.get(entity_type_name, f"{entity_type_name}s")
+    file_type_folder = f"{file_type_name}s"
+
+    try:
+        # Конвертируем изображения в WebP
+        if content_type and content_type.startswith('image/'):
+            ext = file_name.lower().split('.')[-1] if '.' in file_name else ''
+            if ext in {'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff'}:
+                try:
+                    img = Image.open(BytesIO(file_data))
+                    if img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info):
+                        img = img.convert('RGBA')
+                    else:
+                        img = img.convert('RGB')
+                    output = BytesIO()
+                    img.save(output, 'WEBP', quality=85, optimize=True)
+                    webp_data = output.getvalue()
+                    base_name = '.'.join(original_filename.split('.')[:-1]) if '.' in original_filename else original_filename
+                    original_filename = f"{base_name}.webp"
+                    content_type = 'image/webp'
+                    logger.info(f"[sync] WebP: {file_name} {len(file_data)/1024:.1f}KB -> {len(webp_data)/1024:.1f}KB")
+                    file_data = webp_data
+                except Exception as e:
+                    logger.warning(f"[sync] WebP conversion failed, uploading original: {e}")
+
+        file_path = f"{entity_folder}/{entity_id}/{file_type_folder}/{file_id}_{original_filename}"
+
+        s3 = boto3.client(
+            's3',
+            endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+            aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+            aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+            region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+        )
+        bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+        s3.put_object(Bucket=bucket, Key=file_path, Body=file_data, ContentType=content_type, ACL='public-read')
+        logger.info(f"[sync] Файл загружен в S3: {file_path} ({len(file_data)} байт)")
+
+        # Создаём запись FileStorage
+        from .models import FileStorage, FileTypes, EntityTypes
+        file_type_obj, _ = FileTypes.objects.get_or_create(type_name=file_type_name)
+        entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name=entity_type_name)
+        FileStorage.objects.get_or_create(
+            file_url=file_id,
+            defaults={
+                'entity_type': entity_type_obj,
+                'entity_id': entity_id,
+                'file_type': file_type_obj,
+                'uploaded_at': timezone.now(),
+                'original_file_name': original_filename,
+            }
+        )
+
+        return file_id
+
+    except Exception as e:
+        logger.error(f"[sync] Ошибка загрузки в S3: {file_path if 'file_path' in dir() else 'unknown'}: {e}", exc_info=True)
+        return None
+
+
 def _prefix_for(entity_type: str, entity_id: int, file_type: str) -> str:
     if file_type == "avatar":
         return f"users/{entity_id}/avatar/"
