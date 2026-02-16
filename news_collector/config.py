@@ -38,10 +38,8 @@ DB_PATH = os.path.join(os.path.dirname(__file__), "data", "processed_posts.db")
 REQUIRED_VARS = {
     "TELEGRAM_API_ID": TELEGRAM_API_ID,
     "TELEGRAM_API_HASH": TELEGRAM_API_HASH,
-    "TELEGRAM_PHONE": TELEGRAM_PHONE,
     "NEWS_BOT_TOKEN": NEWS_BOT_TOKEN,
     "TARGET_GROUP_ID": TARGET_GROUP_ID,
-    "SOURCE_CHANNELS": SOURCE_CHANNELS,
 }
 
 
@@ -49,9 +47,6 @@ def validate():
     missing = [name for name, value in REQUIRED_VARS.items() if not value]
     if missing:
         print(f"ERROR: Missing required environment variables: {', '.join(missing)}")
-        sys.exit(1)
-    if not SOURCE_CHANNELS_LIST:
-        print("ERROR: SOURCE_CHANNELS must contain at least one channel")
         sys.exit(1)
     try:
         int(TELEGRAM_API_ID)
