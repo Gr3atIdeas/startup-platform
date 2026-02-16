@@ -38,3 +38,4 @@ channels-redis==4.2.0
 daphne==4.1.2
 uvicorn[standard]==0.30.6
 django-silk==5.1.0
+telethon==1.37.0

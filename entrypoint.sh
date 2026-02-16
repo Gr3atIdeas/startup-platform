@@ -10,6 +10,9 @@ elif [ "$CONTAINER_ROLE" = "websocket" ]; then
         --port 3001 \
         --workers 2 \
         --log-level info
+elif [ "$CONTAINER_ROLE" = "news_collector" ]; then
+    echo "Starting news collector..."
+    exec python news_collector/main.py
 else
     echo "Starting web server..."
     python manage.py collectstatic --noinput --clear

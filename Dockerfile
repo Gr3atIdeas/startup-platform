@@ -36,6 +36,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY marketplace/ ./marketplace/
 COPY accounts/ ./accounts/
+COPY news_collector/ ./news_collector/
 COPY manage.py .
 COPY health_check.py .
 
@@ -50,6 +51,7 @@ RUN chmod +x health_check.py
 RUN chmod +x entrypoint.sh
 RUN chmod +x update.sh
 
+RUN mkdir -p /app/news_collector/data
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
 
