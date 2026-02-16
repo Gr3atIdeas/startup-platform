@@ -75,6 +75,30 @@ document.addEventListener('DOMContentLoaded', function () {
       var ext = filename.slice(idx + 1).toLowerCase()
       return allowedExts.indexOf(ext) !== -1
     }
+    // Копирует массив File-объектов в память (ArrayBuffer → new File),
+    // чтобы избежать ERR_UPLOAD_FILE_CHANGED при отложенной отправке формы
+    function copyFilesArrayToMemory(files, callback) {
+      if (files.length === 0) { callback([]); return }
+      var copied = new Array(files.length)
+      var remaining = files.length
+      files.forEach(function(file, idx) {
+        var reader = new FileReader()
+        reader.onload = function(e) {
+          copied[idx] = new File([e.target.result], file.name, {
+            type: file.type, lastModified: file.lastModified
+          })
+          remaining--
+          if (remaining === 0) callback(copied)
+        }
+        reader.onerror = function() {
+          copied[idx] = file // fallback — оригинал
+          remaining--
+          if (remaining === 0) callback(copied)
+        }
+        reader.readAsArrayBuffer(file)
+      })
+    }
+
     function bindInputWithDropArea(inputId, dropAreaId, previewId, options) {
       var input = document.getElementById(inputId)
       var dropArea = document.getElementById(dropAreaId)
@@ -154,17 +178,24 @@ document.addEventListener('DOMContentLoaded', function () {
       input.addEventListener('change', function () {
         var newFiles = toArray(input.files)
         if (newFiles.length === 0) return
-        var combined = currentFiles.concat(newFiles)
-        var filtered = filterFiles(combined)
-        setFiles(filtered)
+        // Копируем новые файлы в память, чтобы избежать ERR_UPLOAD_FILE_CHANGED
+        copyFilesArrayToMemory(newFiles, function(copiedFiles) {
+          var combined = currentFiles.concat(copiedFiles)
+          var filtered = filterFiles(combined)
+          setFiles(filtered)
+        })
       })
       dropArea.addEventListener('dragover', function (e) { e.preventDefault() })
       dropArea.addEventListener('drop', function (e) {
         e.preventDefault()
         var dropped = e.dataTransfer && e.dataTransfer.files ? e.dataTransfer.files : []
-        var combined = currentFiles.concat(toArray(dropped))
-        var filtered = filterFiles(combined)
-        setFiles(filtered)
+        if (dropped.length === 0) return
+        // Копируем dropped файлы в память, чтобы избежать ERR_UPLOAD_FILE_CHANGED
+        copyFilesArrayToMemory(toArray(dropped), function(copiedFiles) {
+          var combined = currentFiles.concat(copiedFiles)
+          var filtered = filterFiles(combined)
+          setFiles(filtered)
+        })
       })
     }
     bindInputWithDropArea('id_creatives_input', 'creativesDropArea', 'creativesPreview', { kind: 'image', mimePrefix: 'image/', maxCount: 10 })
