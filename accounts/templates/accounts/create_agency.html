@@ -585,14 +585,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadingOverlay.appendChild(loadingContent);
                 document.body.appendChild(loadingOverlay);
                 
+                if (typeof window.syncSingleFilesBeforeSubmit === 'function') {
+                    window.syncSingleFilesBeforeSubmit();
+                }
+
                 var formData = new FormData(this);
-                
-                fetch(this.action, {
+                var csrfInput = this.querySelector('input[name="csrfmiddlewaretoken"]');
+                var csrfToken = csrfInput ? csrfInput.value : null;
+
+                fetch(this.action || window.location.href, {
                     method: 'POST',
                     body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
+                    headers: Object.assign(
+                        { 'X-Requested-With': 'XMLHttpRequest' },
+                        csrfToken ? { 'X-CSRFToken': csrfToken } : {}
+                    ),
+                    credentials: 'same-origin',
                 })
                 .then(function(response) {
                     return response.json().then(function(data) {

@@ -126,14 +126,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
+            if (typeof window.syncSingleFilesBeforeSubmit === 'function') {
+                window.syncSingleFilesBeforeSubmit();
+            }
+
             const formData = new FormData(form);
-            
-            fetch(form.action, {
+            const csrfInput = form.querySelector('input[name="csrfmiddlewaretoken"]');
+            const csrfToken = csrfInput ? csrfInput.value : null;
+
+            fetch(form.action || window.location.href, {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                headers: Object.assign(
+                    { 'X-Requested-With': 'XMLHttpRequest' },
+                    csrfToken ? { 'X-CSRFToken': csrfToken } : {}
+                ),
+                credentials: 'same-origin',
             })
             .then(response => {
                 if (response.ok) {
