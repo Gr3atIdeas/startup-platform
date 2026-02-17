@@ -3583,7 +3583,7 @@ def create_startup(request):
                     messages.warning(request, "Не удалось сохранить логотип, но стартап создан.")
                     file_save_errors.append({"field": "logo", "error": str(e)})
             
-            # Асинхронная загрузка catalog_card_image через Celery
+            # Синхронная загрузка catalog_card_image
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
@@ -3591,21 +3591,21 @@ def create_startup(request):
                     catalog_card_image.seek(0)
                     file_data = catalog_card_image.read()
                     content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
-                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                     unique_filename = get_unique_filename(catalog_card_image.name, startup.startup_id, "catalog_card_image")
 
-                    from .tasks import upload_file_to_s3
-                    upload_file_to_s3.delay(
-                        file_data=file_data_b64,
+                    result = upload_file_to_s3_sync(
+                        file_data=file_data,
                         file_name=catalog_card_image.name,
-                        file_content_type=content_type,
+                        content_type=content_type,
                         entity_type_name='startup',
                         entity_id=startup.startup_id,
                         file_type_name='catalog_card_image',
                         original_filename=unique_filename,
                         file_id=catalog_card_id
                     )
-                    logger.info(f"Изображение карточки стартапа отправлено в очередь Celery: {catalog_card_image.name}, размер: {len(file_data)} байт")
+                    if not result:
+                        catalog_card_id = None
+                    logger.info(f"Изображение карточки стартапа загружено: {catalog_card_image.name}, размер: {len(file_data)} байт")
                 except Exception as e:
                     logger.error(f"Ошибка отправки изображения карточки в очередь: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но стартап создан.")
@@ -3628,23 +3628,20 @@ def create_startup(request):
                         creative_id = str(uuid.uuid4())
                         file_data = creative_file.read()
                         content_type = getattr(creative_file, 'content_type', 'image/jpeg')
-                        
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
-                        
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=creative_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='startup',
                             entity_id=startup.startup_id,
                             file_type_name='creative',
                             original_filename=unique_filename,
                             file_id=creative_id
                         )
-                        creatives_ids.append(creative_id)
-                        logger.info(f"Изображение отправлено в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
-                        messages.info(request, f"Изображение {creative_file.name} загружается в фоновом режиме.")
+                        if result:
+                            creatives_ids.append(creative_id)
+                        logger.info(f"Изображение загружено: {creative_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки изображения в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить изображение {creative_file.name} на загрузку.")
@@ -3666,23 +3663,20 @@ def create_startup(request):
                         proof_id = str(uuid.uuid4())
                         file_data = proof_file.read()
                         content_type = getattr(proof_file, 'content_type', 'application/pdf')
-                        
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
-                        
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=proof_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='startup',
                             entity_id=startup.startup_id,
                             file_type_name='proof',
                             original_filename=unique_filename,
                             file_id=proof_id
                         )
-                        proofs_ids.append(proof_id)
-                        logger.info(f"Документ отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
-                        messages.info(request, f"Документ {proof_file.name} загружается в фоновом режиме.")
+                        if result:
+                            proofs_ids.append(proof_id)
+                        logger.info(f"Документ загружен: {proof_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки документа в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить документ {proof_file.name} на загрузку.")
@@ -3924,7 +3918,7 @@ def create_franchise(request):
                     logger.error(f"Ошибка загрузки логотипа франшизы: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить логотип, но франшиза создана.")
 
-            # Асинхронная загрузка catalog_card_image через Celery
+            # Синхронная загрузка catalog_card_image
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
@@ -3932,21 +3926,21 @@ def create_franchise(request):
                     catalog_card_image.seek(0)
                     file_data = catalog_card_image.read()
                     content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
-                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                     unique_filename = get_unique_filename(catalog_card_image.name, franchise.franchise_id, "catalog_card_image")
 
-                    from .tasks import upload_file_to_s3
-                    upload_file_to_s3.delay(
-                        file_data=file_data_b64,
+                    result = upload_file_to_s3_sync(
+                        file_data=file_data,
                         file_name=catalog_card_image.name,
-                        file_content_type=content_type,
+                        content_type=content_type,
                         entity_type_name='franchise',
                         entity_id=franchise.franchise_id,
                         file_type_name='catalog_card_image',
                         original_filename=unique_filename,
                         file_id=catalog_card_id
                     )
-                    logger.info(f"Изображение карточки франшизы отправлено в очередь Celery: {catalog_card_image.name}, размер: {len(file_data)} байт")
+                    if not result:
+                        catalog_card_id = None
+                    logger.info(f"Изображение карточки франшизы загружено: {catalog_card_image.name}, размер: {len(file_data)} байт")
                 except Exception as e:
                     logger.error(f"Ошибка отправки изображения карточки франшизы в очередь: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но франшиза создана.")
@@ -3967,23 +3961,20 @@ def create_franchise(request):
                         creative_id = str(uuid.uuid4())
                         file_data = creative_file.read()
                         content_type = getattr(creative_file, 'content_type', 'image/jpeg')
-                        
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
-                        
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=creative_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='franchise',
                             entity_id=franchise.franchise_id,
                             file_type_name='creative',
                             original_filename=unique_filename,
                             file_id=creative_id
                         )
-                        creatives_ids.append(creative_id)
-                        logger.info(f"Изображение франшизы отправлено в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
-                        messages.info(request, f"Изображение {creative_file.name} загружается в фоновом режиме.")
+                        if result:
+                            creatives_ids.append(creative_id)
+                        logger.info(f"Изображение франшизы загружено: {creative_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки изображения франшизы в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить изображение {creative_file.name} на загрузку.")
@@ -4004,23 +3995,20 @@ def create_franchise(request):
                         proof_id = str(uuid.uuid4())
                         file_data = proof_file.read()
                         content_type = getattr(proof_file, 'content_type', 'application/pdf')
-                        
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
-                        
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=proof_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='franchise',
                             entity_id=franchise.franchise_id,
                             file_type_name='proof',
                             original_filename=unique_filename,
                             file_id=proof_id
                         )
-                        proofs_ids.append(proof_id)
-                        logger.info(f"Документ франшизы отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
-                        messages.info(request, f"Документ {proof_file.name} загружается в фоновом режиме.")
+                        if result:
+                            proofs_ids.append(proof_id)
+                        logger.info(f"Документ франшизы загружен: {proof_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки документа франшизы в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить документ {proof_file.name} на загрузку.")
@@ -4279,21 +4267,21 @@ def create_agency(request):
                     catalog_card_image.seek(0)
                     file_data = catalog_card_image.read()
                     content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
-                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                     unique_filename = get_unique_filename(catalog_card_image.name, agency.agency_id, "catalog_card_image")
 
-                    from .tasks import upload_file_to_s3
-                    upload_file_to_s3.delay(
-                        file_data=file_data_b64,
+                    result = upload_file_to_s3_sync(
+                        file_data=file_data,
                         file_name=catalog_card_image.name,
-                        file_content_type=content_type,
+                        content_type=content_type,
                         entity_type_name='agency',
                         entity_id=agency.agency_id,
                         file_type_name='catalog_card_image',
                         original_filename=unique_filename,
                         file_id=catalog_card_id
                     )
-                    logger.info(f"Изображение карточки агентства отправлено в очередь Celery: {catalog_card_image.name}, размер: {len(file_data)} байт")
+                    if not result:
+                        catalog_card_id = None
+                    logger.info(f"Изображение карточки агентства загружено: {catalog_card_image.name}, размер: {len(file_data)} байт")
                 except Exception as e:
                     logger.error(f"Ошибка отправки изображения карточки агентства в очередь: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но агентство создано.")
@@ -4314,21 +4302,19 @@ def create_agency(request):
                         file_data = creative_file.read()
                         content_type = getattr(creative_file, 'content_type', 'image/jpeg')
 
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
-
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=creative_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='agency',
                             entity_id=agency.agency_id,
                             file_type_name='creative',
                             original_filename=unique_filename,
                             file_id=creative_id
                         )
-                        creatives_ids.append(creative_id)
-                        logger.info(f"Изображение агентства отправлено в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
+                        if result:
+                            creatives_ids.append(creative_id)
+                        logger.info(f"Изображение агентства загружено: {creative_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки изображения агентства в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось загрузить изображение {creative_file.name}.")
@@ -4351,21 +4337,19 @@ def create_agency(request):
                         file_data = proof_file.read()
                         content_type = getattr(proof_file, 'content_type', 'application/pdf')
                         
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
-                        
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=proof_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='agency',
                             entity_id=agency.agency_id,
                             file_type_name='proof',
                             original_filename=unique_filename,
                             file_id=proof_id
                         )
-                        proofs_ids.append(proof_id)
-                        logger.info(f"Документ агентства отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
+                        if result:
+                            proofs_ids.append(proof_id)
+                        logger.info(f"Документ агентства загружен: {proof_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки документа агентства в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить документ {proof_file.name} на загрузку.")
@@ -4629,21 +4613,21 @@ def create_specialist(request):
                     catalog_card_image.seek(0)
                     file_data = catalog_card_image.read()
                     content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
-                    file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                     unique_filename = get_unique_filename(catalog_card_image.name, spec.specialist_id, "catalog_card_image")
 
-                    from .tasks import upload_file_to_s3
-                    upload_file_to_s3.delay(
-                        file_data=file_data_b64,
+                    result = upload_file_to_s3_sync(
+                        file_data=file_data,
                         file_name=catalog_card_image.name,
-                        file_content_type=content_type,
+                        content_type=content_type,
                         entity_type_name='specialist',
                         entity_id=spec.specialist_id,
                         file_type_name='catalog_card_image',
                         original_filename=unique_filename,
                         file_id=catalog_card_id
                     )
-                    logger.info(f"Изображение карточки специалиста отправлено в очередь Celery: {catalog_card_image.name}, размер: {len(file_data)} байт")
+                    if not result:
+                        catalog_card_id = None
+                    logger.info(f"Изображение карточки специалиста загружено: {catalog_card_image.name}, размер: {len(file_data)} байт")
                 except Exception as e:
                     logger.error(f"Ошибка отправки изображения карточки специалиста в очередь: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но профиль специалиста создан.")
@@ -4666,21 +4650,19 @@ def create_specialist(request):
                         file_data = creative_file.read()
                         content_type = getattr(creative_file, 'content_type', 'image/jpeg')
                         
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
-                        
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=creative_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='specialist',
                             entity_id=spec.specialist_id,
                             file_type_name='creative',
                             original_filename=unique_filename,
                             file_id=creative_id
                         )
-                        creatives_ids.append(creative_id)
-                        logger.info(f"Изображение специалиста отправлено в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
+                        if result:
+                            creatives_ids.append(creative_id)
+                        logger.info(f"Изображение специалиста загружено: {creative_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки изображения специалиста в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить изображение {creative_file.name} на загрузку.")
@@ -4703,21 +4685,19 @@ def create_specialist(request):
                         file_data = proof_file.read()
                         content_type = getattr(proof_file, 'content_type', 'application/pdf')
                         
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
-                        
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=proof_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='specialist',
                             entity_id=spec.specialist_id,
                             file_type_name='proof',
                             original_filename=unique_filename,
                             file_id=proof_id
                         )
-                        proofs_ids.append(proof_id)
-                        logger.info(f"Документ специалиста отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
+                        if result:
+                            proofs_ids.append(proof_id)
+                        logger.info(f"Документ специалиста загружен: {proof_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки документа специалиста в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось отправить документ {proof_file.name} на загрузку.")
@@ -5304,21 +5284,19 @@ def edit_startup(request, startup_id):
                         creative_id = str(uuid.uuid4())
                         file_data = creative_file.read()
                         content_type = getattr(creative_file, 'content_type', 'image/jpeg')
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
-
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=creative_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='startup',
                             entity_id=startup.startup_id,
                             file_type_name='creative',
                             original_filename=unique_filename,
                             file_id=creative_id
                         )
-                        creative_ids.append(creative_id)
-                        logger.info(f"Креатив стартапа отправлен в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
+                        if result:
+                            creative_ids.append(creative_id)
+                        logger.info(f"Креатив стартапа загружен: {creative_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки креатива стартапа в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить изображение {creative_file.name}")
@@ -5353,21 +5331,19 @@ def edit_startup(request, startup_id):
                         proof_id = str(uuid.uuid4())
                         file_data = proof_file.read()
                         content_type = getattr(proof_file, 'content_type', 'application/pdf')
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
-
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=proof_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='startup',
                             entity_id=startup.startup_id,
                             file_type_name='proof',
                             original_filename=unique_filename,
                             file_id=proof_id
                         )
-                        proofs_ids.append(proof_id)
-                        logger.info(f"Пруф стартапа отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
+                        if result:
+                            proofs_ids.append(proof_id)
+                        logger.info(f"Пруф стартапа загружен: {proof_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки пруфа стартапа в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить документ {proof_file.name}")
@@ -9493,22 +9469,21 @@ def edit_franchise(request, franchise_id):
                         creative_id = str(uuid.uuid4())
                         file_data = creative_file.read()
                         content_type = getattr(creative_file, 'content_type', 'image/jpeg')
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                         unique_filename = get_unique_filename(creative_file.name, franchise.franchise_id, "creative")
 
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=creative_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='franchise',
                             entity_id=franchise.franchise_id,
                             file_type_name='creative',
                             original_filename=unique_filename,
                             file_id=creative_id
                         )
-                        creative_ids.append(creative_id)
-                        logger.info(f"Креатив франшизы отправлен в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
+                        if result:
+                            creative_ids.append(creative_id)
+                        logger.info(f"Креатив франшизы загружен: {creative_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки креатива франшизы в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить креатив: {e}")
@@ -9521,22 +9496,21 @@ def edit_franchise(request, franchise_id):
                         proof_id = str(uuid.uuid4())
                         file_data = proof_file.read()
                         content_type = getattr(proof_file, 'content_type', 'application/pdf')
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                         unique_filename = get_unique_filename(proof_file.name, franchise.franchise_id, "proof")
 
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=proof_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='franchise',
                             entity_id=franchise.franchise_id,
                             file_type_name='proof',
                             original_filename=unique_filename,
                             file_id=proof_id
                         )
-                        proofs_ids.append(proof_id)
-                        logger.info(f"Пруф франшизы отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
+                        if result:
+                            proofs_ids.append(proof_id)
+                        logger.info(f"Пруф франшизы загружен: {proof_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки пруфа франшизы в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить документ: {e}")
@@ -9832,22 +9806,21 @@ def edit_agency(request, agency_id):
                         creative_id = str(uuid.uuid4())
                         file_data = creative_file.read()
                         content_type = getattr(creative_file, 'content_type', 'image/jpeg')
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                         unique_filename = get_unique_filename(creative_file.name, agency.agency_id, "creative")
 
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=creative_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='agency',
                             entity_id=agency.agency_id,
                             file_type_name='creative',
                             original_filename=unique_filename,
                             file_id=creative_id
                         )
-                        creative_ids.append(creative_id)
-                        logger.info(f"Креатив агентства отправлен в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
+                        if result:
+                            creative_ids.append(creative_id)
+                        logger.info(f"Креатив агентства загружен: {creative_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки креатива агентства в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить креатив: {e}")
@@ -9860,22 +9833,21 @@ def edit_agency(request, agency_id):
                         proof_id = str(uuid.uuid4())
                         file_data = proof_file.read()
                         content_type = getattr(proof_file, 'content_type', 'application/pdf')
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                         unique_filename = get_unique_filename(proof_file.name, agency.agency_id, "proof")
 
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=proof_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='agency',
                             entity_id=agency.agency_id,
                             file_type_name='proof',
                             original_filename=unique_filename,
                             file_id=proof_id
                         )
-                        proofs_ids.append(proof_id)
-                        logger.info(f"Пруф агентства отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
+                        if result:
+                            proofs_ids.append(proof_id)
+                        logger.info(f"Пруф агентства загружен: {proof_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки пруфа агентства в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить документ: {e}")
@@ -10168,22 +10140,21 @@ def edit_specialist(request, specialist_id):
                         creative_id = str(uuid.uuid4())
                         file_data = creative_file.read()
                         content_type = getattr(creative_file, 'content_type', 'image/jpeg')
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                         unique_filename = get_unique_filename(creative_file.name, specialist.specialist_id, "creative")
 
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=creative_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='specialist',
                             entity_id=specialist.specialist_id,
                             file_type_name='creative',
                             original_filename=unique_filename,
                             file_id=creative_id
                         )
-                        creative_ids.append(creative_id)
-                        logger.info(f"Креатив специалиста отправлен в очередь Celery: {creative_file.name}, размер: {len(file_data)} байт")
+                        if result:
+                            creative_ids.append(creative_id)
+                        logger.info(f"Креатив специалиста загружен: {creative_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки креатива специалиста в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить креатив: {e}")
@@ -10196,22 +10167,21 @@ def edit_specialist(request, specialist_id):
                         proof_id = str(uuid.uuid4())
                         file_data = proof_file.read()
                         content_type = getattr(proof_file, 'content_type', 'application/pdf')
-                        file_data_b64 = base64.b64encode(file_data).decode('utf-8')
                         unique_filename = get_unique_filename(proof_file.name, specialist.specialist_id, "proof")
 
-                        from .tasks import upload_file_to_s3
-                        upload_file_to_s3.delay(
-                            file_data=file_data_b64,
+                        result = upload_file_to_s3_sync(
+                            file_data=file_data,
                             file_name=proof_file.name,
-                            file_content_type=content_type,
+                            content_type=content_type,
                             entity_type_name='specialist',
                             entity_id=specialist.specialist_id,
                             file_type_name='proof',
                             original_filename=unique_filename,
                             file_id=proof_id
                         )
-                        proofs_ids.append(proof_id)
-                        logger.info(f"Пруф специалиста отправлен в очередь Celery: {proof_file.name}, размер: {len(file_data)} байт")
+                        if result:
+                            proofs_ids.append(proof_id)
+                        logger.info(f"Пруф специалиста загружен: {proof_file.name}, размер: {len(file_data)} байт")
                     except Exception as e:
                         logger.error(f"Ошибка отправки пруфа специалиста в очередь: {e}", exc_info=True)
                         messages.warning(request, f"Не удалось сохранить документ: {e}")
