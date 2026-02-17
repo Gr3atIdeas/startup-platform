@@ -33,6 +33,21 @@ class PostStorage:
                 word TEXT PRIMARY KEY,
                 added_at TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS moderation_queue (
+                id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                source_channel  TEXT NOT NULL,
+                source_msg_id   INTEGER,
+                original_text   TEXT DEFAULT '',
+                edited_text     TEXT DEFAULT '',
+                media_type      TEXT DEFAULT '',
+                media_file_id   TEXT DEFAULT '',
+                media_filename  TEXT DEFAULT '',
+                bot_msg_id      INTEGER,
+                status          TEXT NOT NULL DEFAULT 'pending',
+                edit_count      INTEGER DEFAULT 0,
+                created_at      TEXT NOT NULL,
+                updated_at      TEXT NOT NULL
+            );
         """)
         self.conn.commit()
 
@@ -152,6 +167,47 @@ class PostStorage:
         )
         self.conn.commit()
         return cursor.rowcount > 0
+
+    # ── moderation queue ──────────────────────────────────────────────
+
+    def add_to_moderation_queue(self, source_channel: str, original_text: str,
+                                media_type: str = '', media_filename: str = '',
+                                source_msg_id: int = None) -> int:
+        now = datetime.utcnow().isoformat()
+        cursor = self.conn.execute(
+            """INSERT INTO moderation_queue
+               (source_channel, source_msg_id, original_text, media_type, media_filename,
+                status, created_at, updated_at)
+               VALUES (?, ?, ?, ?, ?, 'pending', ?, ?)""",
+            (source_channel, source_msg_id, original_text, media_type, media_filename, now, now),
+        )
+        self.conn.commit()
+        return cursor.lastrowid
+
+    def get_moderation_post(self, queue_id: int) -> dict | None:
+        cursor = self.conn.execute(
+            "SELECT * FROM moderation_queue WHERE id = ?", (queue_id,)
+        )
+        row = cursor.fetchone()
+        if not row:
+            return None
+        columns = [desc[0] for desc in cursor.description]
+        return dict(zip(columns, row))
+
+    def update_moderation_queue(self, queue_id: int, **kwargs):
+        kwargs['updated_at'] = datetime.utcnow().isoformat()
+        set_clause = ", ".join(f"{k} = ?" for k in kwargs)
+        values = list(kwargs.values()) + [queue_id]
+        self.conn.execute(
+            f"UPDATE moderation_queue SET {set_clause} WHERE id = ?", values
+        )
+        self.conn.commit()
+
+    def get_pending_moderation_count(self) -> int:
+        cursor = self.conn.execute(
+            "SELECT COUNT(*) FROM moderation_queue WHERE status IN ('sent', 'edited')"
+        )
+        return cursor.fetchone()[0]
 
     # ── close ─────────────────────────────────────────────────────────
 

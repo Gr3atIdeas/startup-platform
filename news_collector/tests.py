@@ -483,5 +483,143 @@ class TestPublisher(unittest.TestCase):
         self.assertEqual(mock_post.call_count, 2)
 
 
+# ── storage: moderation queue ────────────────────────────────────────
+
+class TestModerationQueue(unittest.TestCase):
+    """Test moderation_queue CRUD in PostStorage."""
+
+    def setUp(self):
+        self.storage = _make_storage_in_memory()
+
+    def tearDown(self):
+        self.storage.close()
+
+    def test_add_and_get(self):
+        qid = self.storage.add_to_moderation_queue(
+            source_channel="@testchan",
+            original_text="Hello world",
+            media_type="photo",
+            media_filename="pic.jpg",
+            source_msg_id=42,
+        )
+        self.assertIsInstance(qid, int)
+        self.assertGreater(qid, 0)
+
+        post = self.storage.get_moderation_post(qid)
+        self.assertIsNotNone(post)
+        self.assertEqual(post["source_channel"], "@testchan")
+        self.assertEqual(post["original_text"], "Hello world")
+        self.assertEqual(post["media_type"], "photo")
+        self.assertEqual(post["media_filename"], "pic.jpg")
+        self.assertEqual(post["source_msg_id"], 42)
+        self.assertEqual(post["status"], "pending")
+        self.assertEqual(post["edit_count"], 0)
+
+    def test_get_nonexistent(self):
+        self.assertIsNone(self.storage.get_moderation_post(99999))
+
+    def test_update(self):
+        qid = self.storage.add_to_moderation_queue(
+            source_channel="@ch", original_text="text",
+        )
+        self.storage.update_moderation_queue(
+            qid, status="edited", edited_text="new text", edit_count=1, bot_msg_id=555,
+        )
+        post = self.storage.get_moderation_post(qid)
+        self.assertEqual(post["status"], "edited")
+        self.assertEqual(post["edited_text"], "new text")
+        self.assertEqual(post["edit_count"], 1)
+        self.assertEqual(post["bot_msg_id"], 555)
+
+    def test_pending_count(self):
+        self.assertEqual(self.storage.get_pending_moderation_count(), 0)
+
+        qid1 = self.storage.add_to_moderation_queue(source_channel="@a", original_text="a")
+        self.storage.update_moderation_queue(qid1, status="sent")
+        self.assertEqual(self.storage.get_pending_moderation_count(), 1)
+
+        qid2 = self.storage.add_to_moderation_queue(source_channel="@b", original_text="b")
+        self.storage.update_moderation_queue(qid2, status="edited")
+        self.assertEqual(self.storage.get_pending_moderation_count(), 2)
+
+        # skipped and published don't count
+        qid3 = self.storage.add_to_moderation_queue(source_channel="@c", original_text="c")
+        self.storage.update_moderation_queue(qid3, status="skipped")
+        self.assertEqual(self.storage.get_pending_moderation_count(), 2)
+
+    def test_text_only_post(self):
+        qid = self.storage.add_to_moderation_queue(
+            source_channel="@ch", original_text="Just text",
+        )
+        post = self.storage.get_moderation_post(qid)
+        self.assertEqual(post["media_type"], "")
+        self.assertEqual(post["media_filename"], "")
+
+
+# ── grok: callback data parsing ─────────────────────────────────────
+
+class TestCallbackDataParsing(unittest.TestCase):
+    """Test that callback data strings parse correctly."""
+
+    def test_skip_format(self):
+        data = "skip:123"
+        action, qid = data.split(":", 1)
+        self.assertEqual(action, "skip")
+        self.assertEqual(int(qid), 123)
+
+    def test_edit_format(self):
+        data = "edit:456"
+        action, qid = data.split(":", 1)
+        self.assertEqual(action, "edit")
+        self.assertEqual(int(qid), 456)
+
+    def test_reedit_format(self):
+        data = "reedit:789"
+        action, qid = data.split(":", 1)
+        self.assertEqual(action, "reedit")
+        self.assertEqual(int(qid), 789)
+
+    def test_pub_format(self):
+        data = "pub:10"
+        action, qid = data.split(":", 1)
+        self.assertEqual(action, "pub")
+        self.assertEqual(int(qid), 10)
+
+
+# ── grok: rewrite_news mock ─────────────────────────────────────────
+
+class TestGrokRewrite(unittest.TestCase):
+    """Test grok.rewrite_news with mocked aiohttp."""
+
+    def test_returns_none_without_api_key(self):
+        import asyncio
+        with patch("config.GROK_API_KEY", ""):
+            from grok import rewrite_news
+            result = asyncio.get_event_loop().run_until_complete(rewrite_news("test"))
+            self.assertIsNone(result)
+
+    def test_successful_rewrite(self):
+        import asyncio
+
+        mock_response = MagicMock()
+        mock_response.status = 200
+        mock_response.json = MagicMock(return_value=asyncio.coroutine(lambda: {
+            "choices": [{"message": {"content": "Rewritten text"}}]
+        })())
+        mock_response.__aenter__ = asyncio.coroutine(lambda s: mock_response)
+        mock_response.__aexit__ = asyncio.coroutine(lambda s, *a: None)
+
+        mock_session = MagicMock()
+        mock_session.post = MagicMock(return_value=mock_response)
+        mock_session.__aenter__ = asyncio.coroutine(lambda s: mock_session)
+        mock_session.__aexit__ = asyncio.coroutine(lambda s, *a: None)
+
+        with patch("config.GROK_API_KEY", "test-key"):
+            with patch("grok.aiohttp.ClientSession", return_value=mock_session):
+                from grok import rewrite_news
+                result = asyncio.get_event_loop().run_until_complete(rewrite_news("Original"))
+                self.assertEqual(result, "Rewritten text")
+
+
 if __name__ == "__main__":
     unittest.main()

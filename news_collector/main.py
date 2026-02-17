@@ -6,6 +6,7 @@ import asyncio
 import config
 from collector import create_client, register_handlers, get_all_channels
 from admin import create_bot_client, register_admin_handlers
+from moderation import register_moderation_handlers
 from storage import PostStorage
 
 logging.basicConfig(
@@ -19,7 +20,7 @@ logger = logging.getLogger("news_collector")
 _state = {"client": None}
 
 
-async def start_user_client(storage):
+async def start_user_client(storage, bot=None):
     """Try to start Telethon user client for channel monitoring.
 
     Returns the connected client, or None if it can't start.
@@ -39,7 +40,7 @@ async def start_user_client(storage):
 
     try:
         client = create_client()
-        register_handlers(client, storage)
+        register_handlers(client, storage, bot=bot)
         await client.start(phone=config.TELEGRAM_PHONE)
 
         all_channels = get_all_channels(storage)
@@ -62,23 +63,20 @@ async def main():
     storage = PostStorage()
     storage.cleanup()
 
-    # Callback for admin bot — called after /auth + /code succeeds
-    async def on_auth_complete():
-        await start_user_client(storage)
-
     # ── Bot client — admin panel (starts FIRST, no interactive auth) ──
     bot = create_bot_client()
     register_admin_handlers(
         bot, storage,
-        on_auth_complete=on_auth_complete,
+        on_auth_complete=lambda: start_user_client(storage, bot=bot),
         is_monitoring=lambda: _state["client"] is not None,
     )
+    register_moderation_handlers(bot, storage)
 
     await bot.start(bot_token=config.NEWS_BOT_TOKEN)
     logger.info("Admin bot connected (admin_id=%d)", config.ADMIN_ID)
 
     # ── User client — channel monitoring (auto-start if session exists) ──
-    await start_user_client(storage)
+    await start_user_client(storage, bot=bot)
 
     if _state["client"]:
         logger.info("Monitoring channels — waiting for new posts...")

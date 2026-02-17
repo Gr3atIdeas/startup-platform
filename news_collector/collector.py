@@ -4,7 +4,7 @@ from telethon import TelegramClient, events
 
 import config
 from filters import should_process
-from publisher import send_message, send_photo, send_video, send_document
+from moderation import enqueue_post
 from storage import PostStorage
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ def get_source_label(event) -> str:
     return str(event.chat_id)
 
 
-async def handle_new_message(event, storage: PostStorage):
+async def handle_new_message(event, storage: PostStorage, bot: TelegramClient = None):
     """Process a single new message from a monitored channel."""
     if not should_process(event, storage):
         return
@@ -47,30 +47,39 @@ async def handle_new_message(event, storage: PostStorage):
     logger.info("New post from %s (msg_id=%d)", source, message.id)
 
     try:
+        media_type = ''
+        media_bytes = None
+        filename = ''
+
         if message.photo:
-            photo_bytes = await message.download_media(bytes)
-            send_photo(photo_bytes, caption=text, source_name=source)
+            media_type = 'photo'
+            media_bytes = await message.download_media(bytes)
         elif message.video:
-            video_bytes = await message.download_media(bytes)
-            send_video(video_bytes, caption=text, source_name=source)
+            media_type = 'video'
+            media_bytes = await message.download_media(bytes)
         elif message.document:
-            doc_bytes = await message.download_media(bytes)
+            media_type = 'document'
+            media_bytes = await message.download_media(bytes)
             filename = getattr(message.document, "file_name", None) or "document"
-            send_document(doc_bytes, filename, caption=text, source_name=source)
-        elif text:
-            send_message(text, source_name=source)
-        else:
+        elif not text:
             logger.debug("Skipping unsupported media type in message %d", message.id)
             return
 
+        await enqueue_post(
+            bot=bot, storage=storage,
+            text=text, source=source,
+            media_type=media_type, media_bytes=media_bytes,
+            filename=filename,
+        )
+
         storage.mark_processed(str(event.chat_id), message.id)
-        logger.info("Forwarded message %d from %s", message.id, source)
+        logger.info("Queued message %d from %s for moderation", message.id, source)
 
     except Exception as e:
-        logger.error("Failed to forward message %d from %s: %s", message.id, source, e)
+        logger.error("Failed to process message %d from %s: %s", message.id, source, e)
 
 
-def register_handlers(client: TelegramClient, storage: PostStorage):
+def register_handlers(client: TelegramClient, storage: PostStorage, bot: TelegramClient = None):
     """Register event handler that dynamically checks channel list."""
 
     @client.on(events.NewMessage())
@@ -90,7 +99,7 @@ def register_handlers(client: TelegramClient, storage: PostStorage):
         if not is_monitored:
             return
 
-        await handle_new_message(event, storage)
+        await handle_new_message(event, storage, bot=bot)
 
     all_ch = get_all_channels(storage)
     logger.info("Registered handler for %d channels: %s", len(all_ch), ", ".join(str(ch) for ch in all_ch))
