@@ -53,7 +53,7 @@
 
       <!-- Описание -->
       <div class="franchise-description-row">
-        <p class="franchise-description">{{ franchise.short_description|default:"Описание не указано" }}</p>
+        <p class="franchise-description">{{ franchise.short_description|striptags|truncatewords:25|default:"Описание не указано" }}</p>
       </div>
 
       <!-- Размер инвестиций -->
