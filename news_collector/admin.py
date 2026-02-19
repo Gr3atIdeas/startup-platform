@@ -5,6 +5,7 @@ import logging
 from datetime import datetime
 
 from telethon import TelegramClient, events
+from telethon.sessions import StringSession
 
 import config
 from storage import PostStorage
@@ -91,23 +92,38 @@ def register_admin_handlers(bot: TelegramClient, storage: PostStorage,
             await event.reply("✅ Парсинг каналов уже активен!")
             return
 
-        # If session exists, try to start without re-auth
-        session_file = config.SESSION_PATH + ".session"
-        if os.path.exists(session_file):
-            await event.reply("🔄 Сессия найдена, пробую подключиться...")
+        # 1) Check StringSession from env var (survives deploys)
+        if config.TELETHON_SESSION:
+            await event.reply("🔄 Сессия найдена (из env), пробую подключиться...")
             if on_auth_complete:
                 await on_auth_complete()
             if is_monitoring and is_monitoring():
                 await event.reply("✅ Парсинг каналов запущен!")
             else:
-                # Session exists but broken — delete and re-auth
+                await event.reply(
+                    "⚠️ Сессия из env не работает. Удалите <code>TELETHON_SESSION</code> "
+                    "в Coolify и отправьте /auth для повторной авторизации.",
+                    parse_mode="html",
+                )
+            return
+
+        # 2) Check file-based session (legacy, won't survive deploy)
+        session_file = config.SESSION_PATH + ".session"
+        if os.path.exists(session_file):
+            await event.reply("🔄 Файл сессии найден, пробую подключиться...")
+            if on_auth_complete:
+                await on_auth_complete()
+            if is_monitoring and is_monitoring():
+                await event.reply("✅ Парсинг каналов запущен!")
+            else:
                 os.remove(session_file)
                 await event.reply("⚠️ Сессия устарела, удалена. Отправьте /auth ещё раз.")
             return
 
+        # 3) No session — start new auth flow with StringSession
         try:
             from collector import create_client
-            client = create_client()
+            client = create_client()  # file-based for initial auth
             await client.connect()
 
             result = await client.send_code_request(config.TELEGRAM_PHONE)
@@ -189,13 +205,27 @@ def register_admin_handlers(bot: TelegramClient, storage: PostStorage,
         await _finish_auth(event, client)
 
     async def _finish_auth(event, client):
-        """Complete auth: save session, start monitoring."""
+        """Complete auth: save session, extract StringSession, start monitoring."""
         try:
             me = await client.get_me()
             name = me.first_name or "User"
             await event.reply(f"✅ Авторизован как <b>{name}</b> (id={me.id})", parse_mode="html")
         except Exception:
             pass
+
+        # Extract StringSession for persistent storage in env var
+        try:
+            session_string = StringSession.save(client.session)
+            await event.reply(
+                "🔑 <b>ВАЖНО — сохраните сессию!</b>\n\n"
+                "Скопируйте строку ниже и добавьте в Coolify как переменную:\n"
+                "<code>TELETHON_SESSION</code>\n\n"
+                f"<code>{session_string}</code>\n\n"
+                "⚠️ Без этого при следующем деплое придётся авторизоваться заново.",
+                parse_mode="html",
+            )
+        except Exception as e:
+            logger.error("Failed to extract StringSession: %s", e)
 
         await client.disconnect()
         _auth.clear()

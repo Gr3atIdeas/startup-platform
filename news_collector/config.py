@@ -24,6 +24,10 @@ GROK_MODEL = os.getenv("GROK_MODEL", "grok-3-mini")
 # Канал для публикации одобренных новостей (бот должен быть админом)
 PUBLISH_CHANNEL_ID = os.getenv("PUBLISH_CHANNEL_ID", "")
 
+# Telethon StringSession — persistent session across deploys
+# After /auth, the bot sends the session string. Save it here in Coolify env vars.
+TELETHON_SESSION = os.getenv("TELETHON_SESSION", "")
+
 # Parse comma-separated lists
 # Каналы могут быть юзернеймами (startupnews) или ID (-1001234567890)
 def _parse_channel(ch):

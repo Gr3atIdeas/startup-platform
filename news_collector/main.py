@@ -23,7 +23,8 @@ _state = {"client": None}
 async def start_user_client(storage, bot=None):
     """Try to start Telethon user client for channel monitoring.
 
-    Returns the connected client, or None if it can't start.
+    Uses StringSession from TELETHON_SESSION env var if available (survives deploys).
+    Falls back to file-based session.
     """
     if _state["client"]:
         logger.info("User client already running")
@@ -33,20 +34,26 @@ async def start_user_client(storage, bot=None):
         logger.warning("TELEGRAM_PHONE not set — channel monitoring disabled")
         return None
 
+    # Check for session: env var (StringSession) or file
+    has_env_session = bool(config.TELETHON_SESSION)
     session_file = config.SESSION_PATH + ".session"
-    if not os.path.exists(session_file):
+    has_file_session = os.path.exists(session_file)
+
+    if not has_env_session and not has_file_session:
         logger.info("No Telethon session yet. Send /auth to the bot to authenticate.")
         return None
 
     try:
-        client = create_client()
+        session_str = config.TELETHON_SESSION if has_env_session else ""
+        client = create_client(session_string=session_str)
         register_handlers(client, storage, bot=bot)
         await client.start(phone=config.TELEGRAM_PHONE)
 
+        source = "env (StringSession)" if has_env_session else "file"
         all_channels = get_all_channels(storage)
         logger.info(
-            "User client connected. Monitoring %d channels: %s",
-            len(all_channels),
+            "User client connected via %s. Monitoring %d channels: %s",
+            source, len(all_channels),
             ", ".join(str(ch) for ch in all_channels),
         )
         _state["client"] = client

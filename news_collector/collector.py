@@ -1,6 +1,7 @@
 import logging
 
 from telethon import TelegramClient, events
+from telethon.sessions import StringSession
 
 import config
 from filters import should_process
@@ -10,9 +11,18 @@ from storage import PostStorage
 logger = logging.getLogger(__name__)
 
 
-def create_client() -> TelegramClient:
+def create_client(session_string: str = "") -> TelegramClient:
+    """Create Telethon user client.
+
+    If session_string is provided, uses StringSession (persistent across deploys).
+    Otherwise falls back to file-based session.
+    """
+    if session_string:
+        session = StringSession(session_string)
+    else:
+        session = config.SESSION_PATH
     return TelegramClient(
-        config.SESSION_PATH,
+        session,
         int(config.TELEGRAM_API_ID),
         config.TELEGRAM_API_HASH,
     )

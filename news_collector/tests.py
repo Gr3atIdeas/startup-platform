@@ -18,7 +18,21 @@ class _FakeMessageService:
 _telethon_mock = MagicMock()
 _tl_types_mock = MagicMock()
 _tl_types_mock.MessageService = _FakeMessageService
+
+# StringSession mock — needs to behave like a callable class
+class _FakeStringSession:
+    def __init__(self, session_string=""):
+        self._string = session_string
+
+    @staticmethod
+    def save(session):
+        return "mock_session_string_abc123"
+
+_sessions_mock = MagicMock()
+_sessions_mock.StringSession = _FakeStringSession
+
 sys.modules["telethon"] = _telethon_mock
+sys.modules["telethon.sessions"] = _sessions_mock
 sys.modules["telethon.tl"] = MagicMock()
 sys.modules["telethon.tl.types"] = _tl_types_mock
 sys.modules["telethon.events"] = MagicMock()
@@ -122,6 +136,75 @@ class TestConfigParsing(unittest.TestCase):
         import config
         importlib.reload(config)
         self.assertEqual(config.KEYWORDS_LIST, [])
+
+    @patch.dict(os.environ, {
+        "TELEGRAM_API_ID": "12345",
+        "TELEGRAM_API_HASH": "abc",
+        "TELEGRAM_PHONE": "+71234567890",
+        "NEWS_BOT_TOKEN": "token",
+        "TARGET_GROUP_ID": "-100999",
+        "TELETHON_SESSION": "abc123session",
+    })
+    def test_telethon_session_from_env(self):
+        import importlib
+        import config
+        importlib.reload(config)
+        self.assertEqual(config.TELETHON_SESSION, "abc123session")
+
+    @patch.dict(os.environ, {
+        "TELEGRAM_API_ID": "12345",
+        "TELEGRAM_API_HASH": "abc",
+        "TELEGRAM_PHONE": "+71234567890",
+        "NEWS_BOT_TOKEN": "token",
+        "TARGET_GROUP_ID": "-100999",
+    }, clear=False)
+    def test_telethon_session_default_empty(self):
+        import importlib
+        import config
+        # Remove TELETHON_SESSION if present
+        os.environ.pop("TELETHON_SESSION", None)
+        importlib.reload(config)
+        self.assertEqual(config.TELETHON_SESSION, "")
+
+
+# ── collector: create_client with StringSession ──────────────────────
+
+class TestCreateClient(unittest.TestCase):
+    """Test collector.create_client with and without StringSession."""
+
+    @patch.dict(os.environ, {
+        "TELEGRAM_API_ID": "12345",
+        "TELEGRAM_API_HASH": "abc",
+        "TELEGRAM_PHONE": "+71234567890",
+        "NEWS_BOT_TOKEN": "token",
+        "TARGET_GROUP_ID": "-100999",
+    })
+    def test_create_client_with_session_string(self):
+        """When session_string is provided, StringSession should be used."""
+        import importlib
+        import config
+        importlib.reload(config)
+        from collector import create_client
+        # Should not raise
+        client = create_client(session_string="test_session_string")
+        # TelegramClient is mocked, so just verify it was called
+        self.assertIsNotNone(client)
+
+    @patch.dict(os.environ, {
+        "TELEGRAM_API_ID": "12345",
+        "TELEGRAM_API_HASH": "abc",
+        "TELEGRAM_PHONE": "+71234567890",
+        "NEWS_BOT_TOKEN": "token",
+        "TARGET_GROUP_ID": "-100999",
+    })
+    def test_create_client_without_session_string(self):
+        """Without session_string, file-based session should be used."""
+        import importlib
+        import config
+        importlib.reload(config)
+        from collector import create_client
+        client = create_client()
+        self.assertIsNotNone(client)
 
 
 # ── storage: processed posts ──────────────────────────────────────────
