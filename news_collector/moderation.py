@@ -117,17 +117,31 @@ async def _handle_skip(event, bot, storage, post, queue_id, target):
 
 async def _handle_edit(event, bot, storage, post, queue_id, target):
     """Rewrite text via Grok and resend with new buttons."""
-    await event.answer("⏳ Отправляю в Grok...")
-
     text_to_edit = post.get('edited_text') or post.get('original_text') or ''
     if not text_to_edit.strip():
         await event.answer("❌ Нет текста для редактирования", alert=True)
         return
 
-    rewritten = await rewrite_news(text_to_edit)
+    # Instant feedback + progress message in chat
+    await event.answer()
+    progress_msg = await bot.send_message(
+        target, "⏳ <b>Отправляю в Grok...</b>", parse_mode='html',
+    )
+
+    try:
+        rewritten = await rewrite_news(text_to_edit)
+    except Exception as e:
+        logger.error("Grok rewrite failed for #%d: %s", queue_id, e)
+        rewritten = None
+
     if not rewritten:
-        await event.answer("❌ Grok не ответил", alert=True)
+        await progress_msg.edit(
+            "❌ <b>Grok не ответил.</b> Проверьте GROK_API_KEY или попробуйте позже.",
+            parse_mode='html',
+        )
         return
+
+    await progress_msg.edit("✅ <b>Grok ответил, обновляю пост...</b>", parse_mode='html')
 
     # Download media from current bot message if present
     media_bytes = None
@@ -177,6 +191,16 @@ async def _handle_edit(event, bot, storage, post, queue_id, target):
         logger.info("Edited post #%d (edit_count=%d)", queue_id, edit_count)
     except Exception as e:
         logger.error("Failed to send edited msg #%d: %s", queue_id, e)
+        await progress_msg.edit(
+            f"❌ <b>Ошибка отправки:</b> {e}", parse_mode='html',
+        )
+        return
+
+    # Clean up progress message
+    try:
+        await progress_msg.delete()
+    except Exception:
+        pass
 
 
 async def _handle_reedit(event, bot, storage, post, queue_id, target):
@@ -189,6 +213,11 @@ async def _handle_publish(event, bot, storage, post, queue_id, target):
     if not config.PUBLISH_CHANNEL_ID:
         await event.answer("❌ PUBLISH_CHANNEL_ID не настроен", alert=True)
         return
+
+    await event.answer()
+    progress_msg = await bot.send_message(
+        target, "📤 <b>Публикую...</b>", parse_mode='html',
+    )
 
     publish_to = int(config.PUBLISH_CHANNEL_ID)
     text = post.get('edited_text') or post.get('original_text') or ''
@@ -216,7 +245,9 @@ async def _handle_publish(event, bot, storage, post, queue_id, target):
         logger.info("Published post #%d to channel %s", queue_id, config.PUBLISH_CHANNEL_ID)
     except Exception as e:
         logger.error("Failed to publish post #%d: %s", queue_id, e)
-        await event.answer("❌ Ошибка публикации", alert=True)
+        await progress_msg.edit(
+            f"❌ <b>Ошибка публикации:</b> {e}", parse_mode='html',
+        )
         return
 
     # Delete from moderation chat
@@ -227,5 +258,10 @@ async def _handle_publish(event, bot, storage, post, queue_id, target):
         pass
 
     storage.update_moderation_queue(queue_id, status='published')
-    await event.answer("✅ Опубликовано!")
     logger.info("Post #%d published and cleaned up", queue_id)
+
+    # Clean up progress message
+    try:
+        await progress_msg.delete()
+    except Exception:
+        pass
