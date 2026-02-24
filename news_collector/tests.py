@@ -1,6 +1,7 @@
 """Unit tests for news_collector modules."""
 
 import os
+import re
 import sys
 import sqlite3
 import unittest
@@ -38,11 +39,85 @@ sys.modules["telethon.tl.types"] = _tl_types_mock
 sys.modules["telethon.events"] = MagicMock()
 
 
+# ── SQLite adapter mimicking psycopg2 for tests ─────────────────────
+
+def _pg_to_sqlite(sql):
+    """Convert PostgreSQL SQL to SQLite SQL."""
+    sql = sql.replace("%s", "?")
+    sql = re.sub(r"ON CONFLICT\s+DO NOTHING", "OR IGNORE", sql, flags=re.IGNORECASE)
+    sql = re.sub(r"\bSERIAL\b", "INTEGER", sql, flags=re.IGNORECASE)
+    sql = re.sub(r"\bBIGINT\b", "INTEGER", sql, flags=re.IGNORECASE)
+    sql = re.sub(r"\bTIMESTAMPTZ\b", "TEXT", sql, flags=re.IGNORECASE)
+    sql = re.sub(r"DEFAULT\s+NOW\(\)", "DEFAULT ''", sql, flags=re.IGNORECASE)
+    # Handle INSERT ... OR IGNORE ... VALUES → fix double INSERT
+    sql = sql.replace("INSERT OR IGNORE INTO", "INSERT OR IGNORE INTO")
+    sql = sql.replace("INSERT INTO", "INSERT INTO").replace("INSERT INTO OR IGNORE", "INSERT OR IGNORE INTO")
+    # Fix: "INSERT INTO ... VALUES ... OR IGNORE" → move OR IGNORE after INSERT
+    if "OR IGNORE" in sql and sql.index("OR IGNORE") > sql.index("VALUES") if "VALUES" in sql else False:
+        sql = sql.replace("OR IGNORE", "")
+        sql = sql.replace("INSERT INTO", "INSERT OR IGNORE INTO", 1)
+    return sql
+
+
+class _SQLiteCursor:
+    """SQLite cursor that accepts PostgreSQL-style SQL."""
+
+    def __init__(self, conn):
+        self._conn = conn
+        self._cursor = conn.cursor()
+        self._returning = False
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        pass
+
+    def execute(self, sql, params=None):
+        self._returning = "returning id" in sql.lower()
+        sql = _pg_to_sqlite(sql)
+        sql = re.sub(r"RETURNING\s+id", "", sql, flags=re.IGNORECASE).strip()
+        self._cursor.execute(sql, params or ())
+        self._conn.commit()
+        return self._cursor
+
+    def fetchone(self):
+        if self._returning:
+            self._returning = False
+            return (self._cursor.lastrowid,)
+        return self._cursor.fetchone()
+
+    def fetchall(self):
+        return self._cursor.fetchall()
+
+    @property
+    def description(self):
+        return self._cursor.description
+
+    @property
+    def rowcount(self):
+        return self._cursor.rowcount
+
+
+class _SQLiteAsPg:
+    """SQLite connection mimicking psycopg2 interface for tests."""
+
+    def __init__(self):
+        self._conn = sqlite3.connect(":memory:")
+        self.autocommit = True
+
+    def cursor(self):
+        return _SQLiteCursor(self._conn)
+
+    def close(self):
+        self._conn.close()
+
+
 def _make_storage_in_memory():
-    """Create a PostStorage backed by in-memory SQLite."""
+    """Create a PostStorage backed by in-memory SQLite (psycopg2-compatible)."""
     from storage import PostStorage
     s = PostStorage.__new__(PostStorage)
-    s.conn = sqlite3.connect(":memory:")
+    s.conn = _SQLiteAsPg()
     s._create_tables()
     return s
 
@@ -235,11 +310,11 @@ class TestPostStorage(unittest.TestCase):
 
     def test_cleanup_removes_old(self):
         old_date = (datetime.utcnow() - timedelta(days=60)).isoformat()
-        self.storage.conn.execute(
-            "INSERT INTO processed_posts (channel_id, message_id, processed_at) VALUES (?, ?, ?)",
-            ("chan1", 1, old_date),
-        )
-        self.storage.conn.commit()
+        with self.storage.conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO news_processed_posts (channel_id, message_id, processed_at) VALUES (%s, %s, %s)",
+                ("chan1", 1, old_date),
+            )
         self.storage.mark_processed("chan1", 2)
 
         self.storage.cleanup(days=30)
