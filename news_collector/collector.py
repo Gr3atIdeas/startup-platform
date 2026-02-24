@@ -45,6 +45,15 @@ def get_source_label(event) -> str:
     return str(event.chat_id)
 
 
+def get_post_link(event) -> str:
+    """Build direct link to source post (t.me/channel/msg_id)."""
+    chat = event.chat
+    msg_id = event.message.id
+    if hasattr(chat, "username") and chat.username:
+        return f"https://t.me/{chat.username}/{msg_id}"
+    return ""
+
+
 async def handle_new_message(event, storage: PostStorage, bot: TelegramClient = None):
     """Process a single new message from a monitored channel."""
     if not should_process(event, storage):
@@ -52,6 +61,7 @@ async def handle_new_message(event, storage: PostStorage, bot: TelegramClient = 
 
     message = event.message
     source = get_source_label(event)
+    post_link = get_post_link(event)
     text = message.text or ""
 
     logger.info("New post from %s (msg_id=%d)", source, message.id)
@@ -68,16 +78,21 @@ async def handle_new_message(event, storage: PostStorage, bot: TelegramClient = 
             media_type = 'video'
             media_bytes = await message.download_media(bytes)
         elif message.document:
-            media_type = 'document'
+            # Check if this document is actually an image
+            mime = getattr(message.document, "mime_type", "") or ""
+            if mime.startswith("image/"):
+                media_type = 'photo'
+            else:
+                media_type = 'document'
+                filename = getattr(message.document, "file_name", None) or "document"
             media_bytes = await message.download_media(bytes)
-            filename = getattr(message.document, "file_name", None) or "document"
         elif not text:
             logger.debug("Skipping unsupported media type in message %d", message.id)
             return
 
         await enqueue_post(
             bot=bot, storage=storage,
-            text=text, source=source,
+            text=text, source=source, post_link=post_link,
             media_type=media_type, media_bytes=media_bytes,
             filename=filename,
         )

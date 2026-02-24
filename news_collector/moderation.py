@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 async def enqueue_post(bot: TelegramClient, storage: PostStorage,
-                       text: str, source: str,
+                       text: str, source: str, post_link: str = '',
                        media_type: str = '', media_bytes: bytes = None,
                        filename: str = ''):
     """Save post to moderation queue and send to TARGET_GROUP with inline buttons."""
@@ -23,10 +23,13 @@ async def enqueue_post(bot: TelegramClient, storage: PostStorage,
         media_filename=filename,
     )
 
-    caption = f"{text}\n\n📢 <b>Источник:</b> {source}" if text else f"📢 <b>Источник:</b> {source}"
+    source_line = f"<b>Источник:</b> {source}"
+    if post_link:
+        source_line += f', <a href="{post_link}">ссылка</a>'
+    caption = f"{text}\n\n{source_line}" if text else source_line
     buttons = [
-        [Button.inline("❌ Пропустить", data=f"skip:{queue_id}".encode()),
-         Button.inline("✏️ Отредактировать", data=f"edit:{queue_id}".encode())],
+        [Button.inline("Пропустить", data=f"skip:{queue_id}".encode()),
+         Button.inline("Отредактировать", data=f"edit:{queue_id}".encode())],
     ]
 
     target = int(config.TARGET_GROUP_ID)
@@ -166,11 +169,11 @@ async def _handle_edit(event, bot, storage, post, queue_id, target):
 
     # Send new message with edited text
     edit_count = (post.get('edit_count') or 0) + 1
-    caption = f"{rewritten}\n\n✏️ <i>Отредактировано ({edit_count}x)</i>"
+    caption = f"{rewritten}\n\n<i>Отредактировано ({edit_count}x)</i>"
     buttons = [
-        [Button.inline("🔄 Ещё раз", data=f"reedit:{queue_id}".encode()),
-         Button.inline("✅ Опубликовать", data=f"pub:{queue_id}".encode())],
-        [Button.inline("❌ Пропустить", data=f"skip:{queue_id}".encode())],
+        [Button.inline("Ещё раз", data=f"reedit:{queue_id}".encode()),
+         Button.inline("Опубликовать", data=f"pub:{queue_id}".encode())],
+        [Button.inline("Пропустить", data=f"skip:{queue_id}".encode())],
     ]
 
     try:
