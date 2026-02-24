@@ -91,7 +91,10 @@ def register_moderation_handlers(bot: TelegramClient, storage: PostStorage):
             await event.answer("❌ Пост не найден", alert=True)
             return
 
-        if action == "skip":
+        if action == "noop":
+            await event.answer()
+            return
+        elif action == "skip":
             await _handle_skip(event, bot, storage, post, queue_id, target)
         elif action == "edit":
             await _handle_edit(event, bot, storage, post, queue_id, target)
@@ -106,15 +109,15 @@ def register_moderation_handlers(bot: TelegramClient, storage: PostStorage):
 
 
 async def _handle_skip(event, bot, storage, post, queue_id, target):
-    """Delete message and mark as skipped."""
+    """Mark as skipped — remove buttons, keep message."""
     try:
         if post.get('bot_msg_id'):
-            await bot.delete_messages(target, [post['bot_msg_id']])
+            await bot.edit_message(target, post['bot_msg_id'], buttons=None)
     except Exception as e:
-        logger.warning("Failed to delete msg for skip #%d: %s", queue_id, e)
+        logger.warning("Failed to clear buttons for skip #%d: %s", queue_id, e)
 
     storage.update_moderation_queue(queue_id, status='skipped')
-    await event.answer("🗑 Пропущено")
+    await event.answer("Пропущено")
     logger.info("Skipped post #%d", queue_id)
 
 
@@ -150,24 +153,25 @@ async def _handle_edit(event, bot, storage, post, queue_id, target):
 
     await progress_msg.edit("✅ <b>Grok ответил, обновляю пост...</b>", parse_mode='html')
 
-    # Download media from current bot message if present
+    # Remove buttons from the original message (keep it for comparison)
+    original_msg_id = post.get('bot_msg_id')
+    try:
+        if original_msg_id:
+            await bot.edit_message(target, original_msg_id, buttons=None)
+    except Exception as e:
+        logger.warning("Failed to clear buttons on original #%d: %s", queue_id, e)
+
+    # Download media from original bot message if present
     media_bytes = None
-    if post.get('media_type') and post.get('bot_msg_id'):
+    if post.get('media_type') and original_msg_id:
         try:
-            msgs = await bot.get_messages(target, ids=[post['bot_msg_id']])
+            msgs = await bot.get_messages(target, ids=[original_msg_id])
             if msgs and msgs[0] and msgs[0].media:
                 media_bytes = await msgs[0].download_media(bytes)
         except Exception as e:
             logger.warning("Failed to download media for edit #%d: %s", queue_id, e)
 
-    # Delete old message
-    try:
-        if post.get('bot_msg_id'):
-            await bot.delete_messages(target, [post['bot_msg_id']])
-    except Exception as e:
-        logger.warning("Failed to delete old msg for edit #%d: %s", queue_id, e)
-
-    # Send new message with edited text
+    # Send edited text as reply to original message
     edit_count = (post.get('edit_count') or 0) + 1
     caption = f"{rewritten}\n\n<i>Отредактировано ({edit_count}x)</i>"
     buttons = [
@@ -182,10 +186,12 @@ async def _handle_edit(event, bot, storage, post, queue_id, target):
                 target, media_bytes, caption=caption[:1024],
                 parse_mode='html', buttons=buttons,
                 force_document=(post['media_type'] == 'document'),
+                reply_to=original_msg_id,
             )
         else:
             msg = await bot.send_message(
                 target, caption, parse_mode='html', buttons=buttons,
+                reply_to=original_msg_id,
             )
 
         storage.update_moderation_queue(
@@ -257,15 +263,18 @@ async def _handle_publish(event, bot, storage, post, queue_id, target):
         )
         return
 
-    # Delete from moderation chat
+    # Replace buttons with "Published" marker (keep the post visible)
     try:
         if post.get('bot_msg_id'):
-            await bot.delete_messages(target, [post['bot_msg_id']])
-    except Exception:
-        pass
+            await bot.edit_message(
+                target, post['bot_msg_id'],
+                buttons=[[Button.inline("Опубликовано", data=b"noop:0")]],
+            )
+    except Exception as e:
+        logger.warning("Failed to update buttons after publish #%d: %s", queue_id, e)
 
     storage.update_moderation_queue(queue_id, status='published')
-    logger.info("Post #%d published and cleaned up", queue_id)
+    logger.info("Post #%d published", queue_id)
 
     # Clean up progress message
     try:
