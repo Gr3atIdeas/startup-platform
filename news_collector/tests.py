@@ -749,12 +749,12 @@ class TestCallbackDataParsing(unittest.TestCase):
 class TestGrokRewrite(unittest.TestCase):
     """Test grok.rewrite_news with mocked aiohttp."""
 
-    def test_returns_none_without_api_key(self):
+    def test_raises_without_api_key(self):
         import asyncio
         with patch("config.GROK_API_KEY", ""):
-            from grok import rewrite_news
-            result = asyncio.get_event_loop().run_until_complete(rewrite_news("test"))
-            self.assertIsNone(result)
+            from grok import rewrite_news, GrokError
+            with self.assertRaises(GrokError):
+                asyncio.get_event_loop().run_until_complete(rewrite_news("test"))
 
     def test_successful_rewrite(self):
         import asyncio

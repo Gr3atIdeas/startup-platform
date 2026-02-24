@@ -22,11 +22,15 @@ SYSTEM_PROMPT = (
 )
 
 
-async def rewrite_news(text: str) -> str | None:
-    """Send text to Grok API for rewriting. Returns rewritten text or None on error."""
+class GrokError(Exception):
+    """Raised when Grok API call fails."""
+    pass
+
+
+async def rewrite_news(text: str) -> str:
+    """Send text to Grok API for rewriting. Returns rewritten text or raises GrokError."""
     if not config.GROK_API_KEY:
-        logger.warning("GROK_API_KEY not set — skipping rewrite")
-        return None
+        raise GrokError("GROK_API_KEY не задан")
 
     headers = {
         "Authorization": f"Bearer {config.GROK_API_KEY}",
@@ -47,9 +51,11 @@ async def rewrite_news(text: str) -> str | None:
                 if resp.status != 200:
                     body = await resp.text()
                     logger.error("Grok API error %d: %s", resp.status, body[:300])
-                    return None
+                    raise GrokError(f"API {resp.status}: {body[:200]}")
                 data = await resp.json()
                 return data["choices"][0]["message"]["content"].strip()
+    except GrokError:
+        raise
     except Exception as e:
         logger.error("Grok API request failed: %s", e)
-        return None
+        raise GrokError(f"Ошибка запроса: {e}")

@@ -132,11 +132,15 @@ async def _handle_edit(event, bot, storage, post, queue_id, target):
         rewritten = await rewrite_news(text_to_edit)
     except Exception as e:
         logger.error("Grok rewrite failed for #%d: %s", queue_id, e)
-        rewritten = None
+        await progress_msg.edit(
+            f"❌ <b>Grok ошибка:</b> {e}",
+            parse_mode='html',
+        )
+        return
 
     if not rewritten:
         await progress_msg.edit(
-            "❌ <b>Grok не ответил.</b> Проверьте GROK_API_KEY или попробуйте позже.",
+            "❌ <b>Grok вернул пустой ответ.</b>",
             parse_mode='html',
         )
         return
