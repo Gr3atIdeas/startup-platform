@@ -46,7 +46,11 @@ async def rewrite_news(text: str) -> str:
     }
 
     try:
-        async with aiohttp.ClientSession() as session:
+        connector = None
+        if config.PROXY_URL:
+            from aiohttp_socks import ProxyConnector
+            connector = ProxyConnector.from_url(config.PROXY_URL)
+        async with aiohttp.ClientSession(connector=connector) as session:
             async with session.post(API_URL, json=payload, headers=headers, timeout=aiohttp.ClientTimeout(total=30)) as resp:
                 if resp.status != 200:
                     body = await resp.text()

@@ -40,3 +40,4 @@ uvicorn[standard]==0.30.6
 django-silk==5.1.0
 telethon==1.37.0
 aiohttp>=3.9.0
+aiohttp-socks>=0.8.0

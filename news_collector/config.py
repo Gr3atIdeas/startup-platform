@@ -21,6 +21,10 @@ ADMIN_ID = 911873673
 GROK_API_KEY = os.getenv("GROK_API_KEY", "")
 GROK_MODEL = os.getenv("GROK_MODEL", "grok-3-mini")
 
+# Proxy for outbound API requests (Grok, etc.) — needed when server IP is blocked
+# Supports: http://user:pass@host:port, socks5://user:pass@host:port
+PROXY_URL = os.getenv("PROXY_URL", "")
+
 # Канал для публикации одобренных новостей (бот должен быть админом)
 PUBLISH_CHANNEL_ID = os.getenv("PUBLISH_CHANNEL_ID", "")
 
