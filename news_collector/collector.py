@@ -62,7 +62,12 @@ async def handle_new_message(event, storage: PostStorage, bot: TelegramClient = 
     message = event.message
     source = get_source_label(event)
     post_link = get_post_link(event)
-    text = message.text or ""
+    text = message.raw_text or ""
+    entities = message.entities or []
+    html_text = ""
+    if entities:
+        from telethon.extensions import html as thtml
+        html_text = thtml.unparse(text, entities)
 
     logger.info("New post from %s (msg_id=%d)", source, message.id)
 
@@ -93,6 +98,7 @@ async def handle_new_message(event, storage: PostStorage, bot: TelegramClient = 
         await enqueue_post(
             bot=bot, storage=storage,
             text=text, source=source, post_link=post_link,
+            html_text=html_text,
             media_type=media_type, media_bytes=media_bytes,
             filename=filename,
         )

@@ -1,6 +1,8 @@
 """Moderation pipeline — inline buttons, AI rewrite, publish to channel."""
 
 import logging
+import re
+from html import escape as _html_esc
 
 from telethon import TelegramClient, events, Button
 
@@ -11,8 +13,39 @@ from grok import rewrite_news
 logger = logging.getLogger(__name__)
 
 
+def _to_display_html(text: str, html_text: str = '') -> str:
+    """Build HTML for Telegram display — entities first, then Markdown fallback."""
+    if html_text:
+        out = html_text  # already HTML-safe from Telethon unparse()
+    else:
+        out = _html_esc(text) if text else ''
+    if not out:
+        return out
+    # Convert Markdown bold **text** → <b>text</b>
+    out = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', out, flags=re.DOTALL)
+    # Convert Markdown links [text](url) → <a href="url">text</a>
+    out = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1</a>', out)
+    return out
+
+
+def _to_jpeg(data: bytes) -> bytes:
+    """Convert image bytes to JPEG for reliable Telegram photo display."""
+    try:
+        from PIL import Image
+        import io
+        img = Image.open(io.BytesIO(data))
+        if img.mode in ('RGBA', 'LA', 'P'):
+            img = img.convert('RGB')
+        buf = io.BytesIO()
+        img.save(buf, format='JPEG', quality=85)
+        return buf.getvalue()
+    except Exception:
+        return data
+
+
 async def enqueue_post(bot: TelegramClient, storage: PostStorage,
                        text: str, source: str, post_link: str = '',
+                       html_text: str = '',
                        media_type: str = '', media_bytes: bytes = None,
                        filename: str = ''):
     """Save post to moderation queue and send to TARGET_GROUP with inline buttons."""
@@ -23,10 +56,11 @@ async def enqueue_post(bot: TelegramClient, storage: PostStorage,
         media_filename=filename,
     )
 
+    display_text = _to_display_html(text, html_text)
     source_line = f"<b>Источник:</b> {source}"
     if post_link:
         source_line += f', <a href="{post_link}">ссылка</a>'
-    caption = f"{text}\n\n{source_line}" if text else source_line
+    caption = f"{display_text}\n\n{source_line}" if display_text else source_line
     buttons = [
         [Button.inline("Пропустить", data=f"skip:{queue_id}".encode()),
          Button.inline("Отредактировать", data=f"edit:{queue_id}".encode())],
@@ -37,7 +71,7 @@ async def enqueue_post(bot: TelegramClient, storage: PostStorage,
     try:
         if media_type == 'photo' and media_bytes:
             msg = await bot.send_file(
-                target, media_bytes, caption=caption[:1024],
+                target, _to_jpeg(media_bytes), caption=caption[:1024],
                 parse_mode='html', buttons=buttons,
                 file_name='photo.jpg',
             )
@@ -184,8 +218,9 @@ async def _handle_edit(event, bot, storage, post, queue_id, target):
     try:
         if media_bytes and post.get('media_type'):
             is_doc = post['media_type'] == 'document'
+            file_data = media_bytes if is_doc else _to_jpeg(media_bytes)
             msg = await bot.send_file(
-                target, media_bytes, caption=caption[:1024],
+                target, file_data, caption=caption[:1024],
                 parse_mode='html', buttons=buttons,
                 force_document=is_doc,
                 file_name=(post.get('media_filename') or 'document') if is_doc else 'photo.jpg',
@@ -251,8 +286,9 @@ async def _handle_publish(event, bot, storage, post, queue_id, target):
     try:
         if media_bytes and post.get('media_type'):
             is_doc = post['media_type'] == 'document'
+            file_data = media_bytes if is_doc else _to_jpeg(media_bytes)
             await bot.send_file(
-                publish_to, media_bytes, caption=text[:1024],
+                publish_to, file_data, caption=text[:1024],
                 parse_mode='html',
                 force_document=is_doc,
                 file_name=(post.get('media_filename') or 'document') if is_doc else 'photo.jpg',
