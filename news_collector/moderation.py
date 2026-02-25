@@ -39,6 +39,7 @@ async def enqueue_post(bot: TelegramClient, storage: PostStorage,
             msg = await bot.send_file(
                 target, media_bytes, caption=caption[:1024],
                 parse_mode='html', buttons=buttons,
+                file_name='photo.jpg',
             )
         elif media_type == 'video' and media_bytes:
             msg = await bot.send_file(
@@ -182,10 +183,12 @@ async def _handle_edit(event, bot, storage, post, queue_id, target):
 
     try:
         if media_bytes and post.get('media_type'):
+            is_doc = post['media_type'] == 'document'
             msg = await bot.send_file(
                 target, media_bytes, caption=caption[:1024],
                 parse_mode='html', buttons=buttons,
-                force_document=(post['media_type'] == 'document'),
+                force_document=is_doc,
+                file_name=(post.get('media_filename') or 'document') if is_doc else 'photo.jpg',
                 reply_to=original_msg_id,
             )
         else:
@@ -247,10 +250,12 @@ async def _handle_publish(event, bot, storage, post, queue_id, target):
 
     try:
         if media_bytes and post.get('media_type'):
+            is_doc = post['media_type'] == 'document'
             await bot.send_file(
                 publish_to, media_bytes, caption=text[:1024],
                 parse_mode='html',
-                force_document=(post['media_type'] == 'document'),
+                force_document=is_doc,
+                file_name=(post.get('media_filename') or 'document') if is_doc else 'photo.jpg',
             )
         else:
             await bot.send_message(publish_to, text, parse_mode='html')
