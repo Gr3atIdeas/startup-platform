@@ -28,19 +28,21 @@ def _to_display_html(text: str, html_text: str = '') -> str:
     return out
 
 
-def _to_jpeg(data: bytes) -> bytes:
-    """Convert image bytes to JPEG for reliable Telegram photo display."""
+def _to_jpeg(data: bytes):
+    """Convert image bytes to JPEG BytesIO with .name for Telethon photo detection."""
+    import io
     try:
         from PIL import Image
-        import io
         img = Image.open(io.BytesIO(data))
         if img.mode in ('RGBA', 'LA', 'P'):
             img = img.convert('RGB')
         buf = io.BytesIO()
         img.save(buf, format='JPEG', quality=85)
-        return buf.getvalue()
+        buf.seek(0)
     except Exception:
-        return data
+        buf = io.BytesIO(data)
+    buf.name = 'photo.jpg'
+    return buf
 
 
 async def enqueue_post(bot: TelegramClient, storage: PostStorage,
@@ -73,7 +75,6 @@ async def enqueue_post(bot: TelegramClient, storage: PostStorage,
             msg = await bot.send_file(
                 target, _to_jpeg(media_bytes), caption=caption[:1024],
                 parse_mode='html', buttons=buttons,
-                file_name='photo.jpg',
             )
         elif media_type == 'video' and media_bytes:
             msg = await bot.send_file(
@@ -223,7 +224,7 @@ async def _handle_edit(event, bot, storage, post, queue_id, target):
                 target, file_data, caption=caption[:1024],
                 parse_mode='html', buttons=buttons,
                 force_document=is_doc,
-                file_name=(post.get('media_filename') or 'document') if is_doc else 'photo.jpg',
+                file_name=(post.get('media_filename') or 'document') if is_doc else None,
                 reply_to=original_msg_id,
             )
         else:
@@ -291,7 +292,7 @@ async def _handle_publish(event, bot, storage, post, queue_id, target):
                 publish_to, file_data, caption=text[:1024],
                 parse_mode='html',
                 force_document=is_doc,
-                file_name=(post.get('media_filename') or 'document') if is_doc else 'photo.jpg',
+                file_name=(post.get('media_filename') or 'document') if is_doc else None,
             )
         else:
             await bot.send_message(publish_to, text, parse_mode='html')
