@@ -21,9 +21,29 @@ ADMIN_ID = 911873673
 GROK_API_KEY = os.getenv("GROK_API_KEY", "")
 GROK_MODEL = os.getenv("GROK_MODEL", "grok-3-mini")
 
-# Proxy for outbound API requests (Grok, etc.) — needed when server IP is blocked
+# Proxy for outbound requests (Grok API + Telegram MTProto) — needed on Russian IPs
 # Supports: http://user:pass@host:port, socks5://user:pass@host:port
 PROXY_URL = os.getenv("PROXY_URL", "")
+
+
+def get_telethon_proxy():
+    """Parse PROXY_URL into a tuple for Telethon's proxy= parameter.
+
+    Returns None if no proxy is configured.
+    """
+    if not PROXY_URL:
+        return None
+    from urllib.parse import urlparse
+    import socks
+    parsed = urlparse(PROXY_URL)
+    proxy_types = {
+        'socks5': socks.SOCKS5,
+        'socks4': socks.SOCKS4,
+        'http': socks.HTTP,
+    }
+    scheme = parsed.scheme.lower()
+    proxy_type = proxy_types.get(scheme, socks.SOCKS5)
+    return (proxy_type, parsed.hostname, parsed.port, True, parsed.username, parsed.password)
 
 # Канал для публикации одобренных новостей (бот должен быть админом)
 PUBLISH_CHANNEL_ID = os.getenv("PUBLISH_CHANNEL_ID", "")

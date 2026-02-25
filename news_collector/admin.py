@@ -53,6 +53,7 @@ def create_bot_client() -> TelegramClient:
         session_path,
         int(config.TELEGRAM_API_ID),
         config.TELEGRAM_API_HASH,
+        proxy=config.get_telethon_proxy(),
     )
 
 
