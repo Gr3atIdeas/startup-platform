@@ -13,6 +13,17 @@ from grok import rewrite_news
 logger = logging.getLogger(__name__)
 
 
+async def _safe_answer(event, *args, **kwargs):
+    """Answer a callback query, ignoring QueryIdInvalidError (expired query)."""
+    try:
+        await event.answer(*args, **kwargs)
+    except Exception as e:
+        if "QueryIdInvalid" in type(e).__name__ or "QUERY_ID_INVALID" in str(e):
+            logger.warning("Callback query expired (QueryIdInvalid), continuing anyway")
+        else:
+            raise
+
+
 def _to_display_html(text: str, html_text: str = '') -> str:
     """Build HTML for Telegram display — entities first, then Markdown fallback."""
     if html_text:
@@ -114,7 +125,7 @@ def register_moderation_handlers(bot: TelegramClient, storage: PostStorage):
     @bot.on(events.CallbackQuery())
     async def on_callback(event):
         if event.sender_id != config.ADMIN_ID:
-            await event.answer("⛔ Нет доступа", alert=True)
+            await _safe_answer(event, "⛔ Нет доступа", alert=True)
             return
 
         data = event.data.decode()
@@ -130,11 +141,11 @@ def register_moderation_handlers(bot: TelegramClient, storage: PostStorage):
 
         post = storage.get_moderation_post(queue_id)
         if not post:
-            await event.answer("❌ Пост не найден", alert=True)
+            await _safe_answer(event, "❌ Пост не найден", alert=True)
             return
 
         if action == "noop":
-            await event.answer()
+            await _safe_answer(event)
             return
         elif action == "skip":
             await _handle_skip(event, bot, storage, post, queue_id, target)
@@ -145,7 +156,7 @@ def register_moderation_handlers(bot: TelegramClient, storage: PostStorage):
         elif action == "pub":
             await _handle_publish(event, bot, storage, post, queue_id, target)
         else:
-            await event.answer("❓ Неизвестное действие")
+            await _safe_answer(event, "❓ Неизвестное действие")
 
     logger.info("Moderation handlers registered")
 
@@ -159,7 +170,7 @@ async def _handle_skip(event, bot, storage, post, queue_id, target):
         logger.warning("Failed to clear buttons for skip #%d: %s", queue_id, e)
 
     storage.update_moderation_queue(queue_id, status='skipped')
-    await event.answer("Пропущено")
+    await _safe_answer(event, "Пропущено")
     logger.info("Skipped post #%d", queue_id)
 
 
@@ -167,11 +178,11 @@ async def _handle_edit(event, bot, storage, post, queue_id, target):
     """Rewrite text via Grok and resend with new buttons."""
     text_to_edit = post.get('edited_text') or post.get('original_text') or ''
     if not text_to_edit.strip():
-        await event.answer("❌ Нет текста для редактирования", alert=True)
+        await _safe_answer(event, "❌ Нет текста для редактирования", alert=True)
         return
 
     # Instant feedback + progress message in chat
-    await event.answer()
+    await _safe_answer(event)
     progress_msg = await bot.send_message(
         target, "⏳ <b>Отправляю в Grok...</b>", parse_mode='html',
     )
@@ -269,10 +280,10 @@ async def _handle_reedit(event, bot, storage, post, queue_id, target):
 async def _handle_publish(event, bot, storage, post, queue_id, target):
     """Publish post to PUBLISH_CHANNEL_ID."""
     if not config.PUBLISH_CHANNEL_ID:
-        await event.answer("❌ PUBLISH_CHANNEL_ID не настроен", alert=True)
+        await _safe_answer(event, "❌ PUBLISH_CHANNEL_ID не настроен", alert=True)
         return
 
-    await event.answer()
+    await _safe_answer(event)
     progress_msg = await bot.send_message(
         target, "📤 <b>Публикую...</b>", parse_mode='html',
     )
