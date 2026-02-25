@@ -49,14 +49,20 @@ async def enqueue_post(bot: TelegramClient, storage: PostStorage,
                        text: str, source: str, post_link: str = '',
                        html_text: str = '',
                        media_type: str = '', media_bytes: bytes = None,
-                       filename: str = ''):
-    """Save post to moderation queue and send to TARGET_GROUP with inline buttons."""
-    queue_id = storage.add_to_moderation_queue(
-        source_channel=source,
-        original_text=text,
-        media_type=media_type,
-        media_filename=filename,
-    )
+                       filename: str = '',
+                       queue_id: int = None):
+    """Save post to moderation queue and send to TARGET_GROUP with inline buttons.
+
+    If queue_id is provided, uses existing queue entry (e.g. from platform notifications)
+    instead of creating a new one.
+    """
+    if queue_id is None:
+        queue_id = storage.add_to_moderation_queue(
+            source_channel=source,
+            original_text=text,
+            media_type=media_type,
+            media_filename=filename,
+        )
 
     display_text = _to_display_html(text, html_text)
     source_line = f"<b>Источник:</b> {source}"

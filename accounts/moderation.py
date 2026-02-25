@@ -80,6 +80,13 @@ def approve_entity(entity, moderator, entity_type, moderator_comment=""):
         comment=moderator_comment,
     )
 
+    # Queue Telegram notification (async via Celery)
+    try:
+        from accounts.tasks import notify_entity_approved
+        notify_entity_approved.delay(entity_type, entity_id)
+    except Exception as e:
+        logger.error("Failed to queue entity notification: %s", e)
+
     return True
 
 

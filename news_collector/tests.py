@@ -714,6 +714,69 @@ class TestModerationQueue(unittest.TestCase):
         self.assertEqual(post["media_filename"], "")
 
 
+# ── entity notifications ─────────────────────────────────────────────
+
+class TestEntityNotifications(unittest.TestCase):
+    """Test entity notification tracking in PostStorage."""
+
+    def setUp(self):
+        self.storage = _make_storage_in_memory()
+
+    def tearDown(self):
+        self.storage.close()
+
+    def test_not_notified_initially(self):
+        self.assertFalse(self.storage.is_entity_notified("startup", 1))
+
+    def test_mark_and_check(self):
+        qid = self.storage.add_to_moderation_queue(
+            source_channel="platform", original_text="test",
+        )
+        self.storage.mark_entity_notified("startup", 42, qid)
+        self.assertTrue(self.storage.is_entity_notified("startup", 42))
+        self.assertFalse(self.storage.is_entity_notified("franchise", 42))
+        self.assertFalse(self.storage.is_entity_notified("startup", 99))
+
+    def test_duplicate_mark_ignored(self):
+        qid = self.storage.add_to_moderation_queue(
+            source_channel="platform", original_text="test",
+        )
+        self.storage.mark_entity_notified("startup", 1, qid)
+        # Should not raise
+        self.storage.mark_entity_notified("startup", 1, qid)
+        self.assertTrue(self.storage.is_entity_notified("startup", 1))
+
+    def test_get_pending_bot_posts(self):
+        self.assertEqual(self.storage.get_pending_bot_posts(), [])
+
+        # Add a regular pending post — should NOT appear
+        qid1 = self.storage.add_to_moderation_queue(
+            source_channel="@ch", original_text="regular",
+        )
+        self.assertEqual(self.storage.get_pending_bot_posts(), [])
+
+        # Add a pending_bot post
+        qid2 = self.storage.add_to_moderation_queue(
+            source_channel="platform", original_text="entity post",
+        )
+        self.storage.update_moderation_queue(qid2, status="pending_bot")
+        posts = self.storage.get_pending_bot_posts()
+        self.assertEqual(len(posts), 1)
+        self.assertEqual(posts[0]["id"], qid2)
+        self.assertEqual(posts[0]["original_text"], "entity post")
+
+    def test_pending_bot_cleared_after_send(self):
+        qid = self.storage.add_to_moderation_queue(
+            source_channel="platform", original_text="entity post",
+        )
+        self.storage.update_moderation_queue(qid, status="pending_bot")
+        self.assertEqual(len(self.storage.get_pending_bot_posts()), 1)
+
+        # Simulate bot sending it
+        self.storage.update_moderation_queue(qid, status="sent", bot_msg_id=123)
+        self.assertEqual(len(self.storage.get_pending_bot_posts()), 0)
+
+
 # ── grok: callback data parsing ─────────────────────────────────────
 
 class TestCallbackDataParsing(unittest.TestCase):

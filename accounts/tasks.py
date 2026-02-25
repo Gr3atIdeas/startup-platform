@@ -1,6 +1,7 @@
 import logging
 import uuid
 import base64
+from urllib.parse import urlparse
 from celery import shared_task
 from django.conf import settings
 from django.utils import timezone
@@ -9,7 +10,163 @@ from .models import FileStorage, FileTypes, EntityTypes, Startups
 from PIL import Image
 from io import BytesIO
 
+import psycopg2
+
 logger = logging.getLogger(__name__)
+
+
+# ── Entity notification templates ──────────────────────────────────────────
+
+_ENTITY_TEMPLATES = {
+    "startup": (
+        "На платформе GreatIdeas опубликован новый стартап:\n\n"
+        "<b>{title}</b>\n\n"
+        "{short_description}\n\n"
+        "Направление: {direction}\n"
+        "Стадия: {stage}\n\n"
+        "Подробнее: https://www.greatideas.ru/startups/{id}/"
+    ),
+    "franchise": (
+        "На платформе GreatIdeas опубликована новая франшиза:\n\n"
+        "<b>{title}</b>\n\n"
+        "{short_description}\n\n"
+        "Направление: {direction}\n"
+        "Стадия: {stage}\n\n"
+        "Подробнее: https://www.greatideas.ru/franchises/{id}/"
+    ),
+    "agency": (
+        "На платформе GreatIdeas опубликовано новое агентство:\n\n"
+        "<b>{title}</b>\n\n"
+        "{short_description}\n\n"
+        "Направление: {direction}\n\n"
+        "Подробнее: https://www.greatideas.ru/agencies/{id}/"
+    ),
+    "specialist": (
+        "На платформе GreatIdeas опубликован новый специалист:\n\n"
+        "<b>{title}</b>\n\n"
+        "{short_description}\n\n"
+        "Направление: {direction}\n\n"
+        "Подробнее: https://www.greatideas.ru/specialists/{id}/"
+    ),
+}
+
+_ENTITY_MODELS = {
+    "startup": ("Startups", "startup_id"),
+    "franchise": ("Franchises", "franchise_id"),
+    "agency": ("Agencies", "agency_id"),
+    "specialist": ("Specialists", "specialist_id"),
+}
+
+_TABLE_PREFIX = "news_"
+
+
+def _parse_database_url(url: str) -> dict:
+    """Parse DATABASE_URL into psycopg2 connect kwargs."""
+    parsed = urlparse(url)
+    return {
+        "host": parsed.hostname,
+        "port": parsed.port or 5432,
+        "dbname": parsed.path.lstrip("/"),
+        "user": parsed.username,
+        "password": parsed.password,
+    }
+
+
+@shared_task(bind=True, max_retries=3)
+def notify_entity_approved(self, entity_type: str, entity_id: int):
+    """Generate announcement text and insert into news_moderation_queue for the bot."""
+    try:
+        if entity_type not in _ENTITY_MODELS:
+            logger.error("Unknown entity_type: %s", entity_type)
+            return
+
+        model_name, pk_field = _ENTITY_MODELS[entity_type]
+
+        from .models import Startups, Franchises, Agencies, Specialists
+        model_map = {
+            "Startups": Startups,
+            "Franchises": Franchises,
+            "Agencies": Agencies,
+            "Specialists": Specialists,
+        }
+        model = model_map[model_name]
+        entity = model.objects.filter(pk=entity_id).first()
+        if not entity:
+            logger.error("Entity %s id=%d not found", entity_type, entity_id)
+            return
+
+        # Connect to shared PostgreSQL (same DATABASE_URL as news_collector)
+        import os
+        db_url = os.environ.get("DATABASE_URL", "")
+        if not db_url:
+            logger.error("DATABASE_URL not set — cannot write to news queue")
+            return
+
+        conn = psycopg2.connect(**_parse_database_url(db_url))
+        conn.autocommit = True
+
+        try:
+            # Check if already notified
+            with conn.cursor() as cur:
+                cur.execute(
+                    f"SELECT 1 FROM {_TABLE_PREFIX}entity_notifications "
+                    f"WHERE entity_type = %s AND entity_id = %s",
+                    (entity_type, entity_id),
+                )
+                if cur.fetchone():
+                    logger.info("Entity %s id=%d already notified, skipping", entity_type, entity_id)
+                    return
+
+            # Build announcement text
+            direction = ""
+            if hasattr(entity, "direction") and entity.direction:
+                direction = str(entity.direction)
+            stage = ""
+            if hasattr(entity, "stage") and entity.stage:
+                stage = str(entity.stage)
+
+            template = _ENTITY_TEMPLATES[entity_type]
+            text = template.format(
+                title=entity.title or "",
+                short_description=entity.short_description or "",
+                direction=direction,
+                stage=stage,
+                id=entity_id,
+            )
+
+            # Insert into moderation queue with status='pending_bot'
+            from datetime import datetime
+            now = datetime.utcnow()
+            with conn.cursor() as cur:
+                cur.execute(
+                    f"""INSERT INTO {_TABLE_PREFIX}moderation_queue
+                        (source_channel, source_msg_id, original_text, media_type, media_filename,
+                         status, created_at, updated_at)
+                        VALUES (%s, %s, %s, %s, %s, 'pending_bot', %s, %s)
+                        RETURNING id""",
+                    ("platform", None, text, "", "", now, now),
+                )
+                queue_id = cur.fetchone()[0]
+
+            # Mark as notified
+            with conn.cursor() as cur:
+                cur.execute(
+                    f"""INSERT INTO {_TABLE_PREFIX}entity_notifications
+                        (entity_type, entity_id, queue_id)
+                        VALUES (%s, %s, %s) ON CONFLICT (entity_type, entity_id) DO NOTHING""",
+                    (entity_type, entity_id, queue_id),
+                )
+
+            logger.info(
+                "Entity notification queued: %s id=%d → queue #%d",
+                entity_type, entity_id, queue_id,
+            )
+        finally:
+            conn.close()
+
+    except Exception as e:
+        logger.error("notify_entity_approved failed: %s", e, exc_info=True)
+        raise self.retry(exc=e, countdown=30)
 
 
 def convert_to_webp_in_memory(file_data, file_name, content_type, quality=85):

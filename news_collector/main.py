@@ -6,7 +6,7 @@ import asyncio
 import config
 from collector import create_client, register_handlers, get_all_channels
 from admin import create_bot_client, register_admin_handlers
-from moderation import register_moderation_handlers
+from moderation import register_moderation_handlers, enqueue_post
 from storage import PostStorage
 
 logging.basicConfig(
@@ -63,6 +63,37 @@ async def start_user_client(storage, bot=None):
         return None
 
 
+async def _poll_platform_posts(bot, storage, stop_event):
+    """Poll news_moderation_queue for pending_bot entries inserted by Django."""
+    logger.info("Platform post poller started (10s interval)")
+    while not stop_event.is_set():
+        try:
+            posts = storage.get_pending_bot_posts()
+            for post in posts:
+                queue_id = post["id"]
+                text = post.get("original_text", "")
+                source = post.get("source_channel", "platform")
+                try:
+                    await enqueue_post(
+                        bot, storage,
+                        text=text,
+                        source=source,
+                        html_text=text,  # platform text is already HTML
+                        queue_id=queue_id,
+                    )
+                    logger.info("Platform post #%d sent to moderation", queue_id)
+                except Exception as e:
+                    logger.error("Failed to send platform post #%d: %s", queue_id, e)
+        except Exception as e:
+            logger.error("Platform poller error: %s", e)
+
+        try:
+            await asyncio.wait_for(stop_event.wait(), timeout=10)
+            break  # stop_event was set
+        except asyncio.TimeoutError:
+            pass  # normal — poll again
+
+
 async def main():
     config.validate()
     logger.info("Starting news collector...")
@@ -100,7 +131,17 @@ async def main():
     signal.signal(signal.SIGINT, shutdown)
     signal.signal(signal.SIGTERM, shutdown)
 
+    # ── Platform post poller — picks up pending_bot entries from Django ──
+    poller_task = asyncio.create_task(_poll_platform_posts(bot, storage, stop_event))
+
     await stop_event.wait()
+
+    # Wait for poller to finish cleanly
+    poller_task.cancel()
+    try:
+        await poller_task
+    except asyncio.CancelledError:
+        pass
 
     logger.info("Disconnecting...")
     if _state["client"]:

@@ -80,6 +80,17 @@ class PostStorage:
                 )
             """)
 
+            cur.execute(f"""
+                CREATE TABLE IF NOT EXISTS {_P}entity_notifications (
+                    id          SERIAL PRIMARY KEY,
+                    entity_type TEXT NOT NULL,
+                    entity_id   INTEGER NOT NULL,
+                    queue_id    INTEGER NOT NULL,
+                    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                    UNIQUE(entity_type, entity_id)
+                )
+            """)
+
     # ── processed posts ───────────────────────────────────────────────
 
     def is_processed(self, channel_id: str, message_id: int) -> bool:
@@ -251,6 +262,35 @@ class PostStorage:
                 f"SELECT COUNT(*) FROM {_P}moderation_queue WHERE status IN ('sent', 'edited')"
             )
             return cur.fetchone()[0]
+
+    # ── entity notifications ───────────────────────────────────────────
+
+    def is_entity_notified(self, entity_type: str, entity_id: int) -> bool:
+        with self.conn.cursor() as cur:
+            cur.execute(
+                f"SELECT 1 FROM {_P}entity_notifications WHERE entity_type = %s AND entity_id = %s",
+                (entity_type, entity_id),
+            )
+            return cur.fetchone() is not None
+
+    def mark_entity_notified(self, entity_type: str, entity_id: int, queue_id: int):
+        with self.conn.cursor() as cur:
+            cur.execute(
+                f"""INSERT INTO {_P}entity_notifications (entity_type, entity_id, queue_id)
+                    VALUES (%s, %s, %s) ON CONFLICT (entity_type, entity_id) DO NOTHING""",
+                (entity_type, entity_id, queue_id),
+            )
+
+    def get_pending_bot_posts(self) -> list[dict]:
+        with self.conn.cursor() as cur:
+            cur.execute(
+                f"SELECT * FROM {_P}moderation_queue WHERE status = 'pending_bot' ORDER BY id"
+            )
+            rows = cur.fetchall()
+            if not rows:
+                return []
+            columns = [desc[0] for desc in cur.description]
+            return [dict(zip(columns, row)) for row in rows]
 
     # ── close ─────────────────────────────────────────────────────────
 
