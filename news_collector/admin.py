@@ -33,6 +33,10 @@ HELP_TEXT = """<b>📋 Команды админ-панели</b>
 /add_spam &lt;слово&gt; — добавить спам-слово
 /remove_spam &lt;слово&gt; — удалить спам-слово
 
+<b>AI-промпт:</b>
+/prompt — получить текущий промпт (.docx)
+<i>Отправьте .docx файл, чтобы обновить промпт.</i>
+
 <i>Если ключевых слов нет — пересылаются все посты.
 Посты со спам-словами всегда игнорируются.</i>"""
 
@@ -392,4 +396,126 @@ def register_admin_handlers(bot: TelegramClient, storage: PostStorage,
         else:
             await event.reply(f"❌ Слово <code>{word.lower()}</code> не найдено.", parse_mode="html")
 
+    # ── Grok prompt ─────────────────────────────────────────────
+
+    @bot.on(events.NewMessage(pattern="/prompt"))
+    async def on_prompt(event):
+        if event.sender_id != config.ADMIN_ID:
+            return
+
+        from grok import get_effective_prompt, SYSTEM_PROMPT
+        current_prompt = get_effective_prompt(storage)
+        is_custom = (current_prompt != SYSTEM_PROMPT)
+
+        import io
+        try:
+            from docx import Document
+        except ImportError:
+            await event.reply("python-docx не установлен.")
+            return
+
+        doc = Document()
+        doc.add_paragraph(current_prompt)
+        buf = io.BytesIO()
+        doc.save(buf)
+        buf.seek(0)
+        buf.name = "grok_prompt.docx"
+
+        status = "из БД" if is_custom else "по умолчанию"
+        await bot.send_file(
+            event.chat_id,
+            buf,
+            caption=f"Текущий промпт ({status}, {len(current_prompt)} симв.).\n"
+                    "Отправьте .docx файл, чтобы обновить.",
+        )
+
+    @bot.on(events.NewMessage())
+    async def on_docx_upload(event):
+        if event.sender_id != config.ADMIN_ID:
+            return
+        if not event.message.document:
+            return
+
+        file_name = ""
+        for attr in event.message.document.attributes:
+            if hasattr(attr, "file_name") and attr.file_name:
+                file_name = attr.file_name
+                break
+
+        if not file_name.lower().endswith(".docx"):
+            return
+
+        data = await event.message.download_media(bytes)
+        if not data:
+            await event.reply("Не удалось скачать файл.")
+            return
+
+        import io
+        try:
+            from docx import Document
+        except ImportError:
+            await event.reply("python-docx не установлен.")
+            return
+
+        try:
+            doc = Document(io.BytesIO(data))
+            text = "\n".join(p.text for p in doc.paragraphs)
+        except Exception as e:
+            await event.reply(f"Ошибка чтения .docx: {e}")
+            return
+
+        if not text.strip():
+            await event.reply("Документ пустой. Промпт не изменён.")
+            return
+
+        storage.set_setting("grok_prompt", text.strip())
+
+        from html import escape
+        preview = escape(text.strip()[:200])
+        if len(text.strip()) > 200:
+            preview += "..."
+
+        await event.reply(
+            f"Промпт обновлён ({len(text.strip())} симв.).\n\n"
+            f"<b>Превью:</b>\n<code>{preview}</code>",
+            parse_mode="html",
+        )
+        logger.info("Admin updated Grok prompt (%d chars)", len(text.strip()))
+
     logger.info("Admin bot handlers registered (admin_id=%d)", config.ADMIN_ID)
+
+
+async def setup_bot_commands(bot: TelegramClient):
+    """Set bot commands visible in Telegram's '/' menu."""
+    try:
+        from telethon.tl.functions.bots import SetBotCommandsRequest
+        from telethon.tl.types import BotCommand, BotCommandScopeDefault
+    except ImportError:
+        logger.warning("Could not import BotCommand types, skipping menu setup")
+        return
+
+    commands = [
+        BotCommand(command="help", description="Все команды"),
+        BotCommand(command="status", description="Статус коллектора"),
+        BotCommand(command="channels", description="Список каналов"),
+        BotCommand(command="add_channel", description="Добавить канал"),
+        BotCommand(command="remove_channel", description="Удалить канал"),
+        BotCommand(command="keywords", description="Ключевые слова"),
+        BotCommand(command="add_keyword", description="Добавить ключевое слово"),
+        BotCommand(command="remove_keyword", description="Удалить ключевое слово"),
+        BotCommand(command="spam", description="Спам-слова"),
+        BotCommand(command="add_spam", description="Добавить спам-слово"),
+        BotCommand(command="remove_spam", description="Удалить спам-слово"),
+        BotCommand(command="prompt", description="Промпт Grok (.docx)"),
+        BotCommand(command="auth", description="Авторизация Telegram"),
+    ]
+
+    try:
+        await bot(SetBotCommandsRequest(
+            scope=BotCommandScopeDefault(),
+            lang_code="",
+            commands=commands,
+        ))
+        logger.info("Bot commands menu set (%d commands)", len(commands))
+    except Exception as e:
+        logger.error("Failed to set bot commands: %s", e)

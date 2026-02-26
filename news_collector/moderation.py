@@ -8,7 +8,7 @@ from telethon import TelegramClient, events, Button
 
 import config
 from storage import PostStorage
-from grok import rewrite_news
+from grok import rewrite_news, get_effective_prompt
 
 logger = logging.getLogger(__name__)
 
@@ -188,7 +188,8 @@ async def _handle_edit(event, bot, storage, post, queue_id, target):
     )
 
     try:
-        rewritten = await rewrite_news(text_to_edit)
+        prompt = get_effective_prompt(storage)
+        rewritten = await rewrite_news(text_to_edit, system_prompt=prompt)
     except Exception as e:
         logger.error("Grok rewrite failed for #%d: %s", queue_id, e)
         await progress_msg.edit(

@@ -714,6 +714,54 @@ class TestModerationQueue(unittest.TestCase):
         self.assertEqual(post["media_filename"], "")
 
 
+# ── settings (key-value) ──────────────────────────────────────────────
+
+class TestSettings(unittest.TestCase):
+    """Test key-value settings in PostStorage."""
+
+    def setUp(self):
+        self.storage = _make_storage_in_memory()
+
+    def tearDown(self):
+        self.storage.close()
+
+    def test_get_missing_returns_none(self):
+        self.assertIsNone(self.storage.get_setting("nonexistent"))
+
+    def test_set_and_get(self):
+        self.storage.set_setting("grok_prompt", "Test prompt")
+        self.assertEqual(self.storage.get_setting("grok_prompt"), "Test prompt")
+
+    def test_upsert_updates_existing(self):
+        self.storage.set_setting("grok_prompt", "First")
+        self.storage.set_setting("grok_prompt", "Second")
+        self.assertEqual(self.storage.get_setting("grok_prompt"), "Second")
+
+
+class TestEffectivePrompt(unittest.TestCase):
+    """Test get_effective_prompt with DB and fallback."""
+
+    def setUp(self):
+        self.storage = _make_storage_in_memory()
+
+    def tearDown(self):
+        self.storage.close()
+
+    def test_default_when_no_custom(self):
+        from grok import get_effective_prompt, SYSTEM_PROMPT
+        self.assertEqual(get_effective_prompt(self.storage), SYSTEM_PROMPT)
+
+    def test_custom_from_db(self):
+        from grok import get_effective_prompt
+        self.storage.set_setting("grok_prompt", "Custom prompt")
+        self.assertEqual(get_effective_prompt(self.storage), "Custom prompt")
+
+    def test_empty_custom_falls_back(self):
+        from grok import get_effective_prompt, SYSTEM_PROMPT
+        self.storage.set_setting("grok_prompt", "   ")
+        self.assertEqual(get_effective_prompt(self.storage), SYSTEM_PROMPT)
+
+
 # ── entity notifications ─────────────────────────────────────────────
 
 class TestEntityNotifications(unittest.TestCase):

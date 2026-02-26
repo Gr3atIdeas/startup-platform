@@ -81,6 +81,14 @@ class PostStorage:
             """)
 
             cur.execute(f"""
+                CREATE TABLE IF NOT EXISTS {_P}settings (
+                    key        TEXT PRIMARY KEY,
+                    value      TEXT NOT NULL,
+                    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+                )
+            """)
+
+            cur.execute(f"""
                 CREATE TABLE IF NOT EXISTS {_P}entity_notifications (
                     id          SERIAL PRIMARY KEY,
                     entity_type TEXT NOT NULL,
@@ -262,6 +270,26 @@ class PostStorage:
                 f"SELECT COUNT(*) FROM {_P}moderation_queue WHERE status IN ('sent', 'edited')"
             )
             return cur.fetchone()[0]
+
+    # ── settings (key-value) ─────────────────────────────────────────
+
+    def get_setting(self, key: str) -> str | None:
+        with self.conn.cursor() as cur:
+            cur.execute(
+                f"SELECT value FROM {_P}settings WHERE key = %s", (key,)
+            )
+            row = cur.fetchone()
+            return row[0] if row else None
+
+    def set_setting(self, key: str, value: str):
+        now = datetime.utcnow()
+        with self.conn.cursor() as cur:
+            cur.execute(
+                f"""INSERT INTO {_P}settings (key, value, updated_at)
+                    VALUES (%s, %s, %s)
+                    ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = EXCLUDED.updated_at""",
+                (key, value, now),
+            )
 
     # ── entity notifications ───────────────────────────────────────────
 

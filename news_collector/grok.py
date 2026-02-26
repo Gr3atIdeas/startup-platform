@@ -27,11 +27,23 @@ class GrokError(Exception):
     pass
 
 
-async def rewrite_news(text: str) -> str:
+def get_effective_prompt(storage) -> str:
+    """Return the custom prompt from DB, or the default hardcoded one."""
+    try:
+        custom = storage.get_setting("grok_prompt")
+        if custom and custom.strip():
+            return custom
+    except Exception:
+        pass
+    return SYSTEM_PROMPT
+
+
+async def rewrite_news(text: str, system_prompt: str = "") -> str:
     """Send text to Grok API for rewriting. Returns rewritten text or raises GrokError."""
     if not config.GROK_API_KEY:
         raise GrokError("GROK_API_KEY не задан")
 
+    prompt = system_prompt or SYSTEM_PROMPT
     headers = {
         "Authorization": f"Bearer {config.GROK_API_KEY}",
         "Content-Type": "application/json",
@@ -39,7 +51,7 @@ async def rewrite_news(text: str) -> str:
     payload = {
         "model": config.GROK_MODEL,
         "messages": [
-            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "system", "content": prompt},
             {"role": "user", "content": text},
         ],
         "temperature": 0.7,

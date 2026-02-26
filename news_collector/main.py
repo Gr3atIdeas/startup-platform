@@ -5,7 +5,7 @@ import asyncio
 
 import config
 from collector import create_client, register_handlers, get_all_channels
-from admin import create_bot_client, register_admin_handlers
+from admin import create_bot_client, register_admin_handlers, setup_bot_commands
 from moderation import register_moderation_handlers, enqueue_post
 from storage import PostStorage
 
@@ -112,6 +112,7 @@ async def main():
 
     await bot.start(bot_token=config.NEWS_BOT_TOKEN)
     logger.info("Admin bot connected (admin_id=%d)", config.ADMIN_ID)
+    await setup_bot_commands(bot)
 
     # ── User client — channel monitoring (auto-start if session exists) ──
     await start_user_client(storage, bot=bot)
