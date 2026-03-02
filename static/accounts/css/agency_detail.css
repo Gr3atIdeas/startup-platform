@@ -5231,7 +5231,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   font-size: 14px;
   line-height: 1.6;
   letter-spacing: -0.02em;
-  color: var(--text-secondary);
+  color: #FFFFFF;
 }
 
 .agency-intro-description {
