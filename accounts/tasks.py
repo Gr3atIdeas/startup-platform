@@ -1,7 +1,6 @@
 import logging
 import uuid
 import base64
-from urllib.parse import urlparse
 from celery import shared_task
 from django.conf import settings
 from django.utils import timezone
@@ -9,8 +8,6 @@ import boto3
 from .models import FileStorage, FileTypes, EntityTypes, Startups
 from PIL import Image
 from io import BytesIO
-
-import psycopg2
 
 logger = logging.getLogger(__name__)
 
@@ -60,16 +57,36 @@ _ENTITY_MODELS = {
 _TABLE_PREFIX = "news_"
 
 
-def _parse_database_url(url: str) -> dict:
-    """Parse DATABASE_URL into psycopg2 connect kwargs."""
-    parsed = urlparse(url)
-    return {
-        "host": parsed.hostname,
-        "port": parsed.port or 5432,
-        "dbname": parsed.path.lstrip("/"),
-        "user": parsed.username,
-        "password": parsed.password,
-    }
+def _ensure_news_tables():
+    """Create news_moderation_queue and news_entity_notifications if they don't exist."""
+    from django.db import connection
+    with connection.cursor() as cur:
+        cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS {_TABLE_PREFIX}moderation_queue (
+                id SERIAL PRIMARY KEY,
+                source_channel TEXT NOT NULL DEFAULT '',
+                source_msg_id INTEGER,
+                original_text TEXT NOT NULL DEFAULT '',
+                edited_text TEXT,
+                media_type TEXT NOT NULL DEFAULT '',
+                media_filename TEXT NOT NULL DEFAULT '',
+                bot_msg_id INTEGER,
+                status TEXT NOT NULL DEFAULT 'pending',
+                edit_count INTEGER NOT NULL DEFAULT 0,
+                created_at TIMESTAMP DEFAULT NOW(),
+                updated_at TIMESTAMP DEFAULT NOW()
+            )
+        """)
+        cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS {_TABLE_PREFIX}entity_notifications (
+                id SERIAL PRIMARY KEY,
+                entity_type TEXT NOT NULL,
+                entity_id INTEGER NOT NULL,
+                queue_id INTEGER,
+                created_at TIMESTAMP DEFAULT NOW(),
+                UNIQUE(entity_type, entity_id)
+            )
+        """)
 
 
 @shared_task(bind=True, max_retries=3)
@@ -95,74 +112,64 @@ def notify_entity_approved(self, entity_type: str, entity_id: int):
             logger.error("Entity %s id=%d not found", entity_type, entity_id)
             return
 
-        # Connect to shared PostgreSQL (same DATABASE_URL as news_collector)
-        import os
-        db_url = os.environ.get("DATABASE_URL", "")
-        if not db_url:
-            logger.error("DATABASE_URL not set — cannot write to news queue")
-            return
+        from django.db import connection
 
-        conn = psycopg2.connect(**_parse_database_url(db_url))
-        conn.autocommit = True
+        # Ensure news_ tables exist (idempotent)
+        _ensure_news_tables()
 
-        try:
-            # Check if already notified
-            with conn.cursor() as cur:
-                cur.execute(
-                    f"SELECT 1 FROM {_TABLE_PREFIX}entity_notifications "
-                    f"WHERE entity_type = %s AND entity_id = %s",
-                    (entity_type, entity_id),
-                )
-                if cur.fetchone():
-                    logger.info("Entity %s id=%d already notified, skipping", entity_type, entity_id)
-                    return
+        # Check if already notified
+        with connection.cursor() as cur:
+            cur.execute(
+                f"SELECT 1 FROM {_TABLE_PREFIX}entity_notifications "
+                f"WHERE entity_type = %s AND entity_id = %s",
+                (entity_type, entity_id),
+            )
+            if cur.fetchone():
+                logger.info("Entity %s id=%d already notified, skipping", entity_type, entity_id)
+                return
 
-            # Build announcement text
-            direction = ""
-            if hasattr(entity, "direction") and entity.direction:
-                direction = str(entity.direction)
-            stage = ""
-            if hasattr(entity, "stage") and entity.stage:
-                stage = str(entity.stage)
+        # Build announcement text
+        direction = ""
+        if hasattr(entity, "direction") and entity.direction:
+            direction = str(entity.direction)
+        stage = ""
+        if hasattr(entity, "stage") and entity.stage:
+            stage = str(entity.stage)
 
-            template = _ENTITY_TEMPLATES[entity_type]
-            text = template.format(
-                title=entity.title or "",
-                short_description=entity.short_description or "",
-                direction=direction,
-                stage=stage,
-                id=entity_id,
+        template = _ENTITY_TEMPLATES[entity_type]
+        text = template.format(
+            title=entity.title or "",
+            short_description=entity.short_description or "",
+            direction=direction,
+            stage=stage,
+            id=entity_id,
+        )
+
+        # Insert into moderation queue with status='pending_bot'
+        with connection.cursor() as cur:
+            cur.execute(
+                f"""INSERT INTO {_TABLE_PREFIX}moderation_queue
+                    (source_channel, source_msg_id, original_text, media_type, media_filename,
+                     status, created_at, updated_at)
+                    VALUES (%s, %s, %s, %s, %s, 'pending_bot', NOW(), NOW())
+                    RETURNING id""",
+                ("platform", None, text, "", ""),
+            )
+            queue_id = cur.fetchone()[0]
+
+        # Mark as notified
+        with connection.cursor() as cur:
+            cur.execute(
+                f"""INSERT INTO {_TABLE_PREFIX}entity_notifications
+                    (entity_type, entity_id, queue_id)
+                    VALUES (%s, %s, %s) ON CONFLICT (entity_type, entity_id) DO NOTHING""",
+                (entity_type, entity_id, queue_id),
             )
 
-            # Insert into moderation queue with status='pending_bot'
-            from datetime import datetime
-            now = datetime.utcnow()
-            with conn.cursor() as cur:
-                cur.execute(
-                    f"""INSERT INTO {_TABLE_PREFIX}moderation_queue
-                        (source_channel, source_msg_id, original_text, media_type, media_filename,
-                         status, created_at, updated_at)
-                        VALUES (%s, %s, %s, %s, %s, 'pending_bot', %s, %s)
-                        RETURNING id""",
-                    ("platform", None, text, "", "", now, now),
-                )
-                queue_id = cur.fetchone()[0]
-
-            # Mark as notified
-            with conn.cursor() as cur:
-                cur.execute(
-                    f"""INSERT INTO {_TABLE_PREFIX}entity_notifications
-                        (entity_type, entity_id, queue_id)
-                        VALUES (%s, %s, %s) ON CONFLICT (entity_type, entity_id) DO NOTHING""",
-                    (entity_type, entity_id, queue_id),
-                )
-
-            logger.info(
-                "Entity notification queued: %s id=%d → queue #%d",
-                entity_type, entity_id, queue_id,
-            )
-        finally:
-            conn.close()
+        logger.info(
+            "Entity notification queued: %s id=%d → queue #%d",
+            entity_type, entity_id, queue_id,
+        )
 
     except Exception as e:
         logger.error("notify_entity_approved failed: %s", e, exc_info=True)

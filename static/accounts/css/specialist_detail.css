@@ -1421,7 +1421,7 @@ a:hover {
 .content-section .section-title {
   font-size: 24px;
   font-weight: 700;
-  color: var(--accent-yellow, #f7bf4f);
+  color: #FFFFFF;
   margin-bottom: 20px;
   padding-bottom: 0;
   border-bottom: none;
@@ -1447,7 +1447,7 @@ a:hover {
 }
 
 .content-section#info-section .about-section .section-content {
-  color: var(--text-secondary);
+  color: #FFFFFF;
   font-size: 16px;
   line-height: 1.6;
 }
@@ -1900,7 +1900,7 @@ a:hover {
 #profit-calculation-section,
 #documents-section,
 #conditions-section {
-  color: var(--text-secondary);
+  color: #FFFFFF;
 }
 
 .profit-calculation-wrapper {
@@ -1914,7 +1914,7 @@ a:hover {
 .profit-calculation-content {
   font-size: 16px;
   line-height: 1.6;
-  color: var(--text-secondary);
+  color: #FFFFFF;
 }
 
 
@@ -4669,7 +4669,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   font-size: 20px;
   line-height: 1.59;
   letter-spacing: -0.02em;
-  color: #FFEF2B;
+  color: #FFFFFF;
   margin: 0 0 25px 0;
   clear: none;
 }
@@ -4723,7 +4723,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   margin: 20px 0 12px 0;
   font-weight: 600;
   line-height: 1.4;
-  color: #FFEF2B;
+  color: #FFFFFF;
 }
 
 .about-text h1:first-child,
