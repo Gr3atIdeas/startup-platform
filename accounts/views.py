@@ -2924,9 +2924,49 @@ def profile(request, user_id=None):
                     return JsonResponse({"success": False, "errors": form.errors})
                 messages.error(request, "Пожалуйста, исправьте ошибки.")
         elif "avatar" in request.FILES:
-            user.profile_picture_url = request.FILES["avatar"]
-            user.save(update_fields=["profile_picture_url"])
-            messages.success(request, "Аватар успешно обновлен!")
+            avatar = request.FILES["avatar"]
+            allowed_mimes = ["image/jpeg", "image/png"]
+            if avatar.content_type not in allowed_mimes:
+                messages.error(request, "Допустимы только файлы PNG или JPEG.")
+                return redirect("profile")
+            try:
+                avatar_id = str(uuid.uuid4())
+                file_path = f"users/{user.user_id}/avatar/{avatar_id}_{avatar.name}"
+                s3_client = boto3.client(
+                    "s3",
+                    endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                    region_name=settings.AWS_S3_REGION_NAME,
+                )
+                bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+                # Delete old avatar files from S3
+                prefix = f"users/{user.user_id}/avatar/"
+                response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
+                if "Contents" in response:
+                    for obj in response["Contents"]:
+                        s3_client.delete_object(Bucket=bucket_name, Key=obj["Key"])
+                FileStorage.objects.filter(
+                    entity_type__type_name="user",
+                    entity_id=user.user_id,
+                    file_type__type_name="avatar",
+                ).delete()
+                default_storage.save(file_path, avatar)
+                user.profile_picture_url = avatar_id
+                user.save(update_fields=["profile_picture_url"])
+                entity_type_obj, _ = EntityTypes.objects.get_or_create(type_name="user")
+                file_type_obj, _ = FileTypes.objects.get_or_create(type_name="avatar")
+                FileStorage.objects.create(
+                    entity_type=entity_type_obj,
+                    entity_id=user.user_id,
+                    file_url=avatar_id,
+                    file_type=file_type_obj,
+                    uploaded_at=timezone.now(),
+                )
+                messages.success(request, "Аватар успешно обновлен!")
+            except Exception as e:
+                logger.error("Avatar upload failed for user %d: %s", user.user_id, e)
+                messages.error(request, "Ошибка при загрузке аватара.")
             return redirect("profile")
     form = ProfileEditForm(instance=user)
     startups_list = Startups.objects.filter(owner=user).order_by("-created_at")
