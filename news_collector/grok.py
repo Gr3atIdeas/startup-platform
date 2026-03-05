@@ -57,23 +57,31 @@ async def rewrite_news(text: str, system_prompt: str = "") -> str:
         "temperature": 0.7,
     }
 
-    try:
-        connector = None
-        if config.PROXY_URL:
-            from aiohttp_socks import ProxyConnector
-            connector = ProxyConnector.from_url(config.PROXY_URL)
-        async with aiohttp.ClientSession(connector=connector) as session:
-            async with session.post(API_URL, json=payload, headers=headers, timeout=aiohttp.ClientTimeout(total=60)) as resp:
-                if resp.status != 200:
-                    body = await resp.text()
-                    logger.error("Grok API error %d: %s", resp.status, body[:300])
-                    raise GrokError(f"API {resp.status}: {body[:200]}")
-                data = await resp.json()
-                result = data["choices"][0]["message"]["content"].strip()
-                logger.info("Grok API OK: input %d chars → output %d chars", len(text), len(result))
-                return result
-    except GrokError:
-        raise
-    except Exception as e:
-        logger.error("Grok API request failed: %s (type: %s)", e, type(e).__name__)
-        raise GrokError(f"Ошибка запроса: {type(e).__name__}: {e}")
+    last_err = None
+    for attempt in range(1, 4):  # up to 3 attempts
+        try:
+            connector = None
+            if config.PROXY_URL:
+                from aiohttp_socks import ProxyConnector
+                connector = ProxyConnector.from_url(config.PROXY_URL)
+            async with aiohttp.ClientSession(connector=connector) as session:
+                async with session.post(API_URL, json=payload, headers=headers, timeout=aiohttp.ClientTimeout(total=60)) as resp:
+                    if resp.status != 200:
+                        body = await resp.text()
+                        logger.error("Grok API error %d: %s", resp.status, body[:300])
+                        raise GrokError(f"API {resp.status}: {body[:200]}")
+                    data = await resp.json()
+                    result = data["choices"][0]["message"]["content"].strip()
+                    logger.info("Grok API OK (attempt %d): input %d chars → output %d chars", attempt, len(text), len(result))
+                    return result
+        except GrokError:
+            raise
+        except Exception as e:
+            last_err = e
+            logger.warning("Grok API attempt %d failed: %s (%s)", attempt, e, type(e).__name__)
+            if attempt < 3:
+                import asyncio
+                await asyncio.sleep(2)
+
+    logger.error("Grok API all 3 attempts failed: %s", last_err)
+    raise GrokError(f"Ошибка запроса (3 попытки): {type(last_err).__name__}: {last_err}")
