@@ -189,11 +189,14 @@ async def _handle_edit(event, bot, storage, post, queue_id, target):
 
     try:
         prompt = get_effective_prompt(storage)
+        logger.info("Grok rewrite #%d: sending %d chars", queue_id, len(text_to_edit))
         rewritten = await rewrite_news(text_to_edit, system_prompt=prompt)
+        logger.info("Grok rewrite #%d: received %d chars", queue_id, len(rewritten) if rewritten else 0)
     except Exception as e:
         logger.error("Grok rewrite failed for #%d: %s", queue_id, e)
+        err_text = _html_esc(str(e))
         await progress_msg.edit(
-            f"❌ <b>Grok ошибка:</b> {e}",
+            f"❌ <b>Grok ошибка:</b> {err_text}",
             parse_mode='html',
         )
         return
@@ -262,7 +265,7 @@ async def _handle_edit(event, bot, storage, post, queue_id, target):
     except Exception as e:
         logger.error("Failed to send edited msg #%d: %s", queue_id, e)
         await progress_msg.edit(
-            f"❌ <b>Ошибка отправки:</b> {e}", parse_mode='html',
+            f"❌ <b>Ошибка отправки:</b> {_html_esc(str(e))}", parse_mode='html',
         )
         return
 
@@ -319,7 +322,7 @@ async def _handle_publish(event, bot, storage, post, queue_id, target):
     except Exception as e:
         logger.error("Failed to publish post #%d: %s", queue_id, e)
         await progress_msg.edit(
-            f"❌ <b>Ошибка публикации:</b> {e}", parse_mode='html',
+            f"❌ <b>Ошибка публикации:</b> {_html_esc(str(e))}", parse_mode='html',
         )
         return
 

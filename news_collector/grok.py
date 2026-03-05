@@ -63,15 +63,17 @@ async def rewrite_news(text: str, system_prompt: str = "") -> str:
             from aiohttp_socks import ProxyConnector
             connector = ProxyConnector.from_url(config.PROXY_URL)
         async with aiohttp.ClientSession(connector=connector) as session:
-            async with session.post(API_URL, json=payload, headers=headers, timeout=aiohttp.ClientTimeout(total=30)) as resp:
+            async with session.post(API_URL, json=payload, headers=headers, timeout=aiohttp.ClientTimeout(total=60)) as resp:
                 if resp.status != 200:
                     body = await resp.text()
                     logger.error("Grok API error %d: %s", resp.status, body[:300])
                     raise GrokError(f"API {resp.status}: {body[:200]}")
                 data = await resp.json()
-                return data["choices"][0]["message"]["content"].strip()
+                result = data["choices"][0]["message"]["content"].strip()
+                logger.info("Grok API OK: input %d chars → output %d chars", len(text), len(result))
+                return result
     except GrokError:
         raise
     except Exception as e:
-        logger.error("Grok API request failed: %s", e)
-        raise GrokError(f"Ошибка запроса: {e}")
+        logger.error("Grok API request failed: %s (type: %s)", e, type(e).__name__)
+        raise GrokError(f"Ошибка запроса: {type(e).__name__}: {e}")
