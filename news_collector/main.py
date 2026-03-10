@@ -20,15 +20,23 @@ logger = logging.getLogger("news_collector")
 _state = {"client": None}
 
 
-async def start_user_client(storage, bot=None):
+async def start_user_client(storage, bot=None, force=False):
     """Try to start Telethon user client for channel monitoring.
 
     Uses StringSession from TELETHON_SESSION env var if available (survives deploys).
     Falls back to file-based session.
     """
-    if _state["client"]:
+    if _state["client"] and not force:
         logger.info("User client already running")
         return _state["client"]
+
+    # Disconnect old client if forcing reconnect
+    if _state["client"] and force:
+        try:
+            await _state["client"].disconnect()
+        except Exception:
+            pass
+        _state["client"] = None
 
     if not config.TELEGRAM_PHONE:
         logger.warning("TELEGRAM_PHONE not set — channel monitoring disabled")
@@ -61,6 +69,41 @@ async def start_user_client(storage, bot=None):
     except Exception as e:
         logger.error("Failed to start user client: %s", e)
         return None
+
+
+async def _monitor_user_client(storage, bot, stop_event):
+    """Periodically check if user client is alive and reconnect if needed."""
+    logger.info("User client health monitor started (60s interval)")
+    while not stop_event.is_set():
+        try:
+            await asyncio.wait_for(stop_event.wait(), timeout=60)
+            break
+        except asyncio.TimeoutError:
+            pass
+
+        client = _state.get("client")
+        if client is None:
+            continue
+
+        try:
+            connected = client.is_connected()
+            if not connected:
+                logger.warning("User client disconnected! Attempting reconnect...")
+                new_client = await start_user_client(storage, bot=bot, force=True)
+                if new_client:
+                    logger.info("User client reconnected successfully")
+                else:
+                    logger.error("User client reconnect failed, will retry in 60s")
+        except Exception as e:
+            logger.error("Health check error: %s. Attempting reconnect...", e)
+            try:
+                new_client = await start_user_client(storage, bot=bot, force=True)
+                if new_client:
+                    logger.info("User client reconnected after error")
+                else:
+                    logger.error("User client reconnect failed, will retry in 60s")
+            except Exception as e2:
+                logger.error("Reconnect attempt failed: %s", e2)
 
 
 async def _poll_platform_posts(bot, storage, stop_event):
@@ -135,14 +178,19 @@ async def main():
     # ── Platform post poller — picks up pending_bot entries from Django ──
     poller_task = asyncio.create_task(_poll_platform_posts(bot, storage, stop_event))
 
+    # ── User client health monitor — auto-reconnect if disconnected ──
+    monitor_task = asyncio.create_task(_monitor_user_client(storage, bot, stop_event))
+
     await stop_event.wait()
 
-    # Wait for poller to finish cleanly
+    # Wait for tasks to finish cleanly
     poller_task.cancel()
-    try:
-        await poller_task
-    except asyncio.CancelledError:
-        pass
+    monitor_task.cancel()
+    for task in (poller_task, monitor_task):
+        try:
+            await task
+        except asyncio.CancelledError:
+            pass
 
     logger.info("Disconnecting...")
     if _state["client"]:
