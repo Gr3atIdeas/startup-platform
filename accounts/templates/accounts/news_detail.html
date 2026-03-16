@@ -28,9 +28,13 @@
           <div class="article-meta-rating-row">
             <div class="author-info-block">
               <div class="author-details">
-                <img class="author-avatar" src="{{ article.author.get_profile_picture_url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ article.author.get_full_name|default:'Автор' }}"/>
+                {% if article.author %}
+                  <img class="author-avatar" src="{{ article.author.get_profile_picture_url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ article.author.get_full_name|default:'Автор' }}"/>
+                {% else %}
+                  <img class="author-avatar" src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Редакция"/>
+                {% endif %}
                 <div class="author-name-time">
-                  <div class="author-name">{{ article.author.get_full_name|default:article.author.email|default:"Аноним" }}</div>
+                  <div class="author-name">{% if article.author %}{{ article.author.get_full_name|default:article.author.email|default:"Редакция" }}{% else %}Редакция{% endif %}</div>
                   <div class="publish-time">{{ article.published_at|timesince }} назад</div>
                 </div>
               </div>
@@ -222,7 +226,7 @@
           <img class="similar-article-image" src="{% if similar.get_image_url %}{{ similar.get_image_url }}{% else %}{% static 'accounts/images/main_page/news_placeholder.webp' %}{% endif %}" alt="{{ similar.title }}">
           <div class="similar-article-content">
               <div class="similar-article-title">{{ similar.title }}</div>
-              <div class="similar-article-description">{{ similar.content|truncatewords:20 }}</div>
+              <div class="similar-article-description">{{ similar.content|striptags|truncatewords:20 }}</div>
           </div>
         </a>
         {% empty %}

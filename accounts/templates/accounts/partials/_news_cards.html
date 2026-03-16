@@ -16,11 +16,15 @@
       
       <div class="news-content">
         <div class="news-card-header">
-           <img src="{{ article.author.avatar.url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="Аватар" class="news-avatar">
+           {% if article.author and article.author.avatar %}
+             <img src="{{ article.author.avatar.url }}" alt="Аватар" class="news-avatar">
+           {% else %}
+             <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар" class="news-avatar">
+           {% endif %}
            <div class="news-title-meta">
               <h2 class="news-title"><a href="{% url 'news_detail' article.article_id %}">{{ article.title|default:"Заголовок новости" }}</a></h2>
               <div class="news-meta">
-                {{ article.published_at|date:"d M Y"|default:"2 дня назад" }} | Автор: {{ article.author.get_full_name|default:article.author.email|default:"Неизвестно" }}
+                {{ article.published_at|date:"d M Y"|default:"2 дня назад" }} | Автор: {% if article.author %}{{ article.author.get_full_name|default:article.author.email|default:"Редакция" }}{% else %}Редакция{% endif %}
               </div>
            </div>
         </div>
@@ -31,7 +35,7 @@
           {% if article.tags %}Теги: {{ article.tags }}{% endif %}
         </div>
         <div class="news-excerpt">
-          {{ article.content|truncatewords:25|default:"Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям..." }}
+          {{ article.content|striptags|truncatewords:25|default:"Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям..." }}
         </div>
       </div>
     </div>
