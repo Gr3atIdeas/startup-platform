@@ -8,7 +8,8 @@ from telethon import TelegramClient, events, Button
 
 import config
 from storage import PostStorage
-from grok import rewrite_news, get_effective_prompt
+from grok import rewrite_news, get_effective_prompt, generate_seo_article, GrokError
+from s3_upload import upload_news_image
 
 logger = logging.getLogger(__name__)
 
@@ -337,7 +338,56 @@ async def _handle_publish(event, bot, storage, post, queue_id, target):
         logger.warning("Failed to update buttons after publish #%d: %s", queue_id, e)
 
     storage.update_moderation_queue(queue_id, status='published')
-    logger.info("Post #%d published", queue_id)
+    logger.info("Post #%d published to Telegram", queue_id)
+
+    # ── Publish SEO article to website ────────────────────────────────
+    try:
+        await progress_msg.edit("🌐 <b>Генерирую статью для сайта...</b>", parse_mode='html')
+    except Exception:
+        pass
+
+    try:
+        seo = await generate_seo_article(text)
+
+        # Upload image to S3 if we have media
+        image_url = ''
+        if media_bytes:
+            # create_news_article needs article_id for S3 path, so insert first, then update
+            article_id = storage.create_news_article(
+                title=seo['title'],
+                content=seo['content'],
+                tags=seo.get('tags', ''),
+                category_slug=seo.get('category', ''),
+                image_url='',
+                source_queue_id=queue_id,
+            )
+            if article_id and media_bytes:
+                image_url = upload_news_image(media_bytes, article_id)
+                if image_url:
+                    storage.update_news_article_image(article_id, image_url)
+        else:
+            storage.create_news_article(
+                title=seo['title'],
+                content=seo['content'],
+                tags=seo.get('tags', ''),
+                category_slug=seo.get('category', ''),
+                source_queue_id=queue_id,
+            )
+
+        logger.info("Post #%d published to website", queue_id)
+    except GrokError as e:
+        logger.error("SEO generation failed for post #%d: %s", queue_id, e)
+        try:
+            await bot.send_message(
+                target,
+                f"⚠️ Пост #{queue_id} опубликован в Telegram, но статья для сайта не создана: "
+                f"{_html_esc(str(e))}",
+                parse_mode='html',
+            )
+        except Exception:
+            pass
+    except Exception as e:
+        logger.error("Website publish failed for post #%d: %s", queue_id, e)
 
     # Clean up progress message
     try:

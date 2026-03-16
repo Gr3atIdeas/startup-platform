@@ -48,6 +48,13 @@ def get_telethon_proxy():
 # Канал для публикации одобренных новостей (бот должен быть админом)
 PUBLISH_CHANNEL_ID = os.getenv("PUBLISH_CHANNEL_ID", "")
 
+# S3 (Yandex Cloud) — for uploading news images to website
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID", "")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY", "")
+AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "1-bucket-for-startup-platform1")
+AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL", "https://storage.yandexcloud.net")
+S3_PUBLIC_BASE_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.storage.yandexcloud.net"
+
 # PostgreSQL — shared with Django (from DATABASE_URL)
 DATABASE_URL = os.getenv("DATABASE_URL", "")
 

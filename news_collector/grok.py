@@ -1,5 +1,6 @@
-"""Async client for xAI (Grok) API — news rewriting."""
+"""Async client for xAI (Grok) API — news rewriting & SEO article generation."""
 
+import json
 import logging
 
 import aiohttp
@@ -20,6 +21,25 @@ SYSTEM_PROMPT = (
     "- Не добавляй от себя информацию.\n"
     "- Верни ТОЛЬКО текст новости, без пояснений."
 )
+
+SEO_ARTICLE_PROMPT = """Ты — SEO-редактор новостного сайта про стартапы и бизнес.
+На основе текста новости создай полноценную SEO-оптимизированную статью для сайта.
+
+Верни ответ СТРОГО в JSON формате (без markdown-блоков, только чистый JSON):
+{
+  "title": "SEO-заголовок статьи (до 80 символов, с ключевыми словами)",
+  "content": "Полный HTML-текст статьи. Используй теги <h2>, <h3> для подзаголовков, <p> для абзацев, <strong> для выделения, <ul>/<li> для списков. Минимум 3-4 абзаца. Текст должен быть уникальным, информативным и SEO-оптимизированным.",
+  "tags": "ключевое слово 1, ключевое слово 2, ключевое слово 3",
+  "category": "одна из: medicine, auto, delivery, cafe, fastfood, health, beauty, transport, sport, psychology, ai, technology, finance, education"
+}
+
+Правила:
+- Заголовок должен содержать ключевые слова и привлекать внимание.
+- Контент: расширь новость, добавь контекст и анализ, но не выдумывай факты.
+- Используй HTML-разметку для структуры (h2, h3, p, strong, ul/li).
+- Теги: 3-5 релевантных ключевых слов через запятую.
+- Категория: выбери ОДНУ наиболее подходящую из списка.
+- Верни ТОЛЬКО валидный JSON, без пояснений и markdown."""
 
 
 class GrokError(Exception):
@@ -85,3 +105,37 @@ async def rewrite_news(text: str, system_prompt: str = "") -> str:
 
     logger.error("Grok API all 3 attempts failed: %s", last_err)
     raise GrokError(f"Ошибка запроса (3 попытки): {type(last_err).__name__}: {last_err}")
+
+
+async def generate_seo_article(text: str) -> dict:
+    """Generate SEO-optimized article from news text.
+
+    Returns dict with keys: title, content, tags, category.
+    Raises GrokError on failure.
+    """
+    raw = await rewrite_news(text, system_prompt=SEO_ARTICLE_PROMPT)
+
+    # Strip markdown code block wrappers if present
+    cleaned = raw.strip()
+    if cleaned.startswith("```"):
+        # Remove ```json ... ``` or ``` ... ```
+        lines = cleaned.split("\n")
+        lines = lines[1:]  # drop opening ```json
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        cleaned = "\n".join(lines).strip()
+
+    try:
+        data = json.loads(cleaned)
+    except json.JSONDecodeError as e:
+        logger.error("Grok SEO: invalid JSON response: %s\nRaw: %s", e, raw[:500])
+        raise GrokError(f"Grok вернул невалидный JSON: {e}")
+
+    required = ("title", "content", "tags", "category")
+    missing = [k for k in required if k not in data]
+    if missing:
+        raise GrokError(f"Grok JSON missing keys: {missing}")
+
+    logger.info("SEO article generated: title=%r, category=%s, tags=%s",
+                data["title"][:60], data["category"], data["tags"][:60])
+    return data

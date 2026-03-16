@@ -320,6 +320,73 @@ class PostStorage:
             columns = [desc[0] for desc in cur.description]
             return [dict(zip(columns, row)) for row in rows]
 
+    # ── news articles (website) ──────────────────────────────────────
+
+    def create_news_article(self, title: str, content: str, tags: str = '',
+                            category_slug: str = '', image_url: str = '',
+                            source_queue_id: int = None) -> int | None:
+        """Insert a published article into news_articles table (Django site).
+
+        Returns article_id or None on failure.
+        """
+        import re
+        import uuid as _uuid
+
+        # Simple slug generation (no Django dependency)
+        slug_base = title.lower().strip()
+        slug_base = re.sub(r'[^\w\s-]', '', slug_base)
+        slug_base = re.sub(r'[\s_]+', '-', slug_base).strip('-')[:250]
+        if not slug_base:
+            slug_base = "article"
+        slug = f"{slug_base}-{_uuid.uuid4().hex[:8]}"
+
+        now = datetime.utcnow()
+
+        # Resolve category_id from slug
+        category_id = None
+        if category_slug:
+            try:
+                with self.conn.cursor() as cur:
+                    cur.execute(
+                        "SELECT category_id FROM news_categories WHERE slug = %s",
+                        (category_slug,),
+                    )
+                    row = cur.fetchone()
+                    if row:
+                        category_id = row[0]
+            except Exception as e:
+                logger.warning("Failed to resolve category %r: %s", category_slug, e)
+
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute(
+                    """INSERT INTO news_articles
+                       (title, content, slug, status, tags, image_url,
+                        category_id, is_featured, published_at, updated_at)
+                       VALUES (%s, %s, %s, 'published', %s, %s, %s, false, %s, %s)
+                       RETURNING article_id""",
+                    (title, content, slug, tags, image_url or '',
+                     category_id, now, now),
+                )
+                article_id = cur.fetchone()[0]
+                logger.info("Created news article #%d: %s (queue #%s)",
+                            article_id, title[:50], source_queue_id)
+                return article_id
+        except Exception as e:
+            logger.error("Failed to create news article: %s", e)
+            return None
+
+    def update_news_article_image(self, article_id: int, image_url: str):
+        """Update the image_url of a news article."""
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute(
+                    "UPDATE news_articles SET image_url = %s, updated_at = %s WHERE article_id = %s",
+                    (image_url, datetime.utcnow(), article_id),
+                )
+        except Exception as e:
+            logger.error("Failed to update article #%d image: %s", article_id, e)
+
     # ── close ─────────────────────────────────────────────────────────
 
     def close(self):
