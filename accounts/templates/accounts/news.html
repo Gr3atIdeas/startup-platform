@@ -172,13 +172,13 @@
     });
   })();
 
-  function deleteNews(articleId) {
+  function deleteNews(slug) {
     if (!confirm('Вы уверены, что хотите удалить эту новость?')) {
       return;
     }
     const csrfToken = '{{ csrf_token }}';
 
-    fetch(`/news/${articleId}/delete/`, {
+    fetch(`/news/${slug}/delete/`, {
       method: 'POST',
       headers: {
         'X-CSRFToken': csrfToken,

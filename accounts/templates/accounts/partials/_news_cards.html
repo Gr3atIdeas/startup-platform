@@ -4,40 +4,23 @@
   {% for article in articles %}
     <div class="news-card">
       {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-        <button class="delete-news-btn" data-article-id="{{ article.article_id }}">Удалить</button>
+        <button class="delete-news-btn" data-article-slug="{{ article.slug }}">Удалить</button>
       {% endif %}
-      <a href="{% url 'news_detail' article.article_id %}" class="news-image-link">
-        {% if article.get_image_url %}
-          <img src="{{ article.get_image_url }}" alt="{{ article.title }}" class="news-image">
-        {% else %}
-          <img src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="{{ article.title|default:'Заголовок новости' }}" class="news-image">
-        {% endif %}
+
+      <a href="{% url 'news_detail' article.slug %}" class="news-card-link">
+        <div class="news-content">
+          <h2 class="news-title">{{ article.title|default:"Заголовок новости" }}</h2>
+          <div class="news-meta">
+            {{ article.published_at|date:"d M Y"|default:"Недавно" }}
+            {% if article.category %}
+              <span class="category-badge">{{ article.category.name }}</span>
+            {% endif %}
+          </div>
+          <div class="news-excerpt">
+            {{ article.content|striptags|truncatewords:30|default:"Описание новости..." }}
+          </div>
+        </div>
       </a>
-      
-      <div class="news-content">
-        <div class="news-card-header">
-           {% if article.author and article.author.avatar %}
-             <img src="{{ article.author.avatar.url }}" alt="Аватар" class="news-avatar">
-           {% else %}
-             <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар" class="news-avatar">
-           {% endif %}
-           <div class="news-title-meta">
-              <h2 class="news-title"><a href="{% url 'news_detail' article.article_id %}">{{ article.title|default:"Заголовок новости" }}</a></h2>
-              <div class="news-meta">
-                {{ article.published_at|date:"d M Y"|default:"2 дня назад" }} | Автор: {% if article.author %}{{ article.author.get_full_name|default:article.author.email|default:"Редакция" }}{% else %}Редакция{% endif %}
-              </div>
-           </div>
-        </div>
-        <div class="news-tags">
-          {% if article.category %}
-            <span class="category-badge" style="background: #004E9F; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-right: 6px;">{{ article.category.name }}</span>
-          {% endif %}
-          {% if article.tags %}Теги: {{ article.tags }}{% endif %}
-        </div>
-        <div class="news-excerpt">
-          {{ article.content|striptags|truncatewords:25|default:"Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям..." }}
-        </div>
-      </div>
     </div>
   {% empty %}
     <div class="no-news">
@@ -49,7 +32,7 @@
 {% if page_obj and paginator and paginator.num_pages > 1 %}
   <div class="pagination">
     {% if page_obj.has_previous %}
-      <a href="?page={{ page_obj.previous_page_number }}" class="page-item">« Предыдущая</a>
+      <a href="?page={{ page_obj.previous_page_number }}" class="page-item">&laquo; Предыдущая</a>
     {% endif %}
 
     {% for num in paginator.page_range %}
@@ -65,7 +48,7 @@
     {% endfor %}
 
     {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}" class="page-item">Следующая »</a>
+      <a href="?page={{ page_obj.next_page_number }}" class="page-item">Следующая &raquo;</a>
       <a href="?page={{ paginator.num_pages }}" class="page-item">Последняя &raquo;</a>
     {% endif %}
   </div>

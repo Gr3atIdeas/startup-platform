@@ -6878,10 +6878,10 @@ def news(request):
         })
 
     return render(request, "accounts/news.html", context)
-def news_detail(request, article_id):
+def news_detail(request, slug):
     from .forms import NewsCommentForm
 
-    article = get_object_or_404(NewsArticles, article_id=article_id)
+    article = get_object_or_404(NewsArticles, slug=slug)
 
     # Не показывать черновики/архив обычным пользователям
     if article.status != "published":
@@ -6912,7 +6912,7 @@ def news_detail(request, article_id):
             else:
                 NewsLikes.objects.get_or_create(article=article, user=user)
                 NewsDislikes.objects.filter(article=article, user=user).delete()
-            return redirect("news_detail", article_id=article.article_id)
+            return redirect("news_detail", slug=article.slug)
 
         elif "dislike" in request.POST:
             if user_disliked:
@@ -6920,7 +6920,7 @@ def news_detail(request, article_id):
             else:
                 NewsDislikes.objects.get_or_create(article=article, user=user)
                 NewsLikes.objects.filter(article=article, user=user).delete()
-            return redirect("news_detail", article_id=article.article_id)
+            return redirect("news_detail", slug=article.slug)
 
         elif "comment" in request.POST:
             comment_form = NewsCommentForm(request.POST)
@@ -6935,7 +6935,7 @@ def news_detail(request, article_id):
                     except (ValueError, TypeError):
                         pass
                 comment.save()
-                return redirect("news_detail", article_id=article.article_id)
+                return redirect("news_detail", slug=article.slug)
 
     # Комментарии (top-level)
     comments = NewsComments.objects.filter(
@@ -6987,10 +6987,10 @@ def news_detail(request, article_id):
         },
     )
 @login_required
-def edit_news(request, article_id):
+def edit_news(request, slug):
     from .forms import NewsEditForm
 
-    article = get_object_or_404(NewsArticles, article_id=article_id)
+    article = get_object_or_404(NewsArticles, slug=slug)
     is_mod = (request.user.role.role_name or "").lower() == "moderator"
     is_author = article.author_id == request.user.user_id
     if not is_mod and not is_author:
@@ -7017,7 +7017,7 @@ def edit_news(request, article_id):
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({"success": True})
             messages.success(request, "Новость обновлена!")
-            return redirect("news_detail", article_id=article.article_id)
+            return redirect("news_detail", slug=article.slug)
         else:
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({"success": False, "errors": form.errors})
@@ -7052,14 +7052,14 @@ def delete_news_comment(request, comment_id):
 
 
 @login_required
-def delete_news(request, article_id):
+def delete_news(request, slug):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
     if not request.user.is_authenticated or (request.user.role.role_name or "").lower() != "moderator":
         return JsonResponse(
             {"success": False, "error": "У вас нет прав для этого действия."}
         )
-    article = get_object_or_404(NewsArticles, article_id=article_id)
+    article = get_object_or_404(NewsArticles, slug=slug)
     if article.image_url:
         try:
             default_storage.delete(article.image_url)

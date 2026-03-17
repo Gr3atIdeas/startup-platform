@@ -239,9 +239,9 @@
 
       var handler = function(e) {
         e.preventDefault();
-        var articleId = this.getAttribute('data-article-id');
-        if (articleId && typeof deleteNews === 'function') {
-          deleteNews(articleId);
+        var slug = this.getAttribute('data-article-slug');
+        if (slug && typeof deleteNews === 'function') {
+          deleteNews(slug);
         }
       };
 

@@ -603,7 +603,7 @@ class NewsArticles(models.Model):
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse("news_detail", kwargs={"article_id": self.article_id})
+        return reverse("news_detail", kwargs={"slug": self.slug})
 
     def get_image_url(self):
         """Генерирует полный URL для картинки новости."""
