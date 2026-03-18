@@ -6811,6 +6811,15 @@ def news(request):
         else:
             return JsonResponse({"success": False, "error": "Форма содержит ошибки."})
 
+    # Backfill slugs for articles that don't have one
+    from django.utils.text import slugify as _slugify
+    for art in NewsArticles.objects.filter(Q(slug__isnull=True) | Q(slug="")):
+        base_slug = _slugify(art.title, allow_unicode=True)[:250]
+        if not base_slug:
+            base_slug = "article"
+        art.slug = f"{base_slug}-{uuid.uuid4().hex[:8]}"
+        art.save(update_fields=["slug"])
+
     articles = NewsArticles.objects.filter(
         status="published"
     ).select_related("author", "category")
