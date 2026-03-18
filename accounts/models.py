@@ -591,11 +591,28 @@ class NewsArticles(models.Model):
     def __str__(self):
         return self.title
 
+    @staticmethod
+    def _transliterate(text):
+        """Транслитерация кириллицы в латиницу для SEO-friendly slug."""
+        mapping = {
+            'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e',
+            'ё': 'yo', 'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k',
+            'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r',
+            'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts',
+            'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ъ': '', 'ы': 'y', 'ь': '',
+            'э': 'e', 'ю': 'yu', 'я': 'ya',
+        }
+        result = []
+        for char in text.lower():
+            result.append(mapping.get(char, char))
+        return ''.join(result)
+
     def save(self, *args, **kwargs):
         if not self.slug:
             from django.utils.text import slugify
             import uuid
-            base_slug = slugify(self.title, allow_unicode=True)[:250]
+            transliterated = self._transliterate(self.title)
+            base_slug = slugify(transliterated)[:250]
             if not base_slug:
                 base_slug = "article"
             self.slug = f"{base_slug}-{uuid.uuid4().hex[:8]}"
