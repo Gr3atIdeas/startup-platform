@@ -610,12 +610,16 @@ class NewsArticles(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             from django.utils.text import slugify
-            import uuid
             transliterated = self._transliterate(self.title)
-            base_slug = slugify(transliterated)[:250]
+            base_slug = slugify(transliterated)[:270]
             if not base_slug:
                 base_slug = "article"
-            self.slug = f"{base_slug}-{uuid.uuid4().hex[:8]}"
+            slug = base_slug
+            counter = 2
+            while NewsArticles.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
