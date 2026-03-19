@@ -32,7 +32,7 @@ RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt
 
 COPY marketplace/ ./marketplace/
 COPY accounts/ ./accounts/
@@ -47,12 +47,9 @@ COPY static/accounts/ ./static/accounts/
 COPY entrypoint.sh .
 COPY update.sh .
 
-RUN chmod +x health_check.py
-RUN chmod +x entrypoint.sh
-RUN chmod +x update.sh
-
-RUN mkdir -p /app/news_collector/data
-RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
+RUN chmod +x health_check.py entrypoint.sh update.sh \
+    && mkdir -p /app/news_collector/data \
+    && useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
 
 EXPOSE 3000
