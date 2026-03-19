@@ -39,7 +39,7 @@ body {
   height: 521px;
   position: relative;
   background-color: black;
-  background-image: url('../images/mainimg_notification.png');
+  background-image: url('../images/mainimg_notification.webp');
   background-size: cover; 
   background-position: center;
   box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);

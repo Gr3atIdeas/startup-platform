@@ -18,7 +18,7 @@
     top: 0; left: 0; right: 0; bottom: 0;
     width: 100vw;
     height: 100vh;
-    background: url('/static/accounts/images/404/stars.jpg') center center/cover no-repeat;
+    background: url('/static/accounts/images/404/stars.webp') center center/cover no-repeat;
     z-index: 0;
 }
 
