@@ -6965,13 +6965,13 @@ def news_detail(request, slug):
     ).exclude(article_id=article.article_id).select_related("author")
 
     if article.category_id:
-        similar_by_cat = list(similar.filter(category_id=article.category_id).order_by("-published_at")[:3])
+        similar_by_cat = list(similar.filter(category_id=article.category_id).order_by("-published_at")[:6])
     else:
         similar_by_cat = []
 
-    if len(similar_by_cat) < 3:
+    if len(similar_by_cat) < 6:
         exclude_ids = [article.article_id] + [a.article_id for a in similar_by_cat]
-        extra = list(similar.exclude(article_id__in=exclude_ids).order_by("-published_at")[:3 - len(similar_by_cat)])
+        extra = list(similar.exclude(article_id__in=exclude_ids).order_by("-published_at")[:6 - len(similar_by_cat)])
         similar_by_cat.extend(extra)
 
     comment_form = NewsCommentForm()
@@ -6993,6 +6993,52 @@ def news_detail(request, slug):
             "comment_form": comment_form,
         },
     )
+
+
+def api_similar_news(request):
+    """API for lazy-loading similar articles."""
+    from django.http import JsonResponse
+    from django.template.defaultfilters import truncatewords, striptags
+
+    article_id = request.GET.get("article_id")
+    offset = int(request.GET.get("offset", 0))
+    limit = int(request.GET.get("limit", 6))
+
+    if not article_id:
+        return JsonResponse({"articles": [], "has_more": False})
+
+    try:
+        article = NewsArticles.objects.get(article_id=article_id)
+    except NewsArticles.DoesNotExist:
+        return JsonResponse({"articles": [], "has_more": False})
+
+    qs = NewsArticles.objects.filter(status="published").exclude(
+        article_id=article.article_id
+    ).order_by("-published_at")
+
+    if article.category_id:
+        cat_qs = qs.filter(category_id=article.category_id)
+        other_qs = qs.exclude(category_id=article.category_id)
+        combined = list(cat_qs) + list(other_qs)
+    else:
+        combined = list(qs)
+
+    page = combined[offset : offset + limit]
+    has_more = len(combined) > offset + limit
+
+    articles_data = []
+    for a in page:
+        articles_data.append({
+            "slug": a.slug,
+            "title": a.title,
+            "excerpt": truncatewords(striptags(a.content or ""), 15),
+            "image_url": a.get_image_url() if a.get_image_url() else None,
+            "date": a.published_at.strftime("%d %b %Y") if a.published_at else "",
+        })
+
+    return JsonResponse({"articles": articles_data, "has_more": has_more})
+
+
 @login_required
 def edit_news(request, slug):
     from .forms import NewsEditForm

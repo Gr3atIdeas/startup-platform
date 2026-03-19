@@ -21,267 +21,301 @@
       </a>
     </div>
 
-    <div class="news-content-layout">
-
-      <div class="news-article-main">
-        <div class="news-article-header">
-          <div class="article-meta-rating-row">
-            <div class="author-info-block">
-              <div class="author-details">
-                <div class="author-name-time">
-                  <div class="publish-time">{{ article.published_at|date:"d M Y" }} ({{ article.published_at|timesince }} назад)</div>
-                </div>
-              </div>
-              <div class="article-stats-small">
-                <div class="stat-item">
-                  <form method="post" style="margin: 0; display: flex;">
-                    {% csrf_token %}
-                    <button type="submit" name="like" class="like-button {% if user_liked %}liked{% endif %}">
-                      <i class="fas fa-heart"></i>
-                      <span class="like-count">{{ likes_count }}</span>
-                    </button>
-                  </form>
-                </div>
-                <div class="stat-item">
-                  <form method="post" style="margin: 0; display: flex;">
-                    {% csrf_token %}
-                    <button type="submit" name="dislike" class="like-button {% if user_disliked %}liked{% endif %}">
-                      <i class="fas fa-thumbs-down"></i>
-                      <span class="like-count">{{ dislikes_count }}</span>
-                    </button>
-                  </form>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-icon">
-                    <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
-                  </div>
-                  <div class="stat-text">{{ comments_count }}</div>
-                </div>
+    <article class="news-article-main">
+      <div class="news-article-header">
+        <div class="article-meta-rating-row">
+          <div class="author-info-block">
+            <div class="author-details">
+              <div class="author-name-time">
+                <div class="publish-time">{{ article.published_at|date:"d M Y" }} ({{ article.published_at|timesince }} назад)</div>
               </div>
             </div>
-            {% if article.category %}
-            <div class="rating-block">
-              <span class="category-badge">{{ article.category.name }}</span>
+            <div class="article-stats-small">
+              <div class="stat-item">
+                <form method="post" style="margin: 0; display: flex;">
+                  {% csrf_token %}
+                  <button type="submit" name="like" class="like-button {% if user_liked %}liked{% endif %}">
+                    <i class="fas fa-heart"></i>
+                    <span class="like-count">{{ likes_count }}</span>
+                  </button>
+                </form>
+              </div>
+              <div class="stat-item">
+                <form method="post" style="margin: 0; display: flex;">
+                  {% csrf_token %}
+                  <button type="submit" name="dislike" class="like-button {% if user_disliked %}liked{% endif %}">
+                    <i class="fas fa-thumbs-down"></i>
+                    <span class="like-count">{{ dislikes_count }}</span>
+                  </button>
+                </form>
+              </div>
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
+                </div>
+                <div class="stat-text">{{ comments_count }}</div>
+              </div>
             </div>
-            {% endif %}
           </div>
-
-          {% if article.get_image_url %}
-            <img class="article-main-image" src="{{ article.get_image_url }}" alt="{{ article.title }}">
-          {% else %}
-            <img class="article-main-image" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="{{ article.title }}">
+          {% if article.category %}
+          <div class="rating-block">
+            <span class="category-badge">{{ article.category.name }}</span>
+          </div>
           {% endif %}
+        </div>
 
-          <div class="article-title-large">
-            {{ article.title }}
-            {% if user.is_authenticated and user.role.role_name == 'moderator' or user == article.author %}
-              <a href="{% url 'edit_news' article.slug %}" class="edit-news-btn" style="margin-left: 10px; font-size: 14px; color: #004E9F;">Редактировать</a>
+        {% if article.get_image_url %}
+          <img class="article-main-image" src="{{ article.get_image_url }}" alt="{{ article.title }}">
+        {% endif %}
+
+        <div class="article-title-row">
+          <h1 class="article-title-large">{{ article.title }}</h1>
+          {% if user.is_authenticated and user.role.role_name == 'moderator' or user == article.author %}
+          <div class="article-actions">
+            <a href="{% url 'edit_news' article.slug %}" class="edit-news-btn">Редактировать</a>
+            {% if user.role.role_name == 'moderator' %}
+            <button class="delete-news-btn" onclick="deleteNews('{{ article.slug }}')">Удалить</button>
             {% endif %}
-            {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-              <button class="delete-news-btn" onclick="deleteNews('{{ article.slug }}')">Удалить</button>
-            {% endif %}
           </div>
+          {% endif %}
         </div>
-
-        <div class="article-content-body">
-          <div class="content-text-full-width">
-              {{ article.content|sanitize_html|safe }}
-          </div>
-        </div>
-
-        <div class="article-footer-stats">
-          <div class="stat-item">
-             <div class="stat-icon">
-               <i class="fas fa-eye" style="font-size: 20px; color: #777;"></i>
-             </div>
-             <div class="stat-text">{{ views_count }} просмотров</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-icon">
-              <img src="{% static 'accounts/images/news/thumbs-up.svg' %}" alt="Лайки">
-            </div>
-            <div class="stat-text">{{ likes_count }}</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-icon">
-              <img src="{% static 'accounts/images/news/thumbs-down.svg' %}" alt="Дизлайки">
-            </div>
-            <div class="stat-text">{{ dislikes_count }}</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-icon">
-              <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
-            </div>
-            <div class="stat-text">{{ comments_count }}</div>
-          </div>
-        </div>
-
-        <!-- Комментарии -->
-        <div class="comments-section">
-            <div class="comments-header">
-                <h2 class="comments-title">Комментарии ({{ comments_count }})</h2>
-            </div>
-
-            <div class="comments-list-container">
-                <div class="comments-list">
-                    {% for comment in comments %}
-                    <div class="comment-item" id="comment-{{ comment.comment_id }}">
-                        <div class="comment-content">
-                            <img class="comment-avatar" src="{{ comment.user.get_profile_picture_url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ comment.user.get_full_name }}"/>
-                            <div class="comment-text-block">
-                                <div class="comment-author-name">{{ comment.user.get_full_name|default:comment.user.email }}</div>
-                                <div class="comment-text">{{ comment.content }}</div>
-                            </div>
-                        </div>
-                        <div class="comment-meta">
-                            <div class="comment-date">{{ comment.created_at|date:"d/m/Y H:i" }}</div>
-                            {% if user.is_authenticated %}
-                            <button class="reply-btn" onclick="showReplyForm({{ comment.comment_id }})">Ответить</button>
-                            {% endif %}
-                            {% if user.is_authenticated and user.role.role_name == 'moderator' or user == comment.user %}
-                            <button class="delete-comment-btn" onclick="deleteComment({{ comment.comment_id }})">Удалить</button>
-                            {% endif %}
-                        </div>
-
-                        <!-- Ответы -->
-                        {% for reply in replies_by_parent|default_if_none:"" %}{% endfor %}
-                        {% with replies=replies_by_parent %}
-                        {% if replies %}
-                        <div class="comment-replies">
-                            {% for reply_id, reply_list in replies.items %}
-                                {% if reply_id == comment.comment_id %}
-                                    {% for reply in reply_list %}
-                                    <div class="comment-item reply-item" id="comment-{{ reply.comment_id }}">
-                                        <div class="comment-content">
-                                            <img class="comment-avatar" src="{{ reply.user.get_profile_picture_url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ reply.user.get_full_name }}"/>
-                                            <div class="comment-text-block">
-                                                <div class="comment-author-name">{{ reply.user.get_full_name|default:reply.user.email }}</div>
-                                                <div class="comment-text">{{ reply.content }}</div>
-                                            </div>
-                                        </div>
-                                        <div class="comment-meta">
-                                            <div class="comment-date">{{ reply.created_at|date:"d/m/Y H:i" }}</div>
-                                            {% if user.is_authenticated and user.role.role_name == 'moderator' or user == reply.user %}
-                                            <button class="delete-comment-btn" onclick="deleteComment({{ reply.comment_id }})">Удалить</button>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                        {% endwith %}
-
-                        <!-- Форма ответа (скрытая) -->
-                        <div class="reply-form-container" id="reply-form-{{ comment.comment_id }}" style="display: none;">
-                            {% if user.is_authenticated %}
-                            <form method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="comment" value="1">
-                                <input type="hidden" name="parent_comment_id" value="{{ comment.comment_id }}">
-                                <textarea name="content" class="add-comment-textarea" placeholder="Ответить на комментарий..." required></textarea>
-                                <button type="submit" class="add-comment-submit-btn">
-                                    <span class="add-comment-submit-text">Ответить</span>
-                                </button>
-                            </form>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div class="no-comments">Комментариев пока нет. Будьте первым!</div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            {% if user.is_authenticated %}
-            <form method="post" class="add-comment-form-container">
-                {% csrf_token %}
-                <input type="hidden" name="comment" value="1">
-                <textarea name="content" class="add-comment-textarea" placeholder="Написать комментарий..." required></textarea>
-                <button type="submit" class="add-comment-submit-btn">
-                    <span class="add-comment-submit-text">Оставить комментарий</span>
-                </button>
-            </form>
-            {% else %}
-            <div class="add-comment-form-container">
-                <p style="text-align: center; color: #777;"><a href="{% url 'login' %}">Войдите</a>, чтобы оставить комментарий</p>
-            </div>
-            {% endif %}
-        </div>
-
       </div>
 
-      <!-- Похожие статьи -->
-      <div class="sidebar-similar-articles">
-        <div class="sidebar-title">Похожие статьи</div>
+      <div class="article-content-body">
+        <div class="content-text-full-width">
+            {{ article.content|sanitize_html|safe }}
+        </div>
+      </div>
+
+      <div class="article-footer-stats">
+        <div class="stat-item">
+           <div class="stat-icon">
+             <i class="fas fa-eye" style="font-size: 20px; color: #777;"></i>
+           </div>
+           <div class="stat-text">{{ views_count }} просмотров</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">
+            <img src="{% static 'accounts/images/news/thumbs-up.svg' %}" alt="Лайки">
+          </div>
+          <div class="stat-text">{{ likes_count }}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">
+            <img src="{% static 'accounts/images/news/thumbs-down.svg' %}" alt="Дизлайки">
+          </div>
+          <div class="stat-text">{{ dislikes_count }}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-icon">
+            <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
+          </div>
+          <div class="stat-text">{{ comments_count }}</div>
+        </div>
+      </div>
+
+      <!-- Комментарии -->
+      <div class="comments-section">
+          <div class="comments-header">
+              <h2 class="comments-title">Комментарии ({{ comments_count }})</h2>
+          </div>
+
+          <div class="comments-list-container">
+              <div class="comments-list">
+                  {% for comment in comments %}
+                  <div class="comment-item" id="comment-{{ comment.comment_id }}">
+                      <div class="comment-content">
+                          <img class="comment-avatar" src="{{ comment.user.get_profile_picture_url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ comment.user.get_full_name }}"/>
+                          <div class="comment-text-block">
+                              <div class="comment-author-name">{{ comment.user.get_full_name|default:comment.user.email }}</div>
+                              <div class="comment-text">{{ comment.content }}</div>
+                          </div>
+                      </div>
+                      <div class="comment-meta">
+                          <div class="comment-date">{{ comment.created_at|date:"d/m/Y H:i" }}</div>
+                          {% if user.is_authenticated %}
+                          <button class="reply-btn" onclick="showReplyForm({{ comment.comment_id }})">Ответить</button>
+                          {% endif %}
+                          {% if user.is_authenticated and user.role.role_name == 'moderator' or user == comment.user %}
+                          <button class="delete-comment-btn" onclick="deleteComment({{ comment.comment_id }})">Удалить</button>
+                          {% endif %}
+                      </div>
+
+                      <!-- Ответы -->
+                      {% for reply in replies_by_parent|default_if_none:"" %}{% endfor %}
+                      {% with replies=replies_by_parent %}
+                      {% if replies %}
+                      <div class="comment-replies">
+                          {% for reply_id, reply_list in replies.items %}
+                              {% if reply_id == comment.comment_id %}
+                                  {% for reply in reply_list %}
+                                  <div class="comment-item reply-item" id="comment-{{ reply.comment_id }}">
+                                      <div class="comment-content">
+                                          <img class="comment-avatar" src="{{ reply.user.get_profile_picture_url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ reply.user.get_full_name }}"/>
+                                          <div class="comment-text-block">
+                                              <div class="comment-author-name">{{ reply.user.get_full_name|default:reply.user.email }}</div>
+                                              <div class="comment-text">{{ reply.content }}</div>
+                                          </div>
+                                      </div>
+                                      <div class="comment-meta">
+                                          <div class="comment-date">{{ reply.created_at|date:"d/m/Y H:i" }}</div>
+                                          {% if user.is_authenticated and user.role.role_name == 'moderator' or user == reply.user %}
+                                          <button class="delete-comment-btn" onclick="deleteComment({{ reply.comment_id }})">Удалить</button>
+                                          {% endif %}
+                                      </div>
+                                  </div>
+                                  {% endfor %}
+                              {% endif %}
+                          {% endfor %}
+                      </div>
+                      {% endif %}
+                      {% endwith %}
+
+                      <!-- Форма ответа (скрытая) -->
+                      <div class="reply-form-container" id="reply-form-{{ comment.comment_id }}" style="display: none;">
+                          {% if user.is_authenticated %}
+                          <form method="post">
+                              {% csrf_token %}
+                              <input type="hidden" name="comment" value="1">
+                              <input type="hidden" name="parent_comment_id" value="{{ comment.comment_id }}">
+                              <textarea name="content" class="add-comment-textarea" placeholder="Ответить на комментарий..." required></textarea>
+                              <button type="submit" class="add-comment-submit-btn">
+                                  <span class="add-comment-submit-text">Ответить</span>
+                              </button>
+                          </form>
+                          {% endif %}
+                      </div>
+                  </div>
+                  {% empty %}
+                  <div class="no-comments">Комментариев пока нет. Будьте первым!</div>
+                  {% endfor %}
+              </div>
+          </div>
+
+          {% if user.is_authenticated %}
+          <form method="post" class="add-comment-form-container">
+              {% csrf_token %}
+              <input type="hidden" name="comment" value="1">
+              <textarea name="content" class="add-comment-textarea" placeholder="Написать комментарий..." required></textarea>
+              <button type="submit" class="add-comment-submit-btn">
+                  <span class="add-comment-submit-text">Оставить комментарий</span>
+              </button>
+          </form>
+          {% else %}
+          <div class="add-comment-form-container">
+              <p style="text-align: center; color: #777;"><a href="{% url 'login' %}">Войдите</a>, чтобы оставить комментарий</p>
+          </div>
+          {% endif %}
+      </div>
+
+    </article>
+
+    <!-- Похожие статьи — горизонтальная лента внизу -->
+    {% if similar_articles %}
+    <section class="similar-section">
+      <h2 class="similar-section-title">Читайте также</h2>
+      <div class="similar-articles-row" id="similar-articles-row">
         {% for similar in similar_articles %}
-        <a href="{% url 'news_detail' similar.slug %}" class="similar-article-card" style="text-decoration: none; color: inherit;">
-          <img class="similar-article-image" src="{% if similar.get_image_url %}{{ similar.get_image_url }}{% else %}{% static 'accounts/images/main_page/news_placeholder.webp' %}{% endif %}" alt="{{ similar.title }}">
-          <div class="similar-article-content">
-              <div class="similar-article-title">{{ similar.title }}</div>
-              <div class="similar-article-description">{{ similar.content|striptags|truncatewords:20 }}</div>
+        <a href="{% url 'news_detail' similar.slug %}" class="similar-card">
+          {% if similar.get_image_url %}
+          <img class="similar-card-image" src="{{ similar.get_image_url }}" alt="{{ similar.title }}">
+          {% endif %}
+          <div class="similar-card-body">
+            <div class="similar-card-title">{{ similar.title }}</div>
+            <div class="similar-card-excerpt">{{ similar.content|striptags|truncatewords:15 }}</div>
+            <div class="similar-card-date">{{ similar.published_at|date:"d M Y" }}</div>
           </div>
         </a>
-        {% empty %}
-        <p style="color: #999; font-size: 14px;">Нет похожих статей</p>
         {% endfor %}
       </div>
-    </div>
+      <div class="similar-load-more-container">
+        <button class="similar-load-more-btn" id="load-more-btn" data-offset="{{ similar_articles|length }}" data-article="{{ article.article_id }}">
+          Показать ещё
+        </button>
+      </div>
+    </section>
+    {% endif %}
+
   </div>
 </div>
 
 <script>
   function deleteNews(slug) {
-    if (!confirm('Вы уверены, что хотите удалить эту новость?')) {
-      return;
-    }
-
+    if (!confirm('Вы уверены, что хотите удалить эту новость?')) return;
     fetch(`/news/${slug}/delete/`, {
       method: 'POST',
-      headers: {
-        'X-CSRFToken': '{{ csrf_token }}'
-      }
+      headers: { 'X-CSRFToken': '{{ csrf_token }}' }
     })
-    .then(response => response.json())
+    .then(r => r.json())
     .then(data => {
-      if (data.success) {
-        window.location.href = "{% url 'news' %}";
-      } else {
-        alert(data.error || 'Ошибка при удалении новости');
-      }
+      if (data.success) window.location.href = "{% url 'news' %}";
+      else alert(data.error || 'Ошибка при удалении');
     })
-    .catch(error => {
-      alert('Произошла ошибка при удалении новости');
-    });
+    .catch(() => alert('Ошибка при удалении'));
   }
 
   function deleteComment(commentId) {
     if (!confirm('Удалить комментарий?')) return;
-
     fetch(`/news/comment/${commentId}/delete/`, {
       method: 'POST',
-      headers: {
-        'X-CSRFToken': '{{ csrf_token }}'
-      }
+      headers: { 'X-CSRFToken': '{{ csrf_token }}' }
     })
-    .then(response => response.json())
+    .then(r => r.json())
     .then(data => {
       if (data.success) {
         const el = document.getElementById('comment-' + commentId);
         if (el) el.remove();
-      } else {
-        alert(data.error || 'Ошибка при удалении комментария');
-      }
+      } else alert(data.error || 'Ошибка');
     })
-    .catch(() => alert('Ошибка при удалении комментария'));
+    .catch(() => alert('Ошибка при удалении'));
   }
 
   function showReplyForm(commentId) {
     const form = document.getElementById('reply-form-' + commentId);
-    if (form) {
-      form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    }
+    if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // Подгрузка похожих статей
+  const loadMoreBtn = document.getElementById('load-more-btn');
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', function() {
+      const offset = parseInt(this.dataset.offset);
+      const articleId = this.dataset.article;
+      this.disabled = true;
+      this.textContent = 'Загрузка...';
+
+      fetch(`/api/news/similar/?article_id=${articleId}&offset=${offset}&limit=6`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.articles && data.articles.length > 0) {
+            const row = document.getElementById('similar-articles-row');
+            data.articles.forEach(a => {
+              const card = document.createElement('a');
+              card.href = `/news/${a.slug}/`;
+              card.className = 'similar-card';
+              card.innerHTML = `
+                ${a.image_url ? `<img class="similar-card-image" src="${a.image_url}" alt="${a.title}">` : ''}
+                <div class="similar-card-body">
+                  <div class="similar-card-title">${a.title}</div>
+                  <div class="similar-card-excerpt">${a.excerpt}</div>
+                  <div class="similar-card-date">${a.date}</div>
+                </div>
+              `;
+              row.appendChild(card);
+            });
+            this.dataset.offset = offset + data.articles.length;
+            this.disabled = false;
+            this.textContent = 'Показать ещё';
+            if (!data.has_more) this.style.display = 'none';
+          } else {
+            this.style.display = 'none';
+          }
+        })
+        .catch(() => {
+          this.disabled = false;
+          this.textContent = 'Показать ещё';
+        });
+    });
   }
 </script>
 {% endblock %}
