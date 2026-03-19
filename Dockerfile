@@ -11,18 +11,6 @@ COPY vite.config.js ./
 
 RUN npm run build
 
-FROM node:20-alpine AS coworking-builder
-
-WORKDIR /app/coworking
-
-COPY coworking/package.json coworking/package-lock.json ./
-
-RUN npm ci
-
-COPY coworking/ ./
-
-RUN npm run build
-
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -41,7 +29,6 @@ COPY manage.py .
 COPY health_check.py .
 
 COPY --from=frontend-builder /app/static/dist ./static/dist/
-COPY --from=coworking-builder /app/coworking/dist ./coworking/dist/
 
 COPY static/accounts/ ./static/accounts/
 COPY entrypoint.sh .
