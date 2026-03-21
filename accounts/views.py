@@ -6,6 +6,7 @@ import uuid
 import base64
 from decimal import Decimal
 from html import escape
+from django.utils.html import strip_tags
 from random import choice, shuffle
 import time
 import datetime
@@ -469,7 +470,7 @@ def home(request):
             startups_data.append({
                 "id": startup.startup_id,
                 "name": startup.title,
-                "description": startup.short_description or startup.description[:200] if startup.description else "",
+                "description": strip_tags(startup.short_description or startup.description[:200]) if (startup.short_description or startup.description) else "",
                 "image": planet_image_url,
                 "rating": round(startup.rating_avg, 2),
                 "voters_count": startup.voters_count,
@@ -508,7 +509,7 @@ def home(request):
                 "id": startup.startup_id,
                 "startup_id": startup.startup_id,
                 "name": startup.title,
-                "description": startup.short_description or startup.description[:200] if startup.description else "",
+                "description": strip_tags(startup.short_description or startup.description[:200]) if (startup.short_description or startup.description) else "",
                 "image": planet_image_url,
                 "rating": round(startup.rating_avg, 2) if hasattr(startup, 'rating_avg') else startup.get_average_rating(),
                 "voters_count": startup.voters_count if hasattr(startup, 'voters_count') else startup.total_voters,
@@ -2698,7 +2699,7 @@ def investments(request):
                 "id": str(idx),
                 "startup_id": startup_obj.startup_id,
                 "name": startup_obj.title or "Без названия",
-                "description": startup_obj.description or "Описание отсутствует",
+                "description": strip_tags(startup_obj.description) if startup_obj.description else "Описание отсутствует",
                 "rating": f"{(startup.average_rating or 0):.1f}/5 ({startup_obj.total_voters or 0})",
                 "comment_count": startup.comment_count or 0,
                 "progress": f"{(startup_obj.amount_raised / startup_obj.funding_goal * 100 if startup_obj.funding_goal else 0):.0f}%",
@@ -7890,7 +7891,7 @@ def planetary_system(request):
             "id": startup.startup_id,
             "startup_id": startup.startup_id,
             "name": startup.title,
-            "description": startup.short_description or startup.description[:200] if startup.description else "",
+            "description": strip_tags(startup.short_description or startup.description[:200]) if (startup.short_description or startup.description) else "",
             "image": planet_image_url,
             "rating": startup.get_average_rating(),
             "voters_count": startup.total_voters,
@@ -7924,7 +7925,7 @@ def planetary_system(request):
             "id": startup.startup_id,
             "startup_id": startup.startup_id,
             "name": startup.title,
-            "description": startup.short_description or startup.description[:200] if startup.description else "",
+            "description": strip_tags(startup.short_description or startup.description[:200]) if (startup.short_description or startup.description) else "",
             "image": planet_image_url,
             "rating": startup.get_average_rating(),
             "voters_count": startup.total_voters,
@@ -8149,8 +8150,8 @@ def my_startups(request):
                 "rating": startup.average_rating or 0,
                 "total_voters": startup.total_voters or 0,
                 "comment_count": startup.comment_count or 0,
-                "description": startup.description or "Описание отсутствует.",
-                "short_description": startup.description or "Описание отсутствует.",
+                "description": strip_tags(startup.description) if startup.description else "Описание отсутствует.",
+                "short_description": strip_tags(startup.description) if startup.description else "Описание отсутствует.",
                 "progress": startup.get_progress_percentage() or 0,
                 "funding_goal": startup.funding_goal or 0,
                 "amount_raised": startup.amount_raised or 0,
