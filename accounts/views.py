@@ -674,6 +674,7 @@ def home(request):
 
 
                 description = getattr(startup, 'short_description', None) or getattr(startup, 'description', None) or "Описание стартапа"
+                description = strip_tags(description)
                 if len(description) > 100:
                     description = description[:97] + "..."
 
@@ -6160,6 +6161,7 @@ def startuper_main(request):
 
             description = getattr(startup, 'short_description', '') or getattr(startup, 'description', '')
             if description:
+                description = strip_tags(description)
                 if len(description) > 100:
                     description = description[:100] + "..."
             else:
