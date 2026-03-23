@@ -12,7 +12,7 @@
   <div class="main-content-area">
     <aside class="sidebar">
       <div class="sidebar-block">
-        <a href="#" class="suggest-news-btn" onclick="openPopup()">
+        <a href="{% url 'suggest_news' %}" class="suggest-news-btn">
           Предложить новость
           <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="Добавить новость">
         </a>
@@ -45,7 +45,7 @@
 
     <div class="news-feed-column">
 
-      <a href="#" class="suggest-news-btn mobile-suggest-btn" onclick="openPopup()">
+      <a href="{% url 'suggest_news' %}" class="suggest-news-btn mobile-suggest-btn">
         Предложить новость
         <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="Добавить новость">
       </a>

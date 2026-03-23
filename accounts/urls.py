@@ -51,6 +51,7 @@ urlpatterns = [
     path("delete_investment_franchise/<int:franchise_id>/<int:user_id>/", views.delete_investment_franchise, name="delete_investment_franchise"),
     path("investments/", views.investments, name="investments"),
     path("news/", views.news, name="news"),
+    path("news/suggest/", views.suggest_news, name="suggest_news"),
     path("api/news/similar/", views.api_similar_news, name="api_similar_news"),
     re_path(r"^news/(?P<slug>[-\w]+)/$", views.news_detail, name="news_detail"),
     re_path(r"^news/(?P<slug>[-\w]+)/edit/$", views.edit_news, name="edit_news"),

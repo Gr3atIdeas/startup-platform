@@ -1,0 +1,265 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Предложить новость — Great Ideas{% endblock %}
+
+{% block content %}
+<div class="suggest-news-page">
+  <div class="suggest-news-container">
+    <a href="{% url 'news' %}" class="suggest-news-back">&larr; Назад к новостям</a>
+    <h1 class="suggest-news-title">Предложить новость</h1>
+    <p class="suggest-news-subtitle">Ваша новость будет отправлена на модерацию. После одобрения она появится в ленте новостей.</p>
+
+    <form method="post" enctype="multipart/form-data" class="suggest-news-form" id="suggestNewsForm">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="id_title">Заголовок *</label>
+        <input type="text" name="title" id="id_title" required maxlength="255" placeholder="Название вашей новости">
+      </div>
+
+      <div class="form-group">
+        <label for="id_content">Текст новости *</label>
+        <textarea name="content" id="id_content" class="ckeditor-full" required placeholder="Расскажите подробности..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group form-group--half">
+          <label for="id_entity_type">От чьего имени</label>
+          <select name="entity_type" id="id_entity_type" class="form-select">
+            <option value="personal">Личная новость</option>
+            {% if user_startups %}
+            <optgroup label="Стартапы">
+              {% for s in user_startups %}
+              <option value="startup_{{ s.startup_id }}">{{ s.title }}</option>
+              {% endfor %}
+            </optgroup>
+            {% endif %}
+            {% if user_franchises %}
+            <optgroup label="Франшизы">
+              {% for f in user_franchises %}
+              <option value="franchise_{{ f.franchise_id }}">{{ f.title }}</option>
+              {% endfor %}
+            </optgroup>
+            {% endif %}
+          </select>
+        </div>
+
+        <div class="form-group form-group--half">
+          <label for="id_category">Категория</label>
+          <select name="category" id="id_category" class="form-select">
+            <option value="">— Без категории —</option>
+            {% for cat in all_categories %}
+            <option value="{{ cat.category_id }}">{{ cat.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="id_tags">Теги (через запятую)</label>
+        <input type="text" name="tags" id="id_tags" placeholder="AI, стартапы, инвестиции" maxlength="255">
+      </div>
+
+      <div class="form-group">
+        <label>Картинка (обложка)</label>
+        <div class="file-upload-area" id="fileUploadArea">
+          <input type="file" name="image" id="id_image" accept="image/*" class="file-upload-input">
+          <div class="file-upload-placeholder" id="filePlaceholder">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+            </svg>
+            <span>Нажмите или перетащите файл</span>
+          </div>
+          <div class="file-upload-preview" id="filePreview" style="display:none;">
+            <img id="previewImg" alt="Preview">
+            <button type="button" class="file-upload-remove" id="removeFile">&times;</button>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="suggest-news-submit btn btn--blue">Отправить на модерацию</button>
+    </form>
+  </div>
+</div>
+
+<style>
+.suggest-news-page {
+  min-height: 100vh;
+  padding: 40px 20px 80px;
+  display: flex;
+  justify-content: center;
+}
+.suggest-news-container {
+  width: 100%;
+  max-width: 720px;
+}
+.suggest-news-back {
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  font-size: 14px;
+  display: inline-block;
+  margin-bottom: 24px;
+  transition: color 0.2s;
+}
+.suggest-news-back:hover { color: #fff; }
+.suggest-news-title {
+  font-family: 'Blippo Black', sans-serif;
+  font-size: 32px;
+  color: #fff;
+  margin: 0 0 8px;
+}
+.suggest-news-subtitle {
+  color: rgba(255,255,255,0.55);
+  font-size: 15px;
+  margin: 0 0 32px;
+  line-height: 1.5;
+}
+.suggest-news-form .form-group {
+  margin-bottom: 20px;
+}
+.suggest-news-form label {
+  display: block;
+  color: rgba(255,255,255,0.85);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.suggest-news-form input[type="text"],
+.suggest-news-form select,
+.suggest-news-form textarea {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 15px;
+  font-family: Unbounded, sans-serif;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.suggest-news-form input[type="text"]:focus,
+.suggest-news-form select:focus,
+.suggest-news-form textarea:focus {
+  outline: none;
+  border-color: rgba(255,255,255,0.35);
+}
+.suggest-news-form select option {
+  background: #1a1e2e;
+  color: #fff;
+}
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+.form-group--half { flex: 1; }
+.file-upload-area {
+  position: relative;
+  border: 2px dashed rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.file-upload-area:hover,
+.file-upload-area.dragover {
+  border-color: rgba(255,255,255,0.4);
+}
+.file-upload-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.file-upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.4);
+  font-size: 14px;
+}
+.file-upload-preview {
+  position: relative;
+  display: inline-block;
+}
+.file-upload-preview img {
+  max-height: 200px;
+  max-width: 100%;
+  border-radius: 8px;
+}
+.file-upload-remove {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.suggest-news-submit {
+  padding: 14px 40px;
+  font-size: 16px;
+  border-radius: 12px;
+  margin-top: 8px;
+}
+@media (max-width: 600px) {
+  .form-row { flex-direction: column; gap: 0; }
+  .suggest-news-title { font-size: 24px; }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const fileInput = document.getElementById('id_image');
+  const placeholder = document.getElementById('filePlaceholder');
+  const preview = document.getElementById('filePreview');
+  const previewImg = document.getElementById('previewImg');
+  const removeBtn = document.getElementById('removeFile');
+  const uploadArea = document.getElementById('fileUploadArea');
+
+  fileInput.addEventListener('change', function() {
+    if (this.files && this.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        previewImg.src = e.target.result;
+        placeholder.style.display = 'none';
+        preview.style.display = 'inline-block';
+      };
+      reader.readAsDataURL(this.files[0]);
+    }
+  });
+
+  removeBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    fileInput.value = '';
+    preview.style.display = 'none';
+    placeholder.style.display = 'flex';
+  });
+
+  ['dragover', 'dragenter'].forEach(evt => {
+    uploadArea.addEventListener(evt, function(e) {
+      e.preventDefault();
+      this.classList.add('dragover');
+    });
+  });
+  ['dragleave', 'drop'].forEach(evt => {
+    uploadArea.addEventListener(evt, function(e) {
+      e.preventDefault();
+      this.classList.remove('dragover');
+    });
+  });
+});
+</script>
+{% endblock %}

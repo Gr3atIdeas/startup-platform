@@ -6783,36 +6783,76 @@ def invest_franchise(request, franchise_id):
             {"success": False, "error": "Произошла ошибка при инвестировании"}
         )
 
-def news(request):
-    from .forms import NewsForm
+@login_required
+def suggest_news(request):
+    """Page for authenticated users to suggest a news article for moderation."""
+    user = request.user
+    user_startups = Startups.objects.filter(owner=user, moderation_status="approved")
+    user_franchises = Franchises.objects.filter(owner=user, moderation_status="approved")
+    all_categories = NewsCategories.objects.all().order_by("sort_order")
 
     if request.method == "POST":
-        if (
-            not request.user.is_authenticated
-            or (request.user.role.role_name or "").lower() != "moderator"
-        ):
-            return JsonResponse(
-                {"success": False, "error": "У вас нет прав для этого действия."}
-            )
-        form = NewsForm(request.POST, request.FILES)
-        if form.is_valid():
-            article = form.save(commit=False)
-            article.author = request.user
-            article.published_at = timezone.now()
-            article.updated_at = timezone.now()
-            if not article.tags:
-                article.tags = "Администрация"
-            article.save()
-            image = form.cleaned_data.get("image")
-            if image:
-                image_id = str(uuid.uuid4())
-                file_path = f"news/{article.article_id}/{image_id}_{image.name}"
-                default_storage.save(file_path, image)
-                article.image_url = file_path
-                article.save()
-            return JsonResponse({"success": True})
+        title = request.POST.get("title", "").strip()
+        content = request.POST.get("content", "").strip()
+        category_id = request.POST.get("category") or None
+        tags = request.POST.get("tags", "").strip()
+        entity_val = request.POST.get("entity_type", "personal")
+        image = request.FILES.get("image")
+
+        if not title or not content:
+            messages.error(request, "Заголовок и текст обязательны.")
+            return redirect("suggest_news")
+
+        article = NewsArticles(
+            title=title,
+            content=content,
+            author=user,
+            status="pending",
+            tags=tags or None,
+            updated_at=timezone.now(),
+        )
+        if category_id:
+            try:
+                article.category = NewsCategories.objects.get(pk=category_id)
+            except NewsCategories.DoesNotExist:
+                pass
+
+        # Parse entity type
+        if entity_val.startswith("startup_"):
+            sid = entity_val.replace("startup_", "")
+            if user_startups.filter(startup_id=sid).exists():
+                article.entity_type = "startup"
+                article.linked_startup_id = int(sid)
+        elif entity_val.startswith("franchise_"):
+            fid = entity_val.replace("franchise_", "")
+            if user_franchises.filter(franchise_id=fid).exists():
+                article.entity_type = "franchise"
+                article.linked_franchise_id = int(fid)
         else:
-            return JsonResponse({"success": False, "error": "Форма содержит ошибки."})
+            article.entity_type = "personal"
+
+        article.save()  # triggers slug generation
+
+        if image:
+            image_id = str(uuid.uuid4())
+            file_path = f"news/{article.article_id}/{image_id}_{image.name}"
+            default_storage.save(file_path, image)
+            article.image_url = file_path
+            article.save()
+
+        messages.success(request, "Новость отправлена на модерацию! Мы рассмотрим её в ближайшее время.")
+        return redirect("news")
+
+    context = {
+        "user_startups": user_startups,
+        "user_franchises": user_franchises,
+        "all_categories": all_categories,
+    }
+    return render(request, "accounts/suggest_news.html", context)
+
+
+def news(request):
+    from .forms import NewsForm
 
     # Backfill/fix slugs: regenerate non-ASCII or empty slugs
     import re as _re

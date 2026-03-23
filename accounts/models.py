@@ -559,8 +559,16 @@ class NewsCategories(models.Model):
 class NewsArticles(models.Model):
     STATUS_CHOICES = [
         ("draft", "Черновик"),
+        ("pending", "На модерации"),
         ("published", "Опубликована"),
+        ("rejected", "Отклонена"),
         ("archived", "В архиве"),
+    ]
+
+    ENTITY_TYPE_CHOICES = [
+        ("personal", "Личная"),
+        ("startup", "Стартап"),
+        ("franchise", "Франшиза"),
     ]
 
     article_id = models.AutoField(primary_key=True)
@@ -583,6 +591,10 @@ class NewsArticles(models.Model):
     )
     is_featured = models.BooleanField(default=False)
     scheduled_at = models.DateTimeField(blank=True, null=True)
+    entity_type = models.CharField(max_length=20, choices=ENTITY_TYPE_CHOICES, default="personal", blank=True, null=True)
+    linked_startup = models.ForeignKey("Startups", on_delete=models.SET_NULL, blank=True, null=True, db_column="linked_startup_id", related_name="news_articles")
+    linked_franchise = models.ForeignKey("Franchises", on_delete=models.SET_NULL, blank=True, null=True, db_column="linked_franchise_id", related_name="news_articles")
+    rejection_reason = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
