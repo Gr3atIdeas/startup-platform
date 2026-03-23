@@ -912,7 +912,7 @@ body {
 
 .planet-miniature-container {
   position: absolute;
-  top: 150px;
+  top: 115px;
   right: 10px;
   width: 70px;
   height: 71px;
@@ -1278,7 +1278,7 @@ body {
   }
 
   .planet-miniature-container {
-    top: 132px;
+    top: 100px;
   }
 
   .startup-progress-container {
