@@ -608,6 +608,70 @@ a:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* ── Contact links ─────────────────────── */
+.contact-links-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.contact-links-title {
+  color: rgba(255, 255, 255, 0.6);
+  font-family: Unbounded, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  margin: 0 0 10px;
+}
+
+.contact-links-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: Unbounded, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.contact-link--website {
+  background: rgba(255, 255, 255, 0.08);
+  color: #a0b4ff;
+}
+.contact-link--website:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #c0d0ff;
+}
+
+.contact-link--telegram {
+  background: rgba(0, 136, 204, 0.15);
+  color: #29b6f6;
+}
+.contact-link--telegram:hover {
+  background: rgba(0, 136, 204, 0.25);
+  color: #4fc3f7;
+}
+
+.contact-link--whatsapp {
+  background: rgba(37, 211, 102, 0.12);
+  color: #25d366;
+}
+.contact-link--whatsapp:hover {
+  background: rgba(37, 211, 102, 0.22);
+  color: #4cdf7f;
+}
+
+.contact-link svg {
+  flex-shrink: 0;
+}
 
 .startup-detail-default-planet-display {
   width: 100%;

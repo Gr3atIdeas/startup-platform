@@ -1,0 +1,21 @@
+{% load widget_tweaks %}
+<div class="contacts-section-form">
+    <h3 class="section-subtitle">Контакты для связи</h3>
+    <div class="contacts-fields-row">
+        <div class="form-group">
+            <label for="{{ form.contact_website.id_for_label }}">Сайт</label>
+            {{ form.contact_website|add_class:"form-control"|attr:"placeholder:https://example.com" }}
+            {% if form.contact_website.errors %}<span class="error-message">{{ form.contact_website.errors|first }}</span>{% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.contact_telegram.id_for_label }}">Telegram</label>
+            {{ form.contact_telegram|add_class:"form-control"|attr:"placeholder:username (без @)" }}
+            {% if form.contact_telegram.errors %}<span class="error-message">{{ form.contact_telegram.errors|first }}</span>{% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.contact_whatsapp.id_for_label }}">WhatsApp</label>
+            {{ form.contact_whatsapp|add_class:"form-control"|attr:"placeholder:79001234567" }}
+            {% if form.contact_whatsapp.errors %}<span class="error-message">{{ form.contact_whatsapp.errors|first }}</span>{% endif %}
+        </div>
+    </div>
+</div>

@@ -177,9 +177,15 @@ class StartupEditForm(forms.ModelForm):
             "funding_goal",
             "terms",
             "catalog_card_image",
+            "contact_website",
+            "contact_telegram",
+            "contact_whatsapp",
         ]
         labels = {
             "title": "Название",
+            "contact_website": "Сайт",
+            "contact_telegram": "Telegram",
+            "contact_whatsapp": "WhatsApp",
         }
 
     def __init__(self, *args, **kwargs):
@@ -598,6 +604,9 @@ class FranchiseForm(forms.ModelForm):
             "planet_image",
             "catalog_card_image",
             "profit_calculation",
+            "contact_website",
+            "contact_telegram",
+            "contact_whatsapp",
         ]
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Название франшизы"}),
@@ -732,6 +741,9 @@ class AgencyForm(forms.ModelForm):
             "planet_image",
             "catalog_card_image",
             "successful_projects",
+            "contact_website",
+            "contact_telegram",
+            "contact_whatsapp",
         ]
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Название агентства"}),
@@ -852,6 +864,9 @@ class SpecialistForm(forms.ModelForm):
             "video",
             "planet_image",
             "catalog_card_image",
+            "contact_website",
+            "contact_telegram",
+            "contact_whatsapp",
         ]
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Имя/бренд специалиста"}),
@@ -1175,7 +1190,8 @@ class FranchiseEditForm(forms.ModelForm):
             "title", "short_description", "description", "terms",
             "investment_size", "franchise_cost", "pitch_deck_url",
             "logo", "direction", "creatives", "proofs", "video",
-            "planet_image", "catalog_card_image", "profit_calculation"
+            "planet_image", "catalog_card_image", "profit_calculation",
+            "contact_website", "contact_telegram", "contact_whatsapp",
         ]
         labels = {
             "title": "Название",
@@ -1185,6 +1201,9 @@ class FranchiseEditForm(forms.ModelForm):
             "investment_size": "Размер инвестиций (₽)",
             "franchise_cost": "Паушальный взнос (₽)",
             "pitch_deck_url": "Ссылка на презентацию",
+            "contact_website": "Сайт",
+            "contact_telegram": "Telegram",
+            "contact_whatsapp": "WhatsApp",
             "direction": "Категория",
             "logo": "Логотип",
             "creatives": "Изображения",
@@ -1272,11 +1291,15 @@ class AgencyEditForm(forms.ModelForm):
         fields = [
             "title", "short_description", "description", "terms",
             "pitch_deck_url", "logo", "direction", "stage",
-            "creatives", "proofs", "video", "planet_image", "catalog_card_image", "successful_projects"
+            "creatives", "proofs", "video", "planet_image", "catalog_card_image", "successful_projects",
+            "contact_website", "contact_telegram", "contact_whatsapp",
         ]
         labels = {
             "title": "Название",
             "pitch_deck_url": "Ссылка на презентацию",
+            "contact_website": "Сайт",
+            "contact_telegram": "Telegram",
+            "contact_whatsapp": "WhatsApp",
         }
         widgets = {
             "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
@@ -1371,7 +1394,8 @@ class SpecialistEditForm(forms.ModelForm):
         fields = [
             "title", "short_description", "description", "terms", "additional_info",
             "pitch_deck_url", "logo", "direction", "stage",
-            "creatives", "proofs", "video", "planet_image", "catalog_card_image", "successful_projects"
+            "creatives", "proofs", "video", "planet_image", "catalog_card_image", "successful_projects",
+            "contact_website", "contact_telegram", "contact_whatsapp",
         ]
         labels = {
             "title": "Профиль специалиста",
@@ -1381,6 +1405,9 @@ class SpecialistEditForm(forms.ModelForm):
             "additional_info": "Услуги и кейсы",
             "pitch_deck_url": "Ссылка на презентацию",
             "direction": "Категория",
+            "contact_website": "Сайт",
+            "contact_telegram": "Telegram",
+            "contact_whatsapp": "WhatsApp",
             "logo": "Логотип",
             "creatives": "Изображения",
             "video": "Видео",

@@ -447,7 +447,9 @@ if (window.FileUploadUtils) {
                     {% if form.proofs.errors %}<span class="error-message">{{ form.proofs.errors|first }}</span>{% endif %}
                 </div>
             </div>
-        </div> 
+        </div>
+
+        {% include 'accounts/partials/_contact_form_fields.html' %}
 
         <div class="submit-button-container">
             <button type="submit" class="submit-button" id="submitSpecialistBtn">Сохранить изменения</button>

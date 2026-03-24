@@ -367,6 +367,9 @@ class Startups(models.Model):
     planet_image = models.CharField(max_length=50, blank=True, null=True)
     slider_images = models.JSONField(blank=True, null=True, default=list)
     catalog_card_image = models.CharField(max_length=255, blank=True, null=True)
+    contact_website = models.URLField(max_length=500, blank=True, null=True)
+    contact_telegram = models.CharField(max_length=255, blank=True, null=True)
+    contact_whatsapp = models.CharField(max_length=255, blank=True, null=True)
     class Meta:
         managed = True
         db_table = "startups"
@@ -860,6 +863,9 @@ class Franchises(models.Model):
     catalog_card_image = models.CharField(max_length=255, blank=True, null=True)
     franchise_cost = models.DecimalField(max_digits=19, decimal_places=4, blank=True, null=True)
     profit_calculation = models.TextField(blank=True, null=True)
+    contact_website = models.URLField(max_length=500, blank=True, null=True)
+    contact_telegram = models.CharField(max_length=255, blank=True, null=True)
+    contact_whatsapp = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = True
@@ -996,6 +1002,9 @@ class Agencies(models.Model):
     planet_image = models.CharField(max_length=50, blank=True, null=True)
     slider_images = models.JSONField(blank=True, null=True, default=list)
     catalog_card_image = models.CharField(max_length=255, blank=True, null=True)
+    contact_website = models.URLField(max_length=500, blank=True, null=True)
+    contact_telegram = models.CharField(max_length=255, blank=True, null=True)
+    contact_whatsapp = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = True
@@ -1043,6 +1052,9 @@ class Specialists(models.Model):
     slider_images = models.JSONField(blank=True, null=True, default=list)
     catalog_card_image = models.CharField(max_length=255, blank=True, null=True)
     additional_info = models.TextField(blank=True, null=True)
+    contact_website = models.URLField(max_length=500, blank=True, null=True)
+    contact_telegram = models.CharField(max_length=255, blank=True, null=True)
+    contact_whatsapp = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = True
