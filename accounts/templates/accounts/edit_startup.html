@@ -446,6 +446,27 @@ if (window.FileUploadUtils) {
                         {% if form.pitch_deck_url.errors %}<span class="error-message">{{ form.pitch_deck_url.errors|first }}</span>{% endif %}
                     </div>
                     <div class="form-group">
+                        <label for="{{ form.contact_website.id_for_label }}">Сайт</label>
+                        <div class="input-wrapper">
+                            {{ form.contact_website|add_class:"form-control"|attr:"placeholder:https://example.com" }}
+                        </div>
+                        {% if form.contact_website.errors %}<span class="error-message">{{ form.contact_website.errors|first }}</span>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.contact_telegram.id_for_label }}">Telegram</label>
+                        <div class="input-wrapper">
+                            {{ form.contact_telegram|add_class:"form-control"|attr:"placeholder:username (без @)" }}
+                        </div>
+                        {% if form.contact_telegram.errors %}<span class="error-message">{{ form.contact_telegram.errors|first }}</span>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.contact_whatsapp.id_for_label }}">WhatsApp</label>
+                        <div class="input-wrapper">
+                            {{ form.contact_whatsapp|add_class:"form-control"|attr:"placeholder:79001234567" }}
+                        </div>
+                        {% if form.contact_whatsapp.errors %}<span class="error-message">{{ form.contact_whatsapp.errors|first }}</span>{% endif %}
+                    </div>
+                    <div class="form-group">
                         <label for="{{ form.valuation.id_for_label }}">{{ form.valuation.label }}</label>
                         <div class="input-wrapper valuation-input">
                             {{ form.valuation|add_class:"form-control"|attr:"placeholder:1"|attr:"type:number"|attr:"min:1" }}
@@ -540,8 +561,6 @@ if (window.FileUploadUtils) {
                 </div>
             </div>
         </div> 
-
-        {% include 'accounts/partials/_contact_form_fields.html' %}
 
         <div class="submit-button-container">
             <button type="submit" class="submit-button" id="submitStartupBtn">Сохранить изменения</button>

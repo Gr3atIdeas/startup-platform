@@ -159,9 +159,24 @@
                     {{ form.pitch_deck_url|add_class:"form-control"|attr:"placeholder:URL презентации" }}
                     {% if form.pitch_deck_url.errors %}<span class="error-message">{{ form.pitch_deck_url.errors|first }}</span>{% endif %}
                 </div>
+                <div class="form-group full-width">
+                    <label for="{{ form.contact_website.id_for_label }}">Сайт</label>
+                    {{ form.contact_website|add_class:"form-control"|attr:"placeholder:https://example.com" }}
+                    {% if form.contact_website.errors %}<span class="error-message">{{ form.contact_website.errors|first }}</span>{% endif %}
+                </div>
+                <div class="form-group full-width">
+                    <label for="{{ form.contact_telegram.id_for_label }}">Telegram</label>
+                    {{ form.contact_telegram|add_class:"form-control"|attr:"placeholder:username (без @)" }}
+                    {% if form.contact_telegram.errors %}<span class="error-message">{{ form.contact_telegram.errors|first }}</span>{% endif %}
+                </div>
+                <div class="form-group full-width">
+                    <label for="{{ form.contact_whatsapp.id_for_label }}">WhatsApp</label>
+                    {{ form.contact_whatsapp|add_class:"form-control"|attr:"placeholder:79001234567" }}
+                    {% if form.contact_whatsapp.errors %}<span class="error-message">{{ form.contact_whatsapp.errors|first }}</span>{% endif %}
+                </div>
             </div>
 
-            
+
             <div class="form-content-section">
                 <div class="form-group full-width">
                     <label for="{{ form.profit_calculation.id_for_label }}">{{ form.profit_calculation.label }}</label>
@@ -269,8 +284,6 @@
 
         </div> 
 
-
-        {% include 'accounts/partials/_contact_form_fields.html' %}
 
         <div class="submit-button-container">
             <button type="submit" class="submit-button">Отправить на модерацию</button>
