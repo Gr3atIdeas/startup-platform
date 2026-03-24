@@ -1435,11 +1435,13 @@ a:hover {
 }
 
 .content-section#info-section .about-section {
-  margin-top: 0; 
-  background-color: transparent;
-  padding: 0;
-  border: none;
-  margin-bottom: 30px; 
+  margin-top: 0;
+  background-color: rgba(0, 8, 25, 0.82);
+  padding: 24px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(6px);
 }
 
 .content-section#info-section .about-section + .about-section {
