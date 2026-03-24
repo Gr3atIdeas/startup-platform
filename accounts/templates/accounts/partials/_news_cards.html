@@ -2,12 +2,18 @@
 
 <div class="news-grid">
   {% for article in articles %}
-    <div class="news-card">
+    {% with has_image=article.get_image_url %}
+    <div class="news-card{% if has_image %} news-card--with-image{% endif %}{% if forloop.first %} news-card--featured{% endif %}">
       {% if user.is_authenticated and user.role.role_name == 'moderator' %}
         <button class="delete-news-btn" data-article-slug="{{ article.slug }}">Удалить</button>
       {% endif %}
 
       <a href="{% url 'news_detail' article.slug %}" class="news-card-link">
+        {% if has_image %}
+          <div class="news-card-image">
+            <img src="{{ article.get_image_url }}" alt="{{ article.title }}" loading="lazy">
+          </div>
+        {% endif %}
         <div class="news-content">
           <h2 class="news-title">{{ article.title|default:"Заголовок новости" }}</h2>
           <div class="news-meta">
@@ -22,6 +28,7 @@
         </div>
       </a>
     </div>
+    {% endwith %}
   {% empty %}
     <div class="no-news">
       <p>В настоящее время нет доступных новостей. Загляните позже!</p>
