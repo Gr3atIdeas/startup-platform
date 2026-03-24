@@ -6787,8 +6787,8 @@ def invest_franchise(request, franchise_id):
 def suggest_news(request):
     """Page for authenticated users to suggest a news article for moderation."""
     user = request.user
-    user_startups = Startups.objects.filter(owner=user, moderation_status="approved")
-    user_franchises = Franchises.objects.filter(owner=user, moderation_status="approved")
+    user_startups = Startups.objects.filter(owner=user, status_id__status_name="Одобрено")
+    user_franchises = Franchises.objects.filter(owner=user, status_id__status_name="Одобрено")
     all_categories = NewsCategories.objects.all().order_by("sort_order")
 
     if request.method == "POST":
