@@ -1560,8 +1560,21 @@ def specialists_list(request):
             "specialist_categories": specialist_categories,
         }
         return render(request, "accounts/specialists_list.html", context)
-def agency_detail(request, agency_id):
-    agency = Agencies.objects.filter(agency_id=agency_id).first()
+def agency_detail_by_id(request, agency_id):
+    agency = get_object_or_404(Agencies, agency_id=agency_id)
+    if agency.slug:
+        return redirect("agency_detail", slug=agency.slug, permanent=True)
+    return agency_detail(request, slug=str(agency_id))
+
+def agency_detail(request, slug):
+    agency = Agencies.objects.filter(slug=slug).first()
+    if not agency:
+        try:
+            agency = Agencies.objects.filter(agency_id=slug).first()
+            if agency and agency.slug:
+                return redirect("agency_detail", slug=agency.slug, permanent=True)
+        except ValueError:
+            pass
     if not agency:
         return render(request, "accounts/404.html", status=404)
 
@@ -1569,7 +1582,7 @@ def agency_detail(request, agency_id):
         if "status" in request.POST:
             if not is_moderator(request.user):
                 messages.error(request, "У вас нет прав для этого действия.")
-                return redirect("agency_detail", agency_id=agency.agency_id)
+                return redirect("agency_detail", slug=agency.slug or agency.agency_id)
             new_status = (request.POST.get("status", "") or "").strip().lower()
             allowed_statuses = {"approved", "blocked", "closed", "pending", "rejected"}
             if new_status in allowed_statuses:
@@ -1578,7 +1591,7 @@ def agency_detail(request, agency_id):
                 messages.success(request, "Статус агентства обновлён.")
             else:
                 messages.error(request, "Недопустимый статус.")
-            return redirect("agency_detail", agency_id=agency.agency_id)
+            return redirect("agency_detail", slug=agency.slug or agency.agency_id)
         if not request.user.is_authenticated:
             return redirect("login")
         form = AgencyCommentForm(request.POST)
@@ -1617,7 +1630,7 @@ def agency_detail(request, agency_id):
 
             comment.save()
             messages.success(request, "Ваш комментарий был добавлен.")
-            return redirect("agency_detail", agency_id=agency.agency_id)
+            return redirect("agency_detail", slug=agency.slug or agency.agency_id)
         else:
             messages.error(request, "Ошибка при добавлении комментария.")
     else:
@@ -1711,8 +1724,21 @@ def agency_detail(request, agency_id):
     }
     return render(request, "accounts/agency_detail.html", context)
 
-def specialist_detail(request, specialist_id):
-    specialist = Specialists.objects.filter(specialist_id=specialist_id).first()
+def specialist_detail_by_id(request, specialist_id):
+    specialist = get_object_or_404(Specialists, specialist_id=specialist_id)
+    if specialist.slug:
+        return redirect("specialist_detail", slug=specialist.slug, permanent=True)
+    return specialist_detail(request, slug=str(specialist_id))
+
+def specialist_detail(request, slug):
+    specialist = Specialists.objects.filter(slug=slug).first()
+    if not specialist:
+        try:
+            specialist = Specialists.objects.filter(specialist_id=slug).first()
+            if specialist and specialist.slug:
+                return redirect("specialist_detail", slug=specialist.slug, permanent=True)
+        except ValueError:
+            pass
     if not specialist:
         return render(request, "accounts/404.html", status=404)
 
@@ -1720,7 +1746,7 @@ def specialist_detail(request, specialist_id):
         if "status" in request.POST:
             if not is_moderator(request.user):
                 messages.error(request, "У вас нет прав для этого действия.")
-                return redirect("specialist_detail", specialist_id=specialist.specialist_id)
+                return redirect("specialist_detail", slug=specialist.slug or specialist.specialist_id)
             new_status = (request.POST.get("status", "") or "").strip().lower()
             allowed_statuses = {"approved", "blocked", "closed", "pending", "rejected"}
             if new_status in allowed_statuses:
@@ -1729,7 +1755,7 @@ def specialist_detail(request, specialist_id):
                 messages.success(request, "Статус специалиста обновлён.")
             else:
                 messages.error(request, "Недопустимый статус.")
-            return redirect("specialist_detail", specialist_id=specialist.specialist_id)
+            return redirect("specialist_detail", slug=specialist.slug or specialist.specialist_id)
         if not request.user.is_authenticated:
             return redirect("login")
         form = SpecialistCommentForm(request.POST)
@@ -1768,7 +1794,7 @@ def specialist_detail(request, specialist_id):
 
             comment.save()
             messages.success(request, "Ваш комментарий был добавлен.")
-            return redirect("specialist_detail", specialist_id=specialist.specialist_id)
+            return redirect("specialist_detail", slug=specialist.slug or specialist.specialist_id)
         else:
             messages.error(request, "Ошибка при добавлении комментария.")
     else:
@@ -1858,17 +1884,28 @@ def specialist_detail(request, specialist_id):
         "ai_rating": ai_rating,
     }
     return render(request, "accounts/specialist_detail.html", context)
-def franchise_detail(request, franchise_id):
+def franchise_detail_by_id(request, franchise_id):
+    franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
+    if franchise.slug:
+        return redirect("franchise_detail", slug=franchise.slug, permanent=True)
+    return franchise_detail(request, slug=str(franchise_id))
+
+def franchise_detail(request, slug):
     try:
-        franchise = Franchises.objects.get(franchise_id=franchise_id)
+        franchise = Franchises.objects.get(slug=slug)
     except Franchises.DoesNotExist:
-        return render(request, "accounts/404.html", status=404)
+        try:
+            franchise = Franchises.objects.get(franchise_id=slug)
+            if franchise.slug:
+                return redirect("franchise_detail", slug=franchise.slug, permanent=True)
+        except (Franchises.DoesNotExist, ValueError):
+            return render(request, "accounts/404.html", status=404)
 
     if request.method == "POST":
         if "status" in request.POST:
             if not is_moderator(request.user):
                 messages.error(request, "У вас нет прав для этого действия.")
-                return redirect("franchise_detail", franchise_id=franchise.franchise_id)
+                return redirect("franchise_detail", slug=franchise.slug or franchise.franchise_id)
             new_status = (request.POST.get("status", "") or "").strip().lower()
             allowed_statuses = {"approved", "blocked", "closed", "pending", "rejected"}
             if new_status in allowed_statuses:
@@ -1888,7 +1925,7 @@ def franchise_detail(request, franchise_id):
                 messages.success(request, "Статус франшизы обновлён.")
             else:
                 messages.error(request, "Недопустимый статус.")
-            return redirect("franchise_detail", franchise_id=franchise.franchise_id)
+            return redirect("franchise_detail", slug=franchise.slug or franchise.franchise_id)
         if not request.user.is_authenticated:
             return redirect("login")
         form = FranchiseCommentForm(request.POST)
@@ -1926,7 +1963,7 @@ def franchise_detail(request, franchise_id):
                     comment.user_rating = user_vote.rating
             comment.save()
             messages.success(request, "Ваш комментарий был добавлен.")
-            return redirect("franchise_detail", franchise_id=franchise.franchise_id)
+            return redirect("franchise_detail", slug=franchise.slug or franchise.franchise_id)
         else:
             messages.error(request, "Ошибка при добавлении комментария.")
     else:
@@ -2117,7 +2154,7 @@ def global_search(request):
                         "id": startup.startup_id,
                         "name": startup.title,
                         "type": "startup",
-                        "url": reverse('startup_detail', kwargs={'startup_id': startup.startup_id})
+                        "url": reverse('startup_detail', kwargs={'slug': startup.slug or startup.startup_id})
                     })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке стартапа {startup.startup_id}: {e}")
@@ -2152,7 +2189,7 @@ def global_search(request):
                         "id": franchise.franchise_id,
                         "name": franchise.title,
                         "type": "franchise",
-                        "url": reverse('franchise_detail', kwargs={'franchise_id': franchise.franchise_id})
+                        "url": reverse('franchise_detail', kwargs={'slug': franchise.slug or franchise.franchise_id})
                     })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке франшизы {franchise.franchise_id}: {e}")
@@ -2178,7 +2215,7 @@ def global_search(request):
                         "id": agency.agency_id,
                         "name": agency.title,
                         "type": "agency",
-                        "url": reverse('agency_detail', kwargs={'agency_id': agency.agency_id})
+                        "url": reverse('agency_detail', kwargs={'slug': agency.slug or agency.agency_id})
                     })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке агентства {agency.agency_id}: {e}")
@@ -2204,7 +2241,7 @@ def global_search(request):
                         "id": specialist.specialist_id,
                         "name": specialist.title,
                         "type": "specialist",
-                        "url": reverse('specialist_detail', kwargs={'specialist_id': specialist.specialist_id})
+                        "url": reverse('specialist_detail', kwargs={'slug': specialist.slug or specialist.specialist_id})
                     })
                 except Exception as e:
                     logger.error(f"Ошибка при обработке специалиста {specialist.specialist_id}: {e}")
@@ -2221,18 +2258,28 @@ def global_search(request):
             "details": str(e) if settings.DEBUG else "Внутренняя ошибка сервера"
         }, status=500)
 
-def startup_detail(request, startup_id):
+def startup_detail_by_id(request, startup_id):
+    startup = get_object_or_404(Startups, startup_id=startup_id)
+    if startup.slug:
+        return redirect("startup_detail", slug=startup.slug, permanent=True)
+    return startup_detail(request, slug=str(startup_id))
+
+def startup_detail(request, slug):
     try:
-        startup = Startups.objects.select_related("owner", "direction", "stage").get(
-            startup_id=startup_id
-        )
+        startup = Startups.objects.select_related("owner", "direction", "stage").get(slug=slug)
     except Startups.DoesNotExist:
-        return get_object_or_404(Startups, startup_id=startup_id)
+        # Fallback: try as ID for old links
+        try:
+            startup = Startups.objects.select_related("owner", "direction", "stage").get(startup_id=slug)
+            if startup.slug:
+                return redirect("startup_detail", slug=startup.slug, permanent=True)
+        except (Startups.DoesNotExist, ValueError):
+            raise Http404("Стартап не найден")
     if request.method == "POST":
         if "status" in request.POST:
             if not is_moderator(request.user):
                 messages.error(request, "У вас нет прав для этого действия.")
-                return redirect("startup_detail", startup_id=startup.startup_id)
+                return redirect("startup_detail", slug=startup.slug or startup.startup_id)
             new_status = (request.POST.get("status", "") or "").strip().lower()
             allowed_statuses = {"approved", "blocked", "closed", "pending", "rejected"}
             if new_status in allowed_statuses:
@@ -2252,7 +2299,7 @@ def startup_detail(request, startup_id):
                 messages.success(request, "Статус стартапа обновлён.")
             else:
                 messages.error(request, "Недопустимый статус.")
-            return redirect("startup_detail", startup_id=startup.startup_id)
+            return redirect("startup_detail", slug=startup.slug or startup.startup_id)
         if not request.user.is_authenticated:
             return redirect("login")
         form = CommentForm(request.POST)
@@ -2290,7 +2337,7 @@ def startup_detail(request, startup_id):
 
                 comment.save()
             messages.success(request, "Ваш комментарий был добавлен.")
-            return redirect("startup_detail", startup_id=startup.startup_id)
+            return redirect("startup_detail", slug=startup.slug or startup.startup_id)
         else:
             messages.error(request, "Ошибка при добавлении комментария.")
     else:
@@ -5086,7 +5133,7 @@ def edit_startup(request, startup_id):
         )
     ):
         messages.error(request, "У вас нет прав для редактирования этого стартапа.")
-        return redirect("startup_detail", startup_id=startup_id)
+        return redirect("startup_detail", slug=startup.slug or startup_id)
     timeline = StartupTimeline.objects.filter(startup=startup)
     timeline_steps = timeline
     if request.method == "POST":
@@ -9474,7 +9521,7 @@ def edit_franchise(request, franchise_id):
     franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
     if request.user != franchise.owner and request.user.role.role_name != 'moderator':
         messages.error(request, "У вас нет прав для редактирования этой франшизы.")
-        return redirect("franchise_detail", franchise_id=franchise_id)
+        return redirect("franchise_detail", slug=franchise.slug or franchise_id)
 
     if request.method == "POST":
         # Сохраняем оригинальные данные для сравнения
@@ -9777,10 +9824,10 @@ def edit_franchise(request, franchise_id):
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
-                    "redirect_url": reverse("franchise_detail", kwargs={"franchise_id": franchise.franchise_id})
+                    "redirect_url": reverse("franchise_detail", kwargs={"slug": franchise.slug or franchise.franchise_id})
                 })
             messages.success(request, "Франшиза успешно обновлена.")
-            return redirect("franchise_detail", franchise_id=franchise.franchise_id)
+            return redirect("franchise_detail", slug=franchise.slug or franchise.franchise_id)
         else:
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
@@ -9807,7 +9854,7 @@ def edit_agency(request, agency_id):
         return redirect("agencies_list")
     if request.user != agency.owner and request.user.role.role_name != 'moderator':
         messages.error(request, "У вас нет прав для редактирования этого агентства.")
-        return redirect("agency_detail", agency_id=agency_id)
+        return redirect("agency_detail", slug=agency.slug or agency_id)
 
     if request.method == "POST":
         # Сохраняем оригинальные данные для сравнения
@@ -10114,10 +10161,10 @@ def edit_agency(request, agency_id):
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
-                    "redirect_url": reverse("agency_detail", kwargs={"agency_id": agency.agency_id})
+                    "redirect_url": reverse("agency_detail", kwargs={"slug": agency.slug or agency.agency_id})
                 })
             messages.success(request, "Агентство успешно обновлено.")
-            return redirect("agency_detail", agency_id=agency.agency_id)
+            return redirect("agency_detail", slug=agency.slug or agency.agency_id)
         else:
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
@@ -10448,10 +10495,10 @@ def edit_specialist(request, specialist_id):
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
-                    "redirect_url": reverse("specialist_detail", kwargs={"specialist_id": specialist.specialist_id})
+                    "redirect_url": reverse("specialist_detail", kwargs={"slug": specialist.slug or specialist.specialist_id})
                 })
             messages.success(request, "Специалист успешно обновлен.")
-            return redirect("specialist_detail", specialist_id=specialist.specialist_id)
+            return redirect("specialist_detail", slug=specialist.slug or specialist.specialist_id)
         else:
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({

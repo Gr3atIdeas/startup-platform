@@ -80,6 +80,6 @@
     </div>
 
     <!-- Ссылка на детали -->
-    <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link" aria-label="Подробнее о {{ startup.title }}"></a>
+    <a href="{% url 'startup_detail' slug=startup.slug|default:startup.startup_id %}" class="detail-link" aria-label="Подробнее о {{ startup.title }}"></a>
   </div>
 {% endfor %}

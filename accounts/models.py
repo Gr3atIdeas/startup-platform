@@ -370,6 +370,7 @@ class Startups(models.Model):
     contact_website = models.URLField(max_length=500, blank=True, null=True)
     contact_telegram = models.CharField(max_length=255, blank=True, null=True)
     contact_whatsapp = models.CharField(max_length=255, blank=True, null=True)
+    slug = models.SlugField(max_length=280, unique=True, blank=True, null=True)
     class Meta:
         managed = True
         db_table = "startups"
@@ -378,6 +379,26 @@ class Startups(models.Model):
             models.Index(fields=['owner', 'status'], name='idx_startups_owner_status'),
             models.Index(fields=['status', 'direction'], name='idx_startups_status_dir'),
         ]
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            from django.utils.text import slugify
+            transliterated = NewsArticles._transliterate(self.title)
+            base_slug = slugify(transliterated)[:270]
+            if not base_slug:
+                base_slug = f"startup-{self.startup_id or 'new'}"
+            slug = base_slug
+            counter = 2
+            while Startups.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse("startup_detail", kwargs={"slug": self.slug or self.startup_id})
+
     def get_average_rating(self):
         # Считаем реальный средний рейтинг из голосов
         from django.db.models import Avg
@@ -866,6 +887,7 @@ class Franchises(models.Model):
     contact_website = models.URLField(max_length=500, blank=True, null=True)
     contact_telegram = models.CharField(max_length=255, blank=True, null=True)
     contact_whatsapp = models.CharField(max_length=255, blank=True, null=True)
+    slug = models.SlugField(max_length=280, unique=True, blank=True, null=True)
 
     class Meta:
         managed = True
@@ -875,6 +897,25 @@ class Franchises(models.Model):
             models.Index(fields=['owner', 'status'], name='idx_franchises_owner_status'),
             models.Index(fields=['status', 'direction'], name='idx_franchises_status_dir'),
         ]
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            from django.utils.text import slugify
+            transliterated = NewsArticles._transliterate(self.title)
+            base_slug = slugify(transliterated)[:270]
+            if not base_slug:
+                base_slug = f"franchise-{self.franchise_id or 'new'}"
+            slug = base_slug
+            counter = 2
+            while Franchises.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse("franchise_detail", kwargs={"slug": self.slug or self.franchise_id})
 
     def get_average_rating(self):
         if self.total_voters > 0:
@@ -1005,6 +1046,7 @@ class Agencies(models.Model):
     contact_website = models.URLField(max_length=500, blank=True, null=True)
     contact_telegram = models.CharField(max_length=255, blank=True, null=True)
     contact_whatsapp = models.CharField(max_length=255, blank=True, null=True)
+    slug = models.SlugField(max_length=280, unique=True, blank=True, null=True)
 
     class Meta:
         managed = True
@@ -1013,6 +1055,25 @@ class Agencies(models.Model):
             models.Index(fields=['status', '-created_at'], name='idx_agencies_status_created'),
             models.Index(fields=['owner', 'status'], name='idx_agencies_owner_status'),
         ]
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            from django.utils.text import slugify
+            transliterated = NewsArticles._transliterate(self.title)
+            base_slug = slugify(transliterated)[:270]
+            if not base_slug:
+                base_slug = f"agency-{self.agency_id or 'new'}"
+            slug = base_slug
+            counter = 2
+            while Agencies.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse("agency_detail", kwargs={"slug": self.slug or self.agency_id})
 
     def get_average_rating(self):
         if self.total_voters > 0:
@@ -1055,6 +1116,7 @@ class Specialists(models.Model):
     contact_website = models.URLField(max_length=500, blank=True, null=True)
     contact_telegram = models.CharField(max_length=255, blank=True, null=True)
     contact_whatsapp = models.CharField(max_length=255, blank=True, null=True)
+    slug = models.SlugField(max_length=280, unique=True, blank=True, null=True)
 
     class Meta:
         managed = True
@@ -1063,6 +1125,25 @@ class Specialists(models.Model):
             models.Index(fields=['status', '-created_at'], name='idx_specialists_status_created'),
             models.Index(fields=['owner', 'status'], name='idx_specialists_owner_status'),
         ]
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            from django.utils.text import slugify
+            transliterated = NewsArticles._transliterate(self.title)
+            base_slug = slugify(transliterated)[:270]
+            if not base_slug:
+                base_slug = f"specialist-{self.specialist_id or 'new'}"
+            slug = base_slug
+            counter = 2
+            while Specialists.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse("specialist_detail", kwargs={"slug": self.slug or self.specialist_id})
 
     def get_average_rating(self):
         if self.total_voters > 0:

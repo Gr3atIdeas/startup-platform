@@ -233,7 +233,7 @@ if (window.FileUploadUtils) {
 
 <div class="startup-form-container">
     <div class="form-navigation-header">
-        <a href="{% url 'specialist_detail' specialist_id=specialist.specialist_id %}" class="back-button">&larr; Назад к специалисту</a>
+        <a href="{% url 'specialist_detail' slug=specialist.slug|default:specialist.specialist_id %}" class="back-button">&larr; Назад к специалисту</a>
         <h2 class="form-main-title">Редактирование специалиста</h2>
     </div>
 

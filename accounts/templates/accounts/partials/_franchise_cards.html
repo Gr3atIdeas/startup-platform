@@ -70,6 +70,6 @@
     </div>
 
     <!-- Ссылка на детали -->
-    <a href="{% url 'franchise_detail' franchise_id=franchise.franchise_id %}" class="detail-link" aria-label="Подробнее о {{ franchise.title }}"></a>
+    <a href="{% url 'franchise_detail' slug=franchise.slug|default:franchise.franchise_id %}" class="detail-link" aria-label="Подробнее о {{ franchise.title }}"></a>
   </div>
 {% endfor %}

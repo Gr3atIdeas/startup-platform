@@ -59,6 +59,6 @@
     </div>
 
     <!-- Ссылка на детали -->
-    <a href="{% url 'specialist_detail' specialist_id=specialist.specialist_id %}" class="detail-link" aria-label="Подробнее о {{ specialist.title }}"></a>
+    <a href="{% url 'specialist_detail' slug=specialist.slug|default:specialist.specialist_id %}" class="detail-link" aria-label="Подробнее о {{ specialist.title }}"></a>
   </div>
 {% endfor %}
