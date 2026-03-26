@@ -4,6 +4,7 @@
   {% for article in articles %}
     {% with img_url=article.get_image_url %}
     <article class="news-card news-card--{{ article.card_format }}">
+      <a href="{% url 'news_detail' slug=article.slug %}" class="news-card__link" aria-hidden="true" tabindex="-1"></a>
       {% if user.is_authenticated and user.role.role_name == 'moderator' %}
         <button class="delete-news-btn" data-article-slug="{{ article.slug }}">Удалить</button>
       {% endif %}

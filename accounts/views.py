@@ -6991,16 +6991,51 @@ def news(request):
 
     page_obj = paginator.get_page(page_number)
 
-    # Assign card_format for dynamic grid layout
-    for idx, article in enumerate(page_obj):
+    # Assign card_format for dynamic grid layout (3-column grid, no gaps)
+    # Rules: featured/text-full = 3 cols, medium = 2 cols, standard = 1 col
+    # Track columns per row so every row sums to exactly 3
+    articles_list = list(page_obj)
+    col = 0  # columns used in current row (0, 1, or 2)
+    row_count = 0  # count image-rows for pattern variety
+
+    for idx, article in enumerate(articles_list):
         if not article.image_url:
-            article.card_format = 'text-full'
-        elif idx == 0:
+            if col == 0:
+                # Row start: text-full takes full row (3 cols)
+                article.card_format = 'text-full'
+            else:
+                # Mid-row: use standard (1 col) to avoid gap, even without image
+                article.card_format = 'standard'
+                col = (col + 1) % 3
+                continue
+        elif idx == 0 and col == 0:
             article.card_format = 'featured'
-        elif idx % 7 in (1, 4):
-            article.card_format = 'medium'
+            col = 0
+        elif col == 0:
+            # Start of row: alternate between medium+standard and 3x standard
+            if row_count % 3 == 2:
+                # Every 3rd image-row: use 3 standards for variety
+                article.card_format = 'standard'
+                col = 1
+            else:
+                article.card_format = 'medium'
+                col = 2
+            row_count += 1
+        elif col == 2:
+            # 1 col left: standard to complete the row
+            article.card_format = 'standard'
+            col = 0
+        elif col == 1:
+            # 2 cols left: medium to complete, or standard+standard
+            if row_count % 3 == 0:
+                article.card_format = 'medium'
+                col = 0
+            else:
+                article.card_format = 'standard'
+                col = 2
         else:
             article.card_format = 'standard'
+            col = (col + 1) % 3
 
     all_categories = NewsCategories.objects.all().order_by("sort_order")
 

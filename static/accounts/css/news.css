@@ -77,7 +77,6 @@ body {
   box-sizing: border-box;
   height: fit-content;
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
-  margin-top: 90px;
 }
 
 .sidebar-block {
@@ -427,6 +426,22 @@ input:checked + .slider::before {
   position: relative;
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.news-card > a.news-card__link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.news-card__title a {
+  position: relative;
+  z-index: 2;
+}
+
+.news-card .delete-news-btn {
+  z-index: 3;
 }
 
 .news-card:hover {
