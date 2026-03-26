@@ -333,9 +333,8 @@ a:hover {
 .franchise-detail-carousel-image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  border-radius: 0;
-  background-color: var(--dark-card-bg);
+  object-fit: cover;
+  border-radius: 12px;
 }
 
 
