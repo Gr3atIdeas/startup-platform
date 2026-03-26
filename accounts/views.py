@@ -11351,15 +11351,53 @@ def clear_temp_files(request, form_id):
 def my_analytics(request):
     from accounts.models import Startups, Franchises, Agencies, Specialists
     from accounts.analytics import get_entity_stats
+    import json
 
     user = request.user
-    days = int(request.GET.get('days', 30))
+    days = 90  # Always use 90 days
 
-    # Get all user's entities (regardless of status)
-    user_startups = list(Startups.objects.filter(owner=user).values('startup_id', 'title', 'slug', 'status'))
-    user_franchises = list(Franchises.objects.filter(owner=user).values('franchise_id', 'title', 'slug', 'status'))
-    user_agencies = list(Agencies.objects.filter(owner=user).values('agency_id', 'title', 'slug', 'status'))
-    user_specialists = list(Specialists.objects.filter(owner=user).values('specialist_id', 'title', 'slug', 'status'))
+    # Status filter from GET params (default: approved)
+    status_filter = request.GET.get('status', 'approved')
+    if status_filter not in ('approved', 'all', 'pending', 'rejected'):
+        status_filter = 'approved'
+
+    # Get ALL user's entities (for summary totals we always use approved)
+    all_startups = list(Startups.objects.filter(owner=user).values('startup_id', 'title', 'slug', 'status'))
+    all_franchises = list(Franchises.objects.filter(owner=user).values('franchise_id', 'title', 'slug', 'status'))
+    all_agencies = list(Agencies.objects.filter(owner=user).values('agency_id', 'title', 'slug', 'status'))
+    all_specialists = list(Specialists.objects.filter(owner=user).values('specialist_id', 'title', 'slug', 'status'))
+
+    # Build full entity list with stats
+    def build_entities(items, entity_type, type_label, id_field):
+        result = []
+        for item in items:
+            stats = get_entity_stats(entity_type, item[id_field], days=days)
+            result.append({
+                'type': entity_type, 'type_label': type_label,
+                'id': item[id_field], 'title': item['title'], 'slug': item.get('slug', ''),
+                'status': item.get('status', ''), 'stats': stats
+            })
+        return result
+
+    all_entities = []
+    all_entities += build_entities(all_startups, 'startup', '\u0421\u0442\u0430\u0440\u0442\u0430\u043f', 'startup_id')
+    all_entities += build_entities(all_franchises, 'franchise', '\u0424\u0440\u0430\u043d\u0448\u0438\u0437\u0430', 'franchise_id')
+    all_entities += build_entities(all_agencies, 'agency', '\u0410\u0433\u0435\u043d\u0442\u0441\u0442\u0432\u043e', 'agency_id')
+    all_entities += build_entities(all_specialists, 'specialist', '\u0421\u043f\u0435\u0446\u0438\u0430\u043b\u0438\u0441\u0442', 'specialist_id')
+
+    # Summary totals from approved entities only
+    approved_entities = [e for e in all_entities if e['status'] == 'approved']
+    total_views = sum(e['stats']['total_views'] for e in approved_entities)
+    total_unique = sum(e['stats']['unique_views'] for e in approved_entities)
+    total_clicks = sum(
+        sum(e['stats']['total_clicks'].values()) for e in approved_entities
+    )
+
+    # Filter entities for display based on status_filter
+    if status_filter == 'all':
+        filtered_entities = all_entities
+    else:
+        filtered_entities = [e for e in all_entities if e['status'] == status_filter]
 
     # Selected entity from query params
     selected_type = request.GET.get('type', '')
@@ -11370,61 +11408,14 @@ def my_analytics(request):
     selected_entity = None
     if selected_type and selected_id:
         selected_stats = get_entity_stats(selected_type, int(selected_id), days=days)
-        # Find entity name
-        for s in user_startups:
-            if selected_type == 'startup' and str(s['startup_id']) == selected_id:
-                selected_entity = s
-        for f in user_franchises:
-            if selected_type == 'franchise' and str(f['franchise_id']) == selected_id:
-                selected_entity = f
-        for a in user_agencies:
-            if selected_type == 'agency' and str(a['agency_id']) == selected_id:
-                selected_entity = a
-        for sp in user_specialists:
-            if selected_type == 'specialist' and str(sp['specialist_id']) == selected_id:
-                selected_entity = sp
+        # Find entity in all_entities (not just filtered)
+        for e in all_entities:
+            if e['type'] == selected_type and str(e['id']) == selected_id:
+                selected_entity = e
+                break
 
-    # Get summary stats for all entities
-    all_entities = []
-    for s in user_startups:
-        stats = get_entity_stats('startup', s['startup_id'], days=days)
-        all_entities.append({
-            'type': 'startup', 'type_label': '\u0421\u0442\u0430\u0440\u0442\u0430\u043f',
-            'id': s['startup_id'], 'title': s['title'], 'slug': s.get('slug', ''),
-            'status': s.get('status', ''), 'stats': stats
-        })
-    for f in user_franchises:
-        stats = get_entity_stats('franchise', f['franchise_id'], days=days)
-        all_entities.append({
-            'type': 'franchise', 'type_label': '\u0424\u0440\u0430\u043d\u0448\u0438\u0437\u0430',
-            'id': f['franchise_id'], 'title': f['title'], 'slug': f.get('slug', ''),
-            'status': f.get('status', ''), 'stats': stats
-        })
-    for a in user_agencies:
-        stats = get_entity_stats('agency', a['agency_id'], days=days)
-        all_entities.append({
-            'type': 'agency', 'type_label': '\u0410\u0433\u0435\u043d\u0442\u0441\u0442\u0432\u043e',
-            'id': a['agency_id'], 'title': a['title'], 'slug': a.get('slug', ''),
-            'status': a.get('status', ''), 'stats': stats
-        })
-    for sp in user_specialists:
-        stats = get_entity_stats('specialist', sp['specialist_id'], days=days)
-        all_entities.append({
-            'type': 'specialist', 'type_label': '\u0421\u043f\u0435\u0446\u0438\u0430\u043b\u0438\u0441\u0442',
-            'id': sp['specialist_id'], 'title': sp['title'], 'slug': sp.get('slug', ''),
-            'status': sp.get('status', ''), 'stats': stats
-        })
-
-    # Calculate totals
-    total_views = sum(e['stats']['total_views'] for e in all_entities)
-    total_unique = sum(e['stats']['unique_views'] for e in all_entities)
-    total_clicks = sum(
-        sum(e['stats']['total_clicks'].values()) for e in all_entities
-    )
-
-    import json
     context = {
-        'all_entities': all_entities,
+        'all_entities': filtered_entities,
         'total_views': total_views,
         'total_unique': total_unique,
         'total_clicks': total_clicks,
@@ -11433,7 +11424,7 @@ def my_analytics(request):
         'selected_stats': selected_stats,
         'selected_entity': selected_entity,
         'selected_stats_json': json.dumps(selected_stats) if selected_stats else '{}',
-        'days': days,
+        'status_filter': status_filter,
     }
     return render(request, 'accounts/my_analytics.html', context)
 
