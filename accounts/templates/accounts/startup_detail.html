@@ -44,8 +44,9 @@
 {% endblock %}
 
 {% block content %}
-<div class="startup-detail-page" 
-     data-startup-id="{{ startup.startup_id }}" 
+<div class="startup-detail-page"
+     data-entity-type="startup" data-entity-id="{{ startup.startup_id }}"
+     data-startup-id="{{ startup.startup_id }}"
      data-startup-title="{{ startup.title|escapejs }}"
      data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
      data-user-has-voted="{{ user_has_voted|yesno:'true,false' }}"
@@ -279,7 +280,7 @@
                 </div>
                 <div class="detail-info-section-presentation-card">
                   {% if startup.pitch_deck_url %}
-                    <a href="{{ startup.pitch_deck_url }}" target="_blank" class="presentation-button">Презентация</a>
+                    <a href="{{ startup.pitch_deck_url }}" target="_blank" class="presentation-button" data-track-click="pitch_deck">Презентация</a>
                   {% endif %}
                 </div>
               </div>
@@ -845,4 +846,5 @@
     });
   });
 </script>
+<script src="{% static 'accounts/js/analytics_tracker.js' %}" defer></script>
 {% endblock %}

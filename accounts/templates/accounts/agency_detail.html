@@ -44,8 +44,9 @@
 {% endblock %}
 
 {% block content %}
-<div class="agency-detail-page" 
-     data-agency-id="{{ agency.agency_id }}" 
+<div class="agency-detail-page"
+     data-entity-type="agency" data-entity-id="{{ agency.agency_id }}"
+     data-agency-id="{{ agency.agency_id }}"
      data-agency-title="{{ agency.title|escapejs }}"
      data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
      data-user-has-voted="{{ user_has_voted|yesno:'true,false' }}"
@@ -252,7 +253,7 @@
                 </div>
                 <div class="detail-info-section-presentation-card">
                   {% if agency.pitch_deck_url %}
-                    <a href="{{ agency.pitch_deck_url }}" target="_blank" class="presentation-button">Презентация</a>
+                    <a href="{{ agency.pitch_deck_url }}" target="_blank" class="presentation-button" data-track-click="pitch_deck">Презентация</a>
                   {% endif %}
                 </div>
               </div>
@@ -1091,4 +1092,5 @@
     });
   });
 </script>
+<script src="{% static 'accounts/js/analytics_tracker.js' %}" defer></script>
 {% endblock %}

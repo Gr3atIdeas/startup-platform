@@ -28,6 +28,8 @@ else
     if [ -n "$CELERY_BROKER_URL" ]; then
         echo "Starting Celery worker in background..."
         celery -A marketplace worker --loglevel=info --concurrency=2 &
+        echo "Starting Celery beat in background..."
+        celery -A marketplace beat --loglevel=info &
     fi
 
     # News collector — запускаем в фоне если настроены Telegram-переменные

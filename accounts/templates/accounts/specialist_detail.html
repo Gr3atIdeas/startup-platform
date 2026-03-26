@@ -44,8 +44,9 @@
 {% endblock %}
 
 {% block content %}
-<div class="specialist-detail-page" 
-     data-specialist-id="{{ specialist.specialist_id }}" 
+<div class="specialist-detail-page"
+     data-entity-type="specialist" data-entity-id="{{ specialist.specialist_id }}"
+     data-specialist-id="{{ specialist.specialist_id }}"
      data-specialist-title="{{ specialist.title|escapejs }}"
      data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
      data-user-has-voted="{{ user_has_voted|yesno:'true,false' }}"
@@ -237,7 +238,7 @@
               <div class="detail-info-section-top-row">
                 <div class="detail-info-section-presentation-card">
                   {% if specialist.pitch_deck_url %}
-                    <a href="{{ specialist.pitch_deck_url }}" target="_blank" class="presentation-button">Презентация</a>
+                    <a href="{{ specialist.pitch_deck_url }}" target="_blank" class="presentation-button" data-track-click="pitch_deck">Презентация</a>
                   {% endif %}
                 </div>
               </div>
@@ -1038,4 +1039,5 @@
     });
   });
 </script>
+<script src="{% static 'accounts/js/analytics_tracker.js' %}" defer></script>
 {% endblock %}

@@ -1304,3 +1304,53 @@ class ModerationLog(models.Model):
 
     def __str__(self):
         return f"{self.get_action_display()} {self.get_entity_type_display()} #{self.entity_id} — {self.moderator}"
+
+
+class AnalyticsPageView(models.Model):
+    view_id = models.BigAutoField(primary_key=True)
+    entity_type = models.CharField(max_length=20)
+    entity_id = models.IntegerField()
+    user = models.ForeignKey("Users", models.SET_NULL, blank=True, null=True, db_column="user_id")
+    visitor_hash = models.CharField(max_length=64)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    user_agent = models.TextField(blank=True, null=True)
+    referrer = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = "analytics_page_views"
+
+
+class AnalyticsClickEvent(models.Model):
+    click_id = models.BigAutoField(primary_key=True)
+    entity_type = models.CharField(max_length=20)
+    entity_id = models.IntegerField()
+    button_type = models.CharField(max_length=30)
+    user = models.ForeignKey("Users", models.SET_NULL, blank=True, null=True, db_column="user_id")
+    visitor_hash = models.CharField(max_length=64)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = "analytics_click_events"
+
+
+class AnalyticsDailyStat(models.Model):
+    stat_id = models.BigAutoField(primary_key=True)
+    entity_type = models.CharField(max_length=20)
+    entity_id = models.IntegerField()
+    stat_date = models.DateField()
+    total_views = models.IntegerField(default=0)
+    unique_views = models.IntegerField(default=0)
+    clicks_contact = models.IntegerField(default=0)
+    clicks_website = models.IntegerField(default=0)
+    clicks_pitch_deck = models.IntegerField(default=0)
+    clicks_telegram = models.IntegerField(default=0)
+    clicks_whatsapp = models.IntegerField(default=0)
+
+    class Meta:
+        managed = False
+        db_table = "analytics_daily_stats"
+        unique_together = (("entity_type", "entity_id", "stat_date"),)

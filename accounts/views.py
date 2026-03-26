@@ -11346,3 +11346,42 @@ def clear_temp_files(request, form_id):
         del temp_files[form_id]
         request.session.modified = True
 
+
+@csrf_exempt
+@require_POST
+def track_page_view(request):
+    """Beacon endpoint for page view tracking."""
+    try:
+        import json
+        from accounts.analytics import record_page_view
+        data = json.loads(request.body)
+        entity_type = data.get('entity_type', '')
+        entity_id = data.get('entity_id', 0)
+        if entity_type not in ('startup', 'franchise', 'agency', 'specialist'):
+            return JsonResponse({'status': 'error'}, status=400)
+        record_page_view(entity_type, int(entity_id), request)
+        return JsonResponse({'status': 'ok'})
+    except Exception:
+        return JsonResponse({'status': 'error'}, status=500)
+
+
+@csrf_exempt
+@require_POST
+def track_click(request):
+    """Beacon endpoint for click tracking."""
+    try:
+        import json
+        from accounts.analytics import record_click
+        data = json.loads(request.body)
+        entity_type = data.get('entity_type', '')
+        entity_id = data.get('entity_id', 0)
+        button_type = data.get('button_type', '')
+        valid_types = ('startup', 'franchise', 'agency', 'specialist')
+        valid_buttons = ('contact', 'website', 'pitch_deck', 'telegram', 'whatsapp')
+        if entity_type not in valid_types or button_type not in valid_buttons:
+            return JsonResponse({'status': 'error'}, status=400)
+        record_click(entity_type, int(entity_id), button_type, request)
+        return JsonResponse({'status': 'ok'})
+    except Exception:
+        return JsonResponse({'status': 'error'}, status=500)
+
