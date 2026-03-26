@@ -27,7 +27,7 @@
                     <label class="planet-upload-label">*Выберите планету</label>
                     <div class="planet-selector" id="planetSelector">
                     <button type="button" class="planet-nav-button prev-planet" aria-label="Предыдущая планета">
-                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous" loading="lazy" decoding="async">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     <div class="planet-display">
                         <div class="planet-ribbon" id="planetRibbon">
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <button type="button" class="planet-nav-button next-planet" aria-label="Следующая планета">
-                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next" loading="lazy" decoding="async">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     </div>
                     {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image" }}
@@ -84,7 +84,7 @@
                             <label for="{{ form.direction.id_for_label }}">*{{ form.direction.label|cut:"*" }}</label>
                             <div class="input-wrapper select-wrapper">
                                 {{ form.direction|add_class:"form-control" }}
-                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow" loading="lazy" decoding="async">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="select-arrow"><polyline points="6 9 12 15 18 9"/></svg>
                             </div>
                             {% if form.direction.errors %}<span class="error-message">{{ form.direction.errors|first }}</span>{% endif %}
                         </div>
@@ -99,7 +99,7 @@
                             <label for="{{ form.stage.id_for_label }}">*{{ form.stage.label|cut:"*" }}</label>
                             <div class="input-wrapper select-wrapper">
                                 {{ form.stage|add_class:"form-control" }}
-                                 <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow" loading="lazy" decoding="async">
+                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="select-arrow"><polyline points="6 9 12 15 18 9"/></svg>
                             </div>
                             {% if form.stage.errors %}<span class="error-message">{{ form.stage.errors|first }}</span>{% endif %}
                         </div>
@@ -122,7 +122,7 @@
                             <label for="{{ form.investment_type.id_for_label }}" class="investment-type-label">Тип инвестирования</label>
                             <div class="input-wrapper select-wrapper">
                                 {{ form.investment_type|add_class:"form-control" }}
-                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow" loading="lazy" decoding="async">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="select-arrow"><polyline points="6 9 12 15 18 9"/></svg>
                             </div>
                             {% if form.investment_type.errors %}<span class="error-message">{{ form.investment_type.errors|first }}</span>{% endif %}
                         </div>
@@ -240,11 +240,11 @@
                     {% for i in "12345" %}
                     <div class="timeline-step" data-step="{{ i }}">
                         <div class="step-number-wrapper" id="stepNumber{{ i }}">
-                             {% if i == "1" %}<img src="{% static 'accounts/images/creat_startup/Frame 996.svg' %}" alt="Иконка Этап 1" class="step-icon" loading="lazy" decoding="async">{% endif %}
-                             {% if i == "2" %}<img src="{% static 'accounts/images/creat_startup/Frame 995.svg' %}" alt="Иконка Этап 2" class="step-icon" loading="lazy" decoding="async">{% endif %}
-                             {% if i == "3" %}<img src="{% static 'accounts/images/creat_startup/Frame 994.svg' %}" alt="Иконка Этап 3" class="step-icon" loading="lazy" decoding="async">{% endif %}
-                             {% if i == "4" %}<img src="{% static 'accounts/images/creat_startup/Frame 993.svg' %}" alt="Иконка Этап 4" class="step-icon" loading="lazy" decoding="async">{% endif %}
-                             {% if i == "5" %}<img src="{% static 'accounts/images/creat_startup/Frame 992.svg' %}" alt="Иконка Этап 5" class="step-icon" loading="lazy" decoding="async">{% endif %}
+                             {% if i == "1" %}<svg width="24" height="24" viewBox="0 0 24 24" class="step-icon"><circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="12" y="16" text-anchor="middle" fill="currentColor" font-size="12">1</text></svg>{% endif %}
+                             {% if i == "2" %}<svg width="24" height="24" viewBox="0 0 24 24" class="step-icon"><circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="12" y="16" text-anchor="middle" fill="currentColor" font-size="12">2</text></svg>{% endif %}
+                             {% if i == "3" %}<svg width="24" height="24" viewBox="0 0 24 24" class="step-icon"><circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="12" y="16" text-anchor="middle" fill="currentColor" font-size="12">3</text></svg>{% endif %}
+                             {% if i == "4" %}<svg width="24" height="24" viewBox="0 0 24 24" class="step-icon"><circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="12" y="16" text-anchor="middle" fill="currentColor" font-size="12">4</text></svg>{% endif %}
+                             {% if i == "5" %}<svg width="24" height="24" viewBox="0 0 24 24" class="step-icon"><circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="12" y="16" text-anchor="middle" fill="currentColor" font-size="12">5</text></svg>{% endif %}
                         </div>
                         <div class="step-text">Этап {{ i }}</div>
                         <button type="button" class="btn-select-current-step" data-step-target="{{ i }}">Мы здесь</button>

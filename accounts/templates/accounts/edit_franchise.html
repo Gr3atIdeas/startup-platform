@@ -248,7 +248,7 @@ if (window.FileUploadUtils) {
                     <label class="planet-upload-label">*Выберите планету</label>
                     <div class="planet-selector" id="planetSelector">
                     <button type="button" class="planet-nav-button prev-planet" aria-label="Предыдущая планета">
-                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous" loading="lazy" decoding="async">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     <div class="planet-display">
                         <div class="planet-ribbon" id="planetRibbon">
@@ -256,7 +256,7 @@ if (window.FileUploadUtils) {
                         </div>
                     </div>
                     <button type="button" class="planet-nav-button next-planet" aria-label="Следующая планета">
-                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next" loading="lazy" decoding="async">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
                     </div>
                     {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image" }}
@@ -309,7 +309,7 @@ if (window.FileUploadUtils) {
                             <label for="{{ form.direction.id_for_label }}">*{{ form.direction.label|cut:"*" }}</label>
                             <div class="input-wrapper select-wrapper">
                                 {{ form.direction|add_class:"form-control" }}
-                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow" loading="lazy" decoding="async">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="select-arrow"><polyline points="6 9 12 15 18 9"/></svg>
                             </div>
                             {% if form.direction.errors %}<span class="error-message">{{ form.direction.errors|first }}</span>{% endif %}
                         </div>

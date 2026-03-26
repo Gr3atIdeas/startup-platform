@@ -140,10 +140,10 @@ window.FileUploadUtils = (function() {
         const actionsHTML = 
             '<div class="file-actions">' +
                 '<button type="button" class="edit-file-btn" aria-label="Редактировать" style="display:none;">' +
-                    '<img src="' + config.staticUrl + config.editIconPath + '" alt="Редактировать">' +
+                    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
                 '</button>' +
                 '<button type="button" class="delete-file-btn" aria-label="Удалить">' +
-                    '<img src="' + config.staticUrl + config.deleteIconPath + '" alt="Удалить">' +
+                    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff4444" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
                 '</button>' +
             '</div>';
 
@@ -676,7 +676,7 @@ window.FileUploadUtils = (function() {
         var actionsHTML = 
             '<div class="file-actions">' +
                 '<button type="button" class="delete-file-btn" aria-label="Удалить">' +
-                    '<img src="' + config.staticUrl + config.deleteIconPath + '" alt="Удалить">' +
+                    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff4444" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
                 '</button>' +
             '</div>';
 
