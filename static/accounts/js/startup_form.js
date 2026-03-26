@@ -411,10 +411,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Поддержка всех форм создания (startup, franchise, agency, specialist)
-  var startupForm = document.getElementById('startupForm') || 
-                    document.getElementById('franchiseForm') ||
-                    document.getElementById('agencyForm') ||
-                    document.getElementById('specialistForm')
+  var startupForm = document.getElementById('startupForm')
   function showFieldError(fieldEl, message) {
     if (!fieldEl) return
     fieldEl.classList.add('input-error')

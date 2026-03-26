@@ -318,10 +318,7 @@ window.STARTUP_FORM_CONFIG = {
   planetBaseUrl: "/static/accounts/images/planetary_system/textures/",
 };
 
-console.log('[FranchiseForm] Script block loaded');
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('[FranchiseForm] DOMContentLoaded fired');
-    try {
     // --- Логотип ---
     const logoInput = document.getElementById('id_logo_input');
     const logoPlaceholder = document.getElementById('logoPlaceholder');
@@ -458,31 +455,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Обработка отправки формы ---
-    console.log('[FranchiseForm] Reached submit handler setup');
     const franchiseFormEl = document.getElementById('franchiseForm');
-    console.log('[FranchiseForm] franchiseFormEl:', franchiseFormEl ? 'FOUND' : 'NOT FOUND');
-
-    // Отладка: проверяем, доходят ли клики до кнопки и submit-события до формы
-    var submitBtn = document.querySelector('#franchiseForm button[type="submit"]');
-    if (submitBtn) {
-        console.log('[FranchiseForm] Submit button found:', submitBtn.textContent.trim());
-        submitBtn.addEventListener('click', function(e) {
-            console.log('[FranchiseForm] Button CLICKED, disabled:', submitBtn.disabled, 'form:', submitBtn.form ? submitBtn.form.id : 'NO FORM');
-        });
-    } else {
-        console.error('[FranchiseForm] Submit button NOT FOUND inside form!');
-        // Ищем кнопку вне формы
-        var anyBtn = document.querySelector('button.submit-button');
-        if (anyBtn) {
-            console.error('[FranchiseForm] Button exists but OUTSIDE form! button.form:', anyBtn.form ? anyBtn.form.id : 'null');
-        }
-    }
-
-    // Слушаем submit на document уровне
-    document.addEventListener('submit', function(e) {
-        console.log('[FranchiseForm] Document-level submit event from:', e.target.id || e.target.tagName);
-    }, true);
-
     if (franchiseFormEl) {
         function displayValidationMessage(element, message, fieldType = 'input') {
             const parentGroup = element.closest('.form-group, .upload-box, .logo-upload-group');
@@ -865,9 +838,6 @@ document.addEventListener('DOMContentLoaded', function() {
         spinDown.addEventListener('click', () => {
             valuationInput.stepDown();
         });
-    }
-    } catch (err) {
-        console.error('[FranchiseForm] FATAL ERROR in DOMContentLoaded:', err);
     }
 });
 </script>
