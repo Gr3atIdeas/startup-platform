@@ -259,14 +259,13 @@
 
 .profile-dropdown-item {
   color: #000;
-  padding: 12px 20px;
+  padding: 10px 20px;
   text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 12px;
   font-family: Unbounded, sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 100%;
@@ -314,8 +313,18 @@
   color: #fff;
 }
 
+.profile-dropdown-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  margin: 4px 16px;
+}
+
 .profile-dropdown-logout {
-  color: #000;
+  color: #888;
+}
+
+.profile-dropdown-logout:hover {
+  color: #555 !important;
 }
 
 .profile-dropdown-logout:hover {
@@ -512,12 +521,10 @@ nav.nav-menu
 .catalog-dropdown-item.no-wave-effect {
   all: unset !important;
 
-  
   display: flex !important;
   align-items: center !important;
   justify-content: flex-start !important;
-  gap: 10px !important;
-  padding: 10px 15px !important;
+  padding: 10px 20px !important;
   width: 100% !important;
   box-sizing: border-box !important;
   font-family: Unbounded, sans-serif !important;
@@ -652,8 +659,7 @@ nav.nav-menu
   display: flex !important;
   align-items: center !important;
   justify-content: flex-start !important;
-  gap: 10px !important;
-  padding: 10px 15px !important;
+  padding: 10px 20px !important;
   width: 100% !important;
   box-sizing: border-box !important;
   font-family: Unbounded, sans-serif !important;
