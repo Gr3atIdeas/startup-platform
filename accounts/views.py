@@ -3676,31 +3676,40 @@ def create_startup(request):
                     messages.warning(request, "Не удалось сохранить логотип, но стартап создан.")
                     file_save_errors.append({"field": "logo", "error": str(e)})
             
-            # Синхронная загрузка catalog_card_image
+            # Синхронная загрузка catalog_card_image в catalog_cards/
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 try:
-                    catalog_card_image.seek(0)
-                    file_data = catalog_card_image.read()
-                    content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
-                    unique_filename = get_unique_filename(catalog_card_image.name, startup.startup_id, "catalog_card_image")
-
-                    result = upload_file_to_s3_sync(
-                        file_data=file_data,
-                        file_name=catalog_card_image.name,
-                        content_type=content_type,
-                        entity_type_name='startup',
-                        entity_id=startup.startup_id,
-                        file_type_name='catalog_card_image',
-                        original_filename=unique_filename,
-                        file_id=catalog_card_id
+                    processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+                    base_name = os.path.splitext(processed_catalog_name)[0]
+                    ext = os.path.splitext(processed_catalog_name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                    s3 = boto3.client(
+                        's3',
+                        endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+                        aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+                        aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+                        region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                        config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
                     )
-                    if not result:
-                        catalog_card_id = None
-                    logger.info(f"Изображение карточки стартапа загружено: {catalog_card_image.name}, размер: {len(file_data)} байт")
+                    bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+                    content_type = 'image/webp' if processed_catalog_name.endswith('.webp') else getattr(catalog_card_image, 'content_type', 'application/octet-stream')
+                    if hasattr(processed_catalog_image, 'read'):
+                        body_bytes = processed_catalog_image.read()
+                    else:
+                        body_bytes = processed_catalog_image.getvalue() if hasattr(processed_catalog_image, 'getvalue') else processed_catalog_image
+                    try:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
+                    except Exception:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
+                    startup.catalog_card_image = f"{catalog_card_id}_{safe_name}"
+                    startup.save(update_fields=["catalog_card_image"])
+                    logger.info(f"Изображение карточки стартапа загружено: {file_path}")
                 except Exception as e:
-                    logger.error(f"Ошибка отправки изображения карточки в очередь: {e}", exc_info=True)
+                    logger.error(f"Ошибка сохранения изображения карточки стартапа: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но стартап создан.")
                     file_save_errors.append({"field": "catalog_card_image", "error": str(e)})
             
@@ -4011,31 +4020,40 @@ def create_franchise(request):
                     logger.error(f"Ошибка загрузки логотипа франшизы: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить логотип, но франшиза создана.")
 
-            # Синхронная загрузка catalog_card_image
+            # Синхронная загрузка catalog_card_image в catalog_cards/
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 try:
-                    catalog_card_image.seek(0)
-                    file_data = catalog_card_image.read()
-                    content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
-                    unique_filename = get_unique_filename(catalog_card_image.name, franchise.franchise_id, "catalog_card_image")
-
-                    result = upload_file_to_s3_sync(
-                        file_data=file_data,
-                        file_name=catalog_card_image.name,
-                        content_type=content_type,
-                        entity_type_name='franchise',
-                        entity_id=franchise.franchise_id,
-                        file_type_name='catalog_card_image',
-                        original_filename=unique_filename,
-                        file_id=catalog_card_id
+                    processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+                    base_name = os.path.splitext(processed_catalog_name)[0]
+                    ext = os.path.splitext(processed_catalog_name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                    s3 = boto3.client(
+                        's3',
+                        endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+                        aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+                        aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+                        region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                        config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
                     )
-                    if not result:
-                        catalog_card_id = None
-                    logger.info(f"Изображение карточки франшизы загружено: {catalog_card_image.name}, размер: {len(file_data)} байт")
+                    bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+                    content_type = 'image/webp' if processed_catalog_name.endswith('.webp') else getattr(catalog_card_image, 'content_type', 'application/octet-stream')
+                    if hasattr(processed_catalog_image, 'read'):
+                        body_bytes = processed_catalog_image.read()
+                    else:
+                        body_bytes = processed_catalog_image.getvalue() if hasattr(processed_catalog_image, 'getvalue') else processed_catalog_image
+                    try:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
+                    except Exception:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
+                    franchise.catalog_card_image = f"{catalog_card_id}_{safe_name}"
+                    franchise.save(update_fields=["catalog_card_image"])
+                    logger.info(f"Изображение карточки франшизы загружено: {file_path}")
                 except Exception as e:
-                    logger.error(f"Ошибка отправки изображения карточки франшизы в очередь: {e}", exc_info=True)
+                    logger.error(f"Ошибка сохранения изображения карточки франшизы: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но франшиза создана.")
 
             creatives = request.FILES.getlist("creatives")
@@ -4352,31 +4370,40 @@ def create_agency(request):
                     logger.error(f"Ошибка загрузки логотипа агентства: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить логотип, но агентство создано.")
 
-            # Асинхронная загрузка catalog_card_image через Celery
+            # Синхронная загрузка catalog_card_image в catalog_cards/
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 try:
-                    catalog_card_image.seek(0)
-                    file_data = catalog_card_image.read()
-                    content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
-                    unique_filename = get_unique_filename(catalog_card_image.name, agency.agency_id, "catalog_card_image")
-
-                    result = upload_file_to_s3_sync(
-                        file_data=file_data,
-                        file_name=catalog_card_image.name,
-                        content_type=content_type,
-                        entity_type_name='agency',
-                        entity_id=agency.agency_id,
-                        file_type_name='catalog_card_image',
-                        original_filename=unique_filename,
-                        file_id=catalog_card_id
+                    processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+                    base_name = os.path.splitext(processed_catalog_name)[0]
+                    ext = os.path.splitext(processed_catalog_name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                    s3 = boto3.client(
+                        's3',
+                        endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+                        aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+                        aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+                        region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                        config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
                     )
-                    if not result:
-                        catalog_card_id = None
-                    logger.info(f"Изображение карточки агентства загружено: {catalog_card_image.name}, размер: {len(file_data)} байт")
+                    bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+                    content_type = 'image/webp' if processed_catalog_name.endswith('.webp') else getattr(catalog_card_image, 'content_type', 'application/octet-stream')
+                    if hasattr(processed_catalog_image, 'read'):
+                        body_bytes = processed_catalog_image.read()
+                    else:
+                        body_bytes = processed_catalog_image.getvalue() if hasattr(processed_catalog_image, 'getvalue') else processed_catalog_image
+                    try:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
+                    except Exception:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
+                    agency.catalog_card_image = f"{catalog_card_id}_{safe_name}"
+                    agency.save(update_fields=["catalog_card_image"])
+                    logger.info(f"Изображение карточки агентства загружено: {file_path}")
                 except Exception as e:
-                    logger.error(f"Ошибка отправки изображения карточки агентства в очередь: {e}", exc_info=True)
+                    logger.error(f"Ошибка сохранения изображения карточки агентства: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но агентство создано.")
 
             # Асинхронная загрузка creatives через Celery
@@ -4698,31 +4725,40 @@ def create_specialist(request):
                     logger.error(f"Ошибка загрузки логотипа специалиста: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить логотип, но профиль специалиста создан.")
 
-            # Асинхронная загрузка catalog_card_image через Celery
+            # Синхронная загрузка catalog_card_image в catalog_cards/
             catalog_card_image = form.cleaned_data.get("catalog_card_image")
             if catalog_card_image and hasattr(catalog_card_image, 'read'):
                 catalog_card_id = str(uuid.uuid4())
                 try:
-                    catalog_card_image.seek(0)
-                    file_data = catalog_card_image.read()
-                    content_type = getattr(catalog_card_image, 'content_type', 'image/jpeg')
-                    unique_filename = get_unique_filename(catalog_card_image.name, spec.specialist_id, "catalog_card_image")
-
-                    result = upload_file_to_s3_sync(
-                        file_data=file_data,
-                        file_name=catalog_card_image.name,
-                        content_type=content_type,
-                        entity_type_name='specialist',
-                        entity_id=spec.specialist_id,
-                        file_type_name='catalog_card_image',
-                        original_filename=unique_filename,
-                        file_id=catalog_card_id
+                    processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+                    base_name = os.path.splitext(processed_catalog_name)[0]
+                    ext = os.path.splitext(processed_catalog_name)[1]
+                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+                    safe_name = slugify(safe_base_name) + ext
+                    file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+                    s3 = boto3.client(
+                        's3',
+                        endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+                        aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+                        aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+                        region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+                        config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
                     )
-                    if not result:
-                        catalog_card_id = None
-                    logger.info(f"Изображение карточки специалиста загружено: {catalog_card_image.name}, размер: {len(file_data)} байт")
+                    bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+                    content_type = 'image/webp' if processed_catalog_name.endswith('.webp') else getattr(catalog_card_image, 'content_type', 'application/octet-stream')
+                    if hasattr(processed_catalog_image, 'read'):
+                        body_bytes = processed_catalog_image.read()
+                    else:
+                        body_bytes = processed_catalog_image.getvalue() if hasattr(processed_catalog_image, 'getvalue') else processed_catalog_image
+                    try:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
+                    except Exception:
+                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
+                    spec.catalog_card_image = f"{catalog_card_id}_{safe_name}"
+                    spec.save(update_fields=["catalog_card_image"])
+                    logger.info(f"Изображение карточки специалиста загружено: {file_path}")
                 except Exception as e:
-                    logger.error(f"Ошибка отправки изображения карточки специалиста в очередь: {e}", exc_info=True)
+                    logger.error(f"Ошибка сохранения изображения карточки специалиста: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки, но профиль специалиста создан.")
 
             # Асинхронная загрузка creatives через Celery
