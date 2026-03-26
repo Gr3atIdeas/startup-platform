@@ -445,13 +445,25 @@ document.addEventListener('DOMContentLoaded', function() {
         startupForm.addEventListener('submit', function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            
+
             // Предотвращаем повторную отправку
             if (isFormSubmitting) {
                 console.log('Form already submitting, blocked');
                 return false;
             }
-            
+
+            // Синхронизируем все Quill-редакторы в textarea перед валидацией
+            document.querySelectorAll('.ql-editor').forEach(function(editor) {
+                var container = editor.closest('.quill-editor-container') || editor.closest('.ql-container');
+                if (!container) return;
+                var textarea = container.previousElementSibling;
+                if (textarea && textarea.tagName === 'TEXTAREA') {
+                    var html = editor.innerHTML;
+                    if (html === '<p><br></p>') html = '';
+                    textarea.value = html;
+                }
+            });
+
             let firstInvalidElementOrGroup = null;
             let validationPassed = true;
             let firstErrorText = null;
@@ -530,7 +542,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const agreeRulesCheckbox = document.getElementById('id_agree_rules');
-            if (agreeRulesCheckbox && document.querySelector('label[for="id_agree_rules"] span.checkbox-text')?.textContent?.includes('*')) {
+            if (agreeRulesCheckbox) {
                 if (!agreeRulesCheckbox.checked) {
                     validationPassed = false;
                     const parentDiv = agreeRulesCheckbox.closest('.checkbox-group');
@@ -541,7 +553,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const agreeDataProcessingCheckbox = document.getElementById('id_agree_data_processing');
-            if (agreeDataProcessingCheckbox && document.querySelector('label[for="id_agree_data_processing"] span.checkbox-text')?.textContent?.includes('*')) {
+            if (agreeDataProcessingCheckbox) {
                 if (!agreeDataProcessingCheckbox.checked) {
                     validationPassed = false;
                     const parentDiv = agreeDataProcessingCheckbox.closest('.checkbox-group');

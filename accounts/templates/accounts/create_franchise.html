@@ -492,13 +492,28 @@ document.addEventListener('DOMContentLoaded', function() {
         franchiseFormEl.addEventListener('submit', function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            
+
+            console.log('[FranchiseForm] Submit handler fired');
+
             // Предотвращаем повторную отправку
             if (isFormSubmitting) {
-                console.log('Form already submitting, blocked');
+                console.log('[FranchiseForm] Form already submitting, blocked');
                 return false;
             }
-            
+
+            // Синхронизируем все Quill-редакторы в textarea перед валидацией
+            document.querySelectorAll('.ql-editor').forEach(function(editor) {
+                var container = editor.closest('.quill-editor-container') || editor.closest('.ql-container');
+                if (!container) return;
+                var textarea = container.previousElementSibling;
+                if (textarea && textarea.tagName === 'TEXTAREA') {
+                    var html = editor.innerHTML;
+                    if (html === '<p><br></p>') html = '';
+                    textarea.value = html;
+                    console.log('[FranchiseForm] Synced Quill → textarea:', textarea.name || textarea.id, 'length:', html.length);
+                }
+            });
+
             let firstInvalidElementOrGroup = null;
             let validationPassed = true;
             let firstErrorText = null;
@@ -529,19 +544,27 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (!element.value.trim()) {
                             isInvalid = true;
                         }
+                        console.log('[FranchiseForm] Field:', field.name, '(' + field.id + ') value length:', (element.value || '').length, isInvalid ? '✗ INVALID' : '✓ ok');
                     } else if (field.type === 'select' || field.type === 'hidden') {
                         if (element.value === '' || element.value === null) {
                             isInvalid = true;
                         }
+                        console.log('[FranchiseForm] Field:', field.name, '(' + field.id + ') value:', element.value, isInvalid ? '✗ INVALID' : '✓ ok');
                     } else if (field.type === 'file' && field.required) {
-                        // Проверяем и input.files и превью-область
+                        // Проверяем и input.files и превью-область и accumulated files
                         const previewAreaId = field.id.replace('_input', 'Preview');
                         const previewArea = document.getElementById(previewAreaId);
                         const hasFilesInInput = element.files && element.files.length > 0;
                         const hasFilesInPreview = previewArea && previewArea.querySelectorAll('.file-preview-item').length > 0;
-                        if (!hasFilesInInput && !hasFilesInPreview) {
+                        let hasAccumulatedFiles = false;
+                        if (window.FileUploadUtils && window.FileUploadUtils.getAccumulatedFiles) {
+                            const acc = window.FileUploadUtils.getAccumulatedFiles(field.id);
+                            hasAccumulatedFiles = acc && acc.length > 0;
+                        }
+                        if (!hasFilesInInput && !hasFilesInPreview && !hasAccumulatedFiles) {
                             isInvalid = true;
                         }
+                        console.log('[FranchiseForm] File:', field.name, '(' + field.id + ') input.files:', (element.files ? element.files.length : 0), 'preview:', hasFilesInPreview, 'accumulated:', hasAccumulatedFiles, isInvalid ? '✗ INVALID' : '✓ ok');
                     }
 
                     if (isInvalid) {
@@ -580,7 +603,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const agreeRulesCheckbox = document.getElementById('id_agree_rules');
-            if (agreeRulesCheckbox && document.querySelector('label[for="id_agree_rules"] span.checkbox-text')?.textContent?.includes('*')) {
+            if (agreeRulesCheckbox) {
                 if (!agreeRulesCheckbox.checked) {
                     validationPassed = false;
                     const parentDiv = agreeRulesCheckbox.closest('.checkbox-group');
@@ -589,10 +612,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (parentDiv) parentDiv.classList.add('input-error');
                     if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = parentDiv || agreeRulesCheckbox;
                 }
+                console.log('[FranchiseForm] Checkbox agree_rules:', agreeRulesCheckbox.checked ? '✓ checked' : '✗ unchecked');
             }
 
             const agreeDataProcessingCheckbox = document.getElementById('id_agree_data_processing');
-            if (agreeDataProcessingCheckbox && document.querySelector('label[for="id_agree_data_processing"] span.checkbox-text')?.textContent?.includes('*')) {
+            if (agreeDataProcessingCheckbox) {
                 if (!agreeDataProcessingCheckbox.checked) {
                     validationPassed = false;
                     const parentDiv = agreeDataProcessingCheckbox.closest('.checkbox-group');
@@ -601,17 +625,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (parentDiv) parentDiv.classList.add('input-error');
                     if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = parentDiv || agreeDataProcessingCheckbox;
                 }
+                console.log('[FranchiseForm] Checkbox agree_data:', agreeDataProcessingCheckbox.checked ? '✓ checked' : '✗ unchecked');
             }
 
             const submitButton = this.querySelector('button[type="submit"]');
+            console.log('[FranchiseForm] Validation result:', validationPassed ? '✓ PASSED' : '✗ FAILED', 'firstError:', firstErrorText);
             if (!validationPassed) {
                 e.preventDefault();
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Отправить на модерацию';
                 }
-                if (firstErrorText && typeof window.showNotification === 'function') {
-                    window.showNotification(firstErrorText, 'error', 5000);
+                if (firstErrorText) {
+                    if (typeof window.showNotification === 'function') {
+                        window.showNotification(firstErrorText, 'error', 5000);
+                    } else {
+                        console.warn('[FranchiseForm] showNotification unavailable, error:', firstErrorText);
+                    }
                 }
                 if (firstInvalidElementOrGroup) {
                     if (firstInvalidElementOrGroup.classList && firstInvalidElementOrGroup.classList.contains('timeline-description-textarea')) {
@@ -632,11 +662,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 return false;
             } else {
+                console.log('[FranchiseForm] Validation passed, starting submission...');
                 // Устанавливаем флаг отправки
                 isFormSubmitting = true;
-                
+
                 if (submitButton) {
                     if (submitButton.disabled) {
+                        console.warn('[FranchiseForm] Submit button already disabled, aborting');
+                        isFormSubmitting = false;
                         return;
                     }
                     submitButton.disabled = true;
@@ -660,6 +693,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 var csrfInput = this.querySelector('input[name="csrfmiddlewaretoken"]');
                 var csrfToken = csrfInput ? csrfInput.value : null;
 
+                // Логируем содержимое FormData
+                var fdKeys = [];
+                for (var pair of formData.entries()) {
+                    if (pair[1] instanceof File) {
+                        fdKeys.push(pair[0] + ': File(' + pair[1].name + ', ' + pair[1].size + 'b)');
+                    } else {
+                        fdKeys.push(pair[0] + ': ' + (pair[1] || '').toString().substring(0, 50));
+                    }
+                }
+                console.log('[FranchiseForm] FormData keys:', fdKeys);
+                console.log('[FranchiseForm] Submitting to:', this.action || window.location.href);
+
                 fetch(this.action || window.location.href, {
                     method: 'POST',
                     body: formData,
@@ -670,8 +715,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     credentials: 'same-origin',
                 })
                 .then(function(response) {
+                    console.log('[FranchiseForm] Response status:', response.status, response.ok ? 'OK' : 'ERROR');
                     return response.json().then(function(data) {
                         return { ok: response.ok, data: data };
+                    }).catch(function(parseErr) {
+                        console.error('[FranchiseForm] Failed to parse JSON response:', parseErr);
+                        return response.text().then(function(text) {
+                            console.error('[FranchiseForm] Raw response (first 500 chars):', text.substring(0, 500));
+                            throw new Error('Server returned non-JSON response (status ' + response.status + ')');
+                        });
                     });
                 })
                 .then(function(result) {
