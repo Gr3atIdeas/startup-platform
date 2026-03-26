@@ -438,6 +438,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function validateFormClientSide() {
     var hasError = false
     var isEditPage = window.location.pathname.includes('/edit/') || window.location.pathname.includes('/edit-startup/')
+    console.log('[VALIDATION] Starting validation, isEditPage:', isEditPage)
     
     var requiredSelectors = [
       "[name='title']",
@@ -460,6 +461,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var val = (el.value || '').toString().trim()
       if (!val) {
         hasError = true
+        console.log('[VALIDATION] Required field empty:', sel)
         showFieldError(el, 'Это поле обязательно')
       }
     })
@@ -498,10 +500,16 @@ document.addEventListener('DOMContentLoaded', function () {
       var proofsInput = document.getElementById('id_proofs_input')
       if (creativesInput) {
         var c = creativesInput.files ? creativesInput.files.length : 0
-        // Также проверяем превью-область
+        // Также проверяем превью-область и temp-uploaded файлы
         var creativesPreview = document.getElementById('creativesPreview')
-        var previewCount = creativesPreview ? creativesPreview.querySelectorAll('.file-preview-item').length : 0
-        var totalCreatives = Math.max(c, previewCount)
+        var previewCount = creativesPreview ? creativesPreview.querySelectorAll('.file-preview-item, .preview-item, [class*="preview"], img').length : 0
+        // Проверяем накопленные файлы в памяти (accumulatedFiles из file_upload_utils)
+        var accCount = 0
+        if (window.FileUploadUtils && window.FileUploadUtils.getAccumulatedFiles) {
+          var acc = window.FileUploadUtils.getAccumulatedFiles('id_creatives_input')
+          accCount = acc ? acc.length : 0
+        }
+        var totalCreatives = Math.max(c, previewCount, accCount)
         if (totalCreatives < 1) {
           hasError = true
           showFieldError(creativesInput, 'Добавьте хотя бы 1 изображение (до 10)')
@@ -559,6 +567,7 @@ document.addEventListener('DOMContentLoaded', function () {
         clearFieldError(proofsInput)
       }
     }
+    console.log('[VALIDATION] Final hasError:', hasError)
     return !hasError
   }
   var isFormSubmitting = false;
@@ -581,6 +590,7 @@ document.addEventListener('DOMContentLoaded', function () {
         el.remove()
       })
       var ok = validateFormClientSide()
+      console.log('[VALIDATION] Result:', ok)
       if (!ok) {
         var firstError = startupForm.querySelector('.input-error') || startupForm.querySelector('.custom-validation-error')
         if (firstError) {
