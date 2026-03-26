@@ -1,0 +1,205 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+{% block title %}Моя статистика — Great Ideas{% endblock %}
+
+{% block meta_description %}
+<meta name="description" content="Статистика просмотров и кликов по вашим публикациям на Great Ideas">
+{% endblock %}
+
+{% block content %}
+<style>
+.analytics-dashboard { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+.analytics-title { color: #fff; font-family: 'Blippo Local', sans-serif; font-size: 32px; margin-bottom: 24px; }
+.analytics-subtitle { color: #fff; font-size: 22px; margin: 32px 0 16px; }
+.analytics-period { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.analytics-period a { color: rgba(255,255,255,0.6); text-decoration: none; padding: 8px 16px; border-radius: 8px; background: rgba(255,255,255,0.05); transition: color 0.2s, background 0.2s; }
+.analytics-period a:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.1); }
+.analytics-period a.active { color: #FFD700; background: rgba(255,215,0,0.15); }
+.analytics-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+.analytics-card { background: rgba(0, 8, 25, 0.82); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 24px; text-align: center; }
+.analytics-card__value { font-size: 36px; font-weight: 700; color: #FFD700; }
+.analytics-card__label { color: rgba(255,255,255,0.6); margin-top: 8px; font-size: 14px; }
+.analytics-entities { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-bottom: 32px; }
+.analytics-entity { background: rgba(0,8,25,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; text-decoration: none; color: #fff; transition: border-color 0.2s; display: block; }
+.analytics-entity:hover { border-color: rgba(255,215,0,0.3); color: #fff; text-decoration: none; }
+.analytics-entity--active { border-color: #FFD700; background: rgba(255,215,0,0.08); }
+.analytics-entity__header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.analytics-entity__type { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; }
+.analytics-entity__status { font-size: 11px; color: #ff9800; background: rgba(255,152,0,0.15); padding: 2px 8px; border-radius: 4px; }
+.analytics-entity__title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.analytics-entity__stats { font-size: 13px; color: rgba(255,255,255,0.5); display: flex; gap: 12px; }
+.analytics-chart-container { background: rgba(0,8,25,0.82); border-radius: 14px; padding: 24px; margin-bottom: 24px; height: 350px; position: relative; }
+.analytics-clicks { margin-bottom: 32px; }
+.analytics-clicks h3 { color: #fff; font-size: 18px; margin-bottom: 16px; }
+.analytics-clicks-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.analytics-click-item { background: rgba(0,8,25,0.6); border-radius: 12px; padding: 16px; text-align: center; }
+.analytics-click-item__value { font-size: 24px; font-weight: 700; color: #2196F3; }
+.analytics-click-item__label { color: rgba(255,255,255,0.5); margin-top: 4px; font-size: 13px; }
+.analytics-empty { color: rgba(255,255,255,0.5); font-size: 16px; text-align: center; padding: 40px 0; }
+
+@media (max-width: 768px) {
+  .analytics-summary { grid-template-columns: 1fr; }
+  .analytics-clicks-grid { grid-template-columns: repeat(2, 1fr); }
+  .analytics-entities { grid-template-columns: 1fr; }
+  .analytics-card__value { font-size: 28px; }
+  .analytics-title { font-size: 24px; }
+}
+</style>
+
+<div class="analytics-dashboard">
+  <h1 class="analytics-title">Моя статистика</h1>
+
+  <!-- Period selector -->
+  <div class="analytics-period">
+    <a href="?days=7{% if selected_type %}&type={{ selected_type }}&id={{ selected_id }}{% endif %}" class="{% if days == 7 %}active{% endif %}">7 дней</a>
+    <a href="?days=30{% if selected_type %}&type={{ selected_type }}&id={{ selected_id }}{% endif %}" class="{% if days == 30 %}active{% endif %}">30 дней</a>
+    <a href="?days=90{% if selected_type %}&type={{ selected_type }}&id={{ selected_id }}{% endif %}" class="{% if days == 90 %}active{% endif %}">90 дней</a>
+    <a href="?days=365{% if selected_type %}&type={{ selected_type }}&id={{ selected_id }}{% endif %}" class="{% if days == 365 %}active{% endif %}">Год</a>
+  </div>
+
+  <!-- Summary cards -->
+  <div class="analytics-summary">
+    <div class="analytics-card">
+      <div class="analytics-card__value">{{ total_views }}</div>
+      <div class="analytics-card__label">Просмотров</div>
+    </div>
+    <div class="analytics-card">
+      <div class="analytics-card__value">{{ total_unique }}</div>
+      <div class="analytics-card__label">Уникальных</div>
+    </div>
+    <div class="analytics-card">
+      <div class="analytics-card__value">{{ total_clicks }}</div>
+      <div class="analytics-card__label">Кликов</div>
+    </div>
+  </div>
+
+  <!-- Entity list -->
+  <h2 class="analytics-subtitle">Мои публикации</h2>
+  <div class="analytics-entities">
+    {% for entity in all_entities %}
+    <a href="?type={{ entity.type }}&id={{ entity.id }}&days={{ days }}"
+       class="analytics-entity {% if selected_type == entity.type and selected_id == entity.id|stringformat:'d' %}analytics-entity--active{% endif %}">
+      <div class="analytics-entity__header">
+        <span class="analytics-entity__type">{{ entity.type_label }}</span>
+        {% if entity.status != 'approved' %}
+        <span class="analytics-entity__status">{{ entity.status }}</span>
+        {% endif %}
+      </div>
+      <div class="analytics-entity__title">{{ entity.title }}</div>
+      <div class="analytics-entity__stats">
+        <span>&#128065; {{ entity.stats.total_views }}</span>
+        <span>&#128100; {{ entity.stats.unique_views }}</span>
+      </div>
+    </a>
+    {% empty %}
+    <p class="analytics-empty">У вас пока нет публикаций</p>
+    {% endfor %}
+  </div>
+
+  <!-- Selected entity detail -->
+  {% if selected_stats and selected_entity %}
+  <h2 class="analytics-subtitle">{{ selected_entity.title }}</h2>
+
+  <!-- Chart -->
+  <div class="analytics-chart-container">
+    <canvas id="viewsChart"></canvas>
+  </div>
+
+  <!-- Click breakdown -->
+  <div class="analytics-clicks">
+    <h3>Клики по кнопкам</h3>
+    <div class="analytics-clicks-grid">
+      <div class="analytics-click-item">
+        <div class="analytics-click-item__value">{{ selected_stats.total_clicks.contact }}</div>
+        <div class="analytics-click-item__label">Связаться</div>
+      </div>
+      <div class="analytics-click-item">
+        <div class="analytics-click-item__value">{{ selected_stats.total_clicks.website }}</div>
+        <div class="analytics-click-item__label">Сайт</div>
+      </div>
+      <div class="analytics-click-item">
+        <div class="analytics-click-item__value">{{ selected_stats.total_clicks.pitch_deck }}</div>
+        <div class="analytics-click-item__label">Презентация</div>
+      </div>
+      <div class="analytics-click-item">
+        <div class="analytics-click-item__value">{{ selected_stats.total_clicks.telegram }}</div>
+        <div class="analytics-click-item__label">Telegram</div>
+      </div>
+      <div class="analytics-click-item">
+        <div class="analytics-click-item__value">{{ selected_stats.total_clicks.whatsapp }}</div>
+        <div class="analytics-click-item__label">WhatsApp</div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+{% if selected_stats %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var statsData = {{ selected_stats_json|safe }};
+    var daily = statsData.daily || [];
+    var labels = daily.map(function(d) { return d.date; });
+    var views = daily.map(function(d) { return d.views; });
+    var unique = daily.map(function(d) { return d.unique; });
+    var clicks = daily.map(function(d) { return d.clicks; });
+
+    var ctx = document.getElementById('viewsChart');
+    if (ctx && typeof Chart !== 'undefined') {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Просмотры',
+                        data: views,
+                        borderColor: '#FFD700',
+                        backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Уникальные',
+                        data: unique,
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Клики',
+                        data: clicks,
+                        borderColor: '#2196F3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: '#fff' }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#aaa' },
+                        grid: { color: 'rgba(255,255,255,0.05)' }
+                    },
+                    y: {
+                        ticks: { color: '#aaa' },
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

@@ -211,6 +211,7 @@ urlpatterns = [
     path("temp-upload/", views.temp_file_upload, name="temp_file_upload"),
     path("temp-files/", views.get_temp_files, name="get_temp_files"),
     path("temp-delete/<str:temp_id>/", views.delete_temp_file, name="delete_temp_file"),
+    path("my-analytics/", views.my_analytics, name="my_analytics"),
     path("api/track/pageview/", views.track_page_view, name="track_page_view"),
     path("api/track/click/", views.track_click, name="track_click"),
 ]

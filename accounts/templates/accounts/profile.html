@@ -87,6 +87,11 @@
                 <div class="profile-sidebar-my-galaxy-btn-text">Моя Галактика</div>
             </a>
             {% endif %}
+            {% if is_own_profile %}
+            <a href="{% url 'my_analytics' %}" class="profile-sidebar-my-galaxy-btn" style="margin-top: 8px;">
+                <div class="profile-sidebar-my-galaxy-btn-text">Моя статистика</div>
+            </a>
+            {% endif %}
             
             <div class="profile-sidebar-social-icons-row">
                 <img id="shareProfileBtn" class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/share_icon.svg' %}" alt="Поделиться" title="Поделиться" />
