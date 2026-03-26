@@ -4,7 +4,20 @@
 {% load humanize %}
 {% load accounts_extras %}
 
-{% block title %}Каталог франшиз{% endblock %}
+{% block title %}Каталог франшиз — Great Ideas{% endblock %}
+
+{% block meta_description %}<meta name="description" content="Каталог франшиз на платформе Great Ideas. Выберите франшизу для инвестиций и развития бизнеса.">{% endblock %}
+
+{% block canonical %}<link rel="canonical" href="{{ request.build_absolute_uri }}">{% endblock %}
+
+{% block og_tags %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Great Ideas">
+<meta property="og:title" content="Каталог франшиз — Great Ideas">
+<meta property="og:description" content="Каталог франшиз на платформе Great Ideas. Выберите франшизу для инвестиций и развития бизнеса.">
+<meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+{% endblock %}
 
 {% block head_extra %}
   {{ block.super }}

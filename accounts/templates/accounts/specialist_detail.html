@@ -7,7 +7,34 @@
 {% load accounts_extras %}
 {% load html_sanitizer %}
 
-{% block title %}{{ specialist.customization_data.specialist_display_title|default:specialist.title|default:"Детали специалиста" }}{% endblock %}
+{% block title %}{{ specialist.customization_data.specialist_display_title|default:specialist.title|default:"Детали специалиста" }} — Great Ideas{% endblock %}
+
+{% block meta_description %}<meta name="description" content="{{ specialist.short_description|default:specialist.title|striptags|truncatewords:25 }}">{% endblock %}
+
+{% block canonical %}<link rel="canonical" href="{{ canonical_url }}">{% endblock %}
+
+{% block og_tags %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Great Ideas">
+<meta property="og:title" content="{{ specialist.customization_data.specialist_display_title|default:specialist.title|default:'Специалист' }} — Great Ideas">
+<meta property="og:description" content="{{ specialist.short_description|default:specialist.title|striptags|truncatewords:25 }}">
+{% if slider_images %}<meta property="og:image" content="{{ slider_images.0 }}">
+{% elif logo_urls %}<meta property="og:image" content="{{ logo_urls.0 }}">
+{% else %}<meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">{% endif %}
+<meta property="og:url" content="{{ canonical_url }}">
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ specialist.title }}",
+  "description": "{{ specialist.short_description|striptags|truncatewords:30 }}",
+  "url": "{{ request.build_absolute_uri }}"
+}
+</script>
+{% endblock %}
 
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/specialist_detail.css' %}">

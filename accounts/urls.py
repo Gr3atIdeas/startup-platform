@@ -2,6 +2,7 @@ from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 from . import views
 urlpatterns = [
+    path("robots.txt", views.robots_txt, name="robots_txt"),
     path("", views.home, name="home"),
     path("register/", views.register, name="register"),
     path("login/", views.user_login, name="login"),

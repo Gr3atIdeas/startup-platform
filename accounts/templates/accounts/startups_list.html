@@ -3,7 +3,20 @@
 {% load file_tags %}
 {% load humanize %}
 
-{% block title %}Каталог стартапов{% endblock %}
+{% block title %}Каталог стартапов — Great Ideas{% endblock %}
+
+{% block meta_description %}<meta name="description" content="Каталог стартапов на платформе Great Ideas. Найдите перспективные стартапы для инвестиций и сотрудничества.">{% endblock %}
+
+{% block canonical %}<link rel="canonical" href="{{ request.build_absolute_uri }}">{% endblock %}
+
+{% block og_tags %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Great Ideas">
+<meta property="og:title" content="Каталог стартапов — Great Ideas">
+<meta property="og:description" content="Каталог стартапов на платформе Great Ideas. Найдите перспективные стартапы для инвестиций и сотрудничества.">
+<meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+{% endblock %}
 
 {% block head_extra %}
   {{ block.super }}

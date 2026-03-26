@@ -1721,6 +1721,7 @@ def agency_detail(request, slug):
         "proofs_urls": proofs_urls,
         "agency_documents": agency_documents,
         "ai_rating": ai_rating,
+        "canonical_url": request.build_absolute_uri(),
     }
     return render(request, "accounts/agency_detail.html", context)
 
@@ -1882,6 +1883,7 @@ def specialist_detail(request, slug):
         "proofs_urls": proofs_urls,
         "specialist_documents": specialist_documents,
         "ai_rating": ai_rating,
+        "canonical_url": request.build_absolute_uri(),
     }
     return render(request, "accounts/specialist_detail.html", context)
 def franchise_detail_by_id(request, franchise_id):
@@ -2062,6 +2064,7 @@ def franchise_detail(request, slug):
         "ai_rating": ai_rating,
         "progress_percentage": progress_percentage,
         "investors_count": investors_count,
+        "canonical_url": request.build_absolute_uri(),
     }
     return render(request, "accounts/franchise_detail.html", context)
 
@@ -2439,6 +2442,7 @@ def startup_detail(request, slug):
         "timeline_events": timeline_events,
         "startup_documents": startup_documents,
         "ai_rating": ai_rating,
+        "canonical_url": request.build_absolute_uri(),
     }
     return render(request, "accounts/startup_detail.html", context)
 def load_similar_startups(request, startup_id: int):
@@ -7081,6 +7085,7 @@ def news_detail(request, slug):
             "comments_count": comments_count,
             "similar_articles": similar_by_cat,
             "comment_form": comment_form,
+            "canonical_url": request.build_absolute_uri(),
         },
     )
 
@@ -8864,6 +8869,28 @@ def get_user_rating_for_startup(user_id, startup_id):
     pass
 def custom_404(request, exception):
     return render(request, "accounts/404.html", status=404)
+
+
+def robots_txt(request):
+    lines = [
+        "User-agent: *",
+        "Allow: /startups/",
+        "Allow: /franchises/",
+        "Allow: /agencies/",
+        "Allow: /specialists/",
+        "Allow: /news/",
+        "",
+        "Disallow: /profile/",
+        "Disallow: /admin/",
+        "Disallow: /edit-",
+        "Disallow: /create-",
+        "Disallow: /api/",
+        "Disallow: /vote-",
+        "Disallow: /silk/",
+        "",
+        "Sitemap: https://greatideas.ru/sitemap.xml",
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
 
 
 def _handle_moderation_callback(bot_token, callback_data, chat_id, message_id, original_text, callback_query):

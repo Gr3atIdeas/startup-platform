@@ -4,7 +4,20 @@
 {% load humanize %}
 {% load accounts_extras %}
 
-{% block title %}Каталог агентств{% endblock %}
+{% block title %}Каталог агентств — Great Ideas{% endblock %}
+
+{% block meta_description %}<meta name="description" content="Каталог агентств на платформе Great Ideas. Найдите надёжное агентство для развития вашего бизнеса.">{% endblock %}
+
+{% block canonical %}<link rel="canonical" href="{{ request.build_absolute_uri }}">{% endblock %}
+
+{% block og_tags %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Great Ideas">
+<meta property="og:title" content="Каталог агентств — Great Ideas">
+<meta property="og:description" content="Каталог агентств на платформе Great Ideas. Найдите надёжное агентство для развития вашего бизнеса.">
+<meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+{% endblock %}
 
 {% block head_extra %}
   {{ block.super }}

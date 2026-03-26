@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "storages",
     "widget_tweaks",
     "django.contrib.humanize",
+    "django.contrib.sitemaps",
     "django_vite",
     'django.contrib.sites',
     'allauth',
