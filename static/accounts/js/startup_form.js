@@ -438,7 +438,6 @@ document.addEventListener('DOMContentLoaded', function () {
   function validateFormClientSide() {
     var hasError = false
     var isEditPage = window.location.pathname.includes('/edit/') || window.location.pathname.includes('/edit-startup/')
-    console.log('[VALIDATION] Starting validation, isEditPage:', isEditPage)
     
     var requiredSelectors = [
       "[name='title']",
@@ -461,7 +460,6 @@ document.addEventListener('DOMContentLoaded', function () {
       var val = (el.value || '').toString().trim()
       if (!val) {
         hasError = true
-        console.log('[VALIDATION] Required field empty:', sel)
         showFieldError(el, 'Это поле обязательно')
       }
     })
@@ -567,7 +565,6 @@ document.addEventListener('DOMContentLoaded', function () {
         clearFieldError(proofsInput)
       }
     }
-    console.log('[VALIDATION] Final hasError:', hasError)
     return !hasError
   }
   var isFormSubmitting = false;
@@ -591,7 +588,6 @@ document.addEventListener('DOMContentLoaded', function () {
           var html = editor.innerHTML
           if (html === '<p><br></p>') html = ''
           textarea.value = html
-          console.log('[SYNC] Quill -> textarea:', textarea.name, '=', html.substring(0, 50))
         }
       })
 
@@ -603,7 +599,6 @@ document.addEventListener('DOMContentLoaded', function () {
         el.remove()
       })
       var ok = validateFormClientSide()
-      console.log('[VALIDATION] Result:', ok)
       if (!ok) {
         var firstError = startupForm.querySelector('.input-error') || startupForm.querySelector('.custom-validation-error')
         if (firstError) {
