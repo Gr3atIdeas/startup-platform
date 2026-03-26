@@ -24,6 +24,21 @@ document.addEventListener('DOMContentLoaded', function () {
     '.profile-dropdown-container'
   )
   const dropdownButton = document.querySelector('.profile-dropdown-button')
+  // Backdrop overlay for dropdown dimming
+  var backdrop = document.querySelector('.header-dropdown-backdrop')
+  if (!backdrop) {
+    backdrop = document.createElement('div')
+    backdrop.className = 'header-dropdown-backdrop'
+    document.body.appendChild(backdrop)
+  }
+
+  function showBackdrop() {
+    if (backdrop) backdrop.classList.add('active')
+  }
+  function hideBackdrop() {
+    if (backdrop) backdrop.classList.remove('active')
+  }
+
   function closeAllHeaderMenus() {
     const catalogContainers = document.querySelectorAll('.catalog-dropdown-container')
     catalogContainers.forEach((cont) => {
@@ -40,12 +55,23 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     document.body.classList.remove('create-menu-open')
     if (dropdownContainer) dropdownContainer.classList.remove('open')
+    hideBackdrop()
+  }
+  // Close all menus when clicking backdrop
+  if (backdrop) {
+    backdrop.addEventListener('click', function () {
+      closeAllHeaderMenus()
+    })
   }
   if (dropdownButton) {
     dropdownButton.addEventListener('click', function (event) {
       event.stopPropagation()
+      var wasOpen = dropdownContainer.classList.contains('open')
       closeAllHeaderMenus()
-      dropdownContainer.classList.toggle('open')
+      if (!wasOpen) {
+        dropdownContainer.classList.add('open')
+        showBackdrop()
+      }
     })
   }
   document.addEventListener('click', function (event) {
@@ -91,28 +117,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (button && menu && container) {
           button.addEventListener('click', function (event) {
-          event.stopPropagation();
-
+              event.stopPropagation();
+              var wasOpen = container.classList.contains('open');
               closeAllHeaderMenus();
-              catalogDropdownContainers.forEach(cont => {
-                  cont.classList.remove('open');
-                  const contOverlay = cont.nextElementSibling;
-                  if (contOverlay && contOverlay.classList.contains('catalog-dropdown-overlay')) {
-                      contOverlay.style.display = 'none';
-                      document.body.classList.remove('catalog-menu-open');
-                  }
-              });
-              container.classList.toggle('open');
-
-              const overlay = container.nextElementSibling;
-              if (overlay && overlay.classList.contains('catalog-dropdown-overlay')) {
-                  if (container.classList.contains('open')) {
-                      overlay.style.display = 'block';
-                      document.body.classList.add('catalog-menu-open');
-                  } else {
-                      overlay.style.display = 'none';
-                      document.body.classList.remove('catalog-menu-open');
-                  }
+              if (!wasOpen) {
+                  container.classList.add('open');
+                  document.body.classList.add('catalog-menu-open');
+                  showBackdrop();
               }
           });
       }
@@ -188,27 +199,12 @@ document.addEventListener('DOMContentLoaded', function () {
       if (button && menu && container) {
           button.addEventListener('click', function (event) {
               event.stopPropagation();
-
+              var wasOpen = container.classList.contains('open');
               closeAllHeaderMenus();
-              createDropdownContainers.forEach(cont => {
-                  cont.classList.remove('open');
-                  const contOverlay = cont.nextElementSibling;
-                  if (contOverlay && contOverlay.classList.contains('create-dropdown-overlay')) {
-                      contOverlay.style.display = 'none';
-                      document.body.classList.remove('create-menu-open');
-                  }
-              });
-              container.classList.toggle('open');
-
-              const overlay = container.nextElementSibling;
-              if (overlay && overlay.classList.contains('create-dropdown-overlay')) {
-                  if (container.classList.contains('open')) {
-                      overlay.style.display = 'block';
-                      document.body.classList.add('create-menu-open');
-                  } else {
-                      overlay.style.display = 'none';
-                      document.body.classList.remove('create-menu-open');
-                  }
+              if (!wasOpen) {
+                  container.classList.add('open');
+                  document.body.classList.add('create-menu-open');
+                  showBackdrop();
               }
           });
       }
