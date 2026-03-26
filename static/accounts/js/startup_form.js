@@ -582,6 +582,35 @@ document.addEventListener('DOMContentLoaded', function () {
         return false;
       }
       
+      // Синхронизируем Quill-редакторы в textarea перед валидацией
+      if (window.QuillEditors && Array.isArray(window.QuillEditors)) {
+        window.QuillEditors.forEach(function(q) {
+          if (q && q.root && q.root.innerHTML) {
+            var textarea = q.root.closest('.quill-editor-container')
+            if (textarea) {
+              textarea = textarea.previousElementSibling || textarea.nextElementSibling
+              if (textarea && textarea.tagName === 'TEXTAREA') {
+                var html = q.root.innerHTML
+                if (html === '<p><br></p>') html = ''
+                textarea.value = html
+              }
+            }
+          }
+        })
+      }
+      // Также синхронизируем через data-атрибуты
+      document.querySelectorAll('textarea[data-quill-ready]').forEach(function(ta) {
+        var container = ta.nextElementSibling
+        if (container && container.classList.contains('quill-editor-container')) {
+          var qlEditor = container.querySelector('.ql-editor')
+          if (qlEditor) {
+            var html = qlEditor.innerHTML
+            if (html === '<p><br></p>') html = ''
+            ta.value = html
+          }
+        }
+      })
+
       // очищаем предыдущие ошибки
       Array.prototype.forEach.call(startupForm.querySelectorAll('.input-error'), function (el) {
         el.classList.remove('input-error')
