@@ -2,32 +2,43 @@
 
 <div class="news-grid">
   {% for article in articles %}
-    {% with has_image=article.get_image_url %}
-    <div class="news-card{% if has_image %} news-card--with-image{% endif %}{% if forloop.first %} news-card--featured{% endif %}">
+    {% with img_url=article.get_image_url %}
+    <article class="news-card news-card--{{ article.card_format }}">
       {% if user.is_authenticated and user.role.role_name == 'moderator' %}
         <button class="delete-news-btn" data-article-slug="{{ article.slug }}">Удалить</button>
       {% endif %}
 
-      <a href="{% url 'news_detail' article.slug %}" class="news-card-link">
-        {% if has_image %}
-          <div class="news-card-image">
-            <img src="{{ article.get_image_url }}" alt="{{ article.title }}" loading="lazy">
-          </div>
-        {% endif %}
-        <div class="news-content">
-          <h2 class="news-title">{{ article.title|default:"Заголовок новости" }}</h2>
-          <div class="news-meta">
-            {{ article.published_at|date:"d M Y"|default:"Недавно" }}
-            {% if article.category %}
-              <span class="category-badge">{{ article.category.name }}</span>
-            {% endif %}
-          </div>
-          <div class="news-excerpt">
-            {{ article.content|striptags|truncatewords:30|default:"Описание новости..." }}
-          </div>
+      {% if article.card_format == 'featured' and img_url %}
+      <div class="news-card__image">
+        <img src="{{ img_url }}" alt="{{ article.title }}" loading="lazy">
+      </div>
+      {% endif %}
+
+      {% if article.card_format == 'medium' or article.card_format == 'standard' %}
+        {% if img_url %}
+        <div class="news-card__image">
+          <img src="{{ img_url }}" alt="{{ article.title }}" loading="lazy">
         </div>
-      </a>
-    </div>
+        {% endif %}
+      {% endif %}
+
+      <div class="news-card__body">
+        <div class="news-card__meta">
+          <span class="news-card__date">{{ article.published_at|date:"d M Y"|default:"Недавно" }}</span>
+          {% if article.category %}
+            <span class="news-card__category">{{ article.category.name }}</span>
+          {% endif %}
+        </div>
+        <h2 class="news-card__title">
+          <a href="{% url 'news_detail' slug=article.slug %}">{{ article.title|default:"Заголовок новости" }}</a>
+        </h2>
+        {% if article.card_format != 'text-full' %}
+          <p class="news-card__excerpt">{{ article.content|striptags|truncatewords:30|default:"Описание новости..." }}</p>
+        {% else %}
+          <p class="news-card__excerpt">{{ article.content|striptags|truncatewords:50|default:"Описание новости..." }}</p>
+        {% endif %}
+      </div>
+    </article>
     {% endwith %}
   {% empty %}
     <div class="no-news">

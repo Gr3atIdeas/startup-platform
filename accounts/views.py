@@ -6955,6 +6955,17 @@ def news(request):
 
     page_obj = paginator.get_page(page_number)
 
+    # Assign card_format for dynamic grid layout
+    for idx, article in enumerate(page_obj):
+        if not article.image_url:
+            article.card_format = 'text-full'
+        elif idx == 0:
+            article.card_format = 'featured'
+        elif idx % 7 in (1, 4):
+            article.card_format = 'medium'
+        else:
+            article.card_format = 'standard'
+
     all_categories = NewsCategories.objects.all().order_by("sort_order")
 
     context = {
