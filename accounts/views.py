@@ -1646,11 +1646,11 @@ def agency_detail(request, slug):
         candidates_qs = Agencies.objects.filter(
             customization_data__agency_category=agency_category,
             status="approved",
-        ).exclude(agency_id=agency_id)
+        ).exclude(agency_id=agency.agency_id)
     else:
         candidates_qs = Agencies.objects.filter(
             status="approved",
-        ).exclude(agency_id=agency_id)
+        ).exclude(agency_id=agency.agency_id)
     similar_agencies = candidates_qs.order_by("-created_at")[:4]
 
     comments_with_rating = (
@@ -1810,11 +1810,11 @@ def specialist_detail(request, slug):
         candidates_qs = Specialists.objects.filter(
             customization_data__specialist_category=specialist_category,
             status="approved",
-        ).exclude(specialist_id=specialist_id)
+        ).exclude(specialist_id=specialist.specialist_id)
     else:
         candidates_qs = Specialists.objects.filter(
             status="approved",
-        ).exclude(specialist_id=specialist_id)
+        ).exclude(specialist_id=specialist.specialist_id)
     similar_specialists = candidates_qs.order_by("-created_at")[:4]
 
     comments_with_rating = (
@@ -1972,7 +1972,7 @@ def franchise_detail(request, slug):
     candidates_qs = Franchises.objects.filter(
         direction=franchise.direction,
         status="approved",
-    ).exclude(franchise_id=franchise_id)
+    ).exclude(franchise_id=franchise.franchise_id)
     similar_franchises = candidates_qs.order_by("-created_at")[:4]
 
     from .models import FranchiseComments
@@ -9410,7 +9410,7 @@ def load_similar_franchises(request, franchise_id: int):
                 direction=franchise.direction,
                 status="approved",
             )
-            .exclude(franchise_id=franchise_id)
+            .exclude(franchise_id=franchise.franchise_id)
             .order_by("?")[:4]
         )
 
