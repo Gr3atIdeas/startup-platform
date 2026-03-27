@@ -256,10 +256,6 @@ class StartupEditForm(BaseEntityEditFormMixin, forms.ModelForm):
             "title",
             "short_description",
             "description",
-            "logo",
-            "creatives",
-            "proofs",
-            "video",
             "direction",
             "stage",
             "micro_investment_available",
@@ -270,11 +266,12 @@ class StartupEditForm(BaseEntityEditFormMixin, forms.ModelForm):
             "amount_raised",
             "funding_goal",
             "terms",
-            "catalog_card_image",
             "contact_website",
             "contact_telegram",
             "contact_whatsapp",
         ]
+        # Note: logo, creatives, proofs, video, catalog_card_image are form-only
+        # fields declared in BaseEntityEditFormMixin (not model fields)
         labels = {
             "title": "Название",
             "contact_website": "Сайт",
@@ -358,19 +355,14 @@ class StartupForm(BaseEntityFormMixin, forms.ModelForm):
             "amount_raised",
             "valuation",
             "pitch_deck_url",
-            "logo",
             "direction",
             "stage",
             "investment_type",
-            "agree_rules",
-            "agree_data_processing",
             "micro_investment_available",
-            "creatives",
-            "proofs",
-            "video",
             "planet_image",
-            "catalog_card_image",
         ]
+        # Note: logo, creatives, proofs, video, catalog_card_image, agree_rules,
+        # agree_data_processing are form-only fields from BaseEntityFormMixin
         widgets = {
             "title": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "Ромашка"}
@@ -410,7 +402,6 @@ class StartupForm(BaseEntityFormMixin, forms.ModelForm):
             ),
             "direction": forms.Select(attrs={"class": "form-control"}),
             "stage": forms.Select(attrs={"class": "form-control"}),
-            "logo": forms.FileInput(attrs={"class": "form-control-file"}),
         }
         labels = {
             "title": "Название стартапа *",
@@ -490,16 +481,8 @@ class FranchiseForm(BaseEntityFormMixin, forms.ModelForm):
             "investment_size",
             "franchise_cost",
             "pitch_deck_url",
-            "logo",
             "direction",
-
-            "agree_rules",
-            "agree_data_processing",
-            "creatives",
-            "proofs",
-            "video",
             "planet_image",
-            "catalog_card_image",
             "profit_calculation",
             "contact_website",
             "contact_telegram",
@@ -515,7 +498,6 @@ class FranchiseForm(BaseEntityFormMixin, forms.ModelForm):
 
             "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
             "direction": forms.Select(attrs={"class": "form-control"}),
-            "logo": forms.FileInput(attrs={"class": "form-control-file"}),
             "profit_calculation": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Описание расчета прибыли"}),
         }
         labels = {
@@ -578,15 +560,7 @@ class AgencyForm(BaseEntityFormMixin, forms.ModelForm):
             "description",
             "terms",
             "pitch_deck_url",
-            "logo",
-
-            "agree_rules",
-            "agree_data_processing",
-            "creatives",
-            "proofs",
-            "video",
             "planet_image",
-            "catalog_card_image",
             "successful_projects",
             "contact_website",
             "contact_telegram",
@@ -599,7 +573,6 @@ class AgencyForm(BaseEntityFormMixin, forms.ModelForm):
             "terms": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Этапы работ"}),
             "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
             "direction": forms.Select(attrs={"class": "form-control"}),
-            "logo": forms.FileInput(attrs={"class": "form-control-file"}),
         }
         labels = {
             "title": "Название агентства *",
@@ -653,15 +626,7 @@ class SpecialistForm(BaseEntityFormMixin, forms.ModelForm):
             "terms",
             "additional_info",
             "pitch_deck_url",
-            "logo",
-
-            "agree_rules",
-            "agree_data_processing",
-            "creatives",
-            "proofs",
-            "video",
             "planet_image",
-            "catalog_card_image",
             "contact_website",
             "contact_telegram",
             "contact_whatsapp",
@@ -674,7 +639,6 @@ class SpecialistForm(BaseEntityFormMixin, forms.ModelForm):
             "additional_info": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Услуги и кейсы"}),
             "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
             "direction": forms.Select(attrs={"class": "form-control"}),
-            "logo": forms.FileInput(attrs={"class": "form-control-file"}),
         }
         labels = {
             "title": "Профиль специалиста *",
@@ -937,8 +901,7 @@ class FranchiseEditForm(BaseEntityEditFormMixin, forms.ModelForm):
         fields = [
             "title", "short_description", "description", "terms",
             "investment_size", "franchise_cost", "pitch_deck_url",
-            "logo", "direction", "creatives", "proofs", "video",
-            "planet_image", "catalog_card_image", "profit_calculation",
+            "direction", "planet_image", "profit_calculation",
             "contact_website", "contact_telegram", "contact_whatsapp",
         ]
         labels = {
@@ -1016,8 +979,8 @@ class AgencyEditForm(BaseEntityEditFormMixin, forms.ModelForm):
         model = Agencies
         fields = [
             "title", "short_description", "description", "terms",
-            "pitch_deck_url", "logo", "direction", "stage",
-            "creatives", "proofs", "video", "planet_image", "catalog_card_image", "successful_projects",
+            "pitch_deck_url", "direction", "stage",
+            "planet_image", "successful_projects",
             "contact_website", "contact_telegram", "contact_whatsapp",
         ]
         labels = {
@@ -1070,8 +1033,8 @@ class SpecialistEditForm(BaseEntityEditFormMixin, forms.ModelForm):
         model = Specialists
         fields = [
             "title", "short_description", "description", "terms", "additional_info",
-            "pitch_deck_url", "logo", "direction", "stage",
-            "creatives", "proofs", "video", "planet_image", "catalog_card_image", "successful_projects",
+            "pitch_deck_url", "direction", "stage",
+            "planet_image", "successful_projects",
             "contact_website", "contact_telegram", "contact_whatsapp",
         ]
         labels = {
