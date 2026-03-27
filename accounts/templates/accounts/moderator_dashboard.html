@@ -546,7 +546,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 {% csrf_token %}
                                     <button type="submit" class="action-button reject">Отклонить</button>
                             </form>
-                                <a href="{% url 'startup_detail' startup.startup_id %}" class="action-button details">К заявке</a>
+                                <a href="{{ startup.get_absolute_url }}" class="action-button details">К заявке</a>
                             </div>
                         </div>
                     </div>
@@ -633,7 +633,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     {% csrf_token %}
                                     <button type="submit" class="action-button reject">Отклонить</button>
                                 </form>
-                                <a href="{% url 'franchise_detail' franchise.franchise_id %}" class="action-button details">К заявке</a>
+                                <a href="{{ franchise.get_absolute_url }}" class="action-button details">К заявке</a>
                             </div>
                         </div>
                     </div>
@@ -720,7 +720,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     {% csrf_token %}
                                     <button type="submit" class="action-button reject">Отклонить</button>
                                 </form>
-                                <a href="{% url 'agency_detail' agency.agency_id %}" class="action-button details">К заявке</a>
+                                <a href="{{ agency.get_absolute_url }}" class="action-button details">К заявке</a>
                             </div>
                         </div>
                     </div>
@@ -807,7 +807,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     {% csrf_token %}
                                     <button type="submit" class="action-button reject">Отклонить</button>
                                 </form>
-                                <a href="{% url 'specialist_detail' specialist.specialist_id %}" class="action-button details">К заявке</a>
+                                <a href="{{ specialist.get_absolute_url }}" class="action-button details">К заявке</a>
                             </div>
                         </div>
                     </div>
