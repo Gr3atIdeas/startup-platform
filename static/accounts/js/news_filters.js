@@ -199,9 +199,33 @@
     if (showFiltersBtn) {
       showFiltersBtn.addEventListener('click', function(e) {
         e.preventDefault();
+        // Reset all filters
+        if (sortSelect) sortSelect.value = 'new';
+        var checkboxes = document.querySelectorAll('.category-list input[type="checkbox"]');
+        checkboxes.forEach(function(cb) { cb.checked = false; });
+        if (searchInput) searchInput.value = '';
+        showFiltersBtn.style.display = 'none';
         onFormChangeDebounced();
       });
     }
+
+    // Show/hide clear button based on active filters
+    function updateClearButtonVisibility() {
+      if (!showFiltersBtn) return;
+      var hasFilters = false;
+      var checkboxes = document.querySelectorAll('.category-list input[type="checkbox"]:checked');
+      if (checkboxes.length > 0) hasFilters = true;
+      if (sortSelect && sortSelect.value !== 'new') hasFilters = true;
+      if (searchInput && searchInput.value.trim()) hasFilters = true;
+      showFiltersBtn.style.display = hasFilters ? 'block' : 'none';
+    }
+
+    if (sortSelect) sortSelect.addEventListener('change', updateClearButtonVisibility);
+    document.querySelectorAll('.category-list input[type="checkbox"]').forEach(function(cb) {
+      cb.addEventListener('change', updateClearButtonVisibility);
+    });
+    if (searchInput) searchInput.addEventListener('input', updateClearButtonVisibility);
+    updateClearButtonVisibility();
   }
 
   function bindNewsPaginationHandlers() {

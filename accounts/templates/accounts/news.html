@@ -25,10 +25,7 @@
   <div class="main-content-area">
     <aside class="sidebar">
       <div class="sidebar-block">
-        <a href="{% url 'suggest_news' %}" class="suggest-news-btn">
-          Предложить новость
-          <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="Добавить новость">
-        </a>
+        <a href="{% url 'suggest_news' %}" class="suggest-news-btn">Предложить новость</a>
       </div>
       <div class="sidebar-block">
         <label for="sort-by" class="sidebar-label">Показать сначала</label>
@@ -52,16 +49,13 @@
       </div>
 
       <div class="sidebar-block">
-        <button class="show-filters-btn">Показать</button>
+        <button class="show-filters-btn" id="clearNewsFiltersBtn" style="display:none;">Очистить</button>
       </div>
     </aside>
 
     <div class="news-feed-column">
 
-      <a href="{% url 'suggest_news' %}" class="suggest-news-btn mobile-suggest-btn">
-        Предложить новость
-        <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="Добавить новость">
-      </a>
+      <a href="{% url 'suggest_news' %}" class="suggest-news-btn mobile-suggest-btn">Предложить новость</a>
 
       <div class="search-bar-container">
         <input type="text" placeholder="Поиск по новостям" class="search-input" value="{{ search_query|default_if_none:'' }}">
