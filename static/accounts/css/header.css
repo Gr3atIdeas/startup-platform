@@ -117,7 +117,7 @@
 
 .header-nav-link {
   padding: 8px 16px;
-  border-radius: 5px;
+  border-radius: 20px;
   color: var(--Color5, white);
   font-size: 14px !important;
   font-family: Unbounded, sans-serif;
@@ -125,19 +125,13 @@
   line-height: 18px;
   word-wrap: break-word;
   text-decoration: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
-
 
 .header-nav-link:hover,
 .catalog-dropdown-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(88, 101, 242, 0.5);
   color: #fff;
-}
-
-
-.header-nav-link.cosmochat-link:hover {
-  background: rgba(255, 255, 255, 0.1);
 }
 
 .header-auth-section {
@@ -153,7 +147,7 @@
   padding: 0 25px;
   background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
-  border-radius: 10px;
+  border-radius: 20px;
   justify-content: center;
   align-items: center;
   gap: 9px;
@@ -411,6 +405,7 @@ nav.nav-menu
   background-color: transparent !important;
   border: none !important;
   padding: 8px 16px !important;
+  border-radius: 20px !important;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -440,8 +435,7 @@ nav.nav-menu
 }
 
 .catalog-dropdown-button:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  border-radius: 8px;
+  background-color: rgba(88, 101, 242, 0.5) !important;
 }
 
 .catalog-dropdown-menu {
@@ -602,7 +596,7 @@ nav.nav-menu
   background: #3fff47 !important;
   color: #000 !important;
   padding: 8px 16px !important;
-  border-radius: 5px !important;
+  border-radius: 20px !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 8px !important;
@@ -613,10 +607,11 @@ nav.nav-menu
   text-decoration: none !important;
   border: none !important;
   cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease !important;
 }
 
 .create-dropdown-button:hover {
-  background: #2dd835 !important;
+  background: #35e83d !important;
   color: #000 !important;
 }
 
