@@ -532,6 +532,35 @@
   color: #fff;
 }
 
+/* ── Empty State (no results) ─────────────── */
+
+.no-cards {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.no-cards p {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: Unbounded, sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 400px;
+}
+
+.no-cards .no-cards-hint {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 13px;
+  margin-top: 8px;
+}
+
 /* ── Responsive ──────────────────────────── */
 
 @media (max-width: 1320px) {

@@ -72,4 +72,9 @@
     <!-- Ссылка на детали -->
     <a href="{% url 'franchise_detail' slug=franchise.slug|default:franchise.franchise_id %}" class="detail-link" aria-label="Подробнее о {{ franchise.title }}"></a>
   </div>
+{% empty %}
+  <div class="no-cards">
+    <p>По вашему запросу франшиз не найдено</p>
+    <p class="no-cards-hint">Попробуйте изменить фильтры или сбросить категории</p>
+  </div>
 {% endfor %}

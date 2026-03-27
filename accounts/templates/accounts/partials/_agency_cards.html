@@ -66,4 +66,9 @@
     <!-- Ссылка на детали -->
     <a href="{% url 'agency_detail' slug=agency.slug|default:agency.agency_id %}" class="detail-link" aria-label="Подробнее о {{ agency.title }}"></a>
   </div>
+{% empty %}
+  <div class="no-cards">
+    <p>По вашему запросу агентств не найдено</p>
+    <p class="no-cards-hint">Попробуйте изменить фильтры или сбросить категории</p>
+  </div>
 {% endfor %}

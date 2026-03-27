@@ -61,4 +61,9 @@
     <!-- Ссылка на детали -->
     <a href="{% url 'specialist_detail' slug=specialist.slug|default:specialist.specialist_id %}" class="detail-link" aria-label="Подробнее о {{ specialist.title }}"></a>
   </div>
+{% empty %}
+  <div class="no-cards">
+    <p>По вашему запросу специалистов не найдено</p>
+    <p class="no-cards-hint">Попробуйте изменить фильтры или сбросить категории</p>
+  </div>
 {% endfor %}

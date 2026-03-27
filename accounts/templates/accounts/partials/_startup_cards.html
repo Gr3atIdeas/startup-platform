@@ -82,4 +82,9 @@
     <!-- Ссылка на детали -->
     <a href="{% url 'startup_detail' slug=startup.slug|default:startup.startup_id %}" class="detail-link" aria-label="Подробнее о {{ startup.title }}"></a>
   </div>
+{% empty %}
+  <div class="no-cards">
+    <p>По вашему запросу стартапов не найдено</p>
+    <p class="no-cards-hint">Попробуйте изменить фильтры или сбросить категории</p>
+  </div>
 {% endfor %}

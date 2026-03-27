@@ -1,15 +1,4 @@
-.no-cards {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 220px;
-}
-.no-cards p {
-  color: #fff;
-  text-align: center;
-  margin: 0;
-}
+/* .no-cards moved to catalog_sidebar.css */
 body {
   font-family: Unbounded, 'Helvetica Neue', Arial, sans-serif;
   margin: 0;
