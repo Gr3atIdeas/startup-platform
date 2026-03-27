@@ -28,7 +28,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.core.serializers.json import DjangoJSONEncoder
 from .tasks import upload_video_to_s3
-from .utils import process_uploaded_image, send_telegram_new_entity_notification, get_planet_image_url, get_fallback_planet_url, upload_file_to_s3_sync
+from .utils import process_uploaded_image, send_telegram_new_entity_notification, get_planet_image_url, get_fallback_planet_url, upload_file_to_s3_sync, handle_entity_file_uploads, upload_entity_logo, upload_entity_catalog_card, upload_entity_files
 from django.db import (
     models,
     transaction,
@@ -3990,139 +3990,11 @@ def create_franchise(request):
                     logger.error(f"Ошибка обработки временных медиа-файлов франшизы: {e}", exc_info=True)
                     messages.warning(request, "Не удалось обработать временные медиа-файлы.")
 
-            logo_ids, creatives_ids, creative_ids, proofs_ids, video_ids = [], [], [], [], []
-            logo = form.cleaned_data.get("logo")
-            if logo:
-                logo_id = str(uuid.uuid4())
-                try:
-                    logo.seek(0)
-                    file_data = logo.read()
-                    content_type = getattr(logo, 'content_type', 'image/jpeg')
-                    unique_filename = get_unique_filename(logo.name, franchise.franchise_id, "logo")
-
-                    result = upload_file_to_s3_sync(
-                        file_data=file_data,
-                        file_name=logo.name,
-                        content_type=content_type,
-                        entity_type_name='franchise',
-                        entity_id=franchise.franchise_id,
-                        file_type_name='logo',
-                        original_filename=unique_filename,
-                        file_id=logo_id
-                    )
-                    if result:
-                        logo_ids.append(logo_id)
-                        logger.info(f"Логотип франшизы загружен синхронно: {logo.name}, размер: {len(file_data)} байт")
-                    else:
-                        logger.error(f"Синхронная загрузка логотипа франшизы не удалась: {logo.name}")
-                        messages.warning(request, "Не удалось сохранить логотип, но франшиза создана.")
-                except Exception as e:
-                    logger.error(f"Ошибка загрузки логотипа франшизы: {e}", exc_info=True)
-                    messages.warning(request, "Не удалось сохранить логотип, но франшиза создана.")
-
-            # Синхронная загрузка catalog_card_image в catalog_cards/
-            catalog_card_image = form.cleaned_data.get("catalog_card_image")
-            if catalog_card_image and hasattr(catalog_card_image, 'read'):
-                catalog_card_id = str(uuid.uuid4())
-                try:
-                    processed_catalog_image, processed_catalog_name, _ = process_uploaded_image(catalog_card_image, quality=85)
-                    base_name = os.path.splitext(processed_catalog_name)[0]
-                    ext = os.path.splitext(processed_catalog_name)[1]
-                    safe_base_name = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
-                    safe_name = slugify(safe_base_name) + ext
-                    file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
-                    s3 = boto3.client(
-                        's3',
-                        endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
-                        aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
-                        aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
-                        region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
-                        config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
-                    )
-                    bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
-                    content_type = 'image/webp' if processed_catalog_name.endswith('.webp') else getattr(catalog_card_image, 'content_type', 'application/octet-stream')
-                    if hasattr(processed_catalog_image, 'read'):
-                        body_bytes = processed_catalog_image.read()
-                    else:
-                        body_bytes = processed_catalog_image.getvalue() if hasattr(processed_catalog_image, 'getvalue') else processed_catalog_image
-                    try:
-                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ContentType=content_type, ACL='public-read')
-                    except Exception:
-                        s3.put_object(Bucket=bucket, Key=file_path, Body=body_bytes, ACL='public-read')
-                    franchise.catalog_card_image = f"{catalog_card_id}_{safe_name}"
-                    franchise.save(update_fields=["catalog_card_image"])
-                    logger.info(f"Изображение карточки франшизы загружено: {file_path}")
-                except Exception as e:
-                    logger.error(f"Ошибка сохранения изображения карточки франшизы: {e}", exc_info=True)
-                    messages.warning(request, "Не удалось сохранить изображение для карточки, но франшиза создана.")
-
-            creatives = request.FILES.getlist("creatives")
-            if not creatives:
-                creatives = form.cleaned_data.get("creatives", [])
-                if creatives and not isinstance(creatives, list):
-                    creatives = [creatives]
-            if creatives:
-                creative_type, _ = FileTypes.objects.get_or_create(type_name="creative")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
-                for creative_file in creatives:
-                    if not hasattr(creative_file, "name"):
-                        continue
-                    try:
-                        unique_filename = get_unique_filename(creative_file.name, franchise.franchise_id, "creative")
-                        creative_id = str(uuid.uuid4())
-                        file_data = creative_file.read()
-                        content_type = getattr(creative_file, 'content_type', 'image/jpeg')
-
-                        result = upload_file_to_s3_sync(
-                            file_data=file_data,
-                            file_name=creative_file.name,
-                            content_type=content_type,
-                            entity_type_name='franchise',
-                            entity_id=franchise.franchise_id,
-                            file_type_name='creative',
-                            original_filename=unique_filename,
-                            file_id=creative_id
-                        )
-                        if result:
-                            creatives_ids.append(creative_id)
-                        logger.info(f"Изображение франшизы загружено: {creative_file.name}, размер: {len(file_data)} байт")
-                    except Exception as e:
-                        logger.error(f"Ошибка отправки изображения франшизы в очередь: {e}", exc_info=True)
-                        messages.warning(request, f"Не удалось отправить изображение {creative_file.name} на загрузку.")
-
-            proofs = request.FILES.getlist("proofs")
-            if not proofs:
-                proofs = form.cleaned_data.get("proofs", [])
-                if proofs and not isinstance(proofs, list):
-                    proofs = [proofs]
-            if proofs:
-                proof_type, _ = FileTypes.objects.get_or_create(type_name="proof")
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name="franchise")
-                for proof_file in proofs:
-                    if not hasattr(proof_file, "name"):
-                        continue
-                    try:
-                        unique_filename = get_unique_filename(proof_file.name, franchise.franchise_id, "proof")
-                        proof_id = str(uuid.uuid4())
-                        file_data = proof_file.read()
-                        content_type = getattr(proof_file, 'content_type', 'application/pdf')
-
-                        result = upload_file_to_s3_sync(
-                            file_data=file_data,
-                            file_name=proof_file.name,
-                            content_type=content_type,
-                            entity_type_name='franchise',
-                            entity_id=franchise.franchise_id,
-                            file_type_name='proof',
-                            original_filename=unique_filename,
-                            file_id=proof_id
-                        )
-                        if result:
-                            proofs_ids.append(proof_id)
-                        logger.info(f"Документ франшизы загружен: {proof_file.name}, размер: {len(file_data)} байт")
-                    except Exception as e:
-                        logger.error(f"Ошибка отправки документа франшизы в очередь: {e}", exc_info=True)
-                        messages.warning(request, f"Не удалось отправить документ {proof_file.name} на загрузку.")
+            # Upload all files using shared helpers
+            logo_ids = upload_entity_logo(form, franchise, 'franchise')
+            upload_entity_catalog_card(form, franchise, 'franchise')
+            creatives_ids = upload_entity_files(request, form, franchise, 'franchise', 'creatives', 'creative', 'image/jpeg')
+            proofs_ids = upload_entity_files(request, form, franchise, 'franchise', 'proofs', 'proof', 'application/pdf')
 
             videos = request.FILES.getlist("video")
             if videos:
