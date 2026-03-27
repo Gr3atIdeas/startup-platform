@@ -1,5 +1,5 @@
 .sidebar .noUi-target {
-  background: #ebebeb;
+  background: rgba(255, 255, 255, 0.12);
   height: 4px;
   margin-bottom: 5px;
   box-shadow: none;
@@ -7,7 +7,7 @@
   border-radius: 9999px;
 }
 .sidebar .noUi-connect {
-  background: #004e9f;
+  background: rgba(88, 101, 242, 0.8);
   box-shadow: none;
   border-radius: 9999px;
 }
@@ -15,9 +15,9 @@
   width: 16px;
   height: 16px;
   border-radius: 9999px;
-  background: #004e9f;
-  border: none;
-  box-shadow: none;
+  background: #5865F2;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   top: -6px;
   right: -8px;
@@ -204,12 +204,15 @@ body {
 }
 
 .sidebar {
-  background: #fff;
+  background: linear-gradient(180deg, rgba(88, 101, 242, 0.15) 0%, rgba(30, 40, 80, 0.4) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   width: 254px;
   height: auto;
   min-height: auto;
-  padding: 53px 28px 30px 28px;
-  border-radius: 10px;
+  padding: 30px 24px;
+  border-radius: 16px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -219,7 +222,7 @@ body {
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 15%);
+  box-shadow: 0 4px 24px rgb(0 0 0 / 20%);
 }
 
 #filterForm {
@@ -242,7 +245,7 @@ body {
 
 .sort-dropdown-title {
   width: 100%;
-  color: black;
+  color: rgba(255, 255, 255, 0.6);
   font-size: 12px;
   font-family: Unbounded;
   font-weight: 300;
@@ -256,30 +259,38 @@ body {
   height: 40px;
   padding: 12px 16px;
   padding-right: 35px;
-  border: 1px solid #d9d9d9;
-  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
   font-size: 14px;
   appearance: none;
-  background: #fff
-    url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6 L8 10 L12 6" stroke="%231E1E1E" stroke-width="1.6" fill="none"/></svg>')
+  background: rgba(255, 255, 255, 0.08)
+    url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6 L8 10 L12 6" stroke="%23ffffff" stroke-width="1.6" fill="none"/></svg>')
     no-repeat right 12px center;
   background-size: 16px 16px;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
-  color: #1e1e1e;
+  color: #fff;
   cursor: pointer;
   line-height: 18px;
   box-sizing: border-box;
+}
+.sort-dropdown select:focus {
+  border-color: rgba(88, 101, 242, 0.6);
+  outline: none;
+}
+.sort-dropdown select option {
+  background: #1a1f36;
+  color: #fff;
 }
 
 .categories-title {
   font-family: Unbounded, sans-serif;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 18px;
   letter-spacing: -0.02em;
   margin: 0;
-  color: #000;
+  color: #fff;
   width: 100%;
 }
 
@@ -288,43 +299,52 @@ body {
   padding: 0;
   margin: 0;
   display: flex;
-  flex-direction: column;
-  gap: 9px;
+  flex-wrap: wrap;
+  gap: 8px !important;
   width: 100%;
 }
 
 .category-label {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   cursor: pointer;
-  gap: 10px;
+  gap: 0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  transition: all 0.2s ease;
+}
+.category-label:hover {
+  border-color: rgba(88, 101, 242, 0.4);
+  background: rgba(88, 101, 242, 0.15);
 }
 
 .category-checkbox {
-  appearance: none;
-  width: 11px;
-  height: 11px;
-  border-radius: 2px;
-  border: 1px solid black;
+  width: 0;
+  height: 0;
   margin: 0;
-  cursor: pointer;
-  position: relative;
-  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }
 
-.category-checkbox:checked {
-  background-color: #004e9f;
-  border-color: #004e9f;
+.category-label:has(.category-checkbox:checked) {
+  background: rgba(88, 101, 242, 0.5);
+  border-color: rgba(88, 101, 242, 0.7);
 }
 
 .category-name {
-  color: black;
-  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 11px;
   font-family: Unbounded;
   font-weight: 300;
   letter-spacing: 0.12px;
   word-wrap: break-word;
   line-height: 1;
+  transition: color 0.2s ease;
 }
 
 .rating-filter {
@@ -347,13 +367,13 @@ body {
   font-weight: 300;
   font-size: 12px;
   letter-spacing: 0.12px;
-  color: #1e1e1e;
+  color: rgba(255, 255, 255, 0.6);
   margin: 0;
 }
 
 .rating-value-display {
-  color: #1e1e1e;
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
   font-family: Inter, sans-serif;
   font-weight: 400;
   line-height: 19.6px;
@@ -379,13 +399,13 @@ body {
   font-weight: 300;
   font-size: 12px;
   letter-spacing: 0.12px;
-  color: #1e1e1e;
+  color: rgba(255, 255, 255, 0.6);
   margin: 0;
 }
 
 .payback-value-display {
-  color: #1e1e1e;
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
   font-family: Inter, sans-serif;
   font-weight: 400;
   line-height: 19.6px;
@@ -393,7 +413,7 @@ body {
 }
 
 .payback-range-label {
-  color: #757575;
+  color: rgba(255, 255, 255, 0.3);
   font-size: 8px;
   font-family: Unbounded;
   font-weight: 300;
@@ -422,13 +442,13 @@ body {
   font-weight: 300;
   font-size: 12px;
   letter-spacing: 0.12px;
-  color: #1e1e1e;
+  color: rgba(255, 255, 255, 0.6);
   margin: 0;
 }
 
 .investment-value-display {
-  color: #1e1e1e;
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
   font-family: Inter, sans-serif;
   font-weight: 400;
   line-height: 19.6px;
@@ -436,7 +456,7 @@ body {
 }
 
 .investment-range-label {
-  color: #757575;
+  color: rgba(255, 255, 255, 0.3);
   font-size: 8px;
   font-family: Unbounded;
   font-weight: 300;
@@ -766,7 +786,7 @@ body {
 }
 
 .rating-filter .noUi-target {
-  background: #ebebeb;
+  background: rgba(255, 255, 255, 0.12);
   height: 4px;
   margin-bottom: 5px;
   box-shadow: none;
@@ -775,7 +795,7 @@ body {
 }
 
 .rating-filter .noUi-connect {
-  background: #004e9f;
+  background: rgba(88, 101, 242, 0.8);
   box-shadow: none;
   border-radius: 9999px;
 }
@@ -784,9 +804,9 @@ body {
   width: 16px;
   height: 16px;
   border-radius: 9999px;
-  background: #004e9f;
-  border: none;
-  box-shadow: none;
+  background: #5865F2;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   top: -6px;
   right: -8px;
@@ -801,7 +821,7 @@ body {
 }
 
 .rating-range-label {
-  color: #757575;
+  color: rgba(255, 255, 255, 0.3);
   font-size: 8px;
   font-family: Unbounded;
   font-weight: 300;
