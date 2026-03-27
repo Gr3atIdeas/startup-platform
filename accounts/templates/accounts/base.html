@@ -74,6 +74,7 @@
 
   {% block custom_styles %}{% endblock %}
   
+  <link rel="stylesheet" href="{% static 'accounts/css/catalog_sidebar.css' %}?v={% now 'U' %}">
   {% block head_extra %}
     {{ block.super }}
   {% endblock %}

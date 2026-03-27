@@ -1,0 +1,548 @@
+/* ============================================
+   Unified Catalog Sidebar — shared across all catalog pages
+   (startups, franchises, agencies, specialists, news)
+   ============================================ */
+
+.sidebar {
+  background: linear-gradient(135deg, rgba(88, 101, 242, 0.95) 0%, rgba(110, 130, 255, 0.92) 100%);
+  width: 254px;
+  height: auto;
+  min-height: auto;
+  padding: 30px 24px;
+  border-radius: 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  overflow-y: visible;
+  transition: box-shadow 0.2s ease;
+  box-shadow: 0 4px 24px rgb(0 0 0 / 25%);
+}
+
+/* ── Filter Form ─────────────────────────── */
+
+#filterForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+  width: 197px;
+  max-width: 100%;
+}
+
+/* ── Sort Dropdown ───────────────────────── */
+
+.sort-dropdown {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sort-dropdown-title {
+  width: 100%;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  margin: 0;
+}
+
+.sort-dropdown select {
+  width: 100%;
+  height: 40px;
+  padding: 10px 14px;
+  padding-right: 35px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  font-size: 13px;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.08)
+    url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6 L8 10 L12 6" stroke="%23ffffff" stroke-width="1.6" fill="none"/></svg>')
+    no-repeat right 12px center;
+  background-size: 16px 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  color: #fff;
+  cursor: pointer;
+  line-height: 18px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.sort-dropdown select:focus {
+  border-color: rgba(255, 255, 255, 0.4);
+  outline: none;
+}
+
+.sort-dropdown select option {
+  background: #1a1f36;
+  color: #fff;
+}
+
+/* ── Categories ──────────────────────────── */
+
+.categories-title {
+  font-family: Unbounded, sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin: 0 0 -8px 0;
+  width: 100%;
+}
+
+.categories-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+
+.category-item {}
+
+.category-label {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.category-label:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.category-checkbox {
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.category-label:has(.category-checkbox:checked) {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.category-name {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 11px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.category-label:has(.category-checkbox:checked) .category-name {
+  color: #fff;
+}
+
+/* ── Slider Filters (shared) ─────────────── */
+
+.rating-filter,
+.payback-period-filter,
+.investment-size-filter {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rating-label-container,
+.payback-label-container,
+.investment-label-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.rating-label,
+.payback-label,
+.investment-label {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  letter-spacing: 0.12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.rating-value-display,
+.payback-value-display,
+.investment-value-display {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  line-height: 19.6px;
+  text-align: right;
+}
+
+/* Hide "Диапазон" labels */
+.rating-range-label,
+.payback-range-label,
+.investment-range-label {
+  display: none;
+}
+
+/* ── noUiSlider Theme ────────────────────── */
+
+.sidebar .noUi-target {
+  background: rgba(255, 255, 255, 0.15);
+  height: 4px;
+  margin-bottom: 5px;
+  box-shadow: none;
+  border: none;
+  border-radius: 9999px;
+}
+
+.sidebar .noUi-connect {
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: none;
+  border-radius: 9999px;
+}
+
+.sidebar .noUi-handle {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #fff;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  top: -6px;
+  right: -8px;
+}
+
+.sidebar .noUi-handle:focus {
+  outline: none;
+}
+
+.sidebar .noUi-handle::before,
+.sidebar .noUi-handle::after {
+  display: none;
+}
+
+.rating-filter .noUi-target {
+  background: rgba(255, 255, 255, 0.15);
+  height: 4px;
+  margin-bottom: 5px;
+  box-shadow: none;
+  border: none;
+  border-radius: 9999px;
+}
+
+.rating-filter .noUi-connect {
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: none;
+  border-radius: 9999px;
+}
+
+.rating-filter .noUi-handle {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #fff;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  top: -6px;
+  right: -8px;
+}
+
+.rating-filter .noUi-handle:focus {
+  outline: none;
+}
+
+.rating-filter .noUi-handle::before,
+.rating-filter .noUi-handle::after {
+  display: none;
+}
+
+/* ── Micro-investment Toggle (startups) ──── */
+
+.micro-investment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.micro-label {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  letter-spacing: 0.12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.help-icon {
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 8px;
+}
+
+.toggle-switch {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-switch.active {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Clear/Show Button ───────────────────── */
+
+.show-button {
+  height: 40px;
+  padding: 12px 35px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: none;
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  display: inline-flex;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  color: #fff;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: center;
+}
+
+.show-button:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ── News Sidebar Overrides ──────────────── */
+
+.sidebar-label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.sidebar-select {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  color: #fff;
+  transition: border-color 0.2s ease;
+}
+
+.sidebar-select:focus {
+  border-color: rgba(255, 255, 255, 0.4);
+  outline: none;
+}
+
+.sidebar-select option {
+  background: #1a1f36;
+  color: #fff;
+}
+
+.sidebar-title {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.show-filters-btn {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: none;
+}
+
+.show-filters-btn:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* ── Sidebar Ad Block ────────────────────── */
+
+.sidebar-ad {
+  width: calc(100% + 48px);
+  margin-left: -24px;
+  margin-right: -24px;
+  margin-bottom: -30px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 0 0 16px 16px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.sidebar-ad__icon {
+  width: 40px;
+  height: 40px;
+  opacity: 0.3;
+}
+
+.sidebar-ad__icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.sidebar-ad__title {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: Unbounded, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.sidebar-ad__desc {
+  color: rgba(255, 255, 255, 0.3);
+  font-family: Unbounded, sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.sidebar-ad__btn {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 8px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: Unbounded, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.sidebar-ad__btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+/* ── Catalog Search Bar ──────────────────── */
+
+.catalog-search-wrapper {
+  width: 100%;
+}
+
+.catalog-search {
+  position: relative;
+  width: 100%;
+  height: 42px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #004e9f;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+
+.catalog-search-input {
+  flex-grow: 1;
+  height: 33px;
+  border: none;
+  border-radius: 7px;
+  padding: 0 15px;
+  font-size: 14px;
+  box-sizing: border-box;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  color: #1e1e1e;
+  background: #fff;
+  line-height: 18px;
+}
+
+.catalog-search-input::placeholder {
+  color: #cbcbcb;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 18px;
+}
+
+.catalog-search-btn {
+  background: none;
+  border: none;
+  padding: 0 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+}
+
+.catalog-search-btn svg {
+  width: 22px;
+  height: 22px;
+  color: #fff;
+}
+
+/* ── Responsive ──────────────────────────── */
+
+@media (max-width: 1320px) {
+  .sidebar {
+    width: 220px;
+    padding: 24px 18px;
+  }
+
+  #filterForm {
+    width: 100%;
+  }
+
+  .sidebar-ad {
+    width: calc(100% + 36px);
+    margin-left: -18px;
+    margin-right: -18px;
+  }
+}
+
+@media (max-width: 960px) {
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+  }
+
+  .sidebar-ad {
+    width: calc(100% + 36px);
+    margin-left: -18px;
+    margin-right: -18px;
+  }
+}
