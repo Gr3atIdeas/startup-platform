@@ -125,13 +125,17 @@
   line-height: 18px;
   word-wrap: break-word;
   text-decoration: none;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  border: none !important;
+  transform: none !important;
+  transition: background-color 0.2s ease;
 }
 
 .header-nav-link:hover,
 .catalog-dropdown-button:hover {
   background-color: rgba(88, 101, 242, 0.5);
   color: #fff;
+  transform: none !important;
+  border: none !important;
 }
 
 .header-auth-section {

@@ -48,12 +48,10 @@ function initNavButtons() {
   })
 }
 function handleNavButtonEnter(e) {
-  const button = e.currentTarget
-  button.style.border = '1px solid var(--standard-button-border)'
+  // No border change — handled by CSS hover only
 }
 function handleNavButtonLeave(e) {
-  const button = e.currentTarget
-  button.style.border = 'none'
+  // No border change — handled by CSS hover only
 }
 function initPositionAware() {
   const buttons = document.querySelectorAll(

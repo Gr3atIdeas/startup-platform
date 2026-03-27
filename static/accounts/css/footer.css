@@ -179,6 +179,14 @@
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   text-decoration: none;
+  transition: none;
+  transform: none !important;
+}
+
+.footer-menu-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transform: none !important;
 }
 
 .footer-bottom-section {
@@ -227,6 +235,13 @@
   font-weight: 300;
   letter-spacing: 0.12px;
   text-decoration: none;
+  transform: none !important;
+}
+
+.footer-legal-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transform: none !important;
 }
 
 @media (width <= 768px) {
