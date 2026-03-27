@@ -317,6 +317,16 @@ window.STARTUP_FORM_CONFIG = {
   planetChoices: [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
   planetBaseUrl: "/static/accounts/images/planetary_system/textures/",
 };
+window.ENTITY_FORM_CONFIG = {
+  formId: 'franchiseForm',
+  entityType: 'franchise',
+  requiredFields: [
+    "[name='title']",
+    "[name='direction']",
+    "[name='short_description']",
+    "[name='description']",
+  ],
+};
 
 document.addEventListener('DOMContentLoaded', function() {
     // --- Логотип ---
@@ -454,9 +464,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- Обработка отправки формы ---
-    const franchiseFormEl = document.getElementById('franchiseForm');
-    if (franchiseFormEl) {
+    // --- Inline submit handler REMOVED — now handled by startup_form.js via ENTITY_FORM_CONFIG ---
+    // (previously ~350 lines of inline validation + AJAX submit code lived here)
+    if (false) {
         function displayValidationMessage(element, message, fieldType = 'input') {
             const parentGroup = element.closest('.form-group, .upload-box, .logo-upload-group');
             let existingErrorMsg = null;

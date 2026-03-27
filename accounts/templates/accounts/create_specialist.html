@@ -258,6 +258,15 @@ window.STARTUP_FORM_CONFIG = {
   planetChoices: [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
   planetBaseUrl: "/static/accounts/images/planetary_system/textures/",
 };
+window.ENTITY_FORM_CONFIG = {
+  formId: 'specialistForm',
+  entityType: 'specialist',
+  requiredFields: [
+    "[name='title']",
+    "[name='short_description']",
+    "[name='description']",
+  ],
+};
 
 document.addEventListener('DOMContentLoaded', function() {
     // --- Логотип ---
@@ -395,8 +404,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- Обработка отправки формы ---
-    const startupForm = document.getElementById('specialistForm');
+    // --- Inline submit handler REMOVED — now handled by startup_form.js via ENTITY_FORM_CONFIG ---
+    const startupForm = null; // document.getElementById('specialistForm') — disabled
     if (startupForm) {
         function displayValidationMessage(element, message, fieldType = 'input') {
             const parentGroup = element.closest('.form-group, .upload-box, .logo-upload-group');

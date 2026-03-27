@@ -410,8 +410,10 @@ document.addEventListener('DOMContentLoaded', function () {
     setCurrentStep(initStep)
   }
 
-  // Поддержка всех форм создания (startup, franchise, agency, specialist)
-  var startupForm = document.getElementById('startupForm')
+  // Unified entity form support — configurable via window.ENTITY_FORM_CONFIG
+  var config = window.ENTITY_FORM_CONFIG || {}
+  var formId = config.formId || 'startupForm'
+  var startupForm = document.getElementById(formId)
   function showFieldError(fieldEl, message) {
     if (!fieldEl) return
     fieldEl.classList.add('input-error')
@@ -436,14 +438,14 @@ document.addEventListener('DOMContentLoaded', function () {
     var hasError = false
     var isEditPage = window.location.pathname.includes('/edit/') || window.location.pathname.includes('/edit-startup/')
     
-    var requiredSelectors = [
+    // Required fields from config, or defaults for startup
+    var requiredSelectors = config.requiredFields || [
       "[name='title']",
       "[name='direction']",
       "[name='funding_goal']",
       "[name='stage']",
       "[name='short_description']",
       "[name='description']",
-      // terms теперь необязательное поле
     ]
     
     // Планета обязательна только при создании, не при редактировании
