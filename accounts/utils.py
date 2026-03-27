@@ -836,3 +836,146 @@ def send_telegram_new_entity_notification(entity_type: str, entity_title: str, o
         except requests.exceptions.RequestException as e2:
             logger.error(f"Fallback notification send failed: {e2}", exc_info=True)
             return False
+
+
+# ============================================================
+# Shared Entity File Upload Helpers (Phase 1.2)
+# ============================================================
+
+def upload_entity_logo(form, entity, entity_type_name):
+    """Upload logo for any entity type. Returns list of logo IDs."""
+    logo = form.cleaned_data.get("logo")
+    if not logo:
+        return []
+    logo_id = str(uuid.uuid4())
+    try:
+        logo.seek(0)
+        file_data = logo.read()
+        content_type = getattr(logo, 'content_type', 'image/jpeg')
+        entity_id = _get_entity_id(entity, entity_type_name)
+        unique_filename = _get_unique_filename(logo.name, entity_id, "logo")
+        result = upload_file_to_s3_sync(
+            file_data=file_data, file_name=logo.name, content_type=content_type,
+            entity_type_name=entity_type_name, entity_id=entity_id,
+            file_type_name='logo', original_filename=unique_filename, file_id=logo_id
+        )
+        if result:
+            logger.info(f"Logo uploaded for {entity_type_name}: {logo.name}, {len(file_data)} bytes")
+            return [logo_id]
+        logger.error(f"Logo upload failed for {entity_type_name}: {logo.name}")
+    except Exception as e:
+        logger.error(f"Logo upload error for {entity_type_name}: {e}", exc_info=True)
+    return []
+
+
+def upload_entity_catalog_card(form, entity, entity_type_name):
+    """Upload catalog card image to catalog_cards/ path. Updates entity field."""
+    import os
+    from django.utils.text import slugify as django_slugify
+    catalog_card_image = form.cleaned_data.get("catalog_card_image")
+    if not catalog_card_image or not hasattr(catalog_card_image, 'read'):
+        return
+    catalog_card_id = str(uuid.uuid4())
+    try:
+        processed_image, processed_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+        base_name = os.path.splitext(processed_name)[0]
+        ext = os.path.splitext(processed_name)[1]
+        safe_base = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
+        safe_name = django_slugify(safe_base) + ext
+        file_path = f"catalog_cards/{catalog_card_id}_{safe_name}"
+        s3 = boto3.client(
+            's3',
+            endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
+            aws_access_key_id=getattr(settings, 'AWS_ACCESS_KEY_ID', None),
+            aws_secret_access_key=getattr(settings, 'AWS_SECRET_ACCESS_KEY', None),
+            region_name=getattr(settings, 'AWS_S3_REGION_NAME', None),
+            config=boto3.session.Config(s3={'addressing_style': getattr(settings, 'AWS_S3_ADDRESSING_STYLE', 'virtual')})
+        )
+        bucket = getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None)
+        ct = 'image/webp' if processed_name.endswith('.webp') else getattr(catalog_card_image, 'content_type', 'application/octet-stream')
+        if hasattr(processed_image, 'read'):
+            body = processed_image.read()
+        else:
+            body = processed_image.getvalue() if hasattr(processed_image, 'getvalue') else processed_image
+        try:
+            s3.put_object(Bucket=bucket, Key=file_path, Body=body, ContentType=ct, ACL='public-read')
+        except Exception:
+            s3.put_object(Bucket=bucket, Key=file_path, Body=body, ACL='public-read')
+        entity.catalog_card_image = f"{catalog_card_id}_{safe_name}"
+        entity.save(update_fields=["catalog_card_image"])
+        logger.info(f"Catalog card uploaded: {file_path}")
+    except Exception as e:
+        logger.error(f"Catalog card upload error for {entity_type_name}: {e}", exc_info=True)
+
+
+def upload_entity_files(request, form, entity, entity_type_name, file_field_name, file_type_name, default_content_type='application/octet-stream'):
+    """Upload multiple files (creatives, proofs, video) for any entity type. Returns list of file IDs."""
+    entity_id = _get_entity_id(entity, entity_type_name)
+    files = request.FILES.getlist(file_field_name)
+    if not files:
+        files = form.cleaned_data.get(file_field_name, [])
+        if files and not isinstance(files, list):
+            files = [files]
+    if not files:
+        return []
+    file_ids = []
+    for f in files:
+        if not hasattr(f, "name"):
+            continue
+        try:
+            unique_filename = _get_unique_filename(f.name, entity_id, file_type_name)
+            file_id = str(uuid.uuid4())
+            file_data = f.read()
+            content_type = getattr(f, 'content_type', default_content_type)
+            result = upload_file_to_s3_sync(
+                file_data=file_data, file_name=f.name, content_type=content_type,
+                entity_type_name=entity_type_name, entity_id=entity_id,
+                file_type_name=file_type_name, original_filename=unique_filename, file_id=file_id
+            )
+            if result:
+                file_ids.append(file_id)
+            logger.info(f"{file_type_name} uploaded for {entity_type_name}: {f.name}, {len(file_data)} bytes")
+        except Exception as e:
+            logger.error(f"{file_type_name} upload error for {entity_type_name}: {e}", exc_info=True)
+    return file_ids
+
+
+def handle_entity_file_uploads(request, form, entity, entity_type_name):
+    """
+    Complete file upload handling for any entity type during creation.
+    Uploads logo, catalog_card_image, creatives, proofs, video.
+    Returns dict with logo_ids, creatives_ids, proofs_ids, video_ids, file_save_errors.
+    """
+    file_save_errors = []
+
+    logo_ids = upload_entity_logo(form, entity, entity_type_name)
+    if form.cleaned_data.get("logo") and not logo_ids:
+        file_save_errors.append({"field": "logo", "error": "Upload failed"})
+
+    upload_entity_catalog_card(form, entity, entity_type_name)
+
+    creatives_ids = upload_entity_files(request, form, entity, entity_type_name, 'creatives', 'creative', 'image/jpeg')
+    proofs_ids = upload_entity_files(request, form, entity, entity_type_name, 'proofs', 'proof', 'application/pdf')
+    video_ids = upload_entity_files(request, form, entity, entity_type_name, 'video', 'video', 'video/mp4')
+
+    return {
+        'logo_ids': logo_ids,
+        'creatives_ids': creatives_ids,
+        'proofs_ids': proofs_ids,
+        'video_ids': video_ids,
+        'file_save_errors': file_save_errors,
+    }
+
+
+def _get_entity_id(entity, entity_type_name):
+    """Get the primary key ID field for any entity type."""
+    id_map = {'startup': 'startup_id', 'franchise': 'franchise_id', 'agency': 'agency_id', 'specialist': 'specialist_id'}
+    return getattr(entity, id_map.get(entity_type_name, f'{entity_type_name}_id'), entity.pk)
+
+
+def _get_unique_filename(original_name, entity_id, file_type):
+    """Generate a unique filename for S3 upload."""
+    import os
+    base, ext = os.path.splitext(original_name)
+    safe_base = "".join(c for c in base if c.isalnum() or c in ("-", "_"))[:50]
+    return f"{safe_base}_{entity_id}_{file_type}{ext}"
