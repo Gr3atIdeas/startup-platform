@@ -23,6 +23,145 @@ def convert_html_to_newlines(text):
     text = re.sub(r'<br\s*/?>', '\n', text, flags=re.IGNORECASE)
     
     return text
+
+
+# ============================================================
+# Base Entity Forms — shared across startups, franchises, agencies, specialists
+# ============================================================
+
+# Shared direction translation dict used by all entity forms
+DIRECTION_TRANSLATIONS = {
+    "Technology": "Технологии",
+    "Healthcare": "Здоровье",
+    "Finance": "Финансы",
+    "Education": "Образование",
+    "Entertainment": "Развлечения",
+    "Fashion": "Мода",
+    "Food": "Еда",
+    "Gaming": "Игры",
+    "Real Estate": "Недвижимость",
+    "Travel": "Путешествия",
+    "Agriculture": "Сельское хозяйство",
+    "Energy": "Энергетика",
+    "Environment": "Экология",
+    "Social": "Социальные проекты",
+    "Medicine": "Здоровье",
+    "Auto": "Авто",
+    "Delivery": "Доставка",
+    "Cafe": "Кафе/рестораны",
+    "Fastfood": "Фастфуд",
+    "Health": "Здоровье",
+    "Beauty": "Красота",
+    "Transport": "Транспорт",
+    "Sport": "Спорт",
+    "Psychology": "Психология",
+    "AI": "ИИ",
+    "IT": "ИТ",
+    "Retail": "Ритейл",
+    "Брендинг": "Брендинг",
+    "Видео и мультимедиа": "Видео и мультимедиа",
+    "Перевод": "Перевод",
+}
+
+
+class BaseEntityFormMixin:
+    """
+    Mixin with shared fields and methods for all entity create forms.
+    Provides: logo, creatives, proofs, video, catalog_card_image,
+    short_description, terms, planet_image, agree_rules, agree_data_processing.
+
+    Subclasses must define their own Meta class with model and fields.
+    """
+
+    # --- Shared field declarations (override in subclass if needed) ---
+    logo = forms.ImageField(label="Логотип *", required=True)
+    creatives = forms.FileField(
+        required=False,  # Validated via request.FILES.getlist in view
+        help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)"
+    )
+    proofs = forms.FileField(
+        required=False,
+        help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
+    )
+    video = forms.FileField(required=False, help_text="Загрузите видео (MP4, MOV)")
+    catalog_card_image = forms.ImageField(
+        label="Изображение для карточки в каталоге",
+        required=False,
+        help_text="Загрузите широкоформатное изображение (1200×400, PNG/JPEG/WEBP, макс. 5MB)"
+    )
+    short_description = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 3}), label="*Короткое описание", required=True
+    )
+    terms = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False
+    )
+    planet_image = forms.ChoiceField(
+        choices=[], label="Выберите планету", required=False,
+        widget=forms.HiddenInput(attrs={"id": "id_planet_image"})
+    )
+    agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
+    agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
+
+    def init_planet_choices(self):
+        """Initialize planet_image choices. Call from __init__."""
+        try:
+            planet_urls = get_planet_urls()
+            self.fields["planet_image"].choices = [(p, p) for p in planet_urls]
+            # Preserve current planet if editing
+            if hasattr(self, 'instance') and self.instance and hasattr(self.instance, 'planet_image'):
+                current = self.instance.planet_image
+                if current and current not in planet_urls:
+                    self.fields["planet_image"].choices = [(current, current)] + self.fields["planet_image"].choices
+        except Exception as e:
+            print(f"Error fetching planet URLs: {e}")
+            self.fields["planet_image"].choices = []
+
+    def clean_description(self):
+        """Allow HTML tags in description (Quill editor generates HTML)."""
+        return self.cleaned_data.get('description', '')
+
+    def clean_files(self, cleaned_data):
+        """Normalize file fields (flatten nested lists). Call from clean()."""
+        for field_name in ('creatives', 'proofs', 'video'):
+            files = cleaned_data.get(field_name, [])
+            if isinstance(files, list) and all(isinstance(item, list) for item in files):
+                files = [f for sublist in files for f in sublist]
+            elif files and not isinstance(files, list):
+                files = [files]
+            else:
+                files = files if files else []
+            cleaned_data[field_name] = files
+        return cleaned_data
+
+
+class BaseEntityEditFormMixin(BaseEntityFormMixin):
+    """
+    Mixin for entity edit forms. Same as create but logo not required,
+    file inputs use ClearableFileInput.
+    """
+    logo = forms.ImageField(
+        label="Логотип", required=False,
+        help_text="Загрузите новый логотип (изображение)"
+    )
+    creatives = forms.FileField(
+        required=False, help_text="Загрузите новые изображения (до 10 файлов: PNG, JPEG)",
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
+    )
+    proofs = forms.FileField(
+        required=False, help_text="Загрузите новые документы (до 15 файлов: PDF, DOC, TXT)",
+        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
+    )
+    video = forms.FileField(
+        required=False, help_text="Загрузите новое видео (MP4, MOV)",
+        widget=forms.ClearableFileInput(attrs={'accept': 'video/*'})
+    )
+    catalog_card_image = forms.ImageField(
+        label="Изображение для карточки в каталоге", required=False,
+        help_text="Загрузите широкоформатное изображение (1200×400, PNG/JPEG/WEBP, макс. 5MB)",
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
+    )
+
+
 class RegisterForm(forms.ModelForm):
     hp_field = forms.CharField(required=False, label="", widget=forms.TextInput(attrs={
         "autocomplete": "off",
@@ -73,20 +212,8 @@ class LoginForm(forms.Form):
             raise forms.ValidationError("Обнаружена подозрительная активность.")
         return cleaned_data
 
-class StartupEditForm(forms.ModelForm):
-    logo = forms.ImageField(
-        label="Логотип",
-        required=False,
-        help_text="Загрузите новый логотип стартапа (изображение)",
-    )
-    creatives = forms.FileField(
-        required=False, help_text="Загрузите новые изображения (до 10 файлов: PNG, JPEG)",
-        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
-    )
-    proofs = forms.FileField(
-        required=False, help_text="Загрузите новые документы (до 15 файлов: PDF, DOC, TXT)",
-        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
-    )
+class StartupEditForm(BaseEntityEditFormMixin, forms.ModelForm):
+    # --- Startup-specific edit fields ---
     direction = forms.ModelChoiceField(
         queryset=Directions.objects.none(), label="Направление *", required=True
     )
@@ -96,26 +223,6 @@ class StartupEditForm(forms.ModelForm):
     micro_investment_available = forms.BooleanField(
         required=False, label="Микроинвестиции доступны"
     )
-    video = forms.FileField(required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
-        widget=forms.ClearableFileInput(attrs={'accept': 'video/*'}))
-    catalog_card_image = forms.ImageField(
-        label="Изображение для карточки в каталоге",
-        required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)",
-        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
-    )
-    short_description = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 3}), label="*Короткое описание", required=True
-    )
-    terms = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False
-    )
-    planet_image = forms.ChoiceField(
-        choices=[],
-        label="Выберите планету",
-        required=False,
-        widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
-    )
     INVESTMENT_TYPE_CHOICES = [
         ("", "Выберите тип"),
         ("invest", "Инвестирование"),
@@ -123,39 +230,26 @@ class StartupEditForm(forms.ModelForm):
         ("both", "Инвестирование + Выкуп"),
     ]
     investment_type = forms.ChoiceField(
-        choices=INVESTMENT_TYPE_CHOICES,
-        label="Тип инвестирования",
-        required=False,
-        widget=forms.Select(attrs={"class": "form-control"}),
+        choices=INVESTMENT_TYPE_CHOICES, label="Тип инвестирования",
+        required=False, widget=forms.Select(attrs={"class": "form-control"}),
     )
     funding_goal = forms.IntegerField(
-        label="Цель финансирования *",
-        required=True,
+        label="Цель финансирования *", required=True,
         widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "Введите сумму ₽"}),
     )
     pitch_deck_url = forms.URLField(
-        label="Ссылка на презентацию",
-        required=False,
+        label="Ссылка на презентацию", required=False,
         widget=forms.URLInput(attrs={"class": "form-control", "placeholder": "URL"}),
     )
     valuation = forms.IntegerField(
-        label="Оценка",
-        required=False,
+        label="Оценка", required=False,
         widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "1"}),
     )
     amount_raised = forms.IntegerField(
-        label="Собранная сумма (₽)",
-        required=False,
+        label="Собранная сумма (₽)", required=False,
         widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "Введите сумму"}),
     )
 
-    def clean_description(self):
-        """Разрешаем HTML теги в описании для вставки изображений/видео"""
-        description = self.cleaned_data.get('description', '')
-        if description:
-            pass  # CKEditor уже генерирует HTML
-        return description
-    
     class Meta:
         model = Startups
         fields = [
@@ -190,109 +284,32 @@ class StartupEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        if self.instance and self.instance.pk and hasattr(self.instance, 'description'):
-            if self.instance.description:
-                pass  # CKEditor принимает HTML напрямую
-        
-        allowed_startup_directions = [
-            'Technology', 'Finance', 'Education', 'Entertainment',
-            'Fashion', 'Food', 'Gaming', 'Real Estate', 'Travel', 'Agriculture',
-            'Energy', 'Environment', 'Social', 'Auto', 'Delivery',
-            'Cafe', 'Fastfood', 'Health', 'Beauty', 'Transport', 'Sport',
-            'Psychology', 'AI', 'IT', 'Retail'
-        ]
+        self.init_planet_choices()
+
+        # Same direction setup as StartupForm
         extra_old = []
         if getattr(self, 'instance', None) and getattr(self.instance, 'direction', None):
             current_dir = getattr(self.instance.direction, 'direction_name', None)
             if current_dir in ['Healthcare', 'Medicine']:
                 extra_old = ['Healthcare', 'Medicine']
-        queryset_names = allowed_startup_directions + extra_old
         self.fields["direction"].queryset = Directions.objects.filter(
-            direction_name__in=queryset_names
+            direction_name__in=StartupForm.ALLOWED_DIRECTIONS + extra_old
         ).order_by("direction_name")
+        self.fields["direction"].label_from_instance = lambda obj: DIRECTION_TRANSLATIONS.get(
+            getattr(obj, "direction_name", str(obj)),
+            getattr(obj, "direction_name", str(obj))
+        )
 
-        direction_translations = {
-            "Technology": "Технологии",
-            "Healthcare": "Здоровье",
-            "Finance": "Финансы",
-            "Education": "Образование",
-            "Entertainment": "Развлечения",
-            "Fashion": "Мода",
-            "Food": "Еда",
-            "Gaming": "Игры",
-            "Real Estate": "Недвижимость",
-            "Travel": "Путешествия",
-            "Agriculture": "Сельское хозяйство",
-            "Energy": "Энергетика",
-            "Environment": "Экология",
-            "Social": "Социальные проекты",
-            "Medicine": "Здоровье",
-            "Auto": "Авто",
-            "Delivery": "Доставка",
-            "Cafe": "Кафе/рестораны",
-            "Fastfood": "Фастфуд",
-            "Health": "Здоровье",
-            "Beauty": "Красота",
-            "Transport": "Транспорт",
-            "Sport": "Спорт",
-            "Psychology": "Психология",
-            "AI": "ИИ",
-            "IT": "ИТ",
-            "Retail": "Ритейл",
-        }
-        def _label_from_instance_edit(obj):
-            name = getattr(obj, "direction_name", str(obj))
-            return direction_translations.get(name, name)
-        self.fields["direction"].label_from_instance = _label_from_instance_edit
-        try:
-            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
-        except Exception as e:
-            print(f"Error fetching planet URLs: {e}")
-            self.fields["planet_image"].choices = []
-
-class StartupForm(forms.ModelForm):
-    logo = forms.ImageField(
-        label="Логотип *",
-        required=True,
-        help_text="Загрузите логотип стартапа (изображение)",
-    )
-    creatives = forms.FileField(
-        required=True, help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)"
-    )
-    proofs = forms.FileField(
-        required=False, help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
-    )
+class StartupForm(BaseEntityFormMixin, forms.ModelForm):
+    # --- Startup-specific fields ---
     direction = forms.ModelChoiceField(
         queryset=Directions.objects.none(), label="Направление *", required=True
     )
     stage = forms.ModelChoiceField(
         queryset=StartupStages.objects.all(), label="Стадия", required=False, empty_label="Выберите стадию"
     )
-    agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
-    agree_data_processing = forms.BooleanField(
-        label="Согласен с обработкой данных *", required=True
-    )
     micro_investment_available = forms.BooleanField(
         required=False, label="Микроинвестиции доступны"
-    )
-    video = forms.FileField(required=False, help_text="Загрузите видео (1 файл: MP4, MOV)")
-    catalog_card_image = forms.ImageField(
-        label="Изображение для карточки в каталоге",
-        required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)"
-    )
-    short_description = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 3}), label="*Короткое описание", required=True
-    )
-    terms = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False
-    )
-    planet_image = forms.ChoiceField(
-        choices=[],
-        label="Выберите планету",
-        required=False,
-        widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
     )
     INVESTMENT_TYPE_CHOICES = [
         ("", "Выберите тип"),
@@ -301,75 +318,35 @@ class StartupForm(forms.ModelForm):
         ("both", "Инвестирование + Выкуп"),
     ]
     investment_type = forms.ChoiceField(
-        choices=INVESTMENT_TYPE_CHOICES,
-        label="Тип инвестирования",
-        required=False,
-        widget=forms.Select(attrs={"class": "form-control"}),
+        choices=INVESTMENT_TYPE_CHOICES, label="Тип инвестирования",
+        required=False, widget=forms.Select(attrs={"class": "form-control"}),
     )
+
+    ALLOWED_DIRECTIONS = [
+        'Technology', 'Finance', 'Education', 'Entertainment',
+        'Fashion', 'Food', 'Gaming', 'Real Estate', 'Travel', 'Agriculture',
+        'Energy', 'Environment', 'Social', 'Auto', 'Delivery',
+        'Cafe', 'Fastfood', 'Health', 'Beauty', 'Transport', 'Sport',
+        'Psychology', 'AI', 'IT', 'Retail'
+    ]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        try:
-            planet_urls = get_planet_urls()
-            self.fields["planet_image"].choices = [(p, p) for p in planet_urls]
-            
-            # Если у стартапа уже есть планета, добавляем её в choices если её там нет
-            if hasattr(self, 'instance') and self.instance and hasattr(self.instance, 'planet_image'):
-                current_planet = self.instance.planet_image
-                if current_planet and current_planet not in planet_urls:
-                    # Добавляем текущую планету в начало списка
-                    self.fields["planet_image"].choices = [(current_planet, current_planet)] + self.fields["planet_image"].choices
-        except Exception as e:
-            print(f"Error fetching planet URLs: {e}")
-            self.fields["planet_image"].choices = []
-        allowed_startup_directions = [
-            'Technology', 'Finance', 'Education', 'Entertainment',
-            'Fashion', 'Food', 'Gaming', 'Real Estate', 'Travel', 'Agriculture',
-            'Energy', 'Environment', 'Social', 'Auto', 'Delivery',
-            'Cafe', 'Fastfood', 'Health', 'Beauty', 'Transport', 'Sport',
-            'Psychology', 'AI', 'IT', 'Retail'
-        ]
+        self.init_planet_choices()
+
+        # Startup direction setup
         extra_old = []
         if getattr(self, 'instance', None) and getattr(self.instance, 'direction', None):
             current_dir = getattr(self.instance.direction, 'direction_name', None)
             if current_dir in ['Healthcare', 'Medicine']:
                 extra_old = ['Healthcare', 'Medicine']
-        queryset_names = allowed_startup_directions + extra_old
         self.fields["direction"].queryset = Directions.objects.filter(
-            direction_name__in=queryset_names
+            direction_name__in=self.ALLOWED_DIRECTIONS + extra_old
         ).order_by("direction_name")
-        direction_translations = {
-            "Technology": "Технологии",
-            "Healthcare": "Здоровье",
-            "Finance": "Финансы",
-            "Education": "Образование",
-            "Entertainment": "Развлечения",
-            "Fashion": "Мода",
-            "Food": "Еда",
-            "Gaming": "Игры",
-            "Real Estate": "Недвижимость",
-            "Travel": "Путешествия",
-            "Agriculture": "Сельское хозяйство",
-            "Energy": "Энергетика",
-            "Environment": "Экология",
-            "Social": "Социальные проекты",
-            "Medicine": "Здоровье",
-            "Auto": "Авто",
-            "Delivery": "Доставка",
-            "Cafe": "Кафе/рестораны",
-            "Fastfood": "Фастфуд",
-            "Health": "Здоровье",
-            "Beauty": "Красота",
-            "Transport": "Транспорт",
-            "Sport": "Спорт",
-            "Psychology": "Психология",
-            "AI": "ИИ",
-            "IT": "ИТ",
-            "Retail": "Ритейл",
-        }
-        def _label_from_instance(obj):
-            name = getattr(obj, "direction_name", str(obj))
-            return direction_translations.get(name, name)
-        self.fields["direction"].label_from_instance = _label_from_instance
+        self.fields["direction"].label_from_instance = lambda obj: DIRECTION_TRANSLATIONS.get(
+            getattr(obj, "direction_name", str(obj)),
+            getattr(obj, "direction_name", str(obj))
+        )
     class Meta:
         model = Startups
         fields = [
@@ -457,55 +434,21 @@ class StartupForm(forms.ModelForm):
         }
     def clean_title(self):
         title = self.cleaned_data.get("title")
-        if not self.instance or not self.instance.pk:
-            if Startups.objects.filter(title__iexact=title).exists():
-                raise forms.ValidationError("Стартап с таким названием уже существует.")
-        else:
-            if (
-                Startups.objects.filter(title__iexact=title)
-                .exclude(pk=self.instance.pk)
-                .exists()
-            ):
-                raise forms.ValidationError(
-                    "Другой стартап с таким названием уже существует."
-                )
+        qs = Startups.objects.filter(title__iexact=title)
+        if self.instance and self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise forms.ValidationError("Стартап с таким названием уже существует.")
         return title
+
     def clean(self):
         cleaned_data = super().clean()
-        creatives = cleaned_data.get("creatives", [])
-        if isinstance(creatives, list) and all(
-            isinstance(item, list) for item in creatives
-        ):
-            cleaned_data["creatives"] = [
-                file for sublist in creatives for file in sublist
-            ]
-        elif creatives and not isinstance(creatives, list):
-            cleaned_data["creatives"] = [creatives]
-        else:
-            cleaned_data["creatives"] = creatives if creatives else []
-        if len(cleaned_data.get("creatives", [])) == 0:
-            self.add_error("creatives", "Загрузите хотя бы одно изображение (до 10 файлов).")
-        elif len(cleaned_data.get("creatives", [])) > 10:
+        cleaned_data = self.clean_files(cleaned_data)
+        # Startup validates creatives in clean() (legacy); franchise does it in view
+        if len(cleaned_data.get("creatives", [])) > 10:
             self.add_error("creatives", "Можно прикрепить не более 10 изображений.")
-
-        proofs = cleaned_data.get("proofs", [])
-        if isinstance(proofs, list) and all(isinstance(item, list) for item in proofs):
-            cleaned_data["proofs"] = [file for sublist in proofs for file in sublist]
-        elif proofs and not isinstance(proofs, list):
-            cleaned_data["proofs"] = [proofs]
-        else:
-            cleaned_data["proofs"] = proofs if proofs else []
         if len(cleaned_data.get("proofs", [])) > 10:
             self.add_error("proofs", "Можно прикрепить не более 10 документов.")
-
-        videos = cleaned_data.get("video", [])
-        if isinstance(videos, list) and all(isinstance(item, list) for item in videos):
-            cleaned_data["video"] = [file for sublist in videos for file in sublist]
-        elif videos and not isinstance(videos, list):
-            cleaned_data["video"] = [videos]
-        else:
-            cleaned_data["video"] = videos if videos else []
-
         if len(cleaned_data.get("video", [])) > 3:
             self.add_error("video", "Можно прикрепить не более 3 видео.")
         return cleaned_data
@@ -524,64 +467,18 @@ class DirectionModelChoiceField(forms.ModelChoiceField):
         }
         return translations.get(getattr(obj, "direction_name", str(obj)), getattr(obj, "direction_name", str(obj)))
 
-class FranchiseForm(forms.ModelForm):
-    logo = forms.ImageField(label="Логотип *", required=True)
-    creatives = forms.FileField(
-        required=False,  # Делаем False, т.к. валидация через request.FILES.getlist
-        help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)"
-    )
-    proofs = forms.FileField(
-        required=False, 
-        help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
-    )
+class FranchiseForm(BaseEntityFormMixin, forms.ModelForm):
+    # --- Franchise-specific fields ---
     direction = DirectionModelChoiceField(
         queryset=Directions.objects.filter(
-            direction_name__in=[
-                "Beauty",
-                "Cafe",
-                "Delivery",
-                "Fastfood",
-                "Finance",
-                "Healthcare",
-                "Sport",
-                "Technology",
-            ]
+            direction_name__in=["Beauty", "Cafe", "Delivery", "Fastfood", "Finance", "Healthcare", "Sport", "Technology"]
         ).order_by("direction_name"),
-        label="Категория *",
-        required=True,
+        label="Категория *", required=True,
     )
-
-    agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
-    agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
-    video = forms.FileField(required=False, help_text="Загрузите видео (MP4, MOV)")
-    catalog_card_image = forms.ImageField(
-        label="Изображение для карточки в каталоге",
-        required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)"
-    )
-    short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="*Короткое описание", required=True)
-    terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False)
-    planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        if self.instance and self.instance.pk and hasattr(self.instance, 'description'):
-            if self.instance.description:
-                pass  # CKEditor принимает HTML напрямую
-        
-        try:
-            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
-        except Exception as e:
-            print(f"Error fetching planet URLs: {e}")
-            self.fields["planet_image"].choices = []
-
-    def clean_description(self):
-        """Разрешаем HTML теги в описании для вставки изображений/видео"""
-        description = self.cleaned_data.get('description', '')
-        if description:
-            pass  # CKEditor уже генерирует HTML
-        return description
+        self.init_planet_choices()
 
     class Meta:
         model = Franchises
@@ -642,32 +539,10 @@ class FranchiseForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        creatives = cleaned_data.get("creatives", [])
-        if isinstance(creatives, list) and all(isinstance(item, list) for item in creatives):
-            cleaned_data["creatives"] = [file for sublist in creatives for file in sublist]
-        elif creatives and not isinstance(creatives, list):
-            cleaned_data["creatives"] = [creatives]
-        else:
-            cleaned_data["creatives"] = creatives if creatives else []
-        proofs = cleaned_data.get("proofs", [])
-        if isinstance(proofs, list) and all(isinstance(item, list) for item in proofs):
-            cleaned_data["proofs"] = [file for sublist in proofs for file in sublist]
-        elif proofs and not isinstance(proofs, list):
-            cleaned_data["proofs"] = [proofs]
-        else:
-            cleaned_data["proofs"] = proofs if proofs else []
-        return cleaned_data
+        return self.clean_files(cleaned_data)
 
-class AgencyForm(forms.ModelForm):
-    logo = forms.ImageField(label="Логотип *", required=True)
-    creatives = forms.FileField(
-        required=False,  # Делаем False, т.к. валидация через request.FILES.getlist
-        help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)"
-    )
-    proofs = forms.FileField(
-        required=False, 
-        help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
-    )
+class AgencyForm(BaseEntityFormMixin, forms.ModelForm):
+    # --- Agency-specific fields ---
     agency_category = forms.ChoiceField(
         choices=[
             ("", "Выберите категорию"),
@@ -685,43 +560,15 @@ class AgencyForm(forms.ModelForm):
     agency_services = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 5}), label="Услуги", required=False
     )
-
-    agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
-    agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
-    video = forms.FileField(required=False, help_text="Загрузите видео (MP4, MOV)")
-    catalog_card_image = forms.ImageField(
-        label="Изображение для карточки в каталоге",
-        required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)"
-    )
-    short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="*Короткое описание", required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Этапы работ", required=False)
-    planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
     successful_projects = forms.IntegerField(
-        label="Успешных проектов",
-        required=False,
+        label="Успешных проектов", required=False,
         help_text="Количество успешно реализованных проектов"
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        if self.instance and self.instance.pk and hasattr(self.instance, 'description'):
-            if self.instance.description:
-                pass  # CKEditor принимает HTML напрямую
-        
-        try:
-            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
-        except Exception as e:
-            print(f"Error fetching planet URLs: {e}")
-            self.fields["planet_image"].choices = []
-
-    def clean_description(self):
-        """Разрешаем HTML теги в описании для вставки изображений/видео"""
-        description = self.cleaned_data.get('description', '')
-        if description:
-            pass  # CKEditor уже генерирует HTML
-        return description
+        self.init_planet_choices()
 
     class Meta:
         model = Agencies
@@ -772,32 +619,10 @@ class AgencyForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        creatives = cleaned_data.get("creatives", [])
-        if isinstance(creatives, list) and all(isinstance(item, list) for item in creatives):
-            cleaned_data["creatives"] = [file for sublist in creatives for file in sublist]
-        elif creatives and not isinstance(creatives, list):
-            cleaned_data["creatives"] = [creatives]
-        else:
-            cleaned_data["creatives"] = creatives if creatives else []
-        proofs = cleaned_data.get("proofs", [])
-        if isinstance(proofs, list) and all(isinstance(item, list) for item in proofs):
-            cleaned_data["proofs"] = [file for sublist in proofs for file in sublist]
-        elif proofs and not isinstance(proofs, list):
-            cleaned_data["proofs"] = [proofs]
-        else:
-            cleaned_data["proofs"] = proofs if proofs else []
-        return cleaned_data
+        return self.clean_files(cleaned_data)
 
-class SpecialistForm(forms.ModelForm):
-    logo = forms.ImageField(label="Логотип *", required=True)
-    creatives = forms.FileField(
-        required=False,  # Делаем False, т.к. валидация через request.FILES.getlist
-        help_text="Загрузите изображения (до 10 файлов: PNG, JPEG)"
-    )
-    proofs = forms.FileField(
-        required=False, 
-        help_text="Загрузите документы (до 10 файлов: PDF, DOC, TXT)"
-    )
+class SpecialistForm(BaseEntityFormMixin, forms.ModelForm):
+    # --- Specialist-specific fields ---
     specialist_category = forms.ChoiceField(
         choices=[
             ("", "Выберите категорию"),
@@ -812,39 +637,12 @@ class SpecialistForm(forms.ModelForm):
         ],
         label="Категория", required=False
     )
-
-    agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
-    agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
-    video = forms.FileField(required=False, help_text="Загрузите видео (MP4, MOV)")
-    catalog_card_image = forms.ImageField(
-        label="Изображение для карточки в каталоге",
-        required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)"
-    )
-    short_description = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}), label="*Короткое описание", required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Услуги", required=False)
     additional_info = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Услуги и кейсы", required=False)
-    planet_image = forms.ChoiceField(choices=[], label="Выберите планету", required=False, widget=forms.HiddenInput(attrs={"id": "id_planet_image"}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        if self.instance and self.instance.pk and hasattr(self.instance, 'description'):
-            if self.instance.description:
-                pass  # CKEditor принимает HTML напрямую
-        
-        try:
-            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
-        except Exception as e:
-            print(f"Error fetching planet URLs: {e}")
-            self.fields["planet_image"].choices = []
-
-    def clean_description(self):
-        """Разрешаем HTML теги в описании для вставки изображений/видео"""
-        description = self.cleaned_data.get('description', '')
-        if description:
-            pass  # CKEditor уже генерирует HTML
-        return description
+        self.init_planet_choices()
 
     class Meta:
         model = Specialists
@@ -897,21 +695,8 @@ class SpecialistForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        creatives = cleaned_data.get("creatives", [])
-        if isinstance(creatives, list) and all(isinstance(item, list) for item in creatives):
-            cleaned_data["creatives"] = [file for sublist in creatives for file in sublist]
-        elif creatives and not isinstance(creatives, list):
-            cleaned_data["creatives"] = [creatives]
-        else:
-            cleaned_data["creatives"] = creatives if creatives else []
-        proofs = cleaned_data.get("proofs", [])
-        if isinstance(proofs, list) and all(isinstance(item, list) for item in proofs):
-            cleaned_data["proofs"] = [file for sublist in proofs for file in sublist]
-        elif proofs and not isinstance(proofs, list):
-            cleaned_data["proofs"] = [proofs]
-        else:
-            cleaned_data["proofs"] = proofs if proofs else []
-        return cleaned_data
+        return self.clean_files(cleaned_data)
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comments
@@ -1138,50 +923,13 @@ class ContactForm(forms.Form):
     captcha_answer = forms.CharField(required=False, label="Ответ на капчу")
 
 
-class FranchiseEditForm(forms.ModelForm):
-    logo = forms.ImageField(
-        label="Логотип",
-        required=False,
-        help_text="Загрузите новый логотип франшизы (изображение)",
-    )
-    creatives = forms.FileField(
-        required=False, help_text="Загрузите новые изображения (до 10 файлов: PNG, JPEG)",
-        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
-    )
-    proofs = forms.FileField(
-        required=False, help_text="Загрузите новые документы (до 15 файлов: PDF, DOC, TXT)",
-        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
-    )
+class FranchiseEditForm(BaseEntityEditFormMixin, forms.ModelForm):
+    # --- Franchise-specific edit fields ---
     direction = DirectionModelChoiceField(
         queryset=Directions.objects.filter(
-            direction_name__in=[
-                "Beauty", "Cafe", "Delivery", "Fastfood", "Finance",
-                "Healthcare", "Sport", "Technology",
-            ]
+            direction_name__in=["Beauty", "Cafe", "Delivery", "Fastfood", "Finance", "Healthcare", "Sport", "Technology"]
         ).order_by("direction_name"),
         label="Категория", required=False, empty_label="Выберите категорию"
-    )
-    video = forms.FileField(
-        required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
-        widget=forms.ClearableFileInput(attrs={'accept': 'video/*'})
-    )
-    catalog_card_image = forms.ImageField(
-        label="Изображение для карточки в каталоге",
-        required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)",
-        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
-    )
-    short_description = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 3}), label="*Короткое описание", required=True
-    )
-    terms = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Условия", required=False
-    )
-    planet_image = forms.ChoiceField(
-        choices=[],
-        label="Выберите планету",
-        required=False,
-        widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
     )
 
     class Meta:
@@ -1214,33 +962,11 @@ class FranchiseEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        try:
-            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
-        except Exception as e:
-            self.fields["planet_image"].choices = []
-
-    def clean_description(self):
-        """Разрешаем HTML теги в описании для вставки изображений/видео"""
-        description = self.cleaned_data.get('description', '')
-        if description:
-            pass  # CKEditor уже генерирует HTML
-        return description
+        self.init_planet_choices()
 
 
-class AgencyEditForm(forms.ModelForm):
-    logo = forms.ImageField(
-        label="Логотип",
-        required=False,
-        help_text="Загрузите новый логотип агентства (изображение)",
-    )
-    creatives = forms.FileField(
-        required=False, help_text="Загрузите новые изображения (до 10 файлов: PNG, JPEG)",
-        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
-    )
-    proofs = forms.FileField(
-        required=False, help_text="Загрузите новые документы (до 15 файлов: PDF, DOC, TXT)",
-        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
-    )
+class AgencyEditForm(BaseEntityEditFormMixin, forms.ModelForm):
+    # --- Agency-specific edit fields ---
     agency_category = forms.ChoiceField(
         choices=[
             ("", "Выберите категорию"),
@@ -1307,43 +1033,17 @@ class AgencyEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+        self.init_planet_choices()
+
         if self.instance and self.instance.pk:
-            if hasattr(self.instance, 'description') and self.instance.description:
-                pass  # CKEditor принимает HTML напрямую
-            
             if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
                 self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects')
                 self.fields['agency_category'].initial = self.instance.customization_data.get('agency_category', '')
                 self.fields['agency_services'].initial = self.instance.customization_data.get('agency_services', '')
-        
-        try:
-            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
-        except Exception as e:
-            self.fields["planet_image"].choices = []
-
-    def clean_description(self):
-        """Разрешаем HTML теги в описании для вставки изображений/видео"""
-        description = self.cleaned_data.get('description', '')
-        if description:
-            pass  # CKEditor уже генерирует HTML
-        return description
 
 
-class SpecialistEditForm(forms.ModelForm):
-    logo = forms.ImageField(
-        label="Логотип",
-        required=False,
-        help_text="Загрузите новый логотип специалиста (изображение)",
-    )
-    creatives = forms.FileField(
-        required=False, help_text="Загрузите новые изображения (до 10 файлов: PNG, JPEG)",
-        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
-    )
-    proofs = forms.FileField(
-        required=False, help_text="Загрузите новые документы (до 15 файлов: PDF, DOC, TXT)",
-        widget=forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx,.txt'})
-    )
+class SpecialistEditForm(BaseEntityEditFormMixin, forms.ModelForm):
+    # --- Specialist-specific edit fields ---
     specialist_category = forms.ChoiceField(
         choices=[
             ("", "Выберите категорию"),
@@ -1362,32 +1062,9 @@ class SpecialistEditForm(forms.ModelForm):
         required=False, help_text="Загрузите новое видео (1 файл: MP4, MOV)",
         widget=forms.ClearableFileInput(attrs={'accept': 'video/*'})
     )
-    catalog_card_image = forms.ImageField(
-        label="Изображение для карточки в каталоге",
-        required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)",
-        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
-    )
-    short_description = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 3}), label="*Короткое описание", required=True
-    )
-    terms = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Услуги", required=False
-    )
-    additional_info = forms.CharField(
-        widget=forms.Textarea(attrs={"rows": 5}), label="Услуги и кейсы", required=False
-    )
-    planet_image = forms.ChoiceField(
-        choices=[],
-        label="Выберите планету",
-        required=False,
-        widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
-    )
-    successful_projects = forms.IntegerField(
-        label="Успешных проектов",
-        required=False,
-        help_text="Количество успешно реализованных проектов"
-    )
+    terms = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Услуги", required=False)
+    additional_info = forms.CharField(widget=forms.Textarea(attrs={"rows": 5}), label="Услуги и кейсы", required=False)
+    successful_projects = forms.IntegerField(label="Успешных проектов", required=False)
 
     class Meta:
         model = Specialists
@@ -1416,23 +1093,9 @@ class SpecialistEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        try:
-            self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
-        except Exception as e:
-            self.fields["planet_image"].choices = []
-        
-        # Инициализируем successful_projects из customization_data
+        self.init_planet_choices()
+
         if self.instance and self.instance.pk:
-            if hasattr(self.instance, 'description') and self.instance.description:
-                pass  # CKEditor принимает HTML напрямую
-            
             if hasattr(self.instance, 'customization_data') and self.instance.customization_data:
                 self.fields['successful_projects'].initial = self.instance.customization_data.get('successful_projects')
                 self.fields['specialist_category'].initial = self.instance.customization_data.get('specialist_category', '')
-
-    def clean_description(self):
-        """Разрешаем HTML теги в описании для вставки изображений/видео"""
-        description = self.cleaned_data.get('description', '')
-        if description:
-            pass  # CKEditor уже генерирует HTML
-        return description
