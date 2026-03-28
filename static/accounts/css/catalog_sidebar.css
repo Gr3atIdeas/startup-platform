@@ -84,6 +84,102 @@
   color: #fff;
 }
 
+/* ── Custom Select (Discord-style) ────────── */
+
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 40px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  font-size: 13px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  color: #fff;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.custom-select-trigger:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.custom-select-wrapper.open .custom-select-trigger {
+  border-color: rgba(255, 255, 255, 0.4);
+  border-radius: 10px 10px 0 0;
+}
+
+.custom-select-trigger .cs-arrow {
+  width: 10px;
+  height: 10px;
+  border-right: 1.5px solid rgba(255, 255, 255, 0.6);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.6);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.custom-select-wrapper.open .cs-arrow {
+  transform: rotate(-135deg) translateY(-2px);
+}
+
+.custom-select-options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, rgba(65, 75, 200, 0.98) 0%, rgba(85, 100, 220, 0.97) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  z-index: 50;
+  padding: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.custom-select-wrapper.open .custom-select-options {
+  display: block;
+}
+
+.custom-select-option {
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.custom-select-option:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.custom-select-option.selected {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+/* Hide native select when custom is active */
+.sort-dropdown select.native-hidden {
+  display: none;
+}
+
 /* ── Categories ──────────────────────────── */
 
 .categories-title {
