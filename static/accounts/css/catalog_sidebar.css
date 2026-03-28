@@ -176,7 +176,8 @@
 }
 
 /* Hide native select when custom is active */
-.sort-dropdown select.native-hidden {
+.sort-dropdown select.native-hidden,
+select.native-hidden {
   display: none;
 }
 
@@ -639,6 +640,14 @@
   width: 20px;
   height: 20px;
   color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── Category Tag (card badges) ───────────── */
+
+.category-tag {
+  background: linear-gradient(135deg, rgba(55, 65, 180, 0.9) 0%, rgba(75, 90, 200, 0.85) 100%) !important;
+  color: #fff !important;
+  border-radius: 20px !important;
 }
 
 /* ── Empty State (no results) ─────────────── */
