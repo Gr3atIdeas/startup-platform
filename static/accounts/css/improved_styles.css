@@ -43,13 +43,8 @@ a,
 button,
 input,
 textarea {
-  transition: all var(--transition-speed) ease;
+  transition: color var(--transition-speed) ease, background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
 }
-
-a:hover,
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgb(0 0 0 / 20%);
 }
 
 
