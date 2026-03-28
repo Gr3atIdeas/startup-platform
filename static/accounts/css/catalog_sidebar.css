@@ -581,30 +581,37 @@
   height: 42px;
   border-radius: 10px;
   overflow: hidden;
-  background: #004e9f;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   display: flex;
   align-items: center;
-  padding: 0 4px;
+  padding: 0;
   box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.catalog-search:focus-within {
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .catalog-search-input {
   flex-grow: 1;
-  height: 33px;
+  height: 100%;
   border: none;
-  border-radius: 7px;
+  border-radius: 0;
   padding: 0 15px;
   font-size: 14px;
   box-sizing: border-box;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
-  color: #1e1e1e;
-  background: #fff;
+  color: #fff;
+  background: transparent;
   line-height: 18px;
+  outline: none;
 }
 
 .catalog-search-input::placeholder {
-  color: #cbcbcb;
+  color: rgba(255, 255, 255, 0.4);
   font-size: 14px;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
@@ -614,18 +621,24 @@
 .catalog-search-btn {
   background: none;
   border: none;
-  padding: 0 6px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 42px;
+  height: 100%;
+  transition: background 0.15s ease;
+}
+
+.catalog-search-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .catalog-search-btn svg {
-  width: 22px;
-  height: 22px;
-  color: #fff;
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* ── Empty State (no results) ─────────────── */
