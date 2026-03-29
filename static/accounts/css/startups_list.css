@@ -62,80 +62,7 @@ body {
   gap: 21px;
 }
 
-.catalog-search-wrapper {
-  width: 100%;
-  max-width: 1032px;
-  display: flex;
-  justify-content: center;
-}
-
-.catalog-search {
-  position: relative;
-  width: 100%;
-  height: 42px;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  background: #004e9f;
-  display: flex;
-  align-items: center;
-  padding: 0 4px;
-  box-sizing: border-box;
-}
-
-.catalog-search-input {
-  flex-grow: 1;
-  height: 33px;
-  border: none;
-  border-radius: var(--radius-sm);
-  padding: 0 15px;
-  font-size: 14px;
-  box-sizing: border-box;
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-  color: #1e1e1e;
-  background: #fff;
-  line-height: 18px;
-}
-
-.catalog-search-input::placeholder {
-  color: #cbcbcb;
-  font-size: 14px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-  line-height: 18px;
-}
-
-.catalog-search-btn {
-  position: static;
-  background: none;
-  color: #fff;
-  border: none;
-  width: 28px;
-  height: 27px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-size: 18px;
-  margin-left: 10px;
-  padding: 0;
-  flex-shrink: 0;
-}
-
-.catalog-search-btn svg {
-  width: 18.67px;
-  height: 18px;
-  fill: none;
-  stroke: white;
-  stroke-width: 2;
-}
-
-.catalog-search-btn svg .search-icon-handle {
-  stroke: white;
-  stroke-width: 2;
-}
-
-/* Sidebar styles moved to catalog_sidebar.css */
+/* Search styles in catalog_sidebar.css */
 /* Only startups-specific overrides remain below */
 
 .micro-investment-label-wrapper {
@@ -376,13 +303,6 @@ body {
     justify-content: center;
   }
 
-  .catalog-search {
-    height: 38px;
-  }
-
-  .catalog-search-input {
-    height: 30px;
-  }
 }
 
 @media (width <= 960px) {
@@ -448,24 +368,6 @@ body {
     font-size: 13px;
   }
 
-  .catalog-search {
-    height: 36px;
-  }
-  .catalog-search-input {
-    height: 28px;
-    font-size: 13px;
-  }
-  .catalog-search-input::placeholder {
-    font-size: 13px;
-  }
-  .catalog-search-btn {
-    width: 24px;
-    height: 24px;
-  }
-  .catalog-search-btn svg {
-    width: 16px;
-    height: 16px;
-  }
 }
 
 @media (width <= 400px) {
