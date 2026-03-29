@@ -17,52 +17,53 @@
   <meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
   <meta property="og:url" content="https://greatideas.ru">
   {% endblock %}
-  <!-- Preload критичных шрифтов (до CSS, чтобы устранить FOUT) -->
-  <link rel="preload" href="{% static 'accounts/fonts/Unbounded-VariableFont_wght.ttf' %}" as="font" type="font/ttf" crossorigin>
-  <link rel="preload" href="{% static 'accounts/fonts/Inter/Inter-Variable.ttf' %}" as="font" type="font/ttf" crossorigin>
-  <!-- Preconnect для ускорения загрузки внешних ресурсов -->
+  <!-- Critical inline CSS — renders BEFORE any file downloads -->
+  <style>
+    @font-face{font-family:Unbounded;src:url('{% static "accounts/fonts/Unbounded-VariableFont_wght.ttf" %}') format('truetype-variations');font-weight:200 900;font-display:swap}
+    @font-face{font-family:Inter;src:url('{% static "accounts/fonts/Inter/Inter-Variable.ttf" %}') format('truetype-variations');font-weight:100 900;font-display:swap}
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(180deg,#000 0%,#00346b 25%,#004e9f 48%,#01366d 64%,#020202 100%);color:#fff;min-height:100vh}
+    #main-header{width:100%;padding:20px 0}
+    .header-content-wrapper{max-width:1303px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between}
+    .content{flex:1}
+    @keyframes skeleton-shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}
+    .skeleton-loading [class*="-card"]{overflow:hidden;position:relative}
+    .skeleton-loading [class*="-card"]::after{content:'';position:absolute;inset:0;z-index:20;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.4) 50%,transparent 100%) no-repeat -600px 0/600px 100%,rgba(220,225,240,.95);animation:skeleton-shimmer 1.4s ease-in-out infinite;border-radius:inherit;pointer-events:none;transition:opacity .4s ease}
+    .skeleton-done [class*="-card"]::after{opacity:0}
+  </style>
+
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://storage.yandexcloud.net" crossorigin>
-  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-  <link rel="dns-prefetch" href="https://storage.yandexcloud.net">  
+
   <link rel="shortcut icon" href="{% static 'accounts/images/favicons/favicon.ico' %}">
   <link rel="icon" type="image/png" sizes="32x32" href="{% static 'accounts/images/favicons/favicon-32x32.png' %}">
   <link rel="icon" type="image/png" sizes="16x16" href="{% static 'accounts/images/favicons/favicon-16x16.png' %}">
   <link rel="apple-touch-icon" href="{% static 'accounts/images/favicons/apple-touch-icon.png' %}">
   <link rel="manifest" href="{% static 'accounts/images/favicons/site.webmanifest' %}">
-  
 
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
+  <!-- Render-critical CSS (above the fold) -->
   <link rel="stylesheet" href="{% static 'accounts/css/bootstrap_replacements.css' %}?v={% now 'U' %}">
-
   <link rel="stylesheet" href="{% static 'accounts/css/fonts.css' %}?v={% now 'U' %}">
   <link rel="stylesheet" href="{% static 'accounts/css/global.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/footer.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/contacts.css' %}?v={% now 'U' %}"> 
-  
-  
   <link rel="stylesheet" href="{% static 'accounts/css/header.css' %}?v={% now 'U' %}">
-  
 
-  
+  <!-- Non-critical CSS — load async, apply when ready -->
+  <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/footer.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/contacts.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/notifications.css' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/modal_overlay.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/scroll_arrows.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/image_responsive.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/layout_responsive.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/modern_responsive.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/global_search.css' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" referrerpolicy="no-referrer" media="print" onload="this.media='all'">
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" defer crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-  
-  <link rel="stylesheet" href="{% static 'accounts/css/notifications.css' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/modal_overlay.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/scroll_arrows.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/image_responsive.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/layout_responsive.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/modern_responsive.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="{% static 'accounts/css/global_search.css' %}">
   {% block quill_assets %}{% endblock %}
 
   {% block custom_styles %}{% endblock %}
