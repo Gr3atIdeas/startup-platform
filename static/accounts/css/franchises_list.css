@@ -371,12 +371,13 @@ body {
   border-radius: var(--radius-sm);
   overflow: visible;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .franchise-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: scale(1.03);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  z-index: 2;
 }
 
 .detail-link {
@@ -516,7 +517,7 @@ body {
   top: 92px;
   left: 10px;
   right: 10px;
-  height: 60px;
+  height: 75px;
   display: flex;
   align-items: flex-start;
 }
@@ -662,13 +663,13 @@ body {
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
   font-size: 12px;
-  line-height: 1.24em;
+  line-height: 1.35em;
   letter-spacing: 0.01em;
   color: #000000;
   margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
