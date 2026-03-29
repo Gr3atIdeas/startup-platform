@@ -1,38 +1,50 @@
 """Helpers for pinned catalog items and ad placements."""
+import logging
+
 from django.db import models
 from django.utils import timezone
+
+logger = logging.getLogger(__name__)
 
 
 def get_pinned_entities(entity_type, model_class, pk_field):
     """Return ordered list of pinned entity objects for a catalog type."""
-    from accounts.models import PinnedCatalogItem
+    try:
+        from accounts.models import PinnedCatalogItem
 
-    pins = list(
-        PinnedCatalogItem.objects.filter(
-            entity_type=entity_type, is_active=True
-        ).order_by("position").values_list("entity_id", flat=True)
-    )
-    if not pins:
+        pins = list(
+            PinnedCatalogItem.objects.filter(
+                entity_type=entity_type, is_active=True
+            ).order_by("position").values_list("entity_id", flat=True)
+        )
+        if not pins:
+            return []
+
+        entities = model_class.objects.filter(
+            **{f"{pk_field}__in": pins, "status": "approved"}
+        )
+        entity_map = {getattr(e, pk_field): e for e in entities}
+        return [entity_map[eid] for eid in pins if eid in entity_map]
+    except Exception:
+        logger.debug("pinned_catalog_items table not ready, skipping")
         return []
-
-    entities = model_class.objects.filter(
-        **{f"{pk_field}__in": pins, "status": "approved"}
-    )
-    entity_map = {getattr(e, pk_field): e for e in entities}
-    return [entity_map[eid] for eid in pins if eid in entity_map]
 
 
 def get_active_ads(location):
     """Return list of ad dicts for a given location."""
-    from accounts.models import AdPlacement
+    try:
+        from accounts.models import AdPlacement
 
-    today = timezone.now().date()
-    placements = (
-        AdPlacement.objects.filter(location=location, is_active=True)
-        .filter(models.Q(start_date__isnull=True) | models.Q(start_date__lte=today))
-        .filter(models.Q(end_date__isnull=True) | models.Q(end_date__gte=today))
-        .order_by("sort_order")
-    )
+        today = timezone.now().date()
+        placements = (
+            AdPlacement.objects.filter(location=location, is_active=True)
+            .filter(models.Q(start_date__isnull=True) | models.Q(start_date__lte=today))
+            .filter(models.Q(end_date__isnull=True) | models.Q(end_date__gte=today))
+            .order_by("sort_order")
+        )
+    except Exception:
+        logger.debug("ad_placements table not ready, skipping")
+        return []
 
     ads = []
     for p in placements:
