@@ -682,6 +682,25 @@
       });
     }
   })();
+
+  // Skeleton loading — remove shimmer once images are loaded
+  document.querySelectorAll('.skeleton-loading').forEach(function(grid) {
+    var imgs = grid.querySelectorAll('img[loading="lazy"]');
+    if (!imgs.length) { grid.classList.remove('skeleton-loading'); return; }
+    var loaded = 0;
+    var total = imgs.length;
+    function check() {
+      loaded++;
+      if (loaded >= Math.min(total, 6)) grid.classList.remove('skeleton-loading');
+    }
+    imgs.forEach(function(img) {
+      if (img.complete) { check(); return; }
+      img.addEventListener('load', check);
+      img.addEventListener('error', check);
+    });
+    // Fallback: remove skeleton after 3s max
+    setTimeout(function() { grid.classList.remove('skeleton-loading'); }, 3000);
+  });
   </script>
 </body>
 </html>

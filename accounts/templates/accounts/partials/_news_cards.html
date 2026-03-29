@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="news-grid">
+<div class="news-grid skeleton-loading">
   {% for article in articles %}
     {% with img_url=article.get_image_url %}
     <article class="news-card news-card--{{ article.card_format }}">
