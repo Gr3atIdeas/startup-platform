@@ -360,6 +360,7 @@ input:checked + .slider::before {
   grid-template-columns: repeat(3, 1fr);
   grid-auto-flow: dense;
   gap: 20px;
+  margin-top: 20px;
   margin-bottom: 40px;
 }
 
@@ -368,8 +369,11 @@ input:checked + .slider::before {
 .news-card {
   position: relative;
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .news-card > a.news-card__link {
@@ -388,8 +392,9 @@ input:checked + .slider::before {
 }
 
 .news-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 28px rgb(0 0 0 / 18%);
+  transform: scale(1.02);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  z-index: 2;
 }
 
 /* ── Featured: full width, image left + text right ── */
