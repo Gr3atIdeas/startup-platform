@@ -93,11 +93,11 @@
 }
 
 .header-search-input {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: var(--radius-sm);
   outline: none;
-  color: #fff;
+  color: #1e1e1e;
   font-size: 13px;
   font-family: Inter, sans-serif;
   font-weight: 400;
@@ -111,16 +111,16 @@
 .header-search-bar.search-open .header-search-input {
   width: 200px;
   opacity: 1;
-  padding: 7px 14px;
+  padding: 8px 14px;
   margin-right: 6px;
 }
 
 .header-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: #999;
 }
 
 .header-search-input:focus {
-  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.4);
 }
 
 .header-nav {

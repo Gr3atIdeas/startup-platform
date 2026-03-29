@@ -437,7 +437,7 @@ body {
   align-items: center;
   gap: 12px;
   position: absolute;
-  top: 10px;
+  top: 3%;
   left: 10px;
   right: 10px;
   height: 35px;
@@ -448,7 +448,7 @@ body {
   display: flex;
   align-items: center;
   position: absolute;
-  top: 55px;
+  top: 16.5%;
   left: 10px;
   right: 10px;
   height: 27px;
@@ -456,7 +456,7 @@ body {
 
 .specialist-description-row {
   position: absolute;
-  top: 92px;
+  top: 27.7%;
   left: 10px;
   right: 10px;
   height: 75px;
@@ -469,7 +469,7 @@ body {
   flex-direction: column;
   gap: 10px;
   position: absolute;
-  top: 162px;
+  top: 49%;
   left: 10px;
   right: 10px;
   height: 60px;
@@ -478,10 +478,10 @@ body {
 
 .specialist-progress-container {
   position: absolute;
-  bottom: 50px;
+  bottom: 10%;
   left: 10px;
   right: 10px;
-  width: 308px;
+  width: auto;
   height: 51px;
 }
 
