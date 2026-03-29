@@ -21,12 +21,16 @@ git fetch --depth=1 origin main -q
 echo "Applying changes..."
 git reset --hard origin/main -q
 
-# Сбор статики (только изменённые файлы благодаря кэшу Django)
+# Устанавливаем новые зависимости ПЕРЕД миграциями
+echo "Installing Python dependencies..."
+pip install -q -r requirements.txt 2>/dev/null || true
+
+# Сбор статики
 echo "Collecting static files..."
 python manage.py collectstatic --noinput -v 0
 
-# Миграции
-echo "Running migrations..."
+# Django миграции
+echo "Running Django migrations..."
 python manage.py migrate --noinput
 
 # SQL-миграции (идемпотентные)
@@ -47,10 +51,6 @@ print('    OK')
 " || echo "    WARNING: $sqlfile failed (may already be applied)"
     done
 fi
-
-# Устанавливаем новые зависимости если requirements изменились
-echo "Checking Python dependencies..."
-pip install -q -r requirements.txt 2>/dev/null || true
 
 echo "=== Update completed! ==="
 echo ""
