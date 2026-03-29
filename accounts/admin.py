@@ -492,7 +492,8 @@ class NewsCategoriesAdmin(admin.ModelAdmin):
 
 @admin.register(PinnedCatalogItem)
 class PinnedCatalogItemAdmin(admin.ModelAdmin):
-    list_display = ("position", "entity_type", "entity_id", "entity_title_display", "is_active", "updated_at")
+    list_display = ("id", "position", "entity_type", "entity_id", "entity_title_display", "is_active", "updated_at")
+    list_display_links = ("id",)
     list_filter = ("entity_type", "is_active")
     list_editable = ("position", "is_active")
     ordering = ("entity_type", "position")
