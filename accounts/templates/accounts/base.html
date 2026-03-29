@@ -677,10 +677,8 @@
       }
     });
 
-    // Highlight Catalog dropdown when on any catalog page
-    var catalogPrefixes = ['/startups/', '/franchises/', '/agencies/', '/specialists/'];
-    var onCatalog = catalogPrefixes.some(function(p) { return path.indexOf(p) === 0; });
-    if (onCatalog) {
+    // Highlight Catalog dropdown when on any catalog/detail page
+    if (/^\/(startups|franchises|agencies|specialists)(\/|$)/.test(path)) {
       document.querySelectorAll('.catalog-dropdown-button').forEach(function(btn) {
         btn.classList.add('active');
       });

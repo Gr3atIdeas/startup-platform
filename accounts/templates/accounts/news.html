@@ -18,6 +18,7 @@
 
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/news.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/catalog_sidebar.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -57,11 +58,16 @@
 
       <a href="{% url 'suggest_news' %}" class="suggest-news-btn mobile-suggest-btn">Предложить новость</a>
 
-      <div class="search-bar-container">
-        <input type="text" placeholder="Поиск по новостям" class="search-input" value="{{ search_query|default_if_none:'' }}">
-        <button class="search-button">
-          <img src="{% static 'accounts/images/search.svg' %}" alt="Поиск">
-        </button>
+      <div class="catalog-header-bar">
+        <h1 class="catalog-header-title">Новости</h1>
+        <div class="catalog-header-right">
+          <div class="catalog-header-search">
+            <input type="text" class="search-input catalog-search-input" placeholder="Поиск..." value="{{ search_query|default_if_none:'' }}">
+          </div>
+          <button type="button" class="catalog-search-btn" title="Поиск">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+        </div>
       </div>
 
       <div class="popup-overlay modal-overlay" id="newsPopup" aria-hidden="true" role="dialog">
@@ -212,6 +218,26 @@
   document.getElementById('newsPopup').addEventListener('click', function(e) {
     if (e.target === this) closePopup();
   });
+</script>
+<script>
+  (function() {
+    var searchBtn = document.querySelector('.catalog-search-btn');
+    var searchWrap = document.querySelector('.catalog-header-search');
+    var searchInput = document.querySelector('.catalog-search-input');
+    if (searchBtn && searchWrap) {
+      searchBtn.addEventListener('click', function() {
+        if (!searchWrap.classList.contains('open')) {
+          searchWrap.classList.add('open');
+          setTimeout(function() { if (searchInput) searchInput.focus(); }, 350);
+        } else if (searchInput && !searchInput.value.trim()) {
+          searchWrap.classList.remove('open');
+        }
+      });
+      if (searchInput && searchInput.value.trim()) {
+        searchWrap.classList.add('open');
+      }
+    }
+  })();
 </script>
 <script src="{% static 'accounts/js/quill_init.js' %}"></script>
 {% endblock %}
