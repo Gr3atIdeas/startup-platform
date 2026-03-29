@@ -1,3 +1,5 @@
+import copy
+
 from django import forms
 from .models import Comments, Directions, Roles, Startups, StartupStages, Users, ChatConversations, TransactionTypes, UserVotes, SupportTicket, Franchises, Agencies, Specialists
 from .utils import get_planet_urls
@@ -101,6 +103,21 @@ class BaseEntityFormMixin:
     )
     agree_rules = forms.BooleanField(label="Согласен с правилами *", required=True)
     agree_data_processing = forms.BooleanField(label="Согласен с обработкой данных *", required=True)
+
+    # Fields declared in this mixin (not picked up by Django's DeclarativeFieldsMetaclass
+    # because this class doesn't inherit from forms.Form)
+    _mixin_field_names = [
+        'logo', 'creatives', 'proofs', 'video', 'catalog_card_image',
+        'short_description', 'terms', 'planet_image',
+        'agree_rules', 'agree_data_processing',
+    ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name in self._mixin_field_names:
+            field = getattr(type(self), name, None)
+            if isinstance(field, forms.Field):
+                self.fields[name] = copy.deepcopy(field)
 
     def init_planet_choices(self):
         """Initialize planet_image choices. Call from __init__."""
