@@ -1,13 +1,9 @@
 
 
 .site-footer {
-  width: 100vw;
+  width: 100%;
   min-height: 660px;
   position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
   background: linear-gradient(180deg, #011d39 0%, black 100%);
   overflow: hidden;
   display: flex;

@@ -8,6 +8,28 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    // Toggle search bar open/close
+    const searchBar = headerSearchInput.closest('.header-search-bar');
+    const searchToggle = document.querySelector('.header-search-toggle');
+    if (searchToggle && searchBar) {
+        searchToggle.addEventListener('click', function() {
+            if (!searchBar.classList.contains('search-open')) {
+                searchBar.classList.add('search-open');
+                setTimeout(function() { headerSearchInput.focus(); }, 300);
+            } else if (!headerSearchInput.value.trim()) {
+                searchBar.classList.remove('search-open');
+            }
+        });
+        // Close on click outside
+        document.addEventListener('click', function(e) {
+            if (searchBar.classList.contains('search-open') &&
+                !searchBar.contains(e.target) &&
+                !headerSearchInput.value.trim()) {
+                searchBar.classList.remove('search-open');
+            }
+        });
+    }
+
 
     let searchDropdown = document.querySelector('.global-search-dropdown');
     if (!searchDropdown) {

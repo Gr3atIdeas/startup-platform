@@ -147,9 +147,11 @@
         </button>
         <div class="burger-overlay"></div>
         <div class="header-search-bar">
-            <img src="{% static 'accounts/images/search.svg' %}" alt="Search" class="header-search-icon-img">
             <input type="text" placeholder="Поиск" class="header-search-input">
-      </div>
+            <button type="button" class="header-search-toggle" title="Поиск" aria-label="Поиск">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </button>
+        </div>
       <nav class="nav-menu">
             <div class="header-nav-links">
                 {% if not user.is_authenticated %}
