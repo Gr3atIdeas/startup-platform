@@ -453,8 +453,10 @@ document.addEventListener('DOMContentLoaded', function () {
       requiredSelectors.push("#id_planet_image")
     }
     requiredSelectors.forEach(function (sel) {
-      var el = document.querySelector(sel)
+      var el = startupForm.querySelector(sel) || document.querySelector(sel)
       if (!el) { console.log('[Validate] Field not found:', sel); return }
+      // Skip non-form elements (e.g. <meta name="description">)
+      if (!('value' in el)) { console.log('[Validate] Skipping non-form element:', sel, el.tagName); return }
       clearFieldError(el)
       var val = (el.value || '').toString().trim()
       if (!val) {
