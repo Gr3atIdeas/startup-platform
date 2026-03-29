@@ -665,17 +665,25 @@
   <script>
   (function() {
     var path = location.pathname;
-    document.querySelectorAll('.header-nav-links .header-nav-link').forEach(function(link) {
-      if (!link.href) return;
-      var href = new URL(link.href).pathname;
-      if (href === '/' ? path === '/' : path.indexOf(href) === 0) {
+
+    // Highlight regular nav links
+    document.querySelectorAll('.header-nav-links a.header-nav-link[href]').forEach(function(link) {
+      var href = link.getAttribute('href');
+      if (!href) return;
+      if (href === '/') {
+        if (path === '/') link.classList.add('active');
+      } else if (path.indexOf(href) === 0) {
         link.classList.add('active');
       }
     });
-    var catalogPaths = ['/startups/', '/franchises/', '/agencies/', '/specialists/'];
-    if (catalogPaths.some(function(p) { return path.indexOf(p) === 0; })) {
-      var btn = document.querySelector('.catalog-dropdown-button');
-      if (btn) btn.classList.add('active');
+
+    // Highlight Catalog dropdown when on any catalog page
+    var catalogPrefixes = ['/startups/', '/franchises/', '/agencies/', '/specialists/'];
+    var onCatalog = catalogPrefixes.some(function(p) { return path.indexOf(p) === 0; });
+    if (onCatalog) {
+      document.querySelectorAll('.catalog-dropdown-button').forEach(function(btn) {
+        btn.classList.add('active');
+      });
     }
   })();
   </script>

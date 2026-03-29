@@ -90,8 +90,10 @@
       
       <div class="catalog-header-bar">
         <h1 class="catalog-header-title">Каталог агентств</h1>
-        <div class="catalog-header-search">
-          <input type="text" class="catalog-search-input" placeholder="Поиск..." value="{{ search_query|default_if_none:'' }}">
+        <div class="catalog-header-right">
+          <div class="catalog-header-search">
+            <input type="text" class="catalog-search-input" placeholder="Поиск..." value="{{ search_query|default_if_none:'' }}">
+          </div>
           <button type="button" class="catalog-search-btn" title="Поиск">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </button>
