@@ -4,6 +4,12 @@
 {% load file_tags %}
 {% load accounts_extras %}
 
+{% block quill_assets %}
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'accounts/css/quill_theme.css' %}?v={% now 'U' %}">
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+{% endblock %}
+
 {% block title %}Редактирование франшизы{% endblock %}
 
 {% block content %}
