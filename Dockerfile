@@ -31,8 +31,19 @@ COPY health_check.py .
 COPY --from=frontend-builder /app/static/dist ./static/dist/
 
 COPY static/accounts/ ./static/accounts/
+COPY sql/ ./sql/
 COPY entrypoint.sh .
 COPY update.sh .
+
+# Download GeoLite2-City database for GeoIP resolution
+RUN mkdir -p /app/geoip && \
+    apt-get update && apt-get install -y --no-install-recommends curl && \
+    curl -sSL -o /app/geoip/GeoLite2-City.mmdb \
+      "https://git.io/GeoLite2-City.mmdb" || \
+    curl -sSL -o /app/geoip/GeoLite2-City.mmdb \
+      "https://github.com/P3TERX/GeoLite.mmdb/releases/latest/download/GeoLite2-City.mmdb" || \
+    echo "WARNING: GeoLite2 download failed, geo features will be disabled" && \
+    apt-get purge -y curl && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
 RUN chmod +x health_check.py entrypoint.sh update.sh \
     && mkdir -p /app/news_collector/data \

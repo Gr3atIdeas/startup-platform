@@ -214,4 +214,6 @@ urlpatterns = [
     path("my-analytics/", views.my_analytics, name="my_analytics"),
     path("api/track/pageview/", views.track_page_view, name="track_page_view"),
     path("api/track/click/", views.track_click, name="track_click"),
+    path("api/track/impression/", views.track_impression, name="track_impression"),
+    path("api/track/engagement/", views.track_engagement, name="track_engagement"),
 ]

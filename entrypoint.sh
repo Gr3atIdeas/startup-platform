@@ -20,6 +20,25 @@ else
     # Применяем миграции если есть
     python manage.py migrate --noinput || true
 
+    # Применяем SQL-миграции из sql/ (идемпотентные, можно запускать повторно)
+    if [ -d "sql" ] && [ -n "$DATABASE_URL" ]; then
+        echo "Applying SQL migrations..."
+        for sqlfile in sql/*.sql; do
+            [ -f "$sqlfile" ] || continue
+            echo "  Running $sqlfile..."
+            python -c "
+import dj_database_url, psycopg2, os
+db = dj_database_url.parse(os.environ['DATABASE_URL'])
+conn = psycopg2.connect(dbname=db['NAME'], user=db['USER'], password=db['PASSWORD'], host=db['HOST'], port=db['PORT'])
+conn.autocommit = True
+with open('$sqlfile') as f:
+    conn.cursor().execute(f.read())
+conn.close()
+print('    OK')
+" || echo "    WARNING: $sqlfile failed (may already be applied)"
+        done
+    fi
+
     # Исправляем дубликаты в таблице agencies (критически важно!)
     echo "Fixing agencies duplicates..."
     python manage.py fix_agencies_duplicates || true

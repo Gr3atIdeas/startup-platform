@@ -29,6 +29,29 @@ python manage.py collectstatic --noinput -v 0
 echo "Running migrations..."
 python manage.py migrate --noinput
 
+# SQL-миграции (идемпотентные)
+if [ -d "sql" ] && [ -n "$DATABASE_URL" ]; then
+    echo "Applying SQL migrations..."
+    for sqlfile in sql/*.sql; do
+        [ -f "$sqlfile" ] || continue
+        echo "  Running $sqlfile..."
+        python -c "
+import dj_database_url, psycopg2, os
+db = dj_database_url.parse(os.environ['DATABASE_URL'])
+conn = psycopg2.connect(dbname=db['NAME'], user=db['USER'], password=db['PASSWORD'], host=db['HOST'], port=db['PORT'])
+conn.autocommit = True
+with open('$sqlfile') as f:
+    conn.cursor().execute(f.read())
+conn.close()
+print('    OK')
+" || echo "    WARNING: $sqlfile failed (may already be applied)"
+    done
+fi
+
+# Устанавливаем новые зависимости если requirements изменились
+echo "Checking Python dependencies..."
+pip install -q -r requirements.txt 2>/dev/null || true
+
 echo "=== Update completed! ==="
 echo ""
 echo "NOTE: Python code changes require Gunicorn restart."

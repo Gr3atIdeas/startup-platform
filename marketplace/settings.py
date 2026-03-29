@@ -188,6 +188,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static/accounts",
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+GEOIP_PATH = BASE_DIR / "geoip"
 VITE_APP_DIR = BASE_DIR / "static/src"
 DJANGO_VITE = {
     "default": {

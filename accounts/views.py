@@ -10930,6 +10930,42 @@ def my_analytics(request):
     total_clicks = sum(
         sum(e['stats']['total_clicks'].values()) for e in approved_entities
     )
+    total_impressions = sum(e['stats']['total_impressions'] for e in approved_entities)
+    total_ctr = round(total_clicks / total_views * 100, 1) if total_views > 0 else 0
+
+    # Aggregate engagement across approved entities
+    agg_time_sum = 0
+    agg_eng_count = 0
+    for e in approved_entities:
+        s = e['stats']
+        agg_time_sum += s['avg_time_on_page'] * max(s.get('engagement_count', 1), 1) if s['avg_time_on_page'] > 0 else 0
+        agg_eng_count += 1 if s['avg_time_on_page'] > 0 else 0
+    avg_time_on_page = int(agg_time_sum / agg_eng_count) if agg_eng_count > 0 else 0
+    avg_scroll_depth = 0
+    if approved_entities:
+        scroll_vals = [e['stats']['avg_scroll_depth'] for e in approved_entities if e['stats']['avg_scroll_depth'] > 0]
+        avg_scroll_depth = int(sum(scroll_vals) / len(scroll_vals)) if scroll_vals else 0
+
+    # Aggregate sources
+    agg_sources = {"direct": 0, "search": 0, "social": 0, "internal": 0, "other": 0}
+    for e in approved_entities:
+        for k, v in e['stats']['sources'].items():
+            agg_sources[k] += v
+
+    # Aggregate period comparison
+    comp_views = comp_clicks = comp_impressions = 0
+    comp_count = 0
+    for e in approved_entities:
+        c = e['stats']['comparison']
+        comp_views += c['views']
+        comp_clicks += c['clicks']
+        comp_impressions += c['impressions']
+        comp_count += 1
+    if comp_count > 0:
+        comp_views = round(comp_views / comp_count, 1)
+        comp_clicks = round(comp_clicks / comp_count, 1)
+        comp_impressions = round(comp_impressions / comp_count, 1)
+    agg_comparison = {"views": comp_views, "clicks": comp_clicks, "impressions": comp_impressions}
 
     # Filter entities for display based on status_filter
     if status_filter == 'all':
@@ -10957,6 +10993,12 @@ def my_analytics(request):
         'total_views': total_views,
         'total_unique': total_unique,
         'total_clicks': total_clicks,
+        'total_impressions': total_impressions,
+        'total_ctr': total_ctr,
+        'avg_time_on_page': avg_time_on_page,
+        'avg_scroll_depth': avg_scroll_depth,
+        'agg_sources': json.dumps(agg_sources),
+        'agg_comparison': agg_comparison,
         'selected_type': selected_type,
         'selected_id': selected_id,
         'selected_stats': selected_stats,
@@ -11001,6 +11043,47 @@ def track_click(request):
         if entity_type not in valid_types or button_type not in valid_buttons:
             return JsonResponse({'status': 'error'}, status=400)
         record_click(entity_type, int(entity_id), button_type, request)
+        return JsonResponse({'status': 'ok'})
+    except Exception:
+        return JsonResponse({'status': 'error'}, status=500)
+
+
+@csrf_exempt
+@require_POST
+def track_impression(request):
+    """Beacon endpoint for catalog impression tracking (batch)."""
+    try:
+        import json
+        from accounts.analytics import record_impression
+        data = json.loads(request.body)
+        items = data.get('items', [])
+        valid_types = ('startup', 'franchise', 'agency', 'specialist')
+        for item in items[:50]:
+            et = item.get('entity_type', '')
+            eid = item.get('entity_id', 0)
+            if et in valid_types and eid:
+                record_impression(et, int(eid), request)
+        return JsonResponse({'status': 'ok'})
+    except Exception:
+        return JsonResponse({'status': 'error'}, status=500)
+
+
+@csrf_exempt
+@require_POST
+def track_engagement(request):
+    """Beacon endpoint for engagement tracking (time on page + scroll depth)."""
+    try:
+        import json
+        from accounts.analytics import record_engagement
+        data = json.loads(request.body)
+        entity_type = data.get('entity_type', '')
+        entity_id = data.get('entity_id', 0)
+        time_on_page = data.get('time_on_page', 0)
+        scroll_depth = data.get('scroll_depth', 0)
+        valid_types = ('startup', 'franchise', 'agency', 'specialist')
+        if entity_type not in valid_types:
+            return JsonResponse({'status': 'error'}, status=400)
+        record_engagement(entity_type, int(entity_id), time_on_page, scroll_depth, request)
         return JsonResponse({'status': 'ok'})
     except Exception:
         return JsonResponse({'status': 'error'}, status=500)

@@ -10,6 +10,14 @@ COPY marketplace/ ./marketplace/
 COPY accounts/ ./accounts/
 COPY manage.py .
 
+# Download GeoLite2-City database for geo resolution task
+RUN mkdir -p /app/geoip && \
+    apt-get update && apt-get install -y --no-install-recommends curl && \
+    curl -sSL -o /app/geoip/GeoLite2-City.mmdb \
+      "https://github.com/P3TERX/GeoLite.mmdb/releases/latest/download/GeoLite2-City.mmdb" || \
+    echo "WARNING: GeoLite2 download failed" && \
+    apt-get purge -y curl && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
+
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
 

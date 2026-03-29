@@ -8,42 +8,87 @@
 
 {% block content %}
 <style>
+/* ── Layout ── */
 .analytics-dashboard { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
-.analytics-title { color: #fff; font-family: Unbounded, sans-serif; font-size: 28px; font-weight: 600; margin-bottom: 8px; }
-.analytics-period { color: rgba(255,255,255,0.4); font-size: 13px; margin-bottom: 28px; font-family: Inter, sans-serif; }
+.analytics-title { color: #fff; font-family: Unbounded, sans-serif; font-size: 28px; font-weight: 600; margin-bottom: 4px; }
+.analytics-period { color: rgba(255,255,255,0.35); font-size: 13px; margin-bottom: 28px; font-family: Inter, sans-serif; }
 
-/* Summary cards */
-.analytics-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
-.analytics-card { background: rgba(0, 8, 25, 0.82); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-lg); padding: 24px; text-align: center; transition: border-color 0.2s; }
+/* ── Summary grid (2 rows x 3) ── */
+.analytics-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+.analytics-card { background: rgba(0,8,25,0.82); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-lg); padding: 22px; text-align: center; transition: border-color 0.2s; position: relative; }
 .analytics-card:hover { border-color: rgba(255,255,255,0.12); }
-.analytics-card__value { font-size: 36px; font-weight: 700; color: #FFD700; font-family: Unbounded, sans-serif; }
-.analytics-card__label { color: rgba(255,255,255,0.6); margin-top: 8px; font-size: 14px; font-family: Inter, sans-serif; }
+.analytics-card__value { font-size: 32px; font-weight: 700; color: #FFD700; font-family: Unbounded, sans-serif; }
+.analytics-card__label { color: rgba(255,255,255,0.5); margin-top: 6px; font-size: 13px; font-family: Inter, sans-serif; }
 .analytics-card__value--green { color: #4CAF50; }
 .analytics-card__value--blue { color: #2196F3; }
+.analytics-card__value--cyan { color: #00BCD4; }
+.analytics-card__value--orange { color: #FF9800; }
+.analytics-card__value--purple { color: #AB47BC; }
+.analytics-card__change { position: absolute; top: 10px; right: 12px; font-size: 11px; font-family: Inter, sans-serif; padding: 2px 6px; border-radius: var(--radius-xs); }
+.analytics-card__change--up { color: #4CAF50; background: rgba(76,175,80,0.15); }
+.analytics-card__change--down { color: #f44336; background: rgba(244,67,54,0.15); }
+.analytics-card__change--neutral { color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); }
 
-/* Selected entity detail */
-.analytics-detail { background: rgba(0, 8, 25, 0.82); border: 1px solid rgba(255,215,0,0.2); border-radius: var(--radius-lg); padding: 28px; margin-bottom: 32px; }
+/* ── Sources + Engagement row ── */
+.analytics-insights { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+.analytics-panel { background: rgba(0,8,25,0.82); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-lg); padding: 22px; }
+.analytics-panel__title { color: rgba(255,255,255,0.5); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; font-family: Inter, sans-serif; }
+
+/* Source bars */
+.source-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.source-row:last-child { margin-bottom: 0; }
+.source-label { color: rgba(255,255,255,0.6); font-size: 13px; min-width: 90px; font-family: Inter, sans-serif; }
+.source-bar-bg { flex: 1; height: 20px; background: rgba(255,255,255,0.06); border-radius: var(--radius-xs); overflow: hidden; }
+.source-bar-fill { height: 100%; border-radius: var(--radius-xs); transition: width 0.5s ease; }
+.source-bar-fill--search { background: #4CAF50; }
+.source-bar-fill--social { background: #2196F3; }
+.source-bar-fill--direct { background: #FF9800; }
+.source-bar-fill--internal { background: #AB47BC; }
+.source-bar-fill--other { background: rgba(255,255,255,0.2); }
+.source-count { color: rgba(255,255,255,0.5); font-size: 12px; min-width: 35px; text-align: right; font-family: Inter, sans-serif; }
+
+/* Engagement meters */
+.engagement-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.engagement-item { text-align: center; }
+.engagement-item__value { font-size: 28px; font-weight: 700; font-family: Unbounded, sans-serif; color: #fff; }
+.engagement-item__label { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 4px; font-family: Inter, sans-serif; }
+.engagement-item__bar { margin-top: 8px; height: 6px; background: rgba(255,255,255,0.08); border-radius: var(--radius-full); overflow: hidden; }
+.engagement-item__bar-fill { height: 100%; border-radius: var(--radius-full); background: linear-gradient(90deg, #00BCD4, #4CAF50); transition: width 0.5s ease; }
+
+/* ── Selected entity detail ── */
+.analytics-detail { background: rgba(0,8,25,0.82); border: 1px solid rgba(255,215,0,0.2); border-radius: var(--radius-lg); padding: 28px; margin-bottom: 28px; }
 .analytics-detail__header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
 .analytics-detail__name { color: #fff; font-size: 20px; font-weight: 600; font-family: Unbounded, sans-serif; }
 .analytics-detail__badge { font-size: 12px; color: #FFD700; background: rgba(255,215,0,0.15); padding: 4px 12px; border-radius: var(--radius-xs); text-transform: uppercase; letter-spacing: 0.5px; font-family: Inter, sans-serif; }
 .analytics-detail__close { margin-left: auto; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 22px; line-height: 1; padding: 4px 8px; border-radius: var(--radius-xs); transition: color 0.2s, background 0.2s; }
 .analytics-detail__close:hover { color: #fff; background: rgba(255,255,255,0.1); text-decoration: none; }
+
+.analytics-detail-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.analytics-detail-stat { background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 14px; text-align: center; }
+.analytics-detail-stat__value { font-size: 24px; font-weight: 700; font-family: Unbounded, sans-serif; }
+.analytics-detail-stat__label { color: rgba(255,255,255,0.5); margin-top: 4px; font-size: 11px; font-family: Inter, sans-serif; }
+
 .analytics-chart-container { background: rgba(0,0,0,0.3); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px; height: 300px; position: relative; }
 
-/* Detail summary mini-cards */
-.analytics-detail-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-.analytics-detail-stat { background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 16px; text-align: center; }
-.analytics-detail-stat__value { font-size: 28px; font-weight: 700; font-family: Unbounded, sans-serif; }
-.analytics-detail-stat__label { color: rgba(255,255,255,0.5); margin-top: 4px; font-size: 12px; font-family: Inter, sans-serif; }
+/* Detail sub-panels */
+.analytics-detail-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+.analytics-detail-panel { background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 16px; }
+.analytics-detail-panel__title { color: rgba(255,255,255,0.4); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; font-family: Inter, sans-serif; }
 
 /* Click breakdown */
-.analytics-clicks-title { color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-family: Inter, sans-serif; }
-.analytics-clicks-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
-.analytics-click-item { background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 16px; text-align: center; }
-.analytics-click-item__value { font-size: 24px; font-weight: 700; color: #2196F3; font-family: Unbounded, sans-serif; }
-.analytics-click-item__label { color: rgba(255,255,255,0.5); margin-top: 4px; font-size: 13px; font-family: Inter, sans-serif; }
+.analytics-clicks-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.analytics-click-item { background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 14px; text-align: center; }
+.analytics-click-item__value { font-size: 22px; font-weight: 700; color: #2196F3; font-family: Unbounded, sans-serif; }
+.analytics-click-item__label { color: rgba(255,255,255,0.5); margin-top: 4px; font-size: 12px; font-family: Inter, sans-serif; }
 
-/* Status filter */
+/* Geo table */
+.geo-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.geo-row:last-child { border-bottom: none; }
+.geo-flag { font-size: 16px; }
+.geo-name { flex: 1; color: rgba(255,255,255,0.7); font-size: 13px; font-family: Inter, sans-serif; }
+.geo-count { color: rgba(255,255,255,0.5); font-size: 13px; font-family: Inter, sans-serif; }
+
+/* ── Status filter ── */
 .analytics-status-filter { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
 .analytics-status-filter a {
   color: rgba(255,255,255,0.6); text-decoration: none; padding: 8px 18px;
@@ -53,7 +98,7 @@
 .analytics-status-filter a:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.1); }
 .analytics-status-filter a.active { color: #FFD700; background: rgba(255,215,0,0.15); }
 
-/* Entity grid */
+/* ── Entity grid ── */
 .analytics-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
 .analytics-subtitle { color: #fff; font-size: 20px; font-weight: 500; margin: 0; font-family: Unbounded, sans-serif; }
 .analytics-entities { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-bottom: 32px; }
@@ -67,18 +112,25 @@
 .analytics-entity__status--pending { color: #ff9800; background: rgba(255,152,0,0.15); }
 .analytics-entity__status--rejected { color: #f44336; background: rgba(244,67,54,0.15); }
 .analytics-entity__title { font-size: 16px; font-weight: 600; margin-bottom: 10px; font-family: Unbounded, sans-serif; }
-.analytics-entity__stats { font-size: 13px; color: rgba(255,255,255,0.5); display: flex; gap: 16px; font-family: Inter, sans-serif; }
+.analytics-entity__stats { font-size: 13px; color: rgba(255,255,255,0.5); display: flex; gap: 14px; font-family: Inter, sans-serif; flex-wrap: wrap; }
 .analytics-entity__stats span { display: flex; align-items: center; gap: 4px; }
 .analytics-empty { color: rgba(255,255,255,0.5); font-size: 16px; text-align: center; padding: 40px 0; font-family: Inter, sans-serif; }
 
+/* ── Responsive ── */
 @media (max-width: 768px) {
-  .analytics-summary { grid-template-columns: 1fr; }
-  .analytics-detail-summary { grid-template-columns: 1fr; }
+  .analytics-summary { grid-template-columns: repeat(2, 1fr); }
+  .analytics-insights { grid-template-columns: 1fr; }
+  .analytics-detail-summary { grid-template-columns: repeat(2, 1fr); }
+  .analytics-detail-panels { grid-template-columns: 1fr; }
   .analytics-clicks-grid { grid-template-columns: repeat(2, 1fr); }
   .analytics-entities { grid-template-columns: 1fr; }
-  .analytics-card__value { font-size: 28px; }
+  .analytics-card__value { font-size: 26px; }
   .analytics-title { font-size: 22px; }
   .analytics-detail { padding: 20px; }
+}
+@media (max-width: 480px) {
+  .analytics-summary { grid-template-columns: 1fr; }
+  .analytics-detail-summary { grid-template-columns: 1fr; }
 }
 </style>
 
@@ -86,23 +138,74 @@
   <h1 class="analytics-title">Аналитика</h1>
   <p class="analytics-period">Данные за последние 90 дней</p>
 
-  <!-- Summary cards (totals from approved entities) -->
+  <!-- ══════ Summary cards ══════ -->
   <div class="analytics-summary">
     <div class="analytics-card">
+      {% if agg_comparison.views != 0 %}
+      <span class="analytics-card__change {% if agg_comparison.views > 0 %}analytics-card__change--up{% elif agg_comparison.views < 0 %}analytics-card__change--down{% else %}analytics-card__change--neutral{% endif %}">
+        {% if agg_comparison.views > 0 %}+{% endif %}{{ agg_comparison.views }}%
+      </span>
+      {% endif %}
       <div class="analytics-card__value">{{ total_views }}</div>
-      <div class="analytics-card__label">Просмотров</div>
+      <div class="analytics-card__label">Просмотров страниц</div>
     </div>
     <div class="analytics-card">
       <div class="analytics-card__value analytics-card__value--green">{{ total_unique }}</div>
       <div class="analytics-card__label">Уникальных посетителей</div>
     </div>
     <div class="analytics-card">
+      {% if agg_comparison.clicks != 0 %}
+      <span class="analytics-card__change {% if agg_comparison.clicks > 0 %}analytics-card__change--up{% elif agg_comparison.clicks < 0 %}analytics-card__change--down{% else %}analytics-card__change--neutral{% endif %}">
+        {% if agg_comparison.clicks > 0 %}+{% endif %}{{ agg_comparison.clicks }}%
+      </span>
+      {% endif %}
       <div class="analytics-card__value analytics-card__value--blue">{{ total_clicks }}</div>
       <div class="analytics-card__label">Кликов по контактам</div>
     </div>
+    <div class="analytics-card">
+      {% if agg_comparison.impressions != 0 %}
+      <span class="analytics-card__change {% if agg_comparison.impressions > 0 %}analytics-card__change--up{% elif agg_comparison.impressions < 0 %}analytics-card__change--down{% else %}analytics-card__change--neutral{% endif %}">
+        {% if agg_comparison.impressions > 0 %}+{% endif %}{{ agg_comparison.impressions }}%
+      </span>
+      {% endif %}
+      <div class="analytics-card__value analytics-card__value--cyan">{{ total_impressions }}</div>
+      <div class="analytics-card__label">Показов в каталоге</div>
+    </div>
+    <div class="analytics-card">
+      <div class="analytics-card__value analytics-card__value--orange">{{ total_ctr }}%</div>
+      <div class="analytics-card__label">Конверсия (просмотры → клики)</div>
+    </div>
+    <div class="analytics-card">
+      <div class="analytics-card__value analytics-card__value--purple" id="avgTimeDisplay">0с</div>
+      <div class="analytics-card__label">Среднее время на странице</div>
+    </div>
   </div>
 
-  <!-- Selected entity detail (ABOVE entity list) -->
+  <!-- ══════ Sources + Engagement ══════ -->
+  <div class="analytics-insights">
+    <div class="analytics-panel">
+      <div class="analytics-panel__title">Источники трафика</div>
+      <div id="sourceBars"></div>
+    </div>
+    <div class="analytics-panel">
+      <div class="analytics-panel__title">Вовлечённость</div>
+      <div class="engagement-grid">
+        <div class="engagement-item">
+          <div class="engagement-item__value" id="engTimeVal">0с</div>
+          <div class="engagement-item__label">Время на странице</div>
+        </div>
+        <div class="engagement-item">
+          <div class="engagement-item__value">{{ avg_scroll_depth }}%</div>
+          <div class="engagement-item__label">Глубина просмотра</div>
+          <div class="engagement-item__bar">
+            <div class="engagement-item__bar-fill" style="width: {{ avg_scroll_depth }}%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ Selected entity detail ══════ -->
   {% if selected_stats and selected_entity %}
   <div class="analytics-detail">
     <div class="analytics-detail__header">
@@ -111,7 +214,7 @@
       <a href="?status={{ status_filter }}" class="analytics-detail__close" title="Закрыть">&times;</a>
     </div>
 
-    <!-- Detail summary -->
+    <!-- Mini summary -->
     <div class="analytics-detail-summary">
       <div class="analytics-detail-stat">
         <div class="analytics-detail-stat__value" style="color: #FFD700;">{{ selected_stats.total_views }}</div>
@@ -122,8 +225,12 @@
         <div class="analytics-detail-stat__label">Уникальных</div>
       </div>
       <div class="analytics-detail-stat">
-        <div class="analytics-detail-stat__value" style="color: #2196F3;">{% widthratio 1 1 0 as zero %}{% with selected_stats.total_clicks as tc %}{{ tc.contact|add:tc.website|add:tc.pitch_deck|add:tc.telegram|add:tc.whatsapp }}{% endwith %}</div>
-        <div class="analytics-detail-stat__label">Всего кликов</div>
+        <div class="analytics-detail-stat__value" style="color: #2196F3;">{{ selected_stats.ctr_views }}%</div>
+        <div class="analytics-detail-stat__label">CTR (клики/просмотры)</div>
+      </div>
+      <div class="analytics-detail-stat">
+        <div class="analytics-detail-stat__value" style="color: #00BCD4;">{{ selected_stats.total_impressions }}</div>
+        <div class="analytics-detail-stat__label">Показов в каталоге</div>
       </div>
     </div>
 
@@ -132,9 +239,8 @@
       <canvas id="viewsChart"></canvas>
     </div>
 
-    <!-- Click breakdown -->
-    <p class="analytics-clicks-title">Клики по типам</p>
-    <div class="analytics-clicks-grid">
+    <!-- Clicks + Geo/Sources side by side -->
+    <div class="analytics-clicks-grid" style="margin-bottom: 14px;">
       <div class="analytics-click-item">
         <div class="analytics-click-item__value">{{ selected_stats.total_clicks.contact }}</div>
         <div class="analytics-click-item__label">Связаться</div>
@@ -156,10 +262,62 @@
         <div class="analytics-click-item__label">Max</div>
       </div>
     </div>
+
+    <div class="analytics-detail-panels">
+      <!-- Geography -->
+      <div class="analytics-detail-panel">
+        <div class="analytics-detail-panel__title">География</div>
+        {% if selected_stats.geo %}
+          {% for g in selected_stats.geo %}
+          <div class="geo-row">
+            <span class="geo-name">{{ g.name }}</span>
+            <span class="geo-count">{{ g.count }}</span>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div style="color: rgba(255,255,255,0.3); font-size: 13px;">Данных пока нет</div>
+        {% endif %}
+      </div>
+
+      <!-- Entity sources + engagement -->
+      <div class="analytics-detail-panel">
+        <div class="analytics-detail-panel__title">Вовлечённость</div>
+        <div class="engagement-grid">
+          <div class="engagement-item">
+            <div class="engagement-item__value" style="font-size: 22px;" id="selTimeVal">0с</div>
+            <div class="engagement-item__label">Время на странице</div>
+          </div>
+          <div class="engagement-item">
+            <div class="engagement-item__value" style="font-size: 22px;">{{ selected_stats.avg_scroll_depth }}%</div>
+            <div class="engagement-item__label">Глубина просмотра</div>
+            <div class="engagement-item__bar">
+              <div class="engagement-item__bar-fill" style="width: {{ selected_stats.avg_scroll_depth }}%;"></div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 16px;">
+          <div class="analytics-detail-panel__title">Период (30д vs пред. 30д)</div>
+          <div style="display:flex; gap:16px; flex-wrap:wrap;">
+            <span style="font-size:13px; font-family:Inter,sans-serif;">
+              Просмотры:
+              <span style="color:{% if selected_stats.comparison.views >= 0 %}#4CAF50{% else %}#f44336{% endif %};">
+                {% if selected_stats.comparison.views > 0 %}+{% endif %}{{ selected_stats.comparison.views }}%
+              </span>
+            </span>
+            <span style="font-size:13px; font-family:Inter,sans-serif;">
+              Клики:
+              <span style="color:{% if selected_stats.comparison.clicks >= 0 %}#4CAF50{% else %}#f44336{% endif %};">
+                {% if selected_stats.comparison.clicks > 0 %}+{% endif %}{{ selected_stats.comparison.clicks }}%
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   {% endif %}
 
-  <!-- Status filter + section header -->
+  <!-- ══════ Status filter + entity list ══════ -->
   <div class="analytics-section-header">
     <h2 class="analytics-subtitle">Мои публикации</h2>
   </div>
@@ -174,7 +332,6 @@
        class="{% if status_filter == 'rejected' %}active{% endif %}">Отклонённые</a>
   </div>
 
-  <!-- Entity grid -->
   <div class="analytics-entities">
     {% for entity in all_entities %}
     <a href="?type={{ entity.type }}&id={{ entity.id }}&status={{ status_filter }}"
@@ -187,9 +344,10 @@
       </div>
       <div class="analytics-entity__title">{{ entity.title }}</div>
       <div class="analytics-entity__stats">
-        <span>&#128065; {{ entity.stats.total_views }}</span>
-        <span>&#128100; {{ entity.stats.unique_views }}</span>
-        <span>&#128070; {% with entity.stats.total_clicks as tc %}{{ tc.contact|add:tc.website|add:tc.pitch_deck|add:tc.telegram|add:tc.whatsapp }}{% endwith %}</span>
+        <span title="Просмотры">&#128065; {{ entity.stats.total_views }}</span>
+        <span title="Уникальные">&#128100; {{ entity.stats.unique_views }}</span>
+        <span title="Клики">&#128070; {% with entity.stats.total_clicks as tc %}{{ tc.contact|add:tc.website|add:tc.pitch_deck|add:tc.telegram|add:tc.whatsapp }}{% endwith %}</span>
+        <span title="Показы в каталоге">&#128196; {{ entity.stats.total_impressions }}</span>
       </div>
     </a>
     {% empty %}
@@ -200,18 +358,54 @@
   </div>
 </div>
 
-{% if selected_stats %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // ── Format time display ──
+    function fmtTime(s) {
+        if (s >= 60) return Math.floor(s/60) + 'м ' + (s%60) + 'с';
+        return s + 'с';
+    }
+    var avgTime = {{ avg_time_on_page|default:0 }};
+    var el1 = document.getElementById('avgTimeDisplay');
+    if (el1) el1.textContent = fmtTime(avgTime);
+    var el2 = document.getElementById('engTimeVal');
+    if (el2) el2.textContent = fmtTime(avgTime);
+    {% if selected_stats %}
+    var selTime = {{ selected_stats.avg_time_on_page|default:0 }};
+    var el3 = document.getElementById('selTimeVal');
+    if (el3) el3.textContent = fmtTime(selTime);
+    {% endif %}
+
+    // ── Source bars ──
+    var sources = {{ agg_sources|safe }};
+    var sourceLabels = {direct: 'Прямой', search: 'Поиск', social: 'Соцсети', internal: 'Внутренний', other: 'Другое'};
+    var sourceColors = {direct: '--orange', search: '--search', social: '--social', internal: '--internal', other: '--other'};
+    var container = document.getElementById('sourceBars');
+    if (container) {
+        var maxVal = Math.max.apply(null, Object.values(sources)) || 1;
+        ['search', 'social', 'direct', 'internal', 'other'].forEach(function(key) {
+            var val = sources[key] || 0;
+            var pct = Math.round(val / maxVal * 100);
+            container.innerHTML +=
+                '<div class="source-row">' +
+                '<span class="source-label">' + sourceLabels[key] + '</span>' +
+                '<div class="source-bar-bg"><div class="source-bar-fill source-bar-fill--' + key + '" style="width:' + pct + '%;"></div></div>' +
+                '<span class="source-count">' + val + '</span></div>';
+        });
+    }
+
+    {% if selected_stats %}
+    // ── Chart.js ──
     var statsData = {{ selected_stats_json|safe }};
     var daily = statsData.daily || [];
     var labels = daily.map(function(d) {
-        var parts = d.date.split('-');
-        return parts[2] + '.' + parts[1];
+        var p = d.date.split('-');
+        return p[2] + '.' + p[1];
     });
     var views = daily.map(function(d) { return d.views; });
     var unique = daily.map(function(d) { return d.unique; });
     var clicks = daily.map(function(d) { return d.clicks; });
+    var impressions = daily.map(function(d) { return d.impressions || 0; });
 
     var ctx = document.getElementById('viewsChart');
     if (ctx && typeof Chart !== 'undefined') {
@@ -221,82 +415,46 @@ document.addEventListener('DOMContentLoaded', function() {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Просмотры',
-                        data: views,
-                        borderColor: '#FFD700',
-                        backgroundColor: 'rgba(255, 215, 0, 0.1)',
-                        fill: true,
-                        tension: 0.3,
-                        pointRadius: 2,
-                        pointHoverRadius: 5
+                        label: 'Просмотры', data: views,
+                        borderColor: '#FFD700', backgroundColor: 'rgba(255,215,0,0.08)',
+                        fill: true, tension: 0.3, pointRadius: 2, pointHoverRadius: 5
                     },
                     {
-                        label: 'Уникальные',
-                        data: unique,
-                        borderColor: '#4CAF50',
-                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                        fill: true,
-                        tension: 0.3,
-                        pointRadius: 2,
-                        pointHoverRadius: 5
+                        label: 'Уникальные', data: unique,
+                        borderColor: '#4CAF50', backgroundColor: 'rgba(76,175,80,0.08)',
+                        fill: true, tension: 0.3, pointRadius: 2, pointHoverRadius: 5
                     },
                     {
-                        label: 'Клики',
-                        data: clicks,
-                        borderColor: '#2196F3',
-                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
-                        fill: true,
-                        tension: 0.3,
-                        pointRadius: 2,
-                        pointHoverRadius: 5
+                        label: 'Клики', data: clicks,
+                        borderColor: '#2196F3', backgroundColor: 'rgba(33,150,243,0.08)',
+                        fill: true, tension: 0.3, pointRadius: 2, pointHoverRadius: 5
+                    },
+                    {
+                        label: 'Показы', data: impressions,
+                        borderColor: '#00BCD4', backgroundColor: 'rgba(0,188,212,0.08)',
+                        fill: true, tension: 0.3, pointRadius: 2, pointHoverRadius: 5, hidden: true
                     }
                 ]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
+                responsive: true, maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
                 plugins: {
-                    legend: {
-                        labels: { color: '#fff', font: { family: 'Inter, sans-serif' } }
-                    },
+                    legend: { labels: { color: 'rgba(255,255,255,0.7)', font: { family: 'Inter, sans-serif', size: 12 } } },
                     tooltip: {
-                        backgroundColor: 'rgba(0, 8, 25, 0.95)',
-                        titleColor: '#fff',
-                        bodyColor: 'rgba(255,255,255,0.8)',
-                        borderColor: 'rgba(255,255,255,0.1)',
-                        borderWidth: 1,
-                        titleFont: { family: 'Inter, sans-serif' },
-                        bodyFont: { family: 'Inter, sans-serif' }
+                        backgroundColor: 'rgba(0,8,25,0.95)', titleColor: '#fff',
+                        bodyColor: 'rgba(255,255,255,0.8)', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+                        titleFont: { family: 'Inter' }, bodyFont: { family: 'Inter' }
                     }
                 },
                 scales: {
-                    x: {
-                        ticks: {
-                            color: 'rgba(255,255,255,0.4)',
-                            maxTicksLimit: 15,
-                            maxRotation: 45,
-                            font: { family: 'Inter, sans-serif', size: 11 }
-                        },
-                        grid: { color: 'rgba(255,255,255,0.05)' }
-                    },
-                    y: {
-                        ticks: {
-                            color: 'rgba(255,255,255,0.4)',
-                            font: { family: 'Inter, sans-serif', size: 11 },
-                            precision: 0
-                        },
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        beginAtZero: true
-                    }
+                    x: { ticks: { color: 'rgba(255,255,255,0.35)', maxTicksLimit: 15, maxRotation: 45, font: { family: 'Inter', size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                    y: { ticks: { color: 'rgba(255,255,255,0.35)', font: { family: 'Inter', size: 11 }, precision: 0 }, grid: { color: 'rgba(255,255,255,0.04)' }, beginAtZero: true }
                 }
             }
         });
     }
+    {% endif %}
 });
 </script>
-{% endif %}
 {% endblock %}

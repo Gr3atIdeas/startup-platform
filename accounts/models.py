@@ -1337,6 +1337,59 @@ class AnalyticsClickEvent(models.Model):
         db_table = "analytics_click_events"
 
 
+class AnalyticsCatalogImpression(models.Model):
+    impression_id = models.BigAutoField(primary_key=True)
+    entity_type = models.CharField(max_length=20)
+    entity_id = models.IntegerField()
+    visitor_hash = models.CharField(max_length=64)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = "analytics_catalog_impressions"
+
+
+class AnalyticsEngagementEvent(models.Model):
+    engagement_id = models.BigAutoField(primary_key=True)
+    entity_type = models.CharField(max_length=20)
+    entity_id = models.IntegerField()
+    visitor_hash = models.CharField(max_length=64)
+    time_on_page = models.IntegerField(default=0)
+    scroll_depth = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = "analytics_engagement_events"
+
+
+class AnalyticsGeoCache(models.Model):
+    ip_address = models.GenericIPAddressField(primary_key=True)
+    country_code = models.CharField(max_length=2, blank=True, null=True)
+    country_name = models.CharField(max_length=100, blank=True, null=True)
+    city = models.CharField(max_length=200, blank=True, null=True)
+    resolved_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = "analytics_geo_cache"
+
+
+class AnalyticsDailyGeo(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    entity_type = models.CharField(max_length=20)
+    entity_id = models.IntegerField()
+    stat_date = models.DateField()
+    country_code = models.CharField(max_length=2)
+    country_name = models.CharField(max_length=100, default="")
+    view_count = models.IntegerField(default=0)
+
+    class Meta:
+        managed = False
+        db_table = "analytics_daily_geo"
+
+
 class AnalyticsDailyStat(models.Model):
     stat_id = models.BigAutoField(primary_key=True)
     entity_type = models.CharField(max_length=20)
@@ -1349,6 +1402,16 @@ class AnalyticsDailyStat(models.Model):
     clicks_pitch_deck = models.IntegerField(default=0)
     clicks_telegram = models.IntegerField(default=0)
     clicks_whatsapp = models.IntegerField(default=0)
+    impressions = models.IntegerField(default=0)
+    unique_impressions = models.IntegerField(default=0)
+    avg_time_on_page = models.IntegerField(default=0)
+    avg_scroll_depth = models.IntegerField(default=0)
+    engagement_count = models.IntegerField(default=0)
+    source_direct = models.IntegerField(default=0)
+    source_search = models.IntegerField(default=0)
+    source_social = models.IntegerField(default=0)
+    source_internal = models.IntegerField(default=0)
+    source_other = models.IntegerField(default=0)
 
     class Meta:
         managed = False

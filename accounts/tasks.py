@@ -491,7 +491,7 @@ def upload_file_to_s3(self, file_data, file_name, file_content_type, entity_type
 
 @shared_task
 def flush_analytics_events():
-    """Drain Redis analytics buffer and batch-insert into PostgreSQL with 24h dedup."""
+    """Drain Redis analytics buffer and batch-insert into PostgreSQL."""
     from django.core.cache import cache
 
     try:
@@ -518,6 +518,8 @@ def flush_analytics_events():
 
     pageviews = [e for e in events if e.get('type') == 'page_view']
     clicks = [e for e in events if e.get('type') == 'click']
+    impressions = [e for e in events if e.get('type') == 'impression']
+    engagements = [e for e in events if e.get('type') == 'engagement']
 
     with connection.cursor() as cur:
         for pv in pageviews:
@@ -555,21 +557,64 @@ def flush_analytics_events():
             except Exception as e:
                 logger.error(f"Failed to insert click: {e}")
 
-    logger.info(f"Analytics flush: {len(pageviews)} views, {len(clicks)} clicks")
+        for imp in impressions:
+            try:
+                ip_val = imp.get('ip_address') or None
+                cur.execute("""
+                    INSERT INTO analytics_catalog_impressions
+                        (entity_type, entity_id, visitor_hash, ip_address, created_at)
+                    SELECT %s, %s, %s, %s, %s::timestamptz
+                    WHERE NOT EXISTS (
+                        SELECT 1 FROM analytics_catalog_impressions
+                        WHERE entity_type = %s AND entity_id = %s
+                          AND visitor_hash = %s
+                          AND created_at > %s::timestamptz - INTERVAL '24 hours'
+                    )
+                """, [
+                    imp['entity_type'], imp['entity_id'], imp['visitor_hash'],
+                    ip_val, imp['timestamp'],
+                    imp['entity_type'], imp['entity_id'], imp['visitor_hash'], imp['timestamp'],
+                ])
+            except Exception as e:
+                logger.error(f"Failed to insert impression: {e}")
+
+        for eng in engagements:
+            try:
+                cur.execute("""
+                    INSERT INTO analytics_engagement_events
+                        (entity_type, entity_id, visitor_hash, time_on_page, scroll_depth, created_at)
+                    VALUES (%s, %s, %s, %s, %s, %s::timestamptz)
+                """, [
+                    eng['entity_type'], eng['entity_id'], eng['visitor_hash'],
+                    eng.get('time_on_page', 0), eng.get('scroll_depth', 0), eng['timestamp'],
+                ])
+            except Exception as e:
+                logger.error(f"Failed to insert engagement: {e}")
+
+    logger.info(
+        f"Analytics flush: {len(pageviews)} views, {len(clicks)} clicks, "
+        f"{len(impressions)} impressions, {len(engagements)} engagements"
+    )
 
 
 @shared_task
 def aggregate_daily_analytics():
     """Aggregate raw events into analytics_daily_stats for all non-aggregated days."""
+    from accounts.analytics import classify_referrer_source
+
     with connection.cursor() as cur:
-        # Upsert page view stats for all days that have raw data
+        # ── 1. Upsert page view stats ──
         cur.execute("""
             INSERT INTO analytics_daily_stats
                 (entity_type, entity_id, stat_date, total_views, unique_views,
-                 clicks_contact, clicks_website, clicks_pitch_deck, clicks_telegram, clicks_whatsapp)
+                 clicks_contact, clicks_website, clicks_pitch_deck, clicks_telegram, clicks_whatsapp,
+                 impressions, unique_impressions, avg_time_on_page, avg_scroll_depth, engagement_count,
+                 source_direct, source_search, source_social, source_internal, source_other)
             SELECT
                 entity_type, entity_id, created_at::date,
                 COUNT(*), COUNT(DISTINCT visitor_hash),
+                0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0
             FROM analytics_page_views
             WHERE created_at::date < CURRENT_DATE
@@ -580,15 +625,19 @@ def aggregate_daily_analytics():
                 unique_views = EXCLUDED.unique_views
         """)
 
-        # Upsert click counts per button type
+        # ── 2. Click counts per button type ──
         for btn in ['contact', 'website', 'pitch_deck', 'telegram', 'whatsapp']:
             cur.execute(f"""
                 INSERT INTO analytics_daily_stats
                     (entity_type, entity_id, stat_date, total_views, unique_views,
-                     clicks_contact, clicks_website, clicks_pitch_deck, clicks_telegram, clicks_whatsapp)
+                     clicks_contact, clicks_website, clicks_pitch_deck, clicks_telegram, clicks_whatsapp,
+                     impressions, unique_impressions, avg_time_on_page, avg_scroll_depth, engagement_count,
+                     source_direct, source_search, source_social, source_internal, source_other)
                 SELECT
                     entity_type, entity_id, created_at::date,
-                    0, 0, 0, 0, 0, 0, 0
+                    0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0
                 FROM analytics_click_events
                 WHERE button_type = %s AND created_at::date < CURRENT_DATE
                 GROUP BY entity_type, entity_id, created_at::date
@@ -609,5 +658,146 @@ def aggregate_daily_analytics():
                   AND ads.stat_date = sub.d
             """, [btn])
 
+        # ── 3. Impressions ──
+        cur.execute("""
+            UPDATE analytics_daily_stats ads SET
+                impressions = sub.total, unique_impressions = sub.uniq
+            FROM (
+                SELECT entity_type, entity_id, created_at::date as d,
+                       COUNT(*) as total, COUNT(DISTINCT visitor_hash) as uniq
+                FROM analytics_catalog_impressions
+                WHERE created_at::date < CURRENT_DATE
+                GROUP BY entity_type, entity_id, created_at::date
+            ) sub
+            WHERE ads.entity_type = sub.entity_type
+              AND ads.entity_id = sub.entity_id
+              AND ads.stat_date = sub.d
+        """)
+
+        # ── 4. Engagement (avg time on page, avg scroll depth) ──
+        cur.execute("""
+            UPDATE analytics_daily_stats ads SET
+                avg_time_on_page = sub.avg_time,
+                avg_scroll_depth = sub.avg_scroll,
+                engagement_count = sub.cnt
+            FROM (
+                SELECT entity_type, entity_id, created_at::date as d,
+                       AVG(time_on_page)::int as avg_time,
+                       AVG(scroll_depth)::int as avg_scroll,
+                       COUNT(*) as cnt
+                FROM analytics_engagement_events
+                WHERE created_at::date < CURRENT_DATE
+                GROUP BY entity_type, entity_id, created_at::date
+            ) sub
+            WHERE ads.entity_type = sub.entity_type
+              AND ads.entity_id = sub.entity_id
+              AND ads.stat_date = sub.d
+        """)
+
+        # ── 5. Referrer sources ──
+        cur.execute("""
+            SELECT entity_type, entity_id, created_at::date, referrer
+            FROM analytics_page_views
+            WHERE created_at::date < CURRENT_DATE
+              AND created_at::date >= CURRENT_DATE - INTERVAL '90 days'
+        """)
+        source_counts = {}
+        for et, eid, d, ref in cur.fetchall():
+            key = (et, eid, str(d))
+            if key not in source_counts:
+                source_counts[key] = {"direct": 0, "search": 0, "social": 0, "internal": 0, "other": 0}
+            src = classify_referrer_source(ref)
+            source_counts[key][src] += 1
+
+        for (et, eid, d), counts in source_counts.items():
+            cur.execute("""
+                UPDATE analytics_daily_stats SET
+                    source_direct = %s, source_search = %s, source_social = %s,
+                    source_internal = %s, source_other = %s
+                WHERE entity_type = %s AND entity_id = %s AND stat_date = %s
+            """, [
+                counts["direct"], counts["search"], counts["social"],
+                counts["internal"], counts["other"],
+                et, eid, d,
+            ])
+
+        # ── 6. Geography ──
+        cur.execute("""
+            INSERT INTO analytics_daily_geo (entity_type, entity_id, stat_date, country_code, country_name, view_count)
+            SELECT pv.entity_type, pv.entity_id, pv.created_at::date,
+                   COALESCE(gc.country_code, 'XX'), COALESCE(gc.country_name, 'Unknown'),
+                   COUNT(*)
+            FROM analytics_page_views pv
+            LEFT JOIN analytics_geo_cache gc ON pv.ip_address = gc.ip_address
+            WHERE pv.created_at::date < CURRENT_DATE
+              AND pv.ip_address IS NOT NULL
+            GROUP BY pv.entity_type, pv.entity_id, pv.created_at::date,
+                     gc.country_code, gc.country_name
+            ON CONFLICT (entity_type, entity_id, stat_date, country_code)
+            DO UPDATE SET view_count = EXCLUDED.view_count
+        """)
+
     logger.info("Daily analytics aggregation complete")
+
+
+@shared_task
+def resolve_geo_ips():
+    """Resolve unresolved IP addresses using GeoIP2 and cache results."""
+    try:
+        import geoip2.database
+        from django.conf import settings
+        import os
+
+        db_path = os.path.join(
+            getattr(settings, 'GEOIP_PATH', os.path.join(settings.BASE_DIR, 'geoip')),
+            'GeoLite2-City.mmdb'
+        )
+        if not os.path.exists(db_path):
+            logger.warning(f"GeoIP database not found at {db_path}")
+            return
+    except ImportError:
+        logger.warning("geoip2 package not installed, skipping geo resolution")
+        return
+
+    with connection.cursor() as cur:
+        cur.execute("""
+            SELECT DISTINCT ip_address FROM analytics_page_views
+            WHERE ip_address IS NOT NULL
+              AND ip_address NOT IN (SELECT ip_address FROM analytics_geo_cache)
+            LIMIT 500
+        """)
+        ips = [row[0] for row in cur.fetchall()]
+
+    if not ips:
+        return
+
+    resolved = 0
+    try:
+        reader = geoip2.database.Reader(db_path)
+        with connection.cursor() as cur:
+            for ip in ips:
+                try:
+                    resp = reader.city(str(ip))
+                    cur.execute("""
+                        INSERT INTO analytics_geo_cache (ip_address, country_code, country_name, city)
+                        VALUES (%s, %s, %s, %s)
+                        ON CONFLICT (ip_address) DO NOTHING
+                    """, [
+                        str(ip),
+                        resp.country.iso_code or 'XX',
+                        resp.country.names.get('ru') or resp.country.name or 'Unknown',
+                        resp.city.names.get('ru') or resp.city.name or '',
+                    ])
+                    resolved += 1
+                except Exception:
+                    cur.execute("""
+                        INSERT INTO analytics_geo_cache (ip_address, country_code, country_name, city)
+                        VALUES (%s, 'XX', 'Unknown', '')
+                        ON CONFLICT (ip_address) DO NOTHING
+                    """, [str(ip)])
+        reader.close()
+    except Exception as e:
+        logger.error(f"GeoIP resolution error: {e}")
+
+    logger.info(f"GeoIP resolved {resolved}/{len(ips)} addresses")
 
