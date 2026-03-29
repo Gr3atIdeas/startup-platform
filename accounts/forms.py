@@ -293,7 +293,7 @@ class StartupEditForm(BaseEntityEditFormMixin, forms.ModelForm):
             "title": "Название",
             "contact_website": "Сайт",
             "contact_telegram": "Telegram",
-            "contact_whatsapp": "WhatsApp",
+            "contact_whatsapp": "Max",
         }
 
     def __init__(self, *args, **kwargs):
@@ -377,6 +377,9 @@ class StartupForm(BaseEntityFormMixin, forms.ModelForm):
             "investment_type",
             "micro_investment_available",
             "planet_image",
+            "contact_website",
+            "contact_telegram",
+            "contact_whatsapp",
         ]
         # Note: logo, creatives, proofs, video, catalog_card_image, agree_rules,
         # agree_data_processing are form-only fields from BaseEntityFormMixin
@@ -439,6 +442,9 @@ class StartupForm(BaseEntityFormMixin, forms.ModelForm):
             "micro_investment_available": "Микроинвестиции доступны",
             "agree_rules": "Согласен с правилами *",
             "agree_data_processing": "Согласен с обработкой данных *",
+            "contact_website": "Сайт",
+            "contact_telegram": "Telegram",
+            "contact_whatsapp": "Max",
         }
     def clean_title(self):
         title = self.cleaned_data.get("title")
@@ -931,7 +937,7 @@ class FranchiseEditForm(BaseEntityEditFormMixin, forms.ModelForm):
             "pitch_deck_url": "Ссылка на презентацию",
             "contact_website": "Сайт",
             "contact_telegram": "Telegram",
-            "contact_whatsapp": "WhatsApp",
+            "contact_whatsapp": "Max",
             "direction": "Категория",
             "logo": "Логотип",
             "creatives": "Изображения",
@@ -1005,7 +1011,7 @@ class AgencyEditForm(BaseEntityEditFormMixin, forms.ModelForm):
             "pitch_deck_url": "Ссылка на презентацию",
             "contact_website": "Сайт",
             "contact_telegram": "Telegram",
-            "contact_whatsapp": "WhatsApp",
+            "contact_whatsapp": "Max",
         }
         widgets = {
             "pitch_deck_url": forms.URLInput(attrs={"class": "form-control", "placeholder": "https://example.com"}),
@@ -1064,7 +1070,7 @@ class SpecialistEditForm(BaseEntityEditFormMixin, forms.ModelForm):
             "direction": "Категория",
             "contact_website": "Сайт",
             "contact_telegram": "Telegram",
-            "contact_whatsapp": "WhatsApp",
+            "contact_whatsapp": "Max",
             "logo": "Логотип",
             "creatives": "Изображения",
             "video": "Видео",
