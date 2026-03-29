@@ -571,10 +571,11 @@ document.addEventListener('DOMContentLoaded', function () {
     startupForm.addEventListener('submit', function (e) {
       e.preventDefault();
       e.stopImmediatePropagation();
-      
+      console.log('[FormSubmit] Submit fired, formId:', formId);
+
       // Предотвращаем повторную отправку
       if (isFormSubmitting) {
-        console.log('Form already submitting, blocked');
+        console.log('[FormSubmit] Already submitting, blocked');
         return false;
       }
       
@@ -598,7 +599,11 @@ document.addEventListener('DOMContentLoaded', function () {
         el.remove()
       })
       var ok = validateFormClientSide()
+      console.log('[FormSubmit] Validation result:', ok);
       if (!ok) {
+        var allErrors = startupForm.querySelectorAll('.custom-validation-error');
+        console.log('[FormSubmit] Validation errors:', allErrors.length);
+        allErrors.forEach(function(e) { console.log('[FormSubmit] Error:', e.textContent); });
         var firstError = startupForm.querySelector('.input-error') || startupForm.querySelector('.custom-validation-error')
         if (firstError) {
           var target = firstError.closest('.form-group') || firstError
@@ -611,12 +616,13 @@ document.addEventListener('DOMContentLoaded', function () {
       isFormSubmitting = true;
 
       // AJAX submit, чтобы не терялись прикрепленные файлы при серверных ошибках
-      try {
-        
+      {
         // Синхронизируем файлы из памяти обратно в input перед созданием FormData
-        if (typeof window.syncSingleFilesBeforeSubmit === 'function') {
-          window.syncSingleFilesBeforeSubmit();
-        }
+        try {
+          if (typeof window.syncSingleFilesBeforeSubmit === 'function') {
+            window.syncSingleFilesBeforeSubmit();
+          }
+        } catch (syncErr) { console.warn('syncSingleFilesBeforeSubmit error:', syncErr); }
         
         var loadingOverlay = document.createElement('div')
         loadingOverlay.id = 'submission-loading-overlay'
@@ -668,6 +674,10 @@ document.addEventListener('DOMContentLoaded', function () {
               })
             }
             window.location.assign(data.redirect_url)
+          } else {
+            // Server returned 200 but success is false — treat as error
+            isFormSubmitting = false;
+            console.warn('Server returned non-success response:', data);
           }
         }).catch(function (err) {
           // Сбрасываем флаг при ошибке
@@ -782,8 +792,6 @@ document.addEventListener('DOMContentLoaded', function () {
           var target = firstErrorField ? (firstErrorField.closest('.form-group') || firstErrorField) : generalBox
           if (target) { instantScrollIntoView(target) }
         })
-      } catch (_) {
-        // если что-то пошло не так — позволим обычной отправке
       }
     })
   }
