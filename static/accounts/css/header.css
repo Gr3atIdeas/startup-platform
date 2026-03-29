@@ -143,6 +143,12 @@
   border: none !important;
 }
 
+.header-nav-link.active,
+.catalog-dropdown-button.active {
+  background-color: rgba(88, 101, 242, 0.5);
+  color: #fff;
+}
+
 .header-auth-section {
   display: flex;
   align-items: center;
@@ -927,6 +933,11 @@ nav.nav-menu
   .header-nav-link:hover,
   .header-nav-link:focus {
     background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+  }
+
+  .header-nav-link.active {
+    background: rgba(88, 101, 242, 0.35);
     color: #fff;
   }
 

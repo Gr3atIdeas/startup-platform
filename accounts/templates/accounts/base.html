@@ -661,5 +661,23 @@
   {% block scripts %}
 
   {% endblock %}
+
+  <script>
+  (function() {
+    var path = location.pathname;
+    document.querySelectorAll('.header-nav-links .header-nav-link').forEach(function(link) {
+      if (!link.href) return;
+      var href = new URL(link.href).pathname;
+      if (href === '/' ? path === '/' : path.indexOf(href) === 0) {
+        link.classList.add('active');
+      }
+    });
+    var catalogPaths = ['/startups/', '/franchises/', '/agencies/', '/specialists/'];
+    if (catalogPaths.some(function(p) { return path.indexOf(p) === 0; })) {
+      var btn = document.querySelector('.catalog-dropdown-button');
+      if (btn) btn.classList.add('active');
+    }
+  })();
+  </script>
 </body>
 </html>

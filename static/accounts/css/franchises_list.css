@@ -156,13 +156,13 @@ body {
 }
 
 .pagination-numbers a:hover {
-  background-color: rgb(255 255 255 / 10%);
+  background-color: rgba(88, 101, 242, 0.5);
 }
 
 .pagination-numbers .current-page {
-  color: #004e9f;
+  color: #fff;
   font-size: 14px;
-  background: white;
+  background: rgba(88, 101, 242, 0.5);
   font-weight: 400;
 }
 
