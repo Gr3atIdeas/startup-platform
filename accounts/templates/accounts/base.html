@@ -17,10 +17,15 @@
   <meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
   <meta property="og:url" content="https://greatideas.ru">
   {% endblock %}
+  <!-- Preload fonts for fastest possible rendering -->
+  <link rel="preload" href="{% static 'accounts/fonts/Unbounded-VariableFont_wght.ttf' %}" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="{% static 'accounts/fonts/Inter/Inter-Variable.ttf' %}" as="font" type="font/ttf" crossorigin>
+
   <!-- Critical inline CSS — renders BEFORE any file downloads -->
   <style>
     @font-face{font-family:Unbounded;src:url('{% static "accounts/fonts/Unbounded-VariableFont_wght.ttf" %}') format('truetype-variations');font-weight:200 900;font-display:swap}
     @font-face{font-family:Inter;src:url('{% static "accounts/fonts/Inter/Inter-Variable.ttf" %}') format('truetype-variations');font-weight:100 900;font-display:swap}
+    :root{--radius-xs:4px;--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:20px;--radius-full:9999px;--border-radius-small:4px;--border-radius-medium:12px;--transition-speed:.3s}
     *,*::before,*::after{box-sizing:border-box}
     body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(180deg,#000 0%,#00346b 25%,#004e9f 48%,#01366d 64%,#020202 100%);color:#fff;min-height:100vh}
     #main-header{width:100%;padding:20px 0}
