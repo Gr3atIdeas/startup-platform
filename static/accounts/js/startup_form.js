@@ -437,7 +437,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function validateFormClientSide() {
     var hasError = false
     var isEditPage = window.location.pathname.includes('/edit/') || window.location.pathname.includes('/edit-startup/')
-    
+
     // Required fields from config, or defaults for startup
     var requiredSelectors = config.requiredFields || [
       "[name='title']",
@@ -447,18 +447,19 @@ document.addEventListener('DOMContentLoaded', function () {
       "[name='short_description']",
       "[name='description']",
     ]
-    
+
     // Планета обязательна только при создании, не при редактировании
     if (!isEditPage) {
       requiredSelectors.push("#id_planet_image")
     }
     requiredSelectors.forEach(function (sel) {
       var el = document.querySelector(sel)
-      if (!el) return
+      if (!el) { console.log('[Validate] Field not found:', sel); return }
       clearFieldError(el)
       var val = (el.value || '').toString().trim()
       if (!val) {
         hasError = true
+        console.log('[Validate] FAIL required:', sel, 'value:', JSON.stringify(el.value));
         showFieldError(el, 'Это поле обязательно')
       }
     })
@@ -485,8 +486,11 @@ document.addEventListener('DOMContentLoaded', function () {
                       (logoPreview && logoPreview.querySelector('img'))
         if (!hasLogo) {
           hasError = true
+          console.log('[Validate] FAIL logo: files=', logoInput.files && logoInput.files.length, 'preview=', !!(logoPreview && logoPreview.querySelector('img')));
           showFieldError(logoInput, 'Загрузите логотип')
         }
+      } else {
+        console.log('[Validate] Logo input not found (id_logo / name=logo)');
       }
     }
 
@@ -509,6 +513,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var totalCreatives = Math.max(c, previewCount, accCount)
         if (totalCreatives < 1) {
           hasError = true
+          console.log('[Validate] FAIL creatives: input=', c, 'preview=', previewCount, 'acc=', accCount);
           showFieldError(creativesInput, 'Добавьте хотя бы 1 изображение (до 10)')
         } else if (totalCreatives > 10) {
           hasError = true
