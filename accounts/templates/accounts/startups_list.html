@@ -357,7 +357,50 @@
     // Инициализируем прогресс-бары при загрузке для текущей сетки
     const initialGrid = document.getElementById('startupsGrid');
     updateAnimatedProgressBars(initialGrid); // Вызываем обновленную функцию
-    // --- Конец инициализации прогресс-баров --- 
+    // --- Конец инициализации прогресс-баров ---
+
+    // --- Динамическая обрезка описания карточек ---
+    function fitDescriptions(container) {
+      if (!container) return;
+      const cards = container.querySelectorAll('.startup-card');
+      cards.forEach(function(card) {
+        const desc = card.querySelector('.startup-description');
+        const amountRow = card.querySelector('.startup-amount-row');
+        if (!desc || !amountRow) return;
+
+        // Восстанавливаем полный текст из data-атрибута
+        if (!desc.dataset.fullText) {
+          desc.dataset.fullText = desc.textContent.trim();
+        }
+        desc.textContent = desc.dataset.fullText;
+
+        // Убираем line-clamp чтобы замерить реальную высоту
+        desc.style.webkitLineClamp = 'unset';
+        desc.style.display = 'block';
+
+        var descBottom = desc.getBoundingClientRect().bottom;
+        var amountTop = amountRow.getBoundingClientRect().top;
+
+        if (descBottom > amountTop) {
+          // Обрезаем слова до тех пор пока не влезет
+          var words = desc.dataset.fullText.split(/\s+/);
+          while (words.length > 1 && descBottom > amountTop) {
+            words.pop();
+            desc.textContent = words.join(' ') + '…';
+            descBottom = desc.getBoundingClientRect().bottom;
+            amountTop = amountRow.getBoundingClientRect().top;
+          }
+        }
+
+        // Возвращаем line-clamp и display
+        desc.style.webkitLineClamp = '';
+        desc.style.display = '';
+      });
+    }
+
+    fitDescriptions(initialGrid);
+    window.addEventListener('resize', function() { fitDescriptions(document.getElementById('startupsGrid')); });
+    // --- Конец динамической обрезки описания ---
 
     // --- Обработка отправки формы фильтров --- 
     // Обновляем URL при отправке формы, чтобы пагинация работала с фильтрами
