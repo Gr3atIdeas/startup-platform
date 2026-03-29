@@ -115,7 +115,7 @@ html {
 
 .faq-ask-question-button {
   padding: 12px 25px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   outline: 1px white solid;
   outline-offset: -1px;
   color: white;
@@ -144,7 +144,7 @@ html {
   position: relative; 
   background: #004e9f; 
   box-shadow: 6px 6px 15px rgb(0 0 0 / 25%);
-  border-radius: 20px;
+  border-radius: var(--radius-xl);
   display: flex;
   overflow: hidden; 
   margin-bottom: 65px; 
@@ -170,8 +170,8 @@ html {
 }
 
 .faq-left-panel::-webkit-scrollbar-track {
-  background: transparent; 
-  border-radius: 4px;
+  background: transparent;
+  border-radius: var(--radius-xs);
 
   
 
@@ -183,8 +183,8 @@ html {
 }
 
 .faq-left-panel::-webkit-scrollbar-thumb {
-  background: rgb(255 255 255 / 34%); 
-  border-radius: 4px;
+  background: rgb(255 255 255 / 34%);
+  border-radius: var(--radius-xs);
 }
 
 .faq-left-panel::-webkit-scrollbar-thumb:hover {
@@ -195,7 +195,7 @@ html {
 .faq-accordion-header,
 .faq-question-item {
   padding: 10px 24px; 
-  border-radius: 99px; 
+  border-radius: var(--radius-full);
   font-family: Unbounded, sans-serif;
   cursor: pointer;
   transition:
@@ -316,7 +316,7 @@ html {
   margin-left: 0; 
   background: white;
   box-shadow: inset 4px 4px 6px rgb(0 0 0 / 25%);
-  border-radius: 32px;
+  border-radius: var(--radius-xl);
   border: 1px #818ce5 solid;
   padding: 59px; 
   box-sizing: border-box;
@@ -377,12 +377,12 @@ html {
 
 .faq-right-panel::-webkit-scrollbar-track {
   background: #f1f1f1;
-  border-radius: 10px;
+  border-radius: var(--radius-xs);
 }
 
 .faq-right-panel::-webkit-scrollbar-thumb {
   background: #818ce5;
-  border-radius: 10px;
+  border-radius: var(--radius-xs);
 }
 
 .faq-right-panel::-webkit-scrollbar-thumb:hover {
@@ -397,9 +397,9 @@ html {
   left: 536px; 
   top: 671px; 
   background: rgb(255 255 255 / 34%);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
 
-  
+
 }
 
 
@@ -548,7 +548,7 @@ html {
 
   .faq-content-block {
     margin-bottom: 30px;
-    border-radius: 15px;
+    border-radius: var(--radius-lg);
   }
 
   .faq-left-panel {

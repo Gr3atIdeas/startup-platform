@@ -72,7 +72,7 @@ body {
   position: relative;
   width: 100%;
   height: 42px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   background: #004e9f;
   display: flex;
@@ -85,7 +85,7 @@ body {
   flex-grow: 1;
   height: 33px;
   border: none;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   padding: 0 15px;
   font-size: 14px;
   box-sizing: border-box;
@@ -158,7 +158,7 @@ body {
   height: 40px;
   padding: 12px 35px;
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   outline: 1px solid white;
   justify-content: center;
   align-items: center;
@@ -217,7 +217,7 @@ body {
   line-height: 18px;
   word-wrap: break-word;
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
@@ -466,7 +466,7 @@ body {
   width: 329px;
   height: 490px;
   background: #FFFFFF;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   overflow: visible;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -493,7 +493,7 @@ body {
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: 9px 9px 0 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
 }
 
 .franchise-header-image {
@@ -687,7 +687,7 @@ body {
   padding: 9px 17px;
   background: #050505;
   color: #FFFFFF;
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
   font-size: 12px;
@@ -780,7 +780,7 @@ body {
   height: 100%;
   background: #082047;
   border: 2px solid #4B7C80;
-  border-radius: 30px;
+  border-radius: var(--radius-full);
   overflow: hidden;
 }
 
@@ -791,7 +791,7 @@ body {
   width: 0%;
   height: 100%;
   background: linear-gradient(90deg, rgba(158, 247, 249, 1) 0%, rgba(73, 209, 255, 1) 48%, rgba(220, 253, 161, 1) 100%);
-  border-radius: 26px;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -807,7 +807,7 @@ body {
   gap: 8px;
   padding: 8px 10px;
   background: rgba(255, 255, 255, 0.97);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   height: 30px;
   z-index: 3;
 }

@@ -4,7 +4,7 @@
   --btn-width: auto;
   --btn-height: auto;
   --btn-padding: 0.5em 1.5em;
-  --btn-border-radius: 8px;
+  --btn-border-radius: var(--radius-sm);
   --accent-color: #7b61ff;
   --accent-hover: #6551d9;
   --accent-active: #5441b3;
@@ -60,7 +60,7 @@ input[type='button']:not(.login-btn, .join-button, .plyr__control),
   align-items: center;
   justify-content: center;
   padding: var(--btn-padding, 0.5em 1.5em);
-  border-radius: var(--btn-border-radius, 8px);
+  border-radius: var(--btn-border-radius, var(--radius-sm));
   font-family: Unbounded, sans-serif;
   font-size: 16px;
   font-weight: 500;
@@ -82,7 +82,7 @@ input[type='button']:not(.login-btn, .join-button, .plyr__control),
   align-items: center;
   justify-content: center;
   padding: var(--btn-padding, 0.5em 1.5em);
-  border-radius: var(--btn-border-radius, 8px);
+  border-radius: var(--btn-border-radius, var(--radius-sm));
   font-family: Unbounded, sans-serif;
   font-size: 16px;
   font-weight: 500;

@@ -44,10 +44,10 @@ body {
   background-position: center;
   box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: var(--radius-xl);
   flex-shrink: 0;
 
-  
+
   transition:
     top 0.3s ease-out,
     width 0.3s ease-out,
@@ -90,9 +90,9 @@ body {
   position: absolute;
   background: #004e9f;
   box-shadow: 0 0 250px 250px #004e9f; 
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
 
-  
+
 }
 
 .promo-bg-blur-circle-2 {
@@ -103,9 +103,9 @@ body {
   position: absolute;
   background: rgb(97 165 255 / 45%);
   box-shadow: 0 0 250px 250px rgb(97 165 255 / 45%);
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
 
-  
+
 }
 
 .promo-card-text-content {
@@ -216,7 +216,7 @@ body {
     #f9f7d6 100%
   ) !important; 
   box-shadow: 2px 2px 4px 0 rgb(0 0 0 / 25%);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   color: black !important; 
   font-size: 16px;
   font-family: Unbounded, sans-serif;
@@ -262,8 +262,8 @@ body {
   width: 724px; 
   padding: 41px 70px; 
   background: rgb(255 255 255 / 10%); 
-  border-radius: 20px; 
-  display: flex; 
+  border-radius: var(--radius-xl);
+  display: flex;
   gap: 10px; 
   box-sizing: border-box;
   height: 521px; 
@@ -295,7 +295,7 @@ body {
   background-color: rgb(
     0 0 0 / 30%
   ); 
-  border-radius: 6px; 
+  border-radius: var(--radius-xs);
   border: 2px solid transparent; 
   background-clip: content-box;
 }
@@ -336,7 +336,7 @@ body {
   height: auto; 
   padding: 8px 24px; 
   background: rgb(255 255 255 / 16%); 
-  border-radius: 99px; 
+  border-radius: var(--radius-full);
   display: flex; 
   justify-content: flex-start; 
   align-items: center;
@@ -405,7 +405,7 @@ body {
 .related-startup-card {
   padding: 15px; 
   background: white;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -420,7 +420,7 @@ body {
   width: 100px; 
   height: 90px;
   object-fit: cover;
-  border-radius: 5px; 
+  border-radius: var(--radius-xs);
 }
 
 .related-startup-name {
@@ -501,7 +501,7 @@ body {
 
 .modal-popup {
   color: white;
-  border-radius: 20px;
+  border-radius: var(--radius-xl);
   box-shadow: 0 15px 40px rgb(0 0 0 / 50%);
   width: auto;
   height: auto;
@@ -571,7 +571,7 @@ body {
   overflow: hidden;
 
   
-  border-radius: 20px; 
+  border-radius: var(--radius-xl);
   flex-shrink: 0;
 }
 
@@ -627,7 +627,7 @@ body {
   background-color: rgb(
     50 50 50 / 75%
   ); 
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   backdrop-filter: blur(12px); 
   backdrop-filter: blur(12px);
   height: 521px;
@@ -653,11 +653,11 @@ body {
 }
 .modal-notification-list::-webkit-scrollbar-track {
   background: rgb(255 255 255 / 5%);
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
 }
 .modal-notification-list::-webkit-scrollbar-thumb {
   background-color: rgb(255 255 255 / 30%);
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
 }
 .modal-notification-list::-webkit-scrollbar-thumb:hover {
   background-color: rgb(255 255 255 / 40%);
@@ -694,7 +694,7 @@ body {
 .modal-notification-details .notification-item-bubble {
   background: rgb(255 255 255 / 10%);
   padding: 10px 18px;
-  border-radius: 12px; 
+  border-radius: var(--radius-md);
   flex-grow: 1;
   cursor: default; 
 }
@@ -800,7 +800,7 @@ body {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(50px);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   padding: 16px 20px;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.12),
@@ -833,7 +833,7 @@ body {
   right: 0;
   height: 3px;
   background: linear-gradient(90deg, #007AFF, #5856D6);
-  border-radius: 12px 12px 0 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
 .alert-message.alert-success::before {

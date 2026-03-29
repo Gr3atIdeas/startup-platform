@@ -35,7 +35,7 @@
     padding: 69px 21px;
     background: rgba(0, 78, 159, 0.16);
     box-shadow: 6px 6px 10px rgba(0,0,0,0.25);
-    border-radius: 26px;
+    border-radius: var(--radius-xl);
     outline: 1px #2BEDFF solid;
     outline-offset: -1px;
     display: flex;
@@ -96,7 +96,7 @@
     padding: 12px;
     background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
     box-shadow: 2px 2px 4px rgba(0,0,0,0.25);
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;

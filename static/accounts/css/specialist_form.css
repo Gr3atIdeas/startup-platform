@@ -1,5 +1,5 @@
 /* Consents modal sizing */
-#consentsModal .modal-dialog { max-width: 870px; width: 870px; margin: 10vh auto; background: #222; color: #fff; border-radius: 10px; border: 1px solid rgba(255,255,255,.2); box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+#consentsModal .modal-dialog { max-width: 870px; width: 870px; margin: 10vh auto; background: #222; color: #fff; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,.2); box-shadow: 0 10px 30px rgba(0,0,0,.5); }
 
 /* Consent doc buttons wrapping */
 .consents-docs-buttons .consent-doc-btn {
@@ -30,7 +30,7 @@
 .agreement-section .checkbox-group.input-error .custom-checkbox-label,
 .agreement-section .custom-checkbox-label.input-error {
   outline: 2px solid #FF3B30;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
 }
 .error-message.custom-validation-error {
   color: #FF3B30;
@@ -114,7 +114,7 @@ body {
   display: block;
   width: 144px; 
   height: 144px; 
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background-color: #333;
   cursor: pointer;
   position: relative;
@@ -141,7 +141,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover; 
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
 }
 
 .catalog-card-image-group {
@@ -153,7 +153,7 @@ body {
   display: block;
   width: 144px; 
   height: 72px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background-color: #333;
   cursor: pointer;
   position: relative;
@@ -180,7 +180,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover; 
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
 }
 
 .catalog-card-image-group .help-text {
@@ -199,7 +199,7 @@ body {
 }
 
 .investment-type-card {
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   border: 1px solid rgb(255 255 255 / 36%); 
 
   
@@ -299,7 +299,7 @@ body {
   height: 40px;
   padding: 12px 16px;
   background: white;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   border: 1px solid #d9d9d9;
   color: #1e1e1e;
   font-size: 14px;
@@ -388,7 +388,7 @@ body {
   font-family: Unbounded;
   font-weight: 300;
   line-height: 18px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   border: 1px solid #d9d9d9; 
 }
 
@@ -437,7 +437,7 @@ body {
   padding: 12px;
   background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   justify-content: center;
   align-items: center;
   gap: 8px;
@@ -468,7 +468,7 @@ body {
 
 .file-upload-area {
   border: 2px dashed #757575;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   padding: 20px;
   text-align: center;
   cursor: pointer;
@@ -524,7 +524,7 @@ body {
 .file-preview-item img.file-icon      {
   width: 72px;
   height: 72px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   object-fit: cover;
 }
 
@@ -565,7 +565,7 @@ body {
   padding: 12px 12px 12px 16px;
   background-color: white;
   border: 1px solid #d9d9d9;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   color: #1e1e1e; 
 }
 
@@ -582,7 +582,7 @@ body {
   height: 40px;
   background-color: white;
   border: 1px solid #d9d9d9;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   color: #1e1e1e;
   padding: 12px 16px;
 }
@@ -664,7 +664,7 @@ h3.section-title {
 .timeline-progress-filled {
   position: absolute;
   height: 100%;
-  border-radius: 2px; 
+  border-radius: var(--radius-xs);
 }
 
 .timeline-progress-line {
@@ -782,7 +782,7 @@ h3.section-title {
 .timeline-description-container {
   display: none; 
   padding: 45px 22px 25px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   border: 1px solid rgb(255 255 255 / 36%);
   background-color: rgb(
     40 40 40 / 30%
@@ -831,7 +831,7 @@ h3.section-title {
   padding: 12px 0;
   background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   color: black;
   font-size: 16px;
   font-family: Unbounded;
@@ -848,7 +848,7 @@ h3.section-title {
   width: 100%;
   height: 188px;
   background: white;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   padding: 15px;
   color: black;
   font-family: Unbounded;
@@ -962,7 +962,7 @@ h3.section-title {
   background-color: rgb(0 0 0 / 80%);
   color: white;
   padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   font-size: 12px;
   white-space: nowrap;
   z-index: 10;
@@ -987,7 +987,7 @@ h3.section-title {
     #f9f7d6 100%
   ) !important; 
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   color: black !important; 
   font-size: 18px;
   font-family: Unbounded;
@@ -1023,7 +1023,7 @@ h3.section-title {
 .form-main-content-wrapper {
   background: rgb(255 255 255 / 7%);
   box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);
-  border-radius: 20px;
+  border-radius: var(--radius-xl);
   border: 1px solid rgb(255 255 255 / 36%);
   backdrop-filter: blur(10px);
   padding: 50px; 
@@ -1184,7 +1184,7 @@ h3.section-title {
   justify-content: space-between;
   padding: 8px 12px;
   border: 1px solid #e0e0e0; 
-  border-radius: 6px; 
+  border-radius: var(--radius-sm); 
   margin-bottom: 8px;
   background-color: transparent; 
   box-shadow: 0 1px 2px rgb(0 0 0 / 5%); 
@@ -1201,7 +1201,7 @@ h3.section-title {
   width: 36px;
   height: 36px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   flex-shrink: 0; 
 }
 
@@ -1278,7 +1278,7 @@ h3.section-title {
   color: white !important;
   border: none;
   padding: 4px 8px;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   font-size: 0.75rem;
   cursor: pointer;
   margin-left: 8px;
@@ -1326,7 +1326,7 @@ h3.section-title {
 .timeline-progress-filled {
   position: absolute;
   height: 100%;
-  border-radius: 2px; 
+  border-radius: var(--radius-xs);
 }
 
 .timeline-progress-line {
@@ -1436,7 +1436,7 @@ h3.section-title {
   width: 100%;
   height: 188px;
   background: white;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   padding: 15px;
   color: black;
   font-family: Unbounded;
@@ -1521,7 +1521,7 @@ body,
 .planet-display {
   width: 450px;
   height: 451px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   background-color: #333;
   overflow: hidden;
   display: flex;
@@ -1555,7 +1555,7 @@ body,
   display: block;
   width: 200px;
   height: 100px; 
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background-color: #333;
   cursor: pointer;
   position: relative;
@@ -1582,7 +1582,7 @@ body,
     color: white;
     border: none;
     padding: 8px 16px;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;

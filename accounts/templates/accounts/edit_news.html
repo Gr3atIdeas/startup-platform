@@ -29,13 +29,13 @@
         <div class="form-group">
           <label for="id_title" style="color: #ccc; margin-bottom: 6px; display: block;">Заголовок</label>
           <input type="text" name="title" id="id_title" value="{{ form.title.value|default_if_none:'' }}"
-                 class="form-control" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #1a1a2e; color: #fff;" required>
+                 class="form-control" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid #444; background: #1a1a2e; color: #fff;" required>
         </div>
 
         <div class="form-group">
           <label for="id_content" style="color: #ccc; margin-bottom: 6px; display: block;">Текст новости</label>
           <textarea name="content" id="id_content" rows="12"
-                    class="form-control ckeditor-full" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #1a1a2e; color: #fff;" required>{{ form.content.value|default_if_none:'' }}</textarea>
+                    class="form-control ckeditor-full" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid #444; background: #1a1a2e; color: #fff;" required>{{ form.content.value|default_if_none:'' }}</textarea>
         </div>
 
         <div class="form-group">
@@ -46,7 +46,7 @@
         <div class="form-group">
           <label for="id_tags" style="color: #ccc; margin-bottom: 6px; display: block;">Теги (через запятую)</label>
           <input type="text" name="tags" id="id_tags" value="{{ form.tags.value|default_if_none:'' }}"
-                 class="form-control" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #1a1a2e; color: #fff;"
+                 class="form-control" style="width: 100%; padding: 10px; border-radius: var(--radius-sm); border: 1px solid #444; background: #1a1a2e; color: #fff;"
                  placeholder="AI, стартапы, инвестиции">
         </div>
 
@@ -65,7 +65,7 @@
         <div class="form-group">
           <label style="color: #ccc; margin-bottom: 6px; display: block;">Текущее изображение</label>
           {% if article.get_image_url %}
-            <img src="{{ article.get_image_url }}" alt="Текущее изображение" style="max-width: 300px; border-radius: 8px; margin-bottom: 10px;">
+            <img src="{{ article.get_image_url }}" alt="Текущее изображение" style="max-width: 300px; border-radius: var(--radius-sm); margin-bottom: 10px;">
           {% else %}
             <p style="color: #777;">Нет изображения</p>
           {% endif %}

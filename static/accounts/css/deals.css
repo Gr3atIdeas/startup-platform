@@ -12,7 +12,7 @@ body {
   align-items: flex-start; 
   box-sizing: border-box;
   box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.25);
-  border-radius: 32px;
+  border-radius: var(--radius-xl);
   display: flex;
   gap: 61px;
 }
@@ -24,7 +24,7 @@ body {
   padding: 23px 38px;
   background: white;
   box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.25);
-  border-radius: 32px;
+  border-radius: var(--radius-xl);
   display: flex;
   gap: 61px;
   box-sizing: border-box;
@@ -45,7 +45,7 @@ body {
   gap: 8px;
   padding: 8px 30px;
   background: rgba(255, 255, 255, 0.19);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   border: 1px solid #004E9F;
 }
 
@@ -74,7 +74,7 @@ body {
 
 .deal-status-filters .filter-btn {
   padding: 11px 25px;
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   font-size: 12px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
@@ -109,7 +109,7 @@ body {
   align-items: center;
   gap: 26px;
   padding: 5px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -121,7 +121,7 @@ body {
 .chat-item-avatar {
   width: 77px;
   height: 77px;
-  border-radius: 22px;
+  border-radius: var(--radius-xl);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -213,7 +213,7 @@ body {
   min-height: 0;
   padding: 28px 19px;
   border: 1px solid #818CE5;
-  border-radius: 32px;
+  border-radius: var(--radius-xl);
   position: relative;
   box-sizing: border-box;
 }
@@ -225,7 +225,7 @@ body {
   width: 100%;
   height: 104px;
   background: linear-gradient(180deg, white 0%, rgba(255, 255, 255, 0.01) 100%);
-  border-radius: 32px;
+  border-radius: var(--radius-xl);
   pointer-events: none; 
 }
 
@@ -260,7 +260,7 @@ body {
     background-color: white;
     min-width: 224px;
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.08);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     z-index: 100;
     overflow: hidden;
     flex-direction: column;
@@ -321,7 +321,7 @@ body {
 .message-bubble {
   padding: 11px 14px 11px 39px;
   max-width: 452px; 
-  border-radius: 20px;
+  border-radius: var(--radius-xl);
   font-size: 12px;
   font-family: 'Unbounded';
   font-weight: 300;
@@ -397,7 +397,7 @@ body {
   height: 45px;
   padding: 15px 18px;
   background: #F3F3F3;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: none;
   outline: none;
   resize: none;
@@ -421,13 +421,13 @@ body {
 .chat-list::-webkit-scrollbar-track,
 .chat-messages-list::-webkit-scrollbar-track {
   background: #f1f1f1;
-  border-radius: 10px;
+  border-radius: var(--radius-xs);
 }
 
 .chat-list::-webkit-scrollbar-thumb,
 .chat-messages-list::-webkit-scrollbar-thumb {
   background: #888;
-  border-radius: 10px;
+  border-radius: var(--radius-xs);
 }
 
 .chat-list::-webkit-scrollbar-thumb:hover,

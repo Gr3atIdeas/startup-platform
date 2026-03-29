@@ -6,7 +6,7 @@
     right: 0;
     background: white;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     max-height: 400px;
     overflow-y: auto;
@@ -21,12 +21,12 @@
 
 .global-search-dropdown::-webkit-scrollbar-track {
     background: #f1f1f1;
-    border-radius: 3px;
+    border-radius: var(--radius-xs);
 }
 
 .global-search-dropdown::-webkit-scrollbar-thumb {
     background: #c1c1c1;
-    border-radius: 3px;
+    border-radius: var(--radius-xs);
 }
 
 .global-search-dropdown::-webkit-scrollbar-thumb:hover {
@@ -127,7 +127,7 @@
     color: white;
     border: none;
     padding: 8px 16px;
-    border-radius: 4px;
+    border-radius: var(--radius-xs);
     cursor: pointer;
     font-size: 12px;
     transition: background-color 0.2s;

@@ -5,18 +5,18 @@
 
 {% block content %}
 <div style="min-height: 50vh; display: flex; align-items: center; justify-content: center;">
-  <div style="max-width: 560px; padding: 24px; border-radius: 12px; background: rgba(255,255,255,0.04); color: #fff; text-align: center;">
+  <div style="max-width: 560px; padding: 24px; border-radius: var(--radius-md); background: rgba(255,255,255,0.04); color: #fff; text-align: center;">
     {% if request.user.is_authenticated %}
       <h1 style="margin: 0 0 12px">Добро пожаловать!</h1>
       <p style="margin: 0 0 20px; color: #ccc">Перенаправляем в каталог стартапов…</p>
-      <a href="{% url 'startups_list' %}" style="display:inline-block; padding:12px 18px; border:1px solid #fff; border-radius:8px; text-decoration:none; color:#fff">Открыть каталог</a>
+      <a href="{% url 'startups_list' %}" style="display:inline-block; padding:12px 18px; border:1px solid #fff; border-radius:var(--radius-sm); text-decoration:none; color:#fff">Открыть каталог</a>
       <script>
         setTimeout(function(){ window.location.replace("{% url 'startups_list' %}"); }, 50);
       </script>
     {% else %}
       <h1 style="margin: 0 0 12px">Third-Party Login Failure</h1>
       <p style="margin: 0 0 20px; color: #ccc">Произошла ошибка при попытке входа через сторонний сервис.</p>
-      <a href="{% url 'login' %}" style="display:inline-block; padding:12px 18px; border:1px solid #fff; border-radius:8px; text-decoration:none; color:#fff">Вернуться к входу</a>
+      <a href="{% url 'login' %}" style="display:inline-block; padding:12px 18px; border:1px solid #fff; border-radius:var(--radius-sm); text-decoration:none; color:#fff">Вернуться к входу</a>
     {% endif %}
   </div>
   

@@ -57,7 +57,7 @@
     .application-card {
       background-color: #1A1D2E; /* Темный фон для карточки заявки */
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       padding: 20px;
       display: flex;
       flex-direction: column;
@@ -81,7 +81,7 @@
       font-size: 14px;
       font-weight: 500;
       padding: 4px 10px;
-      border-radius: 12px;
+      border-radius: var(--radius-md);
       display: inline-block; /* Чтобы padding работал */
       margin-bottom: 10px;
       text-align: center;
@@ -116,7 +116,7 @@
       overflow: hidden;
       background: transparent;
       box-shadow: 6px 6px 10px rgba(123, 97, 255, 0.25);
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       outline: 1px #C6BBFE solid;
       outline-offset: -1px;
     }
@@ -285,7 +285,7 @@
       transform: translate(-50%, -50%);
       background: rgba(255, 255, 255, 0.95);
       padding: 15px;
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       box-shadow: 0 0 10px rgba(0,0,0,0.5);
       max-width: 300px;
       width: 90%;
@@ -328,7 +328,7 @@
       background: #000;
       color: white;
       font-size: 12px;
-      border-radius: 4px 0 0 4px;
+      border-radius: var(--radius-xs) 0 0 var(--radius-xs);
     }
 
     .my_startups_planetary-system #info-card .progress-bar .progress {
@@ -336,7 +336,7 @@
       padding: 4px;
       font-size: 12px;
       font-weight: bold;
-      border-radius: 0 4px 4px 0;
+      border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
     }
 
     .my_startups_planetary-system #info-card .funding {
@@ -452,7 +452,7 @@
       width: 471px;
       padding: 28px 40px;
       background: white;
-      border-radius: 20px;
+      border-radius: var(--radius-xl);
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -511,7 +511,7 @@
       display: inline-block;
       padding: 9px 17px;
       background: #050505;
-      border-radius: 5px;
+      border-radius: var(--radius-xs);
       color: white;
       font-size: 12px;
       font-family: 'Unbounded', sans-serif;
@@ -525,7 +525,7 @@
       margin-bottom: 16px;
       position: relative;
       background: rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       overflow: hidden;
       border: 1px solid rgba(0, 0, 0, 0.2);
     }
@@ -534,7 +534,7 @@
       width: 0%; 
       height: 100%;
       background: linear-gradient(90deg, #31D2C6 0%, #006EDF 100%);
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       position: relative;
       overflow: hidden;
       box-shadow: 
@@ -687,7 +687,7 @@
       align-items: center;
       gap: 5px;
       padding: 5px 10px;
-      border-radius: 50px;
+      border-radius: var(--radius-full);
       outline: 1px #004E9F solid;
       outline-offset: -1px;
     }
@@ -719,7 +719,7 @@
       padding: 12px 35px;
       background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
       border: none;
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       color: #F5F5F5;
       font-size: 16px;
       font-family: 'Unbounded', sans-serif;
@@ -820,7 +820,7 @@
         background-color: #1A1D2E;
         color: #FFFFFF;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 5px;
+        border-radius: var(--radius-xs);
         font-size: 14px;
         cursor: pointer;
         transition: background-color 0.3s, border-color 0.3s;
@@ -1075,7 +1075,7 @@
         <div class="analytics-content">
           <div class="analytics-header">
             <h1 class="analytics-title">Аналитика</h1>
-            <a href="{% url 'my_analytics' %}" style="color: #FFD700; text-decoration: none; font-size: 14px; padding: 6px 14px; border: 1px solid rgba(255,215,0,0.3); border-radius: 8px; transition: background 0.2s;">Подробная статистика &rarr;</a>
+            <a href="{% url 'my_analytics' %}" style="color: #FFD700; text-decoration: none; font-size: 14px; padding: 6px 14px; border: 1px solid rgba(255,215,0,0.3); border-radius: var(--radius-sm); transition: background 0.2s;">Подробная статистика &rarr;</a>
           </div>
 
           <div class="stats-overview">

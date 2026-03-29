@@ -111,7 +111,7 @@
 
 .footer-subscribe-button {
   padding: 12px 25px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: 1px white solid;
   justify-content: flex-start;
   align-items: center;

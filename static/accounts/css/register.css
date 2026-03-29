@@ -41,7 +41,7 @@ main.content {
     background: rgba(40, 40, 40, 0.6);
     backdrop-filter: blur(5px);
     padding: 30px;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     max-width: 450px;
     width: 100%;
     box-sizing: border-box;
@@ -83,7 +83,7 @@ main.content {
     border: 1px solid rgba(255, 255, 255, 0.5);
     color: #333;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: var(--radius-xs);
     width: 100%;
     box-sizing: border-box;
 }
@@ -105,7 +105,7 @@ main.content {
     color: #FFFFFF !important;
     font-weight: bold;
     padding: 12px 20px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     width: 100%;
     margin-top: 10px;
@@ -125,7 +125,7 @@ main.content {
     color: #FFFFFF !important;
     font-weight: bold;
     padding: 12px 20px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     width: 100%;
     text-decoration: none;
@@ -238,7 +238,7 @@ main.content {
 
   .auth-container {
     padding: 18px 12px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     position: relative;
     z-index: 10;
     margin-top: 40px;

@@ -651,7 +651,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 generalBox.style.margin = '10px 0'
                 generalBox.style.padding = '10px'
                 generalBox.style.border = '1px solid #e74c3c'
-                generalBox.style.borderRadius = '6px'
+                generalBox.style.borderRadius = 'var(--radius-sm)'
                 generalBox.setAttribute('role', 'alert')
                 startupForm.insertBefore(generalBox, startupForm.firstChild)
               }
@@ -683,7 +683,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!generalBox) {
               generalBox = document.createElement('div')
               generalBox.id = 'formGeneralErrors'
-              generalBox.style.cssText = 'color:#e74c3c;margin:10px 0;padding:10px;border:1px solid #e74c3c;border-radius:6px;'
+              generalBox.style.cssText = 'color:#e74c3c;margin:10px 0;padding:10px;border:1px solid #e74c3c;border-radius:var(--radius-sm);'
               generalBox.setAttribute('role', 'alert')
               startupForm.insertBefore(generalBox, startupForm.firstChild)
             }
@@ -702,7 +702,7 @@ document.addEventListener('DOMContentLoaded', function () {
             generalBox.style.margin = '10px 0'
             generalBox.style.padding = '10px'
             generalBox.style.border = '1px solid #e74c3c'
-            generalBox.style.borderRadius = '6px'
+            generalBox.style.borderRadius = 'var(--radius-sm)'
             generalBox.setAttribute('role', 'alert')
             startupForm.insertBefore(generalBox, startupForm.firstChild)
           }

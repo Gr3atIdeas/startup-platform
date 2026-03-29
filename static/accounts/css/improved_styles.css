@@ -24,11 +24,19 @@
   --spacing-xl: 32px;
   --spacing-xxl: 64px;
 
-  
-  --border-radius-small: 5px;
-  --border-radius-medium: 10px;
+  /* Border Radius Tokens */
+  --radius-xs: 4px;    /* badges, status indicators, small tags */
+  --radius-sm: 8px;    /* buttons, inputs, small cards */
+  --radius-md: 12px;   /* cards, modals, dropdowns */
+  --radius-lg: 16px;   /* sidebar, large panels, sections */
+  --radius-xl: 20px;   /* hero blocks, featured sections */
+  --radius-full: 9999px; /* pill buttons, capsule tags */
 
-  
+  /* Legacy aliases (will be removed after migration) */
+  --border-radius-small: var(--radius-xs);
+  --border-radius-medium: var(--radius-md);
+
+
   --transition-speed: 0.3s;
 }
 
@@ -44,7 +52,6 @@ button,
 input,
 textarea {
   transition: color var(--transition-speed) ease, background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
-}
 }
 
 
@@ -106,6 +113,27 @@ textarea {
 .btn--blue:hover {
   background: linear-gradient(0deg, #004186 0%, #005bb5 100%);
   color: var(--text-light);
+}
+
+
+.btn--yellow-gradient,
+.btn--yellow-gradient:visited {
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+  border: none;
+  color: #000;
+}
+
+.btn--yellow-gradient:hover {
+  background: linear-gradient(180deg, #e6d329 0%, #e0dec0 100%);
+  color: #000;
+}
+
+.btn--yellow-gradient span {
+  color: #000;
+}
+
+.btn--yellow-gradient .icon {
+  filter: brightness(0) invert(0);
 }
 
 

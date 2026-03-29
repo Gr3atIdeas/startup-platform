@@ -439,7 +439,7 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   white-space: nowrap;
   pointer-events: none;
   z-index: 100;
@@ -470,7 +470,7 @@
 .ultra_new_planetary_tooltip_logo {
   width: 18px;
   height: 18px;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   object-fit: cover;
   flex-shrink: 0;
   background: rgba(255,255,255,0.1);
@@ -710,7 +710,7 @@
   height: 30.47px;
   background: #FFEF2B;
   border: none;
-  border-radius: 100px;
+  border-radius: var(--radius-full);
   cursor: pointer;
   z-index: 10000;
   display: flex;
@@ -804,7 +804,7 @@
   width: 471px;
   padding: 28px 40px;
   background: white;
-  border-radius: 20px;
+  border-radius: var(--radius-xl);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -862,7 +862,7 @@
 .ultra_new_planetary_modal_investment_btn button {
   width: 205px;
   padding: 9px 17px;
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   outline: 1px black solid;
   outline-offset: -0.5px;
   background: white;
@@ -884,7 +884,7 @@
   display: inline-block;
   padding: 9px 17px;
   background: #050505;
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   color: white;
   font-size: 12px;
   font-family: 'Unbounded', sans-serif;
@@ -899,7 +899,7 @@
   margin-bottom: 16px;
   position: relative;
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
@@ -908,7 +908,7 @@
   width: 0%; 
   height: 100%;
   background: linear-gradient(90deg, #31D2C6 0%, #006EDF 100%);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   position: relative;
   overflow: hidden;
   box-shadow: 
@@ -1056,7 +1056,7 @@
   align-items: center;
   gap: 5px;
   padding: 5px 10px;
-  border-radius: 50px;
+  border-radius: var(--radius-full);
   outline: 1px #004E9F solid;
   outline-offset: -1px;
 }
@@ -1087,7 +1087,7 @@
   padding: 12px 35px;
   background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   color: #F5F5F5;
   font-size: 16px;
   font-family: 'Unbounded', sans-serif;
@@ -1315,7 +1315,7 @@
   padding: 12px 24px;
   background: linear-gradient(135deg, #FFEF2B 0%, #FFD700 100%);
   border: none;
-  border-radius: 25px;
+  border-radius: var(--radius-full);
   color: black;
   font-size: 14px;
   font-family: 'Unbounded', sans-serif;
@@ -1520,7 +1520,7 @@
   transform: translateX(-50%);
   top: 185px;
   background: #050505;
-  border-radius: 20px;
+  border-radius: var(--radius-full);
   padding: 9px 17px;
   color: white;
   font-size: 12px;

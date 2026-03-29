@@ -21,7 +21,7 @@ body {
 
 .back-button {
   padding: 5px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   align-items: center;
   gap: 8px;
   display: flex;
@@ -145,7 +145,7 @@ body {
   background: #004E9F;
   color: white;
   padding: 4px 12px;
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   font-size: 12px;
   font-family: Unbounded, sans-serif;
   font-weight: 400;
@@ -156,7 +156,7 @@ body {
   width: 100%;
   max-height: 450px;
   object-fit: cover;
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
 }
 
 /* ── Title + actions ── */
@@ -202,7 +202,7 @@ body {
   color: #fff;
   border: none;
   padding: 6px 14px;
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   cursor: pointer;
   font-family: Circe, sans-serif;
   font-size: 13px;
@@ -430,7 +430,7 @@ body {
   width: 100%;
   min-height: 90px;
   background: white;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: 1px #d0d0d0 solid;
   padding: 12px 16px;
   font-family: Unbounded, sans-serif;
@@ -450,7 +450,7 @@ body {
   padding: 0 28px;
   background: linear-gradient(0deg, #004e9f 0%, #006edf 100%) !important;
   box-shadow: 0 2px 4px rgb(0 0 0 / 15%);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: none !important;
   display: inline-flex;
   justify-content: center;
@@ -498,7 +498,7 @@ body {
   display: flex;
   flex-direction: column;
   background: #f8f9fa;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   text-decoration: none;
   color: inherit;
@@ -567,7 +567,7 @@ body {
   padding: 0 32px;
   background: transparent;
   border: 1.5px solid #004e9f;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   color: #004e9f;
   font-size: 14px;
   font-family: Unbounded, sans-serif;
@@ -634,7 +634,7 @@ main.content:has(.page-content-wrapper-white) {
 
   .article-main-image {
     max-height: 280px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
   }
 
   .content-text-full-width {
@@ -670,7 +670,7 @@ main.content:has(.page-content-wrapper-white) {
 
   .article-main-image {
     max-height: 220px;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
   }
 
   .content-text-full-width {

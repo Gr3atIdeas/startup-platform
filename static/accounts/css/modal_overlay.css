@@ -27,7 +27,7 @@
 
 .easter-egg-content {
     background: linear-gradient(135deg, #011d39 0%, #1a3a5f 100%);
-    border-radius: 15px;
+    border-radius: var(--radius-lg);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
     max-width: 90%;
     max-height: 90%;
@@ -61,7 +61,7 @@
     font-size: 24px;
     cursor: pointer;
     padding: 5px 10px;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     transition: all 0.3s ease;
     line-height: 1;
 }
@@ -82,18 +82,18 @@
 .easter-egg-video-container video {
     width: 100%;
     height: auto;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .easter-egg-video-container .plyr {
     width: 100%;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
 }
 
 .easter-egg-video-container .plyr__video-wrapper {
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
 }
 
 .easter-egg-modal {

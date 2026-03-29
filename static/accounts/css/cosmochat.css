@@ -36,8 +36,8 @@ body.cosmochat-body {
   display: flex;
   align-items: center;
   background: rgb(255 255 255 / 19%);
-  border-radius: 99px;
-  border: 1px solid #004e9f; 
+  border-radius: var(--radius-full);
+  border: 1px solid #004e9f;
   padding: 8px 15px;
   gap: 8px;
 }
@@ -66,7 +66,7 @@ body.cosmochat-body {
 
 .filter-btn-new {
   padding: 8px 16px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-size: 14px;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
@@ -130,7 +130,7 @@ body.cosmochat-body {
 
 .django-roles-filter label {
   padding: 8px 16px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-size: 14px;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
@@ -167,7 +167,7 @@ body.cosmochat-body {
 .user-card-new {
   background: white;
   color: black;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 14px 36px;
   display: flex;
   justify-content: space-between;
@@ -316,7 +316,7 @@ body.cosmochat-body {
   padding: 12px;
   background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   color: #f5f5f5;
   font-size: 16px;
   font-family: Unbounded, sans-serif;
@@ -359,7 +359,7 @@ body.cosmochat-body {
   cursor: pointer;
   color: white;
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   text-decoration: none;
   display: inline-block;
 }
@@ -383,7 +383,7 @@ body.cosmochat-body {
 
 .show-more-btn-new {
   padding: 12px 35px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: 1px solid white !important;
   background: transparent;
   color: #f5f5f5;
@@ -404,7 +404,7 @@ body.cosmochat-body {
 
 .hide-btn-new {
   padding: 12px 35px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: 1px solid white;
   background: transparent;
   color: #f5f5f5;
@@ -444,7 +444,7 @@ body.cosmochat-body {
 }
 
 .article-card-item {
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -456,7 +456,7 @@ body.cosmochat-body {
   width: 100%;
   height: 214px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
 }
 
 .article-card-item h3 {
@@ -481,10 +481,10 @@ body.cosmochat-body {
 
 .article-card-item .ad-badge-new {
   position: absolute;
-  top: 10px; 
+  top: 10px;
   right: 10px;
   background: rgb(217 217 217 / 58%);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 4px 10px;
   display: flex;
   align-items: center;
@@ -515,7 +515,7 @@ body.cosmochat-body {
   background: #031a30;
   color: #ffef2b;
   padding: 9px 15px;
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   font-size: 12px;
 }
 
@@ -526,7 +526,7 @@ body.cosmochat-body {
   min-height: 725px;
   background: white;
   box-shadow: 6px 6px 15px rgb(0 0 0 / 25%);
-  border-radius: 15px;
+  border-radius: var(--radius-lg);
   padding: 36px 38px;
   display: flex;
   gap: 61px;
@@ -579,7 +579,7 @@ body.cosmochat-body {
 
 .chat-filters-new .filter-btn-new {
   padding: 11px 25px;
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   font-size: 12px;
   color: black; 
 }
@@ -604,7 +604,7 @@ body.cosmochat-body {
   align-items: center;
   gap: 15px;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background-color 0.2s;
   border: 1px solid transparent; 
@@ -622,7 +622,7 @@ body.cosmochat-body {
 .chat-item-new .chat-avatar-img {
   width: 77px;
   height: 77px;
-  border-radius: 22px;
+  border-radius: var(--radius-xl);
   object-fit: cover;
 }
 
@@ -677,7 +677,7 @@ body.cosmochat-body {
   color: white;
   font-size: 12px;
   padding: 3px 7px;
-  border-radius: 12px; 
+  border-radius: var(--radius-full);
   min-width: 18px;
   text-align: center;
   line-height: 1;
@@ -692,7 +692,7 @@ body.cosmochat-body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  border-radius: 15px;
+  border-radius: var(--radius-lg);
   border: 1px solid #004e9f;
   min-height: 650px; 
   max-height: 650px; 
@@ -744,7 +744,7 @@ body.cosmochat-body {
   border: 1px solid #004e9f;
   color: #004e9f;
   padding: 8px 12px;
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   cursor: pointer;
   margin-left: 10px;
   font-family: Unbounded, sans-serif;
@@ -772,7 +772,7 @@ body.cosmochat-body {
 .message-bubble-new {
   max-width: 70%;
   padding: 10px 15px;
-  border-radius: 18px; 
+  border-radius: var(--radius-md);
   font-size: 14px;
   font-family: Unbounded, sans-serif;
   line-height: 1.4;
@@ -805,14 +805,14 @@ body.cosmochat-body {
   background-color: #e9e9eb; 
   color: black;
   align-self: flex-start;
-  border-bottom-left-radius: 4px; 
+  border-bottom-left-radius: var(--radius-xs);
 }
 
 .current-user-message {
   background-color: #004e9f; 
   color: white;
   align-self: flex-end;
-  border-bottom-right-radius: 4px; 
+  border-bottom-right-radius: var(--radius-xs);
 }
 .current-user-message .message-sender-name {
   color: #e0e0e0;
@@ -827,7 +827,7 @@ body.cosmochat-body {
   text-align: center;
   font-style: italic;
   padding: 8px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   align-self: center;
   width: 100%; 
   max-width: 100%;
@@ -846,7 +846,7 @@ body.cosmochat-body {
   display: flex;
   align-items: center;
   background: #f3f3f3;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
 }
 
 .chat-input-field-area #messageFormNew textarea {
@@ -902,7 +902,7 @@ body.cosmochat-body {
   background: #fff;
   color: black;
   padding: 30px;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   width: 450px;
   max-width: 90%;
   position: relative;
@@ -959,12 +959,12 @@ body.cosmochat-body {
 
 .modal button.action-btn,
 .modal a button.action-btn {
-  
+
   padding: 10px 20px;
   background: #004e9f;
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   margin-top: 20px;
   font-family: Unbounded, sans-serif;
@@ -995,7 +995,7 @@ body.cosmochat-body {
   overflow-y: auto;
   margin-top: 15px;
   border: 1px solid #eee;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
 }
 
 .participant-item {
@@ -1028,7 +1028,7 @@ body.cosmochat-body {
   max-width: 374px;
   background: white;
   box-shadow: 4px 4px 6px rgb(0 0 0 / 25%);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: 1px solid #004e9f;
   margin-top: 10px;
   z-index: 100;
@@ -1100,7 +1100,7 @@ body.cosmochat-body {
 .search-dropdown-user img {
   width: 58px;
   height: 58px;
-  border-radius: 29px;
+  border-radius: var(--radius-full);
   object-fit: cover;
   user-drag: none; 
   -webkit-user-drag: none;
@@ -1151,9 +1151,9 @@ body.cosmochat-body {
 }
 
 .group-chat-modal {
-  
-  color: black; 
-  border-radius: 20px;
+
+  color: black;
+  border-radius: var(--radius-xl);
   box-shadow: 0 15px 40px rgb(0 0 0 / 50%);
   width: 1074px; 
   max-width: 95vw; 
@@ -1267,9 +1267,9 @@ body.cosmochat-body {
 
 .group-chat-modal-search {
   width: 100%;
-  padding: 8px 15px; 
+  padding: 8px 15px;
   background: rgb(255 255 255 / 19%);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   border: 1px solid #004e9f;
   display: flex;
   align-items: center;
@@ -1314,8 +1314,8 @@ body.cosmochat-body {
 }
 
 .group-chat-modal-role-btn {
-  padding: 8px 25px; 
-  border-radius: 99px;
+  padding: 8px 25px;
+  border-radius: var(--radius-full);
   font-size: 12px;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
@@ -1360,9 +1360,9 @@ body.cosmochat-body {
 }
 
 .group-chat-modal-user-avatar {
-  width: 48px; 
-  height: 48px; 
-  border-radius: 24px; 
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
   border: 1px solid #004e9f;
   object-fit: cover;
 }
@@ -1446,13 +1446,13 @@ body.cosmochat-body {
 }
 
 .group-chat-modal-users::-webkit-scrollbar-track {
-  background: rgb(0 0 0 / 5%); 
-  border-radius: 3px;
+  background: rgb(0 0 0 / 5%);
+  border-radius: var(--radius-xs);
 }
 
 .group-chat-modal-users::-webkit-scrollbar-thumb {
   background: #004e9f;
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
 }
 
 .group-chat-modal-users::-webkit-scrollbar-thumb:hover {
@@ -1469,12 +1469,12 @@ body.cosmochat-body {
 }
 
 .selected-user-pill {
-  display: inline-flex; 
+  display: inline-flex;
   align-items: center;
   background-color: #004e9f;
   color: white;
   padding: 5px 10px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-size: 14px; 
   font-family: Unbounded, sans-serif;
   font-weight: 400;
@@ -1561,7 +1561,7 @@ body.cosmochat-body {
 .selected-chat-info {
   width: 100%;
   padding: 15px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   border: 1px solid #004e9f;
   display: flex;
   align-items: center;
@@ -1592,8 +1592,8 @@ body.cosmochat-body {
 
 .chat-item-new .chat-avatar-img[src="/static/accounts/images/cosmochat/group_avatar.svg"],
 .chat-item-new .chat-avatar-img:not([src]) {
-    background-color: #ffffff; 
-    border-radius: 22px; 
+    background-color: #ffffff;
+    border-radius: var(--radius-xl);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1694,10 +1694,10 @@ body.cosmochat-body {
 }
 
 .participants-actions-list .participant-display-item img {
-  
+
   width: 58px;
   height: 58px;
-  border-radius: 29px;
+  border-radius: var(--radius-full);
   border: 1px solid #004e9f;
 }
 
@@ -1735,7 +1735,7 @@ body.cosmochat-body {
   border: none;
   color: white;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   font-family: Unbounded, sans-serif;
   font-size: 14px;
 }
@@ -1743,7 +1743,7 @@ body.cosmochat-body {
 #chatNameInput {
   margin-left: 15px;
   padding: 5px;
-  border-radius: 5px;
+  border-radius: var(--radius-xs);
   border: 1px solid #004e9f;
   background: #fff;
   color: #000;
@@ -1770,7 +1770,7 @@ body.cosmochat-body {
 #chatListContainer .chat-item-new .chat-avatar-img:not([src]) {
     width: 77px;
     height: 77px;
-    border-radius: 22px;
+    border-radius: var(--radius-xl);
     background-color: #ffffff; 
     display: flex;
     justify-content: center;
@@ -1788,7 +1788,7 @@ body.cosmochat-body {
     border: 1px solid #004e9f;
     color: #004e9f;
     padding: 8px 12px;
-    border-radius: 5px;
+    border-radius: var(--radius-xs);
     cursor: pointer;
     margin-left: 10px;
     font-family: Unbounded, sans-serif;
@@ -1823,7 +1823,7 @@ body.cosmochat-body {
     border: 1px solid #004e9f;
     color: #004e9f;
     padding: 8px 12px;
-    border-radius: 5px;
+    border-radius: var(--radius-xs);
     cursor: pointer;
     margin-left: 10px;
     font-family: Unbounded, sans-serif;
@@ -1883,7 +1883,7 @@ body.cosmochat-body {
     top: 100%;
     background: white;
     box-shadow: 0 4px 15px rgb(0 0 0 / 20%);
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     z-index: 100;
     min-width: 200px;
     padding: 15px 10px;
@@ -1917,9 +1917,9 @@ body.cosmochat-body {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 15px; 
+    padding: 15px;
     border: 1px solid #004E9F;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
 }
 
 .group-chat-modal-details-view .chat-icon-container {
@@ -1964,7 +1964,7 @@ body.cosmochat-body {
 .participants-actions-list .participant-display-item img {
     width: 58px;
     height: 58px;
-    border-radius: 29px;
+    border-radius: var(--radius-full);
 }
 
 .participants-actions-list .participant-name {
@@ -2131,7 +2131,7 @@ body.cosmochat-body {
     width: 100%;
     max-width: 100%;
     padding: 20px 15px;
-    border-radius: 15px;
+    border-radius: var(--radius-lg);
   }
 
   .group-chat-modal-content-wrapper {
@@ -2205,7 +2205,7 @@ body.cosmochat-body {
   .group-chat-modal-user-avatar {
     width: 40px;
     height: 40px;
-    border-radius: 20px;
+    border-radius: var(--radius-full);
   }
 
   .group-chat-modal-user-firstname,
@@ -2260,7 +2260,7 @@ body.cosmochat-body {
   .participants-actions-list .participant-display-item img {
     width: 48px;
     height: 48px;
-    border-radius: 24px;
+    border-radius: var(--radius-full);
   }
 
   .participants-actions-list .participant-name {

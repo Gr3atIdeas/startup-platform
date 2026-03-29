@@ -58,7 +58,7 @@
   flex-shrink: 1;
   padding: 8px 20px;
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 99px;
+  border-radius: var(--radius-full);
   border: 1px solid rgba(255, 255, 255, 0.15);
   gap: 8px;
   transition: border-color 0.2s ease;
@@ -122,7 +122,7 @@
 
 .header-nav-link {
   padding: 8px 16px;
-  border-radius: 20px;
+  border-radius: var(--radius-full);
   color: var(--Color5, white);
   font-size: 14px !important;
   font-family: Unbounded, sans-serif;
@@ -156,7 +156,7 @@
   padding: 0 25px;
   background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
-  border-radius: 20px;
+  border-radius: var(--radius-full);
   justify-content: center;
   align-items: center;
   gap: 9px;
@@ -243,7 +243,7 @@
   -webkit-backdrop-filter: blur(20px);
   min-width: 220px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   border: none;
   z-index: 1001;
   right: 0;
@@ -278,7 +278,7 @@
   font-weight: 400;
   line-height: 100%;
   white-space: nowrap;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   transition: background-color 0.15s ease;
 }
 
@@ -313,7 +313,7 @@
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  border-radius: 50px;
+  border-radius: var(--radius-full);
   background: rgba(0, 78, 159, 0.8);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
@@ -385,7 +385,7 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button {
   background: #3fff47 !important;
   color: #000 !important;
   padding: 8px 16px !important;
-  border-radius: 5px !important;
+  border-radius: var(--radius-sm) !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 8px !important;
@@ -414,7 +414,7 @@ nav.nav-menu
   background-color: transparent !important;
   border: none !important;
   padding: 8px 16px !important;
-  border-radius: 20px !important;
+  border-radius: var(--radius-full) !important;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -457,7 +457,7 @@ nav.nav-menu
   -webkit-backdrop-filter: blur(20px);
   min-width: 220px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   z-index: 1001;
   left: 50%;
   top: calc(100% + 12px);
@@ -571,7 +571,7 @@ nav.nav-menu
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  border-radius: 10px !important;
+  border-radius: var(--radius-sm) !important;
   outline: none !important;
   color: #fff !important;
   transition: background-color 0.15s ease !important;
@@ -605,7 +605,7 @@ nav.nav-menu
   background: #3fff47 !important;
   color: #000 !important;
   padding: 8px 16px !important;
-  border-radius: 20px !important;
+  border-radius: var(--radius-full) !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 8px !important;
@@ -641,7 +641,7 @@ nav.nav-menu
   -webkit-backdrop-filter: blur(20px);
   min-width: 240px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   z-index: 1001;
   left: 50%;
   top: calc(100% + 12px);
@@ -692,7 +692,7 @@ nav.nav-menu
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  border-radius: 10px !important;
+  border-radius: var(--radius-sm) !important;
   outline: none !important;
   color: #fff !important;
   transition: background-color 0.15s ease !important;
@@ -852,7 +852,7 @@ nav.nav-menu
     width: 24px;
     height: 2px;
     background: #fff;
-    border-radius: 2px;
+    border-radius: var(--radius-xs);
     transition: transform 0.3s ease, opacity 0.3s ease;
   }
 

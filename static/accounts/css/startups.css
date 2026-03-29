@@ -50,7 +50,7 @@ body {
 .startup-card {
   background: linear-gradient(to right, #e6f0fa, #ebedff);
   padding: 24px;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
   transition: transform 0.3s ease;
 }
@@ -77,7 +77,7 @@ body {
   width: 200px;
   height: 200px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
 }
 
 .startup-logo-placeholder {
@@ -123,7 +123,7 @@ body {
   background-color: #2563eb;
   color: white;
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   text-decoration: none;
   transition: background-color 0.3s ease;
 }

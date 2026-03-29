@@ -3,7 +3,7 @@
 /* Editor container */
 .quill-editor-container {
   background: #ffffff;
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
   font-family: 'Unbounded', sans-serif;
 }
 
@@ -32,7 +32,7 @@ textarea.ckeditor-simple + .quill-editor-container .ql-editor {
 .quill-editor-container .ql-toolbar.ql-snow {
   background: #f8f8fa;
   border: 1px solid #ddd;
-  border-radius: 8px 8px 0 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   padding: 8px 12px;
 }
 
@@ -40,7 +40,7 @@ textarea.ckeditor-simple + .quill-editor-container .ql-editor {
 .quill-editor-container .ql-container.ql-snow {
   border: 1px solid #ddd;
   border-top: none;
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
 }
 
 /* Toolbar buttons */
@@ -76,7 +76,7 @@ textarea.ckeditor-simple + .quill-editor-container .ql-editor {
 .quill-editor-container .ql-toolbar .ql-picker-options {
   background: #ffffff;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: var(--radius-xs);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -132,7 +132,7 @@ textarea.ckeditor-simple + .quill-editor-container .ql-editor {
 /* Images */
 .quill-editor-container .ql-editor img {
   max-width: 100%;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   margin: 8px 0;
 }
 
@@ -140,7 +140,7 @@ textarea.ckeditor-simple + .quill-editor-container .ql-editor {
 .ql-snow .ql-tooltip {
   background: #ffffff;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   color: #1e1e1e;
   padding: 8px 12px;
@@ -148,7 +148,7 @@ textarea.ckeditor-simple + .quill-editor-container .ql-editor {
 
 .ql-snow .ql-tooltip input[type="text"] {
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   padding: 4px 8px;
   color: #1e1e1e;
   background: #ffffff;

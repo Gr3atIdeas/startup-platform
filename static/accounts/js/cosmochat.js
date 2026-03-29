@@ -1395,7 +1395,7 @@ function showConfirmModal(message, onConfirm, onCancel) {
   modal.className = 'modal-popup';
   modal.style.background = 'rgba(34, 34, 34, 0.95)';
   modal.style.color = 'white';
-  modal.style.borderRadius = '20px';
+  modal.style.borderRadius = 'var(--radius-xl)';
   modal.style.boxShadow = '0 15px 40px rgb(0 0 0 / 50%)';
   modal.style.padding = '40px 32px 32px 32px';
   modal.style.display = 'flex';
@@ -1421,7 +1421,7 @@ function showConfirmModal(message, onConfirm, onCancel) {
   confirmBtn.style.fontWeight = 'bold';
   confirmBtn.style.fontSize = '16px';
   confirmBtn.style.padding = '10px 28px';
-  confirmBtn.style.borderRadius = '10px';
+  confirmBtn.style.borderRadius = 'var(--radius-sm)';
   confirmBtn.style.border = 'none';
   confirmBtn.style.cursor = 'pointer';
   const cancelBtn = document.createElement('button');
@@ -1432,7 +1432,7 @@ function showConfirmModal(message, onConfirm, onCancel) {
   cancelBtn.style.fontWeight = 'bold';
   cancelBtn.style.fontSize = '16px';
   cancelBtn.style.padding = '10px 28px';
-  cancelBtn.style.borderRadius = '10px';
+  cancelBtn.style.borderRadius = 'var(--radius-sm)';
   cancelBtn.style.border = 'none';
   cancelBtn.style.cursor = 'pointer';
   btnRow.appendChild(confirmBtn);
@@ -1472,7 +1472,7 @@ window.customConfirm = function(message) {
     modal.className = 'modal-popup';
     modal.style.background = 'rgba(34, 34, 34, 0.95)';
     modal.style.color = 'white';
-    modal.style.borderRadius = '20px';
+    modal.style.borderRadius = 'var(--radius-xl)';
     modal.style.boxShadow = '0 15px 40px rgb(0 0 0 / 50%)';
     modal.style.padding = '40px 32px 32px 32px';
     modal.style.display = 'flex';
@@ -1498,7 +1498,7 @@ window.customConfirm = function(message) {
     confirmBtn.style.fontWeight = 'bold';
     confirmBtn.style.fontSize = '16px';
     confirmBtn.style.padding = '10px 28px';
-    confirmBtn.style.borderRadius = '10px';
+    confirmBtn.style.borderRadius = 'var(--radius-sm)';
     confirmBtn.style.border = 'none';
     confirmBtn.style.cursor = 'pointer';
     const cancelBtn = document.createElement('button');
@@ -1509,7 +1509,7 @@ window.customConfirm = function(message) {
     cancelBtn.style.fontWeight = 'bold';
     cancelBtn.style.fontSize = '16px';
     cancelBtn.style.padding = '10px 28px';
-    cancelBtn.style.borderRadius = '10px';
+    cancelBtn.style.borderRadius = 'var(--radius-sm)';
     cancelBtn.style.border = 'none';
     cancelBtn.style.cursor = 'pointer';
     btnRow.appendChild(confirmBtn);

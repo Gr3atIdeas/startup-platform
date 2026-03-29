@@ -2,7 +2,7 @@
 .feature-card {
   container-type: inline-size;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: clamp(8px, 2vw, 16px);
+  border-radius: var(--radius-md);
   padding: clamp(15px, 3vw, 30px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -72,7 +72,7 @@
   width: 100%;
   height: clamp(120px, 25vw, 200px);
   object-fit: cover;
-  border-radius: clamp(6px, 1.5vw, 12px);
+  border-radius: var(--radius-sm);
   margin-top: clamp(10px, 2vw, 20px);
   transition: transform 0.3s ease;
 }
@@ -207,7 +207,7 @@
 .btn--yellow-gradient {
   background: linear-gradient(135deg, #ffd700, #ffed4e);
   border: none;
-  border-radius: clamp(8px, 2vw, 12px);
+  border-radius: var(--radius-sm);
   padding: clamp(12px, 2.5vw, 20px) clamp(20px, 4vw, 32px);
   font-size: clamp(14px, 3.5vw, 18px);
   font-weight: 600;
@@ -262,7 +262,7 @@
 
 .group-div {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: clamp(8px, 2vw, 16px);
+  border-radius: var(--radius-md);
   padding: clamp(15px, 3vw, 30px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -488,19 +488,19 @@
 .responsive-button {
   padding: clamp(10px, 2.5vw, 16px) clamp(16px, 4vw, 24px);
   font-size: clamp(14px, 3.5vw, 16px);
-  border-radius: clamp(6px, 1.5vw, 10px);
+  border-radius: var(--radius-sm);
 }
 
 .responsive-image {
   width: 100%;
   height: clamp(120px, 25vw, 200px);
   object-fit: cover;
-  border-radius: clamp(6px, 1.5vw, 12px);
+  border-radius: var(--radius-sm);
 }
 
 .responsive-card {
   background: rgba(255, 255, 255, 0.1);
-  border-radius: clamp(8px, 2vw, 16px);
+  border-radius: var(--radius-md);
   padding: clamp(15px, 3vw, 30px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
