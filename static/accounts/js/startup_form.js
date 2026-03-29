@@ -649,7 +649,17 @@ document.addEventListener('DOMContentLoaded', function () {
           body: formData,
           credentials: 'same-origin',
         }).then(function (res) {
-          if (!res.ok) return res.json().then(function (data) { throw data })
+          if (!res.ok) {
+            var ct = res.headers.get('content-type') || '';
+            if (ct.indexOf('application/json') !== -1) {
+              return res.json().then(function (data) { throw data });
+            }
+            // Server returned non-JSON error (500 HTML page)
+            return res.text().then(function (html) {
+              console.error('Server error ' + res.status + ':', html.substring(0, 500));
+              throw { message: 'Ошибка сервера (' + res.status + '). Попробуйте ещё раз или обратитесь в поддержку.' };
+            });
+          }
           return res.json()
         }).then(function (data) {
           var loadingOverlay = document.getElementById('submission-loading-overlay')

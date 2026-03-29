@@ -3774,6 +3774,7 @@ def create_franchise(request):
         messages.error(request, "Доступ к созданию франшизы разрешён только пользователям с ролью 'Стартаппер' или 'Модератор'.")
         return redirect("home")
     if request.method == "POST":
+      try:
         # Логирование входящих данных
         logger.info(f"=== CREATE_FRANCHISE START === User: {request.user.user_id} ({request.user.email})")
         logger.info(f"POST keys: {list(request.POST.keys())}")
@@ -3964,6 +3965,17 @@ def create_franchise(request):
             logger.warning(f"Form errors: {form.errors.as_json()}")
             messages.error(request, "Форма содержит ошибки.")
             return render(request, "accounts/create_franchise.html", {"form": form})
+      except Exception as exc:
+        logger.exception(f"=== CREATE_FRANCHISE CRASHED === User: {request.user.user_id}")
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return JsonResponse({
+                "success": False,
+                "errors": {},
+                "non_field_errors": [f"Внутренняя ошибка сервера: {exc}"],
+            }, status=500)
+        messages.error(request, f"Ошибка при создании франшизы: {exc}")
+        form = FranchiseForm(request.POST)
+        return render(request, "accounts/create_franchise.html", {"form": form})
     else:
         form = FranchiseForm()
         clear_temp_files(request, 'franchiseForm')
