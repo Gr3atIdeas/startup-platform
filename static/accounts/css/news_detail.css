@@ -129,7 +129,7 @@ body {
 .stat-text {
   color: black;
   font-size: 14px;
-  font-family: Circe, sans-serif;
+  font-family: Inter, sans-serif;
   font-weight: 400;
   line-height: 18px;
 }
@@ -189,7 +189,7 @@ body {
   font-size: 14px;
   color: #004E9F;
   text-decoration: none;
-  font-family: Circe, sans-serif;
+  font-family: Inter, sans-serif;
   white-space: nowrap;
 }
 
@@ -204,7 +204,7 @@ body {
   padding: 6px 14px;
   border-radius: var(--radius-xs);
   cursor: pointer;
-  font-family: Circe, sans-serif;
+  font-family: Inter, sans-serif;
   font-size: 13px;
   white-space: nowrap;
 }
@@ -263,7 +263,7 @@ body {
   align-items: center;
   gap: 8px;
   padding: 0;
-  font-family: Circe, sans-serif;
+  font-family: Inter, sans-serif;
 }
 
 .like-button.liked .fa-heart {

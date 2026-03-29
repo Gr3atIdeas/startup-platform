@@ -546,7 +546,7 @@ body {
 }
 
 .franchise-cost-row .cost-label {
-  font-family: 'Circe', sans-serif;
+  font-family: Inter, sans-serif;
   font-weight: 400;
   font-size: 12px;
   color: #7B7B7B;
@@ -575,7 +575,7 @@ body {
 }
 
 .investors-counter .investors-count {
-  font-family: 'Circe', sans-serif;
+  font-family: Inter, sans-serif;
   font-weight: 700;
   font-size: 14px;
   line-height: 1.71em;
@@ -660,10 +660,10 @@ body {
 
 
 .franchise-description {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  font-size: 12px;
-  line-height: 1.35em;
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.45em;
   letter-spacing: 0.01em;
   color: #000000;
   margin: 0;
@@ -722,7 +722,7 @@ body {
 }
 
 .investors-count {
-  font-family: 'Circe', sans-serif;
+  font-family: Inter, sans-serif;
   font-weight: 700;
   font-size: 14px;
   line-height: 1.71em;
@@ -734,7 +734,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-family: 'Circe', sans-serif;
+  font-family: Inter, sans-serif;
   font-weight: 700;
   font-size: 14px;
   line-height: 1.71em;

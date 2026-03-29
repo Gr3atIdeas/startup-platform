@@ -82,7 +82,7 @@ body {
   align-items: center;
   color: white;
   font-size: 8px;
-  font-family: Circe, sans-serif;
+  font-family: Inter, sans-serif;
   font-weight: 400;
   line-height: 1;
   padding-bottom: 1px;
@@ -627,10 +627,10 @@ body {
 }
 
 .startup-description {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  font-size: 12px;
-  line-height: 1.35em;
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.45em;
   letter-spacing: 0.01em;
   color: #000000;
   margin: 0;
@@ -807,7 +807,7 @@ body {
 }
 
 .investors-counter .investors-count {
-  font-family: 'Circe', sans-serif;
+  font-family: Inter, sans-serif;
   font-weight: 700;
   font-size: 14px;
   line-height: 1.71em;

@@ -34,7 +34,7 @@ body {
   padding-right: 0;
   padding-bottom: 0 !important;
   padding-left: 0;
-  font-family: Unbounded, Arial, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
   background: linear-gradient(
     180deg,
     #000000 0%,
