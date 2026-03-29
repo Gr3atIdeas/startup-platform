@@ -22,7 +22,10 @@ body {
   gap: 21px;
   box-sizing: border-box;
   max-width: 1303px;
+  width: 100%;
   margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .catalog-header {

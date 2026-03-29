@@ -14,12 +14,27 @@
   justify-content: space-between;
   align-items: center;
   display: flex;
-  gap: 16px;
+  gap: 12px;
+}
+
+.header-left-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
 .header-logo-link {
-  display: inline-block;
-  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: 0;
+}
+
+.header-logo-icon-img {
+  height: 44px;
+  width: auto;
+  display: block;
 }
 
 .header-logo-icon-container {
