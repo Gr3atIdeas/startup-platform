@@ -683,23 +683,33 @@
     }
   })();
 
-  // Skeleton loading — remove shimmer once images are loaded
+  // Skeleton loading — remove shimmer once images actually render
   document.querySelectorAll('.skeleton-loading').forEach(function(grid) {
-    var imgs = grid.querySelectorAll('img[loading="lazy"]');
-    if (!imgs.length) { grid.classList.remove('skeleton-loading'); return; }
-    var loaded = 0;
-    var total = imgs.length;
-    function check() {
-      loaded++;
-      if (loaded >= Math.min(total, 6)) grid.classList.remove('skeleton-loading');
+    var imgs = Array.from(grid.querySelectorAll('img'));
+    var readyCount = 0;
+    var needed = Math.min(imgs.length, 4) || 1;
+    var removed = false;
+
+    function removeSkeleton() {
+      if (removed) return;
+      removed = true;
+      grid.classList.add('skeleton-done');
+      setTimeout(function() { grid.classList.remove('skeleton-loading', 'skeleton-done'); }, 400);
     }
+
+    function onLoad() {
+      readyCount++;
+      if (readyCount >= needed) removeSkeleton();
+    }
+
     imgs.forEach(function(img) {
-      if (img.complete) { check(); return; }
-      img.addEventListener('load', check);
-      img.addEventListener('error', check);
+      if (img.naturalWidth > 0 && img.complete) { onLoad(); return; }
+      img.addEventListener('load', onLoad);
+      img.addEventListener('error', onLoad);
     });
-    // Fallback: remove skeleton after 3s max
-    setTimeout(function() { grid.classList.remove('skeleton-loading'); }, 3000);
+
+    // Fallback
+    setTimeout(removeSkeleton, 4000);
   });
   </script>
 </body>
