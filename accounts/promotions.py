@@ -36,40 +36,39 @@ def get_active_ads(location):
         from accounts.models import AdPlacement
 
         today = timezone.now().date()
-        placements = (
+        placements = list(
             AdPlacement.objects.filter(location=location, is_active=True)
             .filter(models.Q(start_date__isnull=True) | models.Q(start_date__lte=today))
             .filter(models.Q(end_date__isnull=True) | models.Q(end_date__gte=today))
             .order_by("sort_order")
         )
+
+        ads = []
+        for p in placements:
+            entity = p.get_entity()
+            if not entity or getattr(entity, "status", "") != "approved":
+                continue
+
+            slug = getattr(entity, "slug", "") or ""
+            url = ""
+            if p.entity_type == "startup":
+                url = f"/startup/{slug or entity.startup_id}/"
+            elif p.entity_type == "franchise":
+                url = f"/franchise/{slug or entity.franchise_id}/"
+            elif p.entity_type == "agency":
+                url = f"/agency/{slug or entity.agency_id}/"
+            elif p.entity_type == "specialist":
+                url = f"/specialist/{slug or entity.specialist_id}/"
+
+            ads.append({
+                "placement": p,
+                "entity": entity,
+                "entity_type": p.entity_type,
+                "title": p.title or entity.title,
+                "description": (p.description or getattr(entity, "short_description", "") or "")[:200],
+                "url": url,
+            })
+        return ads
     except Exception:
         logger.debug("ad_placements table not ready, skipping")
         return []
-
-    ads = []
-    for p in placements:
-        entity = p.get_entity()
-        if not entity or getattr(entity, "status", "") != "approved":
-            continue
-
-        # Build URL
-        url = ""
-        slug = getattr(entity, "slug", "") or ""
-        if p.entity_type == "startup":
-            url = f"/startup/{slug or entity.startup_id}/"
-        elif p.entity_type == "franchise":
-            url = f"/franchise/{slug or entity.franchise_id}/"
-        elif p.entity_type == "agency":
-            url = f"/agency/{slug or entity.agency_id}/"
-        elif p.entity_type == "specialist":
-            url = f"/specialist/{slug or entity.specialist_id}/"
-
-        ads.append({
-            "placement": p,
-            "entity": entity,
-            "entity_type": p.entity_type,
-            "title": p.title or entity.title,
-            "description": (p.description or getattr(entity, "short_description", "") or "")[:200],
-            "url": url,
-        })
-    return ads
