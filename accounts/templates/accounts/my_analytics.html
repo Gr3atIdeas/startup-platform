@@ -9,66 +9,82 @@
 {% block content %}
 <style>
 .analytics-dashboard { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
-.analytics-title { color: #fff; font-family: 'Blippo Local', sans-serif; font-size: 32px; margin-bottom: 24px; }
-.analytics-subtitle { color: #fff; font-size: 22px; margin: 0 0 16px; }
+.analytics-title { color: #fff; font-family: Unbounded, sans-serif; font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+.analytics-period { color: rgba(255,255,255,0.4); font-size: 13px; margin-bottom: 28px; font-family: Inter, sans-serif; }
 
 /* Summary cards */
 .analytics-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
-.analytics-card { background: rgba(0, 8, 25, 0.82); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-lg); padding: 24px; text-align: center; }
-.analytics-card__value { font-size: 36px; font-weight: 700; color: #FFD700; }
-.analytics-card__label { color: rgba(255,255,255,0.6); margin-top: 8px; font-size: 14px; }
+.analytics-card { background: rgba(0, 8, 25, 0.82); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-lg); padding: 24px; text-align: center; transition: border-color 0.2s; }
+.analytics-card:hover { border-color: rgba(255,255,255,0.12); }
+.analytics-card__value { font-size: 36px; font-weight: 700; color: #FFD700; font-family: Unbounded, sans-serif; }
+.analytics-card__label { color: rgba(255,255,255,0.6); margin-top: 8px; font-size: 14px; font-family: Inter, sans-serif; }
+.analytics-card__value--green { color: #4CAF50; }
+.analytics-card__value--blue { color: #2196F3; }
 
 /* Selected entity detail */
 .analytics-detail { background: rgba(0, 8, 25, 0.82); border: 1px solid rgba(255,215,0,0.2); border-radius: var(--radius-lg); padding: 28px; margin-bottom: 32px; }
 .analytics-detail__header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-.analytics-detail__name { color: #fff; font-size: 20px; font-weight: 600; }
-.analytics-detail__badge { font-size: 12px; color: #FFD700; background: rgba(255,215,0,0.15); padding: 4px 12px; border-radius: var(--radius-xs); text-transform: uppercase; letter-spacing: 0.5px; }
+.analytics-detail__name { color: #fff; font-size: 20px; font-weight: 600; font-family: Unbounded, sans-serif; }
+.analytics-detail__badge { font-size: 12px; color: #FFD700; background: rgba(255,215,0,0.15); padding: 4px 12px; border-radius: var(--radius-xs); text-transform: uppercase; letter-spacing: 0.5px; font-family: Inter, sans-serif; }
 .analytics-detail__close { margin-left: auto; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 22px; line-height: 1; padding: 4px 8px; border-radius: var(--radius-xs); transition: color 0.2s, background 0.2s; }
 .analytics-detail__close:hover { color: #fff; background: rgba(255,255,255,0.1); text-decoration: none; }
 .analytics-chart-container { background: rgba(0,0,0,0.3); border-radius: var(--radius-md); padding: 20px; margin-bottom: 20px; height: 300px; position: relative; }
+
+/* Detail summary mini-cards */
+.analytics-detail-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.analytics-detail-stat { background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 16px; text-align: center; }
+.analytics-detail-stat__value { font-size: 28px; font-weight: 700; font-family: Unbounded, sans-serif; }
+.analytics-detail-stat__label { color: rgba(255,255,255,0.5); margin-top: 4px; font-size: 12px; font-family: Inter, sans-serif; }
+
+/* Click breakdown */
+.analytics-clicks-title { color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-family: Inter, sans-serif; }
 .analytics-clicks-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
 .analytics-click-item { background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 16px; text-align: center; }
-.analytics-click-item__value { font-size: 24px; font-weight: 700; color: #2196F3; }
-.analytics-click-item__label { color: rgba(255,255,255,0.5); margin-top: 4px; font-size: 13px; }
+.analytics-click-item__value { font-size: 24px; font-weight: 700; color: #2196F3; font-family: Unbounded, sans-serif; }
+.analytics-click-item__label { color: rgba(255,255,255,0.5); margin-top: 4px; font-size: 13px; font-family: Inter, sans-serif; }
 
 /* Status filter */
 .analytics-status-filter { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
 .analytics-status-filter a {
   color: rgba(255,255,255,0.6); text-decoration: none; padding: 8px 18px;
   border-radius: var(--radius-sm); background: rgba(255,255,255,0.05);
-  transition: color 0.2s, background 0.2s; font-size: 14px;
+  transition: color 0.2s, background 0.2s; font-size: 14px; font-family: Inter, sans-serif;
 }
 .analytics-status-filter a:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.1); }
 .analytics-status-filter a.active { color: #FFD700; background: rgba(255,215,0,0.15); }
 
 /* Entity grid */
 .analytics-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+.analytics-subtitle { color: #fff; font-size: 20px; font-weight: 500; margin: 0; font-family: Unbounded, sans-serif; }
 .analytics-entities { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-bottom: 32px; }
-.analytics-entity { background: rgba(0,8,25,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-md); padding: 16px; text-decoration: none; color: #fff; transition: border-color 0.2s; display: block; }
-.analytics-entity:hover { border-color: rgba(255,215,0,0.3); color: #fff; text-decoration: none; }
+.analytics-entity { background: rgba(0,8,25,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-md); padding: 16px; text-decoration: none; color: #fff; transition: border-color 0.2s, background 0.2s; display: block; }
+.analytics-entity:hover { border-color: rgba(255,215,0,0.3); color: #fff; text-decoration: none; background: rgba(0,8,25,0.8); }
 .analytics-entity--active { border-color: #FFD700; background: rgba(255,215,0,0.08); }
-.analytics-entity__header { display: flex; justify-content: space-between; margin-bottom: 8px; }
-.analytics-entity__type { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; }
-.analytics-entity__status { font-size: 11px; padding: 2px 8px; border-radius: var(--radius-xs); }
+.analytics-entity__header { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; }
+.analytics-entity__type { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; font-family: Inter, sans-serif; }
+.analytics-entity__status { font-size: 11px; padding: 2px 8px; border-radius: var(--radius-xs); font-family: Inter, sans-serif; }
 .analytics-entity__status--approved { color: #4CAF50; background: rgba(76,175,80,0.15); }
 .analytics-entity__status--pending { color: #ff9800; background: rgba(255,152,0,0.15); }
 .analytics-entity__status--rejected { color: #f44336; background: rgba(244,67,54,0.15); }
-.analytics-entity__title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-.analytics-entity__stats { font-size: 13px; color: rgba(255,255,255,0.5); display: flex; gap: 12px; }
-.analytics-empty { color: rgba(255,255,255,0.5); font-size: 16px; text-align: center; padding: 40px 0; }
+.analytics-entity__title { font-size: 16px; font-weight: 600; margin-bottom: 10px; font-family: Unbounded, sans-serif; }
+.analytics-entity__stats { font-size: 13px; color: rgba(255,255,255,0.5); display: flex; gap: 16px; font-family: Inter, sans-serif; }
+.analytics-entity__stats span { display: flex; align-items: center; gap: 4px; }
+.analytics-empty { color: rgba(255,255,255,0.5); font-size: 16px; text-align: center; padding: 40px 0; font-family: Inter, sans-serif; }
 
 @media (max-width: 768px) {
   .analytics-summary { grid-template-columns: 1fr; }
+  .analytics-detail-summary { grid-template-columns: 1fr; }
   .analytics-clicks-grid { grid-template-columns: repeat(2, 1fr); }
   .analytics-entities { grid-template-columns: 1fr; }
   .analytics-card__value { font-size: 28px; }
-  .analytics-title { font-size: 24px; }
+  .analytics-title { font-size: 22px; }
   .analytics-detail { padding: 20px; }
 }
 </style>
 
 <div class="analytics-dashboard">
   <h1 class="analytics-title">Аналитика</h1>
+  <p class="analytics-period">Данные за последние 90 дней</p>
 
   <!-- Summary cards (totals from approved entities) -->
   <div class="analytics-summary">
@@ -77,12 +93,12 @@
       <div class="analytics-card__label">Просмотров</div>
     </div>
     <div class="analytics-card">
-      <div class="analytics-card__value">{{ total_unique }}</div>
-      <div class="analytics-card__label">Уникальных</div>
+      <div class="analytics-card__value analytics-card__value--green">{{ total_unique }}</div>
+      <div class="analytics-card__label">Уникальных посетителей</div>
     </div>
     <div class="analytics-card">
-      <div class="analytics-card__value">{{ total_clicks }}</div>
-      <div class="analytics-card__label">Кликов</div>
+      <div class="analytics-card__value analytics-card__value--blue">{{ total_clicks }}</div>
+      <div class="analytics-card__label">Кликов по контактам</div>
     </div>
   </div>
 
@@ -95,12 +111,29 @@
       <a href="?status={{ status_filter }}" class="analytics-detail__close" title="Закрыть">&times;</a>
     </div>
 
+    <!-- Detail summary -->
+    <div class="analytics-detail-summary">
+      <div class="analytics-detail-stat">
+        <div class="analytics-detail-stat__value" style="color: #FFD700;">{{ selected_stats.total_views }}</div>
+        <div class="analytics-detail-stat__label">Просмотров</div>
+      </div>
+      <div class="analytics-detail-stat">
+        <div class="analytics-detail-stat__value" style="color: #4CAF50;">{{ selected_stats.unique_views }}</div>
+        <div class="analytics-detail-stat__label">Уникальных</div>
+      </div>
+      <div class="analytics-detail-stat">
+        <div class="analytics-detail-stat__value" style="color: #2196F3;">{% widthratio 1 1 0 as zero %}{% with selected_stats.total_clicks as tc %}{{ tc.contact|add:tc.website|add:tc.pitch_deck|add:tc.telegram|add:tc.whatsapp }}{% endwith %}</div>
+        <div class="analytics-detail-stat__label">Всего кликов</div>
+      </div>
+    </div>
+
     <!-- Chart -->
     <div class="analytics-chart-container">
       <canvas id="viewsChart"></canvas>
     </div>
 
     <!-- Click breakdown -->
+    <p class="analytics-clicks-title">Клики по типам</p>
     <div class="analytics-clicks-grid">
       <div class="analytics-click-item">
         <div class="analytics-click-item__value">{{ selected_stats.total_clicks.contact }}</div>
@@ -156,6 +189,7 @@
       <div class="analytics-entity__stats">
         <span>&#128065; {{ entity.stats.total_views }}</span>
         <span>&#128100; {{ entity.stats.unique_views }}</span>
+        <span>&#128070; {% with entity.stats.total_clicks as tc %}{{ tc.contact|add:tc.website|add:tc.pitch_deck|add:tc.telegram|add:tc.whatsapp }}{% endwith %}</span>
       </div>
     </a>
     {% empty %}
@@ -171,7 +205,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     var statsData = {{ selected_stats_json|safe }};
     var daily = statsData.daily || [];
-    var labels = daily.map(function(d) { return d.date; });
+    var labels = daily.map(function(d) {
+        var parts = d.date.split('-');
+        return parts[2] + '.' + parts[1];
+    });
     var views = daily.map(function(d) { return d.views; });
     var unique = daily.map(function(d) { return d.unique; });
     var clicks = daily.map(function(d) { return d.clicks; });
@@ -224,27 +261,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 plugins: {
                     legend: {
-                        labels: { color: '#fff' }
+                        labels: { color: '#fff', font: { family: 'Inter, sans-serif' } }
                     },
                     tooltip: {
                         backgroundColor: 'rgba(0, 8, 25, 0.95)',
                         titleColor: '#fff',
                         bodyColor: 'rgba(255,255,255,0.8)',
                         borderColor: 'rgba(255,255,255,0.1)',
-                        borderWidth: 1
+                        borderWidth: 1,
+                        titleFont: { family: 'Inter, sans-serif' },
+                        bodyFont: { family: 'Inter, sans-serif' }
                     }
                 },
                 scales: {
                     x: {
                         ticks: {
-                            color: '#aaa',
+                            color: 'rgba(255,255,255,0.4)',
                             maxTicksLimit: 15,
-                            maxRotation: 45
+                            maxRotation: 45,
+                            font: { family: 'Inter, sans-serif', size: 11 }
                         },
                         grid: { color: 'rgba(255,255,255,0.05)' }
                     },
                     y: {
-                        ticks: { color: '#aaa' },
+                        ticks: {
+                            color: 'rgba(255,255,255,0.4)',
+                            font: { family: 'Inter, sans-serif', size: 11 },
+                            precision: 0
+                        },
                         grid: { color: 'rgba(255,255,255,0.05)' },
                         beginAtZero: true
                     }

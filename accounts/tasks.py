@@ -505,7 +505,7 @@ def flush_analytics_events():
 
     events = []
     for _ in range(500):
-        raw = redis_client.rpop('analytics:events')
+        raw = redis_client.lpop('analytics:events')
         if raw is None:
             break
         try:
@@ -516,16 +516,17 @@ def flush_analytics_events():
     if not events:
         return
 
-    pageviews = [e for e in events if e.get('type') == 'pageview']
+    pageviews = [e for e in events if e.get('type') == 'page_view']
     clicks = [e for e in events if e.get('type') == 'click']
 
     with connection.cursor() as cur:
         for pv in pageviews:
             try:
+                ip_val = pv.get('ip_address') or None
                 cur.execute("""
                     INSERT INTO analytics_page_views
                         (entity_type, entity_id, user_id, visitor_hash, ip_address, user_agent, referrer, created_at)
-                    SELECT %s, %s, %s, %s, %s::inet, %s, %s, %s::timestamptz
+                    SELECT %s, %s, %s, %s, %s, %s, %s, %s::timestamptz
                     WHERE NOT EXISTS (
                         SELECT 1 FROM analytics_page_views
                         WHERE entity_type = %s AND entity_id = %s
@@ -534,21 +535,22 @@ def flush_analytics_events():
                     )
                 """, [
                     pv['entity_type'], pv['entity_id'], pv.get('user_id'), pv['visitor_hash'],
-                    pv['ip'], pv.get('ua', '')[:500], pv.get('referrer', '')[:500], pv['ts'],
-                    pv['entity_type'], pv['entity_id'], pv['visitor_hash'], pv['ts'],
+                    ip_val, pv.get('user_agent', '')[:500], pv.get('referrer', '')[:500], pv['timestamp'],
+                    pv['entity_type'], pv['entity_id'], pv['visitor_hash'], pv['timestamp'],
                 ])
             except Exception as e:
                 logger.error(f"Failed to insert pageview: {e}")
 
         for cl in clicks:
             try:
+                ip_val = cl.get('ip_address') or None
                 cur.execute("""
                     INSERT INTO analytics_click_events
                         (entity_type, entity_id, button_type, user_id, visitor_hash, ip_address, created_at)
-                    VALUES (%s, %s, %s, %s, %s::inet, %s, %s::timestamptz)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s::timestamptz)
                 """, [
                     cl['entity_type'], cl['entity_id'], cl['button_type'],
-                    cl.get('user_id'), cl['visitor_hash'], cl['ip'], cl['ts'],
+                    cl.get('user_id'), cl['visitor_hash'], ip_val, cl['timestamp'],
                 ])
             except Exception as e:
                 logger.error(f"Failed to insert click: {e}")
@@ -558,9 +560,9 @@ def flush_analytics_events():
 
 @shared_task
 def aggregate_daily_analytics():
-    """Aggregate yesterday's raw events into analytics_daily_stats."""
+    """Aggregate raw events into analytics_daily_stats for all non-aggregated days."""
     with connection.cursor() as cur:
-        # Upsert page view stats
+        # Upsert page view stats for all days that have raw data
         cur.execute("""
             INSERT INTO analytics_daily_stats
                 (entity_type, entity_id, stat_date, total_views, unique_views,
@@ -570,7 +572,7 @@ def aggregate_daily_analytics():
                 COUNT(*), COUNT(DISTINCT visitor_hash),
                 0, 0, 0, 0, 0
             FROM analytics_page_views
-            WHERE created_at::date = CURRENT_DATE - INTERVAL '1 day'
+            WHERE created_at::date < CURRENT_DATE
             GROUP BY entity_type, entity_id, created_at::date
             ON CONFLICT (entity_type, entity_id, stat_date)
             DO UPDATE SET
@@ -578,15 +580,28 @@ def aggregate_daily_analytics():
                 unique_views = EXCLUDED.unique_views
         """)
 
-        # Update click counts per button type
+        # Upsert click counts per button type
         for btn in ['contact', 'website', 'pitch_deck', 'telegram', 'whatsapp']:
+            cur.execute(f"""
+                INSERT INTO analytics_daily_stats
+                    (entity_type, entity_id, stat_date, total_views, unique_views,
+                     clicks_contact, clicks_website, clicks_pitch_deck, clicks_telegram, clicks_whatsapp)
+                SELECT
+                    entity_type, entity_id, created_at::date,
+                    0, 0, 0, 0, 0, 0, 0
+                FROM analytics_click_events
+                WHERE button_type = %s AND created_at::date < CURRENT_DATE
+                GROUP BY entity_type, entity_id, created_at::date
+                ON CONFLICT (entity_type, entity_id, stat_date) DO NOTHING
+            """, [btn])
+
             cur.execute(f"""
                 UPDATE analytics_daily_stats ads SET
                     clicks_{btn} = COALESCE(sub.cnt, 0)
                 FROM (
                     SELECT entity_type, entity_id, created_at::date as d, COUNT(*) as cnt
                     FROM analytics_click_events
-                    WHERE button_type = %s AND created_at::date = CURRENT_DATE - INTERVAL '1 day'
+                    WHERE button_type = %s AND created_at::date < CURRENT_DATE
                     GROUP BY entity_type, entity_id, created_at::date
                 ) sub
                 WHERE ads.entity_type = sub.entity_type

@@ -97,10 +97,12 @@ def record_click(entity_type, entity_id, button_type, request):
 
 
 def get_entity_stats(entity_type, entity_id, days=30):
-    """Query analytics_daily_stats and return totals + daily breakdown."""
+    """Query analytics_daily_stats + today's raw events for real-time data."""
     since = (timezone.now() - timedelta(days=days)).date()
+    today = timezone.now().date()
 
     with connection.cursor() as cursor:
+        # Aggregated stats for past days
         cursor.execute(
             """
             SELECT stat_date, total_views, unique_views,
@@ -116,6 +118,39 @@ def get_entity_stats(entity_type, entity_id, days=30):
         )
         rows = cursor.fetchall()
 
+        # Today's real-time page views (not yet aggregated)
+        cursor.execute(
+            """
+            SELECT COUNT(*), COUNT(DISTINCT visitor_hash)
+            FROM analytics_page_views
+            WHERE entity_type = %s AND entity_id = %s
+              AND created_at::date = %s
+            """,
+            [entity_type, entity_id, today],
+        )
+        today_views_row = cursor.fetchone()
+        today_views = today_views_row[0] if today_views_row else 0
+        today_unique = today_views_row[1] if today_views_row else 0
+
+        # Today's real-time clicks by button type
+        cursor.execute(
+            """
+            SELECT button_type, COUNT(*)
+            FROM analytics_click_events
+            WHERE entity_type = %s AND entity_id = %s
+              AND created_at::date = %s
+            GROUP BY button_type
+            """,
+            [entity_type, entity_id, today],
+        )
+        today_clicks = {
+            "contact": 0, "website": 0, "pitch_deck": 0,
+            "telegram": 0, "whatsapp": 0,
+        }
+        for btn_row in cursor.fetchall():
+            if btn_row[0] in today_clicks:
+                today_clicks[btn_row[0]] = btn_row[1]
+
     total_views = 0
     unique_views = 0
     total_clicks = {
@@ -126,6 +161,7 @@ def get_entity_stats(entity_type, entity_id, days=30):
         "whatsapp": 0,
     }
     daily = []
+    has_today_aggregated = False
 
     for row in rows:
         (
@@ -138,6 +174,9 @@ def get_entity_stats(entity_type, entity_id, days=30):
             c_telegram,
             c_whatsapp,
         ) = row
+
+        if stat_date == today:
+            has_today_aggregated = True
 
         total_views += day_views
         unique_views += day_unique
@@ -154,6 +193,22 @@ def get_entity_stats(entity_type, entity_id, days=30):
                 "views": day_views,
                 "unique": day_unique,
                 "clicks": day_total_clicks,
+            }
+        )
+
+    # Append today's real-time data if not already aggregated
+    if not has_today_aggregated and (today_views > 0 or any(today_clicks.values())):
+        total_views += today_views
+        unique_views += today_unique
+        for k, v in today_clicks.items():
+            total_clicks[k] += v
+        today_total_clicks = sum(today_clicks.values())
+        daily.append(
+            {
+                "date": str(today),
+                "views": today_views,
+                "unique": today_unique,
+                "clicks": today_total_clicks,
             }
         )
 
