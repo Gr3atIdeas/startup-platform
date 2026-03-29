@@ -784,6 +784,7 @@ def home(request):
         except Exception:
             latest_news = []
 
+        from accounts.promotions import get_active_ads
         context = {
             "demo_startups_data": json.dumps(startups_data, cls=DjangoJSONEncoder),
             "planets_data_json": json.dumps(planets_data, ensure_ascii=False),
@@ -792,6 +793,7 @@ def home(request):
             "random_startupers": random_startupers,
             "random_startups": random_startups,
             "latest_news": latest_news,
+            "main_ads": get_active_ads("main_under_sidebar"),
         }
 
         response = render(request, "accounts/main.html", context)
@@ -1165,6 +1167,16 @@ def startups_list(request):
         elif sort_order == "oldest":
             startups_qs = startups_qs.order_by("created_at")
 
+    # Pinned cards on page 1 (no filters)
+    from accounts.promotions import get_pinned_entities, get_active_ads
+    pinned_startups = []
+    page_num_int = int(page_number) if str(page_number).isdigit() else 1
+    if page_num_int == 1 and not filters_active:
+        pinned_startups = get_pinned_entities("startup", Startups, "startup_id")
+        pinned_ids = [s.startup_id for s in pinned_startups]
+        if pinned_ids:
+            startups_qs = startups_qs.exclude(startup_id__in=pinned_ids)
+
     paginator = Paginator(startups_qs, 6)
     page_obj = paginator.get_page(page_number)
 
@@ -1198,6 +1210,8 @@ def startups_list(request):
             "micro_investment": micro_investment,
             "sort_order": sort_order,
             "directions": startup_directions,
+            "pinned_items": pinned_startups,
+            "sidebar_ads": get_active_ads("catalog_sidebar"),
         }
         return render(request, "accounts/startups_list.html", context)
 
@@ -1316,6 +1330,15 @@ def franchises_list(request):
 
     
 
+    from accounts.promotions import get_pinned_entities, get_active_ads
+    pinned_franchises = []
+    page_num_int = int(page_number) if str(page_number).isdigit() else 1
+    if page_num_int == 1 and not filters_active:
+        pinned_franchises = get_pinned_entities("franchise", Franchises, "franchise_id")
+        pinned_ids = [f.franchise_id for f in pinned_franchises]
+        if pinned_ids:
+            franchises_qs = franchises_qs.exclude(franchise_id__in=pinned_ids)
+
     paginator = Paginator(franchises_qs, 6)
     page_obj = paginator.get_page(page_number)
 
@@ -1348,6 +1371,8 @@ def franchises_list(request):
             "max_investment": max_investment,
             "sort_order": sort_order,
             "franchise_directions": franchise_directions,
+            "pinned_items": pinned_franchises,
+            "sidebar_ads": get_active_ads("catalog_sidebar"),
         }
         return render(request, "accounts/franchises_list.html", context)
 @vary_on_headers('X-Requested-With')
@@ -1425,6 +1450,15 @@ def agencies_list(request):
         elif sort_order == "oldest":
             agencies_qs = agencies_qs.order_by("created_at")
 
+    from accounts.promotions import get_pinned_entities, get_active_ads
+    pinned_agencies = []
+    page_num_int = int(page_number) if str(page_number).isdigit() else 1
+    if page_num_int == 1 and not filters_active:
+        pinned_agencies = get_pinned_entities("agency", Agencies, "agency_id")
+        pinned_ids = [a.agency_id for a in pinned_agencies]
+        if pinned_ids:
+            agencies_qs = agencies_qs.exclude(agency_id__in=pinned_ids)
+
     paginator = Paginator(agencies_qs, 6)
     page_obj = paginator.get_page(page_number)
 
@@ -1453,6 +1487,8 @@ def agencies_list(request):
             "max_rating": max_rating,
             "sort_order": sort_order,
             "agency_categories": agency_categories,
+            "pinned_items": pinned_agencies,
+            "sidebar_ads": get_active_ads("catalog_sidebar"),
         }
         return render(request, "accounts/agencies_list.html", context)
 
@@ -1530,6 +1566,15 @@ def specialists_list(request):
         elif sort_order == "oldest":
             specialists_qs = specialists_qs.order_by("created_at")
 
+    from accounts.promotions import get_pinned_entities, get_active_ads
+    pinned_specialists = []
+    page_num_int = int(page_number) if str(page_number).isdigit() else 1
+    if page_num_int == 1 and not filters_active:
+        pinned_specialists = get_pinned_entities("specialist", Specialists, "specialist_id")
+        pinned_ids = [s.specialist_id for s in pinned_specialists]
+        if pinned_ids:
+            specialists_qs = specialists_qs.exclude(specialist_id__in=pinned_ids)
+
     paginator = Paginator(specialists_qs, 6)
     page_obj = paginator.get_page(page_number)
 
@@ -1558,6 +1603,8 @@ def specialists_list(request):
             "max_rating": max_rating,
             "sort_order": sort_order,
             "specialist_categories": specialist_categories,
+            "pinned_items": pinned_specialists,
+            "sidebar_ads": get_active_ads("catalog_sidebar"),
         }
         return render(request, "accounts/specialists_list.html", context)
 def agency_detail_by_id(request, agency_id):
@@ -6495,6 +6542,7 @@ def news(request):
 
     all_categories = NewsCategories.objects.all().order_by("sort_order")
 
+    from accounts.promotions import get_active_ads
     context = {
         "articles": page_obj,
         "page_obj": page_obj,
@@ -6503,6 +6551,7 @@ def news(request):
         "selected_categories": selected_categories,
         "all_categories": all_categories,
         "search_query": search_query,
+        "news_ads": get_active_ads("news_sidebar"),
     }
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -6867,6 +6916,7 @@ def cosmochat(request):
             for user in users
         ]
         return JsonResponse({"users": users_data})
+    from accounts.promotions import get_active_ads
     return render(
         request,
         "accounts/cosmochat.html",
@@ -6875,6 +6925,7 @@ def cosmochat(request):
             "users": users,
             "chats": chats,
             "message_form": message_form,
+            "cosmochat_ads": get_active_ads("cosmochat_banner"),
         },
     )
 

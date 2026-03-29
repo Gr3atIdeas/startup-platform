@@ -1306,6 +1306,105 @@ class ModerationLog(models.Model):
         return f"{self.get_action_display()} {self.get_entity_type_display()} #{self.entity_id} — {self.moderator}"
 
 
+class PinnedCatalogItem(models.Model):
+    ENTITY_TYPE_CHOICES = [
+        ("startup", "Стартап"),
+        ("franchise", "Франшиза"),
+        ("agency", "Агентство"),
+        ("specialist", "Специалист"),
+    ]
+    entity_type = models.CharField(max_length=20, choices=ENTITY_TYPE_CHOICES, verbose_name="Тип")
+    entity_id = models.IntegerField(verbose_name="ID сущности")
+    position = models.PositiveSmallIntegerField(verbose_name="Позиция (1-6)")
+    is_active = models.BooleanField(default=True, verbose_name="Активно")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "pinned_catalog_items"
+        ordering = ["entity_type", "position"]
+        verbose_name = "Закреплённая карточка"
+        verbose_name_plural = "Закреплённые карточки"
+        constraints = [
+            models.UniqueConstraint(fields=["entity_type", "position"], name="uniq_pin_type_pos"),
+            models.UniqueConstraint(fields=["entity_type", "entity_id"], name="uniq_pin_type_entity"),
+            models.CheckConstraint(check=models.Q(position__gte=1, position__lte=6), name="chk_pin_position_range"),
+        ]
+
+    def __str__(self):
+        return f"#{self.position} ({self.get_entity_type_display()}) ID={self.entity_id}"
+
+    def get_entity(self):
+        model_map = {
+            "startup": ("Startups", "startup_id"),
+            "franchise": ("Franchises", "franchise_id"),
+            "agency": ("Agencies", "agency_id"),
+            "specialist": ("Specialists", "specialist_id"),
+        }
+        info = model_map.get(self.entity_type)
+        if not info:
+            return None
+        model_cls = globals().get(info[0]) or locals().get(info[0])
+        if model_cls is None:
+            from accounts import models as m
+            model_cls = getattr(m, info[0], None)
+        if model_cls:
+            return model_cls.objects.filter(**{info[1]: self.entity_id}).first()
+        return None
+
+
+class AdPlacement(models.Model):
+    ENTITY_TYPE_CHOICES = [
+        ("startup", "Стартап"),
+        ("franchise", "Франшиза"),
+        ("agency", "Агентство"),
+        ("specialist", "Специалист"),
+    ]
+    LOCATION_CHOICES = [
+        ("main_under_sidebar", "Главная — под сайдбаром"),
+        ("news_sidebar", "Новости — боковая панель"),
+        ("cosmochat_banner", "CosmoChat — баннер"),
+        ("catalog_sidebar", "Каталог — под фильтрами"),
+    ]
+
+    entity_type = models.CharField(max_length=20, choices=ENTITY_TYPE_CHOICES, verbose_name="Тип сущности")
+    entity_id = models.IntegerField(verbose_name="ID сущности")
+    location = models.CharField(max_length=50, choices=LOCATION_CHOICES, verbose_name="Расположение")
+    title = models.CharField(max_length=255, blank=True, verbose_name="Заголовок (переопределить)")
+    description = models.TextField(blank=True, verbose_name="Описание (переопределить)")
+    is_active = models.BooleanField(default=True, verbose_name="Активно")
+    start_date = models.DateField(blank=True, null=True, verbose_name="Начало показа")
+    end_date = models.DateField(blank=True, null=True, verbose_name="Конец показа")
+    sort_order = models.PositiveSmallIntegerField(default=0, verbose_name="Порядок (0 = первый)")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "ad_placements"
+        ordering = ["location", "sort_order"]
+        verbose_name = "Рекламное размещение"
+        verbose_name_plural = "Рекламные размещения"
+
+    def __str__(self):
+        return f"{self.get_location_display()} — {self.get_entity_type_display()} #{self.entity_id}"
+
+    def get_entity(self):
+        model_map = {
+            "startup": ("Startups", "startup_id"),
+            "franchise": ("Franchises", "franchise_id"),
+            "agency": ("Agencies", "agency_id"),
+            "specialist": ("Specialists", "specialist_id"),
+        }
+        info = model_map.get(self.entity_type)
+        if not info:
+            return None
+        from accounts import models as m
+        model_cls = getattr(m, info[0], None)
+        if model_cls:
+            return model_cls.objects.filter(**{info[1]: self.entity_id}).first()
+        return None
+
+
 class AnalyticsPageView(models.Model):
     view_id = models.BigAutoField(primary_key=True)
     entity_type = models.CharField(max_length=20)

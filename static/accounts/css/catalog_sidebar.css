@@ -570,6 +570,44 @@ select.native-hidden {
   color: #fff;
 }
 
+/* ── Dynamic sidebar ad (clickable) ──────── */
+
+.sidebar-ad--link {
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.sidebar-ad--link:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* ── Pinned card badge ───────────────────── */
+
+.pinned-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 15;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  color: #000;
+  font-family: Unbounded, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-xs);
+  box-shadow: 0 2px 8px rgba(255, 165, 0, 0.4);
+}
+
+.startup-card--pinned,
+.franchise-card--pinned,
+.agency-card--pinned,
+.specialist-card--pinned {
+  outline: 2px solid rgba(255, 215, 0, 0.4);
+  outline-offset: -2px;
+}
+
 /* ── Catalog Header Bar ──────────────────── */
 
 .catalog-header-bar {

@@ -17,6 +17,8 @@ from .models import (
     NewsArticles,
     NewsCategories,
     NewsComments,
+    PinnedCatalogItem,
+    AdPlacement,
 )
 from .moderation import approve_entity, reject_entity
 
@@ -484,3 +486,47 @@ class NewsCategoriesAdmin(admin.ModelAdmin):
     def articles_count(self, obj):
         return NewsArticles.objects.filter(category=obj, status="published").count()
     articles_count.short_description = "Статей"
+
+
+# ── Закреплённые карточки и реклама ──────────────────────────────
+
+@admin.register(PinnedCatalogItem)
+class PinnedCatalogItemAdmin(admin.ModelAdmin):
+    list_display = ("position", "entity_type", "entity_id", "entity_title_display", "is_active", "updated_at")
+    list_filter = ("entity_type", "is_active")
+    list_editable = ("position", "is_active")
+    ordering = ("entity_type", "position")
+
+    def entity_title_display(self, obj):
+        entity = obj.get_entity()
+        return entity.title if entity else "— не найдено —"
+    entity_title_display.short_description = "Название"
+
+
+@admin.register(AdPlacement)
+class AdPlacementAdmin(admin.ModelAdmin):
+    list_display = ("location", "entity_type", "entity_id", "entity_title_display", "is_active", "date_range_display", "sort_order")
+    list_filter = ("location", "entity_type", "is_active")
+    list_editable = ("is_active", "sort_order")
+    ordering = ("location", "sort_order")
+
+    fieldsets = (
+        ("Сущность", {"fields": ("entity_type", "entity_id", "location")}),
+        ("Переопределения", {"fields": ("title", "description"), "classes": ("collapse",)}),
+        ("Расписание", {"fields": ("is_active", "start_date", "end_date", "sort_order")}),
+    )
+
+    def entity_title_display(self, obj):
+        entity = obj.get_entity()
+        return entity.title if entity else "— не найдено —"
+    entity_title_display.short_description = "Название"
+
+    def date_range_display(self, obj):
+        if obj.start_date and obj.end_date:
+            return f"{obj.start_date} — {obj.end_date}"
+        elif obj.start_date:
+            return f"с {obj.start_date}"
+        elif obj.end_date:
+            return f"до {obj.end_date}"
+        return "Бессрочно"
+    date_range_display.short_description = "Период"

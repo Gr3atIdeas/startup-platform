@@ -1,0 +1,127 @@
+{% load file_tags %}
+{% load static %}
+{% load humanize %}
+{% load accounts_extras %}
+{# Universal pinned card wrapper — renders the standard card with a TOP badge #}
+{# Usage: {% include '_pinned_card.html' with entity=startup entity_type='startup' %} #}
+
+{% if entity_type == 'startup' %}
+<div class="startup-card startup-card--pinned" data-startup-id="{{ entity.startup_id }}">
+  <div class="pinned-badge">TOP</div>
+  <div class="startup-card-header">
+    {% if entity.get_catalog_card_image_url %}
+      <img src="{{ entity.get_catalog_card_image_url }}" alt="{{ entity.title }}" class="startup-header-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="startup-header-placeholder" style="display:none;">
+        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">
+      </div>
+    {% else %}
+      <div class="startup-header-placeholder">
+        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">
+      </div>
+    {% endif %}
+  </div>
+  {% if entity.planet_image %}
+    <div class="planet-miniature-container">
+      <div class="planet-miniature-3d" style="background-image: url('{{ entity.planet_image|planet_url }}')"></div>
+    </div>
+  {% endif %}
+  <div class="startup-card-content">
+    <div class="startup-title-row">
+      <div class="startup-logo">
+        {% if entity.logo_urls %}
+          <img src="{% get_file_url_tag entity.logo_urls.0 entity.startup_id 'logo' 'startup' %}" alt="{{ entity.title }}" loading="lazy">
+        {% else %}
+          <div class="logo-placeholder"></div>
+        {% endif %}
+      </div>
+      <h3 class="startup-title">{{ entity.title }}</h3>
+    </div>
+    <div class="startup-category-row">
+      {% if entity.direction and entity.direction.direction_name %}
+        <span class="category-tag">{{ entity.direction.direction_name|translate_category }}</span>
+      {% else %}
+        <span class="category-tag">Другое</span>
+      {% endif %}
+    </div>
+    <div class="startup-description-row">
+      <p class="startup-description">{{ entity.short_description|striptags|truncatewords:25|default:"Описание не указано" }}</p>
+    </div>
+    <div class="startup-amount-row">
+      <span class="amount-label">Собранная сумма</span>
+      <span class="amount-value">{{ entity.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
+    </div>
+    <div class="startup-progress-container">
+      <div class="progress-bar-visual">
+        <div class="progress-animation-container" style="width: {{ entity.get_progress_percentage|default:0 }}%;">
+          <div class="progress-planets"></div>
+        </div>
+        <span class="progress-percentage">{{ entity.get_progress_percentage|default:0|floatformat:0 }}%</span>
+      </div>
+      <div class="investors-counter">
+        <div class="investors-icon">
+          <img src="{% static 'accounts/images/icons/groups.svg' %}" alt="Инвесторы" width="16" height="16">
+        </div>
+        <span class="investors-count">({{ entity.get_investors_count|default:0 }})</span>
+      </div>
+    </div>
+  </div>
+  <a href="{% url 'startup_detail' slug=entity.slug|default:entity.startup_id %}" class="detail-link" aria-label="{{ entity.title }}"></a>
+</div>
+
+{% elif entity_type == 'franchise' %}
+<div class="franchise-card franchise-card--pinned" data-franchise-id="{{ entity.franchise_id }}">
+  <div class="pinned-badge">TOP</div>
+  <div class="franchise-card-header">
+    {% if entity.get_catalog_card_image_url %}
+      <img src="{{ entity.get_catalog_card_image_url }}" alt="{{ entity.title }}" class="franchise-header-image" onerror="this.style.display='none';">
+    {% else %}
+      <div class="franchise-header-placeholder">
+        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">
+      </div>
+    {% endif %}
+  </div>
+  <div class="franchise-card-content">
+    <h3 class="franchise-title">{{ entity.title }}</h3>
+    <p class="franchise-description">{{ entity.short_description|striptags|truncatewords:20|default:"Описание не указано" }}</p>
+  </div>
+  <a href="{% url 'franchise_detail' slug=entity.slug|default:entity.franchise_id %}" class="detail-link" aria-label="{{ entity.title }}"></a>
+</div>
+
+{% elif entity_type == 'agency' %}
+<div class="agency-card agency-card--pinned" data-agency-id="{{ entity.agency_id }}">
+  <div class="pinned-badge">TOP</div>
+  <div class="agency-card-header">
+    {% if entity.get_catalog_card_image_url %}
+      <img src="{{ entity.get_catalog_card_image_url }}" alt="{{ entity.title }}" class="agency-header-image" onerror="this.style.display='none';">
+    {% else %}
+      <div class="agency-header-placeholder">
+        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">
+      </div>
+    {% endif %}
+  </div>
+  <div class="agency-card-content">
+    <h3 class="agency-title">{{ entity.title }}</h3>
+    <p class="agency-description">{{ entity.short_description|striptags|truncatewords:20|default:"Описание не указано" }}</p>
+  </div>
+  <a href="{% url 'agency_detail' slug=entity.slug|default:entity.agency_id %}" class="detail-link" aria-label="{{ entity.title }}"></a>
+</div>
+
+{% elif entity_type == 'specialist' %}
+<div class="specialist-card specialist-card--pinned" data-specialist-id="{{ entity.specialist_id }}">
+  <div class="pinned-badge">TOP</div>
+  <div class="specialist-card-header">
+    {% if entity.get_catalog_card_image_url %}
+      <img src="{{ entity.get_catalog_card_image_url }}" alt="{{ entity.title }}" class="specialist-header-image" onerror="this.style.display='none';">
+    {% else %}
+      <div class="specialist-header-placeholder">
+        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">
+      </div>
+    {% endif %}
+  </div>
+  <div class="specialist-card-content">
+    <h3 class="specialist-title">{{ entity.title }}</h3>
+    <p class="specialist-description">{{ entity.short_description|striptags|truncatewords:20|default:"Описание не указано" }}</p>
+  </div>
+  <a href="{% url 'specialist_detail' slug=entity.slug|default:entity.specialist_id %}" class="detail-link" aria-label="{{ entity.title }}"></a>
+</div>
+{% endif %}

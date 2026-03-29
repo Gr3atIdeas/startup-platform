@@ -75,6 +75,15 @@
         <button type="button" id="clearFiltersBtn" class="show-button" data-has-icon-end="false" data-has-icon-start="false" data-size="Medium" data-state="Default" data-variant="Primary" style="display:none; margin: 6px auto 0;">Очистить</button>
       </form>
 
+      {% if sidebar_ads %}
+        {% for ad in sidebar_ads %}
+        <a href="{{ ad.url }}" class="sidebar-ad sidebar-ad--link">
+          <h3 class="sidebar-ad__title">{{ ad.title }}</h3>
+          <p class="sidebar-ad__desc">{{ ad.description|truncatewords:20 }}</p>
+          <span class="sidebar-ad__btn">Подробнее</span>
+        </a>
+        {% endfor %}
+      {% else %}
       <div class="sidebar-ad">
         <div class="sidebar-ad__icon">
           <img src="{% static 'accounts/images/planetary_system/gi.svg' %}" alt="GI">
@@ -83,6 +92,7 @@
         <p class="sidebar-ad__desc">Разместите промо вашего стартапа на платформе Great Ideas</p>
         <a href="https://t.me/yourgreatideas" target="_blank" class="sidebar-ad__btn">Связаться</a>
       </div>
+      {% endif %}
     </aside>
 
 
@@ -102,8 +112,10 @@
 
       
       <div class="agencies-grid skeleton-loading" id="agenciesGrid">
-        {% if page_obj %} 
-          
+        {% for agency in pinned_items %}
+          {% include 'accounts/partials/_pinned_card.html' with entity=agency entity_type='agency' %}
+        {% endfor %}
+        {% if page_obj %}
           {% include 'accounts/partials/_agency_cards.html' with page_obj=page_obj %}
         {% else %}
           <div class="no-cards">
