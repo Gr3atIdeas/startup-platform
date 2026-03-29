@@ -260,7 +260,7 @@ body {
 
 .agencies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 329px);
+  grid-template-columns: repeat(3, 1fr);
   gap: 19px;
   justify-content: center;
   width: 100%;
@@ -297,8 +297,8 @@ body {
   }
 
   .agencies-grid {
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
-    justify-content: center;
   }
 
 }
@@ -347,9 +347,8 @@ body {
   }
 
   .agencies-grid {
-    justify-content: center;
-    display: contents;
-    gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 
   .catalog-title {
@@ -375,6 +374,7 @@ body {
   }
 
   .agencies-grid {
+    grid-template-columns: 1fr;
     gap: 10px;
     margin-top: 25px;
   }
@@ -420,8 +420,8 @@ body {
 /* Новые стили карточек агентств */
 .agency-card {
   position: relative;
-  width: 329px;
-  height: 490px;
+  width: 100%;
+  aspect-ratio: 329 / 490;
   background: #FFFFFF;
   border-radius: var(--radius-md);
   overflow: visible;
@@ -479,7 +479,7 @@ body {
 
 .agency-card-content {
   padding: 10px;
-  height: 332px;
+  flex: 1;
   position: relative;
 }
 
@@ -830,7 +830,6 @@ body {
 @media (max-width: 768px) {
   .agency-card {
     width: 100%;
-    max-width: 297px;
   }
   
   .agency-card-content {

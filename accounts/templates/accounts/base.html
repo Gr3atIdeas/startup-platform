@@ -139,17 +139,9 @@
 
   <header id="main-header">
     <div class="header-content-wrapper">
-        <div class="header-left-group">
-          <a href="{% url 'home' %}" class="header-logo-link">
-              <img src="{% static 'accounts/images/white_logo_header.svg' %}" alt="Great Ideas Logo" class="header-logo-icon-img">
-          </a>
-          <div class="header-search-bar">
-              <input type="text" placeholder="Поиск" class="header-search-input">
-              <button type="button" class="header-search-toggle" title="Поиск" aria-label="Поиск">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              </button>
-          </div>
-        </div>
+        <a href="{% url 'home' %}" class="header-logo-link">
+            <img src="{% static 'accounts/images/white_logo_header.svg' %}" alt="Great Ideas Logo" class="header-logo-icon-img">
+        </a>
         <button class="burger-menu-btn" aria-label="Меню" aria-expanded="false">
             <span></span><span></span><span></span>
         </button>
@@ -249,7 +241,14 @@
                     <a href="{% url 'moderator_dashboard' %}" class="header-nav-link">Заявки</a>
                     <a href="{% url 'deals_view' %}" class="header-nav-link">Сделки</a>
                 {% endif %}
-                
+
+                <div class="header-search-bar">
+                    <input type="text" placeholder="Поиск" class="header-search-input">
+                    <button type="button" class="header-search-toggle" title="Поиск" aria-label="Поиск">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </button>
+                </div>
+
                 {% if user.is_authenticated %}
                     <div class="create-dropdown-container">
                         <button class="header-nav-link header-role-button create-startup-button create-dropdown-button">
