@@ -41,107 +41,69 @@
 {% endblock %}
 
 {% block content %}
-<div class="page-content-wrapper-white">
+<div class="news-detail-wrapper">
   <div class="news-detail-container">
 
-    <div class="back-button-container">
-      <a href="{% if request.META.HTTP_REFERER %}{{ request.META.HTTP_REFERER }}{% else %}{% url 'news' %}{% endif %}" class="back-button">
-        <div class="back-button-arrow">
-          <div class="back-button-arrow-inner"></div>
-        </div>
-        <div class="back-button-text">Назад</div>
+    <!-- Back + Category -->
+    <div class="article-top-bar">
+      <a href="{% url 'news' %}" class="back-button">
+        <span class="back-button-arrow">&larr;</span>
+        Назад
       </a>
+      {% if article.category %}
+        <span class="category-badge">{{ article.category.name }}</span>
+      {% endif %}
     </div>
 
     <article class="news-article-main">
-      <div class="news-article-header">
-        <div class="article-meta-rating-row">
-          <div class="author-info-block">
-            <div class="author-details">
-              <div class="author-name-time">
-                <div class="publish-time">{{ article.published_at|date:"d M Y" }} ({{ article.published_at|timesince }} назад)</div>
-              </div>
-            </div>
-            <div class="article-stats-small">
-              <div class="stat-item">
-                <form method="post" style="margin: 0; display: flex;">
-                  {% csrf_token %}
-                  <button type="submit" name="like" class="like-button {% if user_liked %}liked{% endif %}">
-                    <i class="fas fa-heart"></i>
-                    <span class="like-count">{{ likes_count }}</span>
-                  </button>
-                </form>
-              </div>
-              <div class="stat-item">
-                <form method="post" style="margin: 0; display: flex;">
-                  {% csrf_token %}
-                  <button type="submit" name="dislike" class="like-button {% if user_disliked %}liked{% endif %}">
-                    <i class="fas fa-thumbs-down"></i>
-                    <span class="like-count">{{ dislikes_count }}</span>
-                  </button>
-                </form>
-              </div>
-              <div class="stat-item">
-                <div class="stat-icon">
-                  <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
-                </div>
-                <div class="stat-text">{{ comments_count }}</div>
-              </div>
-            </div>
-          </div>
-          {% if article.category %}
-          <div class="rating-block">
-            <span class="category-badge">{{ article.category.name }}</span>
-          </div>
-          {% endif %}
-        </div>
 
-        {% if article.get_image_url %}
-          <img class="article-main-image" src="{{ article.get_image_url }}" alt="{{ article.title }}">
-        {% endif %}
-
-        <div class="article-title-row">
-          <h1 class="article-title-large">{{ article.title }}</h1>
-          {% if user.is_authenticated and user.role.role_name == 'moderator' or user == article.author %}
-          <div class="article-actions">
-            <a href="{% url 'edit_news' article.slug %}" class="edit-news-btn">Редактировать</a>
-            {% if user.role.role_name == 'moderator' %}
-            <button class="delete-news-btn" onclick="deleteNews('{{ article.slug }}')">Удалить</button>
-            {% endif %}
+      <!-- Meta row: date + like + comments count -->
+      <div class="article-meta-row">
+        <div class="publish-time">{{ article.published_at|date:"d M Y" }} ({{ article.published_at|timesince }} назад)</div>
+        <div class="article-stats-small">
+          <div class="stat-item">
+            <form method="post" style="margin:0; display:flex;">
+              {% csrf_token %}
+              <button type="submit" name="like" class="like-button {% if user_liked %}liked{% endif %}">
+                <i class="fas fa-heart"></i>
+                <span class="like-count">{{ likes_count }}</span>
+              </button>
+            </form>
           </div>
-          {% endif %}
+          <div class="stat-item">
+            <div class="stat-icon"><i class="fas fa-comment" style="font-size:16px; color:rgba(255,255,255,0.3);"></i></div>
+            <div class="stat-text">{{ comments_count }}</div>
+          </div>
         </div>
       </div>
 
+      <!-- Image -->
+      {% if article.get_image_url %}
+        <img class="article-main-image" src="{{ article.get_image_url }}" alt="{{ article.title }}" loading="lazy" decoding="async">
+      {% endif %}
+
+      <!-- Title -->
+      <h1 class="article-title-large">{{ article.title }}</h1>
+
+      <!-- Content -->
       <div class="article-content-body">
         <div class="content-text-full-width">
             {{ article.content|sanitize_html|safe }}
         </div>
       </div>
 
+      <!-- Footer stats (views + likes + comments) -->
       <div class="article-footer-stats">
         <div class="stat-item">
-           <div class="stat-icon">
-             <i class="fas fa-eye" style="font-size: 20px; color: #777;"></i>
-           </div>
+           <div class="stat-icon"><i class="fas fa-eye" style="font-size:18px;"></i></div>
            <div class="stat-text">{{ views_count }} просмотров</div>
         </div>
         <div class="stat-item">
-          <div class="stat-icon">
-            <img src="{% static 'accounts/images/news/thumbs-up.svg' %}" alt="Лайки">
-          </div>
+          <div class="stat-icon"><i class="fas fa-heart" style="font-size:16px;"></i></div>
           <div class="stat-text">{{ likes_count }}</div>
         </div>
         <div class="stat-item">
-          <div class="stat-icon">
-            <img src="{% static 'accounts/images/news/thumbs-down.svg' %}" alt="Дизлайки">
-          </div>
-          <div class="stat-text">{{ dislikes_count }}</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-icon">
-            <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
-          </div>
+          <div class="stat-icon"><i class="fas fa-comment" style="font-size:16px;"></i></div>
           <div class="stat-text">{{ comments_count }}</div>
         </div>
       </div>
