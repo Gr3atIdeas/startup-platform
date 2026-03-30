@@ -19,6 +19,8 @@
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 {% endblock %}
 
+{% block catalog_css %}<link rel="stylesheet" href="{% static 'accounts/css/catalog_sidebar.css' %}?v={% now 'U' %}">{% endblock %}
+
 {% block head_extra %}
   {{ block.super }}
   <link rel="stylesheet" href="{% static 'accounts/css/agencies_list.css' %}?v={% now 'U' %}">
@@ -347,7 +349,11 @@
 </script>
 {% endblock %}
 
+{% block slider_css %}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" referrerpolicy="no-referrer">{% endblock %}
+
 {% block scripts %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js" referrerpolicy="no-referrer" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js" referrerpolicy="no-referrer" defer></script>
   <script src="{% static 'accounts/js/catalog_filters.js' %}" defer></script>
   <script src="{% static 'accounts/js/catalog_impressions.js' %}" defer></script>
 {% endblock %}

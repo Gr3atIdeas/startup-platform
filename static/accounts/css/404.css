@@ -1,265 +1,196 @@
-@import url('./fonts.css');
+@font-face {
+  font-family: Unbounded;
+  src: url('../fonts/Unbounded-Variable.woff2') format('woff2'),
+       url('../fonts/Unbounded-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 200 900;
+  font-display: swap;
+}
+
+/* ── Layout ──────────────────────────────── */
 
 .notfound-body {
-    margin: 0;
-    padding: 0;
-    width: 100vw;
-    height: 100vh;
-    min-height: 100vh;
-    position: relative;
-    overflow: hidden;
-    font-family: 'Unbounded', Arial, sans-serif;
-    background: linear-gradient(180deg, #004E9F 0%, #000 100%);
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  font-family: Unbounded, sans-serif;
+  background: linear-gradient(180deg, #000 0%, #00346b 30%, #004e9f 50%, #01366d 70%, #020202 100%);
 }
 
-
-.notfound-bg {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    width: 100vw;
-    height: 100vh;
-    background: url('/static/accounts/images/404/stars.webp') center center/cover no-repeat;
-    z-index: 0;
+#particles-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
 }
 
+/* ── Centered content ────────────────────── */
 
-.notfound-center-block {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 721px;
-    max-width: 95vw;
-    height: 576px;
-    max-height: 90vh;
-    padding: 69px 21px;
-    background: rgba(0, 78, 159, 0.16);
-    box-shadow: 6px 6px 10px rgba(0,0,0,0.25);
-    border-radius: var(--radius-xl);
-    outline: 1px #2BEDFF solid;
-    outline-offset: -1px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 1;
-    justify-content: center;
-    gap: 30px;
+.notfound-center {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  gap: 24px;
+  text-align: center;
 }
 
+/* ── Cosmonaut ───────────────────────────── */
 
 .notfound-cosmoboy {
-    width: 121px;
-    height: 91px;
-    margin: 0 auto 10px auto;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  animation: float 4s ease-in-out infinite;
 }
+
 .notfound-cosmoboy img {
-    width: 121px;
-    height: 91px;
-    object-fit: contain;
+  width: 130px;
+  height: auto;
+  filter: drop-shadow(0 0 20px rgba(123, 97, 255, 0.3));
 }
 
-
-.notfound-content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-12px) rotate(2deg); }
+  75% { transform: translateY(8px) rotate(-2deg); }
 }
 
-.notfound-title {
-    color: #fff;
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]', 'Unbounded', Arial, sans-serif;
-    font-weight: 400;
-    line-height: 1.1;
-    text-align: center;
-    margin-bottom: 0;
+/* ── 404 code ────────────────────────────── */
+
+.notfound-code {
+  font-size: 120px;
+  font-weight: 800;
+  line-height: 1;
+  color: transparent;
+  background: linear-gradient(135deg, #c6bbfe 0%, #7b61ff 50%, #c6bbfe 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: gradient-shift 4s ease infinite;
 }
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ── Description ─────────────────────────── */
 
 .notfound-desc {
-    color: #fff;
-    font-size: 20px;
-    font-family: 'Unbounded', Arial, sans-serif;
-    font-weight: 400;
-    line-height: 1.1;
-    text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 18px;
+  font-weight: 300;
+  margin: 0;
+  max-width: 400px;
 }
+
+/* ── Primary button ──────────────────────── */
 
 .notfound-btn {
-    width: 303px;
-    height: 56px;
-    padding: 12px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    box-shadow: 2px 2px 4px rgba(0,0,0,0.25);
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #000;
-    font-size: 16px;
-    font-family: 'Unbounded', Arial, sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-    text-decoration: none;
-    transition: box-shadow 0.2s, transform 0.2s;
-    margin: 0 auto;
-    border: none;
-    cursor: pointer;
-    outline: none;
-    gap: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 48px;
+  background: #7b61ff;
+  color: #fff;
+  font-family: Unbounded, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  text-decoration: none;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background .2s, transform .15s, box-shadow .2s;
 }
+
 .notfound-btn:hover {
-    box-shadow: 4px 4px 8px rgba(0,0,0,0.35);
-    transform: translateY(-2px) scale(1.03);
+  background: #6551d9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(123, 97, 255, 0.35);
 }
 
-@media (max-width: 800px) {
-    .notfound-center-block {
-        width: 98vw;
-        height: auto;
-        min-height: 350px;
-        padding: 30px 5vw;
-    }
-    .notfound-title {
-        font-size: 36px;
-    }
-    .notfound-desc {
-        font-size: 16px;
-    }
-    .notfound-btn {
-        width: 90vw;
-        max-width: 303px;
-    }
-} 
+/* ── Secondary button (go back) ──────────── */
 
-@media (max-width: 480px) {
-  .notfound-center-block {
-    width: 95vw;
-    min-height: 300px;
-    padding: 20px 2.5vw;
-    gap: 20px;
-  }
-  
-  .notfound-title {
-    font-size: 28px;
-  }
-  
-  .notfound-desc {
-    font-size: 14px;
-  }
-  
-  .notfound-btn {
-    width: 85vw;
-    max-width: 250px;
-    height: 48px;
-    font-size: 14px;
-  }
-  
-  .notfound-cosmoboy {
-    width: 100px;
-    height: 75px;
-  }
-  
-  .notfound-cosmoboy img {
-    width: 100px;
-    height: 75px;
-  }
+.notfound-back {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: Unbounded, sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color .2s;
+  padding: 8px 16px;
 }
 
-@media (max-width: 360px) {
-  .notfound-center-block {
-    width: 92vw;
-    min-height: 250px;
-    padding: 15px 4vw;
-    gap: 15px;
-  }
-  
-  .notfound-title {
-    font-size: 24px;
-  }
-  
-  .notfound-desc {
-    font-size: 12px;
-  }
-  
-  .notfound-btn {
-    width: 80vw;
-    max-width: 200px;
-    height: 44px;
-    font-size: 13px;
-  }
-  
-  .notfound-cosmoboy {
-    width: 80px;
-    height: 60px;
-  }
-  
-  .notfound-cosmoboy img {
-    width: 80px;
-    height: 60px;
-  }
+.notfound-back:hover {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
-@media (max-width: 768px) and (orientation: landscape) {
-  .notfound-center-block {
-    width: 90vw;
-    height: auto;
-    min-height: 200px;
-    padding: 20px 5vw;
+/* ── Responsive ──────────────────────────── */
+
+@media (max-width: 768px) {
+  .notfound-code {
+    font-size: 80px;
   }
-  
-  .notfound-title {
-    font-size: 32px;
-  }
-  
+
   .notfound-desc {
     font-size: 15px;
   }
-  
-  .notfound-btn {
-    width: 200px;
-    height: 48px;
-  }
-}
 
-@media (max-height: 600px) {
-  .notfound-center-block {
-    min-height: 200px;
-    padding: 15px 5vw;
-    gap: 15px;
+  .notfound-cosmoboy img {
+    width: 100px;
   }
-  
-  .notfound-title {
-    font-size: 30px;
-  }
-  
-  .notfound-desc {
-    font-size: 14px;
-  }
-  
+
   .notfound-btn {
-    height: 44px;
+    padding: 12px 40px;
     font-size: 14px;
   }
 }
 
-@media (max-width: 1200px) and (min-height: 800px) {
-  .notfound-center-block {
-    width: 80vw;
-    min-height: 400px;
-    padding: 40px 10vw;
+@media (max-width: 480px) {
+  .notfound-code {
+    font-size: 64px;
   }
-  
-  .notfound-title {
-    font-size: 48px;
-  }
-  
+
   .notfound-desc {
-    font-size: 18px;
+    font-size: 14px;
   }
-} 
+
+  .notfound-cosmoboy img {
+    width: 80px;
+  }
+
+  .notfound-btn {
+    padding: 12px 32px;
+    font-size: 13px;
+  }
+
+  .notfound-back {
+    font-size: 12px;
+  }
+}
+
+@media (max-height: 500px) {
+  .notfound-center {
+    gap: 16px;
+    padding: 20px;
+  }
+
+  .notfound-code {
+    font-size: 56px;
+  }
+
+  .notfound-cosmoboy img {
+    width: 70px;
+  }
+}

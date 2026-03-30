@@ -17,14 +17,14 @@
   <meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
   <meta property="og:url" content="https://greatideas.ru">
   {% endblock %}
-  <!-- Preload fonts for fastest possible rendering -->
-  <link rel="preload" href="{% static 'accounts/fonts/Unbounded-VariableFont_wght.ttf' %}" as="font" type="font/ttf" crossorigin>
-  <link rel="preload" href="{% static 'accounts/fonts/Inter/Inter-Variable.ttf' %}" as="font" type="font/ttf" crossorigin>
+  <!-- Preload fonts for fastest possible rendering (WOFF2 = 67% smaller than TTF) -->
+  <link rel="preload" href="{% static 'accounts/fonts/Unbounded-Variable.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{% static 'accounts/fonts/Inter/Inter-Variable.woff2' %}" as="font" type="font/woff2" crossorigin>
 
   <!-- Critical inline CSS — renders BEFORE any file downloads -->
   <style>
-    @font-face{font-family:Unbounded;src:url('{% static "accounts/fonts/Unbounded-VariableFont_wght.ttf" %}') format('truetype-variations');font-weight:200 900;font-display:swap}
-    @font-face{font-family:Inter;src:url('{% static "accounts/fonts/Inter/Inter-Variable.ttf" %}') format('truetype-variations');font-weight:100 900;font-display:swap}
+    @font-face{font-family:Unbounded;src:url('{% static "accounts/fonts/Unbounded-Variable.woff2" %}') format('woff2'),url('{% static "accounts/fonts/Unbounded-VariableFont_wght.ttf" %}') format('truetype-variations');font-weight:200 900;font-display:swap}
+    @font-face{font-family:Inter;src:url('{% static "accounts/fonts/Inter/Inter-Variable.woff2" %}') format('woff2'),url('{% static "accounts/fonts/Inter/Inter-Variable.ttf" %}') format('truetype-variations');font-weight:100 900;font-display:swap}
     :root{--radius-xs:4px;--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:20px;--radius-full:9999px;--border-radius-small:4px;--border-radius-medium:12px;--transition-speed:.3s}
     *,*::before,*::after{box-sizing:border-box}
     body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(180deg,#000 0%,#00346b 25%,#004e9f 48%,#01366d 64%,#020202 100%);color:#fff;min-height:100vh}
@@ -65,15 +65,15 @@
   <link rel="stylesheet" href="{% static 'accounts/css/global_search.css' %}" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" media="print" onload="this.media='all'">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css" referrerpolicy="no-referrer" media="print" onload="this.media='all'">
+  {% block slider_css %}{% endblock %}
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" defer crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  {% block chart_js %}{% endblock %}
 
   {% block quill_assets %}{% endblock %}
 
   {% block custom_styles %}{% endblock %}
   
-  <link rel="stylesheet" href="{% static 'accounts/css/catalog_sidebar.css' %}?v={% now 'U' %}">
+  {% block catalog_css %}{% endblock %}
   {% block head_extra %}
     {{ block.super }}
   {% endblock %}
@@ -312,23 +312,10 @@
             <div class="footer-brand-info">
                 <div class="footer-brand-title">Great ideas</div>
                 <div class="footer-brand-tagline">Раскройте открывающиеся возможности и будьте частью инновационной волны</div>
-                <a href="https://t.me/yourgreatideas" class="footer-subscribe-button" target="_blank" rel="noopener">
+                <a href="https://t.me/gi_coworking" class="footer-subscribe-button" target="_blank" rel="noopener" id="footerSubscribeBtn" data-track="footer_subscribe">
                     <div class="footer-subscribe-text">Подписаться на новости</div>
                     <img src="{% static 'accounts/images/layout/telegram_footer.svg' %}" alt="Telegram" class="footer-subscribe-icon-img">
                 </a>
-            </div>
-            <div class="footer-social-links">
-                <a href="#" title="VK"><img src="{% static 'accounts/images/layout/vk_footer.svg' %}" alt="VK" class="footer-social-icon"></a>
-                <a href="https://t.me/yourgreatideas" title="Telegram" target="_blank"><img src="{% static 'accounts/images/layout/telegram_footer.svg' %}" alt="Telegram" class="footer-social-icon"></a>
-            </div>
-        </div>
-        
-        <div class="footer-middle-section">
-            <div class="footer-subscribe-and-apps">
-                <div class="footer-app-links-section">
-                    <a href="#"><img src="{% static 'accounts/images/layout/appstore_footer.png' %}" alt="App Store" class="footer-app-link-img"></a>
-                    <a href="#"><img src="{% static 'accounts/images/layout/googleplay_footer.png' %}" alt="Google Play" class="footer-app-link-img"></a>
-                </div>
             </div>
             <div class="footer-menus-section">
                 <div class="footer-menu-column">
@@ -353,15 +340,14 @@
                         <a href="{% url 'support_orders' %}" class="footer-menu-link">Поддержка</a>
                         {% if user.is_authenticated %}
                         <a href="{% url 'contacts' %}" class="footer-menu-link">Контакты</a>
-                        {% endif %} 
+                        {% endif %}
                         <a href="{% url 'legal' %}" class="footer-menu-link">Правовая информация</a>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="footer-bottom-section">
-             
             <div class="footer-copyright-section">
                 <div class="footer-copyright-text">© 2025 Great Ideas</div>
                 <div class="footer-legal-links">
@@ -662,9 +648,6 @@
   <script src="{% static 'accounts/js/ui_enhancement.js' %}" defer></script>
   <script src="{% static 'accounts/js/global_search.js' %}" defer></script>
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js" referrerpolicy="no-referrer" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js" referrerpolicy="no-referrer" defer></script>
-  
   {% block scripts %}
 
   {% endblock %}
@@ -720,6 +703,18 @@
     // Fallback
     setTimeout(removeSkeleton, 4000);
   });
+
+  // Footer subscribe button click tracking
+  var subBtn = document.getElementById('footerSubscribeBtn');
+  if (subBtn) {
+    subBtn.addEventListener('click', function() {
+      // Yandex.Metrika goal
+      if (typeof ym === 'function') ym(107142125, 'reachGoal', 'footer_subscribe');
+      // Server-side tracking
+      var blob = new Blob([JSON.stringify({entity_type:'footer',entity_id:0,button_type:'subscribe_telegram'})],{type:'application/json'});
+      if (navigator.sendBeacon) navigator.sendBeacon('/api/track/click/', blob);
+    });
+  }
   </script>
 </body>
 </html>

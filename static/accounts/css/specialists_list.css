@@ -459,11 +459,12 @@ body {
 .specialist-description-row {
   position: absolute;
   top: 27.7%;
+  bottom: 52%;
   left: 10px;
   right: 10px;
-  height: 75px;
   display: flex;
   align-items: flex-start;
+  overflow: hidden;
 }
 
 .specialist-amount-row {
@@ -646,7 +647,7 @@ body {
 
 .specialist-description {
   font-family: Inter, sans-serif;
-  font-weight: 400;
+  font-weight: 300;
   font-size: 13px;
   line-height: 1.45em;
   letter-spacing: 0.01em;
@@ -655,7 +656,7 @@ body {
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
-  line-clamp: 3;
+  line-clamp: 4;
   overflow: hidden;
   text-overflow: ellipsis;
 }

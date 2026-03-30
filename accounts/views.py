@@ -11101,8 +11101,8 @@ def track_click(request):
         entity_type = data.get('entity_type', '')
         entity_id = data.get('entity_id', 0)
         button_type = data.get('button_type', '')
-        valid_types = ('startup', 'franchise', 'agency', 'specialist')
-        valid_buttons = ('contact', 'website', 'pitch_deck', 'telegram', 'whatsapp')
+        valid_types = ('startup', 'franchise', 'agency', 'specialist', 'footer')
+        valid_buttons = ('contact', 'website', 'pitch_deck', 'telegram', 'whatsapp', 'subscribe_telegram')
         if entity_type not in valid_types or button_type not in valid_buttons:
             return JsonResponse({'status': 'error'}, status=400)
         record_click(entity_type, int(entity_id), button_type, request)

@@ -154,7 +154,7 @@ class BaseEntityFormMixin:
 class BaseEntityEditFormMixin(BaseEntityFormMixin):
     """
     Mixin for entity edit forms. Same as create but logo not required,
-    file inputs use ClearableFileInput.
+    file inputs use ClearableFileInput, and agreement checkboxes are not needed.
     """
     logo = forms.ImageField(
         label="Логотип", required=False,
@@ -177,6 +177,9 @@ class BaseEntityEditFormMixin(BaseEntityFormMixin):
         help_text="Загрузите широкоформатное изображение (1200×400, PNG/JPEG/WEBP, макс. 5MB)",
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
+    # Agreement checkboxes not needed for editing — user already agreed when creating
+    agree_rules = forms.BooleanField(required=False, widget=forms.HiddenInput())
+    agree_data_processing = forms.BooleanField(required=False, widget=forms.HiddenInput())
 
 
 class RegisterForm(forms.ModelForm):

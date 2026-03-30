@@ -114,8 +114,10 @@ async def enqueue_post(bot: TelegramClient, storage: PostStorage,
 
         storage.update_moderation_queue(queue_id, bot_msg_id=msg.id, status='sent')
         logger.info("Queued post #%d from %s (bot_msg=%d)", queue_id, source, msg.id)
+        return True
     except Exception as e:
         logger.error("Failed to send moderation post #%d: %s", queue_id, e)
+        return False
 
 
 def register_moderation_handlers(bot: TelegramClient, storage: PostStorage):

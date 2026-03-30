@@ -116,6 +116,51 @@ class BaseEntityAdmin(admin.ModelAdmin):
     list_per_page = 30
     save_on_top = True
 
+    # Map model → (entity_type, pk_field) for notification routing
+    _ENTITY_TYPE_MAP = {
+        "Startups": ("startup", "startup_id"),
+        "Franchises": ("franchise", "franchise_id"),
+        "Agencies": ("agency", "agency_id"),
+        "Specialists": ("specialist", "specialist_id"),
+    }
+
+    def save_model(self, request, obj, form, change):
+        """Detect status → approved transition and trigger Telegram notification."""
+        old_status = None
+        if change and "status" in form.changed_data:
+            old_status = form.initial.get("status")
+
+        super().save_model(request, obj, form, change)
+
+        # If status just changed to "approved", trigger full approval flow
+        if old_status and old_status != "approved" and obj.status == "approved":
+            model_name = obj.__class__.__name__
+            entity_info = self._ENTITY_TYPE_MAP.get(model_name)
+            if entity_info:
+                entity_type, pk_field = entity_info
+                entity_id = getattr(obj, pk_field, obj.pk)
+
+                # Log, invalidate cache, send notification
+                from .moderation import _log_moderation_action, _invalidate_cache
+                _log_moderation_action(
+                    moderator=request.user,
+                    action="approve",
+                    entity_type=entity_type,
+                    entity_id=entity_id,
+                    entity_title=getattr(obj, "title", ""),
+                    comment="Одобрено через Django Admin (save)",
+                )
+                _invalidate_cache()
+
+                try:
+                    from .tasks import notify_entity_approved
+                    notify_entity_approved.delay(entity_type, entity_id)
+                except Exception as e:
+                    import logging
+                    logging.getLogger(__name__).error(
+                        "Failed to queue entity notification: %s", e
+                    )
+
     def avg_rating(self, obj):
         rating = obj.get_average_rating()
         if rating:

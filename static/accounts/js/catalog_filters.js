@@ -188,6 +188,10 @@
     }
   }
 
+  function _notifyGridUpdated() {
+    document.dispatchEvent(new CustomEvent('catalog:grid-updated'));
+  }
+
   function updatePageFromJsonResponse(data, newUrl) {
     var oldGrid = gridElement || findGridElement(document);
     if (oldGrid && data.html !== undefined) {
@@ -202,6 +206,7 @@
     }
 
     history.pushState({}, '', newUrl);
+    _notifyGridUpdated();
   }
 
   function buildPaginationHtml(currentPage, numPages, hasNext) {
@@ -255,6 +260,7 @@
     clearButtonElement = document.getElementById('clearFiltersBtn');
     bindClearButton();
     updateClearButtonVisibility();
+    _notifyGridUpdated();
   }
 
   function fetchAndUpdate(url, options) {

@@ -629,6 +629,7 @@ body {
 .startup-description-row {
   position: absolute;
   top: 27.7%;
+  bottom: 52%;
   left: 10px;
   right: 10px;
   display: flex;

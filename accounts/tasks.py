@@ -2,6 +2,7 @@ import json
 import logging
 import uuid
 import base64
+from html import escape as html_escape
 from celery import shared_task
 from django.conf import settings
 from django.db import connection
@@ -130,18 +131,18 @@ def notify_entity_approved(self, entity_type: str, entity_id: int):
                 logger.info("Entity %s id=%d already notified, skipping", entity_type, entity_id)
                 return
 
-        # Build announcement text
+        # Build announcement text (HTML-escape user content to avoid Telegram parse errors)
         direction = ""
         if hasattr(entity, "direction") and entity.direction:
-            direction = str(entity.direction)
+            direction = html_escape(str(entity.direction))
         stage = ""
         if hasattr(entity, "stage") and entity.stage:
-            stage = str(entity.stage)
+            stage = html_escape(str(entity.stage))
 
         template = _ENTITY_TEMPLATES[entity_type]
         text = template.format(
-            title=entity.title or "",
-            short_description=entity.short_description or "",
+            title=html_escape(entity.title or ""),
+            short_description=html_escape(entity.short_description or ""),
             direction=direction,
             stage=stage,
             id=entity_id,

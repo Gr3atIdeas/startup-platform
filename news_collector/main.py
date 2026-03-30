@@ -109,24 +109,49 @@ async def _monitor_user_client(storage, bot, stop_event):
 async def _poll_platform_posts(bot, storage, stop_event):
     """Poll news_moderation_queue for pending_bot entries inserted by Django."""
     logger.info("Platform post poller started (10s interval)")
+    _retry_counts: dict[int, int] = {}
+    MAX_RETRIES = 5
+
     while not stop_event.is_set():
         try:
             posts = storage.get_pending_bot_posts()
             for post in posts:
                 queue_id = post["id"]
+                retries = _retry_counts.get(queue_id, 0)
+                if retries >= MAX_RETRIES:
+                    logger.error(
+                        "Platform post #%d failed %d times, marking as failed",
+                        queue_id, retries,
+                    )
+                    storage.update_moderation_queue(queue_id, status='failed')
+                    _retry_counts.pop(queue_id, None)
+                    continue
+
                 text = post.get("original_text", "")
                 source = post.get("source_channel", "platform")
                 try:
-                    await enqueue_post(
+                    ok = await enqueue_post(
                         bot, storage,
                         text=text,
                         source=source,
                         html_text=text,  # platform text is already HTML
                         queue_id=queue_id,
                     )
-                    logger.info("Platform post #%d sent to moderation", queue_id)
+                    if ok:
+                        logger.info("Platform post #%d sent to moderation", queue_id)
+                        _retry_counts.pop(queue_id, None)
+                    else:
+                        _retry_counts[queue_id] = retries + 1
+                        logger.warning(
+                            "Platform post #%d send returned False (attempt %d/%d)",
+                            queue_id, retries + 1, MAX_RETRIES,
+                        )
                 except Exception as e:
-                    logger.error("Failed to send platform post #%d: %s", queue_id, e)
+                    _retry_counts[queue_id] = retries + 1
+                    logger.error(
+                        "Failed to send platform post #%d (attempt %d/%d): %s",
+                        queue_id, retries + 1, MAX_RETRIES, e,
+                    )
         except Exception as e:
             logger.error("Platform poller error: %s", e)
 
