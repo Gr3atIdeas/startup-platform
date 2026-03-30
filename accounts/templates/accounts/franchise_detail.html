@@ -38,6 +38,7 @@
 
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/entity_detail.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/lead_modal.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/css/glightbox.min.css" />
   <link rel="stylesheet" href="{% static 'accounts/css/moderation_panel.css' %}">
@@ -139,13 +140,8 @@
         </div>
       
       <div class="action-buttons-container">
-        {% if franchise.only_buy or franchise.both_mode %}
-        <button class="action-button primary-button" onclick="handleInvestAction('buy', {{ franchise.franchise_id }}, 'franchise')">Выкупить</button>
-        {% endif %}
         <div class="secondary-actions">
-          {% if franchise.only_invest or franchise.both_mode %}
-          <button class="action-button secondary-button" onclick="handleInvestAction('invest', {{ franchise.franchise_id }}, 'franchise')">Инвестировать</button>
-          {% endif %}
+          <button class="action-button secondary-button" onclick="openLeadModal()">Запросить условия</button>
         </div>
       </div>
       
@@ -176,7 +172,7 @@
                 <a href="#comments-section" class="author-reviews-link-unique">Отзывы</a>
               </div>
             </div>
-            <button class="write-author-button-unique">Написать</button>
+            <button class="write-author-button-unique">Задать вопрос</button>
           </div>
           {% include 'accounts/partials/_contact_links.html' with entity=franchise %}
         </div>
@@ -765,183 +761,11 @@
   </div>
 
   
-  <div class="modal fade" id="investModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="investModalTitle">Инвестировать</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label for="investAmount" class="form-label">Сумма (₽)</label>
-            <input type="number" id="investAmount" class="form-control" placeholder="Введите сумму" min="1" step="1">
-          </div>
-          <div id="investError" class="text-danger" style="display: none;"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
-          <button type="button" class="action-button" id="confirmInvestButton">Подтвердить</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  {% include 'accounts/partials/_lead_modal.html' with entity_type='franchise' entity_id=franchise.franchise_id lead_type='franchise_info' cta_label='Запросить условия' %}
 
   <script src="{% static 'accounts/js/rating_utils.js' %}" defer></script>
+  <script src="{% static 'accounts/js/lead_form.js' %}" defer></script>
   <script src="{% static 'accounts/js/franchise_detail.js' %}" defer></script>
-  <script>
-  function handleInvestAction(type, id, entityType) {
-    if (entityType === 'specialist' || entityType === 'agency') {
-      alert('Функция инвестирования для ' + (entityType === 'specialist' ? 'специалистов' : 'агентств') + ' пока недоступна.');
-      return;
-    }
-    
-    if (entityType === 'franchise') {
-      openInvestModalFranchise(type, id);
-    }
-  }
-  
-  function openInvestModalFranchise(type, franchiseId) {
-    currentInvestFranchiseId = franchiseId;
-    currentInvestType = type;
-    
-    const modal = document.getElementById('investModal');
-    const modalTitle = document.getElementById('investModalTitle');
-    const amountInput = document.getElementById('investAmount');
-    const errorDiv = document.getElementById('investError');
-    
-    if (!modal) return;
-    
-    if (modalTitle) {
-      modalTitle.textContent = type === 'buy' ? 'Выкупить' : 'Инвестировать';
-    }
-    
-    if (amountInput) {
-      amountInput.value = '';
-    }
-    
-    if (errorDiv) {
-      errorDiv.style.display = 'none';
-      errorDiv.textContent = '';
-    }
-    
-    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-      const bsModal = new bootstrap.Modal(modal);
-      bsModal.show();
-    } else {
-      modal.style.display = 'block';
-    }
-  }
-  
-  let currentInvestFranchiseId = null;
-  let currentInvestType = null;
-  
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === name + '=') {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }
-  
-  document.addEventListener('DOMContentLoaded', function() {
-    const confirmInvestButton = document.getElementById('confirmInvestButton');
-    const investModal = document.getElementById('investModal');
-    
-    if (confirmInvestButton) {
-      confirmInvestButton.addEventListener('click', function() {
-        if (!currentInvestFranchiseId) return;
-        
-        const amountInput = document.getElementById('investAmount');
-        const errorDiv = document.getElementById('investError');
-        
-        if (!amountInput) {
-          return;
-        }
-        
-        const amount = parseFloat(amountInput.value);
-        
-        if (!amount || amount <= 0) {
-          if (errorDiv) {
-            errorDiv.textContent = 'Введите корректную сумму';
-            errorDiv.style.display = 'block';
-          }
-          return;
-        }
-        
-        const csrfTokenInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
-        const csrfToken = csrfTokenInput ? csrfTokenInput.value : getCookie('csrftoken');
-        
-        if (!csrfToken) {
-          if (errorDiv) {
-            errorDiv.textContent = 'Ошибка безопасности. Перезагрузите страницу.';
-            errorDiv.style.display = 'block';
-          }
-          return;
-        }
-        
-        const formData = new FormData();
-        formData.append('amount', amount);
-        formData.append('csrfmiddlewaretoken', csrfToken);
-        
-        confirmInvestButton.disabled = true;
-        if (errorDiv) {
-          errorDiv.style.display = 'none';
-        }
-        
-        fetch(`/invest-franchise/${currentInvestFranchiseId}/`, {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': csrfToken
-          },
-          body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-          confirmInvestButton.disabled = false;
-          
-          if (data.success) {
-            if (typeof bootstrap !== 'undefined' && bootstrap.Modal && investModal) {
-              const bsModal = bootstrap.Modal.getInstance(investModal);
-              if (bsModal) {
-                bsModal.hide();
-              }
-            } else if (investModal) {
-              investModal.style.display = 'none';
-            }
-            
-            alert('Инвестирование успешно выполнено!');
-            location.reload();
-          } else {
-            if (errorDiv) {
-              errorDiv.textContent = data.error || 'Произошла ошибка при инвестировании';
-              errorDiv.style.display = 'block';
-            } else {
-              alert(data.error || 'Произошла ошибка при инвестировании');
-            }
-          }
-        })
-        .catch(error => {
-          confirmInvestButton.disabled = false;
-          if (errorDiv) {
-            errorDiv.textContent = 'Произошла ошибка при отправке запроса';
-            errorDiv.style.display = 'block';
-          } else {
-            alert('Произошла ошибка при отправке запроса');
-          }
-        });
-      });
-    }
-  });
-  </script>
-
   <div class="modal fade" id="editAiRatingModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">

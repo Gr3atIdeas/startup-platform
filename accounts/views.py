@@ -11051,6 +11051,50 @@ def my_analytics(request):
                 selected_entity = e
                 break
 
+    # ── Lead analytics ──────────────────────────────────────────
+    from .models import Lead
+    from django.db.models.functions import TruncDate
+
+    leads_qs = Lead.objects.filter(entity_owner=user).order_by('-created_at')
+    lead_stats = {
+        'total': leads_qs.count(),
+        'new': leads_qs.filter(status='new').count(),
+        'viewed': leads_qs.filter(status='viewed').count(),
+        'responded': leads_qs.filter(status='responded').count(),
+        'converted': leads_qs.filter(status='converted').count(),
+    }
+
+    # Lead status filter
+    lead_status_filter = request.GET.get('lead_status', '')
+    lead_entity_filter = request.GET.get('lead_entity', '')
+    filtered_leads = leads_qs
+    if lead_status_filter:
+        filtered_leads = filtered_leads.filter(status=lead_status_filter)
+    if lead_entity_filter:
+        filtered_leads = filtered_leads.filter(entity_type=lead_entity_filter)
+
+    # Mark new leads as viewed when page loads
+    leads_qs.filter(status='new').update(status='viewed', viewed_at=timezone.now())
+
+    # Leads per day for chart (last 30 days)
+    from datetime import timedelta
+    thirty_days_ago = timezone.now() - timedelta(days=30)
+    leads_by_day = list(
+        leads_qs.filter(created_at__gte=thirty_days_ago)
+        .annotate(date=TruncDate('created_at'))
+        .values('date')
+        .annotate(count=Count('lead_id'))
+        .order_by('date')
+    )
+    leads_chart_data = json.dumps([
+        {'date': d['date'].strftime('%Y-%m-%d'), 'count': d['count']}
+        for d in leads_by_day
+    ], cls=DjangoJSONEncoder)
+
+    # Paginate leads list
+    leads_paginator = Paginator(filtered_leads, 15)
+    leads_page = leads_paginator.get_page(request.GET.get('leads_page', 1))
+
     context = {
         'all_entities': filtered_entities,
         'total_views': total_views,
@@ -11068,6 +11112,12 @@ def my_analytics(request):
         'selected_entity': selected_entity,
         'selected_stats_json': json.dumps(selected_stats) if selected_stats else '{}',
         'status_filter': status_filter,
+        # Lead data
+        'lead_stats': lead_stats,
+        'leads_page': leads_page,
+        'leads_chart_data': leads_chart_data,
+        'lead_status_filter': lead_status_filter,
+        'lead_entity_filter': lead_entity_filter,
     }
     return render(request, 'accounts/my_analytics.html', context)
 
@@ -11151,3 +11201,211 @@ def track_engagement(request):
     except Exception:
         return JsonResponse({'status': 'error'}, status=500)
 
+
+
+
+# ══════════════════════════════════════════════════════════════════
+# Lead Generation System
+# ══════════════════════════════════════════════════════════════════
+
+@csrf_exempt
+@require_POST
+def create_lead(request):
+    """Create a new lead (inquiry) for an entity."""
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({"success": False, "error": "Invalid data"}, status=400)
+
+    entity_type = data.get("entity_type", "")
+    entity_id = data.get("entity_id")
+    lead_type = data.get("lead_type", "")
+    name = (data.get("name") or "").strip()
+    email = (data.get("email") or "").strip()
+    phone = (data.get("phone") or "").strip()
+    budget_range = data.get("budget_range", "")
+    message_text = (data.get("message") or "").strip()
+
+    valid_entity_types = ("startup", "franchise", "agency", "specialist")
+    valid_lead_types = ("invest", "franchise_info", "quote", "consultation")
+    if entity_type not in valid_entity_types:
+        return JsonResponse({"success": False, "error": "Неверный тип сущности"}, status=400)
+    if lead_type not in valid_lead_types:
+        return JsonResponse({"success": False, "error": "Неверный тип заявки"}, status=400)
+    if not name or not email:
+        return JsonResponse({"success": False, "error": "Имя и email обязательны"}, status=400)
+    if not entity_id:
+        return JsonResponse({"success": False, "error": "Не указан ID объекта"}, status=400)
+
+    model_map = {
+        "startup": (Startups, "startup_id"),
+        "franchise": (Franchises, "franchise_id"),
+        "agency": (Agencies, "agency_id"),
+        "specialist": (Specialists, "specialist_id"),
+    }
+    Model, pk_field = model_map[entity_type]
+    entity = Model.objects.filter(**{pk_field: entity_id}).select_related("owner").first()
+    if not entity:
+        return JsonResponse({"success": False, "error": "Объект не найден"}, status=404)
+
+    entity_owner = getattr(entity, "owner", None)
+
+    if request.user.is_authenticated and entity_owner and request.user.pk == entity_owner.pk:
+        return JsonResponse({"success": False, "error": "Нельзя оставить заявку на свой объект"}, status=400)
+
+    from .models import Lead
+    lead = Lead.objects.create(
+        entity_type=entity_type,
+        entity_id=entity_id,
+        user=request.user if request.user.is_authenticated else None,
+        entity_owner=entity_owner,
+        lead_type=lead_type,
+        name=name,
+        email=email,
+        phone=phone,
+        budget_range=budget_range,
+        message=message_text,
+    )
+
+    try:
+        _send_lead_telegram_notification(lead, entity)
+    except Exception as e:
+        logger.error("Failed to send lead Telegram notification: %s", e)
+
+    if entity_owner:
+        try:
+            _create_lead_notification(lead, entity_owner, entity)
+        except Exception as e:
+            logger.error("Failed to create lead notification: %s", e)
+
+    return JsonResponse({"success": True, "lead_id": lead.lead_id})
+
+
+def _send_lead_telegram_notification(lead, entity):
+    """Send Telegram notification about new lead to admin."""
+    from django.conf import settings as django_settings
+    bot_token = getattr(django_settings, "TELEGRAM_BOT_TOKEN", None)
+    chat_id = getattr(django_settings, "TELEGRAM_OWNER_CHAT_ID", "911873673")
+    if not bot_token:
+        return
+
+    entity_emojis = {"startup": "\U0001F680", "franchise": "\U0001F3EA", "agency": "\U0001F3E2", "specialist": "\U0001F468\u200D\U0001F4BC"}
+    lead_type_names = {"invest": "\u0418\u043D\u0432\u0435\u0441\u0442\u0438\u0446\u0438\u044F", "franchise_info": "\u0424\u0440\u0430\u043D\u0448\u0438\u0437\u0430", "quote": "\u0420\u0430\u0441\u0447\u0451\u0442", "consultation": "\u041A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446\u0438\u044F"}
+    emoji = entity_emojis.get(lead.entity_type, "\U0001F4DD")
+
+    entity_url_paths = {"startup": "startups", "franchise": "franchises", "agency": "agencies", "specialist": "specialists"}
+    url_path = entity_url_paths.get(lead.entity_type, "startups")
+    view_url = f"https://greatideas.ru/{url_path}/{lead.entity_id}/"
+
+    text = (
+        f"\U0001F4E9 <b>\u041D\u043E\u0432\u0430\u044F \u0437\u0430\u044F\u0432\u043A\u0430!</b>\n\n"
+        f"{emoji} <b>{entity.title or 'N/A'}</b>\n"
+        f"\U0001F4CB \u0422\u0438\u043F: {lead_type_names.get(lead.lead_type, lead.lead_type)}\n\n"
+        f"\U0001F464 {lead.name}\n"
+        f"\u2709\uFE0F {lead.email}\n"
+    )
+    if lead.phone:
+        text += f"\U0001F4DE {lead.phone}\n"
+    if lead.budget_range:
+        text += f"\U0001F4B0 \u0411\u044E\u0434\u0436\u0435\u0442: {lead.budget_range}\n"
+    if lead.message:
+        msg_short = lead.message[:200] + ("..." if len(lead.message) > 200 else "")
+        text += f"\n\U0001F4AC {msg_short}\n"
+
+    inline_keyboard = {"inline_keyboard": [[
+        {"text": "\U0001F441 \u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C", "url": view_url},
+        {"text": "\U0001F4CB \u0410\u0434\u043C\u0438\u043D\u043A\u0430", "url": "https://greatideas.ru/admin/accounts/lead/"},
+    ]]}
+
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    try:
+        requests.post(url, json={"chat_id": chat_id, "text": text, "parse_mode": "HTML", "reply_markup": inline_keyboard}, timeout=10)
+    except Exception as e:
+        logger.error("Telegram lead notification failed: %s", e)
+
+
+def _create_lead_notification(lead, entity_owner, entity):
+    """Create in-app notification for entity owner."""
+    from django.db import connection
+    lead_type_names = {"invest": "\u0438\u043D\u0432\u0435\u0441\u0442\u0438\u0446\u0438\u0438", "franchise_info": "\u0444\u0440\u0430\u043D\u0448\u0438\u0437\u0435", "quote": "\u0440\u0430\u0441\u0447\u0451\u0442\u0435", "consultation": "\u043A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446\u0438\u0438"}
+    type_text = lead_type_names.get(lead.lead_type, "\u0432\u0430\u0448\u0435\u043C \u043E\u0431\u044A\u0435\u043A\u0442\u0435")
+    msg = f"\u041D\u043E\u0432\u0430\u044F \u0437\u0430\u044F\u0432\u043A\u0430 \u043E {type_text}: {entity.title or 'N/A'} \u043E\u0442 {lead.name}"
+    try:
+        with connection.cursor() as cur:
+            cur.execute(
+                "INSERT INTO notifications (user_id, notification_type_id, message, is_read, created_at) VALUES (%s, (SELECT notification_type_id FROM notification_types WHERE type_name = 'system' LIMIT 1), %s, false, NOW())",
+                [entity_owner.pk, msg[:500]],
+            )
+    except Exception as e:
+        logger.warning("Failed to insert notification: %s", e)
+
+
+@login_required
+def my_leads(request):
+    """Dashboard for entity owners to view their leads."""
+    from .models import Lead
+    leads_qs = Lead.objects.filter(entity_owner=request.user).order_by("-created_at")
+
+    status_filter = request.GET.get("status", "")
+    entity_type_filter = request.GET.get("entity_type", "")
+    if status_filter:
+        leads_qs = leads_qs.filter(status=status_filter)
+    if entity_type_filter:
+        leads_qs = leads_qs.filter(entity_type=entity_type_filter)
+
+    # Mark new leads as viewed
+    leads_qs.filter(status="new").update(status="viewed", viewed_at=timezone.now())
+
+    all_leads = Lead.objects.filter(entity_owner=request.user)
+    stats = {
+        "total": all_leads.count(),
+        "new": all_leads.filter(status="new").count(),
+        "viewed": all_leads.filter(status="viewed").count(),
+        "responded": all_leads.filter(status="responded").count(),
+        "converted": all_leads.filter(status="converted").count(),
+    }
+
+    paginator = Paginator(leads_qs, 20)
+    page_obj = paginator.get_page(request.GET.get("page", 1))
+
+    return render(request, "accounts/my_leads.html", {
+        "page_obj": page_obj,
+        "stats": stats,
+        "status_filter": status_filter,
+        "entity_type_filter": entity_type_filter,
+    })
+
+
+@login_required
+@require_POST
+def update_lead_status(request, lead_id):
+    """Update lead status (entity owner only)."""
+    from .models import Lead
+
+    lead = Lead.objects.filter(lead_id=lead_id, entity_owner=request.user).first()
+    if not lead:
+        return JsonResponse({"success": False, "error": "Not found"}, status=404)
+
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({"success": False, "error": "Invalid data"}, status=400)
+
+    new_status = data.get("status", "")
+    valid_transitions = {
+        "new": ["viewed", "responded", "converted"],
+        "viewed": ["responded", "converted"],
+        "responded": ["converted"],
+        "converted": [],
+    }
+    if new_status not in valid_transitions.get(lead.status, []):
+        return JsonResponse({"success": False, "error": "Invalid status transition"}, status=400)
+
+    lead.status = new_status
+    if new_status == "viewed" and not lead.viewed_at:
+        lead.viewed_at = timezone.now()
+    elif new_status == "responded" and not lead.responded_at:
+        lead.responded_at = timezone.now()
+    lead.save()
+
+    return JsonResponse({"success": True, "status": new_status})

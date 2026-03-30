@@ -1,6 +1,7 @@
 {% if entity.contact_website or entity.contact_telegram or entity.contact_whatsapp %}
 <div class="contact-links-section">
   <h4 class="contact-links-title">Контакты</h4>
+  {% if user.is_authenticated %}
   <div class="contact-links-list">
     {% if entity.contact_website %}
       <a href="{{ entity.contact_website }}" target="_blank" rel="noopener" class="contact-link contact-link--website" data-track-click="website">
@@ -21,5 +22,10 @@
       </a>
     {% endif %}
   </div>
+  {% else %}
+  <p class="contact-links-auth-hint">
+    <a href="{% url 'login' %}">Войдите</a>, чтобы увидеть контакты
+  </p>
+  {% endif %}
 </div>
 {% endif %}

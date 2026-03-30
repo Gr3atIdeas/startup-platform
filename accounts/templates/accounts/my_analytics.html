@@ -357,7 +357,124 @@
     </p>
     {% endfor %}
   </div>
+
+  <!-- ══════ Leads section ══════ -->
+  <div class="analytics-section-header" style="margin-top: 40px;">
+    <h2 class="analytics-subtitle">Заявки</h2>
+  </div>
+
+  <!-- Lead summary cards -->
+  <div class="analytics-summary" style="grid-template-columns: repeat(5, 1fr);">
+    <div class="analytics-card">
+      <div class="analytics-card__value">{{ lead_stats.total }}</div>
+      <div class="analytics-card__label">Всего заявок</div>
+    </div>
+    <div class="analytics-card">
+      <div class="analytics-card__value analytics-card__value--blue">{{ lead_stats.new }}</div>
+      <div class="analytics-card__label">Новые</div>
+    </div>
+    <div class="analytics-card">
+      <div class="analytics-card__value analytics-card__value--cyan">{{ lead_stats.viewed }}</div>
+      <div class="analytics-card__label">Просмотрено</div>
+    </div>
+    <div class="analytics-card">
+      <div class="analytics-card__value analytics-card__value--green">{{ lead_stats.responded }}</div>
+      <div class="analytics-card__label">Отвечено</div>
+    </div>
+    <div class="analytics-card">
+      <div class="analytics-card__value analytics-card__value--purple">{{ lead_stats.converted }}</div>
+      <div class="analytics-card__label">Конвертировано</div>
+    </div>
+  </div>
+
+  <!-- Lead chart -->
+  {% if lead_stats.total > 0 %}
+  <div class="analytics-panel" style="margin-top: 16px;">
+    <div class="analytics-panel__title">Заявки за последние 30 дней</div>
+    <canvas id="leadsChart" height="200"></canvas>
+  </div>
+  {% endif %}
+
+  <!-- Lead filters -->
+  <div class="analytics-status-filter" style="margin-top: 16px;">
+    <a href="?status={{ status_filter }}{% if selected_type %}&type={{ selected_type }}&id={{ selected_id }}{% endif %}&lead_status="
+       class="{% if not lead_status_filter %}active{% endif %}">Все</a>
+    <a href="?status={{ status_filter }}{% if selected_type %}&type={{ selected_type }}&id={{ selected_id }}{% endif %}&lead_status=viewed&lead_entity={{ lead_entity_filter }}"
+       class="{% if lead_status_filter == 'viewed' %}active{% endif %}">Просмотренные</a>
+    <a href="?status={{ status_filter }}{% if selected_type %}&type={{ selected_type }}&id={{ selected_id }}{% endif %}&lead_status=responded&lead_entity={{ lead_entity_filter }}"
+       class="{% if lead_status_filter == 'responded' %}active{% endif %}">Отвечено</a>
+    <a href="?status={{ status_filter }}{% if selected_type %}&type={{ selected_type }}&id={{ selected_id }}{% endif %}&lead_status=converted&lead_entity={{ lead_entity_filter }}"
+       class="{% if lead_status_filter == 'converted' %}active{% endif %}">Конвертировано</a>
+  </div>
+
+  <!-- Leads list -->
+  <div class="analytics-entities" style="margin-top: 12px;">
+    {% for lead in leads_page %}
+    <div class="analytics-entity" style="cursor:default; display:flex; flex-direction:column; gap:8px; padding:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+        <div>
+          <div style="font-family:Unbounded,sans-serif; font-size:13px; color:#fff;">{{ lead.get_entity_title }}</div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.45); margin-top:2px;">{{ lead.get_entity_type_display }} / {{ lead.get_lead_type_display }}</div>
+        </div>
+        <span style="font-size:11px; padding:3px 10px; border-radius:20px; color:#fff; white-space:nowrap;
+          {% if lead.status == 'new' %}background:#007bff;{% elif lead.status == 'viewed' %}background:#ffc107;color:#000;{% elif lead.status == 'responded' %}background:#28a745;{% elif lead.status == 'converted' %}background:#6f42c1;{% endif %}
+        ">{{ lead.get_status_display }}</span>
+      </div>
+      <div style="font-family:Inter,sans-serif; font-size:13px; color:rgba(255,255,255,0.8);">
+        <strong>{{ lead.name }}</strong> &mdash;
+        <a href="mailto:{{ lead.email }}" style="color:#7b61ff; text-decoration:none;">{{ lead.email }}</a>
+        {% if lead.phone %} &bull; {{ lead.phone }}{% endif %}
+        {% if lead.budget_range %} &bull; {{ lead.budget_range }}{% endif %}
+      </div>
+      {% if lead.message %}
+      <div style="font-family:Inter,sans-serif; font-size:12px; color:rgba(255,255,255,0.5); font-style:italic;">&laquo;{{ lead.message|truncatewords:25 }}&raquo;</div>
+      {% endif %}
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:11px; color:rgba(255,255,255,0.35);">{{ lead.created_at|date:"d.m.Y H:i" }}</span>
+        {% if lead.status != 'converted' %}
+        <div style="display:flex; gap:6px;">
+          {% if lead.status == 'viewed' %}
+          <button onclick="updateLeadStatus({{ lead.lead_id }},'responded')" style="font-family:Inter,sans-serif; font-size:11px; padding:4px 12px; border-radius:5px; border:1px solid rgba(255,255,255,0.15); background:transparent; color:rgba(255,255,255,0.7); cursor:pointer;">Отвечено</button>
+          {% endif %}
+          {% if lead.status == 'viewed' or lead.status == 'responded' %}
+          <button onclick="updateLeadStatus({{ lead.lead_id }},'converted')" style="font-family:Inter,sans-serif; font-size:11px; padding:4px 12px; border-radius:5px; background:#7b61ff; border:none; color:#fff; cursor:pointer;">Конвертировано</button>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% empty %}
+    <p class="analytics-empty">Пока нет заявок</p>
+    {% endfor %}
+  </div>
+
+  {% if leads_page.has_other_pages %}
+  <div style="text-align:center; margin-top:16px; display:flex; gap:8px; justify-content:center;">
+    {% if leads_page.has_previous %}
+    <a href="?leads_page={{ leads_page.previous_page_number }}&status={{ status_filter }}&lead_status={{ lead_status_filter }}&lead_entity={{ lead_entity_filter }}{% if selected_type %}&type={{ selected_type }}&id={{ selected_id }}{% endif %}" style="color:#7b61ff; text-decoration:none; font-size:13px;">Назад</a>
+    {% endif %}
+    <span style="color:rgba(255,255,255,0.5); font-size:13px;">Стр. {{ leads_page.number }} из {{ leads_page.paginator.num_pages }}</span>
+    {% if leads_page.has_next %}
+    <a href="?leads_page={{ leads_page.next_page_number }}&status={{ status_filter }}&lead_status={{ lead_status_filter }}&lead_entity={{ lead_entity_filter }}{% if selected_type %}&type={{ selected_type }}&id={{ selected_id }}{% endif %}" style="color:#7b61ff; text-decoration:none; font-size:13px;">Вперед</a>
+    {% endif %}
+  </div>
+  {% endif %}
 </div>
+
+<script>
+function updateLeadStatus(leadId, newStatus) {
+  var csrfToken = '';
+  var match = document.cookie.match(/csrftoken=([^;]+)/);
+  if (match) csrfToken = match[1];
+  fetch('/leads/' + leadId + '/update-status/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+    body: JSON.stringify({ status: newStatus }),
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) { if (data.success) location.reload(); else alert(data.error || 'Error'); });
+}
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -456,6 +573,41 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     {% endif %}
+
+    // ── Leads Chart ──
+    var leadsChartEl = document.getElementById('leadsChart');
+    if (leadsChartEl && typeof Chart !== 'undefined') {
+        var leadsData = {{ leads_chart_data|safe }};
+        if (leadsData.length > 0) {
+            var lLabels = leadsData.map(function(d) {
+                var p = d.date.split('-');
+                return p[2] + '.' + p[1];
+            });
+            var lCounts = leadsData.map(function(d) { return d.count; });
+            new Chart(leadsChartEl, {
+                type: 'bar',
+                data: {
+                    labels: lLabels,
+                    datasets: [{
+                        label: 'Заявки', data: lCounts,
+                        backgroundColor: 'rgba(123,97,255,0.6)',
+                        borderColor: '#7b61ff', borderWidth: 1,
+                        borderRadius: 4,
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false },
+                        tooltip: { backgroundColor: 'rgba(0,8,25,0.95)', titleColor: '#fff', bodyColor: 'rgba(255,255,255,0.8)', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }
+                    },
+                    scales: {
+                        x: { ticks: { color: 'rgba(255,255,255,0.35)', maxTicksLimit: 15, maxRotation: 45, font: { family: 'Inter', size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                        y: { ticks: { color: 'rgba(255,255,255,0.35)', font: { family: 'Inter', size: 11 }, precision: 0 }, grid: { color: 'rgba(255,255,255,0.04)' }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+    }
 });
 </script>
 {% endblock %}

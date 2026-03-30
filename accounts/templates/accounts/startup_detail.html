@@ -38,6 +38,7 @@
 
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/entity_detail.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/lead_modal.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/css/glightbox.min.css" />
   <link rel="stylesheet" href="{% static 'accounts/css/moderation_panel.css' %}">
@@ -147,14 +148,7 @@
         <button class="action-button primary-button" onclick="openInvestModal('buy', {{ startup.startup_id }})">Выкупить</button>
         {% endif %}
         <div class="secondary-actions">
-          {% if startup.only_invest or startup.both_mode %}
-          <button class="action-button secondary-button" onclick="openInvestModal('invest', {{ startup.startup_id }})">Связаться</button>
-          {% if startup.micro_investment_available %}
-          <div class="microinvestment-badge">
-            <i class="fas fa-check-circle"></i> Микроинвестиции
-          </div>
-          {% endif %}
-          {% endif %}
+          <button class="action-button secondary-button" onclick="openLeadModal()">Оставить заявку</button>
         </div>
       </div>
       
@@ -185,7 +179,7 @@
                 <a href="#comments-section" class="author-reviews-link-unique">Отзывы</a>
               </div>
             </div>
-            <button class="write-author-button-unique">Написать</button>
+            <button class="write-author-button-unique">Задать вопрос</button>
           </div>
           {% include 'accounts/partials/_contact_links.html' with entity=startup %}
         </div>
@@ -786,27 +780,7 @@
   </div>
 
   
-  <div class="modal fade" id="investModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="investModalTitle">Связаться</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <label for="investAmount" class="form-label">Сумма (₽)</label>
-            <input type="number" id="investAmount" class="form-control" placeholder="Введите сумму" min="1" step="1">
-          </div>
-          <div id="investError" class="text-danger" style="display: none;"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
-          <button type="button" class="action-button" id="confirmInvestButton">Подтвердить</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  {% include 'accounts/partials/_lead_modal.html' with entity_type='startup' entity_id=startup.startup_id lead_type='invest' cta_label='Инвестировать' %}
 
   <div class="modal fade" id="editAiRatingModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
@@ -831,6 +805,7 @@
   </div>
 
   <script src="{% static 'accounts/js/rating_utils.js' %}" defer></script>
+  <script src="{% static 'accounts/js/lead_form.js' %}" defer></script>
   <script src="{% static 'accounts/js/startup_detail.js' %}" defer></script>
 </div> 
 

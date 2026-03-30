@@ -1,0 +1,178 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block title %}Заявки — Great Ideas{% endblock %}
+
+{% block head_extra %}
+  <link rel="stylesheet" href="{% static 'accounts/css/entity_detail.css' %}">
+  <style>
+    .leads-container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    .leads-header { margin-bottom: 24px; }
+    .leads-header h1 { font-family: Unbounded, sans-serif; font-size: 24px; font-weight: 500; color: #fff; margin: 0 0 16px 0; }
+
+    .leads-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+    .leads-stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 14px 20px; min-width: 120px; text-align: center; }
+    .leads-stat-value { font-family: Unbounded, sans-serif; font-size: 24px; font-weight: 600; color: #fff; }
+    .leads-stat-label { font-family: Inter, sans-serif; font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+    .leads-filters { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .leads-filters select { font-family: Inter, sans-serif; font-size: 13px; background: rgba(255,255,255,0.07); color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 12px; appearance: none; }
+    .leads-filters select option { background: #0d1b3e; color: #fff; }
+
+    .leads-list { display: flex; flex-direction: column; gap: 12px; }
+    .lead-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; transition: border-color 0.2s; }
+    .lead-card:hover { border-color: rgba(123,97,255,0.3); }
+    .lead-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+    .lead-card-entity { font-family: Unbounded, sans-serif; font-size: 14px; font-weight: 400; color: #fff; }
+    .lead-card-type { font-family: Inter, sans-serif; font-size: 12px; color: rgba(255,255,255,0.5); }
+
+    .lead-card-badge { font-family: Inter, sans-serif; font-size: 11px; padding: 4px 10px; border-radius: 20px; color: #fff; white-space: nowrap; }
+    .lead-card-badge--new { background: #007bff; }
+    .lead-card-badge--viewed { background: #ffc107; color: #000; }
+    .lead-card-badge--responded { background: #28a745; }
+    .lead-card-badge--converted { background: #6f42c1; }
+
+    .lead-card-contact { font-family: Inter, sans-serif; font-size: 13px; color: rgba(255,255,255,0.8); }
+    .lead-card-contact a { color: #7b61ff; text-decoration: none; }
+    .lead-card-contact a:hover { text-decoration: underline; }
+    .lead-card-message { font-family: Inter, sans-serif; font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 8px; font-style: italic; }
+    .lead-card-meta { font-family: Inter, sans-serif; font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 10px; }
+
+    .lead-card-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .lead-action-btn { font-family: Inter, sans-serif; font-size: 12px; padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: rgba(255,255,255,0.7); cursor: pointer; transition: all 0.2s; }
+    .lead-action-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .lead-action-btn--primary { background: #7b61ff; border-color: #7b61ff; color: #fff; }
+    .lead-action-btn--primary:hover { background: #6551d9; }
+
+    .leads-empty { text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.5); font-family: Inter, sans-serif; }
+    .leads-empty p { font-size: 15px; }
+
+    @media (max-width: 768px) {
+      .leads-stats { gap: 8px; }
+      .leads-stat { min-width: 90px; padding: 10px 14px; }
+      .leads-stat-value { font-size: 20px; }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="leads-container">
+  <div class="leads-header">
+    <h1>Заявки</h1>
+  </div>
+
+  <div class="leads-stats">
+    <div class="leads-stat">
+      <div class="leads-stat-value">{{ stats.total }}</div>
+      <div class="leads-stat-label">Всего</div>
+    </div>
+    <div class="leads-stat">
+      <div class="leads-stat-value">{{ stats.new }}</div>
+      <div class="leads-stat-label">Новые</div>
+    </div>
+    <div class="leads-stat">
+      <div class="leads-stat-value">{{ stats.responded }}</div>
+      <div class="leads-stat-label">Отвечено</div>
+    </div>
+    <div class="leads-stat">
+      <div class="leads-stat-value">{{ stats.converted }}</div>
+      <div class="leads-stat-label">Конвертировано</div>
+    </div>
+  </div>
+
+  <div class="leads-filters">
+    <select onchange="location.href='?status='+this.value+'&entity_type={{ entity_type_filter }}'">
+      <option value="">Все статусы</option>
+      <option value="new" {% if status_filter == 'new' %}selected{% endif %}>Новые</option>
+      <option value="viewed" {% if status_filter == 'viewed' %}selected{% endif %}>Просмотренные</option>
+      <option value="responded" {% if status_filter == 'responded' %}selected{% endif %}>Отвечено</option>
+      <option value="converted" {% if status_filter == 'converted' %}selected{% endif %}>Конвертировано</option>
+    </select>
+    <select onchange="location.href='?entity_type='+this.value+'&status={{ status_filter }}'">
+      <option value="">Все типы</option>
+      <option value="startup" {% if entity_type_filter == 'startup' %}selected{% endif %}>Стартапы</option>
+      <option value="franchise" {% if entity_type_filter == 'franchise' %}selected{% endif %}>Франшизы</option>
+      <option value="agency" {% if entity_type_filter == 'agency' %}selected{% endif %}>Агентства</option>
+      <option value="specialist" {% if entity_type_filter == 'specialist' %}selected{% endif %}>Специалисты</option>
+    </select>
+  </div>
+
+  {% if page_obj %}
+  <div class="leads-list">
+    {% for lead in page_obj %}
+    <div class="lead-card" data-lead-id="{{ lead.lead_id }}">
+      <div class="lead-card-header">
+        <div>
+          <div class="lead-card-entity">{{ lead.get_entity_title }}</div>
+          <div class="lead-card-type">{{ lead.get_entity_type_display }} / {{ lead.get_lead_type_display }}</div>
+        </div>
+        <span class="lead-card-badge lead-card-badge--{{ lead.status }}">{{ lead.get_status_display }}</span>
+      </div>
+      <div class="lead-card-contact">
+        <strong>{{ lead.name }}</strong> &mdash;
+        <a href="mailto:{{ lead.email }}">{{ lead.email }}</a>
+        {% if lead.phone %} &bull; {{ lead.phone }}{% endif %}
+        {% if lead.budget_range %} &bull; {{ lead.budget_range }}{% endif %}
+      </div>
+      {% if lead.message %}
+      <div class="lead-card-message">&laquo;{{ lead.message|truncatewords:30 }}&raquo;</div>
+      {% endif %}
+      <div class="lead-card-meta">{{ lead.created_at|date:"d.m.Y H:i" }}</div>
+      {% if lead.status != 'converted' %}
+      <div class="lead-card-actions">
+        {% if lead.status == 'viewed' %}
+        <button class="lead-action-btn" onclick="updateLeadStatus({{ lead.lead_id }}, 'responded')">Отвечено</button>
+        {% endif %}
+        {% if lead.status == 'viewed' or lead.status == 'responded' %}
+        <button class="lead-action-btn lead-action-btn--primary" onclick="updateLeadStatus({{ lead.lead_id }}, 'converted')">Конвертировано</button>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <div class="pagination-numbers" style="margin-top: 20px; text-align: center;">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}&status={{ status_filter }}&entity_type={{ entity_type_filter }}">Назад</a>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <span class="current-page">{{ num }}</span>
+      {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+        <a href="?page={{ num }}&status={{ status_filter }}&entity_type={{ entity_type_filter }}">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}&status={{ status_filter }}&entity_type={{ entity_type_filter }}">Вперед</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="leads-empty">
+    <p>Пока нет заявок</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function updateLeadStatus(leadId, newStatus) {
+  var csrfToken = '';
+  var match = document.cookie.match(/csrftoken=([^;]+)/);
+  if (match) csrfToken = match[1];
+
+  fetch('/leads/' + leadId + '/update-status/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+    body: JSON.stringify({ status: newStatus }),
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.success) location.reload();
+    else alert(data.error || 'Error');
+  });
+}
+</script>
+{% endblock %}

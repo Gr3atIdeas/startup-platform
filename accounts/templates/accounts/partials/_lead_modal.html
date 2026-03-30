@@ -1,0 +1,65 @@
+{% load static %}
+{# Lead modal — include on entity detail pages with: #}
+{# {% include 'accounts/partials/_lead_modal.html' with entity_type='startup' entity_id=startup.startup_id lead_type='invest' cta_label='Инвестировать' %} #}
+
+<div id="leadModal" class="lead-modal-overlay" style="display:none;" data-entity-type="{{ entity_type }}" data-entity-id="{{ entity_id }}" data-lead-type="{{ lead_type }}">
+  <div class="lead-modal-container">
+    <button class="lead-modal-close" onclick="closeLeadModal()">&times;</button>
+
+    <!-- Form state -->
+    <div id="leadFormContent">
+      <h2 class="lead-modal-title">{{ cta_label|default:"Оставить заявку" }}</h2>
+      <p class="lead-modal-subtitle">Заполните форму, и владелец свяжется с вами</p>
+
+      <form id="leadForm" class="lead-form">
+        <div class="lead-form-group">
+          <label for="leadName">Имя *</label>
+          <input type="text" id="leadName" name="name" required
+            {% if user.is_authenticated %}value="{{ user.first_name }} {{ user.last_name }}"{% endif %}
+            placeholder="Ваше имя">
+        </div>
+
+        <div class="lead-form-group">
+          <label for="leadEmail">Email *</label>
+          <input type="email" id="leadEmail" name="email" required
+            {% if user.is_authenticated %}value="{{ user.email }}"{% endif %}
+            placeholder="email@example.com">
+        </div>
+
+        <div class="lead-form-group">
+          <label for="leadPhone">Телефон</label>
+          <input type="tel" id="leadPhone" name="phone" placeholder="+7 (___) ___-__-__">
+        </div>
+
+        <div class="lead-form-group">
+          <label for="leadBudget">Бюджет</label>
+          <select id="leadBudget" name="budget_range">
+            <option value="">Не указан</option>
+            <option value="до 500К">до 500 000 &#8381;</option>
+            <option value="500К-1М">500 000 — 1 000 000 &#8381;</option>
+            <option value="1М-5М">1 000 000 — 5 000 000 &#8381;</option>
+            <option value="5М-10М">5 000 000 — 10 000 000 &#8381;</option>
+            <option value="10М+">более 10 000 000 &#8381;</option>
+          </select>
+        </div>
+
+        <div class="lead-form-group">
+          <label for="leadMessage">Сообщение</label>
+          <textarea id="leadMessage" name="message" rows="3" placeholder="Расскажите, что вас интересует..."></textarea>
+        </div>
+
+        <div id="leadFormError" class="lead-form-error" style="display:none;"></div>
+
+        <button type="submit" class="lead-form-submit" id="leadSubmitBtn">Отправить заявку</button>
+      </form>
+    </div>
+
+    <!-- Success state -->
+    <div id="leadSuccessContent" style="display:none;">
+      <div class="lead-success-icon">&#10003;</div>
+      <h2 class="lead-modal-title">Заявка отправлена!</h2>
+      <p class="lead-modal-subtitle">Владелец получит уведомление и свяжется с вами в ближайшее время.</p>
+      <button class="lead-form-submit" onclick="closeLeadModal()">Закрыть</button>
+    </div>
+  </div>
+</div>

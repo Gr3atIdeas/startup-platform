@@ -824,6 +824,87 @@ class SupportTicket(models.Model):
         return f"Ticket #{self.ticket_id} by {self.user.username if self.user else 'Anonymous'}"
 
 
+class Lead(models.Model):
+    ENTITY_TYPE_CHOICES = [
+        ('startup', 'Стартап'),
+        ('franchise', 'Франшиза'),
+        ('agency', 'Агентство'),
+        ('specialist', 'Специалист'),
+    ]
+    LEAD_TYPE_CHOICES = [
+        ('invest', 'Инвестиция'),
+        ('franchise_info', 'Информация о франшизе'),
+        ('quote', 'Запрос расчёта'),
+        ('consultation', 'Консультация'),
+    ]
+    STATUS_CHOICES = [
+        ('new', 'Новая'),
+        ('viewed', 'Просмотрена'),
+        ('responded', 'Отвечено'),
+        ('converted', 'Конвертирована'),
+    ]
+    BUDGET_RANGE_CHOICES = [
+        ('', 'Не указан'),
+        ('до 500К', 'до 500 000 ₽'),
+        ('500К-1М', '500 000 — 1 000 000 ₽'),
+        ('1М-5М', '1 000 000 — 5 000 000 ₽'),
+        ('5М-10М', '5 000 000 — 10 000 000 ₽'),
+        ('10М+', 'более 10 000 000 ₽'),
+    ]
+
+    lead_id = models.AutoField(primary_key=True)
+    entity_type = models.CharField(max_length=20, choices=ENTITY_TYPE_CHOICES)
+    entity_id = models.IntegerField()
+    user = models.ForeignKey(
+        'Users', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='submitted_leads', db_column='user_id',
+    )
+    entity_owner = models.ForeignKey(
+        'Users', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='received_leads', db_column='entity_owner_id',
+    )
+    lead_type = models.CharField(max_length=20, choices=LEAD_TYPE_CHOICES)
+    name = models.CharField(max_length=255)
+    email = models.EmailField(max_length=255)
+    phone = models.CharField(max_length=50, blank=True, default='')
+    budget_range = models.CharField(max_length=100, blank=True, default='', choices=BUDGET_RANGE_CHOICES)
+    message = models.TextField(blank=True, default='')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
+    created_at = models.DateTimeField(auto_now_add=True)
+    viewed_at = models.DateTimeField(null=True, blank=True)
+    responded_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'leads'
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['entity_type', 'entity_id'], name='idx_leads_entity'),
+            models.Index(fields=['entity_owner', 'status'], name='idx_leads_owner_status'),
+        ]
+
+    def __str__(self):
+        return f"Lead #{self.lead_id} ({self.get_entity_type_display()}) — {self.name}"
+
+    def get_entity(self):
+        """Return the related entity object."""
+        model_map = {
+            'startup': ('Startups', 'startup_id'),
+            'franchise': ('Franchises', 'franchise_id'),
+            'agency': ('Agencies', 'agency_id'),
+            'specialist': ('Specialists', 'specialist_id'),
+        }
+        info = model_map.get(self.entity_type)
+        if not info:
+            return None
+        from django.apps import apps
+        model = apps.get_model('accounts', info[0])
+        return model.objects.filter(pk=self.entity_id).first()
+
+    def get_entity_title(self):
+        entity = self.get_entity()
+        return entity.title if entity else f"#{self.entity_id}"
+
+
 class Franchises(models.Model):
     franchise_id = models.AutoField(primary_key=True)
     owner = models.ForeignKey(

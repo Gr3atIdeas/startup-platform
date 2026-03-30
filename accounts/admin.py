@@ -19,6 +19,7 @@ from .models import (
     NewsComments,
     PinnedCatalogItem,
     AdPlacement,
+    Lead,
 )
 from .moderation import approve_entity, reject_entity
 
@@ -576,3 +577,61 @@ class AdPlacementAdmin(admin.ModelAdmin):
             return f"до {obj.end_date}"
         return "Бессрочно"
     date_range_display.short_description = "Период"
+
+
+# ── Заявки (Lead Generation) ────────────────────────────────────
+
+@admin.register(Lead)
+class LeadAdmin(admin.ModelAdmin):
+    list_display = ("lead_id", "entity_type_display", "entity_title_short", "lead_type_display", "name", "email", "status_badge", "created_at")
+    list_filter = ("entity_type", "lead_type", "status", "created_at")
+    search_fields = ("name", "email", "phone", "message")
+    readonly_fields = ("lead_id", "created_at", "viewed_at", "responded_at")
+    raw_id_fields = ("user", "entity_owner")
+    date_hierarchy = "created_at"
+    list_per_page = 50
+    ordering = ("-created_at",)
+
+    fieldsets = (
+        ("Заявка", {
+            "fields": ("entity_type", "entity_id", "lead_type", "status"),
+        }),
+        ("Контактные данные", {
+            "fields": ("name", "email", "phone", "budget_range", "message"),
+        }),
+        ("Участники", {
+            "fields": ("user", "entity_owner"),
+        }),
+        ("Метаданные", {
+            "fields": ("lead_id", "created_at", "viewed_at", "responded_at"),
+            "classes": ("collapse",),
+        }),
+    )
+
+    def status_badge(self, obj):
+        colors = {
+            "new": "#007bff",
+            "viewed": "#ffc107",
+            "responded": "#28a745",
+            "converted": "#6f42c1",
+        }
+        color = colors.get(obj.status, "#6c757d")
+        return format_html(
+            '<span style="background:{};color:#fff;padding:3px 8px;border-radius:4px;font-size:11px">{}</span>',
+            color, obj.get_status_display(),
+        )
+    status_badge.short_description = "Статус"
+    status_badge.admin_order_field = "status"
+
+    def entity_type_display(self, obj):
+        return obj.get_entity_type_display()
+    entity_type_display.short_description = "Тип"
+
+    def lead_type_display(self, obj):
+        return obj.get_lead_type_display()
+    lead_type_display.short_description = "Тип заявки"
+
+    def entity_title_short(self, obj):
+        title = obj.get_entity_title()
+        return title[:40] + "..." if len(title) > 40 else title
+    entity_title_short.short_description = "Объект"
