@@ -204,22 +204,30 @@
 
     </article>
 
-    <!-- Похожие статьи — горизонтальная лента внизу -->
+    <!-- Похожие статьи -->
     {% if similar_articles %}
     <section class="similar-section">
       <h2 class="similar-section-title">Читайте также</h2>
       <div class="similar-articles-row" id="similar-articles-row">
         {% for similar in similar_articles %}
-        <a href="{% url 'news_detail' similar.slug %}" class="similar-card">
+        <article class="similar-news-card">
+          <a href="{% url 'news_detail' similar.slug %}" class="similar-news-card__link"></a>
           {% if similar.get_image_url %}
-          <img class="similar-card-image" src="{{ similar.get_image_url }}" alt="{{ similar.title }}">
-          {% endif %}
-          <div class="similar-card-body">
-            <div class="similar-card-title">{{ similar.title }}</div>
-            <div class="similar-card-excerpt">{{ similar.content|striptags|truncatewords:15 }}</div>
-            <div class="similar-card-date">{{ similar.published_at|date:"d M Y" }}</div>
+          <div class="similar-news-card__image">
+            <img src="{{ similar.get_image_url }}" alt="{{ similar.title }}" loading="lazy">
           </div>
-        </a>
+          {% endif %}
+          <div class="similar-news-card__body">
+            <div class="similar-news-card__meta">
+              <span class="similar-news-card__date">{{ similar.published_at|date:"d M Y" }}</span>
+              {% if similar.category %}
+              <span class="similar-news-card__category">{{ similar.category.name }}</span>
+              {% endif %}
+            </div>
+            <h3 class="similar-news-card__title">{{ similar.title }}</h3>
+            <p class="similar-news-card__excerpt">{{ similar.content|striptags|truncatewords:20 }}</p>
+          </div>
+        </article>
         {% endfor %}
       </div>
       <div class="similar-load-more-container">
