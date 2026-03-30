@@ -42,14 +42,17 @@
 
   function buildUrlWithParams(params, keepPageParam) {
     var url = new URL(window.location.href);
-    var merged = new URLSearchParams(url.search);
+    // Start fresh — remove all filter params, keep only non-filter ones
+    var merged = new URLSearchParams();
 
+    if (keepPageParam) {
+      var existingPage = new URLSearchParams(url.search).get('page');
+      if (existingPage) merged.set('page', existingPage);
+    }
 
-    if (!keepPageParam) merged.delete('page');
-
-
+    // Set new params from form
     params.forEach(function (value, key) {
-      merged.set(key, value);
+      merged.append(key, value);
     });
 
     url.search = merged.toString();
@@ -195,7 +198,7 @@
     }
 
 
-    var showFiltersBtn = document.querySelector('.show-filters-btn');
+    var showFiltersBtn = document.getElementById('clearNewsFiltersBtn');
     if (showFiltersBtn) {
       showFiltersBtn.addEventListener('click', function(e) {
         e.preventDefault();
