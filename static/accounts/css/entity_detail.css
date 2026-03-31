@@ -3,10 +3,10 @@
   --primary-dark-blue: #000819; 
   --secondary-blue: #04112d; 
   --accent-purple: #7b61ff; 
-  --accent-yellow: #ffc85e; 
-  --accent-green: #08e5cf; 
-  --button-blue: #345dff; 
-  --button-yellow: #ffef2b; 
+  --accent-yellow: #c6bbfe;
+  --accent-green: #08e5cf;
+  --button-blue: #345dff;
+  --button-yellow: #7b61ff;
   --button-grey: #3d4b70; 
   --dark-card-bg: #0b1a3f; 
   --text-primary: #fff; 
@@ -388,7 +388,7 @@ a:hover {
 .agency-detail-indicator.active,
 .franchise-detail-indicator.active,
 .specialist-detail-indicator.active {
-  background-color: #FFEF2B;
+  background-color: #7b61ff;
 }
 
 .startup-detail-carousel-prev,
@@ -582,7 +582,7 @@ a:hover {
 }
 
 .author-section-title {
-  color: #FFEF2B;
+  color: #c6bbfe;
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 18px;
@@ -823,13 +823,21 @@ a:hover {
 }
 
 .action-button.primary-button {
-  background: #FFFFFF;
-  color: #2353D9;
+  background: #7b61ff;
+  color: #FFFFFF;
+}
+
+.action-button.primary-button:hover {
+  background: #6551d9;
 }
 
 .action-button.secondary-button {
-  background: #FFEF2B;
-  color: #000000;
+  background: #7b61ff;
+  color: #FFFFFF;
+}
+
+.action-button.secondary-button:hover {
+  background: #6551d9;
 }
 
 .secondary-actions {
@@ -850,12 +858,12 @@ a:hover {
 }
 
 .verification-badge i {
-  color: #FFEF2B;
+  color: #c6bbfe;
   font-size: 12px;
 }
 
 .verification-badge span {
-  color: #FFEF2B;
+  color: #c6bbfe;
   font-size: 12px;
   font-weight: 300;
 }
@@ -1271,7 +1279,7 @@ a:hover {
   width: 134px;
   font-size: 16px;
   font-weight: 400;
-  color: #FFEF2B;
+  color: #c6bbfe;
   margin: 0;
 }
 
@@ -1888,9 +1896,9 @@ a:hover {
 }
 
 .info-card .action-button.info-card-button.view-button {
-  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
-  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
-  color: black;
+  background: #7b61ff;
+  box-shadow: 0 2px 8px rgba(123, 97, 255, 0.3);
+  color: #fff;
   font-size: 15px; 
   font-weight: 400;
   line-height: 1;
@@ -1917,8 +1925,8 @@ a:hover {
 }
 
 .info-card .info-card-value-button.accent-yellow-bg {
-  background-color: #ffef2b; 
-  color: black;
+  background-color: #7b61ff;
+  color: #fff;
 }
 
 .info-card .info-card-value-button.accent-blue-bg {
@@ -2081,7 +2089,7 @@ a:hover {
   font-size: 20px;
   line-height: 1.591;
   letter-spacing: -0.02em;
-  color: #FFEF2B;
+  color: #c6bbfe;
   text-align: left;
   margin-bottom: 23px;
 }
@@ -4291,7 +4299,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   width: 116px;
   font-size: 16px;
   font-weight: 400;
-  color: #FFEF2B;
+  color: #FFFFFF;
   margin: 0;
   padding-left: 24px;
 }
@@ -5264,12 +5272,13 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .category-value {
-  background: #031A30;
-  color: #FFEF2B;
-  padding: 9px 14px;
-  border-radius: var(--radius-sm);
+  background: rgba(123, 97, 255, 0.15);
+  color: #c6bbfe;
+  border: 1px solid rgba(123, 97, 255, 0.3);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
   font-family: Unbounded, sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 12px;
   line-height: 1.24;
   letter-spacing: 0.01em;
@@ -5298,7 +5307,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   font-size: 12px;
   line-height: 1.24;
   letter-spacing: 0.01em;
-  color: rgba(255, 255, 255, 0.44);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .financial-value {
@@ -5307,7 +5316,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   font-size: 27px;
   line-height: 1.17;
   letter-spacing: -0.02em;
-  color: #FFEF2B;
+  color: #FFFFFF;
 }
 
 .financial-raised .financial-value {
@@ -5336,10 +5345,9 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .detail-info-section-stage-block {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 9px 27px;
-  border: 1px solid #FFFFFF;
-  border-radius: var(--radius-full);
+  gap: 8px;
+  padding: 0;
+  border: none;
   width: fit-content;
 }
 
@@ -5366,14 +5374,14 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .stage-value {
   font-family: Unbounded, sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 12px;
   line-height: 1.24;
   letter-spacing: 0.01em;
   color: #FFFFFF;
-  background: #2353D9;
-  padding: 9px 13px;
-  border-radius: var(--radius-sm);
+  background: #7b61ff;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
 }
 
 .detail-info-section-about-block {
@@ -5467,7 +5475,7 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .about-text blockquote {
-  border-left: 3px solid #FFEF2B;
+  border-left: 3px solid #7b61ff;
   padding-left: 16px;
   margin: 12px 0;
   color: #FFFFFF;

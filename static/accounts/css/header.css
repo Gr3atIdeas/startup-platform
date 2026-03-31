@@ -625,8 +625,8 @@ nav.nav-menu
 }
 
 .create-dropdown-button {
-  background: #3fff47 !important;
-  color: #000 !important;
+  background: #7b61ff !important;
+  color: #fff !important;
   padding: 8px 16px !important;
   border-radius: var(--radius-full) !important;
   display: inline-flex !important;
@@ -643,8 +643,8 @@ nav.nav-menu
 }
 
 .create-dropdown-button:hover {
-  background: #35e83d !important;
-  color: #000 !important;
+  background: #6551d9 !important;
+  color: #fff !important;
 }
 
 .create-dropdown-button:focus + .create-dropdown-menu,
