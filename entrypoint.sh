@@ -51,10 +51,18 @@ print('    OK')
         celery -A marketplace beat --loglevel=info &
     fi
 
-    # News collector — запускаем в фоне если настроены Telegram-переменные
+    # News collector — запускаем в фоне с автоперезапуском
     if [ -n "$TELEGRAM_API_ID" ] && [ -n "$NEWS_BOT_TOKEN" ]; then
-        echo "Starting news collector in background..."
-        python news_collector/main.py &
+        echo "Starting news collector in background (with auto-restart)..."
+        (
+            while true; do
+                echo "[news_collector] Starting..."
+                python news_collector/main.py
+                EXIT_CODE=$?
+                echo "[news_collector] Exited with code $EXIT_CODE. Restarting in 10s..."
+                sleep 10
+            done
+        ) &
     fi
 
     exec python -m gunicorn \
