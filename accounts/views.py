@@ -1743,6 +1743,16 @@ def agency_detail(request, slug):
 
     # Получаем синхронизированные документы (только те, что есть в редакторе)
     agency_documents = get_synced_files(agency, "proof", "proofs_urls")
+
+    # Batch-resolve file URLs
+    from .utils import batch_resolve_file_urls
+    file_url_map = {}
+    file_url_map.update(batch_resolve_file_urls(logo_urls, agency.agency_id, "logo", "agency"))
+    file_url_map.update(batch_resolve_file_urls(all_creatives, agency.agency_id, "creative", "agency"))
+    file_url_map.update(batch_resolve_file_urls(video_urls, agency.agency_id, "video", "agency"))
+    proof_ids = [d.file_url for d in agency_documents] if agency_documents else []
+    file_url_map.update(batch_resolve_file_urls(proof_ids, agency.agency_id, "proof", "agency"))
+
     ai_rating = None
     if agency.customization_data and isinstance(agency.customization_data, dict):
         ai_rating = agency.customization_data.get('ai_rating', 5)
@@ -1769,6 +1779,7 @@ def agency_detail(request, slug):
         "agency_documents": agency_documents,
         "ai_rating": ai_rating,
         "canonical_url": request.build_absolute_uri(),
+        "file_url_map": file_url_map,
     }
     return render(request, "accounts/agency_detail.html", context)
 
@@ -1905,6 +1916,16 @@ def specialist_detail(request, slug):
 
     # Получаем синхронизированные документы (только те, что есть в редакторе)
     specialist_documents = get_synced_files(specialist, "proof", "proofs_urls")
+
+    # Batch-resolve file URLs
+    from .utils import batch_resolve_file_urls
+    file_url_map = {}
+    file_url_map.update(batch_resolve_file_urls(logo_urls, specialist.specialist_id, "logo", "specialist"))
+    file_url_map.update(batch_resolve_file_urls(all_creatives, specialist.specialist_id, "creative", "specialist"))
+    file_url_map.update(batch_resolve_file_urls(video_urls, specialist.specialist_id, "video", "specialist"))
+    proof_ids = [d.file_url for d in specialist_documents] if specialist_documents else []
+    file_url_map.update(batch_resolve_file_urls(proof_ids, specialist.specialist_id, "proof", "specialist"))
+
     ai_rating = None
     if specialist.customization_data and isinstance(specialist.customization_data, dict):
         ai_rating = specialist.customization_data.get('ai_rating', 5)
@@ -1931,6 +1952,7 @@ def specialist_detail(request, slug):
         "specialist_documents": specialist_documents,
         "ai_rating": ai_rating,
         "canonical_url": request.build_absolute_uri(),
+        "file_url_map": file_url_map,
     }
     return render(request, "accounts/specialist_detail.html", context)
 def franchise_detail_by_id(request, franchise_id):
@@ -2065,6 +2087,16 @@ def franchise_detail(request, slug):
 
     # Получаем синхронизированные документы (только те, что есть в редакторе)
     franchise_documents = get_synced_files(franchise, "proof", "proofs_urls")
+
+    # Batch-resolve file URLs
+    from .utils import batch_resolve_file_urls
+    file_url_map = {}
+    file_url_map.update(batch_resolve_file_urls(logo_urls, franchise.franchise_id, "logo", "franchise"))
+    file_url_map.update(batch_resolve_file_urls(all_creatives, franchise.franchise_id, "creative", "franchise"))
+    file_url_map.update(batch_resolve_file_urls(video_urls, franchise.franchise_id, "video", "franchise"))
+    proof_ids = [d.file_url for d in franchise_documents] if franchise_documents else []
+    file_url_map.update(batch_resolve_file_urls(proof_ids, franchise.franchise_id, "proof", "franchise"))
+
     ai_rating = None
     if franchise.customization_data and isinstance(franchise.customization_data, dict):
         ai_rating = franchise.customization_data.get('ai_rating', 5)
@@ -2112,6 +2144,7 @@ def franchise_detail(request, slug):
         "progress_percentage": progress_percentage,
         "investors_count": investors_count,
         "canonical_url": request.build_absolute_uri(),
+        "file_url_map": file_url_map,
     }
     return render(request, "accounts/franchise_detail.html", context)
 
@@ -2446,6 +2479,15 @@ def startup_detail(request, slug):
     slider_images = startup.slider_images if isinstance(startup.slider_images, list) else []
     all_creatives = creatives_urls
     video_urls = startup.video_urls if isinstance(startup.video_urls, list) else []
+
+    # Batch-resolve all file URLs (1 S3 call per type instead of N calls per file)
+    from .utils import batch_resolve_file_urls
+    file_url_map = {}
+    file_url_map.update(batch_resolve_file_urls(logo_urls, startup.startup_id, "logo", "startup"))
+    file_url_map.update(batch_resolve_file_urls(all_creatives, startup.startup_id, "creative", "startup"))
+    file_url_map.update(batch_resolve_file_urls(video_urls, startup.startup_id, "video", "startup"))
+    proof_ids = [d.file_url for d in startup_documents] if startup_documents else []
+    file_url_map.update(batch_resolve_file_urls(proof_ids, startup.startup_id, "proof", "startup"))
     show_moderator_comment = False
     if startup.moderator_comment and (
         request.user == startup.owner
@@ -2490,6 +2532,7 @@ def startup_detail(request, slug):
         "startup_documents": startup_documents,
         "ai_rating": ai_rating,
         "canonical_url": request.build_absolute_uri(),
+        "file_url_map": file_url_map,
     }
     return render(request, "accounts/startup_detail.html", context)
 def load_similar_startups(request, startup_id: int):

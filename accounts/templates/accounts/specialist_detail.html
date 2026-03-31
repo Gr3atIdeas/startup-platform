@@ -38,10 +38,20 @@
 
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/entity_detail.css' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/lead_modal.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/css/glightbox.min.css" />
-  <link rel="stylesheet" href="{% static 'accounts/css/moderation_panel.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/lead_modal.css' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/css/glightbox.min.css" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="{% static 'accounts/css/moderation_panel.css' %}" media="print" onload="this.media='all'">
+  <style>
+    /* Skeleton shimmer for detail page — shows instantly before CSS loads */
+    .detail-skeleton{position:relative;overflow:hidden}
+    .detail-skeleton::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent) no-repeat -400px 0/400px 100%;animation:detail-shimmer 1.2s ease-in-out infinite}
+    @keyframes detail-shimmer{to{background-position:400px 0}}
+    .detail-skeleton-image{background:rgba(255,255,255,.04);border-radius:16px;aspect-ratio:16/9;width:100%}
+    .detail-skeleton-text{background:rgba(255,255,255,.04);border-radius:6px;height:1em}
+    .detail-skeleton-title{background:rgba(255,255,255,.06);border-radius:8px;height:2em;width:70%}
+    .detail-loaded .detail-skeleton::after{display:none}
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -90,9 +100,10 @@
           <div class="specialist-detail-carousel-track" id="mediaCarousel">
             {% for url in slider_images|slice:":4" %}
               <div class="specialist-detail-carousel-slide {% if forloop.first %}active{% endif %}">
-                <img src="{% get_file_url_tag url specialist.specialist_id 'creative' 'specialist' %}" 
-                     alt="Изображение {{ forloop.counter }}" 
-                     class="specialist-detail-carousel-image">
+                <img src="{{ url|resolve_url:file_url_map }}"
+                     alt="Изображение {{ forloop.counter }}"
+                     class="specialist-detail-carousel-image"
+                     {% if not forloop.first %}loading="lazy"{% endif %} decoding="async">
               </div>
             {% endfor %}
           </div>
@@ -191,7 +202,7 @@
             <div class="specialist-title-content">
               <div class="logo-display-container">
                 {% if specialist.logo_urls %}
-                  <img src="{% get_file_url_tag specialist.logo_urls.0 specialist.specialist_id 'logo' 'specialist' %}" alt="Логотип {{ specialist.title }}" class="specialist-logo">
+                  <img src="{{ specialist.logo_urls.0|resolve_url:file_url_map }}" alt="Логотип {{ specialist.title }}" class="specialist-logo">
                 {% else %}
                   <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
                 {% endif %}
@@ -272,9 +283,9 @@
               <div class="video-grid"> 
                   {% for url in video_urls %}
                       
-                      <a href="{% get_file_url_tag url specialist.specialist_id 'video' 'specialist' %}" 
-                         
-                         class="gallery-item video-item glightbox" 
+                      <a href="{{ url|resolve_url:file_url_map }}"
+
+                         class="gallery-item video-item glightbox"
                          data-gallery="specialist-gallery">          
                          <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
                          
@@ -294,11 +305,11 @@
               <div class="gallery-grid">
                 
                 {% for url in all_creatives %}
-                  <a 
-                     href="{% get_file_url_tag url specialist.specialist_id 'creative' 'specialist' %}"
-                     class="gallery-item image-item glightbox" 
-                     data-gallery="specialist-gallery"> 
-                    <img src="{% get_file_url_tag url specialist.specialist_id 'creative' 'specialist' %}" alt="Креатив {{ forloop.counter }}" />
+                  <a
+                     href="{{ url|resolve_url:file_url_map }}"
+                     class="gallery-item image-item glightbox"
+                     data-gallery="specialist-gallery">
+                    <img src="{{ url|resolve_url:file_url_map }}" alt="Креатив {{ forloop.counter }}" loading="lazy" />
                   </a>
                 {% endfor %}
               </div>
@@ -325,7 +336,7 @@
                 <ul class="document-list">
                     {% for doc in specialist_documents %}
                         <li class="document-item">
-                            <a href="{% get_file_url_tag doc.file_url specialist.specialist_id 'proof' 'specialist' %}" target="_blank" class="document-link">
+                            <a href="{{ doc.file_url|resolve_url:file_url_map }}" target="_blank" class="document-link">
                                 <i class="fas fa-file-alt document-icon"></i>
                                 <span class="document-name">{% get_file_original_name doc.file_url specialist.specialist_id 'proof' 'specialist' %}</span>
                             </a>
@@ -883,12 +894,18 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js" defer></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    var lightbox = GLightbox({
-      selector: '.glightbox'
-    });
+    // Init GLightbox after deferred script loads
+    function initLightbox() {
+      if (typeof GLightbox !== 'undefined') {
+        GLightbox({ selector: '.glightbox' });
+      } else {
+        setTimeout(initLightbox, 100);
+      }
+    }
+    initLightbox();
   });
 </script>
 <script src="{% static 'accounts/js/analytics_tracker.js' %}" defer></script>

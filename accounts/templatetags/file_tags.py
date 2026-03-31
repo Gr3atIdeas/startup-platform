@@ -2,6 +2,19 @@ from django import template
 from accounts.utils import get_file_url, get_file_info, is_uuid
 from accounts.models import FileStorage, FileTypes, EntityTypes
 register = template.Library()
+
+@register.filter
+def resolve_url(file_id, url_map):
+    """Look up a precomputed file URL from the batch-resolved map.
+    Usage: {{ file_id|resolve_url:file_url_map }}
+    Falls back to the file_id itself if not found (for legacy full URLs).
+    """
+    if not file_id:
+        return ""
+    if isinstance(url_map, dict):
+        return url_map.get(str(file_id), file_id if not is_uuid(file_id) else "")
+    return file_id if not is_uuid(file_id) else ""
+
 @register.simple_tag
 def get_file_url_tag(file_id, entity_id, file_type, entity_type: str = "startup"):
     """

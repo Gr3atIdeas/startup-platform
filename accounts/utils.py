@@ -310,6 +310,87 @@ def get_file_info(file_id, entity_id, file_type, entity_type: str = "startup"):
     except ClientError as e:
         logger.error(f"Ошибка при получении информации о файле: {e}")
         return None
+def batch_resolve_file_urls(file_ids, entity_id, file_type, entity_type="startup"):
+    """Resolve multiple file IDs to URLs in one pass, using cache first.
+
+    Returns a dict {file_id: url_string}.
+    Much faster than calling get_file_url() per file in a template loop.
+    """
+    from django.core.cache import cache
+
+    if not file_ids:
+        return {}
+
+    result = {}
+    uncached = []
+
+    for fid in file_ids:
+        if not fid:
+            continue
+        if not is_uuid(fid):
+            result[fid] = fid
+            continue
+        cache_key = f"s3_url:{entity_type}:{entity_id}:{file_type}:{fid}"
+        try:
+            cached = cache.get(cache_key)
+        except Exception:
+            cached = None
+        if cached:
+            result[fid] = cached
+        else:
+            uncached.append(fid)
+
+    if not uncached:
+        return result
+
+    # Batch resolve uncached via S3 list_objects with shared prefix
+    try:
+        s3_client = boto3.client(
+            "s3",
+            endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_S3_REGION_NAME,
+        )
+        bucket = settings.AWS_STORAGE_BUCKET_NAME
+        base_prefix = _prefix_for(entity_type, entity_id, file_type)
+
+        # Single list_objects call with the base prefix (e.g. startups/123/creatives/)
+        response = s3_client.list_objects_v2(Bucket=bucket, Prefix=base_prefix, MaxKeys=500)
+        s3_keys = {}
+        if "Contents" in response:
+            for obj in response["Contents"]:
+                key = obj["Key"]
+                # Extract file_id from key: prefix + file_id + _ + filename
+                name_part = key[len(base_prefix):]
+                fid_in_key = name_part.split("_")[0] if "_" in name_part else name_part
+                if fid_in_key not in s3_keys:
+                    s3_keys[fid_in_key] = key
+
+        for fid in uncached:
+            if fid in s3_keys:
+                url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket}/{s3_keys[fid]}"
+                result[fid] = url
+                try:
+                    cache.set(f"s3_url:{entity_type}:{entity_id}:{file_type}:{fid}", url, 86400)
+                except Exception:
+                    pass
+            else:
+                # Fallback to individual lookup
+                url = get_file_url(fid, entity_id, file_type, entity_type=entity_type)
+                if url:
+                    result[fid] = url
+
+    except Exception as e:
+        logger.error("batch_resolve_file_urls error: %s", e)
+        for fid in uncached:
+            url = get_file_url(fid, entity_id, file_type, entity_type=entity_type)
+            if url:
+                result[fid] = url
+
+    return result
+
+
 def get_file_url(file_id, entity_id, file_type, entity_type: str = "startup"):
     from django.core.cache import cache
     
