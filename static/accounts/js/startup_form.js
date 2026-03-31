@@ -436,7 +436,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   function validateFormClientSide() {
     var hasError = false
-    var isEditPage = window.location.pathname.includes('/edit/') || window.location.pathname.includes('/edit-startup/')
+    var isEditPage = window.location.pathname.includes('/edit-')
 
     // Required fields from config, or defaults for startup
     var requiredSelectors = config.requiredFields || [
