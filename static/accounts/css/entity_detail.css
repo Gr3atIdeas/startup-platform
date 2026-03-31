@@ -5272,13 +5272,13 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 .category-value {
-  background: rgba(123, 97, 255, 0.15);
-  color: #c6bbfe;
-  border: 1px solid rgba(123, 97, 255, 0.3);
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
+  background: #050505;
+  color: #FFFFFF;
+  border: none;
+  padding: 9px 17px;
+  border-radius: var(--radius-xs);
   font-family: Unbounded, sans-serif;
-  font-weight: 400;
+  font-weight: 300;
   font-size: 12px;
   line-height: 1.24;
   letter-spacing: 0.01em;
