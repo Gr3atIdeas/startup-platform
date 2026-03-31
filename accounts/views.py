@@ -2486,8 +2486,6 @@ def startup_detail(request, slug):
     file_url_map.update(batch_resolve_file_urls(logo_urls, startup.startup_id, "logo", "startup"))
     file_url_map.update(batch_resolve_file_urls(all_creatives, startup.startup_id, "creative", "startup"))
     file_url_map.update(batch_resolve_file_urls(video_urls, startup.startup_id, "video", "startup"))
-    proof_ids = [d.file_url for d in startup_documents] if startup_documents else []
-    file_url_map.update(batch_resolve_file_urls(proof_ids, startup.startup_id, "proof", "startup"))
     show_moderator_comment = False
     if startup.moderator_comment and (
         request.user == startup.owner
@@ -2505,6 +2503,8 @@ def startup_detail(request, slug):
     )
     # Получаем синхронизированные документы (только те, что есть в редакторе)
     startup_documents = get_synced_files(startup, "proof", "proofs_urls")
+    proof_ids = [d.file_url for d in startup_documents] if startup_documents else []
+    file_url_map.update(batch_resolve_file_urls(proof_ids, startup.startup_id, "proof", "startup"))
     ai_rating = None
     if startup.customization_data and isinstance(startup.customization_data, dict):
         ai_rating = startup.customization_data.get('ai_rating', 5)
