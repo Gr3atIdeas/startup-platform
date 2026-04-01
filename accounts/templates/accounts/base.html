@@ -33,7 +33,7 @@
     .content{flex:1}
     @keyframes skeleton-shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}
     .skeleton-loading [class*="-card"]{overflow:hidden;position:relative}
-    .skeleton-loading [class*="-card"]::after{content:'';position:absolute;inset:0;z-index:20;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.4) 50%,transparent 100%) no-repeat -600px 0/600px 100%,rgba(220,225,240,.95);animation:skeleton-shimmer 1.4s ease-in-out infinite;border-radius:inherit;pointer-events:none;transition:opacity .4s ease}
+    .skeleton-loading [class*="-card"]::after{content:'';position:absolute;inset:0;z-index:20;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.06) 50%,transparent 100%) no-repeat -600px 0/600px 100%,rgba(10,20,50,.85);animation:skeleton-shimmer 1.4s ease-in-out infinite;border-radius:inherit;pointer-events:none;transition:opacity .4s ease}
     .skeleton-done [class*="-card"]::after{opacity:0}
   </style>
 

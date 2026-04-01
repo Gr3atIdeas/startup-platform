@@ -369,6 +369,7 @@ input:checked + .slider::before {
 .news-card {
   position: relative;
   overflow: hidden;
+  border-radius: var(--radius-md);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
   will-change: transform;

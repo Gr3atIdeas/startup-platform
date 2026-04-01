@@ -62,7 +62,18 @@
   function updateNewsFromJsonResponse(data, newUrl) {
     var oldGrid = newsGridElement || findNewsGrid(document);
     if (oldGrid && data.html !== undefined) {
-      oldGrid.innerHTML = data.html;
+      // Parse HTML to extract the new .news-grid element
+      var temp = document.createElement('div');
+      temp.innerHTML = data.html;
+      var newGrid = temp.querySelector('.news-grid');
+      if (newGrid) {
+        oldGrid.replaceWith(newGrid);
+        newsGridElement = newGrid;
+      } else {
+        // Fallback: response is just card content without wrapper
+        oldGrid.innerHTML = data.html;
+        oldGrid.classList.remove('skeleton-loading');
+      }
     }
 
     var oldPagination = paginationElement || findPagination(document);
