@@ -11320,6 +11320,12 @@ def create_lead(request):
             _create_lead_notification(lead, entity_owner, entity)
         except Exception as e:
             logger.error("Failed to create lead notification: %s", e)
+        # Send Telegram DM to entity owner if they have telegram_id
+        try:
+            if entity_owner.telegram_id:
+                _send_lead_owner_telegram(lead, entity, entity_owner)
+        except Exception as e:
+            logger.error("Failed to send owner Telegram DM: %s", e)
 
     return JsonResponse({"success": True, "lead_id": lead.lead_id})
 
@@ -11381,6 +11387,50 @@ def _create_lead_notification(lead, entity_owner, entity):
             )
     except Exception as e:
         logger.warning("Failed to insert notification: %s", e)
+
+
+def _send_lead_owner_telegram(lead, entity, owner):
+    """Send Telegram DM to entity owner about new lead."""
+    from django.conf import settings as django_settings
+    bot_token = getattr(django_settings, "TELEGRAM_BOT_TOKEN", None)
+    if not bot_token or not owner.telegram_id:
+        return
+
+    lead_type_names = {"invest": "инвестиции", "franchise_info": "франшизе", "quote": "расчёте", "consultation": "консультации"}
+    type_text = lead_type_names.get(lead.lead_type, "вашем объекте")
+
+    entity_url_paths = {"startup": "startups", "franchise": "franchises", "agency": "agencies", "specialist": "specialists"}
+    url_path = entity_url_paths.get(lead.entity_type, "startups")
+    view_url = f"https://greatideas.ru/{url_path}/{lead.entity_id}/"
+
+    text = (
+        f"📩 <b>Новая заявка о {type_text}!</b>\n\n"
+        f"📋 <b>{entity.title or 'Ваш объект'}</b>\n\n"
+        f"👤 {lead.name}\n"
+        f"✉️ {lead.email}\n"
+    )
+    if lead.phone:
+        text += f"📞 {lead.phone}\n"
+    if lead.budget_range:
+        text += f"💰 Бюджет: {lead.budget_range}\n"
+    if lead.message:
+        msg_short = lead.message[:150] + ("..." if len(lead.message) > 150 else "")
+        text += f"\n💬 {msg_short}\n"
+    text += f"\n👉 Посмотреть все заявки: https://greatideas.ru/my-analytics/"
+
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    try:
+        requests.post(url, json={
+            "chat_id": owner.telegram_id,
+            "text": text,
+            "parse_mode": "HTML",
+            "reply_markup": {"inline_keyboard": [[
+                {"text": "📋 Мои заявки", "url": "https://greatideas.ru/my-analytics/"},
+                {"text": "👁 Объект", "url": view_url},
+            ]]},
+        }, timeout=10)
+    except Exception as e:
+        logger.error("Telegram DM to owner %s failed: %s", owner.pk, e)
 
 
 @login_required
