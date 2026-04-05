@@ -3927,6 +3927,7 @@ def create_franchise(request):
             creatives_ids = upload_entity_files(request, form, franchise, 'franchise', 'creatives', 'creative', 'image/jpeg')
             proofs_ids = upload_entity_files(request, form, franchise, 'franchise', 'proofs', 'proof', 'application/pdf')
 
+            video_ids = []
             videos = request.FILES.getlist("video")
             if videos:
                 for video in videos:
