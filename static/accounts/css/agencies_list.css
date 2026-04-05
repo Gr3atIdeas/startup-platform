@@ -363,7 +363,7 @@ body {
 
 /* удалены стили кнопки «Фильтры» и скрытия сайдбара */
 
-@media (width <= 400px) {
+@media (width <= 520px) {
   body {
     padding: 10px;
   }
@@ -375,8 +375,8 @@ body {
 
   .agencies-grid {
     grid-template-columns: 1fr;
-    gap: 10px;
-    margin-top: 25px;
+    gap: 12px;
+    margin-top: 20px;
   }
   .sidebar {
     padding: 15px 15px 25px 15px;
