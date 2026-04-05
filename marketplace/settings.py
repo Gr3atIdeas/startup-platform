@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.telegram',
 ]
 AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailPasswordBackend',
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
