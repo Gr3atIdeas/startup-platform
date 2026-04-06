@@ -85,6 +85,37 @@
       <!-- Title -->
       <h1 class="article-title-large">{{ article.title }}</h1>
 
+      <!-- Author + Reading Time + Share -->
+      <div class="article-author-bar">
+        <div class="article-author">
+          {% if article.author and article.author.get_profile_picture_url %}
+            <img src="{{ article.author.get_profile_picture_url }}" alt="" class="article-author-avatar">
+          {% else %}
+            <div class="article-author-avatar" style="display:flex;align-items:center;justify-content:center;font-size:16px;color:rgba(255,255,255,0.4);">
+              <i class="fas fa-user"></i>
+            </div>
+          {% endif %}
+          <div class="article-author-info">
+            <span class="article-author-name">
+              {% if article.author %}{{ article.author.first_name|default:"Great" }} {{ article.author.last_name|default:"Ideas" }}{% else %}Great Ideas{% endif %}
+            </span>
+            <span class="article-reading-time">{{ reading_time }} мин чтения</span>
+          </div>
+        </div>
+        <div class="article-share">
+          <span class="article-share-label">Поделиться</span>
+          <a href="https://t.me/share/url?url={{ request.build_absolute_uri|urlencode }}&text={{ article.title|urlencode }}" target="_blank" rel="noopener" class="share-btn" title="Telegram">
+            <i class="fab fa-telegram-plane"></i>
+          </a>
+          <a href="https://vk.com/share.php?url={{ request.build_absolute_uri|urlencode }}&title={{ article.title|urlencode }}" target="_blank" rel="noopener" class="share-btn" title="VK">
+            <i class="fab fa-vk"></i>
+          </a>
+          <button class="share-btn" title="Скопировать ссылку" onclick="navigator.clipboard.writeText(location.href).then(function(){this.classList.add('share-btn--copied');var b=this;setTimeout(function(){b.classList.remove('share-btn--copied')},2000)}.bind(this))">
+            <i class="fas fa-link"></i>
+          </button>
+        </div>
+      </div>
+
       <!-- Content -->
       <div class="article-content-body">
         <div class="content-text-full-width">

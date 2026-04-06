@@ -6785,6 +6785,7 @@ def news_detail(request, slug):
             "similar_articles": similar_by_cat,
             "comment_form": comment_form,
             "canonical_url": request.build_absolute_uri(),
+            "reading_time": max(1, len((article.content or "").split()) // 200),
         },
     )
 
