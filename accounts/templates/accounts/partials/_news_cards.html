@@ -26,6 +26,9 @@
       <div class="news-card__body">
         <div class="news-card__meta">
           <span class="news-card__date">{{ article.published_at|date:"d M Y"|default:"Недавно" }}</span>
+          {% if article.content_type == 'article' %}
+            <span class="news-card__type-badge news-card__type-badge--article">Статья</span>
+          {% endif %}
           {% if article.category %}
             <span class="news-card__category">{{ article.category.name }}</span>
           {% endif %}
@@ -43,7 +46,7 @@
     {% endwith %}
   {% empty %}
     <div class="no-cards">
-      <p>Новостей не найдено</p>
+      <p>Материалов не найдено</p>
     </div>
   {% endfor %}
 </div>

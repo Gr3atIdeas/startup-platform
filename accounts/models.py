@@ -595,6 +595,19 @@ class NewsArticles(models.Model):
         ("franchise", "Франшиза"),
     ]
 
+    CONTENT_TYPE_CHOICES = [
+        ("news", "Новость"),
+        ("article", "Статья"),
+    ]
+
+    ENTITY_FOCUS_CHOICES = [
+        ("", "Общее"),
+        ("franchise", "Франшизы"),
+        ("startup", "Стартапы"),
+        ("agency", "Агентства"),
+        ("specialist", "Специалисты"),
+    ]
+
     article_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     content = models.TextField()
@@ -619,6 +632,8 @@ class NewsArticles(models.Model):
     linked_startup = models.ForeignKey("Startups", on_delete=models.SET_NULL, blank=True, null=True, db_column="linked_startup_id", related_name="news_articles")
     linked_franchise = models.ForeignKey("Franchises", on_delete=models.SET_NULL, blank=True, null=True, db_column="linked_franchise_id", related_name="news_articles")
     rejection_reason = models.TextField(blank=True, null=True)
+    content_type = models.CharField(max_length=20, choices=CONTENT_TYPE_CHOICES, default="news")
+    entity_focus = models.CharField(max_length=20, choices=ENTITY_FOCUS_CHOICES, default="", blank=True)
 
     class Meta:
         managed = False

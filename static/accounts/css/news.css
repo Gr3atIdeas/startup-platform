@@ -596,6 +596,22 @@ input:checked + .slider::before {
   font-family: Unbounded, sans-serif;
 }
 
+.news-card__type-badge {
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: 500;
+  font-family: Unbounded, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.news-card__type-badge--article {
+  background: rgba(123, 97, 255, 0.2);
+  color: #c6bbfe;
+  border: 1px solid rgba(123, 97, 255, 0.3);
+}
+
 .news-card__excerpt {
   color: rgba(255, 255, 255, 0.65);
   font-size: 13px;

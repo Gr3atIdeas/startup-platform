@@ -6572,6 +6572,16 @@ def news(request):
     if selected_categories:
         articles = articles.filter(category__slug__in=selected_categories)
 
+    # Content type filter (news / article)
+    content_type_filter = request.GET.get("content_type", "")
+    if content_type_filter in ("news", "article"):
+        articles = articles.filter(content_type=content_type_filter)
+
+    # Entity focus filter (franchise / startup / etc)
+    entity_focus_filter = request.GET.get("entity_focus", "")
+    if entity_focus_filter:
+        articles = articles.filter(entity_focus=entity_focus_filter)
+
     search_query = request.GET.get("search")
     if search_query:
         articles = articles.filter(
@@ -6652,6 +6662,8 @@ def news(request):
         "all_categories": all_categories,
         "search_query": search_query,
         "news_ads": get_active_ads("news_sidebar"),
+        "content_type_filter": content_type_filter,
+        "entity_focus_filter": entity_focus_filter,
     }
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"

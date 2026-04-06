@@ -460,8 +460,8 @@ class NewsCommentsInline(admin.TabularInline):
 
 @admin.register(NewsArticles)
 class NewsArticlesAdmin(admin.ModelAdmin):
-    list_display = ("title", "author", "status_badge", "category", "is_featured", "published_at")
-    list_filter = ("status", "category", "is_featured", "published_at")
+    list_display = ("title", "author", "status_badge", "content_type", "category", "entity_focus", "is_featured", "published_at")
+    list_filter = ("status", "content_type", "entity_focus", "category", "is_featured", "published_at")
     search_fields = ("title", "content", "tags", "author__first_name", "author__last_name")
     readonly_fields = ("article_id", "published_at", "updated_at", "views_count", "likes_count")
     raw_id_fields = ("author",)

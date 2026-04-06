@@ -7,17 +7,17 @@
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 {% endblock %}
 
-{% block title %}Новости — Great Ideas{% endblock %}
+{% block title %}Блог — Great Ideas{% endblock %}
 
-{% block meta_description %}<meta name="description" content="Новости платформы Great Ideas. Актуальные статьи о стартапах, франшизах и бизнесе.">{% endblock %}
+{% block meta_description %}<meta name="description" content="Блог Great Ideas. Статьи о франшизах, стартапах и бизнесе. Новости, аналитика и экспертные материалы.">{% endblock %}
 
 {% block canonical %}<link rel="canonical" href="{{ request.build_absolute_uri }}">{% endblock %}
 
 {% block og_tags %}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Great Ideas">
-<meta property="og:title" content="Новости — Great Ideas">
-<meta property="og:description" content="Новости платформы Great Ideas. Актуальные статьи о стартапах, франшизах и бизнесе.">
+<meta property="og:title" content="Блог — Great Ideas">
+<meta property="og:description" content="Блог Great Ideas. Статьи о франшизах, стартапах и бизнесе.">
 <meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 {% endblock %}
@@ -32,7 +32,7 @@
   <div class="main-content-area">
     <aside class="sidebar">
       <div class="sidebar-block">
-        <a href="{% url 'suggest_news' %}" class="suggest-news-btn">Предложить новость</a>
+        <a href="{% url 'suggest_news' %}" class="suggest-news-btn">Предложить материал</a>
       </div>
       <div class="sidebar-block">
         <label for="sort-by" class="sidebar-label">Показать сначала</label>
@@ -40,6 +40,23 @@
           <option value="new" {% if sort_order == 'new' %}selected{% endif %}>Новые</option>
           <option value="old" {% if sort_order == 'old' %}selected{% endif %}>Старые</option>
           <option value="rating" {% if sort_order == 'rating' %}selected{% endif %}>Популярные</option>
+        </select>
+      </div>
+      <div class="sidebar-block">
+        <label class="sidebar-label">Тип контента</label>
+        <select id="content-type-filter" class="sidebar-select" name="content_type">
+          <option value="">Всё</option>
+          <option value="news" {% if content_type_filter == 'news' %}selected{% endif %}>Новости</option>
+          <option value="article" {% if content_type_filter == 'article' %}selected{% endif %}>Статьи</option>
+        </select>
+      </div>
+      <div class="sidebar-block">
+        <label class="sidebar-label">Тематика</label>
+        <select id="entity-focus-filter" class="sidebar-select" name="entity_focus">
+          <option value="">Все темы</option>
+          <option value="franchise" {% if entity_focus_filter == 'franchise' %}selected{% endif %}>Франшизы</option>
+          <option value="startup" {% if entity_focus_filter == 'startup' %}selected{% endif %}>Стартапы</option>
+          <option value="agency" {% if entity_focus_filter == 'agency' %}selected{% endif %}>Агентства</option>
         </select>
       </div>
       <div class="sidebar-block">
@@ -62,10 +79,10 @@
 
     <div class="news-feed-column">
 
-      <a href="{% url 'suggest_news' %}" class="suggest-news-btn mobile-suggest-btn">Предложить новость</a>
+      <a href="{% url 'suggest_news' %}" class="suggest-news-btn mobile-suggest-btn">Предложить материал</a>
 
       <div class="catalog-header-bar">
-        <h1 class="catalog-header-title">Новости</h1>
+        <h1 class="catalog-header-title">Блог</h1>
         <div class="catalog-header-right">
           <div class="catalog-header-search">
             <input type="text" class="search-input catalog-search-input" placeholder="Поиск..." value="{{ search_query|default_if_none:'' }}">
