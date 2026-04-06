@@ -2,6 +2,7 @@ asgiref==3.8.1
 boto3==1.37.16
 botocore==1.37.16
 certifi==2025.4.26
+pdfplumber>=0.10.0
 charset-normalizer==3.4.2
 dj-database-url==2.1.0
 Django==4.2.13
