@@ -92,6 +92,22 @@ def _ensure_news_tables():
         """)
 
 
+@shared_task(bind=True, max_retries=2)
+def generate_seo_article(self):
+    """Weekly task: generate one SEO article about franchises."""
+    try:
+        from accounts.seo_generator import SEOArticleGenerator
+        generator = SEOArticleGenerator()
+        article = generator.generate()
+        if article:
+            logger.info("SEO article generated: %s (id=%d)", article.title, article.article_id)
+        else:
+            logger.warning("No SEO article generated (topics exhausted or insufficient data)")
+    except Exception as e:
+        logger.error("SEO article generation failed: %s", e, exc_info=True)
+        raise self.retry(exc=e, countdown=3600)
+
+
 @shared_task(bind=True, max_retries=3)
 def notify_entity_approved(self, entity_type: str, entity_id: int):
     """Generate announcement text and insert into news_moderation_queue for the bot."""

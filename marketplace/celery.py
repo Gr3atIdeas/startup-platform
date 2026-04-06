@@ -23,5 +23,9 @@ app.conf.beat_schedule = {
         'task': 'accounts.tasks.aggregate_daily_analytics',
         'schedule': crontab(hour=1, minute=0),
     },
+    'generate-seo-article-weekly': {
+        'task': 'accounts.tasks.generate_seo_article',
+        'schedule': crontab(hour=10, minute=0, day_of_week=1),  # Monday 10:00 UTC
+    },
 }
 

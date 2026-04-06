@@ -22,6 +22,7 @@ from .models import (
     Lead,
     City,
     FranchiseLocation,
+    ArticleTopicLog,
 )
 from .moderation import approve_entity, reject_entity
 
@@ -678,3 +679,14 @@ class FranchiseLocationAdmin(admin.ModelAdmin):
             return f"{months} мес."
         return "—"
     payback_display.short_description = "Окупаемость"
+
+
+# ── SEO Article Generation Log ──────────────────────────────
+
+@admin.register(ArticleTopicLog)
+class ArticleTopicLogAdmin(admin.ModelAdmin):
+    list_display = ("topic_id", "article_type", "article_type_params", "generated_article", "created_at")
+    list_filter = ("article_type", "created_at")
+    readonly_fields = ("topic_id", "param_hash", "created_at")
+    raw_id_fields = ("generated_article",)
+    ordering = ("-created_at",)

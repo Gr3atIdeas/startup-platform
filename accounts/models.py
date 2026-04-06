@@ -839,6 +839,33 @@ class SupportTicket(models.Model):
         return f"Ticket #{self.ticket_id} by {self.user.username if self.user else 'Anonymous'}"
 
 
+class ArticleTopicLog(models.Model):
+    """Tracks generated SEO article topics to prevent repetition."""
+    ARTICLE_TYPE_CHOICES = [
+        ('top_category', 'Топ франшиз в категории'),
+        ('city_review', 'Обзор франшиз в городе'),
+        ('franchise_deep_dive', 'Подробный обзор франшизы'),
+        ('cost_overview', 'Обзор стоимости франшиз'),
+        ('budget_filter', 'Франшизы по бюджету'),
+    ]
+    topic_id = models.AutoField(primary_key=True)
+    article_type = models.CharField(max_length=30, choices=ARTICLE_TYPE_CHOICES)
+    article_type_params = models.JSONField(default=dict)
+    param_hash = models.CharField(max_length=64, unique=True, db_index=True)
+    generated_article = models.ForeignKey(
+        'NewsArticles', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='topic_log',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'article_topic_log'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.get_article_type_display()} — {self.article_type_params}"
+
+
 class Lead(models.Model):
     ENTITY_TYPE_CHOICES = [
         ('startup', 'Стартап'),

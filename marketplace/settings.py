@@ -7,8 +7,13 @@ logger = logging.getLogger(__name__)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-# Фиксированный ID для уведомлений техподдержки и новых заявок
 TELEGRAM_OWNER_CHAT_ID = os.getenv("TELEGRAM_OWNER_CHAT_ID", "911873673")
+
+# Grok (xAI) API — SEO article generation
+GROK_API_KEY = os.getenv("GROK_API_KEY", "")
+GROK_MODEL = os.getenv("GROK_MODEL", "grok-3-mini")
+GROK_SEO_TEMPERATURE = 0.5
+PROXY_URL = os.getenv("PROXY_URL", "")
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "1-bucket-for-startup-platform1")
