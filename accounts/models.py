@@ -893,6 +893,19 @@ class Lead(models.Model):
         ('5М-10М', '5 000 000 — 10 000 000 ₽'),
         ('10М+', 'более 10 000 000 ₽'),
     ]
+    EXPERIENCE_CHOICES = [
+        ('', 'Не указан'),
+        ('none', 'Нет опыта в бизнесе'),
+        ('1-3', '1–3 года'),
+        ('3+', 'Более 3 лет'),
+    ]
+    TIMELINE_CHOICES = [
+        ('', 'Не указан'),
+        ('1m', 'До 1 месяца'),
+        ('1-3m', '1–3 месяца'),
+        ('3-6m', '3–6 месяцев'),
+        ('6m+', 'Более 6 месяцев'),
+    ]
 
     lead_id = models.AutoField(primary_key=True)
     entity_type = models.CharField(max_length=20, choices=ENTITY_TYPE_CHOICES)
@@ -911,6 +924,17 @@ class Lead(models.Model):
     phone = models.CharField(max_length=50, blank=True, default='')
     budget_range = models.CharField(max_length=100, blank=True, default='', choices=BUDGET_RANGE_CHOICES)
     message = models.TextField(blank=True, default='')
+    target_city = models.ForeignKey(
+        'City', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='leads', db_column='target_city_id',
+    )
+    business_experience = models.CharField(
+        max_length=20, blank=True, default='', choices=EXPERIENCE_CHOICES,
+    )
+    timeline = models.CharField(
+        max_length=20, blank=True, default='', choices=TIMELINE_CHOICES,
+    )
+    internal_notes = models.TextField(blank=True, default='')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
     created_at = models.DateTimeField(auto_now_add=True)
     viewed_at = models.DateTimeField(null=True, blank=True)
@@ -945,6 +969,37 @@ class Lead(models.Model):
     def get_entity_title(self):
         entity = self.get_entity()
         return entity.title if entity else f"#{self.entity_id}"
+
+
+class CRMIntegration(models.Model):
+    """CRM integration settings per user (Bitrix24, AmoCRM, or generic webhook)."""
+    CRM_TYPE_CHOICES = [
+        ('bitrix24', 'Bitrix24'),
+        ('amocrm', 'AmoCRM'),
+        ('webhook', 'Webhook (универсальный)'),
+    ]
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(
+        'Users', on_delete=models.CASCADE,
+        related_name='crm_integrations', db_column='user_id',
+    )
+    crm_type = models.CharField(max_length=20, choices=CRM_TYPE_CHOICES)
+    webhook_url = models.URLField(max_length=500, help_text="Webhook URL или REST API endpoint")
+    api_key = models.CharField(max_length=500, blank=True, default='', help_text="API ключ или токен")
+    api_secret = models.CharField(max_length=500, blank=True, default='', help_text="Секретный ключ (для AmoCRM refresh_token)")
+    subdomain = models.CharField(max_length=100, blank=True, default='', help_text="Поддомен (для AmoCRM: company.amocrm.ru)")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    last_error = models.TextField(blank=True, default='')
+    last_sync_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'crm_integrations'
+        unique_together = [('user', 'crm_type')]
+
+    def __str__(self):
+        return f"{self.get_crm_type_display()} — {self.user}"
 
 
 class Franchises(models.Model):
@@ -1727,3 +1782,106 @@ class AnalyticsDailyStat(models.Model):
         managed = False
         db_table = "analytics_daily_stats"
         unique_together = (("entity_type", "entity_id", "stat_date"),)
+
+
+# ── Franchisee Discovery ────────────────────────────────────
+
+class FranchiseAnalysisLog(models.Model):
+    """Лог анализа франшизы для поиска контактов франчайзи."""
+    STATUS_CHOICES = [
+        ('pending', 'В очереди'),
+        ('running', 'Выполняется'),
+        ('completed', 'Завершено'),
+        ('failed', 'Ошибка'),
+    ]
+    log_id = models.AutoField(primary_key=True)
+    franchise = models.ForeignKey(
+        'Franchises', on_delete=models.CASCADE,
+        related_name='analysis_logs', db_column='franchise_id',
+    )
+    initiated_by = models.ForeignKey(
+        'Users', on_delete=models.SET_NULL, null=True,
+        related_name='franchise_analyses', db_column='initiated_by_id',
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    celery_task_id = models.CharField(max_length=255, blank=True, default='')
+    sources_scraped = models.JSONField(default=list)
+    contacts_found = models.IntegerField(default=0)
+    error_message = models.TextField(blank=True, default='')
+    raw_scraped_text = models.TextField(blank=True, default='')
+    grok_response_raw = models.TextField(blank=True, default='')
+    started_at = models.DateTimeField(null=True, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'franchise_analysis_log'
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['franchise', '-created_at'], name='idx_falog_franchise'),
+            models.Index(fields=['status'], name='idx_falog_status'),
+        ]
+
+    def __str__(self):
+        return f"Analysis #{self.log_id} — {self.franchise} ({self.status})"
+
+
+class FranchiseeContact(models.Model):
+    """Контакт найденного франчайзи для outreach."""
+    OUTREACH_STATUS_CHOICES = [
+        ('new', 'Новый'),
+        ('to_reach_out', 'Связаться'),
+        ('contacted', 'Связались'),
+        ('responded', 'Ответил'),
+        ('declined', 'Отказ'),
+        ('interview_done', 'Интервью проведено'),
+    ]
+    SOURCE_CHOICES = [
+        ('website', 'Сайт франшизы'),
+        ('2gis', '2ГИС'),
+        ('yandex_maps', 'Яндекс Карты'),
+        ('web_search', 'Веб-поиск'),
+        ('manual', 'Вручную'),
+    ]
+
+    contact_id = models.AutoField(primary_key=True)
+    franchise = models.ForeignKey(
+        'Franchises', on_delete=models.CASCADE,
+        related_name='franchisee_contacts', db_column='franchise_id',
+    )
+    analysis_log = models.ForeignKey(
+        'FranchiseAnalysisLog', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='contacts', db_column='analysis_log_id',
+    )
+    person_name = models.CharField(max_length=255, blank=True, default='')
+    company_name = models.CharField(max_length=255, blank=True, default='')
+    phone = models.CharField(max_length=100, blank=True, default='')
+    email = models.EmailField(max_length=255, blank=True, default='')
+    telegram = models.CharField(max_length=255, blank=True, default='')
+    website = models.URLField(max_length=500, blank=True, default='')
+    city = models.CharField(max_length=255, blank=True, default='')
+    address = models.TextField(blank=True, default='')
+    source = models.CharField(max_length=30, choices=SOURCE_CHOICES, default='website')
+    source_url = models.URLField(max_length=500, blank=True, default='')
+    confidence = models.CharField(max_length=20, blank=True, default='')
+    outreach_status = models.CharField(max_length=30, choices=OUTREACH_STATUS_CHOICES, default='new')
+    moderator_notes = models.TextField(blank=True, default='')
+    assigned_to = models.ForeignKey(
+        'Users', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='assigned_franchisee_contacts', db_column='assigned_to_id',
+    )
+    contacted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'franchisee_contacts'
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['franchise', '-created_at'], name='idx_fcontact_franchise'),
+            models.Index(fields=['outreach_status'], name='idx_fcontact_status'),
+        ]
+
+    def __str__(self):
+        name = self.person_name or self.company_name or self.phone or self.email
+        return f"Contact #{self.contact_id} — {name} ({self.franchise})"

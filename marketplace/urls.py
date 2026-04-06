@@ -7,6 +7,8 @@ from django.urls import include, path
 
 from accounts.sitemaps import (
     AgencySitemap,
+    FranchiseCitySitemap,
+    FranchiseDirectionSitemap,
     FranchiseSitemap,
     NewsSitemap,
     SpecialistSitemap,
@@ -18,6 +20,8 @@ sitemaps = {
     "static": StaticViewSitemap,
     "startups": StartupSitemap,
     "franchises": FranchiseSitemap,
+    "franchise_cities": FranchiseCitySitemap,
+    "franchise_directions": FranchiseDirectionSitemap,
     "agencies": AgencySitemap,
     "specialists": SpecialistSitemap,
     "news": NewsSitemap,

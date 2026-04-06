@@ -1,0 +1,255 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Контакты франчайзи: {{ franchise.title }} — Great Ideas{% endblock %}
+
+{% block head_extra %}
+<style>
+  .fc-container { max-width:1200px; margin:40px auto; padding:0 20px; }
+  .fc-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; }
+  .fc-title { font-family:Unbounded,sans-serif; font-size:22px; color:#fff; }
+  .fc-subtitle { font-family:Inter,sans-serif; font-size:14px; color:rgba(255,255,255,0.5); margin-top:4px; }
+  .fc-back { font-family:Inter,sans-serif; font-size:13px; color:#7b61ff; text-decoration:none; margin-bottom:16px; display:inline-block; }
+  .fc-stats { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+  .fc-stat-tab {
+    padding:8px 16px; border-radius:20px; font-family:Inter,sans-serif;
+    font-size:13px; text-decoration:none; cursor:pointer;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+    color:rgba(255,255,255,0.7); transition:all 0.2s;
+  }
+  .fc-stat-tab.active, .fc-stat-tab:hover {
+    background:rgba(99,102,241,0.15); border-color:rgba(99,102,241,0.3); color:#fff;
+  }
+  .fc-stat-count {
+    font-weight:700; margin-left:4px; opacity:0.7;
+  }
+  .fc-card {
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+    border-radius:14px; padding:20px; margin-bottom:14px; transition:border-color 0.2s;
+  }
+  .fc-card:hover { border-color:rgba(255,255,255,0.15); }
+  .fc-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .fc-card-name { font-family:Unbounded,sans-serif; font-size:15px; color:#fff; }
+  .fc-card-city { font-family:Inter,sans-serif; font-size:13px; color:rgba(255,255,255,0.5); }
+  .fc-card-contacts { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:8px; margin-bottom:12px; }
+  .fc-card-field { font-family:Inter,sans-serif; font-size:13px; }
+  .fc-card-field label { color:rgba(255,255,255,0.4); font-size:11px; display:block; margin-bottom:2px; }
+  .fc-card-field a { color:#7b61ff; text-decoration:none; }
+  .fc-card-field span { color:rgba(255,255,255,0.8); }
+  .fc-confidence {
+    font-size:11px; padding:3px 10px; border-radius:12px; font-family:Inter,sans-serif;
+  }
+  .fc-confidence--high { background:rgba(34,197,94,0.15); color:#22c55e; }
+  .fc-confidence--medium { background:rgba(245,158,11,0.15); color:#f59e0b; }
+  .fc-confidence--low { background:rgba(239,68,68,0.15); color:#ef4444; }
+  .fc-card-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .fc-status-select {
+    padding:6px 12px; border-radius:8px; font-family:Inter,sans-serif; font-size:12px;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+    color:#fff; outline:none;
+  }
+  .fc-notes-input {
+    flex:1; min-width:200px; padding:8px 12px; border-radius:8px;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+    color:#fff; font-family:Inter,sans-serif; font-size:13px; outline:none;
+  }
+  .fc-save-btn {
+    padding:6px 14px; border-radius:8px; border:none;
+    background:#6366f1; color:#fff; font-family:Inter,sans-serif;
+    font-size:12px; cursor:pointer;
+  }
+  .fc-logs { margin-top:40px; }
+  .fc-log-item {
+    display:flex; gap:16px; align-items:center; padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+    font-family:Inter,sans-serif; font-size:13px; color:rgba(255,255,255,0.6);
+  }
+  .fc-log-status {
+    font-size:11px; padding:3px 10px; border-radius:12px;
+  }
+  .fc-empty {
+    text-align:center; padding:60px 20px;
+    font-family:Inter,sans-serif; color:rgba(255,255,255,0.4);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fc-container">
+  <a href="{% url 'franchisee_discovery_list' %}" class="fc-back">&larr; Назад к списку</a>
+
+  <div class="fc-header">
+    <div>
+      <h1 class="fc-title">{{ franchise.title }}</h1>
+      <div class="fc-subtitle">
+        {% if franchise.contact_website %}<a href="{{ franchise.contact_website }}" target="_blank" style="color:#7b61ff;">{{ franchise.contact_website|truncatechars:50 }}</a> &bull; {% endif %}
+        {{ contacts|length }} контактов найдено
+      </div>
+    </div>
+    <button class="fd-btn-analyze" onclick="startAnalysis(this, {{ franchise.franchise_id }})" style="padding:10px 20px; border-radius:10px; border:1px solid rgba(99,102,241,0.3); background:rgba(99,102,241,0.1); color:#a78bfa; font-family:Inter,sans-serif; font-size:13px; cursor:pointer;">
+      Запустить анализ
+    </button>
+  </div>
+
+  <!-- Status tabs -->
+  <div class="fc-stats">
+    <a href="?status=" class="fc-stat-tab {% if not status_filter %}active{% endif %}">Все<span class="fc-stat-count">{{ contacts|length }}</span></a>
+    {% for key, info in status_counts.items %}
+    {% if info.count > 0 %}
+    <a href="?status={{ key }}" class="fc-stat-tab {% if status_filter == key %}active{% endif %}">{{ info.label }}<span class="fc-stat-count">{{ info.count }}</span></a>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- Contacts -->
+  {% for contact in contacts %}
+  <div class="fc-card" id="contact-{{ contact.contact_id }}">
+    <div class="fc-card-header">
+      <div>
+        <div class="fc-card-name">
+          {{ contact.person_name|default:contact.company_name|default:"Без имени" }}
+          {% if contact.company_name and contact.person_name %}<span style="font-family:Inter,sans-serif; font-size:12px; color:rgba(255,255,255,0.4); font-weight:400;"> &mdash; {{ contact.company_name }}</span>{% endif %}
+        </div>
+        {% if contact.city or contact.address %}
+        <div class="fc-card-city">
+          {% if contact.city %}{{ contact.city }}{% endif %}
+          {% if contact.address %} &bull; {{ contact.address|truncatechars:80 }}{% endif %}
+        </div>
+        {% endif %}
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        {% if contact.confidence %}
+        <span class="fc-confidence fc-confidence--{{ contact.confidence }}">{{ contact.confidence }}</span>
+        {% endif %}
+        <span style="font-size:11px; color:rgba(255,255,255,0.3);">{{ contact.get_source_display }}</span>
+      </div>
+    </div>
+
+    <div class="fc-card-contacts">
+      {% if contact.phone %}
+      <div class="fc-card-field">
+        <label>Телефон</label>
+        <a href="tel:{{ contact.phone }}">{{ contact.phone }}</a>
+      </div>
+      {% endif %}
+      {% if contact.email %}
+      <div class="fc-card-field">
+        <label>Email</label>
+        <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+      </div>
+      {% endif %}
+      {% if contact.telegram %}
+      <div class="fc-card-field">
+        <label>Telegram</label>
+        <span>{{ contact.telegram }}</span>
+      </div>
+      {% endif %}
+      {% if contact.website %}
+      <div class="fc-card-field">
+        <label>Сайт</label>
+        <a href="{{ contact.website }}" target="_blank">{{ contact.website|truncatechars:40 }}</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="fc-card-actions">
+      <select class="fc-status-select" data-contact-id="{{ contact.contact_id }}" onchange="updateContact({{ contact.contact_id }})">
+        {% for val, label in outreach_choices %}
+        <option value="{{ val }}" {% if contact.outreach_status == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <input type="text" class="fc-notes-input" data-contact-id="{{ contact.contact_id }}"
+        value="{{ contact.moderator_notes }}" placeholder="Заметки...">
+      <button class="fc-save-btn" onclick="updateContact({{ contact.contact_id }})">Сохранить</button>
+      {% if contact.contacted_at %}
+      <span style="font-size:11px; color:rgba(255,255,255,0.3);">Связались: {{ contact.contacted_at|date:"d.m.Y" }}</span>
+      {% endif %}
+    </div>
+  </div>
+  {% empty %}
+  <div class="fc-empty">
+    <p>Контактов пока не найдено</p>
+    <p style="margin-top:8px; font-size:13px;">Нажмите "Запустить анализ" для автоматического поиска</p>
+  </div>
+  {% endfor %}
+
+  <!-- Analysis logs -->
+  {% if analysis_logs %}
+  <div class="fc-logs">
+    <h3 style="font-family:Unbounded,sans-serif; font-size:16px; color:#fff; margin-bottom:16px;">История анализов</h3>
+    {% for log in analysis_logs %}
+    <div class="fc-log-item">
+      <span>{{ log.created_at|date:"d.m.Y H:i" }}</span>
+      <span class="fc-log-status" style="
+        {% if log.status == 'completed' %}background:rgba(34,197,94,0.15); color:#22c55e;
+        {% elif log.status == 'failed' %}background:rgba(239,68,68,0.15); color:#ef4444;
+        {% elif log.status == 'running' %}background:rgba(59,130,246,0.15); color:#3b82f6;
+        {% else %}background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.5);{% endif %}
+      ">{{ log.get_status_display }}</span>
+      <span>{{ log.contacts_found }} контактов</span>
+      <span>{{ log.sources_scraped|length }} источников</span>
+      {% if log.error_message %}<span style="color:#f59e0b;" title="{{ log.error_message }}">{{ log.error_message|truncatechars:50 }}</span>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+<script>
+function updateContact(contactId) {
+  var select = document.querySelector('select[data-contact-id="' + contactId + '"]');
+  var input = document.querySelector('input[data-contact-id="' + contactId + '"]');
+
+  var csrfToken = '';
+  var match = document.cookie.match(/csrftoken=([^;]+)/);
+  if (match) csrfToken = match[1];
+  var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+  if (csrfMeta) csrfToken = csrfMeta.content;
+
+  fetch('/moderator/franchisee-discovery/contact/' + contactId + '/update/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+    body: JSON.stringify({
+      outreach_status: select.value,
+      moderator_notes: input.value,
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.ok) {
+      var card = document.getElementById('contact-' + contactId);
+      card.style.borderColor = 'rgba(34,197,94,0.3)';
+      setTimeout(function() { card.style.borderColor = ''; }, 1500);
+    }
+  });
+}
+
+function startAnalysis(btn, franchiseId) {
+  btn.disabled = true;
+  btn.textContent = 'Запуск...';
+
+  var csrfToken = '';
+  var match = document.cookie.match(/csrftoken=([^;]+)/);
+  if (match) csrfToken = match[1];
+  var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+  if (csrfMeta) csrfToken = csrfMeta.content;
+
+  fetch('/moderator/franchisee-discovery/analyze/' + franchiseId + '/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+    body: JSON.stringify({})
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.log_id) {
+      btn.textContent = 'Анализ запущен...';
+      setTimeout(function() { location.reload(); }, 5000);
+    } else {
+      btn.textContent = data.error || 'Ошибка';
+      btn.disabled = false;
+    }
+  });
+}
+</script>
+{% endblock %}

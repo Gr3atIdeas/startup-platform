@@ -340,6 +340,14 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="header-title-block">
                 <h2 class="header-title-highlight">ЗАЯВКИ</h2>
             </div>
+            <div style="display:flex; gap:10px; margin-left:auto;">
+                <a href="{% url 'franchisee_discovery_list' %}" style="padding:8px 18px; border-radius:10px; background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.25); color:#a78bfa; font-family:Inter,sans-serif; font-size:13px; text-decoration:none; display:flex; align-items:center; gap:6px;">
+                    <i class="fas fa-search" style="font-size:12px;"></i> Поиск франчайзи
+                </a>
+                <a href="{% url 'franchise_import' %}" style="padding:8px 18px; border-radius:10px; background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.25); color:#22c55e; font-family:Inter,sans-serif; font-size:13px; text-decoration:none; display:flex; align-items:center; gap:6px;">
+                    <i class="fas fa-file-import" style="font-size:12px;"></i> AI Импорт
+                </a>
+            </div>
         </header>
 
         <section class="filters-and-actions">

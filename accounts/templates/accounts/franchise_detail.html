@@ -28,10 +28,68 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BusinessInvestmentOpportunity",
+  "@type": "InvestmentOrDeposit",
   "name": "{{ franchise.title }}",
-  "description": "{{ franchise.short_description|striptags|truncatewords:30 }}",
-  "url": "{{ request.build_absolute_uri }}"
+  "description": "{{ franchise.short_description|striptags|truncatewords:50 }}",
+  "url": "{{ request.build_absolute_uri }}",
+  {% if slider_images %}"image": "{{ slider_images.0 }}",{% elif logo_urls %}"image": "{{ logo_urls.0 }}",{% endif %}
+  {% if franchise.investment_size %}"amount": {
+    "@type": "MonetaryAmount",
+    "currency": "RUB",
+    "value": "{{ franchise.investment_size }}"
+  },{% endif %}
+  {% if franchise.total_voters and franchise.total_voters > 0 %}"aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{% widthratio franchise.sum_votes franchise.total_voters 1 %}",
+    "bestRating": "5",
+    "worstRating": "1",
+    "ratingCount": "{{ franchise.total_voters }}"
+  },{% endif %}
+  {% if franchise.direction %}"category": "{{ franchise.direction.direction_name }}",{% endif %}
+  "provider": {
+    "@type": "Organization",
+    "name": "{{ franchise.title }}"{% if franchise.owner %},
+    "founder": {
+      "@type": "Person",
+      "name": "{{ franchise.owner.first_name }} {{ franchise.owner.last_name }}"
+    }{% endif %}
+  }
+}
+</script>
+{% if franchise.franchise_cost or franchise.investment_size %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Франшиза {{ franchise.title }}",
+  "description": "{{ franchise.short_description|striptags|truncatewords:50 }}",
+  "url": "{{ request.build_absolute_uri }}",
+  {% if franchise.direction %}"category": "{{ franchise.direction.direction_name }}",{% endif %}
+  {% if franchise.total_voters and franchise.total_voters > 0 %}"aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{% widthratio franchise.sum_votes franchise.total_voters 1 %}",
+    "bestRating": "5",
+    "ratingCount": "{{ franchise.total_voters }}"
+  },{% endif %}
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "RUB",
+    {% if franchise.franchise_cost %}"price": "{{ franchise.franchise_cost }}",{% elif franchise.investment_size %}"price": "{{ franchise.investment_size }}",{% endif %}
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Главная", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+    {"@type": "ListItem", "position": 2, "name": "Франшизы", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_list' %}"},
+    {% if franchise.direction %}{"@type": "ListItem", "position": 3, "name": "{{ franchise.direction.direction_name }}", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_id=franchise.direction.direction_id %}"},
+    {"@type": "ListItem", "position": 4, "name": "{{ franchise.title }}"}{% else %}{"@type": "ListItem", "position": 3, "name": "{{ franchise.title }}"}{% endif %}
+  ]
 }
 </script>
 {% endblock %}
@@ -64,6 +122,19 @@
      data-load-similar-url="{% url 'load_similar_franchises' franchise_id=franchise.franchise_id %}"
      data-owner-id="{{ franchise.owner.user_id }}"
      data-investment-size="{{ franchise.investment_size|default:0 }}">
+  <!-- Breadcrumbs -->
+  <nav style="margin-bottom:8px; padding:0 20px; font-family:Inter,sans-serif; font-size:13px;">
+    <a href="{% url 'home' %}" style="color:rgba(255,255,255,0.5); text-decoration:none;">Главная</a>
+    <span style="color:rgba(255,255,255,0.3); margin:0 6px;">/</span>
+    <a href="{% url 'franchises_list' %}" style="color:rgba(255,255,255,0.5); text-decoration:none;">Франшизы</a>
+    {% if franchise.direction %}
+    <span style="color:rgba(255,255,255,0.3); margin:0 6px;">/</span>
+    <a href="{% url 'franchises_by_direction' direction_id=franchise.direction.direction_id %}" style="color:rgba(255,255,255,0.5); text-decoration:none;">{{ franchise.direction.direction_name }}</a>
+    {% endif %}
+    <span style="color:rgba(255,255,255,0.3); margin:0 6px;">/</span>
+    <span style="color:rgba(255,255,255,0.8);">{{ franchise.title|truncatewords:5 }}</span>
+  </nav>
+
   <div class="back-link-container">
     <a href="{% url 'franchises_list' %}" class="back-button">
       <i class="fas fa-arrow-left"></i> Назад
@@ -153,6 +224,16 @@
       <div class="action-buttons-container">
         <div class="secondary-actions">
           <button class="action-button secondary-button" onclick="openLeadModal()">Запросить условия</button>
+          {% if franchise.pitch_deck_url %}
+          <a href="{{ franchise.pitch_deck_url }}" target="_blank" class="action-button secondary-button" style="text-decoration:none; text-align:center; font-size:13px; padding:10px 16px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15);" data-track-click="pitch_deck">
+            <i class="fas fa-file-pdf" style="margin-right:6px;"></i>Скачать презентацию
+          </a>
+          {% endif %}
+          {% if user.is_authenticated and franchise.owner and user.pk != franchise.owner.pk %}
+          <a href="{% url 'cosmochat' %}?start_chat={{ franchise.owner.user_id }}" class="action-button secondary-button" style="text-decoration:none; text-align:center; font-size:13px; padding:10px 16px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15);">
+            <i class="fas fa-comment" style="margin-right:6px;"></i>Написать в чат
+          </a>
+          {% endif %}
         </div>
       </div>
       
@@ -689,8 +770,37 @@
         </div> 
       </div> 
 
-    </div> 
-  </div> 
+    </div>
+  </div>
+
+  <!-- Перелинковка: города присутствия -->
+  {% if franchise_cities %}
+  <div style="max-width:1200px; margin:32px auto 0; padding:0 20px;">
+    <h2 style="font-family:Unbounded,sans-serif; font-size:18px; color:#fff; margin-bottom:16px;">{{ franchise.title }} в городах</h2>
+    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+      {% for city in franchise_cities %}
+      <a href="{% url 'franchises_by_city' city_slug=city.slug %}" style="font-family:Inter,sans-serif; font-size:13px; padding:8px 16px; border-radius:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); text-decoration:none; transition:all 0.2s;">
+        {{ city.name }}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Перелинковка: статьи по теме -->
+  {% if related_articles %}
+  <div style="max-width:1200px; margin:32px auto 0; padding:0 20px;">
+    <h2 style="font-family:Unbounded,sans-serif; font-size:18px; color:#fff; margin-bottom:16px;">Статьи о франшизах</h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:16px;">
+      {% for article in related_articles %}
+      <a href="{% url 'news_detail' slug=article.slug %}" style="text-decoration:none; padding:16px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); transition:all 0.2s;">
+        <div style="font-family:Unbounded,sans-serif; font-size:14px; color:#fff; margin-bottom:8px; line-height:1.4;">{{ article.title|truncatewords:10 }}</div>
+        <div style="font-family:Inter,sans-serif; font-size:12px; color:rgba(255,255,255,0.5);">{{ article.created_at|date:"d.m.Y" }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 
   <div class="similar-franchises-section">
     <div class="similar-franchises-container">
@@ -1055,8 +1165,33 @@
     }
   });
   </script>
-</div> 
+</div>
 
+<!-- Sticky CTA bar for mobile -->
+<div class="franchise-sticky-cta" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:1000; background:rgba(10,10,20,0.95); backdrop-filter:blur(12px); border-top:1px solid rgba(255,255,255,0.1); padding:12px 20px; justify-content:center; gap:12px;">
+  <button onclick="openLeadModal()" style="flex:1; max-width:300px; padding:12px 20px; border-radius:12px; border:none; background:linear-gradient(135deg, #6366f1, #8b5cf6); color:#fff; font-family:Inter,sans-serif; font-weight:600; font-size:14px; cursor:pointer;">
+    Запросить условия
+  </button>
+  {% if franchise.pitch_deck_url %}
+  <a href="{{ franchise.pitch_deck_url }}" target="_blank" style="padding:12px 16px; border-radius:12px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.8); font-family:Inter,sans-serif; font-size:13px; text-decoration:none; display:flex; align-items:center;">
+    <i class="fas fa-file-pdf"></i>
+  </a>
+  {% endif %}
+</div>
+<script>
+(function(){
+  var stickyBar = document.querySelector('.franchise-sticky-cta');
+  if (!stickyBar) return;
+  var mainCta = document.querySelector('.action-buttons-container');
+  if (!mainCta) { stickyBar.style.display = 'flex'; return; }
+  function checkSticky() {
+    var rect = mainCta.getBoundingClientRect();
+    stickyBar.style.display = rect.bottom < 0 ? 'flex' : 'none';
+  }
+  window.addEventListener('scroll', checkSticky, {passive: true});
+  checkSticky();
+})();
+</script>
 
 {% endblock %}
 

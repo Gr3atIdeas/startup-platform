@@ -92,6 +92,100 @@ def _ensure_news_tables():
         """)
 
 
+@shared_task(bind=True, max_retries=3, default_retry_delay=30)
+def send_lead_to_crm_task(self, lead_id):
+    """Send a lead to all active CRM integrations of the entity owner."""
+    try:
+        from .models import Lead
+        lead = Lead.objects.select_related("entity_owner", "target_city").get(lead_id=lead_id)
+        from .crm_integration import send_lead_to_crm
+        send_lead_to_crm(lead)
+    except Lead.DoesNotExist:
+        logger.warning("Lead %s not found for CRM sync", lead_id)
+    except Exception as exc:
+        logger.error("CRM sync failed for lead %s: %s", lead_id, exc)
+        raise self.retry(exc=exc)
+
+
+@shared_task(bind=True, max_retries=2, default_retry_delay=60,
+             time_limit=300, soft_time_limit=270)
+def analyze_franchise_contacts_task(self, log_id):
+    """Async franchisee contact discovery: scrape web + AI extraction."""
+    import json as _json
+    from .models import FranchiseAnalysisLog
+    from .franchisee_discovery import (
+        scrape_franchise_website,
+        search_web_for_franchisees,
+        search_maps_for_locations,
+        extract_franchisee_contacts,
+        save_contact,
+    )
+
+    log = FranchiseAnalysisLog.objects.select_related("franchise").get(log_id=log_id)
+    log.status = "running"
+    log.started_at = timezone.now()
+    log.save(update_fields=["status", "started_at"])
+
+    try:
+        franchise = log.franchise
+        all_sources = []
+
+        # Stage 1: Website
+        try:
+            all_sources.extend(scrape_franchise_website(franchise))
+        except Exception as e:
+            logger.warning("Website scrape failed for %s: %s", franchise.title, e)
+
+        # Stage 2: Web search
+        try:
+            all_sources.extend(search_web_for_franchisees(franchise.title))
+        except Exception as e:
+            logger.warning("Web search failed for %s: %s", franchise.title, e)
+
+        # Stage 3: Maps
+        try:
+            all_sources.extend(search_maps_for_locations(franchise.title))
+        except Exception as e:
+            logger.warning("Maps search failed for %s: %s", franchise.title, e)
+
+        log.sources_scraped = [s.get("url", "") for s in all_sources if s.get("url")]
+
+        combined = "\n\n".join(
+            f"=== Источник: {s.get('source', '')} ({s.get('url', '')}) ===\n{s['text']}"
+            for s in all_sources if s.get("text")
+        )
+        log.raw_scraped_text = combined[:50000]
+
+        if not combined.strip():
+            log.status = "completed"
+            log.error_message = "Не удалось собрать данные ни из одного источника"
+            log.completed_at = timezone.now()
+            log.save()
+            return
+
+        # Stage 4: AI extraction
+        result = extract_franchisee_contacts(combined, franchise.title)
+        log.grok_response_raw = _json.dumps(result, ensure_ascii=False)[:50000] if result else ""
+
+        contacts_list = (result or {}).get("contacts") or []
+        saved = 0
+        for cd in contacts_list:
+            if save_contact(franchise, log, cd):
+                saved += 1
+
+        log.contacts_found = saved
+        log.status = "completed"
+        log.completed_at = timezone.now()
+        log.save()
+
+    except Exception as exc:
+        log.status = "failed"
+        log.error_message = str(exc)[:2000]
+        log.completed_at = timezone.now()
+        log.save()
+        raise self.retry(exc=exc)
+
+
 @shared_task(bind=True, max_retries=2)
 def generate_seo_article(self):
     """Weekly task: generate one SEO article about franchises."""

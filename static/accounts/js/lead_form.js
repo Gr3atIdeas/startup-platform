@@ -59,6 +59,12 @@
       var phone = (document.getElementById('leadPhone').value || '').trim();
       var budgetRange = document.getElementById('leadBudget').value || '';
       var message = (document.getElementById('leadMessage').value || '').trim();
+      var targetCityEl = document.getElementById('leadCity');
+      var targetCity = targetCityEl ? targetCityEl.value : '';
+      var experienceEl = document.getElementById('leadExperience');
+      var businessExperience = experienceEl ? experienceEl.value : '';
+      var timelineEl = document.getElementById('leadTimeline');
+      var timeline = timelineEl ? timelineEl.value : '';
 
       if (!name || !email) {
         errorDiv.textContent = 'Заполните имя и email';
@@ -99,6 +105,9 @@
           phone: phone,
           budget_range: budgetRange,
           message: message,
+          target_city: targetCity || null,
+          business_experience: businessExperience,
+          timeline: timeline,
         }),
       })
       .then(function(resp) { return resp.json(); })

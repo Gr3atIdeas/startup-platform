@@ -359,8 +359,13 @@
   </div>
 
   <!-- ══════ Leads section ══════ -->
-  <div class="analytics-section-header" style="margin-top: 40px;">
+  <div class="analytics-section-header" style="margin-top: 40px; display:flex; justify-content:space-between; align-items:center;">
     <h2 class="analytics-subtitle">Заявки</h2>
+    {% if lead_stats.total > 0 %}
+    <a href="{% url 'export_leads' %}{% if lead_status_filter %}?status={{ lead_status_filter }}{% endif %}" class="btn-export-leads" style="font-family:Inter,sans-serif; font-size:13px; padding:8px 16px; border-radius:8px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.8); text-decoration:none; display:flex; align-items:center; gap:6px;">
+      <i class="fas fa-file-excel" style="color:#28a745;"></i> Экспорт в Excel
+    </a>
+    {% endif %}
   </div>
 
   <!-- Lead summary cards -->
@@ -386,6 +391,47 @@
       <div class="analytics-card__label">Конвертировано</div>
     </div>
   </div>
+
+  <!-- Lead conversion funnel -->
+  {% if lead_stats.total > 0 %}
+  <div class="analytics-panel" style="margin-top:16px;">
+    <div class="analytics-panel__title">Воронка конверсии</div>
+    <div style="display:flex; align-items:center; gap:8px; padding:16px 0;">
+      {% with total=lead_stats.total viewed=lead_stats.viewed responded=lead_stats.responded converted=lead_stats.converted %}
+      <div style="flex:1; text-align:center;">
+        <div style="background:linear-gradient(135deg,#3b82f6,#6366f1); border-radius:8px; padding:12px; margin-bottom:6px;">
+          <div style="font-family:Unbounded,sans-serif; font-size:20px; color:#fff;">{{ total }}</div>
+        </div>
+        <div style="font-family:Inter,sans-serif; font-size:11px; color:rgba(255,255,255,0.6);">Новые</div>
+      </div>
+      <div style="color:rgba(255,255,255,0.3); font-size:18px;">&#8594;</div>
+      <div style="flex:1; text-align:center;">
+        <div style="background:linear-gradient(135deg,#06b6d4,#22d3ee); border-radius:8px; padding:12px; margin-bottom:6px;">
+          <div style="font-family:Unbounded,sans-serif; font-size:20px; color:#fff;">{{ viewed }}</div>
+        </div>
+        <div style="font-family:Inter,sans-serif; font-size:11px; color:rgba(255,255,255,0.6);">Просмотрено</div>
+        {% if total > 0 %}<div style="font-family:Inter,sans-serif; font-size:10px; color:rgba(255,255,255,0.4);">{% widthratio viewed total 100 %}%</div>{% endif %}
+      </div>
+      <div style="color:rgba(255,255,255,0.3); font-size:18px;">&#8594;</div>
+      <div style="flex:1; text-align:center;">
+        <div style="background:linear-gradient(135deg,#22c55e,#4ade80); border-radius:8px; padding:12px; margin-bottom:6px;">
+          <div style="font-family:Unbounded,sans-serif; font-size:20px; color:#fff;">{{ responded }}</div>
+        </div>
+        <div style="font-family:Inter,sans-serif; font-size:11px; color:rgba(255,255,255,0.6);">Отвечено</div>
+        {% if total > 0 %}<div style="font-family:Inter,sans-serif; font-size:10px; color:rgba(255,255,255,0.4);">{% widthratio responded total 100 %}%</div>{% endif %}
+      </div>
+      <div style="color:rgba(255,255,255,0.3); font-size:18px;">&#8594;</div>
+      <div style="flex:1; text-align:center;">
+        <div style="background:linear-gradient(135deg,#8b5cf6,#a78bfa); border-radius:8px; padding:12px; margin-bottom:6px;">
+          <div style="font-family:Unbounded,sans-serif; font-size:20px; color:#fff;">{{ converted }}</div>
+        </div>
+        <div style="font-family:Inter,sans-serif; font-size:11px; color:rgba(255,255,255,0.6);">Конвертировано</div>
+        {% if total > 0 %}<div style="font-family:Inter,sans-serif; font-size:10px; color:rgba(255,255,255,0.4);">{% widthratio converted total 100 %}%</div>{% endif %}
+      </div>
+      {% endwith %}
+    </div>
+  </div>
+  {% endif %}
 
   <!-- Lead chart -->
   {% if lead_stats.total > 0 %}

@@ -1,0 +1,272 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block title %}Настройки CRM — Great Ideas{% endblock %}
+
+{% block head_extra %}
+<style>
+  .crm-container { max-width:800px; margin:40px auto; padding:0 20px; }
+  .crm-title { font-family:Unbounded,sans-serif; font-size:24px; color:#fff; margin-bottom:24px; }
+  .crm-card {
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px; padding:24px; margin-bottom:20px;
+  }
+  .crm-card-header {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:16px;
+  }
+  .crm-card-title {
+    font-family:Unbounded,sans-serif; font-size:16px; color:#fff;
+    display:flex; align-items:center; gap:10px;
+  }
+  .crm-badge {
+    font-size:11px; padding:3px 10px; border-radius:12px;
+    font-family:Inter,sans-serif;
+  }
+  .crm-badge--active { background:rgba(34,197,94,0.15); color:#22c55e; }
+  .crm-badge--inactive { background:rgba(239,68,68,0.15); color:#ef4444; }
+  .crm-badge--error { background:rgba(245,158,11,0.15); color:#f59e0b; }
+  .crm-form-group {
+    margin-bottom:14px;
+  }
+  .crm-form-group label {
+    display:block; font-family:Inter,sans-serif; font-size:13px;
+    color:rgba(255,255,255,0.6); margin-bottom:6px;
+  }
+  .crm-form-group input, .crm-form-group select {
+    width:100%; padding:10px 14px; border-radius:10px;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+    color:#fff; font-family:Inter,sans-serif; font-size:14px;
+    outline:none; transition:border-color 0.2s;
+  }
+  .crm-form-group input:focus { border-color:rgba(99,102,241,0.5); }
+  .crm-form-group .hint {
+    font-size:11px; color:rgba(255,255,255,0.4); margin-top:4px;
+  }
+  .crm-btn {
+    font-family:Inter,sans-serif; font-size:13px; padding:10px 20px;
+    border-radius:10px; border:none; cursor:pointer; font-weight:500;
+    transition:all 0.2s;
+  }
+  .crm-btn--primary { background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; }
+  .crm-btn--secondary { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.8); }
+  .crm-btn--danger { background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.2); }
+  .crm-actions { display:flex; gap:10px; margin-top:16px; }
+  .crm-error-msg {
+    font-family:Inter,sans-serif; font-size:12px; color:#f59e0b;
+    margin-top:8px; padding:8px 12px; border-radius:8px;
+    background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.15);
+  }
+  .crm-last-sync {
+    font-family:Inter,sans-serif; font-size:12px; color:rgba(255,255,255,0.4);
+  }
+  .crm-tabs { display:flex; gap:8px; margin-bottom:24px; }
+  .crm-tab {
+    padding:8px 20px; border-radius:20px; font-family:Inter,sans-serif;
+    font-size:13px; text-decoration:none; cursor:pointer;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+    color:rgba(255,255,255,0.7); transition:all 0.2s;
+  }
+  .crm-tab.active, .crm-tab:hover {
+    background:rgba(99,102,241,0.15); border-color:rgba(99,102,241,0.3);
+    color:#fff;
+  }
+  .crm-section { display:none; }
+  .crm-section.active { display:block; }
+  .checkbox-row {
+    display:flex; align-items:center; gap:8px;
+    font-family:Inter,sans-serif; font-size:14px; color:rgba(255,255,255,0.8);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="crm-container">
+  <h1 class="crm-title">Интеграции с CRM</h1>
+  <p style="font-family:Inter,sans-serif; font-size:14px; color:rgba(255,255,255,0.5); margin-bottom:24px;">
+    Настройте автоматическую отправку заявок в вашу CRM-систему. При получении новой заявки данные будут автоматически переданы в подключённые системы.
+  </p>
+
+  {% if messages %}
+  <div style="margin-bottom:20px;">
+    {% for message in messages %}
+    <div style="padding:12px 16px; border-radius:10px; margin-bottom:8px; font-family:Inter,sans-serif; font-size:13px;
+      {% if message.tags == 'success' %}background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.2); color:#22c55e;
+      {% elif message.tags == 'error' %}background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); color:#ef4444;
+      {% else %}background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.8);{% endif %}">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Tabs -->
+  <div class="crm-tabs">
+    <div class="crm-tab active" onclick="switchCrmTab('bitrix24')">Bitrix24</div>
+    <div class="crm-tab" onclick="switchCrmTab('amocrm')">AmoCRM</div>
+    <div class="crm-tab" onclick="switchCrmTab('webhook')">Webhook</div>
+  </div>
+
+  <!-- Bitrix24 -->
+  <div id="crm-bitrix24" class="crm-section active">
+    <div class="crm-card">
+      <div class="crm-card-header">
+        <div class="crm-card-title">
+          Bitrix24
+          {% if integrations_dict.bitrix24 %}
+            {% if integrations_dict.bitrix24.is_active %}
+              <span class="crm-badge crm-badge--active">Активна</span>
+            {% else %}
+              <span class="crm-badge crm-badge--inactive">Отключена</span>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="crm_type" value="bitrix24">
+
+        <div class="crm-form-group">
+          <label>Webhook URL *</label>
+          <input type="url" name="webhook_url" value="{{ integrations_dict.bitrix24.webhook_url|default:'' }}" placeholder="https://your-domain.bitrix24.ru/rest/1/abc123xyz/" required>
+          <div class="hint">Создайте входящий вебхук в Bitrix24: Приложения → Вебхуки → Добавить входящий вебхук (с доступом к CRM)</div>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" name="is_active" id="bitrix_active" {% if integrations_dict.bitrix24.is_active or not integrations_dict.bitrix24 %}checked{% endif %}>
+          <label for="bitrix_active">Включить интеграцию</label>
+        </div>
+
+        {% if integrations_dict.bitrix24.last_error %}
+        <div class="crm-error-msg">Последняя ошибка: {{ integrations_dict.bitrix24.last_error }}</div>
+        {% endif %}
+
+        {% if integrations_dict.bitrix24.last_sync_at %}
+        <div class="crm-last-sync" style="margin-top:8px;">Последняя синхронизация: {{ integrations_dict.bitrix24.last_sync_at|date:"d.m.Y H:i" }}</div>
+        {% endif %}
+
+        <div class="crm-actions">
+          <button type="submit" class="crm-btn crm-btn--primary">Сохранить</button>
+          {% if integrations_dict.bitrix24 %}
+          <button type="submit" name="action" value="test" class="crm-btn crm-btn--secondary">Тест подключения</button>
+          <button type="submit" name="action" value="delete" class="crm-btn crm-btn--danger" onclick="return confirm('Удалить интеграцию?')">Удалить</button>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- AmoCRM -->
+  <div id="crm-amocrm" class="crm-section">
+    <div class="crm-card">
+      <div class="crm-card-header">
+        <div class="crm-card-title">
+          AmoCRM
+          {% if integrations_dict.amocrm %}
+            {% if integrations_dict.amocrm.is_active %}
+              <span class="crm-badge crm-badge--active">Активна</span>
+            {% else %}
+              <span class="crm-badge crm-badge--inactive">Отключена</span>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="crm_type" value="amocrm">
+
+        <div class="crm-form-group">
+          <label>Поддомен AmoCRM *</label>
+          <input type="text" name="subdomain" value="{{ integrations_dict.amocrm.subdomain|default:'' }}" placeholder="mycompany">
+          <div class="hint">Если ваш адрес mycompany.amocrm.ru — введите "mycompany"</div>
+        </div>
+
+        <div class="crm-form-group">
+          <label>Долгоживущий токен (API key) *</label>
+          <input type="url" name="webhook_url" value="{{ integrations_dict.amocrm.webhook_url|default:'https://placeholder.amocrm.ru' }}" style="display:none;">
+          <input type="text" name="api_key" value="{{ integrations_dict.amocrm.api_key|default:'' }}" placeholder="Вставьте токен из настроек AmoCRM">
+          <div class="hint">Настройки → Интеграции → Создать интеграцию → Получить долгоживущий токен</div>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" name="is_active" id="amo_active" {% if integrations_dict.amocrm.is_active or not integrations_dict.amocrm %}checked{% endif %}>
+          <label for="amo_active">Включить интеграцию</label>
+        </div>
+
+        {% if integrations_dict.amocrm.last_error %}
+        <div class="crm-error-msg">Последняя ошибка: {{ integrations_dict.amocrm.last_error }}</div>
+        {% endif %}
+
+        {% if integrations_dict.amocrm.last_sync_at %}
+        <div class="crm-last-sync" style="margin-top:8px;">Последняя синхронизация: {{ integrations_dict.amocrm.last_sync_at|date:"d.m.Y H:i" }}</div>
+        {% endif %}
+
+        <div class="crm-actions">
+          <button type="submit" class="crm-btn crm-btn--primary">Сохранить</button>
+          {% if integrations_dict.amocrm %}
+          <button type="submit" name="action" value="test" class="crm-btn crm-btn--secondary">Тест подключения</button>
+          <button type="submit" name="action" value="delete" class="crm-btn crm-btn--danger" onclick="return confirm('Удалить интеграцию?')">Удалить</button>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Webhook -->
+  <div id="crm-webhook" class="crm-section">
+    <div class="crm-card">
+      <div class="crm-card-header">
+        <div class="crm-card-title">
+          Универсальный Webhook
+          {% if integrations_dict.webhook %}
+            {% if integrations_dict.webhook.is_active %}
+              <span class="crm-badge crm-badge--active">Активна</span>
+            {% else %}
+              <span class="crm-badge crm-badge--inactive">Отключена</span>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="crm_type" value="webhook">
+
+        <div class="crm-form-group">
+          <label>Webhook URL *</label>
+          <input type="url" name="webhook_url" value="{{ integrations_dict.webhook.webhook_url|default:'' }}" placeholder="https://your-service.com/webhook/leads" required>
+          <div class="hint">При создании заявки на этот URL будет отправлен POST-запрос с JSON-данными лида</div>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" name="is_active" id="wh_active" {% if integrations_dict.webhook.is_active or not integrations_dict.webhook %}checked{% endif %}>
+          <label for="wh_active">Включить интеграцию</label>
+        </div>
+
+        {% if integrations_dict.webhook.last_error %}
+        <div class="crm-error-msg">Последняя ошибка: {{ integrations_dict.webhook.last_error }}</div>
+        {% endif %}
+
+        <div class="crm-actions">
+          <button type="submit" class="crm-btn crm-btn--primary">Сохранить</button>
+          {% if integrations_dict.webhook %}
+          <button type="submit" name="action" value="test" class="crm-btn crm-btn--secondary">Тест подключения</button>
+          <button type="submit" name="action" value="delete" class="crm-btn crm-btn--danger" onclick="return confirm('Удалить интеграцию?')">Удалить</button>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchCrmTab(type) {
+  document.querySelectorAll('.crm-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.crm-section').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('crm-' + type).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+{% endblock %}

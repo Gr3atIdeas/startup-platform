@@ -39,6 +39,8 @@
           <select name="sort_order" id="sortOrder">
             <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Новые</option>
             <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Старые</option>
+            <option value="popular" {% if sort_order == 'popular' %}selected{% endif %}>Популярные</option>
+            <option value="rating" {% if sort_order == 'rating' %}selected{% endif %}>По рейтингу</option>
           </select>
         </div>
 

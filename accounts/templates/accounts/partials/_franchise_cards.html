@@ -42,18 +42,38 @@
         <h3 class="franchise-title">{{ franchise.title }}</h3>
       </div>
 
-      <!-- Категория -->
-      <div class="franchise-category-row">
+      <!-- Категория и бейджи -->
+      <div class="franchise-category-row" style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
         {% if franchise.direction and franchise.direction.direction_name %}
           <span class="category-tag">{{ franchise.direction.direction_name|translate_category }}</span>
         {% else %}
           <span class="category-tag">Другое</span>
         {% endif %}
+        {% load tz %}
+        {% now "U" as current_ts %}
+        {% if franchise.created_at %}
+          {% with created_ts=franchise.created_at|date:"U" %}
+            {% widthratio current_ts 1 1 as now_int %}
+            {% widthratio created_ts 1 1 as created_int %}
+          {% endwith %}
+        {% endif %}
       </div>
+
+      <!-- Рейтинг -->
+      {% if franchise.total_voters and franchise.total_voters > 0 %}
+      <div style="display:flex; align-items:center; gap:4px; margin:4px 0 6px;">
+        {% with avg_rating=franchise.rating_agg|default:0 %}
+        <span style="color:#fbbf24; font-size:13px;">
+          {% for i in "12345" %}{% if forloop.counter <= avg_rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+        </span>
+        <span style="color:rgba(255,255,255,0.5); font-size:12px; font-family:Inter,sans-serif;">{{ avg_rating|floatformat:1 }} ({{ franchise.total_voters }})</span>
+        {% endwith %}
+      </div>
+      {% endif %}
 
       <!-- Описание -->
       <div class="franchise-description-row">
-        <p class="franchise-description">{{ franchise.short_description|striptags|truncatewords:25|default:"Описание не указано" }}</p>
+        <p class="franchise-description">{{ franchise.short_description|striptags|truncatewords:40|default:"Описание не указано" }}</p>
       </div>
 
       <!-- Размер инвестиций -->
@@ -67,6 +87,14 @@
         <span class="cost-label">Паушальный взнос</span>
         <span class="cost-value">{{ franchise.franchise_cost|default:0|floatformat:0|intcomma }} ₽</span>
       </div>
+
+      <!-- Окупаемость -->
+      {% if franchise.payback_period %}
+      <div class="franchise-cost-row" style="margin-top:4px;">
+        <span class="cost-label">Окупаемость</span>
+        <span class="cost-value">{{ franchise.payback_period }} мес.</span>
+      </div>
+      {% endif %}
     </div>
 
     <!-- Ссылка на детали -->

@@ -42,6 +42,7 @@ from django.db.models import (
     ExpressionWrapper,
     F,
     FloatField,
+    IntegerField,
     Max,
     Min,
     OuterRef,
@@ -97,6 +98,7 @@ from .forms import (
 from .models import (
     ChatConversations,
     ChatParticipants,
+    City,
     Comments,
     Directions,
     FranchiseDirections,
@@ -1337,6 +1339,21 @@ def franchises_list(request):
             franchises_qs = franchises_qs.order_by("-created_at")
         elif sort_order == "oldest":
             franchises_qs = franchises_qs.order_by("created_at")
+        elif sort_order == "popular":
+            from .models import AnalyticsDailyStat
+            from django.db.models import Sum, Subquery, OuterRef
+            views_subq = (
+                AnalyticsDailyStat.objects
+                .filter(entity_type="franchise", entity_id=OuterRef("franchise_id"))
+                .values("entity_id")
+                .annotate(total=Sum("total_views"))
+                .values("total")[:1]
+            )
+            franchises_qs = franchises_qs.annotate(
+                popularity=Coalesce(Subquery(views_subq, output_field=IntegerField()), Value(0))
+            ).order_by("-popularity", "-created_at")
+        elif sort_order == "rating":
+            franchises_qs = franchises_qs.order_by("-rating_agg", "-total_voters", "-created_at")
 
     
 
@@ -2189,6 +2206,16 @@ def franchise_detail(request, slug):
         "locations_count": len(active_locations),
         "avg_monthly_profit": avg_monthly_profit,
         "avg_payback": avg_payback,
+        "cities": City.objects.all().order_by("name"),
+        # Перелинковка: статьи по теме
+        "related_articles": NewsArticles.objects.filter(
+            status="published", entity_focus="franchise"
+        ).order_by("-created_at")[:4],
+        # Перелинковка: города присутствия этой франшизы (для ссылок на городские страницы)
+        "franchise_cities": City.objects.filter(
+            franchise_locations__franchise=franchise,
+            franchise_locations__status="active",
+        ).distinct().order_by("name")[:12],
     }
     return render(request, "accounts/franchise_detail.html", context)
 
@@ -8580,7 +8607,7 @@ def robots_txt(request):
         "Allow: /franchises/",
         "Allow: /agencies/",
         "Allow: /specialists/",
-        "Allow: /news/",
+        "Allow: /blog/",
         "",
         "Disallow: /profile/",
         "Disallow: /admin/",
@@ -8590,7 +8617,7 @@ def robots_txt(request):
         "Disallow: /vote-",
         "Disallow: /silk/",
         "",
-        "Sitemap: https://greatideas.ru/sitemap.xml",
+        "Sitemap: https://www.greatideas.ru/sitemap.xml",
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
 
@@ -11326,6 +11353,9 @@ def create_lead(request):
     phone = (data.get("phone") or "").strip()
     budget_range = data.get("budget_range", "")
     message_text = (data.get("message") or "").strip()
+    target_city_id = data.get("target_city") or None
+    business_experience = data.get("business_experience", "")
+    timeline = data.get("timeline", "")
 
     valid_entity_types = ("startup", "franchise", "agency", "specialist")
     valid_lead_types = ("invest", "franchise_info", "quote", "consultation")
@@ -11354,7 +11384,11 @@ def create_lead(request):
     if request.user.is_authenticated and entity_owner and request.user.pk == entity_owner.pk:
         return JsonResponse({"success": False, "error": "Нельзя оставить заявку на свой объект"}, status=400)
 
-    from .models import Lead
+    from .models import Lead, City
+    target_city = None
+    if target_city_id:
+        target_city = City.objects.filter(city_id=target_city_id).first()
+
     lead = Lead.objects.create(
         entity_type=entity_type,
         entity_id=entity_id,
@@ -11366,6 +11400,9 @@ def create_lead(request):
         phone=phone,
         budget_range=budget_range,
         message=message_text,
+        target_city=target_city,
+        business_experience=business_experience,
+        timeline=timeline,
     )
 
     try:
@@ -11384,6 +11421,13 @@ def create_lead(request):
                 _send_lead_owner_telegram(lead, entity, entity_owner)
         except Exception as e:
             logger.error("Failed to send owner Telegram DM: %s", e)
+
+    # Send lead to CRM integrations (async via Celery)
+    try:
+        from .tasks import send_lead_to_crm_task
+        send_lead_to_crm_task.delay(lead.lead_id)
+    except Exception as e:
+        logger.error("Failed to queue CRM sync for lead %s: %s", lead.lead_id, e)
 
     return JsonResponse({"success": True, "lead_id": lead.lead_id})
 
@@ -11562,6 +11606,294 @@ def update_lead_status(request, lead_id):
     return JsonResponse({"success": True, "status": new_status})
 
 
+@login_required
+def export_leads(request):
+    """Export leads as Excel file for entity owners."""
+    from .models import Lead
+
+    leads_qs = Lead.objects.filter(entity_owner=request.user).order_by("-created_at")
+
+    status_filter = request.GET.get("status", "")
+    if status_filter and status_filter in ("new", "viewed", "responded", "converted"):
+        leads_qs = leads_qs.filter(status=status_filter)
+
+    entity_type_filter = request.GET.get("entity_type", "")
+    if entity_type_filter:
+        leads_qs = leads_qs.filter(entity_type=entity_type_filter)
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Лиды"
+
+    header_font = Font(bold=True, color="FFFFFF")
+    header_fill = PatternFill(start_color="6366F1", end_color="6366F1", fill_type="solid")
+
+    headers = [
+        "Дата", "Тип", "Объект", "Имя", "Email", "Телефон",
+        "Бюджет", "Город", "Опыт", "Сроки", "Сообщение",
+        "Статус", "Дата просмотра", "Дата ответа",
+    ]
+    for col_num, header in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col_num, value=header)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = Alignment(horizontal="center")
+
+    status_display = dict(Lead.STATUS_CHOICES)
+    experience_display = dict(Lead.EXPERIENCE_CHOICES)
+    timeline_display = dict(Lead.TIMELINE_CHOICES)
+
+    for row_num, lead in enumerate(leads_qs[:5000], 2):
+        ws.cell(row=row_num, column=1, value=lead.created_at.strftime("%d.%m.%Y %H:%M") if lead.created_at else "")
+        ws.cell(row=row_num, column=2, value=lead.get_entity_type_display())
+        ws.cell(row=row_num, column=3, value=lead.get_entity_title())
+        ws.cell(row=row_num, column=4, value=lead.name)
+        ws.cell(row=row_num, column=5, value=lead.email)
+        ws.cell(row=row_num, column=6, value=lead.phone)
+        ws.cell(row=row_num, column=7, value=lead.budget_range)
+        ws.cell(row=row_num, column=8, value=lead.target_city.name if lead.target_city else "")
+        ws.cell(row=row_num, column=9, value=experience_display.get(lead.business_experience, ""))
+        ws.cell(row=row_num, column=10, value=timeline_display.get(lead.timeline, ""))
+        ws.cell(row=row_num, column=11, value=lead.message[:500] if lead.message else "")
+        ws.cell(row=row_num, column=12, value=status_display.get(lead.status, lead.status))
+        ws.cell(row=row_num, column=13, value=lead.viewed_at.strftime("%d.%m.%Y %H:%M") if lead.viewed_at else "")
+        ws.cell(row=row_num, column=14, value=lead.responded_at.strftime("%d.%m.%Y %H:%M") if lead.responded_at else "")
+
+    for col_num in range(1, len(headers) + 1):
+        ws.column_dimensions[get_column_letter(col_num)].width = 18
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    report_date = timezone.now().strftime("%Y-%m-%d")
+    response["Content-Disposition"] = f'attachment; filename="leads_{report_date}.xlsx"'
+    wb.save(response)
+    return response
+
+
+@login_required
+def crm_settings(request):
+    """CRM integration settings page."""
+    from .models import CRMIntegration
+
+    integrations = CRMIntegration.objects.filter(user=request.user)
+    integrations_dict = {i.crm_type: i for i in integrations}
+
+    if request.method == "POST":
+        action = request.POST.get("action", "")
+        crm_type = request.POST.get("crm_type", "")
+
+        if action == "delete" and crm_type:
+            CRMIntegration.objects.filter(user=request.user, crm_type=crm_type).delete()
+            messages.success(request, "Интеграция удалена.")
+            return redirect("crm_settings")
+
+        if action == "test" and crm_type:
+            integration = integrations_dict.get(crm_type)
+            if integration:
+                from .crm_integration import get_adapter
+                adapter = get_adapter(integration)
+                if adapter.test_connection():
+                    messages.success(request, f"Подключение к {integration.get_crm_type_display()} успешно!")
+                else:
+                    messages.error(request, f"Не удалось подключиться к {integration.get_crm_type_display()}. Проверьте настройки.")
+            return redirect("crm_settings")
+
+        if crm_type in ("bitrix24", "amocrm", "webhook"):
+            webhook_url = request.POST.get("webhook_url", "").strip()
+            api_key = request.POST.get("api_key", "").strip()
+            subdomain = request.POST.get("subdomain", "").strip()
+            is_active = request.POST.get("is_active") == "on"
+
+            if not webhook_url:
+                messages.error(request, "URL обязателен.")
+                return redirect("crm_settings")
+
+            integration, created = CRMIntegration.objects.update_or_create(
+                user=request.user,
+                crm_type=crm_type,
+                defaults={
+                    "webhook_url": webhook_url,
+                    "api_key": api_key,
+                    "subdomain": subdomain,
+                    "is_active": is_active,
+                    "last_error": "",
+                },
+            )
+            messages.success(request, f"{'Добавлена' if created else 'Обновлена'} интеграция {integration.get_crm_type_display()}")
+            return redirect("crm_settings")
+
+    context = {
+        "integrations": integrations,
+        "integrations_dict": integrations_dict,
+    }
+    return render(request, "accounts/crm_settings.html", context)
+
+
+# ── Franchisee Discovery (moderator) ────────────────────────
+
+@login_required
+def franchisee_discovery_list(request):
+    """Moderator page: list franchises for franchisee contact discovery."""
+    if not is_moderator(request.user):
+        messages.error(request, "Доступ запрещён.")
+        return redirect("home")
+
+    from .models import FranchiseAnalysisLog, FranchiseeContact
+
+    q = request.GET.get("q", "").strip()
+    franchises_qs = Franchises.objects.filter(status="approved").select_related("direction")
+
+    if q:
+        franchises_qs = franchises_qs.filter(title__icontains=q)
+
+    try:
+        franchises_qs = franchises_qs.annotate(
+            contacts_count=Count("franchisee_contacts"),
+            locations_count=Count("locations", filter=models.Q(locations__status="active")),
+            last_analyzed=Max(
+                "analysis_logs__created_at",
+                filter=models.Q(analysis_logs__status="completed"),
+            ),
+            is_analyzing=Exists(
+                FranchiseAnalysisLog.objects.filter(
+                    franchise=OuterRef("franchise_id"),
+                    status__in=["pending", "running"],
+                )
+            ),
+        ).order_by("-contacts_count", "-created_at")
+    except Exception:
+        # Таблицы ещё не созданы — показать без аннотаций
+        franchises_qs = franchises_qs.annotate(
+            locations_count=Count("locations", filter=models.Q(locations__status="active")),
+        ).order_by("-created_at")
+
+    paginator = Paginator(franchises_qs, 25)
+    page_obj = paginator.get_page(request.GET.get("page", 1))
+
+    context = {
+        "page_obj": page_obj,
+        "query": q,
+    }
+    return render(request, "accounts/franchisee_discovery.html", context)
+
+
+@login_required
+def analyze_franchise_contacts(request, franchise_id):
+    """Start async franchisee contact analysis (POST, AJAX)."""
+    if not is_moderator(request.user):
+        return JsonResponse({"error": "Forbidden"}, status=403)
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=405)
+
+    from .models import FranchiseAnalysisLog
+
+    franchise = get_object_or_404(Franchises, franchise_id=franchise_id, status="approved")
+
+    # Check not already running
+    running = FranchiseAnalysisLog.objects.filter(
+        franchise=franchise, status__in=["pending", "running"]
+    ).exists()
+    if running:
+        return JsonResponse({"error": "Анализ уже выполняется"}, status=409)
+
+    log = FranchiseAnalysisLog.objects.create(
+        franchise=franchise,
+        initiated_by=request.user,
+        status="pending",
+    )
+
+    from .tasks import analyze_franchise_contacts_task
+    task = analyze_franchise_contacts_task.delay(log.log_id)
+    log.celery_task_id = task.id
+    log.save(update_fields=["celery_task_id"])
+
+    return JsonResponse({"status": "started", "log_id": log.log_id})
+
+
+@login_required
+def franchisee_analysis_status(request, log_id):
+    """Poll analysis status (GET, AJAX)."""
+    if not is_moderator(request.user):
+        return JsonResponse({"error": "Forbidden"}, status=403)
+
+    from .models import FranchiseAnalysisLog
+    log = get_object_or_404(FranchiseAnalysisLog, log_id=log_id)
+
+    return JsonResponse({
+        "status": log.status,
+        "contacts_found": log.contacts_found,
+        "error": log.error_message,
+        "sources_count": len(log.sources_scraped) if log.sources_scraped else 0,
+    })
+
+
+@login_required
+def franchisee_contacts_detail(request, franchise_id):
+    """View all discovered contacts for a franchise."""
+    if not is_moderator(request.user):
+        messages.error(request, "Доступ запрещён.")
+        return redirect("home")
+
+    from .models import FranchiseAnalysisLog, FranchiseeContact
+
+    franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
+    status_filter = request.GET.get("status", "")
+
+    contacts_qs = FranchiseeContact.objects.filter(franchise=franchise)
+    if status_filter:
+        contacts_qs = contacts_qs.filter(outreach_status=status_filter)
+
+    analysis_logs = FranchiseAnalysisLog.objects.filter(franchise=franchise).order_by("-created_at")[:10]
+
+    # Status summary
+    status_counts = {}
+    for choice_val, choice_label in FranchiseeContact.OUTREACH_STATUS_CHOICES:
+        cnt = FranchiseeContact.objects.filter(franchise=franchise, outreach_status=choice_val).count()
+        status_counts[choice_val] = {"label": choice_label, "count": cnt}
+
+    context = {
+        "franchise": franchise,
+        "contacts": contacts_qs,
+        "analysis_logs": analysis_logs,
+        "status_filter": status_filter,
+        "status_counts": status_counts,
+        "outreach_choices": FranchiseeContact.OUTREACH_STATUS_CHOICES,
+    }
+    return render(request, "accounts/franchisee_contacts.html", context)
+
+
+@login_required
+def update_franchisee_contact(request, contact_id):
+    """Update contact outreach status and notes (POST, AJAX)."""
+    if not is_moderator(request.user):
+        return JsonResponse({"error": "Forbidden"}, status=403)
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=405)
+
+    from .models import FranchiseeContact
+
+    contact = get_object_or_404(FranchiseeContact, contact_id=contact_id)
+
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+    new_status = data.get("outreach_status", "")
+    valid_statuses = [c[0] for c in FranchiseeContact.OUTREACH_STATUS_CHOICES]
+    if new_status and new_status in valid_statuses:
+        contact.outreach_status = new_status
+        if new_status == "contacted" and not contact.contacted_at:
+            contact.contacted_at = timezone.now()
+
+    notes = data.get("moderator_notes")
+    if notes is not None:
+        contact.moderator_notes = notes
+
+    contact.save()
+    return JsonResponse({"ok": True, "status": contact.outreach_status})
+
 
 def franchises_by_city(request, city_slug):
     """SEO landing page for franchises in a specific city."""
@@ -11585,12 +11917,21 @@ def franchises_by_city(request, city_slug):
         franchise_locations__status="active"
     ).exclude(city_id=city.city_id).distinct().order_by("name")[:20]
 
+    # Категории франшиз в этом городе (для перелинковки)
+    city_direction_ids = franchises_qs.filter(
+        direction__isnull=False
+    ).values_list("direction_id", flat=True).distinct()
+    city_directions = Directions.objects.filter(
+        direction_id__in=city_direction_ids
+    ).order_by("direction_name")
+
     context = {
         "city": city,
         "page_obj": page_obj,
         "paginator": paginator,
         "franchises_count": franchises_qs.count(),
         "other_cities": other_cities,
+        "city_directions": city_directions,
     }
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -11605,6 +11946,43 @@ def franchises_by_city(request, city_slug):
 
     return render(request, "accounts/franchises_by_city.html", context)
 
+
+def franchises_by_direction(request, direction_id):
+    """SEO landing page for franchises in a specific category/direction."""
+    from .models import Directions
+
+    direction = get_object_or_404(Directions, direction_id=direction_id)
+
+    franchises_qs = Franchises.objects.filter(
+        direction=direction, status="approved"
+    ).select_related("owner", "direction", "stage").order_by("-created_at")
+
+    paginator = Paginator(franchises_qs, 12)
+    page_obj = paginator.get_page(request.GET.get("page", 1))
+
+    other_directions = Directions.objects.filter(
+        franchises__status="approved"
+    ).exclude(direction_id=direction.direction_id).distinct().order_by("direction_name")
+
+    context = {
+        "direction": direction,
+        "page_obj": page_obj,
+        "paginator": paginator,
+        "franchises_count": franchises_qs.count(),
+        "other_directions": other_directions,
+    }
+
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    if is_ajax:
+        html = render_to_string("accounts/partials/_franchise_cards.html", context, request=request)
+        return JsonResponse({
+            "html": html,
+            "page_number": page_obj.number,
+            "num_pages": paginator.num_pages,
+            "has_next": page_obj.has_next(),
+        })
+
+    return render(request, "accounts/franchises_by_direction.html", context)
 
 
 # ── Franchise AI Importer ────────────────────────────────────

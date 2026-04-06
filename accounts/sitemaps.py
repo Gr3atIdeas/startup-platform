@@ -1,7 +1,10 @@
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
-from .models import Startups, Franchises, Agencies, Specialists, NewsArticles
+from .models import (
+    Startups, Franchises, Agencies, Specialists, NewsArticles,
+    City, Directions, FranchiseLocation,
+)
 
 
 class StaticViewSitemap(Sitemap):
@@ -78,9 +81,45 @@ class SpecialistSitemap(Sitemap):
         return reverse("specialist_detail", kwargs={"slug": obj.slug})
 
 
+class FranchiseCitySitemap(Sitemap):
+    """Городские лендинги франшиз — /franchises/city/{slug}/."""
+    changefreq = "weekly"
+    priority = 0.6
+
+    def items(self):
+        city_ids = (
+            FranchiseLocation.objects
+            .filter(franchise__status="approved", status="active")
+            .values_list("city_id", flat=True)
+            .distinct()
+        )
+        return City.objects.filter(city_id__in=city_ids).order_by("name")
+
+    def location(self, obj):
+        return reverse("franchises_by_city", kwargs={"city_slug": obj.slug})
+
+
+class FranchiseDirectionSitemap(Sitemap):
+    """Категорийные лендинги франшиз — /franchises/direction/{id}/."""
+    changefreq = "weekly"
+    priority = 0.6
+
+    def items(self):
+        direction_ids = (
+            Franchises.objects
+            .filter(status="approved")
+            .values_list("direction_id", flat=True)
+            .distinct()
+        )
+        return Directions.objects.filter(direction_id__in=direction_ids).order_by("direction_name")
+
+    def location(self, obj):
+        return reverse("franchises_by_direction", kwargs={"direction_id": obj.direction_id})
+
+
 class NewsSitemap(Sitemap):
     changefreq = "daily"
-    priority = 0.6
+    priority = 0.8
 
     def items(self):
         return NewsArticles.objects.filter(status="published").order_by("-updated_at")

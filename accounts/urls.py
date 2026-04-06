@@ -12,6 +12,7 @@ urlpatterns = [
     path("startups/id/<int:startup_id>/", views.startup_detail_by_id, name="startup_detail_by_id"),
     path("franchises/", views.franchises_list, name="franchises_list"),
     path("franchises/city/<slug:city_slug>/", views.franchises_by_city, name="franchises_by_city"),
+    path("franchises/direction/<int:direction_id>/", views.franchises_by_direction, name="franchises_by_direction"),
     path("franchises/<slug:slug>/", views.franchise_detail, name="franchise_detail"),
     path("franchises/id/<int:franchise_id>/", views.franchise_detail_by_id, name="franchise_detail_by_id"),
     path("agencies/", views.agencies_list, name="agencies_list"),
@@ -142,10 +143,18 @@ urlpatterns = [
     path("invest-franchise/<int:franchise_id>/", views.invest_franchise, name="invest_franchise"),
     # AI Franchise Import (moderator only)
     path("import-franchise/", views.franchise_import, name="franchise_import"),
+    # Franchisee Discovery
+    path("moderator/franchisee-discovery/", views.franchisee_discovery_list, name="franchisee_discovery_list"),
+    path("moderator/franchisee-discovery/analyze/<int:franchise_id>/", views.analyze_franchise_contacts, name="analyze_franchise_contacts"),
+    path("moderator/franchisee-discovery/<int:franchise_id>/contacts/", views.franchisee_contacts_detail, name="franchisee_contacts_detail"),
+    path("moderator/franchisee-discovery/contact/<int:contact_id>/update/", views.update_franchisee_contact, name="update_franchisee_contact"),
+    path("moderator/franchisee-discovery/status/<int:log_id>/", views.franchisee_analysis_status, name="franchisee_analysis_status"),
     # Lead Generation
     path("leads/create/", views.create_lead, name="create_lead"),
     path("my-leads/", RedirectView.as_view(pattern_name="my_analytics", permanent=False), name="my_leads"),
     path("leads/<int:lead_id>/update-status/", views.update_lead_status, name="update_lead_status"),
+    path("leads/export/", views.export_leads, name="export_leads"),
+    path("settings/crm/", views.crm_settings, name="crm_settings"),
     path("edit-ai-rating/<str:entity_type>/<int:entity_id>/", views.edit_ai_rating, name="edit_ai_rating"),
     path("search-suggestions/", views.search_suggestions, name="search_suggestions"),
     path("global-search/", views.global_search, name="global_search"),
