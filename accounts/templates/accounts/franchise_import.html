@@ -1,0 +1,198 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block title %}AI-импорт франшизы — Great Ideas{% endblock %}
+
+{% block head_extra %}
+<style>
+.import-container { max-width: 800px; margin: 0 auto; padding: 30px 20px; }
+.import-title { font-family: Unbounded, sans-serif; font-size: 24px; font-weight: 500; color: #fff; margin: 0 0 8px; }
+.import-subtitle { font-family: Inter, sans-serif; font-size: 14px; color: rgba(255,255,255,0.5); margin: 0 0 32px; }
+
+.import-form { display: flex; flex-direction: column; gap: 20px; }
+
+.import-field { display: flex; flex-direction: column; gap: 6px; }
+.import-field label { font-family: Inter, sans-serif; font-size: 13px; color: rgba(255,255,255,0.7); }
+
+.import-url-input {
+  font-family: Inter, sans-serif; font-size: 14px; color: #fff;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px; padding: 12px 16px; outline: none;
+}
+.import-url-input:focus { border-color: #7b61ff; }
+.import-url-input::placeholder { color: rgba(255,255,255,0.25); }
+
+.import-dropzone {
+  border: 2px dashed rgba(255,255,255,0.15); border-radius: 14px;
+  padding: 40px 20px; text-align: center; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: rgba(255,255,255,0.02);
+}
+.import-dropzone:hover, .import-dropzone.dragover {
+  border-color: #7b61ff; background: rgba(123,97,255,0.05);
+}
+.import-dropzone-text { font-family: Inter, sans-serif; font-size: 14px; color: rgba(255,255,255,0.5); }
+.import-dropzone-hint { font-family: Inter, sans-serif; font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 8px; }
+.import-dropzone-files { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.import-file-chip {
+  font-family: Inter, sans-serif; font-size: 12px; color: #c6bbfe;
+  background: rgba(123,97,255,0.1); border: 1px solid rgba(123,97,255,0.2);
+  padding: 4px 12px; border-radius: 20px;
+}
+
+.import-submit {
+  font-family: Unbounded, sans-serif; font-size: 15px; font-weight: 400;
+  color: #fff; background: #7b61ff; border: none; border-radius: 12px;
+  padding: 14px; cursor: pointer; transition: background 0.2s;
+}
+.import-submit:hover { background: #6551d9; }
+.import-submit:disabled { opacity: 0.5; cursor: wait; }
+
+.import-loading { text-align: center; padding: 40px; }
+.import-loading-text { font-family: Inter, sans-serif; font-size: 14px; color: rgba(255,255,255,0.6); }
+.import-spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: #7b61ff; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Result */
+.import-result { background: rgba(0,15,40,0.5); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; margin-top: 24px; }
+.import-result-title { font-family: Unbounded, sans-serif; font-size: 18px; color: #fff; margin: 0 0 16px; }
+
+.import-warnings { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.import-warning { font-family: Inter, sans-serif; font-size: 13px; padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; gap: 8px; }
+.import-warning--missing { background: rgba(255,193,7,0.1); color: #ffc107; }
+.import-warning--info { background: rgba(123,97,255,0.1); color: #c6bbfe; }
+
+.import-actions { display: flex; gap: 12px; margin-top: 16px; }
+.import-action-btn {
+  font-family: Unbounded, sans-serif; font-size: 13px; padding: 10px 24px;
+  border-radius: 8px; text-decoration: none; transition: background 0.2s;
+}
+.import-action-btn--primary { background: #7b61ff; color: #fff; border: none; }
+.import-action-btn--primary:hover { background: #6551d9; }
+.import-action-btn--secondary { background: transparent; color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.15); }
+.import-action-btn--secondary:hover { background: rgba(255,255,255,0.05); color: #fff; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="import-container">
+  <h1 class="import-title">AI-импорт франшизы</h1>
+  <p class="import-subtitle">Загрузите файлы или вставьте ссылку — AI извлечёт данные и создаст карточку франшизы</p>
+
+  {% if not result %}
+  <form method="post" enctype="multipart/form-data" class="import-form" id="importForm">
+    {% csrf_token %}
+
+    <div class="import-field">
+      <label>Ссылка на сайт франшизы</label>
+      <input type="url" name="import_url" class="import-url-input" placeholder="https://franchise-site.ru">
+    </div>
+
+    <div class="import-field">
+      <label>Файлы (PDF, DOCX, Excel, изображения)</label>
+      <div class="import-dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
+        <div class="import-dropzone-text">Перетащите файлы сюда или нажмите для выбора</div>
+        <div class="import-dropzone-hint">PDF, DOCX, XLSX, PNG, JPG — до 20 файлов</div>
+        <div class="import-dropzone-files" id="fileList"></div>
+      </div>
+      <input type="file" name="import_files" id="fileInput" multiple accept=".pdf,.docx,.doc,.xlsx,.xls,.txt,.csv,.png,.jpg,.jpeg,.webp,.gif" style="display:none;">
+    </div>
+
+    <button type="submit" class="import-submit" id="submitBtn">Импортировать через AI</button>
+  </form>
+
+  <script>
+  (function() {
+    var dropzone = document.getElementById('dropzone');
+    var fileInput = document.getElementById('fileInput');
+    var fileList = document.getElementById('fileList');
+    var form = document.getElementById('importForm');
+    var submitBtn = document.getElementById('submitBtn');
+
+    fileInput.addEventListener('change', updateFileList);
+
+    dropzone.addEventListener('dragover', function(e) { e.preventDefault(); dropzone.classList.add('dragover'); });
+    dropzone.addEventListener('dragleave', function() { dropzone.classList.remove('dragover'); });
+    dropzone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      fileInput.files = e.dataTransfer.files;
+      updateFileList();
+    });
+
+    function updateFileList() {
+      fileList.innerHTML = '';
+      Array.from(fileInput.files).forEach(function(f) {
+        var chip = document.createElement('span');
+        chip.className = 'import-file-chip';
+        chip.textContent = f.name;
+        fileList.appendChild(chip);
+      });
+    }
+
+    form.addEventListener('submit', function() {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'AI обрабатывает данные...';
+      // Replace form with loading indicator
+      setTimeout(function() {
+        form.innerHTML = '<div class="import-loading"><div class="import-spinner"></div><div class="import-loading-text">AI анализирует файлы и извлекает данные о франшизе...<br>Это может занять 30-60 секунд</div></div>';
+      }, 100);
+    });
+  })();
+  </script>
+
+  {% elif result == 'success' and franchise %}
+  <div class="import-result">
+    <div class="import-result-title">{{ franchise.title }}</div>
+
+    {% if warnings %}
+    <div class="import-warnings">
+      {% for w in warnings %}
+      <div class="import-warning {% if 'не найден' in w or 'не определ' in w or 'не заполн' in w %}import-warning--missing{% else %}import-warning--info{% endif %}">
+        {% if 'не найден' in w or 'не определ' in w or 'не заполн' in w %}&#9888;{% else %}&#8505;{% endif %}
+        {{ w }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <table style="width:100%; font-family:Inter,sans-serif; font-size:13px; color:rgba(255,255,255,0.8); border-collapse:collapse;">
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:8px 0; color:rgba(255,255,255,0.5); width:40%;">Название</td>
+        <td style="padding:8px 0;">{{ franchise.title }}</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:8px 0; color:rgba(255,255,255,0.5);">Категория</td>
+        <td style="padding:8px 0;">{{ franchise.direction.direction_name|default:"Не определена" }}</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:8px 0; color:rgba(255,255,255,0.5);">Инвестиции</td>
+        <td style="padding:8px 0;">{% if franchise.investment_size %}{{ franchise.investment_size|floatformat:0 }} ₽{% else %}Не определено{% endif %}</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:8px 0; color:rgba(255,255,255,0.5);">Паушальный взнос</td>
+        <td style="padding:8px 0;">{% if franchise.franchise_cost %}{{ franchise.franchise_cost|floatformat:0 }} ₽{% else %}Не определено{% endif %}</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:8px 0; color:rgba(255,255,255,0.5);">Окупаемость</td>
+        <td style="padding:8px 0;">{% if franchise.payback_period %}{{ franchise.payback_period }} мес{% else %}Не определено{% endif %}</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <td style="padding:8px 0; color:rgba(255,255,255,0.5);">Точки</td>
+        <td style="padding:8px 0;">Собственных: {{ franchise.own_businesses_count }}, Франчайзинговых: {{ franchise.franchise_businesses_count }}</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 0; color:rgba(255,255,255,0.5);">Статус</td>
+        <td style="padding:8px 0;">На модерации</td>
+      </tr>
+    </table>
+
+    <div class="import-actions">
+      <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}" class="import-action-btn import-action-btn--primary">Редактировать и дозаполнить</a>
+      <a href="{% url 'franchise_import' %}" class="import-action-btn import-action-btn--secondary">Импортировать ещё</a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

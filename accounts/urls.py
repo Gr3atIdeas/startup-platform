@@ -140,6 +140,8 @@ urlpatterns = [
     path("vote-startup/<int:startup_id>/", views.vote_startup, name="vote_startup"),
     path("invest/<int:startup_id>/", views.invest, name="invest"),
     path("invest-franchise/<int:franchise_id>/", views.invest_franchise, name="invest_franchise"),
+    # AI Franchise Import (moderator only)
+    path("import-franchise/", views.franchise_import, name="franchise_import"),
     # Lead Generation
     path("leads/create/", views.create_lead, name="create_lead"),
     path("my-leads/", RedirectView.as_view(pattern_name="my_analytics", permanent=False), name="my_leads"),

@@ -11604,3 +11604,69 @@ def franchises_by_city(request, city_slug):
         })
 
     return render(request, "accounts/franchises_by_city.html", context)
+
+
+
+# ── Franchise AI Importer ────────────────────────────────────
+
+@login_required
+def franchise_import(request):
+    """AI-powered franchise import from files and URLs (moderator only)."""
+    if not (request.user.is_authenticated and hasattr(request.user, 'role') and request.user.role and request.user.role.role_name == 'moderator'):
+        messages.error(request, "Доступ только для модераторов")
+        return redirect("home")
+
+    result = None
+    warnings = []
+    franchise = None
+
+    if request.method == "POST":
+        from accounts.franchise_importer import parse_file, parse_url, is_image_file, extract_franchise_data, create_franchise_from_data
+
+        # Collect all text from all sources
+        all_texts = []
+        image_files = []
+
+        # Parse URL if provided
+        url = request.POST.get("import_url", "").strip()
+        if url:
+            url_text = parse_url(url)
+            if url_text:
+                all_texts.append(f"=== Данные с сайта {url} ===\n{url_text}")
+
+        # Parse uploaded files
+        files = request.FILES.getlist("import_files")
+        for f in files:
+            if is_image_file(f.name):
+                image_files.append(f)
+            else:
+                text = parse_file(f, f.name)
+                if text:
+                    all_texts.append(f"=== Файл: {f.name} ===\n{text}")
+
+        if not all_texts:
+            messages.warning(request, "Не удалось извлечь текст из загруженных файлов. Добавьте PDF, DOCX, Excel или ссылку на сайт.")
+            return render(request, "accounts/franchise_import.html", {})
+
+        combined_text = "\n\n".join(all_texts)
+
+        # AI extraction
+        extracted = extract_franchise_data(combined_text)
+        if not extracted:
+            messages.error(request, "AI не смог обработать данные. Попробуйте загрузить другие файлы.")
+            return render(request, "accounts/franchise_import.html", {})
+
+        # Create franchise
+        franchise, warnings = create_franchise_from_data(
+            extracted, image_files=image_files, user=request.user
+        )
+
+        if franchise:
+            result = "success"
+            messages.success(request, f"Франшиза \"{franchise.title}\" создана! Проверьте и дозаполните данные.")
+
+    return render(request, "accounts/franchise_import.html", {
+        "result": result,
+        "warnings": warnings,
+        "franchise": franchise,
+    })
