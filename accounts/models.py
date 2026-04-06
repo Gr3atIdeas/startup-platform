@@ -1046,6 +1046,94 @@ class Franchises(models.Model):
         return self.title
 
 
+class City(models.Model):
+    """Справочник городов для франшиз и будущих сущностей."""
+    REGION_CHOICES = [
+        ('central', 'Центральный'),
+        ('northwest', 'Северо-Западный'),
+        ('south', 'Южный'),
+        ('volga', 'Приволжский'),
+        ('ural', 'Уральский'),
+        ('siberia', 'Сибирский'),
+        ('far_east', 'Дальневосточный'),
+        ('caucasus', 'Северо-Кавказский'),
+    ]
+    city_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=280, unique=True, blank=True)
+    region = models.CharField(max_length=50, choices=REGION_CHOICES, blank=True, default='')
+    population = models.IntegerField(blank=True, null=True, help_text="Население города")
+    is_major = models.BooleanField(default=False, help_text="Город-миллионник")
+
+    class Meta:
+        db_table = 'cities'
+        ordering = ['name']
+        verbose_name_plural = 'Cities'
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.name:
+            from django.utils.text import slugify
+            transliterated = NewsArticles._transliterate(self.name)
+            self.slug = slugify(transliterated)[:270] or f"city-{self.pk or 'new'}"
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
+class FranchiseLocation(models.Model):
+    """Точка присутствия франшизы в конкретном городе."""
+    STATUS_CHOICES = [
+        ('active', 'Активна'),
+        ('planned', 'Планируется'),
+        ('closed', 'Закрыта'),
+    ]
+    location_id = models.AutoField(primary_key=True)
+    franchise = models.ForeignKey(
+        Franchises, on_delete=models.CASCADE,
+        related_name='locations', db_column='franchise_id',
+    )
+    city = models.ForeignKey(
+        City, on_delete=models.CASCADE,
+        related_name='franchise_locations', db_column='city_id',
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    opened_at = models.DateField(blank=True, null=True, help_text="Дата открытия")
+    monthly_revenue = models.DecimalField(
+        max_digits=15, decimal_places=2, blank=True, null=True,
+        help_text="Средняя месячная выручка (руб)",
+    )
+    monthly_profit = models.DecimalField(
+        max_digits=15, decimal_places=2, blank=True, null=True,
+        help_text="Средняя месячная прибыль (руб)",
+    )
+    initial_investment = models.DecimalField(
+        max_digits=15, decimal_places=2, blank=True, null=True,
+        help_text="Начальные инвестиции в эту точку (руб)",
+    )
+    note = models.TextField(blank=True, default='', help_text="Комментарий к точке")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'franchise_locations'
+        ordering = ['-opened_at']
+        unique_together = [['franchise', 'city']]
+        indexes = [
+            models.Index(fields=['franchise', 'status'], name='idx_fl_franchise_status'),
+            models.Index(fields=['city'], name='idx_fl_city'),
+        ]
+
+    def get_payback_months(self):
+        """Расчёт окупаемости в месяцах."""
+        if self.initial_investment and self.monthly_profit and self.monthly_profit > 0:
+            return int(self.initial_investment / self.monthly_profit)
+        return None
+
+    def __str__(self):
+        return f"{self.franchise.title} — {self.city.name}"
+
+
 class FranchiseComments(models.Model):
     comment_id = models.AutoField(primary_key=True)
     franchise = models.ForeignKey(

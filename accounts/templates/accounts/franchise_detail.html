@@ -265,6 +265,7 @@
           <button class="tab-button" data-target="profit-calculation-section"><span>Стоимость и<br>расчет прибыли</span></button>
           <button class="tab-button" data-target="documents-section"><span>Документы</span></button>
           <button class="tab-button" data-target="conditions-section"><span>Условия</span></button>
+          {% if franchise_locations %}<button class="tab-button" data-target="geography-section"><span>География</span></button>{% endif %}
         </div>
 
         <div class="tab-content-container">
@@ -357,9 +358,74 @@
                     {{ franchise.profit_calculation|sanitize_html|safe|default:"Информация о расчете прибыли пока не добавлена." }}
                 </div>
             </div>
-            {% else %}
-            <p>Информация о расчете прибыли пока не добавлена.</p>
             {% endif %}
+
+            <!-- Калькулятор прибыльности -->
+            <div class="calc-widget">
+              <h3 class="calc-title">Калькулятор окупаемости</h3>
+              <div class="calc-inputs">
+                <div class="calc-field">
+                  <label for="calcInvestment">Начальные инвестиции (&#8381;)</label>
+                  <input type="number" id="calcInvestment" value="{{ franchise.investment_size|default:0|floatformat:0 }}" min="0" step="10000">
+                </div>
+                <div class="calc-field">
+                  <label for="calcMonthlyProfit">Ожидаемая прибыль/мес (&#8381;)</label>
+                  <input type="number" id="calcMonthlyProfit" value="{{ avg_monthly_profit|default:0 }}" min="0" step="5000">
+                </div>
+                <div class="calc-field">
+                  <label for="calcFranchiseCost">Паушальный взнос (&#8381;)</label>
+                  <input type="number" id="calcFranchiseCost" value="{{ franchise.franchise_cost|default:0|floatformat:0 }}" min="0" step="10000">
+                </div>
+              </div>
+              <div class="calc-results">
+                <div class="calc-result">
+                  <span class="calc-result-label">Общие вложения</span>
+                  <span class="calc-result-value" id="calcTotalInvestment">0 &#8381;</span>
+                </div>
+                <div class="calc-result">
+                  <span class="calc-result-label">Срок окупаемости</span>
+                  <span class="calc-result-value" id="calcPayback">— мес</span>
+                </div>
+                <div class="calc-result">
+                  <span class="calc-result-label">Прибыль за 1 год</span>
+                  <span class="calc-result-value" id="calcYearProfit">0 &#8381;</span>
+                </div>
+                <div class="calc-result">
+                  <span class="calc-result-label">ROI за 1 год</span>
+                  <span class="calc-result-value" id="calcROI">0%</span>
+                </div>
+              </div>
+              {% if avg_monthly_profit %}
+              <p class="calc-hint">Средняя прибыль рассчитана на основе данных {{ locations_count }} точ{{ locations_count|pluralize:"ки,ек,ек" }} франшизы</p>
+              {% endif %}
+            </div>
+            <script>
+            (function() {
+              var inv = document.getElementById('calcInvestment');
+              var profit = document.getElementById('calcMonthlyProfit');
+              var fee = document.getElementById('calcFranchiseCost');
+              function calc() {
+                var i = parseFloat(inv.value) || 0;
+                var p = parseFloat(profit.value) || 0;
+                var f = parseFloat(fee.value) || 0;
+                var total = i + f;
+                document.getElementById('calcTotalInvestment').textContent = total.toLocaleString('ru-RU') + ' \u20BD';
+                if (p > 0) {
+                  var months = Math.ceil(total / p);
+                  document.getElementById('calcPayback').textContent = months + ' мес';
+                  var yearProfit = p * 12 - total;
+                  document.getElementById('calcYearProfit').textContent = yearProfit.toLocaleString('ru-RU') + ' \u20BD';
+                  var roi = Math.round((p * 12 / total) * 100 - 100);
+                  document.getElementById('calcROI').textContent = roi + '%';
+                } else {
+                  document.getElementById('calcPayback').textContent = '\u2014';
+                  document.getElementById('calcYearProfit').textContent = '\u2014';
+                  document.getElementById('calcROI').textContent = '\u2014';
+                }
+              }
+              if (inv) { inv.addEventListener('input', calc); profit.addEventListener('input', calc); fee.addEventListener('input', calc); calc(); }
+            })();
+            </script>
           </div>
 
           
@@ -385,10 +451,63 @@
           
           <div id="conditions-section" class="content-section">
             <h2 class="section-title">Условия</h2>
-            
+
             <div class="about-text">{{ franchise.terms|sanitize_html|safe|default:"Условия не указаны." }}</div>
           </div>
-        </div> 
+
+          {% if franchise_locations %}
+          <div id="geography-section" class="content-section">
+            <h2 class="section-title">География присутствия</h2>
+
+            <!-- Summary stats -->
+            <div class="geo-summary">
+              <div class="geo-stat">
+                <span class="geo-stat-value">{{ locations_count }}</span>
+                <span class="geo-stat-label">{{ locations_count|pluralize:"точка,точки,точек" }} активных</span>
+              </div>
+              {% if avg_monthly_profit %}
+              <div class="geo-stat">
+                <span class="geo-stat-value">{{ avg_monthly_profit|floatformat:0 }} &#8381;</span>
+                <span class="geo-stat-label">средняя прибыль/мес</span>
+              </div>
+              {% endif %}
+              {% if avg_payback %}
+              <div class="geo-stat">
+                <span class="geo-stat-value">{{ avg_payback }} мес</span>
+                <span class="geo-stat-label">средняя окупаемость</span>
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Locations by region -->
+            {% for region_name, locations in locations_by_region.items %}
+            <div class="geo-region">
+              <h3 class="geo-region-title">{{ region_name }}</h3>
+              <div class="geo-cities-grid">
+                {% for loc in locations %}
+                <div class="geo-city-card {% if loc.status == 'planned' %}geo-city-card--planned{% elif loc.status == 'closed' %}geo-city-card--closed{% endif %}">
+                  <div class="geo-city-name">
+                    {{ loc.city.name }}
+                    {% if loc.status == 'planned' %}<span class="geo-badge geo-badge--planned">Планируется</span>{% endif %}
+                    {% if loc.status == 'closed' %}<span class="geo-badge geo-badge--closed">Закрыта</span>{% endif %}
+                  </div>
+                  {% if loc.monthly_profit or loc.initial_investment %}
+                  <div class="geo-city-stats">
+                    {% if loc.monthly_profit %}<span>Прибыль: {{ loc.monthly_profit|floatformat:0 }} &#8381;/мес</span>{% endif %}
+                    {% if loc.initial_investment %}<span>Вложения: {{ loc.initial_investment|floatformat:0 }} &#8381;</span>{% endif %}
+                    {% if loc.get_payback_months %}<span>Окупаемость: {{ loc.get_payback_months }} мес</span>{% endif %}
+                  </div>
+                  {% endif %}
+                  {% if loc.opened_at %}<div class="geo-city-date">Открыта: {{ loc.opened_at|date:"d.m.Y" }}</div>{% endif %}
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+        </div>
       </div> 
     </div> 
   </div> 

@@ -1304,12 +1304,22 @@ def franchises_list(request):
         min_rating = 0
         max_rating = 5
 
+    # City filter
+    from .models import FranchiseLocation, City
+    selected_city = request.GET.get("city", "").strip()
+    if selected_city:
+        franchise_ids_in_city = FranchiseLocation.objects.filter(
+            city__slug=selected_city, status="active"
+        ).values_list("franchise_id", flat=True)
+        franchises_qs = franchises_qs.filter(franchise_id__in=franchise_ids_in_city)
+
     filters_active = (
         bool(selected_categories) or
         (search_query != "") or
         (min_payback > 0) or (max_payback < 60) or
         (min_investment > 0) or (max_investment < 10000000) or
-        (min_rating > 0) or (max_rating < 5)
+        (min_rating > 0) or (max_rating < 5) or
+        bool(selected_city)
     )
     rating_active = (min_rating > 0 or max_rating < 5)
     payback_active = (min_payback > 0 or max_payback < 60)
@@ -1373,6 +1383,10 @@ def franchises_list(request):
             "franchise_directions": franchise_directions,
             "pinned_items": pinned_franchises,
             "sidebar_ads": get_active_ads("catalog_sidebar"),
+            "selected_city": selected_city,
+            "available_cities": City.objects.filter(
+                franchise_locations__status="active"
+            ).distinct().order_by("name"),
         }
         return render(request, "accounts/franchises_list.html", context)
 @vary_on_headers('X-Requested-With')
@@ -2122,6 +2136,31 @@ def franchise_detail(request, slug):
         progress_percentage = float(progress_percentage)
     investors_count = franchise.get_investors_count()
 
+    # Geography — franchise locations
+    from .models import FranchiseLocation
+    franchise_locations = (
+        FranchiseLocation.objects.filter(franchise=franchise)
+        .select_related("city")
+        .order_by("city__name")
+    )
+    locations_by_region = {}
+    for loc in franchise_locations:
+        region = loc.city.get_region_display() if loc.city.region else "Другой"
+        locations_by_region.setdefault(region, []).append(loc)
+
+    # Aggregate stats for calculator
+    active_locations = [l for l in franchise_locations if l.status == 'active']
+    avg_monthly_profit = None
+    avg_payback = None
+    if active_locations:
+        profits = [float(l.monthly_profit) for l in active_locations if l.monthly_profit]
+        if profits:
+            avg_monthly_profit = int(sum(profits) / len(profits))
+        paybacks = [l.get_payback_months() for l in active_locations]
+        paybacks = [p for p in paybacks if p]
+        if paybacks:
+            avg_payback = int(sum(paybacks) / len(paybacks))
+
     context = {
         "franchise": franchise,
         "similar_franchises": similar_franchises,
@@ -2145,6 +2184,11 @@ def franchise_detail(request, slug):
         "investors_count": investors_count,
         "canonical_url": request.build_absolute_uri(),
         "file_url_map": file_url_map,
+        "franchise_locations": franchise_locations,
+        "locations_by_region": locations_by_region,
+        "locations_count": len(active_locations),
+        "avg_monthly_profit": avg_monthly_profit,
+        "avg_payback": avg_payback,
     }
     return render(request, "accounts/franchise_detail.html", context)
 
@@ -11503,3 +11547,47 @@ def update_lead_status(request, lead_id):
     lead.save()
 
     return JsonResponse({"success": True, "status": new_status})
+
+
+
+def franchises_by_city(request, city_slug):
+    """SEO landing page for franchises in a specific city."""
+    from .models import City, FranchiseLocation
+
+    city = get_object_or_404(City, slug=city_slug)
+
+    franchise_ids = FranchiseLocation.objects.filter(
+        city=city, status="active"
+    ).values_list("franchise_id", flat=True)
+
+    franchises_qs = Franchises.objects.filter(
+        franchise_id__in=franchise_ids, status="approved"
+    ).select_related("owner", "direction", "stage").order_by("-created_at")
+
+    paginator = Paginator(franchises_qs, 12)
+    page_obj = paginator.get_page(request.GET.get("page", 1))
+
+    # Get other cities for navigation
+    other_cities = City.objects.filter(
+        franchise_locations__status="active"
+    ).exclude(city_id=city.city_id).distinct().order_by("name")[:20]
+
+    context = {
+        "city": city,
+        "page_obj": page_obj,
+        "paginator": paginator,
+        "franchises_count": franchises_qs.count(),
+        "other_cities": other_cities,
+    }
+
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    if is_ajax:
+        html = render_to_string("accounts/partials/_franchise_cards.html", context, request=request)
+        return JsonResponse({
+            "html": html,
+            "page_number": page_obj.number,
+            "num_pages": paginator.num_pages,
+            "has_next": page_obj.has_next(),
+        })
+
+    return render(request, "accounts/franchises_by_city.html", context)

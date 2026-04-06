@@ -6108,3 +6108,220 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   line-height: 1.6;
   color: #FFFFFF;
 }
+
+/* ── Geography Section ──────────────────────────────── */
+
+.geo-summary {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.geo-stat {
+  background: rgba(123, 97, 255, 0.1);
+  border: 1px solid rgba(123, 97, 255, 0.2);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+}
+
+.geo-stat-value {
+  font-family: Unbounded, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.geo-stat-label {
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.geo-region {
+  margin-bottom: 20px;
+}
+
+.geo-region-title {
+  font-family: Unbounded, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #c6bbfe;
+  margin: 0 0 12px;
+}
+
+.geo-cities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.geo-city-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.geo-city-card--planned {
+  border-color: rgba(255, 193, 7, 0.3);
+  opacity: 0.8;
+}
+
+.geo-city-card--closed {
+  border-color: rgba(255, 97, 97, 0.2);
+  opacity: 0.5;
+}
+
+.geo-city-name {
+  font-family: Unbounded, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.geo-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-family: Inter, sans-serif;
+}
+
+.geo-badge--planned {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+.geo-badge--closed {
+  background: rgba(255, 97, 97, 0.15);
+  color: #ff6161;
+}
+
+.geo-city-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.geo-city-date {
+  font-family: Inter, sans-serif;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 480px) {
+  .geo-cities-grid {
+    grid-template-columns: 1fr;
+  }
+  .geo-summary {
+    flex-direction: column;
+  }
+}
+
+/* ── Profitability Calculator ───────────────────────── */
+
+.calc-widget {
+  background: rgba(0, 15, 40, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.calc-title {
+  font-family: Unbounded, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  margin: 0 0 20px;
+}
+
+.calc-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.calc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.calc-field label {
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.calc-field input {
+  font-family: Inter, sans-serif;
+  font-size: 15px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.calc-field input:focus {
+  border-color: #7b61ff;
+}
+
+.calc-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.calc-result {
+  background: rgba(123, 97, 255, 0.08);
+  border: 1px solid rgba(123, 97, 255, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.calc-result-label {
+  font-family: Inter, sans-serif;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.calc-result-value {
+  font-family: Unbounded, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.calc-hint {
+  font-family: Inter, sans-serif;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 12px 0 0;
+}
+
+@media (max-width: 480px) {
+  .calc-inputs { grid-template-columns: 1fr; }
+  .calc-results { grid-template-columns: repeat(2, 1fr); }
+  .calc-widget { padding: 16px; }
+}

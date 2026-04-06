@@ -1,0 +1,79 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load file_tags %}
+{% load humanize %}
+{% load accounts_extras %}
+
+{% block title %}Франшизы в {{ city.name }} — Great Ideas{% endblock %}
+
+{% block meta_description %}<meta name="description" content="Каталог франшиз в городе {{ city.name }}. {{ franchises_count }} франшиз{{ franchises_count|pluralize:"а,ы," }} доступн{{ franchises_count|pluralize:"а,ы,о" }} для открытия. Выберите лучшую франшизу на Great Ideas.">{% endblock %}
+
+{% block canonical %}<link rel="canonical" href="{{ request.build_absolute_uri }}">{% endblock %}
+
+{% block og_tags %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Great Ideas">
+<meta property="og:title" content="Франшизы в {{ city.name }} — Great Ideas">
+<meta property="og:description" content="Каталог франшиз в {{ city.name }}. Найдите лучшую франшизу для инвестиций.">
+<meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+{% endblock %}
+
+{% block catalog_css %}<link rel="stylesheet" href="{% static 'accounts/css/catalog_sidebar.css' %}?v={% now 'U' %}">{% endblock %}
+
+{% block head_extra %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'accounts/css/franchises_list.css' %}?v={% now 'U' %}">
+{% endblock %}
+
+{% block content %}
+<div class="catalog-container" style="max-width:1303px; margin:0 auto; padding:0 20px;">
+
+  <div class="startups-content" style="width:100%;">
+    <div class="catalog-header-bar">
+      <h1 class="catalog-header-title">Франшизы в {{ city.name }}</h1>
+    </div>
+
+    <p style="color:rgba(255,255,255,0.6); font-family:Inter,sans-serif; font-size:14px; margin-bottom:20px;">
+      {{ franchises_count }} франшиз{{ franchises_count|pluralize:"а,ы," }} доступн{{ franchises_count|pluralize:"а,ы,о" }} в городе {{ city.name }}{% if city.region %} ({{ city.get_region_display }}){% endif %}
+    </p>
+
+    {% if other_cities %}
+    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;">
+      <a href="{% url 'franchises_list' %}" style="font-family:Unbounded,sans-serif; font-size:12px; padding:6px 14px; border-radius:var(--radius-full); background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); text-decoration:none;">Все города</a>
+      {% for c in other_cities %}
+      <a href="{% url 'franchises_by_city' city_slug=c.slug %}" style="font-family:Unbounded,sans-serif; font-size:12px; padding:6px 14px; border-radius:var(--radius-full); background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); text-decoration:none;">{{ c.name }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="franchises-grid">
+      {% for franchise in page_obj %}
+        {% include 'accounts/partials/_franchise_cards.html' with page_obj=page_obj %}
+      {% empty %}
+        <div class="no-cards">
+          <p>В {{ city.name }} пока нет франшиз</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if paginator.num_pages > 1 %}
+    <div class="pagination-numbers">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Назад</a>
+      {% endif %}
+      {% for num in paginator.page_range %}
+        {% if page_obj.number == num %}
+          <span class="current-page">{{ num }}</span>
+        {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+          <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Вперед</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

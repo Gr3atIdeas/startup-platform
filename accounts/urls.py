@@ -11,6 +11,7 @@ urlpatterns = [
     path("startups/<slug:slug>/", views.startup_detail, name="startup_detail"),
     path("startups/id/<int:startup_id>/", views.startup_detail_by_id, name="startup_detail_by_id"),
     path("franchises/", views.franchises_list, name="franchises_list"),
+    path("franchises/city/<slug:city_slug>/", views.franchises_by_city, name="franchises_by_city"),
     path("franchises/<slug:slug>/", views.franchise_detail, name="franchise_detail"),
     path("franchises/id/<int:franchise_id>/", views.franchise_detail_by_id, name="franchise_detail_by_id"),
     path("agencies/", views.agencies_list, name="agencies_list"),

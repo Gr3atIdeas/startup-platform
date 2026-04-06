@@ -60,6 +60,18 @@
         </ul>
 
         
+        {% if available_cities %}
+        <div class="city-filter" style="margin-bottom: 16px;">
+          <label class="sidebar-label" style="display:block; margin-bottom:6px;">Город</label>
+          <select name="city" id="cityFilter" class="sidebar-select" style="width:100%;">
+            <option value="">Все города</option>
+            {% for city in available_cities %}
+              <option value="{{ city.slug }}" {% if selected_city == city.slug %}selected{% endif %}>{{ city.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        {% endif %}
+
         <div class="payback-period-filter">
           <div class="payback-label-container"> 
             <label class="payback-label">Срок окупаемости</label>

@@ -20,6 +20,8 @@ from .models import (
     PinnedCatalogItem,
     AdPlacement,
     Lead,
+    City,
+    FranchiseLocation,
 )
 from .moderation import approve_entity, reject_entity
 
@@ -635,3 +637,44 @@ class LeadAdmin(admin.ModelAdmin):
         title = obj.get_entity_title()
         return title[:40] + "..." if len(title) > 40 else title
     entity_title_short.short_description = "Объект"
+
+
+# ── География франшиз ──────────────────────────────────────
+
+class FranchiseLocationInline(admin.TabularInline):
+    model = FranchiseLocation
+    extra = 1
+    fields = ("city", "status", "opened_at", "initial_investment", "monthly_revenue", "monthly_profit", "note")
+    raw_id_fields = ("city",)
+
+
+# Add locations inline to FranchisesAdmin
+FranchisesAdmin.inlines = list(getattr(FranchisesAdmin, 'inlines', [])) + [FranchiseLocationInline]
+
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    list_display = ("name", "region", "population", "is_major", "franchise_count")
+    list_filter = ("region", "is_major")
+    search_fields = ("name",)
+    prepopulated_fields = {"slug": ("name",)}
+
+    def franchise_count(self, obj):
+        return obj.franchise_locations.filter(status="active").count()
+    franchise_count.short_description = "Франшиз"
+
+
+@admin.register(FranchiseLocation)
+class FranchiseLocationAdmin(admin.ModelAdmin):
+    list_display = ("franchise", "city", "status", "opened_at", "monthly_profit", "initial_investment", "payback_display")
+    list_filter = ("status", "city__region", "city__is_major")
+    search_fields = ("franchise__title", "city__name")
+    raw_id_fields = ("franchise", "city")
+    date_hierarchy = "opened_at"
+
+    def payback_display(self, obj):
+        months = obj.get_payback_months()
+        if months:
+            return f"{months} мес."
+        return "—"
+    payback_display.short_description = "Окупаемость"
