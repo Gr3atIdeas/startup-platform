@@ -2210,7 +2210,7 @@ def franchise_detail(request, slug):
         # Перелинковка: статьи по теме
         "related_articles": NewsArticles.objects.filter(
             status="published", entity_focus="franchise"
-        ).order_by("-created_at")[:4],
+        ).order_by("-published_at")[:4],
         # Перелинковка: города присутствия этой франшизы (для ссылок на городские страницы)
         "franchise_cities": City.objects.filter(
             franchise_locations__franchise=franchise,
