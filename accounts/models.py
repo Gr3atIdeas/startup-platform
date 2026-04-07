@@ -1803,7 +1803,18 @@ class FranchiseAnalysisLog(models.Model):
         'Users', on_delete=models.SET_NULL, null=True,
         related_name='franchise_analyses', db_column='initiated_by_id',
     )
+    STAGE_CHOICES = [
+        ('queued', 'В очереди'),
+        ('website', 'Скрапинг сайта'),
+        ('web_search', 'Поиск в интернете'),
+        ('maps', 'Поиск на картах'),
+        ('ai_extraction', 'AI-извлечение контактов'),
+        ('saving', 'Сохранение контактов'),
+        ('done', 'Завершено'),
+    ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    current_stage = models.CharField(max_length=30, choices=STAGE_CHOICES, default='queued')
+    stage_log = models.JSONField(default=list, help_text="Лог стадий: [{stage, started, ended, result}]")
     celery_task_id = models.CharField(max_length=255, blank=True, default='')
     sources_scraped = models.JSONField(default=list)
     contacts_found = models.IntegerField(default=0)

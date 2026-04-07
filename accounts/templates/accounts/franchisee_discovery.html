@@ -190,38 +190,71 @@ function startAnalysis(btn, franchiseId) {
 }
 
 function pollStatus(btn, logId, franchiseId) {
+  var row = document.getElementById('row-' + franchiseId);
+
+  // Create or get progress panel below button
+  var progressId = 'progress-' + franchiseId;
+  var progressEl = document.getElementById(progressId);
+  if (!progressEl) {
+    progressEl = document.createElement('div');
+    progressEl.id = progressId;
+    progressEl.style.cssText = 'margin-top:8px; font-family:Inter,sans-serif; font-size:12px;';
+    btn.parentElement.appendChild(progressEl);
+  }
+
   fetch('/moderator/franchisee-discovery/status/' + logId + '/')
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data.status === 'completed') {
         btn.disabled = false;
         if (data.contacts_found > 0) {
-          btn.innerHTML = 'Найдено ' + data.contacts_found + ' контактов';
+          btn.innerHTML = 'Найдено ' + data.contacts_found;
           btn.style.borderColor = 'rgba(34,197,94,0.4)';
           btn.style.color = '#22c55e';
-          // Update contacts cell
-          var row = document.getElementById('row-' + franchiseId);
           if (row) {
             var cells = row.querySelectorAll('td');
             cells[3].innerHTML = '<a href="/moderator/franchisee-discovery/' + franchiseId + '/contacts/" class="fd-contacts-link">' + data.contacts_found + '</a>';
           }
         } else {
-          btn.textContent = data.error || 'Контактов не найдено';
+          btn.textContent = 'Не найдено';
           btn.style.color = '#f59e0b';
         }
+        progressEl.innerHTML = renderStageLog(data.stage_log, true);
       } else if (data.status === 'failed') {
         btn.disabled = false;
         btn.textContent = 'Ошибка';
-        btn.title = data.error;
         btn.style.color = '#ef4444';
+        progressEl.innerHTML = '<div style="color:#ef4444; margin-top:4px;">' + (data.error || 'Неизвестная ошибка') + '</div>' + renderStageLog(data.stage_log, true);
       } else {
-        btn.innerHTML = '<span class="spinner"></span>Анализ (' + (data.sources_count || 0) + ' источников)...';
-        setTimeout(function() { pollStatus(btn, logId, franchiseId); }, 3000);
+        // Running
+        var stageLabel = data.current_stage_label || data.current_stage || 'запуск';
+        btn.innerHTML = '<span class="spinner"></span>' + stageLabel;
+        progressEl.innerHTML = renderStageLog(data.stage_log, false) +
+          '<div style="color:rgba(255,255,255,0.4); margin-top:4px;">' + (data.sources_count || 0) + ' источников собрано</div>';
+        setTimeout(function() { pollStatus(btn, logId, franchiseId); }, 2000);
       }
     })
     .catch(function() {
       setTimeout(function() { pollStatus(btn, logId, franchiseId); }, 5000);
     });
+}
+
+function renderStageLog(stages, finished) {
+  if (!stages || !stages.length) return '';
+  var html = '<div style="margin-top:6px; border-left:2px solid rgba(255,255,255,0.1); padding-left:10px;">';
+  var icons = {
+    'website': '&#127760;', 'web_search': '&#128269;', 'maps': '&#128205;',
+    'ai_extraction': '&#129302;', 'saving': '&#128190;', 'done': '&#9989;', 'queued': '&#9203;'
+  };
+  for (var i = 0; i < stages.length; i++) {
+    var s = stages[i];
+    var icon = icons[s.stage] || '&#9679;';
+    var isLast = (i === stages.length - 1);
+    var color = isLast && !finished ? 'color:#a78bfa;' : 'color:rgba(255,255,255,0.5);';
+    html += '<div style="' + color + ' margin:3px 0;">' + icon + ' ' + (s.result || s.stage) + '</div>';
+  }
+  html += '</div>';
+  return html;
 }
 </script>
 {% endblock %}

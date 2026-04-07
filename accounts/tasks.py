@@ -124,31 +124,55 @@ def analyze_franchise_contacts_task(self, log_id):
     log = FranchiseAnalysisLog.objects.select_related("franchise").get(log_id=log_id)
     log.status = "running"
     log.started_at = timezone.now()
-    log.save(update_fields=["status", "started_at"])
+    log.stage_log = []
+    log.save(update_fields=["status", "started_at", "stage_log"])
+
+    def _log_stage(stage_name, result_text=""):
+        """Update current stage and append to stage_log."""
+        now = timezone.now().isoformat()
+        # Close previous stage
+        if log.stage_log and not log.stage_log[-1].get("ended"):
+            log.stage_log[-1]["ended"] = now
+        # Open new stage
+        log.stage_log.append({"stage": stage_name, "started": now, "result": result_text})
+        log.current_stage = stage_name
+        log.sources_scraped = [s.get("url", "") for s in all_sources if s.get("url")]
+        log.save(update_fields=["current_stage", "stage_log", "sources_scraped"])
+
+    all_sources = []
 
     try:
         franchise = log.franchise
-        all_sources = []
 
-        # Stage 1: Website
+        # Stage 1: Website scraping
+        _log_stage("website", f"Скрапинг {franchise.contact_website or 'нет сайта'}...")
         try:
-            all_sources.extend(scrape_franchise_website(franchise))
+            website_results = scrape_franchise_website(franchise)
+            all_sources.extend(website_results)
+            _log_stage("website", f"Найдено {len(website_results)} страниц")
         except Exception as e:
             logger.warning("Website scrape failed for %s: %s", franchise.title, e)
+            _log_stage("website", f"Ошибка: {str(e)[:200]}")
 
         # Stage 2: Web search
+        _log_stage("web_search", f"Поиск '{franchise.title}' в Яндексе...")
         try:
-            all_sources.extend(search_web_for_franchisees(franchise.title))
+            search_results = search_web_for_franchisees(franchise.title)
+            all_sources.extend(search_results)
+            _log_stage("web_search", f"Найдено {len(search_results)} результатов")
         except Exception as e:
             logger.warning("Web search failed for %s: %s", franchise.title, e)
+            _log_stage("web_search", f"Ошибка: {str(e)[:200]}")
 
         # Stage 3: Maps
+        _log_stage("maps", "Поиск на 2ГИС...")
         try:
-            all_sources.extend(search_maps_for_locations(franchise.title))
+            maps_results = search_maps_for_locations(franchise.title)
+            all_sources.extend(maps_results)
+            _log_stage("maps", f"Найдено {len(maps_results)} результатов")
         except Exception as e:
             logger.warning("Maps search failed for %s: %s", franchise.title, e)
-
-        log.sources_scraped = [s.get("url", "") for s in all_sources if s.get("url")]
+            _log_stage("maps", f"Ошибка: {str(e)[:200]}")
 
         combined = "\n\n".join(
             f"=== Источник: {s.get('source', '')} ({s.get('url', '')}) ===\n{s['text']}"
@@ -157,6 +181,7 @@ def analyze_franchise_contacts_task(self, log_id):
         log.raw_scraped_text = combined[:50000]
 
         if not combined.strip():
+            log.current_stage = "done"
             log.status = "completed"
             log.error_message = "Не удалось собрать данные ни из одного источника"
             log.completed_at = timezone.now()
@@ -164,21 +189,28 @@ def analyze_franchise_contacts_task(self, log_id):
             return
 
         # Stage 4: AI extraction
+        _log_stage("ai_extraction", f"Отправка {len(combined)} символов в Grok AI...")
         result = extract_franchisee_contacts(combined, franchise.title)
         log.grok_response_raw = _json.dumps(result, ensure_ascii=False)[:50000] if result else ""
-
         contacts_list = (result or {}).get("contacts") or []
+        _log_stage("ai_extraction", f"AI нашёл {len(contacts_list)} контактов")
+
+        # Stage 5: Save contacts
+        _log_stage("saving", f"Сохранение {len(contacts_list)} контактов...")
         saved = 0
         for cd in contacts_list:
             if save_contact(franchise, log, cd):
                 saved += 1
 
+        _log_stage("done", f"Готово: {saved} контактов сохранено")
         log.contacts_found = saved
+        log.current_stage = "done"
         log.status = "completed"
         log.completed_at = timezone.now()
         log.save()
 
     except Exception as exc:
+        log.current_stage = "done"
         log.status = "failed"
         log.error_message = str(exc)[:2000]
         log.completed_at = timezone.now()

@@ -11820,11 +11820,15 @@ def franchisee_analysis_status(request, log_id):
     from .models import FranchiseAnalysisLog
     log = get_object_or_404(FranchiseAnalysisLog, log_id=log_id)
 
+    stage_labels = dict(getattr(log, 'STAGE_CHOICES', []))
     return JsonResponse({
         "status": log.status,
         "contacts_found": log.contacts_found,
         "error": log.error_message,
         "sources_count": len(log.sources_scraped) if log.sources_scraped else 0,
+        "current_stage": getattr(log, 'current_stage', ''),
+        "current_stage_label": stage_labels.get(getattr(log, 'current_stage', ''), ''),
+        "stage_log": getattr(log, 'stage_log', []),
     })
 
 
