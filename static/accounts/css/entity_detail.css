@@ -89,7 +89,30 @@ a:hover {
   gap: 8px;
   color: var(--text-secondary);
   font-size: 16px;
-  font-weight: 400; 
+  font-weight: 400;
+}
+
+.franchise-breadcrumbs {
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.franchise-breadcrumbs a {
+  color: rgba(255,255,255,0.45);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.franchise-breadcrumbs a:hover { color: rgba(255,255,255,0.8); }
+.franchise-breadcrumbs span {
+  color: rgba(255,255,255,0.25);
+  margin: 0 6px;
+}
+.franchise-breadcrumbs .current {
+  color: rgba(255,255,255,0.75);
+  margin: 0;
 }
 
 .management-top-button {
@@ -306,10 +329,21 @@ a:hover {
 
 .startup-detail-media-container,
 .agency-detail-media-container,
-.franchise-detail-media-container,
 .specialist-detail-media-container {
   width: 407px;
   height: 405px;
+  border-radius: var(--radius-lg);
+  border: none;
+  background-color: rgba(255, 255, 255, 0.03);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.franchise-detail-media-container {
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 16 / 9;
   border-radius: var(--radius-lg);
   border: none;
   background-color: rgba(255, 255, 255, 0.03);
@@ -4522,10 +4556,15 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   
 .startup-detail-media-container,
 .agency-detail-media-container,
-.franchise-detail-media-container,
 .specialist-detail-media-container {
     width: 350px;
     height: 350px;
+  }
+  .franchise-detail-media-container {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
   }
 }
 
@@ -4677,10 +4716,15 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 @media (max-width: 992px) and (min-height: 700px) {
 .startup-detail-media-container,
 .agency-detail-media-container,
-.franchise-detail-media-container,
 .specialist-detail-media-container {
     width: 350px;
     height: 350px;
+  }
+  .franchise-detail-media-container {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
   }
 }
 
@@ -5718,10 +5762,16 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .startup-detail-media-container,
 .agency-detail-media-container,
-.franchise-detail-media-container,
 .specialist-detail-media-container {
     width: 100%;
     height: 300px;
+  }
+
+  .franchise-detail-media-container {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
   }
 
   .right-column {
@@ -5746,9 +5796,12 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 
 .startup-detail-media-container,
 .agency-detail-media-container,
-.franchise-detail-media-container,
 .specialist-detail-media-container {
     height: 250px;
+  }
+  .franchise-detail-media-container {
+    height: auto;
+    aspect-ratio: 16 / 9;
   }
 
   .tab-navigation {
