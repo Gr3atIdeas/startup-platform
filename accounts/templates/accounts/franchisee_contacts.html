@@ -76,6 +76,7 @@
 {% endblock %}
 
 {% block content %}
+{% csrf_token %}
 <div class="fc-container">
   <a href="{% url 'franchisee_discovery_list' %}" class="fc-back">&larr; Назад к списку</a>
 
@@ -202,10 +203,10 @@ function updateContact(contactId) {
   var input = document.querySelector('input[data-contact-id="' + contactId + '"]');
 
   var csrfToken = '';
-  var match = document.cookie.match(/csrftoken=([^;]+)/);
-  if (match) csrfToken = match[1];
-  var csrfMeta = document.querySelector('meta[name="csrf-token"]');
-  if (csrfMeta) csrfToken = csrfMeta.content;
+  var csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+  if (csrfInput) csrfToken = csrfInput.value;
+  if (!csrfToken) { var match = document.cookie.match(/csrftoken=([^;]+)/); if (match) csrfToken = match[1]; }
+  if (!csrfToken) { var csrfMeta = document.querySelector('meta[name="csrf-token"]'); if (csrfMeta) csrfToken = csrfMeta.content; }
 
   fetch('/moderator/franchisee-discovery/contact/' + contactId + '/update/', {
     method: 'POST',
@@ -230,10 +231,10 @@ function startAnalysis(btn, franchiseId) {
   btn.textContent = 'Запуск...';
 
   var csrfToken = '';
-  var match = document.cookie.match(/csrftoken=([^;]+)/);
-  if (match) csrfToken = match[1];
-  var csrfMeta = document.querySelector('meta[name="csrf-token"]');
-  if (csrfMeta) csrfToken = csrfMeta.content;
+  var csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+  if (csrfInput) csrfToken = csrfInput.value;
+  if (!csrfToken) { var match = document.cookie.match(/csrftoken=([^;]+)/); if (match) csrfToken = match[1]; }
+  if (!csrfToken) { var csrfMeta = document.querySelector('meta[name="csrf-token"]'); if (csrfMeta) csrfToken = csrfMeta.content; }
 
   fetch('/moderator/franchisee-discovery/analyze/' + franchiseId + '/', {
     method: 'POST',

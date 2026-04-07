@@ -67,6 +67,7 @@
 {% endblock %}
 
 {% block content %}
+{% csrf_token %}
 <div class="fd-container">
   <h1 class="fd-title">Поиск франчайзи</h1>
   <p class="fd-subtitle">Автоматический поиск контактов действующих франчайзи для сбора отзывов и интервью</p>
@@ -154,8 +155,12 @@ function startAnalysis(btn, franchiseId) {
   btn.innerHTML = '<span class="spinner"></span>Запуск...';
 
   var csrfToken = '';
-  var csrfMeta = document.querySelector('meta[name="csrf-token"]');
-  if (csrfMeta) csrfToken = csrfMeta.content;
+  var csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+  if (csrfInput) csrfToken = csrfInput.value;
+  if (!csrfToken) {
+    var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    if (csrfMeta) csrfToken = csrfMeta.content;
+  }
   if (!csrfToken) {
     var match = document.cookie.match(/csrftoken=([^;]+)/);
     if (match) csrfToken = match[1];
