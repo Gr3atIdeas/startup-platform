@@ -15,7 +15,12 @@
   <meta property="og:title" content="Great Ideas — платформа для бизнеса и стартапов">
   <meta property="og:description" content="Great Ideas — платформа для стартапов, франшиз, агентств и специалистов.">
   <meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
-  <meta property="og:url" content="https://greatideas.ru">
+  <meta property="og:url" content="https://www.greatideas.ru">
+  <meta property="og:locale" content="ru_RU">
+  <!-- Twitter Card defaults -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Great Ideas — платформа для бизнеса и стартапов">
+  <meta name="twitter:description" content="Great Ideas — платформа для стартапов, франшиз, агентств и специалистов.">
   {% endblock %}
   <!-- Preload fonts for fastest possible rendering (WOFF2 = 67% smaller than TTF) -->
   <link rel="preload" href="{% static 'accounts/fonts/Unbounded-Variable.woff2' %}" as="font" type="font/woff2" crossorigin>
@@ -195,9 +200,9 @@
                         </div>
                     </div>
                     <div class="catalog-dropdown-overlay"></div>
-                    <a href="{% url 'investments' %}" class="header-nav-link">Портфель</a> 
+                    <a href="{% url 'investments' %}" class="header-nav-link">Портфель</a>
                     <a href="{% url 'news' %}" class="header-nav-link">Блог</a>
-                    <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
+                    {% comment %}Hidden: CosmoChat temporarily disabled{% endcomment %}
                 {% elif user.role.role_name == 'startuper' %}
                     <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
                     <div class="catalog-dropdown-container">
@@ -218,9 +223,9 @@
                         </div>
                     </div>
                     <div class="catalog-dropdown-overlay"></div>
-                    <a href="{% url 'my_startups' %}" class="header-nav-link">Мои стартапы</a> 
+                    <a href="{% url 'my_startups' %}" class="header-nav-link">Мои стартапы</a>
                     <a href="{% url 'news' %}" class="header-nav-link">Блог</a>
-                    <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
+                    {% comment %}Hidden: CosmoChat temporarily disabled{% endcomment %}
                 {% elif user.role.role_name == 'moderator' %}
                     <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
                     <div class="catalog-dropdown-container">
@@ -242,7 +247,7 @@
                     </div>
                     <div class="catalog-dropdown-overlay"></div>
                     <a href="{% url 'news' %}" class="header-nav-link">Блог</a>
-                    <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
+                    {% comment %}Hidden: CosmoChat temporarily disabled{% endcomment %}
                     <a href="{% url 'moderator_dashboard' %}" class="header-nav-link">Заявки</a>
                     <a href="{% url 'deals_view' %}" class="header-nav-link">Сделки</a>
                     <a href="{% url 'franchise_import' %}" class="header-nav-link">AI-импорт</a>
@@ -331,7 +336,7 @@
                         <a href="{% url 'agencies_list' %}" class="footer-menu-link">Агентства</a>
                         <a href="{% url 'specialists_list' %}" class="footer-menu-link">Специалисты</a>
                         <a href="{% url 'news' %}" class="footer-menu-link">Блог</a>
-                        <a href="{% url 'cosmochat' %}" class="footer-menu-link">CosmoChat</a>
+                        {% comment %}Hidden: CosmoChat temporarily disabled{% endcomment %}
                     </div>
                 </div>
                 <div class="footer-menu-column">

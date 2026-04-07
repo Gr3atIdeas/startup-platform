@@ -1179,7 +1179,7 @@ def startups_list(request):
         if pinned_ids:
             startups_qs = startups_qs.exclude(startup_id__in=pinned_ids)
 
-    paginator = Paginator(startups_qs, 6)
+    paginator = Paginator(startups_qs, 12)
     page_obj = paginator.get_page(page_number)
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -1366,7 +1366,7 @@ def franchises_list(request):
         if pinned_ids:
             franchises_qs = franchises_qs.exclude(franchise_id__in=pinned_ids)
 
-    paginator = Paginator(franchises_qs, 6)
+    paginator = Paginator(franchises_qs, 12)
     page_obj = paginator.get_page(page_number)
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -1490,7 +1490,7 @@ def agencies_list(request):
         if pinned_ids:
             agencies_qs = agencies_qs.exclude(agency_id__in=pinned_ids)
 
-    paginator = Paginator(agencies_qs, 6)
+    paginator = Paginator(agencies_qs, 12)
     page_obj = paginator.get_page(page_number)
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -1606,7 +1606,7 @@ def specialists_list(request):
         if pinned_ids:
             specialists_qs = specialists_qs.exclude(specialist_id__in=pinned_ids)
 
-    paginator = Paginator(specialists_qs, 6)
+    paginator = Paginator(specialists_qs, 12)
     page_obj = paginator.get_page(page_number)
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -11740,6 +11740,14 @@ def franchisee_discovery_list(request):
         return redirect("home")
 
     from .models import FranchiseAnalysisLog, FranchiseeContact
+    from datetime import timedelta
+
+    # Auto-expire stuck tasks on page load
+    stale_cutoff = timezone.now() - timedelta(minutes=10)
+    FranchiseAnalysisLog.objects.filter(
+        status__in=["pending", "running"],
+        created_at__lt=stale_cutoff,
+    ).update(status="failed", error_message="Таймаут: задача не завершилась за 10 минут")
 
     q = request.GET.get("q", "").strip()
     franchises_qs = Franchises.objects.filter(status="approved").select_related("direction")
@@ -11790,7 +11798,16 @@ def analyze_franchise_contacts(request, franchise_id):
 
     franchise = get_object_or_404(Franchises, franchise_id=franchise_id, status="approved")
 
-    # Check not already running
+    # Auto-expire stuck tasks (pending/running > 10 minutes)
+    from datetime import timedelta
+    stale_cutoff = timezone.now() - timedelta(minutes=10)
+    FranchiseAnalysisLog.objects.filter(
+        franchise=franchise,
+        status__in=["pending", "running"],
+        created_at__lt=stale_cutoff,
+    ).update(status="failed", error_message="Таймаут: задача не завершилась за 10 минут")
+
+    # Check not already running (after cleanup)
     running = FranchiseAnalysisLog.objects.filter(
         franchise=franchise, status__in=["pending", "running"]
     ).exists()
@@ -11818,7 +11835,16 @@ def franchisee_analysis_status(request, log_id):
         return JsonResponse({"error": "Forbidden"}, status=403)
 
     from .models import FranchiseAnalysisLog
+    from datetime import timedelta
     log = get_object_or_404(FranchiseAnalysisLog, log_id=log_id)
+
+    # Auto-expire stuck tasks on poll
+    if log.status in ("pending", "running"):
+        stale_cutoff = timezone.now() - timedelta(minutes=10)
+        if log.created_at < stale_cutoff:
+            log.status = "failed"
+            log.error_message = "Таймаут: задача не завершилась за 10 минут"
+            log.save(update_fields=["status", "error_message"])
 
     stage_labels = dict(getattr(log, 'STAGE_CHOICES', []))
     return JsonResponse({

@@ -41,9 +41,10 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: Unbounded, sans-serif; 
+  font-family: Unbounded, sans-serif;
   color: var(--text-primary);
-  font-weight: 700; 
+  font-weight: 500;
+  line-height: 1.25;
 }
 
 a {
@@ -1680,12 +1681,12 @@ a:hover {
   justify-content: center;
   padding: 6px 12px; 
   border: none; 
-  font-family: Poppins, sans-serif;
-  font-size: 16px;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
   font-style: normal;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: -0.28px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0;
   text-align: center;
   cursor: pointer;
   transition:
@@ -1771,8 +1772,8 @@ a:hover {
 
 .content-section .section-title {
   font-family: 'Unbounded', sans-serif;
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 500;
   color: #FFFFFF;
   margin-bottom: 20px;
   padding-bottom: 0;
@@ -1801,13 +1802,15 @@ a:hover {
 }
 
 .content-section#info-section .about-section .section-content {
-  color: #FFFFFF;
+  font-family: Inter, sans-serif;
+  color: rgba(255, 255, 255, 0.93);
   font-size: 16px;
-  line-height: 1.6;
+  font-weight: 400;
+  line-height: 1.65;
 }
 
 .content-section#info-section .about-section .section-content p {
-  margin-bottom: 15px;
+  margin-bottom: 1.2em;
 }
 
 .content-section#info-section .about-section .section-content strong {
@@ -2101,11 +2104,11 @@ a:hover {
 }
 
 .about-content .text-content {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  font-size: 13px;
-  line-height: 1.286;
-  letter-spacing: -0.02em;
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.65;
+  letter-spacing: 0;
   color: #FFFFFF;
   text-align: left;
 }

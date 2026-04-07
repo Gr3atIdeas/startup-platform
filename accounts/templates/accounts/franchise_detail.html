@@ -133,11 +133,6 @@
           <button class="franchise-detail-carousel-next" aria-label="Следующее изображение">
             <i class="fas fa-chevron-right"></i>
           </button>
-          <button class="carousel-chat-button-unique">
-            <img src="{% static 'accounts/images/icons/chat-icon.svg' %}" alt="Чат" class="chat-icon">
-            <span>Чат</span>
-          </button>
-          
           <div class="carousel-planet-thumbnail">
             {% if franchise.planet_image %}
               <div class="planet-detail-3d" style="background-image: url('{{ franchise.planet_image|planet_url }}')"></div>
@@ -171,11 +166,6 @@
             <i class="fas fa-file-pdf" style="margin-right:6px;"></i>Скачать презентацию
           </a>
           {% endif %}
-          {% if user.is_authenticated and franchise.owner and user.pk != franchise.owner.pk %}
-          <a href="{% url 'cosmochat' %}?start_chat={{ franchise.owner.user_id }}" class="action-button secondary-button" style="text-decoration:none; text-align:center; font-size:13px; padding:10px 16px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15);">
-            <i class="fas fa-comment" style="margin-right:6px;"></i>Написать в чат
-          </a>
-          {% endif %}
         </div>
       </div>
       
@@ -206,7 +196,6 @@
                 <a href="#comments-section" class="author-reviews-link-unique">Отзывы</a>
               </div>
             </div>
-            <button class="write-author-button-unique">Задать вопрос</button>
           </div>
           {% include 'accounts/partials/_contact_links.html' with entity=franchise %}
         </div>
