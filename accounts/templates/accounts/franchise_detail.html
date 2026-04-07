@@ -38,7 +38,7 @@
     "currency": "RUB",
     "value": "{{ franchise.investment_size }}"
   },{% endif %}
-  {% if franchise.total_voters and franchise.total_voters > 0 %}"aggregateRating": {
+  {% if franchise.total_voters and franchise.total_voters > 0 and franchise.sum_votes %}"aggregateRating": {
     "@type": "AggregateRating",
     "ratingValue": "{% widthratio franchise.sum_votes franchise.total_voters 1 %}",
     "bestRating": "5",
@@ -65,7 +65,7 @@
   "description": "{{ franchise.short_description|striptags|truncatewords:50 }}",
   "url": "{{ request.build_absolute_uri }}",
   {% if franchise.direction %}"category": "{{ franchise.direction.direction_name }}",{% endif %}
-  {% if franchise.total_voters and franchise.total_voters > 0 %}"aggregateRating": {
+  {% if franchise.total_voters and franchise.total_voters > 0 and franchise.sum_votes %}"aggregateRating": {
     "@type": "AggregateRating",
     "ratingValue": "{% widthratio franchise.sum_votes franchise.total_voters 1 %}",
     "bestRating": "5",
