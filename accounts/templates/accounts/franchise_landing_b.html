@@ -1,0 +1,239 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load file_tags %}
+{% load accounts_extras %}
+
+{% block title %}Платформа для франшиз — Great Ideas{% endblock %}
+{% block meta_description %}<meta name="description" content="Ищете франшизу или хотите привлечь франчайзи? Great Ideas — платформа с AI-проверкой, аналитикой и CRM-интеграцией.">{% endblock %}
+
+{% block head_extra %}
+<style>
+  .flb { font-family: Inter, sans-serif; }
+
+  /* Hero */
+  .flb-hero {
+    min-height: 70vh; display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 80px 20px 40px;
+    background: radial-gradient(ellipse at 30% 20%, rgba(99,102,241,0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(139,92,246,0.08) 0%, transparent 50%);
+  }
+  .flb-hero h1 {
+    font-family: Unbounded, sans-serif; font-size: clamp(28px, 5vw, 44px);
+    font-weight: 600; color: #fff; line-height: 1.2; margin-bottom: 16px;
+  }
+  .flb-hero-sub { font-size: 17px; color: rgba(255,255,255,0.6); margin-bottom: 40px; max-width: 550px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+
+  /* Two paths */
+  .flb-paths { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; margin: 0 auto; }
+  .flb-path {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 36px 28px; text-align: center; transition: all 0.3s;
+    cursor: pointer; text-decoration: none; display: block;
+  }
+  .flb-path:hover { border-color: rgba(99,102,241,0.4); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+  .flb-path-icon { font-size: 48px; margin-bottom: 16px; }
+  .flb-path-title { font-family: Unbounded, sans-serif; font-size: 20px; font-weight: 500; color: #fff; margin-bottom: 12px; }
+  .flb-path-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.6; margin-bottom: 20px; }
+  .flb-path-features { text-align: left; margin-bottom: 24px; }
+  .flb-path-feature {
+    display: flex; align-items: center; gap: 10px; padding: 8px 0;
+    font-size: 14px; color: rgba(255,255,255,0.7);
+  }
+  .flb-path-feature::before { content: '\2713'; color: #22c55e; font-weight: 700; flex-shrink: 0; }
+  .flb-path-btn {
+    display: inline-block; padding: 12px 28px; border-radius: 12px;
+    font-family: Inter, sans-serif; font-size: 15px; font-weight: 600; text-decoration: none;
+  }
+  .flb-path-btn--buyer { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+  .flb-path-btn--owner { background: transparent; border: 1px solid rgba(99,102,241,0.4); color: #a78bfa; }
+
+  /* Sections */
+  .flb-section { max-width: 1200px; margin: 0 auto; padding: 80px 20px; }
+  .flb-section-title { font-family: Unbounded, sans-serif; font-size: clamp(22px, 3vw, 30px); font-weight: 500; color: #fff; text-align: center; margin-bottom: 48px; }
+
+  /* Stats bar */
+  .flb-stats {
+    display: flex; justify-content: center; gap: 60px; padding: 40px 20px;
+    border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-wrap: wrap;
+  }
+  .flb-stat-val { font-family: Unbounded, sans-serif; font-size: 36px; font-weight: 700; color: #a78bfa; }
+  .flb-stat-label { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+  /* Franchise cards */
+  .flb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  .flb-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; overflow: hidden; text-decoration: none; display: block; transition: all 0.3s;
+  }
+  .flb-card:hover { border-color: rgba(99,102,241,0.3); transform: translateY(-2px); }
+  .flb-card-img { height: 160px; background: rgba(255,255,255,0.02); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .flb-card-img img { width: 100%; height: 100%; object-fit: cover; }
+  .flb-card-body { padding: 16px 20px; }
+  .flb-card-title { font-family: Unbounded, sans-serif; font-size: 15px; font-weight: 500; color: #fff; margin-bottom: 8px; }
+  .flb-card-info { font-size: 13px; color: rgba(255,255,255,0.5); display: flex; gap: 12px; }
+
+  .flb-cta-center { text-align: center; margin-top: 32px; }
+  .flb-btn { padding: 14px 32px; border-radius: 14px; font-size: 16px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s; }
+  .flb-btn--primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+  .flb-btn--secondary { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; }
+
+  /* Articles */
+  .flb-articles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .flb-article { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; text-decoration: none; transition: all 0.3s; }
+  .flb-article:hover { border-color: rgba(99,102,241,0.3); }
+  .flb-article-title { font-family: Unbounded, sans-serif; font-size: 14px; font-weight: 500; color: #fff; margin-bottom: 8px; line-height: 1.4; }
+  .flb-article-date { font-size: 12px; color: rgba(255,255,255,0.4); }
+
+  @media (max-width: 768px) {
+    .flb-paths { grid-template-columns: 1fr; }
+    .flb-stats { gap: 30px; }
+    .flb-articles { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flb">
+
+  <!-- HERO -->
+  <section class="flb-hero">
+    <div>
+      <h1>Great Ideas — платформа<br>для франшиз</h1>
+      <p class="flb-hero-sub">Находите проверенные франшизы или привлекайте франчайзи с помощью AI-аналитики и CRM</p>
+
+      <div class="flb-paths">
+        <!-- Buyer path -->
+        <div class="flb-path" onclick="document.getElementById('buyer-section').scrollIntoView({behavior:'smooth'})">
+          <div class="flb-path-icon">&#128269;</div>
+          <div class="flb-path-title">Ищу франшизу</div>
+          <div class="flb-path-desc">Выберите из проверенных франшиз с реальными отзывами</div>
+          <div class="flb-path-features">
+            <div class="flb-path-feature">Проверенные отзывы франчайзи</div>
+            <div class="flb-path-feature">Калькулятор доходности</div>
+            <div class="flb-path-feature">Фильтры по городу и бюджету</div>
+            <div class="flb-path-feature">AI-рейтинг каждой франшизы</div>
+          </div>
+          <a href="{% url 'franchises_list' %}" class="flb-path-btn flb-path-btn--buyer">Открыть каталог</a>
+        </div>
+
+        <!-- Owner path -->
+        <div class="flb-path" onclick="document.getElementById('owner-section').scrollIntoView({behavior:'smooth'})">
+          <div class="flb-path-icon">&#128188;</div>
+          <div class="flb-path-title">Я владелец франшизы</div>
+          <div class="flb-path-desc">Привлекайте франчайзи и управляйте заявками</div>
+          <div class="flb-path-features">
+            <div class="flb-path-feature">Бесплатное размещение</div>
+            <div class="flb-path-feature">Аналитика и заявки в ЛК</div>
+            <div class="flb-path-feature">Bitrix24 / AmoCRM интеграция</div>
+            <div class="flb-path-feature">SEO-продвижение вашей франшизы</div>
+          </div>
+          <a href="{% url 'create_franchise' %}" class="flb-path-btn flb-path-btn--owner">Разместить франшизу</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="flb-stats">
+    <div style="text-align:center;">
+      <div class="flb-stat-val">{{ total_franchises }}</div>
+      <div class="flb-stat-label">франшиз в каталоге</div>
+    </div>
+    <div style="text-align:center;">
+      <div class="flb-stat-val">{{ total_cities }}</div>
+      <div class="flb-stat-label">городов</div>
+    </div>
+    <div style="text-align:center;">
+      <div class="flb-stat-val">{{ total_leads }}+</div>
+      <div class="flb-stat-label">заявок</div>
+    </div>
+  </div>
+
+  <!-- TOP FRANCHISES -->
+  <section class="flb-section" id="buyer-section">
+    <h2 class="flb-section-title">Лучшие франшизы</h2>
+    <div class="flb-grid">
+      {% for franchise in top_franchises|slice:":6" %}
+      <a href="{% url 'franchise_detail' slug=franchise.slug|default:franchise.franchise_id %}" class="flb-card">
+        <div class="flb-card-img">
+          {% if franchise.get_catalog_card_image_url %}
+            <img src="{{ franchise.get_catalog_card_image_url }}" alt="{{ franchise.title }}" loading="lazy">
+          {% else %}
+            <div style="color:rgba(255,255,255,0.15); font-size:40px;">&#127968;</div>
+          {% endif %}
+        </div>
+        <div class="flb-card-body">
+          <div class="flb-card-title">{{ franchise.title }}</div>
+          <div class="flb-card-info">
+            {% if franchise.direction %}<span>{{ franchise.direction.direction_name }}</span>{% endif %}
+            {% if franchise.investment_size %}<span>от {{ franchise.investment_size|floatformat:0|intcomma }} &#8381;</span>{% endif %}
+            {% if franchise.payback_period %}<span>{{ franchise.payback_period }} мес.</span>{% endif %}
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    <div class="flb-cta-center">
+      <a href="{% url 'franchises_list' %}" class="flb-btn flb-btn--secondary">Все франшизы &#8594;</a>
+    </div>
+  </section>
+
+  <!-- FOR OWNERS -->
+  <section class="flb-section" id="owner-section" style="padding-top:0;">
+    <h2 class="flb-section-title">Почему владельцы выбирают Great Ideas</h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap:20px; margin-bottom:32px;">
+      <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px;">
+        <div style="font-size:28px; margin-bottom:12px;">&#128200;</div>
+        <div style="font-family:Unbounded,sans-serif; font-size:15px; color:#fff; margin-bottom:8px;">Аналитика</div>
+        <div style="font-size:14px; color:rgba(255,255,255,0.55); line-height:1.5;">Просмотры, клики, география, конверсия — всё в реальном времени</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px;">
+        <div style="font-size:28px; margin-bottom:12px;">&#128233;</div>
+        <div style="font-family:Unbounded,sans-serif; font-size:15px; color:#fff; margin-bottom:8px;">Заявки</div>
+        <div style="font-size:14px; color:rgba(255,255,255,0.55); line-height:1.5;">Контакты покупателей с бюджетом и городом. Экспорт в Excel</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px;">
+        <div style="font-size:28px; margin-bottom:12px;">&#128279;</div>
+        <div style="font-family:Unbounded,sans-serif; font-size:15px; color:#fff; margin-bottom:8px;">CRM</div>
+        <div style="font-size:14px; color:rgba(255,255,255,0.55); line-height:1.5;">Автоматическая отправка лидов в Bitrix24 и AmoCRM</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px;">
+        <div style="font-size:28px; margin-bottom:12px;">&#128270;</div>
+        <div style="font-family:Unbounded,sans-serif; font-size:15px; color:#fff; margin-bottom:8px;">SEO</div>
+        <div style="font-size:14px; color:rgba(255,255,255,0.55); line-height:1.5;">Ваша франшиза в Яндекс и Google. Городские страницы, статьи</div>
+      </div>
+    </div>
+    <div class="flb-cta-center">
+      <a href="{% url 'create_franchise' %}" class="flb-btn flb-btn--primary">Разместить франшизу бесплатно</a>
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  {% if latest_articles %}
+  <section class="flb-section" style="padding-top:0;">
+    <h2 class="flb-section-title">Блог</h2>
+    <div class="flb-articles">
+      {% for a in latest_articles %}
+      <a href="{% url 'news_detail' slug=a.slug %}" class="flb-article">
+        <div class="flb-article-title">{{ a.title|truncatewords:12 }}</div>
+        <div class="flb-article-date">{{ a.published_at|date:"d.m.Y" }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- FINAL CTA -->
+  <section style="text-align:center; padding:80px 20px; background:radial-gradient(ellipse at 50% 100%, rgba(99,102,241,0.1) 0%, transparent 60%);">
+    <h2 style="font-family:Unbounded,sans-serif; font-size:28px; font-weight:500; color:#fff; margin-bottom:16px;">Начните прямо сейчас</h2>
+    <p style="font-size:16px; color:rgba(255,255,255,0.55); margin-bottom:32px;">Бесплатно. Без обязательств. Результат за минуты.</p>
+    <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+      <a href="{% url 'franchises_list' %}" class="flb-btn flb-btn--primary">Выбрать франшизу</a>
+      <a href="{% url 'create_franchise' %}" class="flb-btn flb-btn--secondary">Разместить франшизу</a>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

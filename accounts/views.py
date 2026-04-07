@@ -11977,6 +11977,50 @@ def franchises_by_city(request, city_slug):
     return render(request, "accounts/franchises_by_city.html", context)
 
 
+def _franchise_landing_context():
+    """Shared context for all franchise landing page variants."""
+    from .models import FranchiseLocation, Lead
+    top_franchises = (
+        Franchises.objects.filter(status="approved")
+        .select_related("direction", "owner")
+        .order_by("-total_voters", "-sum_votes", "-created_at")[:12]
+    )
+    return {
+        "top_franchises": top_franchises,
+        "total_franchises": Franchises.objects.filter(status="approved").count(),
+        "total_cities": City.objects.filter(franchise_locations__status="active").distinct().count(),
+        "total_leads": Lead.objects.filter(entity_type="franchise").count(),
+        "latest_articles": NewsArticles.objects.filter(
+            status="published", entity_focus="franchise"
+        ).order_by("-published_at")[:3],
+        "franchise_directions": Directions.objects.filter(
+            franchises__status="approved"
+        ).annotate(
+            franchise_count=Count("franchises", filter=models.Q(franchises__status="approved"))
+        ).order_by("-franchise_count")[:8],
+    }
+
+
+def franchise_landing(request):
+    """Concept A: Trust & Verification."""
+    return render(request, "accounts/franchise_landing.html", _franchise_landing_context())
+
+
+def franchise_landing_b(request):
+    """Concept B: Dual Landing."""
+    return render(request, "accounts/franchise_landing_b.html", _franchise_landing_context())
+
+
+def franchise_landing_c(request):
+    """Concept C: Catalog-first."""
+    return render(request, "accounts/franchise_landing_c.html", _franchise_landing_context())
+
+
+def franchise_landing_d(request):
+    """Concept D: Storytelling."""
+    return render(request, "accounts/franchise_landing_d.html", _franchise_landing_context())
+
+
 def franchises_by_direction(request, direction_id):
     """SEO landing page for franchises in a specific category/direction."""
     from .models import Directions
