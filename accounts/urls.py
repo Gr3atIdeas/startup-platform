@@ -12,6 +12,7 @@ urlpatterns = [
     path("startups/id/<int:startup_id>/", views.startup_detail_by_id, name="startup_detail_by_id"),
     path("franchises/", views.franchises_list, name="franchises_list"),
     path("franchise-landing/", views.franchise_landing, name="franchise_landing"),
+    path("franchise-cards-test/", views.franchise_cards_test, name="franchise_cards_test"),
     path("franchise-landing-b/", views.franchise_landing_b, name="franchise_landing_b"),
     path("franchise-landing-c/", views.franchise_landing_c, name="franchise_landing_c"),
     path("franchise-landing-d/", views.franchise_landing_d, name="franchise_landing_d"),

@@ -1,0 +1,213 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load file_tags %}
+{% load accounts_extras %}
+
+{% block title %}Тест карточек франшиз — Great Ideas{% endblock %}
+
+{% block head_extra %}
+<style>
+  .fct-page { max-width:1300px; margin:40px auto; padding:0 20px; }
+  .fct-title { font-family:Unbounded,sans-serif; font-size:24px; color:#fff; margin-bottom:8px; }
+  .fct-sub { font-family:Inter,sans-serif; font-size:14px; color:rgba(255,255,255,0.5); margin-bottom:32px; }
+  .fct-section { margin-bottom:60px; }
+  .fct-section-title {
+    font-family:Unbounded,sans-serif; font-size:18px; color:#a78bfa;
+    margin-bottom:20px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+
+  /* ── Variant A: Current vertical cards ── */
+  .fct-grid-v { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:20px; }
+  .fct-card-v {
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px; overflow:hidden; text-decoration:none; display:block; transition:all 0.3s;
+  }
+  .fct-card-v:hover { border-color:rgba(99,102,241,0.3); transform:translateY(-2px); }
+  .fct-card-v-img { aspect-ratio:16/9; overflow:hidden; background:rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center; }
+  .fct-card-v-img img { width:100%; height:100%; object-fit:cover; }
+  .fct-card-v-body { padding:16px 20px; }
+  .fct-card-v-title { font-family:Unbounded,sans-serif; font-size:15px; font-weight:500; color:#fff; margin-bottom:8px; }
+  .fct-card-v-rating { color:#fbbf24; font-size:13px; margin-bottom:8px; }
+  .fct-card-v-desc { font-size:13px; color:rgba(255,255,255,0.55); line-height:1.5; margin-bottom:12px; }
+  .fct-card-v-meta { display:flex; gap:12px; flex-wrap:wrap; }
+  .fct-card-v-meta span { font-size:12px; color:rgba(255,255,255,0.45); display:flex; align-items:center; gap:4px; }
+  .fct-card-v-badge {
+    position:absolute; top:12px; left:12px; font-size:11px; padding:4px 10px;
+    border-radius:8px; font-family:Inter,sans-serif; font-weight:600;
+  }
+
+  /* ── Variant B: Horizontal cards ── */
+  .fct-grid-h { display:flex; flex-direction:column; gap:16px; }
+  .fct-card-h {
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px; overflow:hidden; text-decoration:none; display:grid;
+    grid-template-columns:280px 1fr; transition:all 0.3s;
+  }
+  .fct-card-h:hover { border-color:rgba(99,102,241,0.3); }
+  .fct-card-h-img { aspect-ratio:4/3; overflow:hidden; background:rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center; }
+  .fct-card-h-img img { width:100%; height:100%; object-fit:cover; }
+  .fct-card-h-body { padding:20px 24px; display:flex; flex-direction:column; justify-content:center; }
+  .fct-card-h-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+  .fct-card-h-title { font-family:Unbounded,sans-serif; font-size:17px; font-weight:500; color:#fff; }
+  .fct-card-h-category {
+    font-size:12px; padding:4px 12px; border-radius:12px;
+    background:rgba(99,102,241,0.12); color:#a78bfa; font-family:Inter,sans-serif;
+    white-space:nowrap;
+  }
+  .fct-card-h-rating { color:#fbbf24; font-size:14px; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+  .fct-card-h-rating-text { color:rgba(255,255,255,0.45); font-size:12px; }
+  .fct-card-h-desc { font-size:14px; color:rgba(255,255,255,0.6); line-height:1.55; margin-bottom:14px; }
+  .fct-card-h-stats { display:flex; gap:20px; flex-wrap:wrap; }
+  .fct-card-h-stat { }
+  .fct-card-h-stat-val { font-family:Unbounded,sans-serif; font-size:15px; font-weight:600; color:#fff; }
+  .fct-card-h-stat-label { font-size:11px; color:rgba(255,255,255,0.4); margin-top:2px; }
+
+  /* ── Variant C: Compact grid cards ── */
+  .fct-grid-c { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:14px; }
+  .fct-card-c {
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+    border-radius:14px; overflow:hidden; text-decoration:none; display:block; transition:all 0.2s;
+  }
+  .fct-card-c:hover { border-color:rgba(99,102,241,0.25); }
+  .fct-card-c-img { aspect-ratio:16/9; overflow:hidden; background:rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center; position:relative; }
+  .fct-card-c-img img { width:100%; height:100%; object-fit:cover; }
+  .fct-card-c-price {
+    position:absolute; bottom:8px; right:8px; font-family:Inter,sans-serif;
+    font-size:12px; font-weight:600; padding:4px 10px; border-radius:8px;
+    background:rgba(0,0,0,0.7); color:#fff; backdrop-filter:blur(4px);
+  }
+  .fct-card-c-body { padding:12px 14px; }
+  .fct-card-c-title { font-family:Unbounded,sans-serif; font-size:13px; font-weight:500; color:#fff; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .fct-card-c-info { display:flex; justify-content:space-between; align-items:center; }
+  .fct-card-c-category { font-size:11px; color:rgba(255,255,255,0.45); }
+  .fct-card-c-rating { font-size:12px; color:#fbbf24; }
+
+  @media (max-width: 768px) {
+    .fct-card-h { grid-template-columns:1fr; }
+    .fct-card-h-img { aspect-ratio:16/9; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fct-page">
+  <h1 class="fct-title">Тест вариантов карточек</h1>
+  <p class="fct-sub">Сравни 3 варианта дизайна карточек франшиз на реальных данных</p>
+
+  <!-- ════ Variant A: Vertical (current improved) ════ -->
+  <div class="fct-section">
+    <h2 class="fct-section-title">Вариант A: Вертикальные карточки (текущий, улучшенный)</h2>
+    <div class="fct-grid-v">
+      {% for franchise in top_franchises|slice:":6" %}
+      <a href="{% url 'franchise_detail' slug=franchise.slug|default:franchise.franchise_id %}" class="fct-card-v">
+        <div class="fct-card-v-img" style="position:relative;">
+          {% if franchise.get_catalog_card_image_url %}
+            <img src="{{ franchise.get_catalog_card_image_url }}" alt="{{ franchise.title }}" loading="lazy">
+          {% else %}
+            <div style="color:rgba(255,255,255,0.15); font-size:40px;">&#127968;</div>
+          {% endif %}
+        </div>
+        <div class="fct-card-v-body">
+          <div class="fct-card-v-title">{{ franchise.title }}</div>
+          {% if franchise.total_voters and franchise.total_voters > 0 %}
+          <div class="fct-card-v-rating">
+            {% for i in "12345" %}{% if forloop.counter <= franchise.sum_votes|divisibleby:franchise.total_voters %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+            <span style="color:rgba(255,255,255,0.4); font-size:12px;">({{ franchise.total_voters }})</span>
+          </div>
+          {% endif %}
+          <div class="fct-card-v-desc">{{ franchise.short_description|striptags|truncatewords:20|default:"" }}</div>
+          <div class="fct-card-v-meta">
+            {% if franchise.direction %}<span>{{ franchise.direction.direction_name }}</span>{% endif %}
+            {% if franchise.investment_size %}<span>&#128176; от {{ franchise.investment_size|floatformat:0|intcomma }} &#8381;</span>{% endif %}
+            {% if franchise.payback_period %}<span>&#9203; {{ franchise.payback_period }} мес.</span>{% endif %}
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- ════ Variant B: Horizontal ════ -->
+  <div class="fct-section">
+    <h2 class="fct-section-title">Вариант B: Горизонтальные карточки (как Авито/ЦИАН)</h2>
+    <div class="fct-grid-h">
+      {% for franchise in top_franchises|slice:":6" %}
+      <a href="{% url 'franchise_detail' slug=franchise.slug|default:franchise.franchise_id %}" class="fct-card-h">
+        <div class="fct-card-h-img">
+          {% if franchise.get_catalog_card_image_url %}
+            <img src="{{ franchise.get_catalog_card_image_url }}" alt="{{ franchise.title }}" loading="lazy">
+          {% else %}
+            <div style="color:rgba(255,255,255,0.15); font-size:40px;">&#127968;</div>
+          {% endif %}
+        </div>
+        <div class="fct-card-h-body">
+          <div class="fct-card-h-top">
+            <div class="fct-card-h-title">{{ franchise.title }}</div>
+            {% if franchise.direction %}<span class="fct-card-h-category">{{ franchise.direction.direction_name }}</span>{% endif %}
+          </div>
+          {% if franchise.total_voters and franchise.total_voters > 0 %}
+          <div class="fct-card-h-rating">
+            {% for i in "12345" %}{% if forloop.counter <= franchise.sum_votes|divisibleby:franchise.total_voters %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+            <span class="fct-card-h-rating-text">{{ franchise.total_voters }} оценок</span>
+          </div>
+          {% endif %}
+          <div class="fct-card-h-desc">{{ franchise.short_description|striptags|truncatewords:25|default:"" }}</div>
+          <div class="fct-card-h-stats">
+            {% if franchise.investment_size %}
+            <div class="fct-card-h-stat">
+              <div class="fct-card-h-stat-val">от {{ franchise.investment_size|floatformat:0|intcomma }} &#8381;</div>
+              <div class="fct-card-h-stat-label">инвестиции</div>
+            </div>
+            {% endif %}
+            {% if franchise.franchise_cost %}
+            <div class="fct-card-h-stat">
+              <div class="fct-card-h-stat-val">{{ franchise.franchise_cost|floatformat:0|intcomma }} &#8381;</div>
+              <div class="fct-card-h-stat-label">паушальный взнос</div>
+            </div>
+            {% endif %}
+            {% if franchise.payback_period %}
+            <div class="fct-card-h-stat">
+              <div class="fct-card-h-stat-val">{{ franchise.payback_period }} мес.</div>
+              <div class="fct-card-h-stat-label">окупаемость</div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- ════ Variant C: Compact grid ════ -->
+  <div class="fct-section">
+    <h2 class="fct-section-title">Вариант C: Компактные карточки (больше на экране)</h2>
+    <div class="fct-grid-c">
+      {% for franchise in top_franchises %}
+      <a href="{% url 'franchise_detail' slug=franchise.slug|default:franchise.franchise_id %}" class="fct-card-c">
+        <div class="fct-card-c-img">
+          {% if franchise.get_catalog_card_image_url %}
+            <img src="{{ franchise.get_catalog_card_image_url }}" alt="{{ franchise.title }}" loading="lazy">
+          {% else %}
+            <div style="color:rgba(255,255,255,0.15); font-size:32px;">&#127968;</div>
+          {% endif %}
+          {% if franchise.investment_size %}
+          <span class="fct-card-c-price">от {{ franchise.investment_size|floatformat:0|intcomma }} &#8381;</span>
+          {% endif %}
+        </div>
+        <div class="fct-card-c-body">
+          <div class="fct-card-c-title">{{ franchise.title }}</div>
+          <div class="fct-card-c-info">
+            {% if franchise.direction %}<span class="fct-card-c-category">{{ franchise.direction.direction_name }}</span>{% endif %}
+            {% if franchise.total_voters and franchise.total_voters > 0 %}
+            <span class="fct-card-c-rating">&#9733; {{ franchise.sum_votes|divisibleby:franchise.total_voters }}</span>
+            {% endif %}
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

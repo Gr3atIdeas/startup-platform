@@ -89,7 +89,7 @@ class BaseEntityFormMixin:
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
-        help_text="Загрузите широкоформатное изображение (1200×400, PNG/JPEG/WEBP, макс. 5MB)"
+        help_text="Изображение 16:9 для каталога (мин. 1200x675, PNG/JPEG/WEBP, макс. 5MB). Автообрезка до 16:9"
     )
     short_description = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 3}), label="*Короткое описание", required=True
@@ -174,7 +174,7 @@ class BaseEntityEditFormMixin(BaseEntityFormMixin):
     )
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге", required=False,
-        help_text="Загрузите широкоформатное изображение (1200×400, PNG/JPEG/WEBP, макс. 5MB)",
+        help_text="Изображение 16:9 для каталога (мин. 1200x675, PNG/JPEG/WEBP, макс. 5MB). Автообрезка до 16:9",
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     # Agreement checkboxes not needed for editing — user already agreed when creating
@@ -980,7 +980,7 @@ class AgencyEditForm(BaseEntityEditFormMixin, forms.ModelForm):
     catalog_card_image = forms.ImageField(
         label="Изображение для карточки в каталоге",
         required=False,
-        help_text="Загрузите широкоформатное изображение (рекомендуемое разрешение 1200×400, форматы: PNG, JPEG, WEBP, максимум 5MB)",
+        help_text="Изображение 16:9 для каталога (мин. 1200x675, PNG/JPEG/WEBP, макс. 5MB). Автообрезка до 16:9",
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'})
     )
     short_description = forms.CharField(

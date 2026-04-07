@@ -555,11 +555,12 @@ textarea.form-control,
 .catalog-card-image-group .catalog-card-image-label {
   display: block;
   width: 361px;
-  height: 90px;
-  border-radius: var(--radius-xs);
-  background-color: #333;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-sm);
+  background-color: #1a1a2e;
   position: relative;
   overflow: hidden;
+  border: 1px dashed rgba(255,255,255,0.15);
 }
 
 .catalog-card-image-group .catalog-card-image-placeholder {

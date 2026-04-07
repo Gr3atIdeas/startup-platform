@@ -89,6 +89,61 @@ def convert_image_to_webp(uploaded_file, quality=85, max_size=None):
         return None, None
 
 
+def crop_and_resize_16_9(uploaded_file, target_width=1200, quality=85):
+    """
+    Crop image to 16:9 aspect ratio (center crop) and resize.
+    Returns (BytesIO, filename, content_type) or None if failed.
+    """
+    try:
+        if hasattr(uploaded_file, 'seek'):
+            uploaded_file.seek(0)
+
+        img = Image.open(uploaded_file)
+        if img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info):
+            img = img.convert('RGBA')
+        else:
+            img = img.convert('RGB')
+
+        w, h = img.size
+        target_ratio = 16 / 9
+        current_ratio = w / h
+
+        if current_ratio > target_ratio:
+            # Image is wider than 16:9 — crop sides
+            new_w = int(h * target_ratio)
+            left = (w - new_w) // 2
+            img = img.crop((left, 0, left + new_w, h))
+        elif current_ratio < target_ratio:
+            # Image is taller than 16:9 — crop top/bottom
+            new_h = int(w / target_ratio)
+            top = (h - new_h) // 2
+            img = img.crop((0, top, w, top + new_h))
+
+        # Resize to target width
+        target_h = int(target_width / target_ratio)
+        img = img.resize((target_width, target_h), Image.Resampling.LANCZOS)
+
+        output = BytesIO()
+        fmt = 'WEBP'
+        img.save(output, fmt, quality=quality, optimize=True)
+        output.seek(0)
+
+        original_name = getattr(uploaded_file, 'name', 'image.jpg')
+        base_name = '.'.join(original_name.split('.')[:-1]) if '.' in original_name else original_name
+        new_name = f"{base_name}.webp"
+
+        logger.info("Crop 16:9 + resize: %s -> %dx%d, %dKB",
+                     original_name, target_width, target_h, output.getbuffer().nbytes // 1024)
+
+        output.name = new_name
+        output.content_type = 'image/webp'
+        return output, new_name, 'image/webp'
+
+    except Exception as e:
+        logger.warning("crop_and_resize_16_9 failed: %s", e)
+        return None
+
+
 def process_uploaded_image(uploaded_file, quality=85, max_size=None):
     """
     Обрабатывает загруженное изображение: конвертирует в WebP если возможно.
@@ -958,7 +1013,12 @@ def upload_entity_catalog_card(form, entity, entity_type_name):
         return
     catalog_card_id = str(uuid.uuid4())
     try:
-        processed_image, processed_name, _ = process_uploaded_image(catalog_card_image, quality=85)
+        # Crop to 16:9 and resize to 1200x675
+        crop_result = crop_and_resize_16_9(catalog_card_image, target_width=1200, quality=85)
+        if crop_result:
+            processed_image, processed_name, _ = crop_result
+        else:
+            processed_image, processed_name, _ = process_uploaded_image(catalog_card_image, quality=85)
         base_name = os.path.splitext(processed_name)[0]
         ext = os.path.splitext(processed_name)[1]
         safe_base = "".join(c for c in base_name if c.isalnum() or c in ("-", "_"))
@@ -1006,8 +1066,14 @@ def upload_entity_files(request, form, entity, entity_type_name, file_field_name
         try:
             unique_filename = _get_unique_filename(f.name, entity_id, file_type_name)
             file_id = str(uuid.uuid4())
-            file_data = f.read()
+            # Resize images (creatives) to max 1600px wide for faster loading
             content_type = getattr(f, 'content_type', default_content_type)
+            if file_type_name == 'creative' and content_type.startswith('image/'):
+                processed, proc_name, proc_ct = process_uploaded_image(f, quality=85, max_size=(1600, 1600))
+                file_data = processed.read() if hasattr(processed, 'read') else processed
+                content_type = proc_ct
+            else:
+                file_data = f.read()
             result = upload_file_to_s3_sync(
                 file_data=file_data, file_name=f.name, content_type=content_type,
                 entity_type_name=entity_type_name, entity_id=entity_id,

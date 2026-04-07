@@ -12001,6 +12001,12 @@ def _franchise_landing_context():
     }
 
 
+def franchise_cards_test(request):
+    """Test page: compare old vs new card designs side by side."""
+    ctx = _franchise_landing_context()
+    return render(request, "accounts/franchise_cards_test.html", ctx)
+
+
 def franchise_landing(request):
     """Concept A: Trust & Verification."""
     return render(request, "accounts/franchise_landing.html", _franchise_landing_context())
