@@ -157,7 +157,7 @@
           </script>
           {% if franchise.direction %}
           <div style="position:absolute; bottom:12px; left:12px; z-index:5;">
-            <a href="{% url 'franchises_list' %}?category={{ franchise.direction.direction_id }}" style="display:inline-block; padding:6px 14px; border-radius:10px; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.15); color:#fff; font-family:Inter,sans-serif; font-size:12px; font-weight:500; text-decoration:none;">
+            <a href="{% url 'franchises_list' %}?category={{ franchise.direction.direction_id }}" style="display:inline-block; padding:6px 14px; border-radius:10px; background:rgba(99,102,241,0.85); backdrop-filter:blur(8px); color:#fff; font-family:Inter,sans-serif; font-size:12px; font-weight:500; text-decoration:none;">
               {{ franchise.direction.direction_name|translate_category }}
             </a>
           </div>
@@ -291,7 +291,6 @@
         <div class="tab-navigation">
           <button class="tab-button active" data-target="info-section"><span>Информация</span></button>
           <button class="tab-button" data-target="gallery-section"><span>Галерея</span></button>
-          <button class="tab-button" data-target="profit-calculation-section"><span>Стоимость и<br>расчет прибыли</span></button>
           <button class="tab-button" data-target="documents-section"><span>Документы</span></button>
           <button class="tab-button" data-target="conditions-section"><span>Условия</span></button>
           {% if franchise_locations %}<button class="tab-button" data-target="geography-section"><span>География</span></button>{% endif %}
@@ -316,6 +315,71 @@
                 </div>
               </div>
             </div>
+
+            {% if franchise.profit_calculation %}
+            <div class="about-section">
+              <h3 class="about-title">Стоимость и условия</h3>
+              <div class="section-content">
+                {{ franchise.profit_calculation|sanitize_html|safe }}
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Калькулятор окупаемости -->
+            <div class="calc-widget">
+              <h3 class="calc-title">Калькулятор окупаемости</h3>
+              <div class="calc-inputs">
+                <div class="calc-field">
+                  <label for="calcInvestment">Начальные инвестиции (&#8381;)</label>
+                  <input type="number" id="calcInvestment" value="{{ franchise.investment_size|default:0|floatformat:0 }}" min="0" step="10000">
+                </div>
+                <div class="calc-field">
+                  <label for="calcMonthlyProfit">Ожидаемая прибыль/мес (&#8381;)</label>
+                  <input type="number" id="calcMonthlyProfit" value="{{ avg_monthly_profit|default:0 }}" min="0" step="5000">
+                </div>
+                <div class="calc-field">
+                  <label for="calcFranchiseCost">Паушальный взнос (&#8381;)</label>
+                  <input type="number" id="calcFranchiseCost" value="{{ franchise.franchise_cost|default:0|floatformat:0 }}" min="0" step="10000">
+                </div>
+              </div>
+              <div class="calc-results">
+                <div class="calc-result"><span class="calc-result-label">Общие вложения</span><span class="calc-result-value" id="calcTotalInvestment">0 &#8381;</span></div>
+                <div class="calc-result"><span class="calc-result-label">Срок окупаемости</span><span class="calc-result-value" id="calcPaybackPeriod">&mdash;</span></div>
+                <div class="calc-result"><span class="calc-result-label">Прибыль за 1 год</span><span class="calc-result-value" id="calcAnnualProfit">&mdash;</span></div>
+                <div class="calc-result"><span class="calc-result-label">ROI за 1 год</span><span class="calc-result-value" id="calcROI">&mdash;</span></div>
+              </div>
+              {% if avg_monthly_profit %}
+              <p class="calc-hint">Средняя прибыль на основе данных {{ locations_count }} точек франшизы</p>
+              {% endif %}
+            </div>
+            <script>
+            (function() {
+              var inv = document.getElementById('calcInvestment');
+              var profit = document.getElementById('calcMonthlyProfit');
+              var fee = document.getElementById('calcFranchiseCost');
+              function calc() {
+                var i = parseFloat(inv.value) || 0;
+                var p = parseFloat(profit.value) || 0;
+                var f = parseFloat(fee.value) || 0;
+                var total = i + f;
+                document.getElementById('calcTotalInvestment').textContent = total.toLocaleString('ru-RU') + ' \u20BD';
+                if (p > 0) {
+                  var months = Math.ceil(total / p);
+                  document.getElementById('calcPaybackPeriod').textContent = months + ' мес';
+                  var yearProfit = p * 12 - total;
+                  document.getElementById('calcAnnualProfit').textContent = yearProfit.toLocaleString('ru-RU') + ' \u20BD';
+                  var roi = total > 0 ? Math.round((p * 12 / total) * 100 - 100) : 0;
+                  document.getElementById('calcROI').textContent = roi + '%';
+                } else {
+                  document.getElementById('calcPaybackPeriod').textContent = '\u2014';
+                  document.getElementById('calcAnnualProfit').textContent = '\u2014';
+                  document.getElementById('calcROI').textContent = '\u2014';
+                }
+              }
+              if (inv) { inv.addEventListener('input', calc); profit.addEventListener('input', calc); fee.addEventListener('input', calc); calc(); }
+            })();
+            </script>
+
           </div>
 
           <div id="gallery-section" class="content-section media-section">
@@ -364,83 +428,7 @@
           </div>
 
           
-          <div id="profit-calculation-section" class="content-section">
-            <h2 class="section-title">Стоимость и расчет прибыли</h2>
-            {% if franchise.profit_calculation %}
-            <div class="profit-calculation-wrapper">
-                <div class="profit-calculation-content">
-                    {{ franchise.profit_calculation|sanitize_html|safe|default:"Информация о расчете прибыли пока не добавлена." }}
-                </div>
-            </div>
-            {% endif %}
-
-            <!-- Калькулятор прибыльности -->
-            <div class="calc-widget">
-              <h3 class="calc-title">Калькулятор окупаемости</h3>
-              <div class="calc-inputs">
-                <div class="calc-field">
-                  <label for="calcInvestment">Начальные инвестиции (&#8381;)</label>
-                  <input type="number" id="calcInvestment" value="{{ franchise.investment_size|default:0|floatformat:0 }}" min="0" step="10000">
-                </div>
-                <div class="calc-field">
-                  <label for="calcMonthlyProfit">Ожидаемая прибыль/мес (&#8381;)</label>
-                  <input type="number" id="calcMonthlyProfit" value="{{ avg_monthly_profit|default:0 }}" min="0" step="5000">
-                </div>
-                <div class="calc-field">
-                  <label for="calcFranchiseCost">Паушальный взнос (&#8381;)</label>
-                  <input type="number" id="calcFranchiseCost" value="{{ franchise.franchise_cost|default:0|floatformat:0 }}" min="0" step="10000">
-                </div>
-              </div>
-              <div class="calc-results">
-                <div class="calc-result">
-                  <span class="calc-result-label">Общие вложения</span>
-                  <span class="calc-result-value" id="calcTotalInvestment">0 &#8381;</span>
-                </div>
-                <div class="calc-result">
-                  <span class="calc-result-label">Срок окупаемости</span>
-                  <span class="calc-result-value" id="calcPayback">— мес</span>
-                </div>
-                <div class="calc-result">
-                  <span class="calc-result-label">Прибыль за 1 год</span>
-                  <span class="calc-result-value" id="calcYearProfit">0 &#8381;</span>
-                </div>
-                <div class="calc-result">
-                  <span class="calc-result-label">ROI за 1 год</span>
-                  <span class="calc-result-value" id="calcROI">0%</span>
-                </div>
-              </div>
-              {% if avg_monthly_profit %}
-              <p class="calc-hint">Средняя прибыль рассчитана на основе данных {{ locations_count }} точ{{ locations_count|pluralize:"ки,ек,ек" }} франшизы</p>
-              {% endif %}
-            </div>
-            <script>
-            (function() {
-              var inv = document.getElementById('calcInvestment');
-              var profit = document.getElementById('calcMonthlyProfit');
-              var fee = document.getElementById('calcFranchiseCost');
-              function calc() {
-                var i = parseFloat(inv.value) || 0;
-                var p = parseFloat(profit.value) || 0;
-                var f = parseFloat(fee.value) || 0;
-                var total = i + f;
-                document.getElementById('calcTotalInvestment').textContent = total.toLocaleString('ru-RU') + ' \u20BD';
-                if (p > 0) {
-                  var months = Math.ceil(total / p);
-                  document.getElementById('calcPayback').textContent = months + ' мес';
-                  var yearProfit = p * 12 - total;
-                  document.getElementById('calcYearProfit').textContent = yearProfit.toLocaleString('ru-RU') + ' \u20BD';
-                  var roi = Math.round((p * 12 / total) * 100 - 100);
-                  document.getElementById('calcROI').textContent = roi + '%';
-                } else {
-                  document.getElementById('calcPayback').textContent = '\u2014';
-                  document.getElementById('calcYearProfit').textContent = '\u2014';
-                  document.getElementById('calcROI').textContent = '\u2014';
-                }
-              }
-              if (inv) { inv.addEventListener('input', calc); profit.addEventListener('input', calc); fee.addEventListener('input', calc); calc(); }
-            })();
-            </script>
-          </div>
+          {% comment %}Tab "Стоимость и расчет прибыли" moved into info-section above{% endcomment %}
 
           
           <div id="documents-section" class="content-section">

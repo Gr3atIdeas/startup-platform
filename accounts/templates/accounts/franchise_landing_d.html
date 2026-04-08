@@ -4,30 +4,42 @@
 {% load file_tags %}
 {% load accounts_extras %}
 
-{% block title %}От идеи к бизнесу — франшизы на Great Ideas{% endblock %}
-{% block meta_description %}<meta name="description" content="Выберите, проверьте и откройте франшизу за 4 шага. Реальные отзывы, AI-анализ, поддержка на каждом этапе.">{% endblock %}
+{% block title %}От идеи к бизнесу — франшизы Great Ideas{% endblock %}
+{% block meta_description %}<meta name="description" content="Выберите, проверьте и откройте франшизу за 4 шага. Реальные отзывы, AI-анализ, поддержка.">{% endblock %}
+
+{% block catalog_css %}<link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}">{% endblock %}
 
 {% block head_extra %}
 <style>
-  .fld { font-family: Inter, sans-serif; }
+  .fld { font-family: Unbounded, sans-serif; }
 
-  /* Hero */
   .fld-hero {
-    min-height: 85vh; display: flex; align-items: center; justify-content: center;
-    text-align: center; padding: 80px 20px;
-    background: radial-gradient(ellipse at 50% 30%, rgba(99,102,241,0.12) 0%, transparent 60%);
-    position: relative;
+    min-height: 90vh; display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 100px 20px; position: relative; overflow: hidden;
+  }
+  .fld-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 30%, rgba(0,78,159,0.25) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(255,239,43,0.04) 0%, transparent 40%);
+    pointer-events: none;
   }
   .fld-hero h1 {
-    font-family: Unbounded, sans-serif; font-size: clamp(30px, 5.5vw, 52px);
-    font-weight: 700; color: #fff; line-height: 1.15; margin-bottom: 20px;
+    font-family: 'Blippo Black', Unbounded, sans-serif;
+    font-size: clamp(32px, 6vw, 72px); font-weight: 900;
+    line-height: 0.95; margin-bottom: 24px; text-transform: uppercase;
+    position: relative; z-index: 1;
   }
-  .fld-hero h1 em { font-style: normal; color: #a78bfa; }
-  .fld-hero-sub { font-size: 18px; color: rgba(255,255,255,0.6); margin-bottom: 36px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6; }
-  .fld-btn { padding: 16px 36px; border-radius: 14px; font-size: 17px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s; }
-  .fld-btn--primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
-  .fld-btn--primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.4); }
-  .fld-btn--ghost { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; }
+  .fld-hero-sub {
+    font-size: 17px; color: rgba(255,255,255,0.55); margin-bottom: 40px;
+    max-width: 500px; margin-left: auto; margin-right: auto; font-weight: 300;
+    position: relative; z-index: 1; line-height: 1.6;
+  }
+
+  /* Shared buttons */
+  .fld-btn-yellow { padding: 16px 36px; border-radius: var(--radius-sm, 8px); border: none; background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%); color: #000; font-family: Unbounded, sans-serif; font-size: 16px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; box-shadow: 2px 2px 4px rgba(0,0,0,0.25); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+  .fld-btn-yellow:hover { transform: translateY(-2px); box-shadow: 3px 3px 8px rgba(0,0,0,0.35); }
+  .fld-btn-outline { padding: 16px 36px; border-radius: var(--radius-sm, 8px); background: transparent; border: 1px solid #ffef2b; color: #ffef2b; font-family: Unbounded, sans-serif; font-size: 16px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; transition: all 0.3s; }
+  .fld-btn-outline:hover { background: #ffef2b; color: #000; }
 
   /* Journey steps */
   .fld-journey { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
@@ -38,54 +50,57 @@
   .fld-step:nth-child(even) .fld-step-content { order: 2; }
   .fld-step:nth-child(even) .fld-step-visual { order: 1; }
   .fld-step-label {
-    font-family: Unbounded, sans-serif; font-size: 12px; font-weight: 600;
-    color: #a78bfa; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;
+    font-family: 'Blippo Black', sans-serif; font-size: 12px;
+    color: #ffef2b; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 12px;
   }
   .fld-step-title {
-    font-family: Unbounded, sans-serif; font-size: clamp(22px, 3vw, 30px);
-    font-weight: 500; color: #fff; margin-bottom: 16px; line-height: 1.3;
+    font-family: 'Blippo Black', Unbounded, sans-serif;
+    font-size: clamp(22px, 3vw, 32px); color: #fff; margin-bottom: 16px;
+    line-height: 1.1; text-transform: uppercase;
   }
-  .fld-step-text { font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.65; margin-bottom: 24px; }
-  .fld-step-features { list-style: none; padding: 0; margin: 0; }
-  .fld-step-features li {
-    padding: 8px 0; font-size: 15px; color: rgba(255,255,255,0.7);
-    display: flex; align-items: center; gap: 10px;
-  }
-  .fld-step-features li::before { content: '\2713'; color: #22c55e; font-weight: 700; }
+  .fld-step-text { font-size: 15px; color: rgba(255,255,255,0.55); line-height: 1.65; margin-bottom: 24px; font-weight: 300; }
+  .fld-step-features { list-style: none; padding: 0; }
+  .fld-step-features li { padding: 8px 0; font-size: 14px; color: rgba(255,255,255,0.65); display: flex; align-items: center; gap: 10px; font-weight: 300; }
+  .fld-step-features li::before { content: '\2713'; color: #ffef2b; font-weight: 700; }
   .fld-step-visual {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px; padding: 24px; min-height: 280px;
+    background: linear-gradient(180deg, #004e9f 0%, #001c39 100%);
+    border-radius: var(--radius-xl, 20px); padding: 28px; min-height: 260px;
     display: flex; flex-direction: column; justify-content: center;
   }
-
-  /* Franchise mini cards inside steps */
   .fld-mini-card {
-    background: rgba(255,255,255,0.06); border-radius: 12px; padding: 14px 16px;
-    margin-bottom: 10px; display: flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,0.06); border-radius: var(--radius-md, 12px);
+    padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px;
   }
   .fld-mini-card-icon { font-size: 28px; flex-shrink: 0; }
-  .fld-mini-card-title { font-family: Unbounded, sans-serif; font-size: 13px; color: #fff; }
-  .fld-mini-card-meta { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+  .fld-mini-card-title { font-size: 13px; color: #fff; font-weight: 500; }
+  .fld-mini-card-meta { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; font-weight: 300; }
 
   /* Owners section */
   .fld-owners {
     max-width: 1000px; margin: 0 auto; padding: 80px 20px; text-align: center;
   }
-  .fld-owners-title { font-family: Unbounded, sans-serif; font-size: 28px; font-weight: 500; color: #fff; margin-bottom: 16px; }
-  .fld-owners-sub { font-size: 16px; color: rgba(255,255,255,0.55); margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6; }
-  .fld-owners-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; text-align: left; margin-bottom: 32px; }
-  .fld-owners-card {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px; padding: 20px;
+  .fld-owners-title {
+    font-family: 'Blippo Black', sans-serif; font-size: clamp(20px, 3vw, 32px);
+    margin-bottom: 16px; text-transform: uppercase;
   }
+  .fld-owners-sub { font-size: 15px; color: rgba(255,255,255,0.5); margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; font-weight: 300; line-height: 1.6; }
+  .fld-owners-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; text-align: left; margin-bottom: 36px; }
+  .fld-owners-card {
+    background: linear-gradient(180deg, #004e9f 0%, #001c39 100%);
+    border-radius: var(--radius-xl, 20px); padding: 24px; transition: transform 0.3s;
+  }
+  .fld-owners-card:hover { transform: translateY(-4px); }
   .fld-owners-card-icon { font-size: 24px; margin-bottom: 10px; }
-  .fld-owners-card-title { font-family: Unbounded, sans-serif; font-size: 14px; font-weight: 500; color: #fff; margin-bottom: 6px; }
-  .fld-owners-card-text { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+  .fld-owners-card-title { font-size: 14px; font-weight: 600; color: #ffef2b; margin-bottom: 6px; }
+  .fld-owners-card-text { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; font-weight: 300; }
 
-  /* Final CTA */
   .fld-final {
-    text-align: center; padding: 80px 20px;
-    background: radial-gradient(ellipse at 50% 100%, rgba(99,102,241,0.12) 0%, transparent 60%);
+    text-align: center; padding: 100px 20px; position: relative;
+  }
+  .fld-final::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(0,78,159,0.2) 0%, transparent 60%);
+    pointer-events: none;
   }
 
   @media (max-width: 768px) {
@@ -100,33 +115,30 @@
 {% block content %}
 <div class="fld">
 
-  <!-- HERO -->
   <section class="fld-hero">
     <div>
-      <h1>От идеи — к <em>своему бизнесу</em></h1>
+      <h1><span style="color:#fff;">От идеи —</span><br><span style="color:#ffef2b;">к бизнесу</span></h1>
       <p class="fld-hero-sub">Выберите проверенную франшизу и откройте свой бизнес. Мы поможем на каждом шаге.</p>
-      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
-        <a href="{% url 'franchises_list' %}" class="fld-btn fld-btn--primary">Начать путь</a>
-        <a href="#step1" class="fld-btn fld-btn--ghost">Как это работает?</a>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap; position:relative; z-index:1;">
+        <a href="{% url 'franchises_list' %}" class="fld-btn-yellow">Начать путь</a>
+        <a href="#step1" class="fld-btn-outline">Как это работает?</a>
       </div>
     </div>
   </section>
 
-  <!-- JOURNEY -->
   <div class="fld-journey">
 
-    <!-- Step 1: Choose -->
     <div class="fld-step" id="step1">
       <div class="fld-step-content">
-        <div class="fld-step-label">Шаг 1</div>
-        <div class="fld-step-title">Выберите франшизу</div>
+        <div class="fld-step-label">Шаг 01</div>
+        <div class="fld-step-title">Выберите</div>
         <div class="fld-step-text">{{ total_franchises }} проверенных франшиз в {{ total_cities }} городах. Фильтруйте по бюджету, категории и городу.</div>
         <ul class="fld-step-features">
           <li>Фильтры по бюджету и окупаемости</li>
           <li>Категории: от общепита до IT</li>
           <li>Сортировка по рейтингу и популярности</li>
         </ul>
-        <a href="{% url 'franchises_list' %}" class="fld-btn fld-btn--primary" style="margin-top:16px; font-size:14px; padding:12px 24px;">Открыть каталог</a>
+        <a href="{% url 'franchises_list' %}" class="fld-btn-yellow" style="margin-top:16px; font-size:14px; padding:12px 24px;">Открыть каталог</a>
       </div>
       <div class="fld-step-visual">
         {% for franchise in top_franchises|slice:":3" %}
@@ -135,7 +147,7 @@
           <div>
             <div class="fld-mini-card-title">{{ franchise.title }}</div>
             <div class="fld-mini-card-meta">
-              {% if franchise.direction %}{{ franchise.direction.direction_name }}{% endif %}
+              {% if franchise.direction %}{{ franchise.direction.direction_name|translate_category }}{% endif %}
               {% if franchise.investment_size %} &bull; от {{ franchise.investment_size|floatformat:0|intcomma }} &#8381;{% endif %}
             </div>
           </div>
@@ -144,12 +156,11 @@
       </div>
     </div>
 
-    <!-- Step 2: Verify -->
     <div class="fld-step">
       <div class="fld-step-content">
-        <div class="fld-step-label">Шаг 2</div>
+        <div class="fld-step-label">Шаг 02</div>
         <div class="fld-step-title">Проверьте</div>
-        <div class="fld-step-text">Мы делаем то, что конкуренты не делают — собираем реальные отзывы от действующих франчайзи. Не рекламу, а правду.</div>
+        <div class="fld-step-text">Мы делаем то, что конкуренты не делают — собираем реальные отзывы от действующих франчайзи.</div>
         <ul class="fld-step-features">
           <li>Отзывы действующих франчайзи</li>
           <li>AI-анализ финансов и условий</li>
@@ -157,96 +168,72 @@
           <li>География присутствия</li>
         </ul>
       </div>
-      <div class="fld-step-visual">
-        <div style="text-align:center; padding:20px;">
-          <div style="font-size:64px; margin-bottom:16px;">&#129302;</div>
-          <div style="font-family:Unbounded,sans-serif; font-size:14px; color:#fff; margin-bottom:8px;">AI-анализ каждой франшизы</div>
-          <div style="font-size:13px; color:rgba(255,255,255,0.5); line-height:1.5;">Финансовые показатели, условия партнёрства, окупаемость, риски</div>
-        </div>
+      <div class="fld-step-visual" style="text-align:center;">
+        <div style="font-size:56px; margin-bottom:16px;">&#129302;</div>
+        <div style="font-size:15px; color:#ffef2b; margin-bottom:8px; font-weight:600;">AI-анализ</div>
+        <div style="font-size:13px; color:rgba(255,255,255,0.5); font-weight:300;">Финансы, условия, окупаемость, риски</div>
       </div>
     </div>
 
-    <!-- Step 3: Connect -->
     <div class="fld-step">
       <div class="fld-step-content">
-        <div class="fld-step-label">Шаг 3</div>
+        <div class="fld-step-label">Шаг 03</div>
         <div class="fld-step-title">Свяжитесь</div>
-        <div class="fld-step-text">Оставьте заявку — владелец франшизы получит уведомление и свяжется с вами. Укажите бюджет и город, чтобы получить точное предложение.</div>
+        <div class="fld-step-text">Оставьте заявку — владелец получит уведомление и свяжется. Укажите бюджет и город для точного предложения.</div>
         <ul class="fld-step-features">
           <li>Мгновенное уведомление владельцу</li>
           <li>Контакты и бюджет под рукой</li>
-          <li>Всё бесплатно для покупателя</li>
+          <li>Бесплатно для покупателя</li>
         </ul>
       </div>
-      <div class="fld-step-visual">
-        <div style="padding:20px;">
-          <div style="background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.2); border-radius:12px; padding:20px; margin-bottom:12px;">
-            <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:4px;">&#128233; Заявка отправлена</div>
-            <div style="font-family:Unbounded,sans-serif; font-size:14px; color:#fff;">Владелец получил ваши контакты</div>
-          </div>
-          <div style="background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.2); border-radius:12px; padding:20px;">
-            <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:4px;">&#9989; Ответ получен</div>
-            <div style="font-family:Unbounded,sans-serif; font-size:14px; color:#fff;">Обсудите условия и начните</div>
-          </div>
+      <div class="fld-step-visual" style="padding:24px;">
+        <div style="background:rgba(255,239,43,0.08); border:1px solid rgba(255,239,43,0.2); border-radius:12px; padding:20px; margin-bottom:12px;">
+          <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:4px;">&#128233; Заявка отправлена</div>
+          <div style="font-size:14px; color:#ffef2b; font-weight:600;">Владелец получил контакты</div>
+        </div>
+        <div style="background:rgba(255,239,43,0.05); border:1px solid rgba(255,239,43,0.12); border-radius:12px; padding:20px;">
+          <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:4px;">&#9989; Ответ получен</div>
+          <div style="font-size:14px; color:#fff; font-weight:500;">Обсудите условия и начните</div>
         </div>
       </div>
     </div>
 
-    <!-- Step 4: Launch -->
     <div class="fld-step" style="border-bottom:none;">
       <div class="fld-step-content">
-        <div class="fld-step-label">Шаг 4</div>
-        <div class="fld-step-title">Откройте свой бизнес</div>
-        <div class="fld-step-text">Тысячи людей уже сделали этот шаг. Франшиза — это проверенная бизнес-модель с поддержкой на старте.</div>
-        <a href="{% url 'franchises_list' %}" class="fld-btn fld-btn--primary" style="margin-top:16px; font-size:14px; padding:12px 24px;">Выбрать франшизу</a>
+        <div class="fld-step-label">Шаг 04</div>
+        <div class="fld-step-title">Откройте</div>
+        <div class="fld-step-text">Франшиза — проверенная бизнес-модель с поддержкой на старте. Тысячи людей уже сделали этот шаг.</div>
+        <a href="{% url 'franchises_list' %}" class="fld-btn-yellow" style="margin-top:16px; font-size:14px; padding:12px 24px;">Выбрать франшизу</a>
       </div>
-      <div class="fld-step-visual">
-        <div style="text-align:center; padding:20px;">
-          <div style="font-size:64px; margin-bottom:16px;">&#127881;</div>
-          <div style="font-family:Unbounded,sans-serif; font-size:16px; color:#fff; margin-bottom:8px;">Ваш бизнес работает</div>
-          <div style="font-size:14px; color:rgba(255,255,255,0.5);">Поддержка франчайзера + проверенная модель</div>
-        </div>
+      <div class="fld-step-visual" style="text-align:center;">
+        <div style="font-size:56px; margin-bottom:16px;">&#127881;</div>
+        <div style="font-family:'Blippo Black',sans-serif; font-size:18px; color:#ffef2b; margin-bottom:8px; text-transform:uppercase;">Ваш бизнес</div>
+        <div style="font-size:14px; color:rgba(255,255,255,0.5); font-weight:300;">Поддержка + проверенная модель</div>
       </div>
     </div>
 
   </div>
 
-  <!-- FOR OWNERS -->
   <section class="fld-owners">
-    <div class="fld-owners-title">Вы владелец франшизы?</div>
+    <div class="fld-owners-title"><span style="color:#fff;">Вы владелец</span> <span style="color:#ffef2b;">франшизы?</span></div>
     <div class="fld-owners-sub">Разместите бесплатно и получайте заявки от заинтересованных предпринимателей</div>
     <div class="fld-owners-grid">
-      <div class="fld-owners-card">
-        <div class="fld-owners-card-icon">&#128200;</div>
-        <div class="fld-owners-card-title">Аналитика</div>
-        <div class="fld-owners-card-text">Просмотры, география, клики, конверсия — в реальном времени</div>
-      </div>
-      <div class="fld-owners-card">
-        <div class="fld-owners-card-icon">&#128233;</div>
-        <div class="fld-owners-card-title">Заявки</div>
-        <div class="fld-owners-card-text">Контакты с бюджетом и городом. Экспорт в Excel</div>
-      </div>
-      <div class="fld-owners-card">
-        <div class="fld-owners-card-icon">&#128279;</div>
-        <div class="fld-owners-card-title">CRM-интеграция</div>
-        <div class="fld-owners-card-text">Bitrix24, AmoCRM — лиды улетают в вашу CRM автоматически</div>
-      </div>
-      <div class="fld-owners-card">
-        <div class="fld-owners-card-icon">&#128270;</div>
-        <div class="fld-owners-card-title">SEO-продвижение</div>
-        <div class="fld-owners-card-text">Городские страницы, статьи, структурированные данные в поиске</div>
-      </div>
+      <div class="fld-owners-card"><div class="fld-owners-card-icon">&#128200;</div><div class="fld-owners-card-title">Аналитика</div><div class="fld-owners-card-text">Просмотры, география, клики, конверсия</div></div>
+      <div class="fld-owners-card"><div class="fld-owners-card-icon">&#128233;</div><div class="fld-owners-card-title">Заявки</div><div class="fld-owners-card-text">Контакты с бюджетом и городом. Excel</div></div>
+      <div class="fld-owners-card"><div class="fld-owners-card-icon">&#128279;</div><div class="fld-owners-card-title">CRM</div><div class="fld-owners-card-text">Bitrix24, AmoCRM — лиды автоматически</div></div>
+      <div class="fld-owners-card"><div class="fld-owners-card-icon">&#128270;</div><div class="fld-owners-card-title">SEO</div><div class="fld-owners-card-text">Городские страницы, статьи в поиске</div></div>
     </div>
-    <a href="{% url 'create_franchise' %}" class="fld-btn fld-btn--primary">Разместить франшизу бесплатно</a>
+    <a href="{% url 'create_franchise' %}" class="fld-btn-yellow">Разместить бесплатно</a>
   </section>
 
-  <!-- FINAL CTA -->
   <section class="fld-final">
-    <h2 style="font-family:Unbounded,sans-serif; font-size:clamp(24px,4vw,36px); font-weight:600; color:#fff; margin-bottom:16px;">Готовы начать?</h2>
-    <p style="font-size:17px; color:rgba(255,255,255,0.55); margin-bottom:32px; max-width:450px; margin-left:auto; margin-right:auto; line-height:1.6;">Ваш будущий бизнес ждёт. Выберите франшизу или разместите свою.</p>
-    <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
-      <a href="{% url 'franchises_list' %}" class="fld-btn fld-btn--primary">Открыть каталог</a>
-      <a href="{% url 'create_franchise' %}" class="fld-btn fld-btn--ghost">Разместить франшизу</a>
+    <div style="position:relative; z-index:1;">
+      <h2 style="font-family:'Blippo Black',sans-serif; font-size:clamp(24px,4vw,40px); margin-bottom:16px; text-transform:uppercase;"><span style="color:#fff;">Готовы</span> <span style="color:#ffef2b;">начать?</span></h2>
+      <p style="font-size:16px; color:rgba(255,255,255,0.5); margin-bottom:36px; max-width:450px; margin-left:auto; margin-right:auto; font-weight:300; line-height:1.6;">Ваш будущий бизнес ждёт</p>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <a href="{% url 'franchises_list' %}" class="fld-btn-yellow">Открыть каталог</a>
+        <a href="{% url 'create_franchise' %}" class="fld-btn-outline">Разместить франшизу</a>
+      </div>
     </div>
   </section>
 

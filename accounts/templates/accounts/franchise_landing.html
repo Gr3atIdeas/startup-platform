@@ -16,228 +16,253 @@
 <meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
 {% endblock %}
 
+{% block catalog_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}">
+{% endblock %}
+
 {% block head_extra %}
 <style>
-  .fl-page { font-family: Inter, sans-serif; }
+  .fl { font-family: Unbounded, sans-serif; }
 
   /* ── Hero ── */
   .fl-hero {
-    min-height: 80vh; display: flex; align-items: center; justify-content: center;
-    text-align: center; padding: 80px 20px 60px;
-    background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.15) 0%, transparent 60%);
-    position: relative;
+    min-height: 85vh; display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 100px 20px 60px; position: relative; overflow: hidden;
   }
-  .fl-hero-inner { max-width: 800px; }
+  .fl-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 30%, rgba(0,78,159,0.25) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, rgba(255,239,43,0.06) 0%, transparent 40%);
+    pointer-events: none;
+  }
+  .fl-hero-inner { position: relative; z-index: 2; max-width: 900px; }
   .fl-hero h1 {
-    font-family: Unbounded, sans-serif; font-size: clamp(28px, 5vw, 48px);
-    font-weight: 600; color: #fff; line-height: 1.2; margin-bottom: 20px;
+    font-family: 'Blippo Black', Unbounded, sans-serif;
+    font-size: clamp(32px, 6vw, 70px); font-weight: 900;
+    line-height: 0.95; margin-bottom: 24px; text-transform: uppercase;
   }
-  .fl-hero h1 span { color: #a78bfa; }
+  .fl-hero h1 .white { color: #fff; }
+  .fl-hero h1 .yellow { color: #ffef2b; }
   .fl-hero-sub {
-    font-size: 18px; color: rgba(255,255,255,0.65); line-height: 1.6;
-    margin-bottom: 36px; max-width: 600px; margin-left: auto; margin-right: auto;
+    font-family: Unbounded, sans-serif; font-size: clamp(14px, 2vw, 18px);
+    color: rgba(255,255,255,0.6); line-height: 1.6; margin-bottom: 40px;
+    max-width: 600px; margin-left: auto; margin-right: auto; font-weight: 300;
   }
   .fl-hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-  .fl-btn {
-    padding: 14px 32px; border-radius: 14px; font-family: Inter, sans-serif;
-    font-size: 16px; font-weight: 600; text-decoration: none; transition: all 0.3s;
-    display: inline-flex; align-items: center; gap: 8px;
-  }
-  .fl-btn--primary {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; border: none;
-  }
-  .fl-btn--primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.4); }
-  .fl-btn--secondary {
-    background: transparent; color: #fff;
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-  .fl-btn--secondary:hover { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.05); }
-  .fl-hero-stats {
-    display: flex; gap: 40px; justify-content: center; margin-top: 48px;
-    flex-wrap: wrap;
-  }
-  .fl-hero-stat { text-align: center; }
-  .fl-hero-stat-value {
-    font-family: Unbounded, sans-serif; font-size: 32px; font-weight: 700; color: #fff;
-  }
-  .fl-hero-stat-label { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 4px; }
 
-  /* ── Section shared ── */
-  .fl-section {
-    max-width: 1200px; margin: 0 auto; padding: 80px 20px;
+  /* Buttons matching main page */
+  .fl-btn-yellow {
+    padding: 14px 32px; border-radius: var(--radius-sm, 8px); border: none;
+    background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+    color: #000; font-family: Unbounded, sans-serif; font-size: 15px; font-weight: 600;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.25); cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
+  .fl-btn-yellow:hover { transform: translateY(-2px); box-shadow: 3px 3px 8px rgba(0,0,0,0.35); background: linear-gradient(180deg, #e6d329 0%, #e0dec0 100%); }
+
+  .fl-btn-blue {
+    padding: 14px 32px; border-radius: var(--radius-sm, 8px); border: none;
+    background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
+    color: #fff; font-family: Unbounded, sans-serif; font-size: 15px; font-weight: 600;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
+    cursor: pointer; transition: transform 0.2s;
+  }
+  .fl-btn-blue:hover { transform: scale(1.05); background: linear-gradient(0deg, #004186 0%, #005bb5 100%); }
+
+  .fl-btn-outline {
+    padding: 14px 32px; border-radius: var(--radius-sm, 8px);
+    background: transparent; border: 1px solid #ffef2b;
+    color: #ffef2b; font-family: Unbounded, sans-serif; font-size: 15px; font-weight: 500;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .fl-btn-outline:hover { background: #ffef2b; color: #000; }
+
+  /* Stats */
+  .fl-stats {
+    display: flex; gap: 50px; justify-content: center; margin-top: 56px; flex-wrap: wrap;
+  }
+  .fl-stat { text-align: center; }
+  .fl-stat-val {
+    font-family: 'Blippo Black', Unbounded, sans-serif;
+    font-size: clamp(28px, 4vw, 48px); color: #ffef2b;
+  }
+  .fl-stat-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; font-weight: 300; }
+
+  /* ── Sections ── */
+  .fl-section { max-width: 1303px; margin: 0 auto; padding: 80px 20px; }
+  .fl-section-head { text-align: center; margin-bottom: 48px; }
   .fl-section-title {
-    font-family: Unbounded, sans-serif; font-size: clamp(22px, 3vw, 32px);
-    font-weight: 500; color: #fff; text-align: center; margin-bottom: 16px;
+    font-family: 'Blippo Black', Unbounded, sans-serif;
+    font-size: clamp(22px, 3.5vw, 42px); text-transform: uppercase;
+    margin-bottom: 12px;
   }
-  .fl-section-subtitle {
-    font-size: 16px; color: rgba(255,255,255,0.55); text-align: center;
-    max-width: 600px; margin: 0 auto 48px; line-height: 1.6;
+  .fl-section-sub {
+    font-size: 15px; color: rgba(255,255,255,0.5); max-width: 550px;
+    margin: 0 auto; line-height: 1.6; font-weight: 300;
   }
 
-  /* ── How we verify ── */
+  /* ── Steps ── */
   .fl-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .fl-step {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px; padding: 32px 24px; text-align: center; transition: all 0.3s;
+    background: linear-gradient(180deg, #004e9f 0%, #001c39 100%);
+    border-radius: var(--radius-xl, 20px); padding: 36px 28px; text-align: center;
+    position: relative; overflow: hidden; transition: transform 0.3s;
   }
-  .fl-step:hover { border-color: rgba(99,102,241,0.3); transform: translateY(-4px); }
-  .fl-step-icon {
-    width: 64px; height: 64px; border-radius: 16px; margin: 0 auto 20px;
-    display: flex; align-items: center; justify-content: center; font-size: 28px;
-    background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2));
+  .fl-step:hover { transform: translateY(-6px); }
+  .fl-step::before {
+    content: ''; position: absolute; inset: 0; opacity: 0;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent);
+    transition: opacity 0.3s;
   }
+  .fl-step:hover::before { opacity: 1; }
+  .fl-step-num {
+    font-family: 'Blippo Black', sans-serif; font-size: 48px;
+    color: rgba(255,239,43,0.15); position: absolute; top: 12px; right: 16px;
+  }
+  .fl-step-icon { font-size: 36px; margin-bottom: 16px; position: relative; z-index: 1; }
   .fl-step-title {
-    font-family: Unbounded, sans-serif; font-size: 16px; font-weight: 500;
-    color: #fff; margin-bottom: 12px;
+    font-family: Unbounded, sans-serif; font-size: 16px; font-weight: 600;
+    color: #fff; margin-bottom: 10px; position: relative; z-index: 1;
   }
-  .fl-step-text { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.6; }
-  .fl-step-number {
-    font-family: Unbounded, sans-serif; font-size: 48px; font-weight: 700;
-    color: rgba(99,102,241,0.15); position: absolute; top: 16px; right: 20px;
+  .fl-step-text {
+    font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6;
+    font-weight: 300; position: relative; z-index: 1;
   }
-
-  /* ── Franchise grid ── */
-  .fl-franchise-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;
-  }
-  .fl-franchise-card {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px; overflow: hidden; transition: all 0.3s; text-decoration: none;
-    display: block;
-  }
-  .fl-franchise-card:hover { border-color: rgba(99,102,241,0.3); transform: translateY(-4px); }
-  .fl-franchise-card-img {
-    height: 180px; background: rgba(255,255,255,0.02);
-    display: flex; align-items: center; justify-content: center; overflow: hidden;
-  }
-  .fl-franchise-card-img img { width: 100%; height: 100%; object-fit: cover; }
-  .fl-franchise-card-body { padding: 20px; }
-  .fl-franchise-card-title {
-    font-family: Unbounded, sans-serif; font-size: 16px; font-weight: 500;
-    color: #fff; margin-bottom: 8px;
-  }
-  .fl-franchise-card-meta {
-    display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px;
-  }
-  .fl-franchise-card-meta span {
-    font-size: 13px; color: rgba(255,255,255,0.5);
-    display: flex; align-items: center; gap: 4px;
-  }
-  .fl-franchise-card-desc {
-    font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.5;
-  }
-  .fl-franchise-card-rating { color: #fbbf24; }
-
-  /* ── For owners ── */
-  .fl-owners {
-    background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08));
-    border: 1px solid rgba(99,102,241,0.15); border-radius: 24px;
-    padding: 60px 40px; margin: 0 auto; max-width: 1200px;
-  }
-  .fl-owners-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 32px; }
-  .fl-owners-item {
-    display: flex; gap: 16px; align-items: flex-start;
-  }
-  .fl-owners-icon {
-    width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
-    background: rgba(99,102,241,0.15); display: flex; align-items: center;
-    justify-content: center; font-size: 22px;
-  }
-  .fl-owners-item-title {
-    font-family: Unbounded, sans-serif; font-size: 15px; font-weight: 500;
-    color: #fff; margin-bottom: 6px;
-  }
-  .fl-owners-item-text { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.5; }
 
   /* ── Categories ── */
-  .fl-categories { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 48px; }
-  .fl-category-chip {
-    padding: 10px 20px; border-radius: 24px; font-size: 14px; font-weight: 500;
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.7); text-decoration: none; transition: all 0.2s;
+  .fl-cats { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .fl-cat {
+    padding: 8px 20px; border-radius: var(--radius-full, 9999px); font-size: 14px; font-weight: 400;
+    background: rgba(255,239,43,0.08); border: 1px solid rgba(255,239,43,0.2);
+    color: #ffef2b; text-decoration: none; transition: all 0.3s;
     display: flex; align-items: center; gap: 6px;
   }
-  .fl-category-chip:hover { background: rgba(99,102,241,0.15); border-color: rgba(99,102,241,0.3); color: #fff; }
-  .fl-category-count {
-    font-size: 12px; background: rgba(255,255,255,0.1); padding: 2px 8px;
-    border-radius: 10px; color: rgba(255,255,255,0.5);
+  .fl-cat:hover { background: #ffef2b; color: #000; border-color: #ffef2b; }
+  .fl-cat-count { font-size: 11px; opacity: 0.6; }
+
+  /* ── Franchise cards ── */
+  .fl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
+  .fl-card {
+    border-radius: var(--radius-xl, 20px); overflow: hidden;
+    background: linear-gradient(180deg, rgba(0,78,159,0.15) 0%, rgba(0,0,0,0.3) 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-decoration: none; display: block; transition: transform 0.3s, border-color 0.3s;
   }
+  .fl-card:hover { transform: translateY(-4px); border-color: rgba(255,239,43,0.3); }
+  .fl-card-img { aspect-ratio: 16/9; overflow: hidden; position: relative; }
+  .fl-card-img img { width: 100%; height: 100%; object-fit: cover; }
+  .fl-card-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(0,78,159,0.15); color: rgba(255,255,255,0.15); font-size: 48px; }
+  .fl-card-badge {
+    position: absolute; bottom: 10px; left: 10px;
+    padding: 4px 12px; border-radius: var(--radius-full, 9999px);
+    background: rgba(255,239,43,0.15); border: 1px solid rgba(255,239,43,0.3);
+    font-size: 12px; color: #ffef2b; font-weight: 500;
+  }
+  .fl-card-body { padding: 20px 24px; }
+  .fl-card-title {
+    font-family: Unbounded, sans-serif; font-size: 17px; font-weight: 600;
+    color: #fff; margin-bottom: 10px;
+  }
+  .fl-card-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+  .fl-card-meta span { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 300; }
+
+  /* ── Owners block ── */
+  .fl-owners {
+    background: linear-gradient(180deg, #004e9f 0%, #001c39 100%);
+    border-radius: var(--radius-xl, 20px); padding: 60px 48px;
+    position: relative; overflow: hidden;
+  }
+  .fl-owners::before {
+    content: ''; position: absolute; top: -50%; right: -20%; width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,239,43,0.08), transparent);
+    pointer-events: none;
+  }
+  .fl-owners-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 36px; }
+  .fl-owners-item { display: flex; gap: 16px; align-items: flex-start; position: relative; z-index: 1; }
+  .fl-owners-icon {
+    width: 52px; height: 52px; border-radius: var(--radius-md, 12px); flex-shrink: 0;
+    background: rgba(255,239,43,0.1); border: 1px solid rgba(255,239,43,0.2);
+    display: flex; align-items: center; justify-content: center; font-size: 24px;
+  }
+  .fl-owners-title { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+  .fl-owners-text { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.5; font-weight: 300; }
 
   /* ── Articles ── */
   .fl-articles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .fl-article-card {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px; padding: 24px; text-decoration: none; transition: all 0.3s;
+  .fl-article {
+    border-radius: var(--radius-xl, 20px); padding: 28px;
+    background: linear-gradient(180deg, rgba(0,78,159,0.12) 0%, rgba(0,0,0,0.2) 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+    text-decoration: none; transition: all 0.3s;
   }
-  .fl-article-card:hover { border-color: rgba(99,102,241,0.3); }
-  .fl-article-title {
-    font-family: Unbounded, sans-serif; font-size: 15px; font-weight: 500;
-    color: #fff; margin-bottom: 10px; line-height: 1.4;
-  }
-  .fl-article-date { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .fl-article:hover { border-color: rgba(255,239,43,0.2); transform: translateY(-2px); }
+  .fl-article-title { font-size: 15px; font-weight: 500; color: #fff; margin-bottom: 10px; line-height: 1.4; }
+  .fl-article-date { font-size: 12px; color: rgba(255,255,255,0.35); font-weight: 300; }
 
   /* ── FAQ ── */
-  .fl-faq-item {
-    border-bottom: 1px solid rgba(255,255,255,0.08); padding: 20px 0;
-  }
+  .fl-faq { max-width: 700px; margin: 0 auto; }
+  .fl-faq-item { border-bottom: 1px solid rgba(255,255,255,0.08); padding: 20px 0; }
   .fl-faq-q {
-    font-family: Unbounded, sans-serif; font-size: 15px; font-weight: 500;
-    color: #fff; cursor: pointer; display: flex; justify-content: space-between;
-    align-items: center;
+    font-size: 15px; font-weight: 500; color: #fff; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
   }
-  .fl-faq-q::after { content: '+'; font-size: 20px; color: rgba(255,255,255,0.4); transition: 0.2s; }
-  .fl-faq-q.open::after { content: '-'; }
+  .fl-faq-q::after { content: '+'; font-size: 22px; color: #ffef2b; transition: 0.2s; }
+  .fl-faq-q.open::after { content: '\2212'; }
   .fl-faq-a {
-    font-size: 15px; color: rgba(255,255,255,0.6); line-height: 1.65;
-    max-height: 0; overflow: hidden; transition: max-height 0.3s; padding: 0;
+    font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.65; font-weight: 300;
+    max-height: 0; overflow: hidden; transition: max-height 0.3s;
   }
   .fl-faq-a.open { max-height: 300px; padding-top: 12px; }
 
   /* ── Final CTA ── */
-  .fl-final-cta {
-    text-align: center; padding: 80px 20px;
-    background: radial-gradient(ellipse at 50% 100%, rgba(99,102,241,0.1) 0%, transparent 60%);
+  .fl-final {
+    text-align: center; padding: 100px 20px; position: relative;
+  }
+  .fl-final::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(0,78,159,0.2) 0%, transparent 60%);
+    pointer-events: none;
   }
 
-  /* ── Responsive ── */
   @media (max-width: 768px) {
     .fl-steps { grid-template-columns: 1fr; }
     .fl-owners-grid { grid-template-columns: 1fr; }
     .fl-articles { grid-template-columns: 1fr; }
-    .fl-hero-stats { gap: 24px; }
-    .fl-franchise-grid { grid-template-columns: 1fr; }
+    .fl-grid { grid-template-columns: 1fr; }
+    .fl-owners { padding: 40px 24px; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="fl-page">
+<div class="fl">
 
   <!-- ════ HERO ════ -->
   <section class="fl-hero">
     <div class="fl-hero-inner">
-      <h1>Проверенные франшизы —<br><span>инвестируйте с уверенностью</span></h1>
+      <h1><span class="white">Проверенные</span><br><span class="yellow">франшизы</span></h1>
       <p class="fl-hero-sub">
         Мы собираем реальные отзывы франчайзи и анализируем каждую франшизу с помощью AI.
-        Вы получаете только проверенную информацию для принятия решений.
+        Инвестируйте с уверенностью.
       </p>
       <div class="fl-hero-buttons">
-        <a href="{% url 'franchises_list' %}" class="fl-btn fl-btn--primary">Выбрать франшизу</a>
-        <a href="{% url 'create_franchise' %}" class="fl-btn fl-btn--secondary">Разместить франшизу</a>
+        <a href="{% url 'franchises_list' %}" class="fl-btn-yellow">Выбрать франшизу</a>
+        <a href="{% url 'create_franchise' %}" class="fl-btn-outline">Разместить франшизу</a>
       </div>
-      <div class="fl-hero-stats">
-        <div class="fl-hero-stat">
-          <div class="fl-hero-stat-value">{{ total_franchises }}</div>
-          <div class="fl-hero-stat-label">проверенных франшиз</div>
+      <div class="fl-stats">
+        <div class="fl-stat">
+          <div class="fl-stat-val">{{ total_franchises }}</div>
+          <div class="fl-stat-label">проверенных франшиз</div>
         </div>
-        <div class="fl-hero-stat">
-          <div class="fl-hero-stat-value">{{ total_cities }}</div>
-          <div class="fl-hero-stat-label">городов присутствия</div>
+        <div class="fl-stat">
+          <div class="fl-stat-val">{{ total_cities }}</div>
+          <div class="fl-stat-label">городов</div>
         </div>
-        <div class="fl-hero-stat">
-          <div class="fl-hero-stat-value">{{ total_leads }}+</div>
-          <div class="fl-hero-stat-label">заявок от покупателей</div>
+        <div class="fl-stat">
+          <div class="fl-stat-val">{{ total_leads }}+</div>
+          <div class="fl-stat-label">заявок</div>
         </div>
       </div>
     </div>
@@ -245,24 +270,28 @@
 
   <!-- ════ КАК МЫ ПРОВЕРЯЕМ ════ -->
   <section class="fl-section">
-    <h2 class="fl-section-title">Как мы проверяем франшизы</h2>
-    <p class="fl-section-subtitle">Каждая франшиза на платформе проходит комплексную проверку перед публикацией</p>
-
+    <div class="fl-section-head">
+      <h2 class="fl-section-title"><span style="color:#fff;">Как мы</span> <span style="color:#ffef2b;">проверяем</span></h2>
+      <p class="fl-section-sub">Каждая франшиза проходит комплексную проверку перед публикацией</p>
+    </div>
     <div class="fl-steps">
-      <div class="fl-step" style="position:relative;">
+      <div class="fl-step">
+        <div class="fl-step-num">01</div>
         <div class="fl-step-icon">&#129302;</div>
         <div class="fl-step-title">AI-анализ</div>
-        <div class="fl-step-text">Искусственный интеллект анализирует финансовые показатели, условия и окупаемость каждой франшизы</div>
+        <div class="fl-step-text">Искусственный интеллект анализирует финансовые показатели, условия и окупаемость</div>
       </div>
-      <div class="fl-step" style="position:relative;">
+      <div class="fl-step">
+        <div class="fl-step-num">02</div>
         <div class="fl-step-icon">&#128172;</div>
         <div class="fl-step-title">Отзывы франчайзи</div>
-        <div class="fl-step-text">Мы находим и опрашиваем действующих франчайзи, чтобы вы получали реальные отзывы, а не рекламу</div>
+        <div class="fl-step-text">Мы находим и опрашиваем действующих франчайзи для реальных отзывов</div>
       </div>
-      <div class="fl-step" style="position:relative;">
+      <div class="fl-step">
+        <div class="fl-step-num">03</div>
         <div class="fl-step-icon">&#128203;</div>
         <div class="fl-step-title">Модерация</div>
-        <div class="fl-step-text">Каждая франшиза проходит ручную проверку модератором: условия, документы, репутация</div>
+        <div class="fl-step-text">Ручная проверка условий, документов и репутации модератором</div>
       </div>
     </div>
   </section>
@@ -270,12 +299,14 @@
   <!-- ════ КАТЕГОРИИ ════ -->
   {% if franchise_directions %}
   <section class="fl-section" style="padding-top:0;">
-    <h2 class="fl-section-title">Популярные категории</h2>
-    <div class="fl-categories">
+    <div class="fl-section-head">
+      <h2 class="fl-section-title" style="font-size:clamp(18px,3vw,28px);"><span style="color:#fff;">Популярные</span> <span style="color:#ffef2b;">категории</span></h2>
+    </div>
+    <div class="fl-cats">
       {% for d in franchise_directions %}
-      <a href="{% url 'franchises_by_direction' direction_id=d.direction_id %}" class="fl-category-chip">
-        {{ d.direction_name }}
-        <span class="fl-category-count">{{ d.franchise_count }}</span>
+      <a href="{% url 'franchises_list' %}?category={{ d.direction_id }}" class="fl-cat">
+        {{ d.direction_name|translate_category }}
+        <span class="fl-cat-count">{{ d.franchise_count }}</span>
       </a>
       {% endfor %}
     </div>
@@ -284,85 +315,78 @@
 
   <!-- ════ ТОП ФРАНШИЗЫ ════ -->
   <section class="fl-section" style="padding-top:0;">
-    <h2 class="fl-section-title">Лучшие франшизы</h2>
-    <p class="fl-section-subtitle">Самые популярные и высоко оцененные франшизы на платформе</p>
-
-    <div class="fl-franchise-grid">
-      {% for franchise in top_franchises %}
-      <a href="{% url 'franchise_detail' slug=franchise.slug|default:franchise.franchise_id %}" class="fl-franchise-card">
-        <div class="fl-franchise-card-img">
+    <div class="fl-section-head">
+      <h2 class="fl-section-title"><span style="color:#fff;">Лучшие</span> <span style="color:#ffef2b;">франшизы</span></h2>
+      <p class="fl-section-sub">Самые популярные и высоко оцененные на платформе</p>
+    </div>
+    <div class="fl-grid">
+      {% for franchise in top_franchises|slice:":6" %}
+      <a href="{% url 'franchise_detail' slug=franchise.slug|default:franchise.franchise_id %}" class="fl-card">
+        <div class="fl-card-img">
           {% if franchise.get_catalog_card_image_url %}
             <img src="{{ franchise.get_catalog_card_image_url }}" alt="{{ franchise.title }}" loading="lazy">
           {% else %}
-            <div style="color:rgba(255,255,255,0.2); font-size:40px;">&#127968;</div>
+            <div class="fl-card-img-placeholder">&#127968;</div>
+          {% endif %}
+          {% if franchise.direction %}
+          <span class="fl-card-badge">{{ franchise.direction.direction_name|translate_category }}</span>
           {% endif %}
         </div>
-        <div class="fl-franchise-card-body">
-          <div class="fl-franchise-card-title">{{ franchise.title }}</div>
-          <div class="fl-franchise-card-meta">
-            {% if franchise.direction %}
-            <span>{{ franchise.direction.direction_name }}</span>
-            {% endif %}
-            {% if franchise.investment_size %}
-            <span>&#128176; от {{ franchise.investment_size|floatformat:0|intcomma }} &#8381;</span>
-            {% endif %}
-            {% if franchise.payback_period %}
-            <span>&#9203; {{ franchise.payback_period }} мес.</span>
-            {% endif %}
-            {% if franchise.total_voters and franchise.total_voters > 0 %}
-            <span class="fl-franchise-card-rating">&#9733; {{ franchise.sum_votes|divisibleby:franchise.total_voters }}</span>
-            {% endif %}
+        <div class="fl-card-body">
+          <div class="fl-card-title">{{ franchise.title }}</div>
+          <div class="fl-card-meta">
+            {% if franchise.investment_size %}<span>от {{ franchise.investment_size|floatformat:0|intcomma }} &#8381;</span>{% endif %}
+            {% if franchise.payback_period %}<span>&#9203; {{ franchise.payback_period }} мес.</span>{% endif %}
+            {% if franchise.total_voters and franchise.total_voters > 0 %}<span style="color:#ffef2b;">&#9733; {{ franchise.total_voters }}</span>{% endif %}
           </div>
-          <div class="fl-franchise-card-desc">{{ franchise.short_description|striptags|truncatewords:20|default:"" }}</div>
         </div>
       </a>
       {% endfor %}
     </div>
-
-    <div style="text-align:center; margin-top:32px;">
-      <a href="{% url 'franchises_list' %}" class="fl-btn fl-btn--secondary">Все франшизы &#8594;</a>
+    <div style="text-align:center; margin-top:36px;">
+      <a href="{% url 'franchises_list' %}" class="fl-btn-blue">Все франшизы &#8594;</a>
     </div>
   </section>
 
-  <!-- ════ ДЛЯ ВЛАДЕЛЬЦЕВ ФРАНШИЗ ════ -->
+  <!-- ════ ДЛЯ ВЛАДЕЛЬЦЕВ ════ -->
   <section class="fl-section">
     <div class="fl-owners">
-      <h2 class="fl-section-title" style="margin-bottom:8px;">Для владельцев франшиз</h2>
-      <p class="fl-section-subtitle">Разместите вашу франшизу бесплатно и получайте заявки от потенциальных франчайзи</p>
-
+      <div class="fl-section-head" style="position:relative; z-index:1;">
+        <h2 class="fl-section-title"><span style="color:#fff;">Для владельцев</span> <span style="color:#ffef2b;">франшиз</span></h2>
+        <p class="fl-section-sub">Разместите бесплатно и получайте заявки от потенциальных франчайзи</p>
+      </div>
       <div class="fl-owners-grid">
         <div class="fl-owners-item">
           <div class="fl-owners-icon">&#128200;</div>
           <div>
-            <div class="fl-owners-item-title">Аналитика в реальном времени</div>
-            <div class="fl-owners-item-text">Просмотры, клики, конверсии, география посетителей — всё в вашем личном кабинете</div>
+            <div class="fl-owners-title">Аналитика в реальном времени</div>
+            <div class="fl-owners-text">Просмотры, клики, конверсии, география посетителей в личном кабинете</div>
           </div>
         </div>
         <div class="fl-owners-item">
           <div class="fl-owners-icon">&#128233;</div>
           <div>
-            <div class="fl-owners-item-title">Заявки с контактами</div>
-            <div class="fl-owners-item-text">Получайте заявки от потенциальных франчайзи с бюджетом, городом и контактами. Экспорт в Excel</div>
+            <div class="fl-owners-title">Заявки с контактами</div>
+            <div class="fl-owners-text">Получайте заявки с бюджетом, городом и контактами. Экспорт в Excel</div>
           </div>
         </div>
         <div class="fl-owners-item">
           <div class="fl-owners-icon">&#128279;</div>
           <div>
-            <div class="fl-owners-item-title">CRM-интеграция</div>
-            <div class="fl-owners-item-text">Автоматическая отправка заявок в Bitrix24 или AmoCRM. Настройка за 2 минуты</div>
+            <div class="fl-owners-title">CRM-интеграция</div>
+            <div class="fl-owners-text">Автоматическая отправка заявок в Bitrix24 или AmoCRM</div>
           </div>
         </div>
         <div class="fl-owners-item">
           <div class="fl-owners-icon">&#128270;</div>
           <div>
-            <div class="fl-owners-item-title">SEO-продвижение</div>
-            <div class="fl-owners-item-text">Ваша франшиза появляется в поиске Яндекс и Google. Городские страницы, статьи, структурированные данные</div>
+            <div class="fl-owners-title">SEO-продвижение</div>
+            <div class="fl-owners-text">Ваша франшиза в поиске Яндекс и Google. Городские страницы, статьи</div>
           </div>
         </div>
       </div>
-
-      <div style="text-align:center;">
-        <a href="{% url 'create_franchise' %}" class="fl-btn fl-btn--primary" style="font-size:17px; padding:16px 40px;">
+      <div style="text-align:center; position:relative; z-index:1;">
+        <a href="{% url 'create_franchise' %}" class="fl-btn-yellow" style="font-size:17px; padding:16px 40px;">
           Разместить франшизу бесплатно
         </a>
       </div>
@@ -372,64 +396,61 @@
   <!-- ════ БЛОГ ════ -->
   {% if latest_articles %}
   <section class="fl-section">
-    <h2 class="fl-section-title">Блог о франшизах</h2>
-    <p class="fl-section-subtitle">Аналитика, обзоры и советы для будущих франчайзи</p>
-
+    <div class="fl-section-head">
+      <h2 class="fl-section-title" style="font-size:clamp(18px,3vw,28px);"><span style="color:#fff;">Блог о</span> <span style="color:#ffef2b;">франшизах</span></h2>
+    </div>
     <div class="fl-articles">
       {% for article in latest_articles %}
-      <a href="{% url 'news_detail' slug=article.slug %}" class="fl-article-card">
+      <a href="{% url 'news_detail' slug=article.slug %}" class="fl-article">
         <div class="fl-article-title">{{ article.title|truncatewords:12 }}</div>
         <div class="fl-article-date">{{ article.published_at|date:"d.m.Y" }}</div>
       </a>
       {% endfor %}
     </div>
-
     <div style="text-align:center; margin-top:24px;">
-      <a href="{% url 'news' %}" class="fl-btn fl-btn--secondary" style="font-size:14px; padding:10px 24px;">Все статьи &#8594;</a>
+      <a href="{% url 'news' %}" class="fl-btn-outline" style="font-size:13px; padding:10px 24px;">Все статьи &#8594;</a>
     </div>
   </section>
   {% endif %}
 
   <!-- ════ FAQ ════ -->
   <section class="fl-section">
-    <h2 class="fl-section-title">Частые вопросы</h2>
-    <div style="max-width:700px; margin:0 auto;">
-
+    <div class="fl-section-head">
+      <h2 class="fl-section-title" style="font-size:clamp(18px,3vw,28px);"><span style="color:#fff;">Частые</span> <span style="color:#ffef2b;">вопросы</span></h2>
+    </div>
+    <div class="fl-faq">
       <div class="fl-faq-item">
-        <div class="fl-faq-q" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')">Что такое Great Ideas?</div>
-        <div class="fl-faq-a">Great Ideas — это платформа проверенных франшиз. Мы анализируем каждую франшизу с помощью AI, собираем реальные отзывы от действующих франчайзи и предоставляем аналитику владельцам франшиз. Размещение бесплатно.</div>
+        <div class="fl-faq-q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Что такое Great Ideas?</div>
+        <div class="fl-faq-a">Great Ideas — платформа проверенных франшиз. Мы анализируем каждую франшизу с помощью AI, собираем отзывы от действующих франчайзи и предоставляем аналитику владельцам. Размещение бесплатно.</div>
       </div>
-
       <div class="fl-faq-item">
-        <div class="fl-faq-q" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')">Как вы проверяете франшизы?</div>
-        <div class="fl-faq-a">Каждая франшиза проходит модерацию, AI-анализ финансовых условий и проверку документов. Мы также связываемся с действующими франчайзи для сбора реальных отзывов о работе с франшизой.</div>
+        <div class="fl-faq-q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Как вы проверяете франшизы?</div>
+        <div class="fl-faq-a">Каждая франшиза проходит модерацию, AI-анализ финансовых условий и проверку документов. Мы связываемся с действующими франчайзи для сбора реальных отзывов.</div>
       </div>
-
       <div class="fl-faq-item">
-        <div class="fl-faq-q" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')">Сколько стоит размещение франшизы?</div>
-        <div class="fl-faq-a">Размещение франшизы на платформе полностью бесплатно. Вы получаете личный кабинет с аналитикой, заявками и возможностью интеграции с CRM-системами.</div>
+        <div class="fl-faq-q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Сколько стоит размещение?</div>
+        <div class="fl-faq-a">Размещение полностью бесплатно. Вы получаете личный кабинет с аналитикой, заявками и интеграцией с CRM-системами.</div>
       </div>
-
       <div class="fl-faq-item">
-        <div class="fl-faq-q" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')">Как я получу заявки от покупателей?</div>
-        <div class="fl-faq-a">Потенциальные франчайзи оставляют заявки прямо на странице вашей франшизы. Вы получаете уведомление в Telegram и по email. Заявки можно экспортировать в Excel или настроить автоматическую отправку в Bitrix24/AmoCRM.</div>
+        <div class="fl-faq-q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Как я получу заявки от покупателей?</div>
+        <div class="fl-faq-a">Потенциальные франчайзи оставляют заявки на странице вашей франшизы. Уведомление приходит в Telegram и по email. Заявки можно экспортировать в Excel или отправить в Bitrix24/AmoCRM.</div>
       </div>
-
       <div class="fl-faq-item">
-        <div class="fl-faq-q" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')">Какую аналитику я получу как владелец?</div>
-        <div class="fl-faq-a">В личном кабинете доступны: просмотры страницы, уникальные посетители, клики по контактам, география посетителей, источники трафика, воронка конверсии заявок и сравнение с предыдущим периодом.</div>
+        <div class="fl-faq-q" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">Какую аналитику я получу?</div>
+        <div class="fl-faq-a">В личном кабинете: просмотры, уникальные посетители, клики по контактам, география, источники трафика, воронка конверсии заявок.</div>
       </div>
-
     </div>
   </section>
 
   <!-- ════ ФИНАЛЬНЫЙ CTA ════ -->
-  <section class="fl-final-cta">
-    <h2 class="fl-section-title">Готовы начать?</h2>
-    <p class="fl-section-subtitle" style="margin-bottom:32px;">Найдите идеальную франшизу или разместите свою и начните получать заявки уже сегодня</p>
-    <div class="fl-hero-buttons">
-      <a href="{% url 'franchises_list' %}" class="fl-btn fl-btn--primary">Открыть каталог</a>
-      <a href="{% url 'create_franchise' %}" class="fl-btn fl-btn--secondary">Разместить франшизу</a>
+  <section class="fl-final">
+    <div style="position:relative; z-index:1;">
+      <h2 class="fl-section-title"><span style="color:#fff;">Готовы</span> <span style="color:#ffef2b;">начать?</span></h2>
+      <p class="fl-section-sub" style="margin-bottom:36px;">Найдите идеальную франшизу или разместите свою и получайте заявки уже сегодня</p>
+      <div class="fl-hero-buttons">
+        <a href="{% url 'franchises_list' %}" class="fl-btn-yellow">Открыть каталог</a>
+        <a href="{% url 'create_franchise' %}" class="fl-btn-outline">Разместить франшизу</a>
+      </div>
     </div>
   </section>
 

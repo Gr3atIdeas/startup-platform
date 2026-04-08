@@ -7,115 +7,120 @@
 {% block title %}Каталог франшиз — Great Ideas{% endblock %}
 {% block meta_description %}<meta name="description" content="Каталог проверенных франшиз. Фильтры по бюджету, городу, категории. Реальные отзывы и AI-анализ.">{% endblock %}
 
+{% block catalog_css %}<link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}">{% endblock %}
+
 {% block head_extra %}
 <style>
-  .flc { font-family: Inter, sans-serif; }
+  .flc { font-family: Unbounded, sans-serif; }
 
-  /* Compact hero with search */
   .flc-hero {
-    padding: 60px 20px 40px; text-align: center;
-    background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.1) 0%, transparent 50%);
+    padding: 80px 20px 48px; text-align: center; position: relative;
+  }
+  .flc-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(0,78,159,0.2) 0%, transparent 50%);
+    pointer-events: none;
   }
   .flc-hero h1 {
-    font-family: Unbounded, sans-serif; font-size: clamp(24px, 4vw, 40px);
-    font-weight: 600; color: #fff; margin-bottom: 12px;
+    font-family: 'Blippo Black', Unbounded, sans-serif;
+    font-size: clamp(26px, 5vw, 50px); text-transform: uppercase;
+    margin-bottom: 12px; position: relative; z-index: 1;
   }
-  .flc-hero-sub { font-size: 16px; color: rgba(255,255,255,0.55); margin-bottom: 28px; }
+  .flc-hero-sub { font-size: 15px; color: rgba(255,255,255,0.5); margin-bottom: 28px; position: relative; z-index: 1; font-weight: 300; }
 
-  /* Search bar */
   .flc-search {
-    max-width: 700px; margin: 0 auto; display: flex; gap: 0;
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 16px; overflow: hidden;
+    max-width: 700px; margin: 0 auto; display: flex; position: relative; z-index: 1;
+    border-radius: var(--radius-sm, 8px); overflow: hidden;
+    border: 1px solid rgba(255,239,43,0.2);
   }
   .flc-search input {
-    flex: 1; padding: 16px 20px; background: transparent; border: none;
-    color: #fff; font-size: 16px; font-family: Inter, sans-serif; outline: none;
+    flex: 1; padding: 16px 20px; background: rgba(0,0,0,0.3); border: none;
+    color: #fff; font-size: 15px; font-family: Unbounded, sans-serif; outline: none; font-weight: 300;
   }
-  .flc-search input::placeholder { color: rgba(255,255,255,0.35); }
+  .flc-search input::placeholder { color: rgba(255,255,255,0.3); }
   .flc-search button {
-    padding: 16px 28px; background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    border: none; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer;
-    font-family: Inter, sans-serif;
+    padding: 16px 28px; background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+    border: none; color: #000; font-size: 14px; font-weight: 600; cursor: pointer;
+    font-family: Unbounded, sans-serif; transition: transform 0.2s;
   }
+  .flc-search button:hover { transform: scale(1.02); }
 
-  /* Quick filters */
   .flc-filters {
-    display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap;
+    display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; position: relative; z-index: 1;
   }
-  .flc-filter-chip {
-    padding: 8px 16px; border-radius: 20px; font-size: 13px;
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.6); text-decoration: none; transition: all 0.2s;
+  .flc-filter {
+    padding: 8px 16px; border-radius: var(--radius-full, 9999px); font-size: 13px; font-weight: 400;
+    background: rgba(255,239,43,0.08); border: 1px solid rgba(255,239,43,0.15);
+    color: rgba(255,239,43,0.8); text-decoration: none; transition: all 0.3s;
   }
-  .flc-filter-chip:hover { background: rgba(99,102,241,0.15); border-color: rgba(99,102,241,0.3); color: #fff; }
+  .flc-filter:hover { background: #ffef2b; color: #000; border-color: #ffef2b; }
 
-  /* Section */
-  .flc-section { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
-  .flc-section-title { font-family: Unbounded, sans-serif; font-size: 22px; font-weight: 500; color: #fff; margin-bottom: 24px; }
-
-  /* Categories */
-  .flc-categories { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 48px; }
-  .flc-category {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px; padding: 20px 16px; text-align: center; text-decoration: none;
-    transition: all 0.3s;
+  .flc-section { max-width: 1303px; margin: 0 auto; padding: 60px 20px; }
+  .flc-section-title {
+    font-family: 'Blippo Black', sans-serif; font-size: clamp(18px, 3vw, 28px);
+    margin-bottom: 24px; text-transform: uppercase;
   }
-  .flc-category:hover { border-color: rgba(99,102,241,0.3); transform: translateY(-2px); }
-  .flc-category-name { font-family: Unbounded, sans-serif; font-size: 13px; color: #fff; margin-bottom: 4px; }
-  .flc-category-count { font-size: 12px; color: rgba(255,255,255,0.4); }
 
-  /* Card grid */
+  .flc-cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 48px; }
+  .flc-cat {
+    background: linear-gradient(180deg, rgba(0,78,159,0.15) 0%, rgba(0,0,0,0.2) 100%);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-md, 12px);
+    padding: 20px 16px; text-align: center; text-decoration: none; transition: all 0.3s;
+  }
+  .flc-cat:hover { border-color: rgba(255,239,43,0.3); transform: translateY(-2px); }
+  .flc-cat-name { font-size: 13px; color: #fff; font-weight: 500; margin-bottom: 4px; }
+  .flc-cat-count { font-size: 11px; color: rgba(255,255,255,0.35); font-weight: 300; }
+
   .flc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
   .flc-card {
-    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px; overflow: hidden; text-decoration: none; display: block; transition: all 0.2s;
+    background: linear-gradient(180deg, rgba(0,78,159,0.1) 0%, rgba(0,0,0,0.2) 100%);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-xl, 20px);
+    overflow: hidden; text-decoration: none; display: block; transition: all 0.2s;
   }
-  .flc-card:hover { border-color: rgba(99,102,241,0.25); }
-  .flc-card-img { height: 150px; overflow: hidden; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; }
+  .flc-card:hover { border-color: rgba(255,239,43,0.2); transform: translateY(-2px); }
+  .flc-card-img { aspect-ratio: 16/9; overflow: hidden; background: rgba(0,78,159,0.1); display: flex; align-items: center; justify-content: center; position: relative; }
   .flc-card-img img { width: 100%; height: 100%; object-fit: cover; }
-  .flc-card-body { padding: 14px 16px; }
-  .flc-card-title { font-family: Unbounded, sans-serif; font-size: 14px; font-weight: 500; color: #fff; margin-bottom: 6px; }
-  .flc-card-meta { display: flex; gap: 10px; font-size: 12px; color: rgba(255,255,255,0.5); flex-wrap: wrap; }
-  .flc-card-meta span { display: flex; align-items: center; gap: 3px; }
-
-  .flc-more { text-align: center; margin-top: 28px; }
-  .flc-btn { padding: 12px 28px; border-radius: 12px; font-size: 15px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s; }
-  .flc-btn--primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
-  .flc-btn--outline { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; }
-
-  /* Why us (compact) */
-  .flc-why { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 48px; }
-  .flc-why-item { text-align: center; padding: 24px 16px; }
-  .flc-why-icon { font-size: 32px; margin-bottom: 12px; }
-  .flc-why-title { font-family: Unbounded, sans-serif; font-size: 14px; font-weight: 500; color: #fff; margin-bottom: 8px; }
-  .flc-why-text { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
-
-  /* Owner banner */
-  .flc-banner {
-    background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1));
-    border: 1px solid rgba(99,102,241,0.2); border-radius: 20px;
-    padding: 40px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  .flc-card-price {
+    position: absolute; bottom: 8px; right: 8px;
+    font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 8px;
+    background: rgba(0,0,0,0.7); color: #ffef2b; backdrop-filter: blur(4px);
   }
-  .flc-banner-text { max-width: 500px; }
-  .flc-banner-title { font-family: Unbounded, sans-serif; font-size: 20px; font-weight: 500; color: #fff; margin-bottom: 8px; }
-  .flc-banner-desc { font-size: 15px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+  .flc-card-body { padding: 14px 16px; }
+  .flc-card-title { font-size: 14px; font-weight: 500; color: #fff; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .flc-card-info { display: flex; justify-content: space-between; align-items: center; }
+  .flc-card-cat { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 300; }
+  .flc-card-rating { font-size: 12px; color: #ffef2b; }
 
-  /* Articles */
-  .flc-articles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .flc-article { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; text-decoration: none; transition: all 0.2s; }
-  .flc-article:hover { border-color: rgba(99,102,241,0.25); }
-  .flc-article-title { font-family: Unbounded, sans-serif; font-size: 13px; font-weight: 500; color: #fff; margin-bottom: 6px; line-height: 1.4; }
-  .flc-article-date { font-size: 12px; color: rgba(255,255,255,0.35); }
+  .flc-why { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 48px; }
+  .flc-why-item {
+    text-align: center; padding: 28px 16px;
+    background: linear-gradient(180deg, #004e9f 0%, #001c39 100%);
+    border-radius: var(--radius-xl, 20px); transition: transform 0.3s;
+  }
+  .flc-why-item:hover { transform: translateY(-4px); }
+  .flc-why-icon { font-size: 32px; margin-bottom: 12px; }
+  .flc-why-title { font-size: 14px; font-weight: 600; color: #ffef2b; margin-bottom: 8px; }
+  .flc-why-text { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; font-weight: 300; }
+
+  .flc-banner {
+    background: linear-gradient(180deg, #004e9f 0%, #001c39 100%);
+    border-radius: var(--radius-xl, 20px); padding: 40px;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  }
+  .flc-banner-title { font-family: 'Blippo Black', sans-serif; font-size: 22px; color: #ffef2b; margin-bottom: 8px; text-transform: uppercase; }
+  .flc-banner-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.5; font-weight: 300; }
+
+  .flc-btn-yellow { padding: 14px 28px; border-radius: var(--radius-sm, 8px); border: none; background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%); color: #000; font-family: Unbounded, sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; box-shadow: 2px 2px 4px rgba(0,0,0,0.25); cursor: pointer; transition: transform 0.2s; }
+  .flc-btn-yellow:hover { transform: translateY(-2px); }
+  .flc-btn-outline { padding: 12px 24px; border-radius: var(--radius-sm, 8px); background: transparent; border: 1px solid rgba(255,239,43,0.3); color: #ffef2b; font-family: Unbounded, sans-serif; font-size: 13px; font-weight: 400; text-decoration: none; display: inline-flex; transition: all 0.3s; }
+  .flc-btn-outline:hover { background: #ffef2b; color: #000; }
 
   @media (max-width: 768px) {
-    .flc-categories { grid-template-columns: repeat(2, 1fr); }
+    .flc-cats { grid-template-columns: repeat(2, 1fr); }
     .flc-why { grid-template-columns: 1fr; }
     .flc-grid { grid-template-columns: 1fr; }
     .flc-banner { flex-direction: column; text-align: center; }
-    .flc-articles { grid-template-columns: 1fr; }
     .flc-search { flex-direction: column; }
-    .flc-search button { border-radius: 0; }
   }
 </style>
 {% endblock %}
@@ -123,114 +128,79 @@
 {% block content %}
 <div class="flc">
 
-  <!-- HERO + SEARCH -->
   <section class="flc-hero">
-    <h1>Найдите франшизу мечты</h1>
+    <h1><span style="color:#fff;">Найдите</span> <span style="color:#ffef2b;">франшизу</span></h1>
     <p class="flc-hero-sub">{{ total_franchises }} проверенных франшиз в {{ total_cities }} городах России</p>
     <form class="flc-search" action="{% url 'franchises_list' %}" method="get">
-      <input type="text" name="search" placeholder="Название франшизы, категория или город...">
+      <input type="text" name="search" placeholder="Название, категория или город...">
       <button type="submit">Найти</button>
     </form>
     <div class="flc-filters">
-      <a href="{% url 'franchises_list' %}?max_investment=500000" class="flc-filter-chip">до 500К</a>
-      <a href="{% url 'franchises_list' %}?max_investment=1000000" class="flc-filter-chip">до 1 млн</a>
-      <a href="{% url 'franchises_list' %}?max_investment=3000000" class="flc-filter-chip">до 3 млн</a>
-      <a href="{% url 'franchises_list' %}?sort_order=popular" class="flc-filter-chip">Популярные</a>
-      <a href="{% url 'franchises_list' %}?sort_order=rating" class="flc-filter-chip">По рейтингу</a>
+      <a href="{% url 'franchises_list' %}?max_investment=500000" class="flc-filter">до 500К</a>
+      <a href="{% url 'franchises_list' %}?max_investment=1000000" class="flc-filter">до 1 млн</a>
+      <a href="{% url 'franchises_list' %}?max_investment=3000000" class="flc-filter">до 3 млн</a>
+      <a href="{% url 'franchises_list' %}?sort_order=popular" class="flc-filter">Популярные</a>
+      <a href="{% url 'franchises_list' %}?sort_order=rating" class="flc-filter">По рейтингу</a>
     </div>
   </section>
 
-  <!-- CATEGORIES -->
   {% if franchise_directions %}
   <section class="flc-section" style="padding-bottom:0;">
-    <h2 class="flc-section-title">Категории</h2>
-    <div class="flc-categories">
+    <h2 class="flc-section-title"><span style="color:#fff;">Категории</span></h2>
+    <div class="flc-cats">
       {% for d in franchise_directions %}
-      <a href="{% url 'franchises_by_direction' direction_id=d.direction_id %}" class="flc-category">
-        <div class="flc-category-name">{{ d.direction_name }}</div>
-        <div class="flc-category-count">{{ d.franchise_count }} франшиз</div>
+      <a href="{% url 'franchises_list' %}?category={{ d.direction_id }}" class="flc-cat">
+        <div class="flc-cat-name">{{ d.direction_name|translate_category }}</div>
+        <div class="flc-cat-count">{{ d.franchise_count }}</div>
       </a>
       {% endfor %}
     </div>
   </section>
   {% endif %}
 
-  <!-- CATALOG -->
   <section class="flc-section">
-    <h2 class="flc-section-title">Популярные франшизы</h2>
+    <h2 class="flc-section-title"><span style="color:#fff;">Популярные</span> <span style="color:#ffef2b;">франшизы</span></h2>
     <div class="flc-grid">
       {% for franchise in top_franchises %}
       <a href="{% url 'franchise_detail' slug=franchise.slug|default:franchise.franchise_id %}" class="flc-card">
         <div class="flc-card-img">
-          {% if franchise.get_catalog_card_image_url %}
-            <img src="{{ franchise.get_catalog_card_image_url }}" alt="{{ franchise.title }}" loading="lazy">
-          {% else %}
-            <div style="color:rgba(255,255,255,0.15); font-size:36px;">&#127968;</div>
-          {% endif %}
+          {% if franchise.get_catalog_card_image_url %}<img src="{{ franchise.get_catalog_card_image_url }}" alt="{{ franchise.title }}" loading="lazy">
+          {% else %}<div style="color:rgba(255,255,255,0.1); font-size:36px;">&#127968;</div>{% endif %}
+          {% if franchise.investment_size %}<span class="flc-card-price">от {{ franchise.investment_size|floatformat:0|intcomma }} &#8381;</span>{% endif %}
         </div>
         <div class="flc-card-body">
           <div class="flc-card-title">{{ franchise.title }}</div>
-          <div class="flc-card-meta">
-            {% if franchise.direction %}<span>{{ franchise.direction.direction_name }}</span>{% endif %}
-            {% if franchise.investment_size %}<span>&#128176; {{ franchise.investment_size|floatformat:0|intcomma }} &#8381;</span>{% endif %}
-            {% if franchise.payback_period %}<span>&#9203; {{ franchise.payback_period }} мес.</span>{% endif %}
+          <div class="flc-card-info">
+            {% if franchise.direction %}<span class="flc-card-cat">{{ franchise.direction.direction_name|translate_category }}</span>{% endif %}
+            {% if franchise.total_voters and franchise.total_voters > 0 %}<span class="flc-card-rating">&#9733;</span>{% endif %}
           </div>
         </div>
       </a>
       {% endfor %}
     </div>
-    <div class="flc-more">
-      <a href="{% url 'franchises_list' %}" class="flc-btn flc-btn--outline">Показать ещё &#8594;</a>
+    <div style="text-align:center; margin-top:28px;">
+      <a href="{% url 'franchises_list' %}" class="flc-btn-outline">Показать ещё &#8594;</a>
     </div>
   </section>
 
-  <!-- WHY US -->
   <section class="flc-section" style="padding-top:0;">
-    <h2 class="flc-section-title" style="text-align:center;">Почему Great Ideas</h2>
+    <h2 class="flc-section-title" style="text-align:center;"><span style="color:#fff;">Почему</span> <span style="color:#ffef2b;">Great Ideas</span></h2>
     <div class="flc-why">
-      <div class="flc-why-item">
-        <div class="flc-why-icon">&#128172;</div>
-        <div class="flc-why-title">Реальные отзывы</div>
-        <div class="flc-why-text">Мы опрашиваем действующих франчайзи, а не берём отзывы с рекламных страниц</div>
-      </div>
-      <div class="flc-why-item">
-        <div class="flc-why-icon">&#129302;</div>
-        <div class="flc-why-title">AI-анализ</div>
-        <div class="flc-why-text">Искусственный интеллект оценивает финансы, условия и окупаемость</div>
-      </div>
-      <div class="flc-why-item">
-        <div class="flc-why-icon">&#128279;</div>
-        <div class="flc-why-title">CRM для владельцев</div>
-        <div class="flc-why-text">Аналитика, заявки, интеграция с Bitrix24 и AmoCRM бесплатно</div>
-      </div>
+      <div class="flc-why-item"><div class="flc-why-icon">&#128172;</div><div class="flc-why-title">Реальные отзывы</div><div class="flc-why-text">Опрашиваем действующих франчайзи</div></div>
+      <div class="flc-why-item"><div class="flc-why-icon">&#129302;</div><div class="flc-why-title">AI-анализ</div><div class="flc-why-text">ИИ оценивает финансы и условия</div></div>
+      <div class="flc-why-item"><div class="flc-why-icon">&#128279;</div><div class="flc-why-title">CRM для владельцев</div><div class="flc-why-text">Аналитика, заявки, Bitrix24, AmoCRM</div></div>
     </div>
   </section>
 
-  <!-- OWNER BANNER -->
   <section class="flc-section" style="padding-top:0;">
     <div class="flc-banner">
-      <div class="flc-banner-text">
-        <div class="flc-banner-title">Вы владелец франшизы?</div>
-        <div class="flc-banner-desc">Разместите бесплатно и получайте заявки с аналитикой, CRM-интеграцией и SEO-продвижением</div>
+      <div>
+        <div class="flc-banner-title">Вы владелец?</div>
+        <div class="flc-banner-desc">Разместите бесплатно, получайте заявки с аналитикой и CRM</div>
       </div>
-      <a href="{% url 'create_franchise' %}" class="flc-btn flc-btn--primary">Разместить бесплатно</a>
+      <a href="{% url 'create_franchise' %}" class="flc-btn-yellow">Разместить бесплатно</a>
     </div>
   </section>
-
-  <!-- BLOG -->
-  {% if latest_articles %}
-  <section class="flc-section" style="padding-top:0;">
-    <h2 class="flc-section-title">Статьи</h2>
-    <div class="flc-articles">
-      {% for a in latest_articles %}
-      <a href="{% url 'news_detail' slug=a.slug %}" class="flc-article">
-        <div class="flc-article-title">{{ a.title|truncatewords:10 }}</div>
-        <div class="flc-article-date">{{ a.published_at|date:"d.m.Y" }}</div>
-      </a>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
 
 </div>
 {% endblock %}
