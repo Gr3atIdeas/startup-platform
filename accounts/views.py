@@ -12224,20 +12224,10 @@ def franchises_by_direction(request, direction_slug):
         f"{count} франшиз доступно для инвестиций на платформе Great Ideas."
     )
 
-    context = {
-        "direction": direction,
-        "direction_slug": direction_slug,
-        "page_obj": page_obj,
-        "paginator": paginator,
-        "franchises_count": count,
-        "other_directions": other_directions,
-        "seo_text": seo_text,
-        "cat_name": cat_name,
-    }
-
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
     if is_ajax:
-        cards_html = render_to_string("accounts/partials/_franchise_cards.html", context, request=request)
+        ajax_context = {"page_obj": page_obj}
+        cards_html = render_to_string("accounts/partials/_franchise_cards.html", ajax_context, request=request)
         return JsonResponse({
             "html": cards_html,
             "catalog_title": f"Каталог франшиз: {cat_name}",
@@ -12248,7 +12238,43 @@ def franchises_by_direction(request, direction_slug):
             "has_next": page_obj.has_next(),
         })
 
-    return render(request, "accounts/franchises_by_direction.html", context)
+    # Full page render: reuse main catalog template with sidebar
+    all_dir_ids = (
+        Franchises.objects
+        .filter(status="approved", direction__isnull=False)
+        .values_list("direction_id", flat=True)
+        .distinct()
+    )
+    franchise_directions = Directions.objects.filter(direction_id__in=all_dir_ids).order_by("direction_name")
+    for d in franchise_directions:
+        d.seo_slug = get_direction_slug(d)
+
+    from accounts.promotions import get_active_ads
+    context = {
+        "page_obj": page_obj,
+        "paginator": paginator,
+        "initial_has_next": page_obj.has_next(),
+        "selected_categories": [str(direction.direction_id)],
+        "search_query": "",
+        "sort_order": "newest",
+        "franchise_directions": franchise_directions,
+        "pinned_items": [],
+        "sidebar_ads": get_active_ads("catalog_sidebar"),
+        "available_cities": City.objects.filter(
+            franchise_locations__status="active"
+        ).distinct().order_by("name"),
+        "canonical_url": request.build_absolute_uri(),
+        # SEO fields for direction page
+        "direction_seo_title": f"Каталог франшиз: {cat_name}",
+        "direction_seo_desc": seo_text,
+        "direction_page_title": f"Франшизы: {cat_name} — купить франшизу в категории {cat_name} | Great Ideas",
+        # JSON-LD data
+        "direction": direction,
+        "direction_slug": direction_slug,
+        "cat_name": cat_name,
+        "franchises_count": count,
+    }
+    return render(request, "accounts/franchises_list.html", context)
 
 
 # ── Franchise AI Importer ────────────────────────────────────

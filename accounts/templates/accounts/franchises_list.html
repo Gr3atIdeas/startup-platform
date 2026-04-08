@@ -4,17 +4,17 @@
 {% load humanize %}
 {% load accounts_extras %}
 
-{% block title %}Каталог франшиз — Great Ideas{% endblock %}
+{% block title %}{% if direction_page_title %}{{ direction_page_title }}{% else %}Каталог франшиз — Great Ideas{% endif %}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="Каталог франшиз на платформе Great Ideas. Выберите франшизу для инвестиций и развития бизнеса.">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if direction_seo_desc %}{{ direction_seo_desc|truncatewords:30 }}{% else %}Каталог франшиз на платформе Great Ideas. Выберите франшизу для инвестиций и развития бизнеса.{% endif %}">{% endblock %}
 
 {% block canonical %}<link rel="canonical" href="{% if canonical_url %}{{ canonical_url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_list' %}{% endif %}">{% endblock %}
 
 {% block og_tags %}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Great Ideas">
-<meta property="og:title" content="Каталог франшиз — Great Ideas">
-<meta property="og:description" content="Каталог франшиз на платформе Great Ideas. Выберите франшизу для инвестиций и развития бизнеса.">
+<meta property="og:title" content="{% if direction_seo_title %}{{ direction_seo_title }}{% else %}Каталог франшиз{% endif %} — Great Ideas">
+<meta property="og:description" content="{% if direction_seo_desc %}{{ direction_seo_desc|truncatewords:25 }}{% else %}Каталог франшиз на платформе Great Ideas. Выберите франшизу для инвестиций и развития бизнеса.{% endif %}">
 <meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 {% endblock %}
@@ -25,6 +25,27 @@
   {{ block.super }}
 
   <link rel="stylesheet" href="{% static 'accounts/css/franchises_list.css' %}?v={% now 'U' %}">
+
+  {% if direction %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Франшизы: {{ cat_name }}",
+    "description": "{{ direction_seo_desc|truncatewords:25 }}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_slug=direction_slug %}",
+    "numberOfItems": {{ franchises_count }},
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Главная", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+        {"@type": "ListItem", "position": 2, "name": "Франшизы", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_list' %}"},
+        {"@type": "ListItem", "position": 3, "name": "{{ cat_name }}"}
+      ]
+    }
+  }
+  </script>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -145,8 +166,8 @@
       
       <div class="catalog-header-bar" style="flex-wrap:wrap;">
         <div style="flex:1; min-width:0;">
-          <h1 class="catalog-header-title" id="catalogTitle">Каталог франшиз</h1>
-          <p id="catalogSeoDesc" style="display:none; color:rgba(255,255,255,0.7); font-size:12px; font-family:Inter,sans-serif; line-height:1.4; margin:4px 0 0; opacity:0.75;"></p>
+          <h1 class="catalog-header-title" id="catalogTitle">{% if direction_seo_title %}{{ direction_seo_title }}{% else %}Каталог франшиз{% endif %}</h1>
+          <p id="catalogSeoDesc" style="{% if not direction_seo_desc %}display:none; {% endif %}color:rgba(255,255,255,0.7); font-size:12px; font-family:Inter,sans-serif; line-height:1.4; margin:4px 0 0; opacity:0.75;">{% if direction_seo_desc %}{{ direction_seo_desc }}{% endif %}</p>
         </div>
         <div class="catalog-header-right">
           <div class="catalog-header-search">
