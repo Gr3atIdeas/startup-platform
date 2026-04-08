@@ -49,9 +49,9 @@
   }
   .fdt-dot {
     width: 8px; height: 8px; border-radius: 50%;
-    background: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.2s;
+    background: rgba(99,102,241,0.35); cursor: pointer; transition: all 0.2s;
   }
-  .fdt-dot.active { background: #fff; width: 24px; border-radius: 4px; }
+  .fdt-dot.active { background: #6366f1; width: 24px; border-radius: 4px; }
   .fdt-category-badge {
     position: absolute; top: 16px; left: 16px; z-index: 5;
     padding: 6px 16px; border-radius: 12px;
@@ -119,11 +119,13 @@
   .fdt-tabs {
     display: flex; gap: 0; margin-bottom: 0;
     border-bottom: 1px solid rgba(255,255,255,0.08);
+    justify-content: center;
   }
   .fdt-tab {
-    padding: 14px 24px; font-size: 14px; font-weight: 500; cursor: pointer;
+    padding: 16px 32px; font-size: 16px; font-weight: 500; cursor: pointer;
     color: rgba(255,255,255,0.45); border-bottom: 2px solid transparent;
     transition: all 0.2s; background: none; border-top: none; border-left: none; border-right: none;
+    font-family: Unbounded, sans-serif;
   }
   .fdt-tab.active { color: #fff; border-bottom-color: #6366f1; }
   .fdt-tab:hover { color: rgba(255,255,255,0.7); }
@@ -203,6 +205,18 @@
     <span class="current">{{ franchise.title|truncatewords:5 }}</span>
   </nav>
 
+  <!-- Title -->
+  <div class="fdt-title-block">
+    {% if logo_url %}
+    <div class="fdt-logo"><img src="{{ logo_url }}" alt="Логотип"></div>
+    {% endif %}
+    <h1 class="fdt-title">{{ franchise.title }}</h1>
+  </div>
+
+  {% if franchise.short_description %}
+  <p class="fdt-desc">{{ franchise.short_description|striptags }}</p>
+  {% endif %}
+
   <!-- Carousel -->
   <div class="fdt-carousel" id="carousel">
     {% if franchise.direction %}
@@ -249,19 +263,6 @@
     };
   })();
   </script>
-
-  <!-- Title -->
-  <div class="fdt-title-block">
-    {% if logo_url %}
-    <div class="fdt-logo"><img src="{{ logo_url }}" alt="Логотип"></div>
-    {% endif %}
-    <h1 class="fdt-title">{{ franchise.title }}</h1>
-  </div>
-
-  <!-- Description -->
-  {% if franchise.short_description %}
-  <p class="fdt-desc">{{ franchise.short_description|striptags }}</p>
-  {% endif %}
 
   <!-- Stats -->
   <div class="fdt-stats">
