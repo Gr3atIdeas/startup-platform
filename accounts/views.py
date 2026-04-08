@@ -1384,6 +1384,18 @@ def franchises_list(request):
             }
         )
     else:
+        # If exactly one category is selected, canonical should point to the
+        # dedicated direction landing page for better SEO consolidation.
+        canonical_url = None
+        if len(selected_categories) == 1 and not search_query:
+            try:
+                dir_id = int(selected_categories[0])
+                canonical_url = request.build_absolute_uri(
+                    reverse("franchises_by_direction", kwargs={"direction_id": dir_id})
+                )
+            except (ValueError, TypeError):
+                pass
+
         context = {
             "page_obj": page_obj,
             "paginator": paginator,
@@ -1404,6 +1416,7 @@ def franchises_list(request):
             "available_cities": City.objects.filter(
                 franchise_locations__status="active"
             ).distinct().order_by("name"),
+            "canonical_url": canonical_url,
         }
         return render(request, "accounts/franchises_list.html", context)
 @vary_on_headers('X-Requested-With')
@@ -12109,10 +12122,80 @@ def franchise_landing_d(request):
 
 
 def franchises_by_direction(request, direction_id):
-    """Redirect to franchise catalog with category filter pre-applied."""
+    """SEO landing page for franchises in a specific category."""
     from .models import Directions
-    get_object_or_404(Directions, direction_id=direction_id)
-    return redirect(f"{reverse('franchises_list')}?category={direction_id}")
+
+    direction = get_object_or_404(Directions, direction_id=direction_id)
+
+    franchises_qs = Franchises.objects.filter(
+        status="approved", direction=direction
+    ).select_related("owner", "direction", "stage").order_by("-created_at")
+
+    paginator = Paginator(franchises_qs, 12)
+    page_obj = paginator.get_page(request.GET.get("page", 1))
+
+    # Other directions for cross-linking
+    existing_dir_ids = (
+        Franchises.objects
+        .filter(status="approved", direction__isnull=False)
+        .exclude(direction=direction)
+        .values_list("direction_id", flat=True)
+        .distinct()
+    )
+    other_directions = Directions.objects.filter(
+        direction_id__in=existing_dir_ids
+    ).order_by("direction_name")
+
+    # SEO descriptions per category
+    from .templatetags.accounts_extras import translate_category
+    cat_name = translate_category(direction.direction_name)
+    seo_descriptions = {
+        "Beauty": f"Каталог франшиз в сфере красоты и косметологии. Салоны красоты, барбершопы, "
+                  f"косметологические клиники и другие бизнес-форматы с проверенной бизнес-моделью. "
+                  f"Выберите франшизу из {franchises_qs.count()} предложений и начните свой бизнес в индустрии красоты.",
+        "Cafe": f"Франшизы кафе и ресторанов — готовые бизнес-модели в сфере общественного питания. "
+                f"Кофейни, рестораны, бары и другие форматы HoReCa. "
+                f"{franchises_qs.count()} франшиз доступно для инвестиций.",
+        "Delivery": f"Франшизы служб доставки — курьерские сервисы, доставка еды, логистические решения. "
+                    f"Быстрорастущий сегмент с {franchises_qs.count()} предложениями для инвесторов.",
+        "Fastfood": f"Франшизы фастфуда и быстрого питания — шаурма, бургеры, пицца, суши и другие форматы. "
+                    f"Самый популярный сегмент франчайзинга с {franchises_qs.count()} предложениями.",
+        "Finance": f"Франшизы в сфере финансов — микрофинансирование, страхование, финансовый консалтинг. "
+                   f"{franchises_qs.count()} франшиз для тех, кто хочет работать в финтех-индустрии.",
+        "Healthcare": f"Франшизы в сфере здоровья — аптеки, медицинские центры, ортопедические салоны. "
+                      f"{franchises_qs.count()} проверенных бизнес-моделей в медицинской отрасли.",
+        "Sport": f"Франшизы в сфере спорта и фитнеса — тренажёрные залы, студии йоги, спортивные секции. "
+                 f"{franchises_qs.count()} предложений для запуска спортивного бизнеса.",
+        "Technology": f"Франшизы в сфере технологий — IT-решения, сервисные центры, образовательные платформы. "
+                      f"{franchises_qs.count()} технологических франшиз для инвесторов.",
+    }
+    seo_text = seo_descriptions.get(
+        direction.direction_name,
+        f"Каталог франшиз в категории «{cat_name}». "
+        f"{franchises_qs.count()} франшиз доступно для инвестиций на платформе Great Ideas."
+    )
+
+    context = {
+        "direction": direction,
+        "page_obj": page_obj,
+        "paginator": paginator,
+        "franchises_count": franchises_qs.count(),
+        "other_directions": other_directions,
+        "seo_text": seo_text,
+        "cat_name": cat_name,
+    }
+
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    if is_ajax:
+        html = render_to_string("accounts/partials/_franchise_cards.html", context, request=request)
+        return JsonResponse({
+            "html": html,
+            "page_number": page_obj.number,
+            "num_pages": paginator.num_pages,
+            "has_next": page_obj.has_next(),
+        })
+
+    return render(request, "accounts/franchises_by_direction.html", context)
 
 
 # ── Franchise AI Importer ────────────────────────────────────

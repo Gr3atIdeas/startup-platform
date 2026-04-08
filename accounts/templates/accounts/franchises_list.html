@@ -8,7 +8,7 @@
 
 {% block meta_description %}<meta name="description" content="Каталог франшиз на платформе Great Ideas. Выберите франшизу для инвестиций и развития бизнеса.">{% endblock %}
 
-{% block canonical %}<link rel="canonical" href="{{ request.build_absolute_uri }}">{% endblock %}
+{% block canonical %}<link rel="canonical" href="{% if canonical_url %}{{ canonical_url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_list' %}{% endif %}">{% endblock %}
 
 {% block og_tags %}
 <meta property="og:type" content="website">
@@ -119,6 +119,23 @@
 
         <button type="button" id="clearFiltersBtn" class="show-button" data-has-icon-end="false" data-has-icon-start="false" data-size="Medium" data-state="Default" data-variant="Primary" style="display:none; margin: 6px auto 0;">Очистить</button>
       </form>
+
+      {# SEO: crawlable category links for search engines #}
+      {% if franchise_directions %}
+      <nav style="margin-top:16px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06);">
+        <div style="font-family:Inter,sans-serif; font-size:11px; color:rgba(255,255,255,0.3); margin-bottom:8px;">Франшизы по категориям</div>
+        <div style="display:flex; flex-wrap:wrap; gap:4px;">
+          {% for dir in franchise_directions %}
+          <a href="{% url 'franchises_by_direction' direction_id=dir.direction_id %}"
+             style="font-family:Inter,sans-serif; font-size:11px; padding:3px 10px; border-radius:12px;
+                    background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.45);
+                    text-decoration:none; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);">
+            {{ dir.direction_name|translate_category }}
+          </a>
+          {% endfor %}
+        </div>
+      </nav>
+      {% endif %}
 
       {% if sidebar_ads %}
         {% for ad in sidebar_ads %}

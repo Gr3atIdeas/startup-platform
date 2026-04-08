@@ -4,19 +4,19 @@
 {% load humanize %}
 {% load accounts_extras %}
 
-{% block title %}Франшизы в категории {{ direction.direction_name }} — Great Ideas{% endblock %}
+{% block title %}Франшизы: {{ cat_name }} — купить франшизу в категории {{ cat_name }} | Great Ideas{% endblock %}
 
-{% block meta_description %}<meta name="description" content="Каталог франшиз в категории {{ direction.direction_name }}. {{ franchises_count }} франшиз доступно для инвестиций. Выберите лучшую франшизу на Great Ideas.">{% endblock %}
+{% block meta_description %}<meta name="description" content="{{ seo_text|truncatewords:30 }}">{% endblock %}
 
-{% block canonical %}<link rel="canonical" href="{{ request.build_absolute_uri }}">{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_id=direction.direction_id %}">{% endblock %}
 
 {% block og_tags %}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Great Ideas">
-<meta property="og:title" content="Франшизы: {{ direction.direction_name }} — Great Ideas">
-<meta property="og:description" content="Каталог франшиз в категории {{ direction.direction_name }}. Найдите лучшую франшизу для инвестиций.">
+<meta property="og:title" content="Франшизы: {{ cat_name }} — Great Ideas">
+<meta property="og:description" content="{{ seo_text|truncatewords:25 }}">
 <meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
-<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_id=direction.direction_id %}">
 {% endblock %}
 
 {% block catalog_css %}<link rel="stylesheet" href="{% static 'accounts/css/catalog_sidebar.css' %}?v={% now 'U' %}">{% endblock %}
@@ -28,16 +28,16 @@
   {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "Франшизы: {{ direction.direction_name }}",
-    "description": "Каталог франшиз в категории {{ direction.direction_name }}",
-    "url": "{{ request.build_absolute_uri }}",
+    "name": "Франшизы: {{ cat_name }}",
+    "description": "{{ seo_text|truncatewords:25 }}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_id=direction.direction_id %}",
     "numberOfItems": {{ franchises_count }},
     "breadcrumb": {
       "@type": "BreadcrumbList",
       "itemListElement": [
         {"@type": "ListItem", "position": 1, "name": "Главная", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
         {"@type": "ListItem", "position": 2, "name": "Франшизы", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_list' %}"},
-        {"@type": "ListItem", "position": 3, "name": "{{ direction.direction_name }}"}
+        {"@type": "ListItem", "position": 3, "name": "{{ cat_name }}"}
       ]
     }
   }
@@ -54,36 +54,44 @@
       <span style="color:rgba(255,255,255,0.3); margin:0 6px;">/</span>
       <a href="{% url 'franchises_list' %}" style="color:rgba(255,255,255,0.5); text-decoration:none;">Франшизы</a>
       <span style="color:rgba(255,255,255,0.3); margin:0 6px;">/</span>
-      <span style="color:rgba(255,255,255,0.8);">{{ direction.direction_name }}</span>
+      <span style="color:rgba(255,255,255,0.8);">{{ cat_name }}</span>
     </nav>
 
     <div class="catalog-header-bar">
-      <h1 class="catalog-header-title">Франшизы: {{ direction.direction_name }}</h1>
+      <h1 class="catalog-header-title">Франшизы: {{ cat_name }}</h1>
     </div>
 
-    <p style="color:rgba(255,255,255,0.6); font-family:Inter,sans-serif; font-size:14px; margin-bottom:20px;">
-      {{ franchises_count }} франшиз в категории {{ direction.direction_name }}
+    <!-- SEO description -->
+    <p style="color:rgba(255,255,255,0.6); font-family:Inter,sans-serif; font-size:14px; line-height:1.6; margin-bottom:24px; max-width:800px;">
+      {{ seo_text }}
     </p>
 
+    <!-- Cross-links to other categories -->
     {% if other_directions %}
     <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;">
-      <a href="{% url 'franchises_list' %}" style="font-family:Unbounded,sans-serif; font-size:12px; padding:6px 14px; border-radius:var(--radius-full); background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); text-decoration:none;">Все категории</a>
+      <a href="{% url 'franchises_list' %}"
+         style="font-family:Inter,sans-serif; font-size:12px; padding:6px 14px; border-radius:20px;
+                background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+                color:rgba(255,255,255,0.7); text-decoration:none; transition:all 0.2s;">
+        Все франшизы
+      </a>
       {% for d in other_directions %}
-      <a href="{% url 'franchises_by_direction' direction_id=d.direction_id %}" style="font-family:Unbounded,sans-serif; font-size:12px; padding:6px 14px; border-radius:var(--radius-full); background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.7); text-decoration:none;">{{ d.direction_name }}</a>
+      <a href="{% url 'franchises_by_direction' direction_id=d.direction_id %}"
+         style="font-family:Inter,sans-serif; font-size:12px; padding:6px 14px; border-radius:20px;
+                background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+                color:rgba(255,255,255,0.7); text-decoration:none; transition:all 0.2s;">
+        {{ d.direction_name|translate_category }}
+      </a>
       {% endfor %}
     </div>
     {% endif %}
 
+    <!-- Franchise cards grid -->
     <div class="franchises-grid">
-      {% for franchise in page_obj %}
-        {% include 'accounts/partials/_franchise_cards.html' with page_obj=page_obj %}
-      {% empty %}
-        <div class="no-cards">
-          <p>В этой категории пока нет франшиз</p>
-        </div>
-      {% endfor %}
+      {% include 'accounts/partials/_franchise_cards.html' with page_obj=page_obj %}
     </div>
 
+    <!-- Pagination -->
     {% if paginator.num_pages > 1 %}
     <div class="pagination-numbers">
       {% if page_obj.has_previous %}
@@ -94,6 +102,8 @@
           <span class="current-page">{{ num }}</span>
         {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
           <a href="?page={{ num }}">{{ num }}</a>
+        {% elif num == page_obj.number|add:"-3" or num == page_obj.number|add:"3" %}
+          <span class="dots">...</span>
         {% endif %}
       {% endfor %}
       {% if page_obj.has_next %}
