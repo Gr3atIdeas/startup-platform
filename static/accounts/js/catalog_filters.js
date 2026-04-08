@@ -198,6 +198,23 @@
       oldGrid.innerHTML = data.html;
     }
 
+    // Update SEO header (direction page title + description)
+    var seoHeader = document.getElementById('catalogSeoHeader');
+    if (seoHeader) {
+      if (data.seo_header_html) {
+        seoHeader.innerHTML = data.seo_header_html;
+        seoHeader.style.display = '';
+      } else {
+        seoHeader.innerHTML = '';
+        seoHeader.style.display = 'none';
+      }
+    }
+
+    // Update the page title
+    if (data.page_title) {
+      document.title = data.page_title;
+    }
+
     var oldPagination = paginationContainerElement || findPaginationContainer(document);
     if (oldPagination) {
       oldPagination.innerHTML = buildPaginationHtml(data.page_number, data.num_pages, data.has_next);
@@ -293,7 +310,12 @@
   }
 
   function buildUrlWithParams(params, keepPageParam) {
-    var url = new URL(window.location.href);
+    // Always use the base catalog URL (not a direction URL) for filter queries
+    var basePath = window.location.pathname;
+    if (basePath.indexOf('/direction/') !== -1) {
+      basePath = basePath.replace(/\/direction\/[^/]+\/?/, '/');
+    }
+    var url = new URL(basePath, window.location.origin);
     var merged = new URLSearchParams(url.search);
 
 
@@ -320,12 +342,41 @@
     return url.toString();
   }
 
+  function getDirectionUrl(params) {
+    // If exactly one category is selected and no other filters active,
+    // route to the dedicated SEO direction page
+    var slugMap = window.DIRECTION_CATEGORY_SLUGS;
+    if (!slugMap) return null;
+
+    var categories = params.getAll('category');
+    if (categories.length !== 1) return null;
+
+    // Check no other filters are active
+    var hasOtherFilters = false;
+    params.forEach(function(value, key) {
+      if (key === 'category') return;
+      if (key === 'sort_order' && value === 'newest') return;
+      if (key === 'search' && !value) return;
+      hasOtherFilters = true;
+    });
+    if (hasOtherFilters) return null;
+
+    var slug = slugMap[categories[0]];
+    return slug ? '/franchises/direction/' + slug + '/' : null;
+  }
+
   function onFormChangeDebounced() {
     if (!filterFormElement) return;
     var params = serializeFormToParams(filterFormElement);
-    var url = buildUrlWithParams(params, false);
     updateClearButtonVisibility();
-    fetchAndUpdate(url);
+
+    var directionUrl = getDirectionUrl(params);
+    if (directionUrl) {
+      fetchAndUpdate(directionUrl);
+    } else {
+      var url = buildUrlWithParams(params, false);
+      fetchAndUpdate(url);
+    }
   }
 
   function debounce(fn, delay) {
@@ -475,6 +526,13 @@
 
       var params = serializeFormToParams(filterFormElement);
       var url = buildUrlWithParams(params, false);
+      // Reset to base catalog URL when clearing
+      try {
+        var baseUrl = new URL(url);
+        baseUrl.pathname = '/franchises/';
+        baseUrl.search = '';
+        url = baseUrl.toString();
+      } catch(_) {}
       fetchAndUpdate(url).then(function () { updateClearButtonVisibility(); });
     });
   }

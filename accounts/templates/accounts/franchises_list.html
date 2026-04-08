@@ -155,7 +155,10 @@
         </div>
       </div>
 
-      
+      {# SEO header area — populated by AJAX when navigating to a direction page #}
+      <div id="catalogSeoHeader" style="display:none;"></div>
+
+
       <div class="franchises-grid skeleton-loading" id="franchisesGrid">
         {% for franchise in pinned_items %}
           {% include 'accounts/partials/_pinned_card.html' with entity=franchise entity_type='franchise' %}
@@ -502,6 +505,13 @@
 {% block scripts %}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js" referrerpolicy="no-referrer" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js" referrerpolicy="no-referrer" defer></script>
+  <script>
+    // Direction ID → slug mapping for SPA-style category navigation
+    window.DIRECTION_CATEGORY_SLUGS = {
+      {% for dir in franchise_directions %}"{{ dir.direction_id }}": "{{ dir.seo_slug }}"{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    };
+  </script>
   <script src="{% static 'accounts/js/catalog_filters.js' %}" defer></script>
   <script src="{% static 'accounts/js/catalog_impressions.js' %}" defer></script>
 {% endblock %}

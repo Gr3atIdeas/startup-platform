@@ -1403,6 +1403,7 @@ def franchises_list(request):
                 "page_number": page_obj.number,
                 "num_pages": paginator.num_pages,
                 "count": paginator.count,
+                "page_title": "Каталог франшиз — Great Ideas",
             }
         )
     else:
@@ -12235,9 +12236,16 @@ def franchises_by_direction(request, direction_slug):
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
     if is_ajax:
-        html = render_to_string("accounts/partials/_franchise_cards.html", context, request=request)
+        cards_html = render_to_string("accounts/partials/_franchise_cards.html", context, request=request)
+        seo_header_html = (
+            f'<h1 class="catalog-header-title" style="margin-bottom:12px;">Франшизы: {cat_name}</h1>'
+            f'<p style="color:rgba(255,255,255,0.6); font-family:Inter,sans-serif; font-size:14px; '
+            f'line-height:1.6; margin-bottom:20px; max-width:800px;">{seo_text}</p>'
+        )
         return JsonResponse({
-            "html": html,
+            "html": cards_html,
+            "seo_header_html": seo_header_html,
+            "page_title": f"Франшизы: {cat_name} — Great Ideas",
             "page_number": page_obj.number,
             "num_pages": paginator.num_pages,
             "has_next": page_obj.has_next(),
