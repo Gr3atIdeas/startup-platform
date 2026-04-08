@@ -29,26 +29,6 @@
             <div class="form-top-card">
             <div class="form-top-grid">
                 <div class="form-top-left">
-                <div class="form-group planet-upload-group">
-                    <label class="planet-upload-label">*Выберите планету</label>
-                    <div class="planet-selector" id="planetSelector">
-                    <button type="button" class="planet-nav-button prev-planet" aria-label="Предыдущая планета">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                    </button>
-                    <div class="planet-display">
-                        <div class="planet-ribbon" id="planetRibbon">
-                            
-                        </div>
-                    </div>
-                    <button type="button" class="planet-nav-button next-planet" aria-label="Следующая планета">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                    </button>
-                    </div>
-                    {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image" }}
-                    {% if form.planet_image.errors %}
-                    <span class="error-message">{{ form.planet_image.errors|first }}</span>
-                    {% endif %}
-                </div>
                 <div class="form-group logo-upload-group">
                     <div class="logo-upload-label">
                     <div class="logo-placeholder" id="logoPlaceholder">
@@ -320,8 +300,8 @@ FileUploadUtils.init({ staticUrl: "{% static 'accounts/images/creat_startup/' %}
 <script src="{% static 'accounts/js/description_media_modal.js' %}"></script>
 <script>
 window.STARTUP_FORM_CONFIG = {
-  planetChoices: [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
-  planetBaseUrl: "/static/accounts/images/planetary_system/textures/",
+  planetChoices: [],
+  planetBaseUrl: "",
 };
 window.ENTITY_FORM_CONFIG = {
   formId: 'franchiseForm',

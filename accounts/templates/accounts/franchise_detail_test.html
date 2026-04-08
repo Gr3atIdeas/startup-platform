@@ -33,6 +33,19 @@
   }
   .fdt-slide.active { opacity: 1; pointer-events: auto; }
   .fdt-slide img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
+  .fdt-slide video { width: 100%; height: 100%; object-fit: cover; background: #000; }
+  .fdt-slide-play {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.25); cursor: pointer; z-index: 3; transition: background 0.2s;
+  }
+  .fdt-slide-play:hover { background: rgba(0,0,0,0.15); }
+  .fdt-slide-play i {
+    font-size: 56px; color: rgba(255,255,255,0.9);
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+    transition: transform 0.2s;
+  }
+  .fdt-slide-play:hover i { transform: scale(1.1); }
+  .fdt-slide-play.hidden { display: none; }
   .fdt-carousel-btn {
     position: absolute; top: 0; bottom: 0; z-index: 5;
     width: 80px; border: none; cursor: pointer;
@@ -227,13 +240,21 @@
   <p class="fdt-desc">{{ franchise.short_description|striptags }}</p>
   {% endif %}
 
-  <!-- Carousel -->
+  <!-- Hero: video (if available) or image carousel -->
   <div class="fdt-carousel" id="carousel">
     {% if franchise.direction %}
     <div class="fdt-category-badge">{{ franchise.direction.direction_name|translate_category }}</div>
     {% endif %}
 
-    {% if slider_images %}
+    {% if hero_video %}
+      {# Standalone video — no carousel, no auto-switching #}
+      <div class="fdt-slide active" data-type="video">
+        <video src="{{ hero_video|resolve_url:file_url_map }}" preload="metadata" playsinline></video>
+        <div class="fdt-slide-play" onclick="toggleVideo(this)">
+          <i class="fas fa-play"></i>
+        </div>
+      </div>
+    {% elif slider_images %}
       {% for url in slider_images|slice:":6" %}
       <div class="fdt-slide {% if forloop.first %}active{% endif %}">
         <a href="{{ url|resolve_url:file_url_map }}" class="glightbox" data-gallery="main">
@@ -257,20 +278,54 @@
 
   <script>
   (function(){
+    /* ---- Image carousel ---- */
     var slides = document.querySelectorAll('.fdt-slide');
     var dots = document.querySelectorAll('.fdt-dot');
-    if (slides.length < 2) return;
-    var cur = 0;
-    window.carNav = function(d) {
-      slides[cur].classList.remove('active'); if(dots[cur]) dots[cur].classList.remove('active');
-      cur = (cur + d + slides.length) % slides.length;
-      slides[cur].classList.add('active'); if(dots[cur]) dots[cur].classList.add('active');
+    if (slides.length > 1) {
+      var cur = 0;
+      window.carNav = function(d) {
+        slides[cur].classList.remove('active'); if(dots[cur]) dots[cur].classList.remove('active');
+        cur = (cur + d + slides.length) % slides.length;
+        slides[cur].classList.add('active'); if(dots[cur]) dots[cur].classList.add('active');
+      };
+      window.carGo = function(i) {
+        if (i === cur) return;
+        slides[cur].classList.remove('active'); if(dots[cur]) dots[cur].classList.remove('active');
+        cur = i;
+        slides[cur].classList.add('active'); if(dots[cur]) dots[cur].classList.add('active');
+      };
+    }
+
+    /* ---- Hero video ---- */
+    window.toggleVideo = function(overlay) {
+      var video = overlay.parentElement.querySelector('video');
+      var icon = overlay.querySelector('i');
+      if (!video) return;
+      if (video.paused) {
+        video.play();
+        overlay.classList.add('hidden');
+      } else {
+        video.pause();
+        icon.className = 'fas fa-play';
+        overlay.classList.remove('hidden');
+      }
     };
-    window.carGo = function(i) {
-      slides[cur].classList.remove('active'); if(dots[cur]) dots[cur].classList.remove('active');
-      cur = i;
-      slides[cur].classList.add('active'); if(dots[cur]) dots[cur].classList.add('active');
-    };
+
+    document.querySelectorAll('.fdt-slide[data-type="video"]').forEach(function(s) {
+      var v = s.querySelector('video');
+      var btn = s.querySelector('.fdt-slide-play');
+      if (v && btn) {
+        v.addEventListener('pause', function() {
+          if (!v.ended) { btn.classList.remove('hidden'); btn.querySelector('i').className = 'fas fa-play'; }
+        });
+        v.addEventListener('ended', function() {
+          btn.classList.remove('hidden'); btn.querySelector('i').className = 'fas fa-redo';
+        });
+        v.addEventListener('click', function() {
+          if (!v.paused) { v.pause(); }
+        });
+      }
+    });
   })();
   </script>
 

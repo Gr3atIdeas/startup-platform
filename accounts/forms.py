@@ -495,7 +495,8 @@ class FranchiseForm(BaseEntityFormMixin, forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.init_planet_choices()
+        # Remove planet_image from form fields (no longer shown in UI)
+        self.fields.pop('planet_image', None)
 
     class Meta:
         model = Franchises
@@ -508,7 +509,6 @@ class FranchiseForm(BaseEntityFormMixin, forms.ModelForm):
             "franchise_cost",
             "pitch_deck_url",
             "direction",
-            "planet_image",
             "profit_calculation",
             "contact_website",
             "contact_telegram",
@@ -922,12 +922,17 @@ class FranchiseEditForm(BaseEntityEditFormMixin, forms.ModelForm):
         label="Категория", required=False, empty_label="Выберите категорию"
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Remove planet_image from form fields (no longer shown in UI)
+        self.fields.pop('planet_image', None)
+
     class Meta:
         model = Franchises
         fields = [
             "title", "short_description", "description", "terms",
             "investment_size", "franchise_cost", "pitch_deck_url",
-            "direction", "planet_image", "profit_calculation",
+            "direction", "profit_calculation",
             "contact_website", "contact_telegram", "contact_whatsapp",
         ]
         labels = {
@@ -948,10 +953,6 @@ class FranchiseEditForm(BaseEntityEditFormMixin, forms.ModelForm):
             "proofs": "Документы",
             "profit_calculation": "Стоимость и расчет прибыли",
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.init_planet_choices()
 
 
 class AgencyEditForm(BaseEntityEditFormMixin, forms.ModelForm):

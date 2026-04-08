@@ -12055,10 +12055,12 @@ def franchise_detail_test(request, slug):
     slider_images = franchise.slider_images or []
     if not slider_images and all_creatives:
         slider_images = all_creatives[:4]
+    video_urls = franchise.video_urls if isinstance(franchise.video_urls, list) else []
 
     file_url_map = {}
     file_url_map.update(batch_resolve_file_urls(logo_urls, franchise.franchise_id, "logo", "franchise"))
     file_url_map.update(batch_resolve_file_urls(all_creatives, franchise.franchise_id, "creative", "franchise"))
+    file_url_map.update(batch_resolve_file_urls(video_urls, franchise.franchise_id, "video", "franchise"))
 
     logo_url = None
     if logo_urls:
@@ -12069,9 +12071,13 @@ def franchise_detail_test(request, slug):
         franchise=franchise, status="active"
     ).values("city").distinct().count()
 
+    # Hero video: if franchise has video, show it instead of image carousel
+    hero_video = video_urls[0] if video_urls else None
+
     context = {
         "franchise": franchise,
         "slider_images": slider_images,
+        "hero_video": hero_video,
         "file_url_map": file_url_map,
         "logo_url": logo_url,
         "comments": comments,
