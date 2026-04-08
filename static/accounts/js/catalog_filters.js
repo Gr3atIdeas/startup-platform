@@ -198,19 +198,21 @@
       oldGrid.innerHTML = data.html;
     }
 
-    // Update SEO header (direction page title + description)
-    var seoHeader = document.getElementById('catalogSeoHeader');
-    if (seoHeader) {
-      if (data.seo_header_html) {
-        seoHeader.innerHTML = data.seo_header_html;
-        seoHeader.style.display = '';
+    // Update catalog title and SEO description
+    var catalogTitle = document.getElementById('catalogTitle');
+    var seoDesc = document.getElementById('catalogSeoDesc');
+    if (catalogTitle) {
+      catalogTitle.textContent = data.catalog_title || 'Каталог франшиз';
+    }
+    if (seoDesc) {
+      if (data.seo_description) {
+        seoDesc.textContent = data.seo_description;
+        seoDesc.style.display = '';
       } else {
-        seoHeader.innerHTML = '';
-        seoHeader.style.display = 'none';
+        seoDesc.textContent = '';
+        seoDesc.style.display = 'none';
       }
     }
-
-    // Update the page title
     if (data.page_title) {
       document.title = data.page_title;
     }
