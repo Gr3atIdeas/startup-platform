@@ -12045,29 +12045,24 @@ def franchise_detail_test(request, slug):
     """Test: new single-column franchise detail layout."""
     franchise = get_object_or_404(Franchises, slug=slug, status="approved")
 
-    from .models import FranchiseComments, FranchiseVotes
+    from .models import FranchiseComments
+    from .utils import batch_resolve_file_urls
+
     comments = FranchiseComments.objects.filter(franchise=franchise).select_related("user").order_by("-created_at")[:10]
 
-    # File URLs
-    all_file_ids = []
-    for field in [franchise.logo_urls, franchise.creatives_urls, franchise.slider_images]:
-        if field:
-            all_file_ids.extend(field)
-    from .models import FileStorage
-    file_url_map = {}
-    if all_file_ids:
-        storages = FileStorage.objects.filter(file_id__in=all_file_ids)
-        for fs in storages:
-            file_url_map[str(fs.file_id)] = fs.get_file_url()
-
+    logo_urls = franchise.logo_urls or []
+    all_creatives = franchise.creatives_urls or []
     slider_images = franchise.slider_images or []
-    if not slider_images and franchise.creatives_urls:
-        slider_images = franchise.creatives_urls[:4]
+    if not slider_images and all_creatives:
+        slider_images = all_creatives[:4]
+
+    file_url_map = {}
+    file_url_map.update(batch_resolve_file_urls(logo_urls, franchise.franchise_id, "logo", "franchise"))
+    file_url_map.update(batch_resolve_file_urls(all_creatives, franchise.franchise_id, "creative", "franchise"))
 
     logo_url = None
-    if franchise.logo_urls:
-        lid = franchise.logo_urls[0]
-        logo_url = file_url_map.get(str(lid), "")
+    if logo_urls:
+        logo_url = file_url_map.get(str(logo_urls[0]), "")
 
     context = {
         "franchise": franchise,
@@ -12075,7 +12070,8 @@ def franchise_detail_test(request, slug):
         "file_url_map": file_url_map,
         "logo_url": logo_url,
         "comments": comments,
-        "comments_count": comments.count() if hasattr(comments, 'count') else len(comments),
+        "comments_count": len(comments),
+        "cities": City.objects.all().order_by("name"),
     }
     return render(request, "accounts/franchise_detail_test.html", context)
 
