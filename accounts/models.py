@@ -1882,6 +1882,7 @@ class FranchiseeContact(models.Model):
         related_name='assigned_franchisee_contacts', db_column='assigned_to_id',
     )
     contacted_at = models.DateTimeField(null=True, blank=True)
+    research_data = models.JSONField(default=dict, blank=True, help_text="Deep research logs and enriched data")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

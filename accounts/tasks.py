@@ -121,29 +121,18 @@ def deep_research_contact_task(self, contact_id):
     try:
         result = deep_research_contact(contact, franchise_title)
 
-        # Save research log to moderator_notes (prepend)
-        log_lines = []
-        for step in result.get("research_log", []):
-            icon = {"2gis": "2GIS", "yandex": "Яндекс", "website": "Сайт",
-                    "social": "Соцсети", "ai": "AI"}.get(step["step"], step["step"])
-            log_lines.append(f"[{icon}] {step['detail']}")
-
-        research_summary = " | ".join(log_lines)
-        sources = result.get("sources", [])
-
-        # Apply enriched data
         enriched = result.get("enriched_data")
         if enriched:
             apply_deep_research(contact, enriched)
 
-        # Append research log
-        existing_notes = contact.moderator_notes or ""
-        research_header = f"\n--- Deep Research ({timezone.now().strftime('%d.%m %H:%M')}) ---\n"
-        research_header += research_summary
-        if sources:
-            research_header += f"\nИсточники: {', '.join(sources[:5])}"
-        contact.moderator_notes = (existing_notes + research_header).strip()
-        contact.save(update_fields=["moderator_notes"])
+        # Save structured research data to JSON field
+        contact.research_data = {
+            "timestamp": timezone.now().isoformat(),
+            "research_log": result.get("research_log", []),
+            "sources": result.get("sources", []),
+            "enriched_data": enriched,
+        }
+        contact.save(update_fields=["research_data"])
 
         logger.info("Deep research done for contact %s: enriched=%s", contact_id, bool(enriched))
 
@@ -176,16 +165,13 @@ def deep_research_all_contacts_task(self, franchise_id):
             if enriched:
                 apply_deep_research(contact, enriched)
 
-            # Append log
-            log_lines = [f"[{s['step']}] {s['detail']}" for s in result.get("research_log", [])]
-            sources = result.get("sources", [])
-            header = f"\n--- Deep Research ({timezone.now().strftime('%d.%m %H:%M')}) ---\n"
-            header += " | ".join(log_lines)
-            if sources:
-                header += f"\nИсточники: {', '.join(sources[:5])}"
-            existing = contact.moderator_notes or ""
-            contact.moderator_notes = (existing + header).strip()
-            contact.save(update_fields=["moderator_notes"])
+            contact.research_data = {
+                "timestamp": timezone.now().isoformat(),
+                "research_log": result.get("research_log", []),
+                "sources": result.get("sources", []),
+                "enriched_data": enriched,
+            }
+            contact.save(update_fields=["research_data"])
 
         except Exception as e:
             logger.error("Deep research failed for contact %s: %s", contact.contact_id, e)

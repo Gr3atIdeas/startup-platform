@@ -412,102 +412,112 @@ DEEP_RESEARCH_PROMPT = """Ты — система глубокого иссле�
 }}"""
 
 
+def _safe_scrape(url, label, research_log, all_sources, source_type, max_text=10000):
+    """Scrape a URL safely, appending to log and sources."""
+    research_log.append({"step": label, "status": "running", "detail": f"{label}: {url[:80]}"})
+    try:
+        _, text = _fetch_page(url, timeout=10)
+        if text and len(text) > 200:
+            all_sources.append({"url": url, "text": text[:max_text], "source": source_type})
+            research_log[-1]["status"] = "done"
+            research_log[-1]["detail"] = f"{label}: {len(text)} символов"
+            return True
+        else:
+            research_log[-1]["status"] = "done"
+            research_log[-1]["detail"] = f"{label}: мало данных"
+            return False
+    except Exception as e:
+        research_log[-1]["status"] = "error"
+        research_log[-1]["detail"] = f"{label} ошибка: {str(e)[:100]}"
+        return False
+
+
 def deep_research_contact(contact, franchise_title):
     """
     Level 2: Deep research a single contact/location.
-    Searches 2GIS, Yandex, and location website for detailed info.
-    Returns dict with research results and list of sources.
+    Multiple sources with fallbacks. Never stops on single failure.
+    Returns dict with research_log, enriched_data, sources.
     """
     city = contact.city or ""
     address = contact.address or ""
-    search_query = f"{franchise_title} {city}"
+    query_base = f"{franchise_title} {city}"
     if address:
-        search_query += f" {address}"
+        query_base += f" {address}"
 
     all_sources = []
     research_log = []
 
-    # 1. Search 2GIS for this specific location
-    research_log.append({"step": "2gis", "status": "running", "detail": f"Поиск в 2ГИС: {search_query}"})
-    try:
-        from bs4 import BeautifulSoup
-        url = f"https://2gis.ru/search/{search_query.replace(' ', '%20')}"
-        resp = http_requests.get(url, headers=_HEADERS, timeout=15, proxies=_get_proxies())
-        if resp.status_code == 200:
-            soup = BeautifulSoup(resp.text, "html.parser")
-            for tag in soup(["script", "style", "nav"]):
-                tag.decompose()
-            text = soup.get_text(separator="\n", strip=True)
-            text = re.sub(r"\n{3,}", "\n\n", text)
-            if len(text) > 300:
-                all_sources.append({"url": url, "text": text[:10000], "source": "2gis"})
-                research_log[-1]["status"] = "done"
-                research_log[-1]["detail"] = f"2ГИС: {len(text)} символов"
-            else:
-                research_log[-1]["status"] = "done"
-                research_log[-1]["detail"] = "2ГИС: мало данных"
-        else:
-            research_log[-1]["status"] = "done"
-            research_log[-1]["detail"] = f"2ГИС: HTTP {resp.status_code}"
-    except Exception as e:
-        research_log[-1]["status"] = "error"
-        research_log[-1]["detail"] = f"2ГИС ошибка: {str(e)[:100]}"
+    # 1. 2GIS (with timeout fallback)
+    _safe_scrape(
+        f"https://2gis.ru/search/{query_base.replace(' ', '%20')}",
+        "2ГИС", research_log, all_sources, "2gis"
+    )
+    time.sleep(1)
 
-    time.sleep(2)
+    # 2. Yandex Maps
+    _safe_scrape(
+        f"https://yandex.ru/maps/?text={query_base.replace(' ', '%20')}",
+        "Яндекс.Карты", research_log, all_sources, "yandex_maps"
+    )
+    time.sleep(1)
 
-    # 2. Yandex search for owner/reviews
-    research_log.append({"step": "yandex", "status": "running", "detail": f"Яндекс: {franchise_title} {city} владелец отзывы"})
+    # 3. Yandex search: contacts + phone
+    research_log.append({"step": "yandex_search", "status": "running", "detail": f"Яндекс поиск: {franchise_title} {city} телефон"})
     try:
-        yandex_query = f'"{franchise_title}" {city} владелец отзывы франчайзи телефон'
-        urls = _yandex_search(yandex_query)
-        for u in urls[:3]:
-            time.sleep(2)
-            _, text = _fetch_page(u)
-            if text and len(text) > 200:
-                all_sources.append({"url": u, "text": text[:8000], "source": "web_search"})
+        queries = [
+            f'"{franchise_title}" {city} телефон адрес контакты',
+            f'"{franchise_title}" {city} отзывы владелец франчайзи',
+        ]
+        total_found = 0
+        for q in queries:
+            urls = _yandex_search(q)
+            for u in urls[:2]:
+                time.sleep(1)
+                _, text = _fetch_page(u, timeout=10)
+                if text and len(text) > 200:
+                    all_sources.append({"url": u, "text": text[:8000], "source": "web_search"})
+                    total_found += 1
         research_log[-1]["status"] = "done"
-        research_log[-1]["detail"] = f"Яндекс: {len(urls)} результатов, {len([s for s in all_sources if s['source']=='web_search'])} полезных"
+        research_log[-1]["detail"] = f"Яндекс поиск: {total_found} полезных страниц"
     except Exception as e:
         research_log[-1]["status"] = "error"
-        research_log[-1]["detail"] = f"Яндекс ошибка: {str(e)[:100]}"
+        research_log[-1]["detail"] = f"Яндекс поиск ошибка: {str(e)[:100]}"
 
-    time.sleep(2)
+    time.sleep(1)
 
-    # 3. If contact has a website, scrape it for contacts
+    # 4. Franchise website — look for city-specific page
+    if contact.franchise.contact_website:
+        base_url = contact.franchise.contact_website
+        if not base_url.startswith("http"):
+            base_url = "https://" + base_url
+        _safe_scrape(base_url, "Сайт франшизы", research_log, all_sources, "website")
+        time.sleep(1)
+
+    # 5. Contact's own website
     if contact.website:
-        research_log.append({"step": "website", "status": "running", "detail": f"Сайт точки: {contact.website}"})
-        try:
-            _, text = _fetch_page(contact.website)
-            if text and len(text) > 200:
-                all_sources.append({"url": contact.website, "text": text[:10000], "source": "website"})
-                research_log[-1]["status"] = "done"
-                research_log[-1]["detail"] = f"Сайт: {len(text)} символов"
-            else:
-                research_log[-1]["status"] = "done"
-                research_log[-1]["detail"] = "Сайт: мало данных"
-        except Exception as e:
-            research_log[-1]["status"] = "error"
-            research_log[-1]["detail"] = f"Сайт ошибка: {str(e)[:100]}"
+        _safe_scrape(contact.website, "Сайт точки", research_log, all_sources, "website")
+        time.sleep(1)
 
-    # 4. Search for social media
-    research_log.append({"step": "social", "status": "running", "detail": f"Поиск соцсетей: {franchise_title} {city}"})
+    # 6. Social media search
+    research_log.append({"step": "social", "status": "running", "detail": f"Соцсети: {franchise_title} {city}"})
     try:
-        social_query = f'"{franchise_title}" {city} vk.com OR instagram OR telegram'
-        social_urls = _yandex_search(social_query)
+        social_urls = _yandex_search(f'"{franchise_title}" {city} vk.com OR instagram OR telegram')
+        found = 0
         for u in social_urls[:2]:
-            time.sleep(2)
-            _, text = _fetch_page(u)
+            time.sleep(1)
+            _, text = _fetch_page(u, timeout=10)
             if text and len(text) > 100:
                 all_sources.append({"url": u, "text": text[:5000], "source": "web_search"})
+                found += 1
         research_log[-1]["status"] = "done"
-        research_log[-1]["detail"] = f"Соцсети: {len(social_urls)} найдено"
+        research_log[-1]["detail"] = f"Соцсети: {found} найдено"
     except Exception as e:
         research_log[-1]["status"] = "error"
         research_log[-1]["detail"] = f"Соцсети ошибка: {str(e)[:100]}"
 
-    # 5. AI extraction
+    # 7. AI extraction (always runs if we have ANY data)
     if not all_sources:
-        research_log.append({"step": "ai", "status": "skip", "detail": "Нет данных для AI"})
+        research_log.append({"step": "ai", "status": "skip", "detail": "Нет данных ни из одного источника"})
         return {"research_log": research_log, "enriched_data": None, "sources": []}
 
     combined = "\n\n".join(
@@ -515,14 +525,14 @@ def deep_research_contact(contact, franchise_title):
         for s in all_sources if s.get("text")
     )
 
-    research_log.append({"step": "ai", "status": "running", "detail": f"AI анализ: {len(combined)} символов"})
+    research_log.append({"step": "ai", "status": "running", "detail": f"AI анализ: {len(combined)} символов из {len(all_sources)} источников"})
 
     enriched = _extract_deep_data(combined, franchise_title, city)
     if enriched:
         research_log[-1]["status"] = "done"
-        phones_count = len(enriched.get("phones") or [])
-        emails_count = len(enriched.get("emails") or [])
-        research_log[-1]["detail"] = f"AI: {phones_count} тел, {emails_count} email, имя: {enriched.get('person_name') or 'нет'}"
+        phones = enriched.get("phones") or []
+        emails = enriched.get("emails") or []
+        research_log[-1]["detail"] = f"AI: {len(phones)} тел, {len(emails)} email, имя: {enriched.get('person_name') or 'нет'}"
     else:
         research_log[-1]["status"] = "error"
         research_log[-1]["detail"] = "AI не смог извлечь данные"
