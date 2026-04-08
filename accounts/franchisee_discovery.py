@@ -373,3 +373,291 @@ def _map_source(source_hint):
     if "search" in hint or "поиск" in hint:
         return "web_search"
     return "website"
+
+
+# ── Deep Research (Level 2) ────────────────────────────────────
+
+
+DEEP_RESEARCH_PROMPT = """Ты — система глубокого исследования точки франшизы для платформы GreatIdeas.ru.
+
+ЗАДАЧА: Из предоставленного текста извлеки МАКСИМУМ информации об этой конкретной точке франшизы "{franchise_title}" в городе {city}.
+
+Извлеки ВСЁ что найдёшь:
+- ФИО владельца или управляющего
+- Телефоны (все, включая мобильные)
+- Email адреса
+- Telegram, WhatsApp, VK, Instagram
+- Сайт (именно этой точки, не головной)
+- Полный адрес
+- График работы
+- Отзывы клиентов (краткие выдержки, макс 3)
+- Любые упоминания имён людей, связанных с этой точкой
+
+НЕ ВЫДУМЫВАЙ данные. Только из текста.
+
+Верни СТРОГО JSON:
+{{
+  "person_name": "ФИО владельца/управляющего или null",
+  "phones": ["список всех телефонов"],
+  "emails": ["список всех email"],
+  "telegram": "telegram или null",
+  "whatsapp": "whatsapp или null",
+  "vk": "ссылка VK или null",
+  "instagram": "ссылка Instagram или null",
+  "website": "сайт точки или null",
+  "full_address": "полный адрес или null",
+  "working_hours": "график работы или null",
+  "reviews_summary": ["краткие выдержки из отзывов, макс 3"],
+  "additional_info": "любая дополнительная полезная информация"
+}}"""
+
+
+def deep_research_contact(contact, franchise_title):
+    """
+    Level 2: Deep research a single contact/location.
+    Searches 2GIS, Yandex, and location website for detailed info.
+    Returns dict with research results and list of sources.
+    """
+    city = contact.city or ""
+    address = contact.address or ""
+    search_query = f"{franchise_title} {city}"
+    if address:
+        search_query += f" {address}"
+
+    all_sources = []
+    research_log = []
+
+    # 1. Search 2GIS for this specific location
+    research_log.append({"step": "2gis", "status": "running", "detail": f"Поиск в 2ГИС: {search_query}"})
+    try:
+        from bs4 import BeautifulSoup
+        url = f"https://2gis.ru/search/{search_query.replace(' ', '%20')}"
+        resp = http_requests.get(url, headers=_HEADERS, timeout=15, proxies=_get_proxies())
+        if resp.status_code == 200:
+            soup = BeautifulSoup(resp.text, "html.parser")
+            for tag in soup(["script", "style", "nav"]):
+                tag.decompose()
+            text = soup.get_text(separator="\n", strip=True)
+            text = re.sub(r"\n{3,}", "\n\n", text)
+            if len(text) > 300:
+                all_sources.append({"url": url, "text": text[:10000], "source": "2gis"})
+                research_log[-1]["status"] = "done"
+                research_log[-1]["detail"] = f"2ГИС: {len(text)} символов"
+            else:
+                research_log[-1]["status"] = "done"
+                research_log[-1]["detail"] = "2ГИС: мало данных"
+        else:
+            research_log[-1]["status"] = "done"
+            research_log[-1]["detail"] = f"2ГИС: HTTP {resp.status_code}"
+    except Exception as e:
+        research_log[-1]["status"] = "error"
+        research_log[-1]["detail"] = f"2ГИС ошибка: {str(e)[:100]}"
+
+    time.sleep(2)
+
+    # 2. Yandex search for owner/reviews
+    research_log.append({"step": "yandex", "status": "running", "detail": f"Яндекс: {franchise_title} {city} владелец отзывы"})
+    try:
+        yandex_query = f'"{franchise_title}" {city} владелец отзывы франчайзи телефон'
+        urls = _yandex_search(yandex_query)
+        for u in urls[:3]:
+            time.sleep(2)
+            _, text = _fetch_page(u)
+            if text and len(text) > 200:
+                all_sources.append({"url": u, "text": text[:8000], "source": "web_search"})
+        research_log[-1]["status"] = "done"
+        research_log[-1]["detail"] = f"Яндекс: {len(urls)} результатов, {len([s for s in all_sources if s['source']=='web_search'])} полезных"
+    except Exception as e:
+        research_log[-1]["status"] = "error"
+        research_log[-1]["detail"] = f"Яндекс ошибка: {str(e)[:100]}"
+
+    time.sleep(2)
+
+    # 3. If contact has a website, scrape it for contacts
+    if contact.website:
+        research_log.append({"step": "website", "status": "running", "detail": f"Сайт точки: {contact.website}"})
+        try:
+            _, text = _fetch_page(contact.website)
+            if text and len(text) > 200:
+                all_sources.append({"url": contact.website, "text": text[:10000], "source": "website"})
+                research_log[-1]["status"] = "done"
+                research_log[-1]["detail"] = f"Сайт: {len(text)} символов"
+            else:
+                research_log[-1]["status"] = "done"
+                research_log[-1]["detail"] = "Сайт: мало данных"
+        except Exception as e:
+            research_log[-1]["status"] = "error"
+            research_log[-1]["detail"] = f"Сайт ошибка: {str(e)[:100]}"
+
+    # 4. Search for social media
+    research_log.append({"step": "social", "status": "running", "detail": f"Поиск соцсетей: {franchise_title} {city}"})
+    try:
+        social_query = f'"{franchise_title}" {city} vk.com OR instagram OR telegram'
+        social_urls = _yandex_search(social_query)
+        for u in social_urls[:2]:
+            time.sleep(2)
+            _, text = _fetch_page(u)
+            if text and len(text) > 100:
+                all_sources.append({"url": u, "text": text[:5000], "source": "web_search"})
+        research_log[-1]["status"] = "done"
+        research_log[-1]["detail"] = f"Соцсети: {len(social_urls)} найдено"
+    except Exception as e:
+        research_log[-1]["status"] = "error"
+        research_log[-1]["detail"] = f"Соцсети ошибка: {str(e)[:100]}"
+
+    # 5. AI extraction
+    if not all_sources:
+        research_log.append({"step": "ai", "status": "skip", "detail": "Нет данных для AI"})
+        return {"research_log": research_log, "enriched_data": None, "sources": []}
+
+    combined = "\n\n".join(
+        f"=== {s['source']} ({s['url']}) ===\n{s['text']}"
+        for s in all_sources if s.get("text")
+    )
+
+    research_log.append({"step": "ai", "status": "running", "detail": f"AI анализ: {len(combined)} символов"})
+
+    enriched = _extract_deep_data(combined, franchise_title, city)
+    if enriched:
+        research_log[-1]["status"] = "done"
+        phones_count = len(enriched.get("phones") or [])
+        emails_count = len(enriched.get("emails") or [])
+        research_log[-1]["detail"] = f"AI: {phones_count} тел, {emails_count} email, имя: {enriched.get('person_name') or 'нет'}"
+    else:
+        research_log[-1]["status"] = "error"
+        research_log[-1]["detail"] = "AI не смог извлечь данные"
+
+    return {
+        "research_log": research_log,
+        "enriched_data": enriched,
+        "sources": [s["url"] for s in all_sources],
+    }
+
+
+def _extract_deep_data(all_text, franchise_title, city):
+    """Send text to Grok for deep contact extraction."""
+    api_key = getattr(settings, "GROK_API_KEY", "")
+    model = getattr(settings, "GROK_MODEL", "grok-3-mini")
+
+    if not api_key:
+        return None
+
+    if len(all_text) > 25000:
+        all_text = all_text[:25000]
+
+    prompt = DEEP_RESEARCH_PROMPT.format(franchise_title=franchise_title, city=city)
+
+    try:
+        response = http_requests.post(
+            "https://api.x.ai/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": model,
+                "messages": [
+                    {"role": "system", "content": prompt},
+                    {"role": "user", "content": f"Исследуй эту точку:\n\n{all_text}"},
+                ],
+                "temperature": 0.1,
+                "max_tokens": 4000,
+            },
+            proxies=_get_proxies() or None,
+            timeout=120,
+        )
+        response.raise_for_status()
+        data = response.json()
+        content = data["choices"][0]["message"]["content"]
+
+        if "```json" in content:
+            content = content.split("```json")[1].split("```")[0].strip()
+        elif "```" in content:
+            content = content.split("```")[1].split("```")[0].strip()
+
+        return json.loads(content)
+
+    except Exception as e:
+        logger.error("Deep research AI error: %s", e)
+        return None
+
+
+def apply_deep_research(contact, enriched_data):
+    """Apply enriched data to a FranchiseeContact, updating empty fields."""
+    if not enriched_data:
+        return False
+
+    updated = False
+
+    # Name
+    if enriched_data.get("person_name") and not contact.person_name:
+        contact.person_name = enriched_data["person_name"][:255]
+        updated = True
+
+    # Phone — take first from list
+    phones = enriched_data.get("phones") or []
+    if phones and not contact.phone:
+        contact.phone = phones[0][:100]
+        updated = True
+
+    # Email — take first from list
+    emails = enriched_data.get("emails") or []
+    if emails and not contact.email:
+        contact.email = emails[0][:255]
+        updated = True
+
+    # Telegram
+    if enriched_data.get("telegram") and not contact.telegram:
+        contact.telegram = enriched_data["telegram"][:255]
+        updated = True
+
+    # Website
+    if enriched_data.get("website") and not contact.website:
+        contact.website = enriched_data["website"][:500]
+        updated = True
+
+    # Address — update if more detailed
+    if enriched_data.get("full_address") and len(enriched_data["full_address"]) > len(contact.address or ""):
+        contact.address = enriched_data["full_address"]
+        updated = True
+
+    # Build notes from extra data
+    extra_parts = []
+    if enriched_data.get("working_hours"):
+        extra_parts.append(f"График: {enriched_data['working_hours']}")
+    if enriched_data.get("whatsapp"):
+        extra_parts.append(f"WhatsApp: {enriched_data['whatsapp']}")
+    if enriched_data.get("vk"):
+        extra_parts.append(f"VK: {enriched_data['vk']}")
+    if enriched_data.get("instagram"):
+        extra_parts.append(f"Instagram: {enriched_data['instagram']}")
+    if phones and len(phones) > 1:
+        extra_parts.append(f"Доп. телефоны: {', '.join(phones[1:])}")
+    if emails and len(emails) > 1:
+        extra_parts.append(f"Доп. email: {', '.join(emails[1:])}")
+    reviews = enriched_data.get("reviews_summary") or []
+    if reviews:
+        extra_parts.append(f"Отзывы: {'; '.join(reviews[:3])}")
+    if enriched_data.get("additional_info"):
+        extra_parts.append(enriched_data["additional_info"])
+
+    if extra_parts:
+        existing_notes = contact.moderator_notes or ""
+        new_notes = " | ".join(extra_parts)
+        if new_notes not in existing_notes:
+            contact.moderator_notes = (existing_notes + "\n" + new_notes).strip() if existing_notes else new_notes
+            updated = True
+
+    # Upgrade confidence if we found real contacts
+    if (contact.phone or contact.email) and contact.confidence in ("low", ""):
+        contact.confidence = "medium"
+        updated = True
+    if contact.phone and contact.email and contact.person_name:
+        contact.confidence = "high"
+        updated = True
+
+    if updated:
+        contact.save()
+
+    return updated
+    return "website"

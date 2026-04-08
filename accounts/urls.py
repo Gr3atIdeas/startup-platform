@@ -153,6 +153,8 @@ urlpatterns = [
     path("moderator/franchisee-discovery/analyze/<int:franchise_id>/", views.analyze_franchise_contacts, name="analyze_franchise_contacts"),
     path("moderator/franchisee-discovery/<int:franchise_id>/contacts/", views.franchisee_contacts_detail, name="franchisee_contacts_detail"),
     path("moderator/franchisee-discovery/contact/<int:contact_id>/update/", views.update_franchisee_contact, name="update_franchisee_contact"),
+    path("moderator/franchisee-discovery/contact/<int:contact_id>/deep-research/", views.deep_research_contact, name="deep_research_contact"),
+    path("moderator/franchisee-discovery/<int:franchise_id>/deep-research-all/", views.deep_research_all, name="deep_research_all"),
     path("moderator/franchisee-discovery/status/<int:log_id>/", views.franchisee_analysis_status, name="franchisee_analysis_status"),
     # Lead Generation
     path("leads/create/", views.create_lead, name="create_lead"),

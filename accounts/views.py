@@ -11925,6 +11925,40 @@ def update_franchisee_contact(request, contact_id):
     return JsonResponse({"ok": True, "status": contact.outreach_status})
 
 
+@login_required
+def deep_research_contact(request, contact_id):
+    """Launch deep research for a single contact (POST, AJAX)."""
+    if not is_moderator(request.user):
+        return JsonResponse({"error": "Forbidden"}, status=403)
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=405)
+
+    from .models import FranchiseeContact
+    contact = get_object_or_404(FranchiseeContact, contact_id=contact_id)
+
+    from .tasks import deep_research_contact_task
+    task = deep_research_contact_task.delay(contact.contact_id)
+    return JsonResponse({"ok": True, "task_id": task.id})
+
+
+@login_required
+def deep_research_all(request, franchise_id):
+    """Launch deep research for ALL contacts of a franchise (POST, AJAX)."""
+    if not is_moderator(request.user):
+        return JsonResponse({"error": "Forbidden"}, status=403)
+    if request.method != "POST":
+        return JsonResponse({"error": "POST required"}, status=405)
+
+    from .models import FranchiseeContact
+    count = FranchiseeContact.objects.filter(franchise_id=franchise_id).count()
+    if count == 0:
+        return JsonResponse({"error": "Нет контактов для исследования"}, status=400)
+
+    from .tasks import deep_research_all_contacts_task
+    task = deep_research_all_contacts_task.delay(franchise_id)
+    return JsonResponse({"ok": True, "task_id": task.id, "contacts_count": count})
+
+
 def franchises_by_city(request, city_slug):
     """SEO landing page for franchises in a specific city."""
     from .models import City, FranchiseLocation

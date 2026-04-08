@@ -107,6 +107,93 @@ def send_lead_to_crm_task(self, lead_id):
         raise self.retry(exc=exc)
 
 
+@shared_task(bind=True, max_retries=1, default_retry_delay=30,
+             time_limit=180, soft_time_limit=160)
+def deep_research_contact_task(self, contact_id):
+    """Level 2: Deep research a single franchisee contact for detailed info."""
+    import json as _json
+    from .models import FranchiseeContact
+    from .franchisee_discovery import deep_research_contact, apply_deep_research
+
+    contact = FranchiseeContact.objects.select_related("franchise").get(contact_id=contact_id)
+    franchise_title = contact.franchise.title
+
+    try:
+        result = deep_research_contact(contact, franchise_title)
+
+        # Save research log to moderator_notes (prepend)
+        log_lines = []
+        for step in result.get("research_log", []):
+            icon = {"2gis": "2GIS", "yandex": "Яндекс", "website": "Сайт",
+                    "social": "Соцсети", "ai": "AI"}.get(step["step"], step["step"])
+            log_lines.append(f"[{icon}] {step['detail']}")
+
+        research_summary = " | ".join(log_lines)
+        sources = result.get("sources", [])
+
+        # Apply enriched data
+        enriched = result.get("enriched_data")
+        if enriched:
+            apply_deep_research(contact, enriched)
+
+        # Append research log
+        existing_notes = contact.moderator_notes or ""
+        research_header = f"\n--- Deep Research ({timezone.now().strftime('%d.%m %H:%M')}) ---\n"
+        research_header += research_summary
+        if sources:
+            research_header += f"\nИсточники: {', '.join(sources[:5])}"
+        contact.moderator_notes = (existing_notes + research_header).strip()
+        contact.save(update_fields=["moderator_notes"])
+
+        logger.info("Deep research done for contact %s: enriched=%s", contact_id, bool(enriched))
+
+    except Exception as exc:
+        logger.error("Deep research failed for contact %s: %s", contact_id, exc)
+        raise self.retry(exc=exc)
+
+
+@shared_task(bind=True, max_retries=1, default_retry_delay=30,
+             time_limit=600, soft_time_limit=570)
+def deep_research_all_contacts_task(self, franchise_id):
+    """Level 2: Deep research ALL contacts of a franchise sequentially."""
+    import json as _json
+    from .models import FranchiseeContact
+    from .franchisee_discovery import deep_research_contact, apply_deep_research
+
+    contacts = FranchiseeContact.objects.filter(
+        franchise_id=franchise_id
+    ).select_related("franchise").order_by("contact_id")
+
+    franchise_title = contacts[0].franchise.title if contacts else ""
+    total = contacts.count()
+
+    for i, contact in enumerate(contacts):
+        try:
+            logger.info("Deep research %d/%d: %s %s", i + 1, total, contact.city, contact.address)
+            result = deep_research_contact(contact, franchise_title)
+
+            enriched = result.get("enriched_data")
+            if enriched:
+                apply_deep_research(contact, enriched)
+
+            # Append log
+            log_lines = [f"[{s['step']}] {s['detail']}" for s in result.get("research_log", [])]
+            sources = result.get("sources", [])
+            header = f"\n--- Deep Research ({timezone.now().strftime('%d.%m %H:%M')}) ---\n"
+            header += " | ".join(log_lines)
+            if sources:
+                header += f"\nИсточники: {', '.join(sources[:5])}"
+            existing = contact.moderator_notes or ""
+            contact.moderator_notes = (existing + header).strip()
+            contact.save(update_fields=["moderator_notes"])
+
+        except Exception as e:
+            logger.error("Deep research failed for contact %s: %s", contact.contact_id, e)
+            continue  # Don't stop on individual failures
+
+    logger.info("Deep research ALL done for franchise %s: %d contacts", franchise_id, total)
+
+
 @shared_task(bind=True, max_retries=2, default_retry_delay=60,
              time_limit=300, soft_time_limit=270)
 def analyze_franchise_contacts_task(self, log_id):

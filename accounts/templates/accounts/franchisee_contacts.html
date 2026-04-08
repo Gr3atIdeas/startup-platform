@@ -169,9 +169,16 @@
         <a href="{% url 'franchise_detail' slug=franchise.slug|default:franchise.franchise_id %}" target="_blank">Открыть франшизу &nearr;</a>
       </div>
     </div>
-    <button class="fca-analyze-btn" id="analyzeBtn" onclick="startAnalysis({{ franchise.franchise_id }})">
-      Запустить анализ
-    </button>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="fca-analyze-btn" id="analyzeBtn" onclick="startAnalysis({{ franchise.franchise_id }})">
+        Уровень 1: Найти точки
+      </button>
+      {% if contacts %}
+      <button class="fca-analyze-btn" id="deepAllBtn" onclick="deepResearchAll({{ franchise.franchise_id }})" style="border-color:rgba(34,197,94,0.3); color:#22c55e;">
+        Уровень 2: Углубить все ({{ contacts|length }})
+      </button>
+      {% endif %}
+    </div>
   </div>
 
   <!-- Live progress -->
@@ -322,6 +329,7 @@
         </select>
         <input type="text" class="fca-notes" data-contact-id="{{ contact.contact_id }}" value="{{ contact.moderator_notes }}" placeholder="Заметки...">
         <button class="fca-save-btn" onclick="updateContact({{ contact.contact_id }})">Сохранить</button>
+        <button class="fca-save-btn" onclick="deepResearchOne(this, {{ contact.contact_id }})" style="background:rgba(34,197,94,0.15); color:#22c55e; border:1px solid rgba(34,197,94,0.2);">Исследовать</button>
       </div>
     </div>
     {% endfor %}
@@ -426,6 +434,68 @@ function updateContact(contactId) {
       card.style.borderColor = 'rgba(34,197,94,0.3)';
       setTimeout(function() { card.style.borderColor = ''; }, 1500);
     }
+  });
+}
+
+function getCSRF() {
+  var csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+  if (csrfInput) return csrfInput.value;
+  var m = document.cookie.match(/csrftoken=([^;]+)/);
+  return m ? m[1] : '';
+}
+
+function deepResearchOne(btn, contactId) {
+  btn.disabled = true;
+  btn.textContent = 'Исследую...';
+  fetch('/moderator/franchisee-discovery/contact/' + contactId + '/deep-research/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRF() },
+    body: JSON.stringify({})
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.ok) {
+      btn.textContent = 'Запущено...';
+      btn.style.background = 'rgba(59,130,246,0.15)';
+      btn.style.color = '#3b82f6';
+      // Poll and reload after completion
+      setTimeout(function() { location.reload(); }, 30000);
+    } else {
+      btn.textContent = data.error || 'Ошибка';
+      btn.disabled = false;
+    }
+  })
+  .catch(function() {
+    btn.textContent = 'Ошибка сети';
+    btn.disabled = false;
+  });
+}
+
+function deepResearchAll(franchiseId) {
+  var btn = document.getElementById('deepAllBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,0.2); border-top-color:#22c55e; border-radius:50%; animation:spin 0.8s linear infinite;"></span> Исследую все...';
+
+  fetch('/moderator/franchisee-discovery/' + franchiseId + '/deep-research-all/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRF() },
+    body: JSON.stringify({})
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.ok) {
+      btn.textContent = 'Исследование запущено (' + data.contacts_count + ' контактов)...';
+      // Reload after estimated time (30sec per contact)
+      var waitTime = Math.min(data.contacts_count * 30000, 300000);
+      setTimeout(function() { location.reload(); }, waitTime);
+    } else {
+      btn.textContent = data.error || 'Ошибка';
+      btn.disabled = false;
+    }
+  })
+  .catch(function() {
+    btn.textContent = 'Ошибка сети';
+    btn.disabled = false;
   });
 }
 </script>
