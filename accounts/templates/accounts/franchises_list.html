@@ -143,8 +143,11 @@
 
     <div class="franchises-content">
       
-      <div class="catalog-header-bar">
-        <h1 class="catalog-header-title" id="catalogTitle">Каталог франшиз</h1>
+      <div class="catalog-header-bar" style="flex-wrap:wrap;">
+        <div style="flex:1; min-width:0;">
+          <h1 class="catalog-header-title" id="catalogTitle">Каталог франшиз</h1>
+          <p id="catalogSeoDesc" style="display:none; color:rgba(255,255,255,0.7); font-size:12px; font-family:Inter,sans-serif; line-height:1.4; margin:4px 0 0; opacity:0.75;"></p>
+        </div>
         <div class="catalog-header-right">
           <div class="catalog-header-search">
             <input type="text" class="catalog-search-input" placeholder="Поиск..." value="{{ search_query|default_if_none:'' }}">
@@ -154,7 +157,6 @@
           </button>
         </div>
       </div>
-      <p id="catalogSeoDesc" style="display:none; color:rgba(255,255,255,0.55); font-family:Inter,sans-serif; font-size:13px; line-height:1.5; margin:-8px 0 16px; max-width:800px;"></p>
 
 
       <div class="franchises-grid skeleton-loading" id="franchisesGrid">
