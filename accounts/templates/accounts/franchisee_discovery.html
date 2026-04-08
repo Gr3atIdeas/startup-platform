@@ -1,6 +1,7 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
 {% load humanize %}
+{% load accounts_extras %}
 
 {% block title %}Поиск франчайзи — Great Ideas{% endblock %}
 
@@ -93,11 +94,11 @@
       <tr id="row-{{ f.franchise_id }}">
         <td>
           <div class="fd-franchise-name">
-            <a href="{% url 'franchise_detail' slug=f.slug|default:f.franchise_id %}">{{ f.title }}</a>
+            <a href="{% url 'franchisee_contacts_detail' franchise_id=f.franchise_id %}">{{ f.title }}</a>
           </div>
           {% if f.contact_website %}<div style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:2px;">{{ f.contact_website|truncatechars:40 }}</div>{% endif %}
         </td>
-        <td>{{ f.direction.direction_name|default:"—" }}</td>
+        <td>{{ f.direction.direction_name|default:"—"|translate_category }}</td>
         <td>{{ f.locations_count|default:0 }}</td>
         <td>
           {% with cc=f.contacts_count|default:0 %}
