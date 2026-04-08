@@ -1471,7 +1471,6 @@ a:hover {
 
 .startup-header .logo-display-container,
 .agency-header .logo-display-container,
-.franchise-header .logo-display-container,
 .specialist-header .logo-display-container {
   width: 50px;
   height: 50px;
@@ -1485,6 +1484,32 @@ a:hover {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+
+.franchise-header .logo-display-container {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background-color: rgba(255,255,255,0.06);
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.franchise-header .logo-display-container .franchise-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 13px;
+}
+.franchise-header .logo-display-container .logo-placeholder {
+  width: 28px;
+  height: 28px;
+  opacity: 0.4;
 }
 
 .startup-title-content,

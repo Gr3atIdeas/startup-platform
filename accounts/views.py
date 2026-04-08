@@ -12028,41 +12028,10 @@ def franchise_landing_d(request):
 
 
 def franchises_by_direction(request, direction_id):
-    """SEO landing page for franchises in a specific category/direction."""
+    """Redirect to franchise catalog with category filter pre-applied."""
     from .models import Directions
-
-    direction = get_object_or_404(Directions, direction_id=direction_id)
-
-    franchises_qs = Franchises.objects.filter(
-        direction=direction, status="approved"
-    ).select_related("owner", "direction", "stage").order_by("-created_at")
-
-    paginator = Paginator(franchises_qs, 12)
-    page_obj = paginator.get_page(request.GET.get("page", 1))
-
-    other_directions = Directions.objects.filter(
-        franchises__status="approved"
-    ).exclude(direction_id=direction.direction_id).distinct().order_by("direction_name")
-
-    context = {
-        "direction": direction,
-        "page_obj": page_obj,
-        "paginator": paginator,
-        "franchises_count": franchises_qs.count(),
-        "other_directions": other_directions,
-    }
-
-    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
-    if is_ajax:
-        html = render_to_string("accounts/partials/_franchise_cards.html", context, request=request)
-        return JsonResponse({
-            "html": html,
-            "page_number": page_obj.number,
-            "num_pages": paginator.num_pages,
-            "has_next": page_obj.has_next(),
-        })
-
-    return render(request, "accounts/franchises_by_direction.html", context)
+    get_object_or_404(Directions, direction_id=direction_id)
+    return redirect(f"{reverse('franchises_list')}?category={direction_id}")
 
 
 # ── Franchise AI Importer ────────────────────────────────────

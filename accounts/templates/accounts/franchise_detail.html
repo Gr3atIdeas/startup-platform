@@ -71,7 +71,7 @@
       <a href="{% url 'franchises_list' %}">Франшизы</a>
       {% if franchise.direction %}
       <span>/</span>
-      <a href="{% url 'franchises_by_direction' direction_id=franchise.direction.direction_id %}">{{ franchise.direction.direction_name }}</a>
+      <a href="{% url 'franchises_list' %}?category={{ franchise.direction.direction_id }}">{{ franchise.direction.direction_name|translate_category }}</a>
       {% endif %}
       <span>/</span>
       <span class="current">{{ franchise.title|truncatewords:5 }}</span>
@@ -110,10 +110,13 @@
           <div class="franchise-detail-carousel-track" id="mediaCarousel">
             {% for url in slider_images|slice:":4" %}
               <div class="franchise-detail-carousel-slide {% if forloop.first %}active{% endif %}">
-                <img src="{{ url|resolve_url:file_url_map }}"
-                     alt="Изображение {{ forloop.counter }}"
-                     class="franchise-detail-carousel-image"
-                     {% if not forloop.first %}loading="lazy"{% endif %} decoding="async">
+                <a href="{{ url|resolve_url:file_url_map }}" class="glightbox" data-gallery="carousel" data-glightbox="title: Изображение {{ forloop.counter }}">
+                  <img src="{{ url|resolve_url:file_url_map }}"
+                       alt="Изображение {{ forloop.counter }}"
+                       class="franchise-detail-carousel-image"
+                       {% if not forloop.first %}loading="lazy"{% endif %} decoding="async"
+                       style="cursor:zoom-in;">
+                </a>
               </div>
             {% endfor %}
           </div>
@@ -122,19 +125,43 @@
               <span class="franchise-detail-indicator {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
             {% endfor %}
           </div>
-          <button class="franchise-detail-carousel-prev" aria-label="Предыдущее изображение">
+          <button class="franchise-detail-carousel-prev" aria-label="Предыдущее изображение" onclick="window._carouselNav&&window._carouselNav(-1)">
             <i class="fas fa-chevron-left"></i>
           </button>
-          <button class="franchise-detail-carousel-next" aria-label="Следующее изображение">
+          <button class="franchise-detail-carousel-next" aria-label="Следующее изображение" onclick="window._carouselNav&&window._carouselNav(1)">
             <i class="fas fa-chevron-right"></i>
           </button>
-          <div class="carousel-planet-thumbnail">
-            {% if franchise.planet_image %}
-              <div class="planet-detail-3d" style="background-image: url('{{ franchise.planet_image|planet_url }}')"></div>
-            {% else %}
-              <img src="{% static 'accounts/images/icons/planet_placeholder.svg' %}" alt="Планета не выбрана" class="planet-thumbnail-placeholder">
-            {% endif %}
+          <script>
+          (function(){
+            var slides = document.querySelectorAll('.franchise-detail-carousel-slide');
+            var dots = document.querySelectorAll('.franchise-detail-indicator');
+            if(slides.length < 2) return;
+            var cur = 0;
+            window._carouselNav = function(dir) {
+              slides[cur].classList.remove('active');
+              if(dots[cur]) dots[cur].classList.remove('active');
+              cur = (cur + dir + slides.length) % slides.length;
+              slides[cur].classList.add('active');
+              if(dots[cur]) dots[cur].classList.add('active');
+            };
+            dots.forEach(function(dot, i) {
+              dot.addEventListener('click', function() {
+                slides[cur].classList.remove('active');
+                if(dots[cur]) dots[cur].classList.remove('active');
+                cur = i;
+                slides[cur].classList.add('active');
+                if(dots[cur]) dots[cur].classList.add('active');
+              });
+            });
+          })();
+          </script>
+          {% if franchise.direction %}
+          <div style="position:absolute; bottom:12px; left:12px; z-index:5;">
+            <a href="{% url 'franchises_list' %}?category={{ franchise.direction.direction_id }}" style="display:inline-block; padding:6px 14px; border-radius:10px; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.15); color:#fff; font-family:Inter,sans-serif; font-size:12px; font-weight:500; text-decoration:none;">
+              {{ franchise.direction.direction_name|translate_category }}
+            </a>
           </div>
+          {% endif %}
         {% endif %}
 
 
@@ -233,11 +260,6 @@
         {{ franchise.short_description|striptags|truncatewords:30|default:"" }}
       </div>
 
-      <div class="franchise-category-badge">
-        <span class="category-label">Категория:</span>
-        <span class="category-value">{{ franchise.direction.direction_name|translate_category|default:"Без категории" }}</span>
-      </div>
-
       <div class="franchise-financial-info">
         <div class="financial-goal">
           <span class="financial-label">Стоимость франшизы</span>
@@ -278,21 +300,6 @@
         <div class="tab-content-container">
           <div id="info-section" class="content-section active">
             <div class="detail-info-section-container">
-              <div class="detail-info-section-top-row">
-                <div class="detail-info-section-stage-block">
-                  <div class="stage-icon-container">
-                    <img src="{% static 'accounts/images/figma_assets/stage_icon.webp' %}" alt="Стоимость" class="stage-icon">
-                    <span class="stage-label">Стоимость</span>
-                  </div>
-                  <div class="stage-value">{{ franchise.investment_size|default:0|floatformat:0|intcomma }} ₽</div>
-                </div>
-                <div class="detail-info-section-presentation-card">
-                  {% if franchise.pitch_deck_url %}
-                    <a href="{{ franchise.pitch_deck_url }}" target="_blank" class="presentation-button" data-track-click="pitch_deck">Презентация</a>
-                  {% endif %}
-                </div>
-              </div>
-
               <div class="detail-info-section-about-block">
 
                 <h3 class="about-title">О франшизе</h3>
@@ -1125,6 +1132,18 @@
 <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js" defer></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Wrap images in about-content and section-content with glightbox links
+    document.querySelectorAll('.about-content img, .section-content img').forEach(function(img) {
+      if (img.closest('.glightbox') || img.closest('a')) return; // already wrapped
+      var link = document.createElement('a');
+      link.href = img.src;
+      link.className = 'glightbox';
+      link.setAttribute('data-gallery', 'content');
+      img.style.cursor = 'zoom-in';
+      img.parentNode.insertBefore(link, img);
+      link.appendChild(img);
+    });
+
     // Init GLightbox after deferred script loads
     function initLightbox() {
       if (typeof GLightbox !== 'undefined') {
