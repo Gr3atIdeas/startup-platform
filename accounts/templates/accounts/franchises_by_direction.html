@@ -8,7 +8,7 @@
 
 {% block meta_description %}<meta name="description" content="{{ seo_text|truncatewords:30 }}">{% endblock %}
 
-{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_id=direction.direction_id %}">{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_slug=direction_slug %}">{% endblock %}
 
 {% block og_tags %}
 <meta property="og:type" content="website">
@@ -16,7 +16,7 @@
 <meta property="og:title" content="Франшизы: {{ cat_name }} — Great Ideas">
 <meta property="og:description" content="{{ seo_text|truncatewords:25 }}">
 <meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
-<meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_id=direction.direction_id %}">
+<meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_slug=direction_slug %}">
 {% endblock %}
 
 {% block catalog_css %}<link rel="stylesheet" href="{% static 'accounts/css/catalog_sidebar.css' %}?v={% now 'U' %}">{% endblock %}
@@ -30,7 +30,7 @@
     "@type": "CollectionPage",
     "name": "Франшизы: {{ cat_name }}",
     "description": "{{ seo_text|truncatewords:25 }}",
-    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_id=direction.direction_id %}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_slug=direction_slug %}",
     "numberOfItems": {{ franchises_count }},
     "breadcrumb": {
       "@type": "BreadcrumbList",
@@ -45,9 +45,9 @@
 {% endblock %}
 
 {% block content %}
-<div class="catalog-container" style="max-width:1303px; margin:0 auto; padding:0 20px;">
+<div class="catalog-container">
+  <div class="franchises-content" style="width:100%; max-width:1303px; margin:0 auto;">
 
-  <div class="startups-content" style="width:100%;">
     <!-- Breadcrumbs -->
     <nav style="margin-bottom:16px; font-family:Inter,sans-serif; font-size:13px;">
       <a href="{% url 'home' %}" style="color:rgba(255,255,255,0.5); text-decoration:none;">Главная</a>
@@ -68,7 +68,7 @@
 
     <!-- Cross-links to other categories -->
     {% if other_directions %}
-    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;">
+    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:28px;">
       <a href="{% url 'franchises_list' %}"
          style="font-family:Inter,sans-serif; font-size:12px; padding:6px 14px; border-radius:20px;
                 background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
@@ -76,7 +76,7 @@
         Все франшизы
       </a>
       {% for d in other_directions %}
-      <a href="{% url 'franchises_by_direction' direction_id=d.direction_id %}"
+      <a href="{% url 'franchises_by_direction' direction_slug=d.slug %}"
          style="font-family:Inter,sans-serif; font-size:12px; padding:6px 14px; border-radius:20px;
                 background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
                 color:rgba(255,255,255,0.7); text-decoration:none; transition:all 0.2s;">
@@ -111,6 +111,7 @@
       {% endif %}
     </div>
     {% endif %}
+
   </div>
 </div>
 {% endblock %}

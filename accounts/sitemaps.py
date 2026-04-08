@@ -100,7 +100,7 @@ class FranchiseCitySitemap(Sitemap):
 
 
 class FranchiseDirectionSitemap(Sitemap):
-    """Категорийные лендинги франшиз — /franchises/direction/{id}/."""
+    """Категорийные лендинги франшиз — /franchises/direction/{slug}/."""
     changefreq = "weekly"
     priority = 0.6
 
@@ -114,7 +114,9 @@ class FranchiseDirectionSitemap(Sitemap):
         return Directions.objects.filter(direction_id__in=direction_ids).order_by("direction_name")
 
     def location(self, obj):
-        return reverse("franchises_by_direction", kwargs={"direction_id": obj.direction_id})
+        from .views import get_direction_slug
+        slug = get_direction_slug(obj)
+        return reverse("franchises_by_direction", kwargs={"direction_slug": slug})
 
 
 class NewsSitemap(Sitemap):

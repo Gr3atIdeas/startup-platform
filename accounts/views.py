@@ -57,7 +57,7 @@ from django.db.models.functions import (
     TruncMonth,
     Floor,
 )
-from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
+from django.http import Http404, HttpResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.templatetags.static import static
@@ -135,6 +135,25 @@ from .models import (
 )
 from .utils import send_telegram_support_message, send_telegram_contact_form_message
 logger = logging.getLogger(__name__)
+
+
+# ── Direction slug mapping (for SEO-friendly category URLs) ──
+DIRECTION_SLUG_MAP = {
+    "beauty": "Beauty",
+    "kafe-restorany": "Cafe",
+    "dostavka": "Delivery",
+    "fastfud": "Fastfood",
+    "finansy": "Finance",
+    "zdorove": "Healthcare",
+    "sport": "Sport",
+    "tekhnologii": "Technology",
+}
+DIRECTION_NAME_TO_SLUG = {v: k for k, v in DIRECTION_SLUG_MAP.items()}
+
+
+def get_direction_slug(direction):
+    """Get URL slug for a direction object."""
+    return DIRECTION_NAME_TO_SLUG.get(direction.direction_name, str(direction.direction_id))
 
 
 def is_moderator(user):
@@ -1226,6 +1245,9 @@ def franchises_list(request):
         .distinct()
     )
     franchise_directions = Directions.objects.filter(direction_id__in=existing_dir_ids).order_by("direction_name")
+    # Attach SEO slugs for crawlable links
+    for d in franchise_directions:
+        d.seo_slug = get_direction_slug(d)
 
     franchises_qs = Franchises.objects.filter(status="approved").select_related("owner", "direction", "stage")
     selected_categories = request.GET.getlist("category")
@@ -1390,10 +1412,12 @@ def franchises_list(request):
         if len(selected_categories) == 1 and not search_query:
             try:
                 dir_id = int(selected_categories[0])
+                direction_obj = Directions.objects.get(direction_id=dir_id)
+                slug = get_direction_slug(direction_obj)
                 canonical_url = request.build_absolute_uri(
-                    reverse("franchises_by_direction", kwargs={"direction_id": dir_id})
+                    reverse("franchises_by_direction", kwargs={"direction_slug": slug})
                 )
-            except (ValueError, TypeError):
+            except (ValueError, TypeError, Directions.DoesNotExist):
                 pass
 
         context = {
@@ -12001,6 +12025,8 @@ def franchises_by_city(request, city_slug):
     city_directions = Directions.objects.filter(
         direction_id__in=city_direction_ids
     ).order_by("direction_name")
+    for d in city_directions:
+        d.seo_slug = get_direction_slug(d)
 
     context = {
         "city": city,
@@ -12121,11 +12147,27 @@ def franchise_landing_d(request):
     return render(request, "accounts/franchise_landing_d.html", _franchise_landing_context())
 
 
-def franchises_by_direction(request, direction_id):
+def franchises_by_direction_legacy(request, direction_id):
+    """301-redirect from old /direction/<id>/ to new /direction/<slug>/."""
+    from .models import Directions
+    direction = get_object_or_404(Directions, direction_id=direction_id)
+    slug = get_direction_slug(direction)
+    return redirect(
+        reverse("franchises_by_direction", kwargs={"direction_slug": slug}),
+        permanent=True,
+    )
+
+
+def franchises_by_direction(request, direction_slug):
     """SEO landing page for franchises in a specific category."""
     from .models import Directions
 
-    direction = get_object_or_404(Directions, direction_id=direction_id)
+    direction_name = DIRECTION_SLUG_MAP.get(direction_slug)
+    if direction_name:
+        direction = get_object_or_404(Directions, direction_name=direction_name)
+    else:
+        # Fallback: try slug as ID for any unmapped directions
+        raise Http404("Direction not found")
 
     franchises_qs = Franchises.objects.filter(
         status="approved", direction=direction
@@ -12146,40 +12188,46 @@ def franchises_by_direction(request, direction_id):
         direction_id__in=existing_dir_ids
     ).order_by("direction_name")
 
+    # Attach slugs to other directions for template URL generation
+    for d in other_directions:
+        d.slug = get_direction_slug(d)
+
     # SEO descriptions per category
     from .templatetags.accounts_extras import translate_category
     cat_name = translate_category(direction.direction_name)
+    count = franchises_qs.count()
     seo_descriptions = {
         "Beauty": f"Каталог франшиз в сфере красоты и косметологии. Салоны красоты, барбершопы, "
                   f"косметологические клиники и другие бизнес-форматы с проверенной бизнес-моделью. "
-                  f"Выберите франшизу из {franchises_qs.count()} предложений и начните свой бизнес в индустрии красоты.",
+                  f"Выберите франшизу из {count} предложений и начните свой бизнес в индустрии красоты.",
         "Cafe": f"Франшизы кафе и ресторанов — готовые бизнес-модели в сфере общественного питания. "
                 f"Кофейни, рестораны, бары и другие форматы HoReCa. "
-                f"{franchises_qs.count()} франшиз доступно для инвестиций.",
+                f"{count} франшиз доступно для инвестиций.",
         "Delivery": f"Франшизы служб доставки — курьерские сервисы, доставка еды, логистические решения. "
-                    f"Быстрорастущий сегмент с {franchises_qs.count()} предложениями для инвесторов.",
+                    f"Быстрорастущий сегмент с {count} предложениями для инвесторов.",
         "Fastfood": f"Франшизы фастфуда и быстрого питания — шаурма, бургеры, пицца, суши и другие форматы. "
-                    f"Самый популярный сегмент франчайзинга с {franchises_qs.count()} предложениями.",
+                    f"Самый популярный сегмент франчайзинга с {count} предложениями.",
         "Finance": f"Франшизы в сфере финансов — микрофинансирование, страхование, финансовый консалтинг. "
-                   f"{franchises_qs.count()} франшиз для тех, кто хочет работать в финтех-индустрии.",
+                   f"{count} франшиз для тех, кто хочет работать в финтех-индустрии.",
         "Healthcare": f"Франшизы в сфере здоровья — аптеки, медицинские центры, ортопедические салоны. "
-                      f"{franchises_qs.count()} проверенных бизнес-моделей в медицинской отрасли.",
+                      f"{count} проверенных бизнес-моделей в медицинской отрасли.",
         "Sport": f"Франшизы в сфере спорта и фитнеса — тренажёрные залы, студии йоги, спортивные секции. "
-                 f"{franchises_qs.count()} предложений для запуска спортивного бизнеса.",
+                 f"{count} предложений для запуска спортивного бизнеса.",
         "Technology": f"Франшизы в сфере технологий — IT-решения, сервисные центры, образовательные платформы. "
-                      f"{franchises_qs.count()} технологических франшиз для инвесторов.",
+                      f"{count} технологических франшиз для инвесторов.",
     }
     seo_text = seo_descriptions.get(
         direction.direction_name,
         f"Каталог франшиз в категории «{cat_name}». "
-        f"{franchises_qs.count()} франшиз доступно для инвестиций на платформе Great Ideas."
+        f"{count} франшиз доступно для инвестиций на платформе Great Ideas."
     )
 
     context = {
         "direction": direction,
+        "direction_slug": direction_slug,
         "page_obj": page_obj,
         "paginator": paginator,
-        "franchises_count": franchises_qs.count(),
+        "franchises_count": count,
         "other_directions": other_directions,
         "seo_text": seo_text,
         "cat_name": cat_name,
