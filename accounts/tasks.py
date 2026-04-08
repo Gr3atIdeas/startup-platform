@@ -181,7 +181,7 @@ def deep_research_all_contacts_task(self, franchise_id):
 
 
 @shared_task(bind=True, max_retries=2, default_retry_delay=60,
-             time_limit=300, soft_time_limit=270)
+             time_limit=600, soft_time_limit=570)
 def analyze_franchise_contacts_task(self, log_id):
     """Async franchisee contact discovery: scrape web + AI extraction."""
     import json as _json

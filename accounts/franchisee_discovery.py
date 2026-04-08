@@ -119,24 +119,52 @@ def scrape_franchise_website(franchise):
 
 
 def search_web_for_franchisees(franchise_title):
-    """Search the web for franchisee contacts."""
+    """Search the web for franchisee contacts — by cities and general queries."""
     results = []
-    queries = [
-        f'"{franchise_title}" франчайзи контакты телефон',
-        f'"{franchise_title}" точки адреса город отзывы',
+    seen_urls = set()
+
+    # General queries first
+    general_queries = [
+        f'"{franchise_title}" франчайзи контакты телефон адрес',
+        f'"{franchise_title}" точки города адреса филиалы',
+        f'"{franchise_title}" отзывы франчайзи владелец',
     ]
 
-    for query in queries:
+    for query in general_queries:
         urls = _yandex_search(query)
         for url in urls[:3]:
-            time.sleep(2)
+            if url in seen_urls:
+                continue
+            seen_urls.add(url)
+            time.sleep(1)
             _, text = _fetch_page(url)
             if text and len(text) > 200:
-                results.append({
-                    "url": url,
-                    "text": text,
-                    "source": "web_search",
-                })
+                results.append({"url": url, "text": text, "source": "web_search"})
+
+    # City-specific search — top Russian cities
+    top_cities = [
+        "Москва", "Санкт-Петербург", "Новосибирск", "Екатеринбург",
+        "Казань", "Нижний Новгород", "Челябинск", "Самара",
+        "Ростов-на-Дону", "Уфа", "Красноярск", "Воронеж",
+        "Краснодар", "Пермь", "Волгоград",
+    ]
+
+    for city in top_cities:
+        query = f'"{franchise_title}" {city} адрес телефон'
+        urls = _yandex_search(query)
+        for url in urls[:2]:
+            if url in seen_urls:
+                continue
+            seen_urls.add(url)
+            time.sleep(1)
+            _, text = _fetch_page(url)
+            if text and len(text) > 200:
+                results.append({"url": url, "text": text, "source": "web_search"})
+        # Rate limit between cities
+        time.sleep(1)
+        # Stop if we have enough data (avoid timeouts)
+        if len(results) > 20:
+            break
 
     return results
 
@@ -185,30 +213,33 @@ def _yandex_search(query):
 
 
 def search_maps_for_locations(franchise_title):
-    """Best-effort search on 2GIS for franchise locations."""
+    """Best-effort search on 2GIS and Yandex Maps for franchise locations."""
     results = []
 
-    try:
-        from bs4 import BeautifulSoup
+    # Try multiple map sources
+    map_urls = [
+        f"https://2gis.ru/search/{franchise_title}",
+        f"https://yandex.ru/maps/?text={franchise_title.replace(' ', '%20')}",
+    ]
 
-        url = f"https://2gis.ru/search/{franchise_title}"
-        resp = http_requests.get(
-            url, headers=_HEADERS, timeout=15, proxies=_get_proxies(),
-        )
-        if resp.status_code == 200:
-            soup = BeautifulSoup(resp.text, "html.parser")
-            for tag in soup(["script", "style", "nav"]):
-                tag.decompose()
-            text = soup.get_text(separator="\n", strip=True)
-            text = re.sub(r"\n{3,}", "\n\n", text)
-            if len(text) > 300:
-                results.append({
-                    "url": url,
-                    "text": text[:15000],
-                    "source": "2gis",
-                })
-    except Exception as e:
-        logger.warning("2GIS search failed: %s", e)
+    for url in map_urls:
+        try:
+            from bs4 import BeautifulSoup
+            resp = http_requests.get(
+                url, headers=_HEADERS, timeout=10, proxies=_get_proxies(),
+            )
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.text, "html.parser")
+                for tag in soup(["script", "style", "nav"]):
+                    tag.decompose()
+                text = soup.get_text(separator="\n", strip=True)
+                text = re.sub(r"\n{3,}", "\n\n", text)
+                if len(text) > 300:
+                    source_type = "2gis" if "2gis" in url else "yandex_maps"
+                    results.append({"url": url, "text": text[:15000], "source": source_type})
+        except Exception as e:
+            logger.warning("Maps search failed for %s: %s", url, e)
+        time.sleep(1)
 
     return results
 
