@@ -1,0 +1,465 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load file_tags %}
+{% load accounts_extras %}
+{% load html_sanitizer %}
+
+{% block title %}{{ franchise.title }} — Great Ideas{% endblock %}
+
+{% block meta_description %}<meta name="description" content="{{ franchise.short_description|striptags|truncatewords:25 }}">{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/css/glightbox.min.css">
+<style>
+  .fdt { font-family: Inter, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; }
+
+  /* Breadcrumbs */
+  .fdt-crumbs { font-size: 13px; margin-bottom: 20px; }
+  .fdt-crumbs a { color: rgba(255,255,255,0.4); text-decoration: none; }
+  .fdt-crumbs a:hover { color: rgba(255,255,255,0.7); }
+  .fdt-crumbs span { color: rgba(255,255,255,0.2); margin: 0 6px; }
+  .fdt-crumbs .current { color: rgba(255,255,255,0.7); }
+
+  /* Carousel — full width, 16:9 */
+  .fdt-carousel {
+    position: relative; width: 100%; aspect-ratio: 16/9;
+    border-radius: 20px; overflow: hidden; margin-bottom: 28px;
+    background: rgba(255,255,255,0.03);
+  }
+  .fdt-slide {
+    position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s;
+    pointer-events: none;
+  }
+  .fdt-slide.active { opacity: 1; pointer-events: auto; }
+  .fdt-slide img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
+  .fdt-carousel-btn {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+    width: 44px; height: 44px; border-radius: 50%; border: none;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(8px);
+    color: #fff; font-size: 18px; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fdt-carousel-btn:hover { background: rgba(0,0,0,0.7); }
+  .fdt-carousel-btn--prev { left: 16px; }
+  .fdt-carousel-btn--next { right: 16px; }
+  .fdt-dots {
+    position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; z-index: 5;
+  }
+  .fdt-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.2s;
+  }
+  .fdt-dot.active { background: #fff; width: 24px; border-radius: 4px; }
+  .fdt-category-badge {
+    position: absolute; top: 16px; left: 16px; z-index: 5;
+    padding: 6px 16px; border-radius: 12px;
+    background: rgba(99,102,241,0.85); color: #fff;
+    font-size: 13px; font-weight: 500;
+  }
+  .fdt-no-images {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.15); font-size: 48px;
+  }
+
+  /* Title block */
+  .fdt-title-block { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+  .fdt-logo {
+    width: 52px; height: 52px; border-radius: 14px; overflow: hidden;
+    background: rgba(255,255,255,0.06); flex-shrink: 0;
+  }
+  .fdt-logo img { width: 100%; height: 100%; object-fit: cover; }
+  .fdt-title {
+    font-family: Unbounded, sans-serif; font-size: clamp(22px, 4vw, 32px);
+    font-weight: 600; color: #fff; line-height: 1.2;
+  }
+
+  /* Description */
+  .fdt-desc {
+    font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.65;
+    margin-bottom: 24px; font-weight: 300;
+  }
+
+  /* Stats row */
+  .fdt-stats {
+    display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 24px;
+    padding: 20px 24px; border-radius: 16px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  }
+  .fdt-stat-item { }
+  .fdt-stat-label { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+  .fdt-stat-value { font-family: Unbounded, sans-serif; font-size: 18px; font-weight: 600; color: #fff; }
+
+  /* CTA row */
+  .fdt-cta {
+    display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap;
+  }
+  .fdt-cta-primary {
+    padding: 14px 32px; border-radius: 14px; border: none;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff;
+    font-family: Inter, sans-serif; font-size: 16px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; text-decoration: none;
+  }
+  .fdt-cta-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.4); }
+  .fdt-cta-secondary {
+    padding: 14px 24px; border-radius: 14px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.8); font-family: Inter, sans-serif; font-size: 14px; font-weight: 500;
+    text-decoration: none; display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+  }
+  .fdt-cta-secondary:hover { background: rgba(255,255,255,0.1); }
+
+  /* Tabs */
+  .fdt-tabs {
+    display: flex; gap: 0; margin-bottom: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .fdt-tab {
+    padding: 14px 24px; font-size: 14px; font-weight: 500; cursor: pointer;
+    color: rgba(255,255,255,0.45); border-bottom: 2px solid transparent;
+    transition: all 0.2s; background: none; border-top: none; border-left: none; border-right: none;
+  }
+  .fdt-tab.active { color: #fff; border-bottom-color: #6366f1; }
+  .fdt-tab:hover { color: rgba(255,255,255,0.7); }
+  .fdt-panel { display: none; padding-top: 28px; }
+  .fdt-panel.active { display: block; }
+
+  /* Content */
+  .fdt-content {
+    font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.65; font-weight: 300;
+  }
+  .fdt-content h2, .fdt-content h3 {
+    font-family: Unbounded, sans-serif; font-weight: 500; color: #fff;
+    margin: 24px 0 12px; line-height: 1.3;
+  }
+  .fdt-content h2 { font-size: 22px; }
+  .fdt-content h3 { font-size: 18px; }
+  .fdt-content p { margin-bottom: 1em; }
+  .fdt-content img { max-width: 100%; border-radius: 12px; cursor: zoom-in; margin: 12px 0; }
+  .fdt-content ul, .fdt-content ol { padding-left: 20px; margin-bottom: 1em; }
+  .fdt-content li { margin-bottom: 6px; }
+  .fdt-content strong { color: #fff; font-weight: 500; }
+  .fdt-content a { color: #a78bfa; }
+
+  /* Gallery grid */
+  .fdt-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .fdt-gallery a {
+    border-radius: 12px; overflow: hidden; aspect-ratio: 4/3;
+    display: block; transition: all 0.2s;
+  }
+  .fdt-gallery a:hover { transform: scale(1.02); }
+  .fdt-gallery img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Calculator */
+  .fdt-calc {
+    margin-top: 32px; padding: 28px; border-radius: 16px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  }
+  .fdt-calc-title { font-family: Unbounded, sans-serif; font-size: 18px; font-weight: 500; color: #fff; margin-bottom: 20px; }
+  .fdt-calc-inputs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .fdt-calc-field label { font-size: 12px; color: rgba(255,255,255,0.4); display: block; margin-bottom: 6px; }
+  .fdt-calc-field input {
+    width: 100%; padding: 12px 14px; border-radius: 10px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    color: #fff; font-size: 16px; font-family: Inter, sans-serif; outline: none;
+    box-sizing: border-box;
+  }
+  .fdt-calc-field input:focus { border-color: rgba(99,102,241,0.5); }
+  .fdt-calc-results { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .fdt-calc-result {
+    padding: 14px; border-radius: 12px;
+    background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.15);
+  }
+  .fdt-calc-result-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+  .fdt-calc-result-value { font-family: Unbounded, sans-serif; font-size: 16px; color: #fff; font-weight: 600; }
+
+  /* Empty state */
+  .fdt-empty { text-align: center; padding: 40px; color: rgba(255,255,255,0.3); font-size: 14px; }
+
+  @media (max-width: 768px) {
+    .fdt { padding: 16px; }
+    .fdt-stats { gap: 16px; }
+    .fdt-calc-inputs { grid-template-columns: 1fr; }
+    .fdt-calc-results { grid-template-columns: repeat(2, 1fr); }
+    .fdt-gallery { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fdt">
+
+  <!-- Breadcrumbs -->
+  <nav class="fdt-crumbs">
+    <a href="{% url 'home' %}">Главная</a><span>/</span>
+    <a href="{% url 'franchises_list' %}">Франшизы</a><span>/</span>
+    {% if franchise.direction %}<a href="{% url 'franchises_list' %}?category={{ franchise.direction.direction_id }}">{{ franchise.direction.direction_name|translate_category }}</a><span>/</span>{% endif %}
+    <span class="current">{{ franchise.title|truncatewords:5 }}</span>
+  </nav>
+
+  <!-- Carousel -->
+  <div class="fdt-carousel" id="carousel">
+    {% if franchise.direction %}
+    <div class="fdt-category-badge">{{ franchise.direction.direction_name|translate_category }}</div>
+    {% endif %}
+
+    {% if slider_images %}
+      {% for url in slider_images|slice:":6" %}
+      <div class="fdt-slide {% if forloop.first %}active{% endif %}">
+        <a href="{{ url|resolve_url:file_url_map }}" class="glightbox" data-gallery="main">
+          <img src="{{ url|resolve_url:file_url_map }}" alt="{{ franchise.title }} — {{ forloop.counter }}" {% if not forloop.first %}loading="lazy"{% endif %}>
+        </a>
+      </div>
+      {% endfor %}
+      {% if slider_images|length > 1 %}
+      <button class="fdt-carousel-btn fdt-carousel-btn--prev" onclick="carNav(-1)"><i class="fas fa-chevron-left"></i></button>
+      <button class="fdt-carousel-btn fdt-carousel-btn--next" onclick="carNav(1)"><i class="fas fa-chevron-right"></i></button>
+      <div class="fdt-dots">
+        {% for url in slider_images|slice:":6" %}
+        <div class="fdt-dot {% if forloop.first %}active{% endif %}" onclick="carGo({{ forloop.counter0 }})"></div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% else %}
+      <div class="fdt-no-images">&#127968;</div>
+    {% endif %}
+  </div>
+
+  <script>
+  (function(){
+    var slides = document.querySelectorAll('.fdt-slide');
+    var dots = document.querySelectorAll('.fdt-dot');
+    if (slides.length < 2) return;
+    var cur = 0;
+    window.carNav = function(d) {
+      slides[cur].classList.remove('active'); if(dots[cur]) dots[cur].classList.remove('active');
+      cur = (cur + d + slides.length) % slides.length;
+      slides[cur].classList.add('active'); if(dots[cur]) dots[cur].classList.add('active');
+    };
+    window.carGo = function(i) {
+      slides[cur].classList.remove('active'); if(dots[cur]) dots[cur].classList.remove('active');
+      cur = i;
+      slides[cur].classList.add('active'); if(dots[cur]) dots[cur].classList.add('active');
+    };
+  })();
+  </script>
+
+  <!-- Title -->
+  <div class="fdt-title-block">
+    {% if logo_url %}
+    <div class="fdt-logo"><img src="{{ logo_url }}" alt="Логотип"></div>
+    {% endif %}
+    <h1 class="fdt-title">{{ franchise.title }}</h1>
+  </div>
+
+  <!-- Description -->
+  {% if franchise.short_description %}
+  <p class="fdt-desc">{{ franchise.short_description|striptags }}</p>
+  {% endif %}
+
+  <!-- Stats -->
+  <div class="fdt-stats">
+    {% if franchise.investment_size %}
+    <div class="fdt-stat-item">
+      <div class="fdt-stat-label">Стоимость франшизы</div>
+      <div class="fdt-stat-value">от {{ franchise.investment_size|floatformat:0|intcomma }} &#8381;</div>
+    </div>
+    {% endif %}
+    {% if franchise.franchise_cost %}
+    <div class="fdt-stat-item">
+      <div class="fdt-stat-label">Паушальный взнос</div>
+      <div class="fdt-stat-value">{{ franchise.franchise_cost|floatformat:0|intcomma }} &#8381;</div>
+    </div>
+    {% endif %}
+    {% if franchise.payback_period %}
+    <div class="fdt-stat-item">
+      <div class="fdt-stat-label">Окупаемость</div>
+      <div class="fdt-stat-value">{{ franchise.payback_period }} мес.</div>
+    </div>
+    {% endif %}
+    <div class="fdt-stat-item">
+      <div class="fdt-stat-label">Рейтинг</div>
+      <div class="fdt-stat-value">
+        {% if franchise.total_voters and franchise.total_voters > 0 %}
+          <span style="color:#fbbf24;">&#9733;</span> {{ franchise.total_voters }} оценок
+        {% else %}
+          <span style="color:rgba(255,255,255,0.3);">Нет оценок</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="fdt-cta">
+    <button class="fdt-cta-primary" onclick="openLeadModal()">Запросить условия</button>
+    {% if franchise.pitch_deck_url %}
+    <a href="{{ franchise.pitch_deck_url }}" target="_blank" class="fdt-cta-secondary">
+      <i class="fas fa-file-pdf"></i> Скачать презентацию
+    </a>
+    {% endif %}
+    {% if franchise.contact_website %}
+    <a href="{{ franchise.contact_website }}" target="_blank" class="fdt-cta-secondary">
+      <i class="fas fa-globe"></i> Сайт
+    </a>
+    {% endif %}
+    {% if franchise.contact_telegram %}
+    <a href="https://t.me/{{ franchise.contact_telegram }}" target="_blank" class="fdt-cta-secondary">
+      <i class="fab fa-telegram"></i> Telegram
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- Tabs -->
+  <div class="fdt-tabs">
+    <button class="fdt-tab active" onclick="fdtTab('info')">Информация</button>
+    <button class="fdt-tab" onclick="fdtTab('gallery')">Галерея</button>
+    <button class="fdt-tab" onclick="fdtTab('docs')">Документы</button>
+    <button class="fdt-tab" onclick="fdtTab('conditions')">Условия</button>
+  </div>
+
+  <!-- Info panel -->
+  <div id="fdt-info" class="fdt-panel active">
+    <div class="fdt-content">
+      {{ franchise.description|sanitize_html|safe|default:"<p>Описание не добавлено.</p>" }}
+    </div>
+
+    {% if franchise.profit_calculation %}
+    <div class="fdt-content" style="margin-top:24px;">
+      <h3>Стоимость и условия</h3>
+      {{ franchise.profit_calculation|sanitize_html|safe }}
+    </div>
+    {% endif %}
+
+    <!-- Calculator -->
+    <div class="fdt-calc">
+      <div class="fdt-calc-title">Калькулятор окупаемости</div>
+      <div class="fdt-calc-inputs">
+        <div class="fdt-calc-field">
+          <label>Начальные инвестиции (&#8381;)</label>
+          <input type="number" id="tcInv" value="{{ franchise.investment_size|default:0|floatformat:0 }}" min="0" step="10000">
+        </div>
+        <div class="fdt-calc-field">
+          <label>Ожидаемая прибыль/мес (&#8381;)</label>
+          <input type="number" id="tcProf" value="0" min="0" step="5000">
+        </div>
+        <div class="fdt-calc-field">
+          <label>Паушальный взнос (&#8381;)</label>
+          <input type="number" id="tcFee" value="{{ franchise.franchise_cost|default:0|floatformat:0 }}" min="0" step="10000">
+        </div>
+      </div>
+      <div class="fdt-calc-results">
+        <div class="fdt-calc-result"><div class="fdt-calc-result-label">Общие вложения</div><div class="fdt-calc-result-value" id="tcTotal">0 &#8381;</div></div>
+        <div class="fdt-calc-result"><div class="fdt-calc-result-label">Окупаемость</div><div class="fdt-calc-result-value" id="tcPayback">&mdash;</div></div>
+        <div class="fdt-calc-result"><div class="fdt-calc-result-label">Прибыль за год</div><div class="fdt-calc-result-value" id="tcYear">&mdash;</div></div>
+        <div class="fdt-calc-result"><div class="fdt-calc-result-label">ROI за год</div><div class="fdt-calc-result-value" id="tcROI">&mdash;</div></div>
+      </div>
+    </div>
+    <script>
+    (function(){
+      var inv=document.getElementById('tcInv'), prof=document.getElementById('tcProf'), fee=document.getElementById('tcFee');
+      function c(){
+        var i=parseFloat(inv.value)||0, p=parseFloat(prof.value)||0, f=parseFloat(fee.value)||0, t=i+f;
+        document.getElementById('tcTotal').textContent=t.toLocaleString('ru-RU')+' \u20BD';
+        if(p>0){
+          document.getElementById('tcPayback').textContent=Math.ceil(t/p)+' мес';
+          document.getElementById('tcYear').textContent=(p*12-t).toLocaleString('ru-RU')+' \u20BD';
+          document.getElementById('tcROI').textContent=(t>0?Math.round((p*12/t)*100-100):0)+'%';
+        }else{
+          document.getElementById('tcPayback').textContent='\u2014';
+          document.getElementById('tcYear').textContent='\u2014';
+          document.getElementById('tcROI').textContent='\u2014';
+        }
+      }
+      if(inv){inv.addEventListener('input',c);prof.addEventListener('input',c);fee.addEventListener('input',c);c();}
+    })();
+    </script>
+  </div>
+
+  <!-- Gallery panel -->
+  <div id="fdt-gallery" class="fdt-panel">
+    {% if slider_images or franchise.creatives_urls %}
+    <div class="fdt-gallery">
+      {% for url in slider_images|slice:":10" %}
+      <a href="{{ url|resolve_url:file_url_map }}" class="glightbox" data-gallery="gallery">
+        <img src="{{ url|resolve_url:file_url_map }}" alt="Фото {{ forloop.counter }}" loading="lazy">
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="fdt-empty">Фото не добавлены</div>
+    {% endif %}
+  </div>
+
+  <!-- Documents panel -->
+  <div id="fdt-docs" class="fdt-panel">
+    {% if franchise.proofs_urls %}
+    <div class="fdt-content">
+      <p>Документы доступны для скачивания.</p>
+    </div>
+    {% else %}
+    <div class="fdt-empty">Документы не добавлены</div>
+    {% endif %}
+  </div>
+
+  <!-- Conditions panel -->
+  <div id="fdt-conditions" class="fdt-panel">
+    {% if franchise.terms %}
+    <div class="fdt-content">
+      {{ franchise.terms|sanitize_html|safe }}
+    </div>
+    {% else %}
+    <div class="fdt-empty">Условия не добавлены</div>
+    {% endif %}
+  </div>
+
+  <!-- Comments -->
+  {% if comments %}
+  <div style="margin-top:48px;">
+    <h3 style="font-family:Unbounded,sans-serif; font-size:20px; font-weight:500; color:#fff; margin-bottom:20px;">
+      Отзывы ({{ comments_count }})
+    </h3>
+    {% for c in comments %}
+    <div style="padding:16px 0; border-bottom:1px solid rgba(255,255,255,0.06);">
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+        <span style="font-weight:500; color:#fff;">{{ c.user.first_name|default:"Пользователь" }}</span>
+        <span style="font-size:12px; color:rgba(255,255,255,0.3);">{{ c.created_at|date:"d.m.Y" }}</span>
+      </div>
+      <div style="font-size:14px; color:rgba(255,255,255,0.6); line-height:1.5;">{{ c.content|default:"" }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- Lead modal (reuse existing) -->
+{% include 'accounts/partials/_lead_modal.html' with entity_type='franchise' entity_id=franchise.franchise_id lead_type='franchise_info' cta_label='Запросить условия' %}
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js" defer></script>
+<script src="{% static 'accounts/js/lead_form.js' %}" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Wrap content images with glightbox
+  document.querySelectorAll('.fdt-content img').forEach(function(img) {
+    if (img.closest('a')) return;
+    var link = document.createElement('a');
+    link.href = img.src; link.className = 'glightbox'; link.setAttribute('data-gallery', 'content');
+    img.parentNode.insertBefore(link, img); link.appendChild(img);
+  });
+  function initLB() { if (typeof GLightbox !== 'undefined') GLightbox({selector:'.glightbox'}); else setTimeout(initLB, 100); }
+  initLB();
+});
+
+function fdtTab(id) {
+  document.querySelectorAll('.fdt-tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.fdt-panel').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('fdt-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+{% endblock %}
