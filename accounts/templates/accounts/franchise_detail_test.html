@@ -12,7 +12,7 @@
 {% block head_extra %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/css/glightbox.min.css">
 <style>
-  .fdt { font-family: Inter, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; }
+  .fdt { font-family: Inter, sans-serif; max-width: 1303px; margin: 0 auto; padding: 20px; }
 
   /* Breadcrumbs */
   .fdt-crumbs { font-size: 13px; margin-bottom: 20px; }
@@ -112,6 +112,10 @@
   .fdt-cta-secondary:hover { background: rgba(255,255,255,0.1); }
 
   /* Tabs */
+  .fdt-tabbed-area {
+    background: rgba(0, 8, 25, 0.82); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px; padding: 28px 32px; backdrop-filter: blur(6px);
+  }
   .fdt-tabs {
     display: flex; gap: 0; margin-bottom: 0;
     border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -312,6 +316,7 @@
   </div>
 
   <!-- Tabs -->
+  <div class="fdt-tabbed-area">
   <div class="fdt-tabs">
     <button class="fdt-tab active" onclick="fdtTab('info')">Информация</button>
     <button class="fdt-tab" onclick="fdtTab('gallery')">Галерея</button>
@@ -413,6 +418,7 @@
     <div class="fdt-empty">Условия не добавлены</div>
     {% endif %}
   </div>
+  </div><!-- end fdt-tabbed-area -->
 
   <!-- Comments -->
   {% if comments %}
