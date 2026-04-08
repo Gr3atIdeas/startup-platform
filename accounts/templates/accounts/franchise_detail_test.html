@@ -34,15 +34,25 @@
   .fdt-slide.active { opacity: 1; pointer-events: auto; }
   .fdt-slide img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
   .fdt-carousel-btn {
-    position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
-    width: 44px; height: 44px; border-radius: 50%; border: none;
-    background: rgba(0,0,0,0.5); backdrop-filter: blur(8px);
-    color: #fff; font-size: 18px; cursor: pointer; transition: all 0.2s;
+    position: absolute; top: 0; bottom: 0; z-index: 5;
+    width: 80px; border: none; cursor: pointer;
+    background: transparent; color: rgba(255,255,255,0);
+    font-size: 22px; transition: all 0.3s;
     display: flex; align-items: center; justify-content: center;
   }
-  .fdt-carousel-btn:hover { background: rgba(0,0,0,0.7); }
-  .fdt-carousel-btn--prev { left: 16px; }
-  .fdt-carousel-btn--next { right: 16px; }
+  .fdt-carousel-btn--prev {
+    left: 0; border-radius: 20px 0 0 20px;
+    background: linear-gradient(to right, rgba(0,0,0,0.4), transparent);
+    opacity: 0; padding-right: 16px;
+  }
+  .fdt-carousel-btn--next {
+    right: 0; border-radius: 0 20px 20px 0;
+    background: linear-gradient(to left, rgba(0,0,0,0.4), transparent);
+    opacity: 0; padding-left: 16px;
+  }
+  .fdt-carousel:hover .fdt-carousel-btn { opacity: 1; color: rgba(255,255,255,0.9); }
+  .fdt-carousel-btn:hover { width: 100px; background: linear-gradient(to right, rgba(0,0,0,0.6), transparent); }
+  .fdt-carousel-btn--next:hover { background: linear-gradient(to left, rgba(0,0,0,0.6), transparent); }
   .fdt-dots {
     position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
     display: flex; gap: 8px; z-index: 5;
@@ -294,6 +304,12 @@
         {% endif %}
       </div>
     </div>
+    {% if locations_count > 0 %}
+    <div class="fdt-stat-item">
+      <div class="fdt-stat-label">Города</div>
+      <div class="fdt-stat-value">{{ locations_count }}</div>
+    </div>
+    {% endif %}
   </div>
 
   <!-- CTA -->

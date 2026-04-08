@@ -12064,6 +12064,11 @@ def franchise_detail_test(request, slug):
     if logo_urls:
         logo_url = file_url_map.get(str(logo_urls[0]), "")
 
+    from .models import FranchiseLocation
+    locations_count = FranchiseLocation.objects.filter(
+        franchise=franchise, status="active"
+    ).values("city").distinct().count()
+
     context = {
         "franchise": franchise,
         "slider_images": slider_images,
@@ -12072,6 +12077,7 @@ def franchise_detail_test(request, slug):
         "comments": comments,
         "comments_count": len(comments),
         "cities": City.objects.all().order_by("name"),
+        "locations_count": locations_count,
     }
     return render(request, "accounts/franchise_detail_test.html", context)
 
