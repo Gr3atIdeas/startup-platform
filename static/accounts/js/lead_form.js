@@ -10,13 +10,143 @@
   var successContent = document.getElementById('leadSuccessContent');
   var submitBtn = document.getElementById('leadSubmitBtn');
 
-  // Open modal
+  // ── Custom Select Dropdowns ──────────────────────
+  var customSelects = modal.querySelectorAll('.lead-custom-select');
+
+  customSelects.forEach(function(sel) {
+    var trigger = sel.querySelector('.lead-custom-select-trigger');
+    var dropdown = sel.querySelector('.lead-custom-select-dropdown');
+    var hiddenInput = sel.querySelector('input[type="hidden"]');
+    var valueSpan = trigger.querySelector('.lead-select-value');
+    var options = dropdown.querySelectorAll('.lead-custom-select-option');
+
+    trigger.addEventListener('click', function(e) {
+      e.preventDefault();
+      // Close all other selects
+      customSelects.forEach(function(other) {
+        if (other !== sel) other.classList.remove('open');
+      });
+      sel.classList.toggle('open');
+    });
+
+    options.forEach(function(opt) {
+      opt.addEventListener('click', function() {
+        options.forEach(function(o) { o.classList.remove('selected'); });
+        opt.classList.add('selected');
+        hiddenInput.value = opt.dataset.value;
+        valueSpan.textContent = opt.textContent;
+        sel.classList.remove('open');
+      });
+    });
+  });
+
+  // Close dropdowns on outside click
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.lead-custom-select')) {
+      customSelects.forEach(function(sel) { sel.classList.remove('open'); });
+    }
+  });
+
+  // ── City Autocomplete ────────────────────────────
+  var RUSSIAN_CITIES = [
+    'Москва','Санкт-Петербург','Новосибирск','Екатеринбург','Казань',
+    'Нижний Новгород','Челябинск','Самара','Омск','Ростов-на-Дону',
+    'Уфа','Красноярск','Воронеж','Пермь','Волгоград',
+    'Краснодар','Саратов','Тюмень','Тольятти','Ижевск',
+    'Барнаул','Ульяновск','Иркутск','Хабаровск','Ярославль',
+    'Владивосток','Махачкала','Томск','Оренбург','Кемерово',
+    'Новокузнецк','Рязань','Астрахань','Набережные Челны','Пенза',
+    'Липецк','Тула','Киров','Чебоксары','Калининград',
+    'Брянск','Курск','Иваново','Магнитогорск','Улан-Удэ',
+    'Тверь','Ставрополь','Белгород','Сочи','Нижний Тагил',
+    'Архангельск','Владимир','Калуга','Смоленск','Чита',
+    'Саранск','Вологда','Орёл','Грозный','Владикавказ',
+    'Мурманск','Тамбов','Петрозаводск','Кострома','Нальчик',
+    'Йошкар-Ола','Якутск','Сургут','Симферополь','Севастополь',
+    'Абакан','Великий Новгород','Псков','Череповец','Подольск',
+    'Балашиха','Химки','Мытищи','Люберцы','Королёв',
+    'Красногорск','Одинцово','Домодедово','Электросталь','Коломна',
+  ];
+
+  var cityInput = document.getElementById('leadCity');
+  var citySuggestions = document.getElementById('leadCitySuggestions');
+
+  if (cityInput && citySuggestions) {
+    var debounceTimer = null;
+
+    cityInput.addEventListener('input', function() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function() {
+        var query = cityInput.value.trim().toLowerCase();
+        citySuggestions.innerHTML = '';
+
+        if (query.length < 1) {
+          citySuggestions.classList.remove('visible');
+          return;
+        }
+
+        var matches = RUSSIAN_CITIES.filter(function(city) {
+          return city.toLowerCase().indexOf(query) !== -1;
+        }).slice(0, 8);
+
+        if (matches.length === 0) {
+          citySuggestions.classList.remove('visible');
+          return;
+        }
+
+        matches.forEach(function(city) {
+          var div = document.createElement('div');
+          div.className = 'lead-city-suggestion';
+          // Highlight matching part
+          var idx = city.toLowerCase().indexOf(query);
+          div.innerHTML = city.substring(0, idx) +
+            '<mark>' + city.substring(idx, idx + query.length) + '</mark>' +
+            city.substring(idx + query.length);
+          div.addEventListener('click', function() {
+            cityInput.value = city;
+            citySuggestions.classList.remove('visible');
+          });
+          citySuggestions.appendChild(div);
+        });
+
+        citySuggestions.classList.add('visible');
+      }, 150);
+    });
+
+    // Hide on outside click
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.lead-city-autocomplete')) {
+        citySuggestions.classList.remove('visible');
+      }
+    });
+
+    // Hide on blur with delay (so click on suggestion works)
+    cityInput.addEventListener('blur', function() {
+      setTimeout(function() {
+        citySuggestions.classList.remove('visible');
+      }, 200);
+    });
+  }
+
+  // ── Open / Close Modal ───────────────────────────
   window.openLeadModal = function() {
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
     // Reset form state
     if (form) form.reset();
-    // Re-fill autofill fields (they get cleared on reset)
+    // Reset custom selects
+    customSelects.forEach(function(sel) {
+      var hiddenInput = sel.querySelector('input[type="hidden"]');
+      var valueSpan = sel.querySelector('.lead-select-value');
+      var options = sel.querySelectorAll('.lead-custom-select-option');
+      hiddenInput.value = '';
+      valueSpan.textContent = 'Не указан';
+      options.forEach(function(o, i) {
+        o.classList.toggle('selected', i === 0);
+      });
+      sel.classList.remove('open');
+    });
+    // Re-fill autofill fields
     var nameInput = document.getElementById('leadName');
     var emailInput = document.getElementById('leadEmail');
     if (nameInput && nameInput.defaultValue) nameInput.value = nameInput.defaultValue;
@@ -27,25 +157,22 @@
     errorDiv.style.display = 'none';
   };
 
-  // Close modal
   window.closeLeadModal = function() {
     modal.style.display = 'none';
     document.body.style.overflow = '';
   };
 
-  // Close on overlay click
   modal.addEventListener('click', function(e) {
     if (e.target === modal) closeLeadModal();
   });
 
-  // Close on Escape
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && modal.style.display !== 'none') {
       closeLeadModal();
     }
   });
 
-  // Submit form
+  // ── Submit Form ──────────────────────────────────
   if (form) {
     form.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -57,14 +184,12 @@
       var name = (document.getElementById('leadName').value || '').trim();
       var email = (document.getElementById('leadEmail').value || '').trim();
       var phone = (document.getElementById('leadPhone').value || '').trim();
+      var messenger = (document.getElementById('leadMessenger').value || '').trim();
       var budgetRange = document.getElementById('leadBudget').value || '';
       var message = (document.getElementById('leadMessage').value || '').trim();
-      var targetCityEl = document.getElementById('leadCity');
-      var targetCity = targetCityEl ? targetCityEl.value : '';
-      var experienceEl = document.getElementById('leadExperience');
-      var businessExperience = experienceEl ? experienceEl.value : '';
-      var timelineEl = document.getElementById('leadTimeline');
-      var timeline = timelineEl ? timelineEl.value : '';
+      var targetCityText = (document.getElementById('leadCity').value || '').trim();
+      var businessExperience = document.getElementById('leadExperience').value || '';
+      var timeline = document.getElementById('leadTimeline').value || '';
 
       if (!name || !email) {
         errorDiv.textContent = 'Заполните имя и email';
@@ -84,7 +209,6 @@
         var csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
         if (csrfInput) csrfToken = csrfInput.value;
       }
-      // Fallback: read from cookie
       if (!csrfToken) {
         var match = document.cookie.match(/csrftoken=([^;]+)/);
         if (match) csrfToken = match[1];
@@ -103,9 +227,11 @@
           name: name,
           email: email,
           phone: phone,
+          messenger: messenger,
           budget_range: budgetRange,
           message: message,
-          target_city: targetCity || null,
+          target_city: null,
+          target_city_text: targetCityText,
           business_experience: businessExperience,
           timeline: timeline,
         }),
@@ -118,7 +244,6 @@
         if (data.success) {
           formContent.style.display = 'none';
           successContent.style.display = '';
-          // Track in Yandex.Metrika
           if (typeof ym === 'function') {
             ym(107142125, 'reachGoal', 'lead_submitted', {
               entity_type: entityType,

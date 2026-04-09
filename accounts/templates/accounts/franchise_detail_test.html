@@ -5,21 +5,64 @@
 {% load accounts_extras %}
 {% load html_sanitizer %}
 
-{% block title %}{{ franchise.title }} — Great Ideas{% endblock %}
+{% block title %}{{ franchise.title|default:"Детали франшизы" }} — Great Ideas{% endblock %}
 
-{% block meta_description %}<meta name="description" content="{{ franchise.short_description|striptags|truncatewords:25 }}">{% endblock %}
+{% block meta_description %}<meta name="description" content="{{ franchise.short_description|default:franchise.title|striptags|truncatewords:25 }}">{% endblock %}
+
+{% block canonical %}<link rel="canonical" href="{{ canonical_url }}">{% endblock %}
+
+{% block og_tags %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Great Ideas">
+<meta property="og:title" content="{{ franchise.title|default:'Франшиза' }} — Great Ideas">
+<meta property="og:description" content="{{ franchise.short_description|default:franchise.title|striptags|truncatewords:25 }}">
+{% if slider_images %}<meta property="og:image" content="{{ slider_images.0 }}">
+{% elif logo_url %}<meta property="og:image" content="{{ logo_url }}">
+{% else %}<meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">{% endif %}
+<meta property="og:url" content="{{ canonical_url }}">
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BusinessInvestmentOpportunity",
+  "name": "{{ franchise.title }}",
+  "description": "{{ franchise.short_description|striptags|truncatewords:30 }}",
+  "url": "{{ canonical_url }}"
+}
+</script>
+{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/css/glightbox.min.css">
+<link rel="stylesheet" href="{% static 'accounts/css/lead_modal.css' %}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" media="print" onload="this.media='all'" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/css/glightbox.min.css" media="print" onload="this.media='all'" />
 <style>
   .fdt { font-family: Inter, sans-serif; max-width: 1303px; margin: 0 auto; padding: 20px; }
 
-  /* Breadcrumbs */
-  .fdt-crumbs { font-size: 13px; margin-bottom: 20px; }
+  /* Breadcrumbs + top bar */
+  .fdt-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+  .fdt-crumbs { font-size: 13px; }
   .fdt-crumbs a { color: rgba(255,255,255,0.4); text-decoration: none; }
   .fdt-crumbs a:hover { color: rgba(255,255,255,0.7); }
   .fdt-crumbs span { color: rgba(255,255,255,0.2); margin: 0 6px; }
   .fdt-crumbs .current { color: rgba(255,255,255,0.7); }
+
+  /* Moderation bar */
+  .fdt-mod-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .fdt-mod-bar select {
+    padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15); color: #fff; font-size: 13px;
+    font-family: Inter, sans-serif; cursor: pointer;
+  }
+  .fdt-mod-bar select option { background: #0d1b3e; }
+  .fdt-mod-bar a, .fdt-mod-bar button {
+    padding: 6px 14px; border-radius: 8px; font-size: 13px; font-family: Inter, sans-serif;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.8); text-decoration: none; cursor: pointer; transition: background 0.2s;
+  }
+  .fdt-mod-bar a:hover, .fdt-mod-bar button:hover { background: rgba(255,255,255,0.15); }
 
   /* Carousel — full width, 16:9 */
   .fdt-carousel {
@@ -218,15 +261,32 @@
 {% endblock %}
 
 {% block content %}
-<div class="fdt">
+<div class="fdt" data-entity-type="franchise" data-entity-id="{{ franchise.franchise_id }}">
 
-  <!-- Breadcrumbs -->
-  <nav class="fdt-crumbs">
-    <a href="{% url 'home' %}">Главная</a><span>/</span>
-    <a href="{% url 'franchises_list' %}">Франшизы</a><span>/</span>
-    {% if franchise.direction %}<a href="{% url 'franchises_list' %}?category={{ franchise.direction.direction_id }}">{{ franchise.direction.direction_name|translate_category }}</a><span>/</span>{% endif %}
-    <span class="current">{{ franchise.title|truncatewords:5 }}</span>
-  </nav>
+  <!-- Top bar: breadcrumbs + moderation -->
+  <div class="fdt-topbar">
+    <nav class="fdt-crumbs">
+      <a href="{% url 'home' %}">Главная</a><span>/</span>
+      <a href="{% url 'franchises_list' %}">Франшизы</a><span>/</span>
+      {% if franchise.direction %}<a href="{% url 'franchises_list' %}?category={{ franchise.direction.direction_id }}">{{ franchise.direction.direction_name|translate_category }}</a><span>/</span>{% endif %}
+      <span class="current">{{ franchise.title|truncatewords:5 }}</span>
+    </nav>
+    {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+    <div class="fdt-mod-bar">
+      <form method="post" style="display:inline;">
+        {% csrf_token %}
+        <select name="status" onchange="this.form.submit()">
+          <option value="approved" {% if franchise.status == 'approved' %}selected{% endif %}>Одобрено</option>
+          <option value="blocked" {% if franchise.status == 'blocked' %}selected{% endif %}>Заблокировано</option>
+          <option value="closed" {% if franchise.status == 'closed' %}selected{% endif %}>Закрыто</option>
+          <option value="pending" {% if franchise.status == 'pending' %}selected{% endif %}>На рассмотрении</option>
+          <option value="rejected" {% if franchise.status == 'rejected' %}selected{% endif %}>Отклонено</option>
+        </select>
+      </form>
+      <a href="{% url 'edit_franchise' franchise_id=franchise.franchise_id %}">Редактировать</a>
+    </div>
+    {% endif %}
+  </div>
 
   <!-- Title -->
   <div class="fdt-title-block">
@@ -471,9 +531,23 @@
 
   <!-- Documents panel -->
   <div id="fdt-docs" class="fdt-panel">
-    {% if franchise.proofs_urls %}
+    {% if franchise_documents %}
     <div class="fdt-content">
-      <p>Документы доступны для скачивания.</p>
+      {% for doc in franchise_documents %}
+      <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06);">
+        <i class="fas fa-file-alt" style="color:rgba(255,255,255,0.4); font-size:20px;"></i>
+        <a href="{{ doc.file_url|resolve_url:file_url_map }}" target="_blank" style="color:#a78bfa; font-size:14px;">{{ doc.original_name|default:"Документ" }}</a>
+      </div>
+      {% endfor %}
+    </div>
+    {% elif franchise.proofs_urls %}
+    <div class="fdt-content">
+      {% for proof_id in franchise.proofs_urls %}
+      <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06);">
+        <i class="fas fa-file-alt" style="color:rgba(255,255,255,0.4); font-size:20px;"></i>
+        <a href="{{ proof_id|resolve_url:file_url_map }}" target="_blank" style="color:#a78bfa; font-size:14px;">Документ {{ forloop.counter }}</a>
+      </div>
+      {% endfor %}
     </div>
     {% else %}
     <div class="fdt-empty">Документы не добавлены</div>
@@ -493,26 +567,58 @@
   </div><!-- end fdt-tabbed-area -->
 
   <!-- Comments -->
-  {% if comments %}
   <div style="margin-top:48px;">
     <h3 style="font-family:Unbounded,sans-serif; font-size:20px; font-weight:500; color:#fff; margin-bottom:20px;">
-      Отзывы ({{ comments_count }})
+      Отзывы {% if total_comments_count %}({{ total_comments_count }}){% endif %}
     </h3>
+    {% if comments %}
     {% for c in comments %}
     <div style="padding:16px 0; border-bottom:1px solid rgba(255,255,255,0.06);">
-      <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
         <span style="font-weight:500; color:#fff;">{{ c.user.first_name|default:"Пользователь" }}</span>
-        <span style="font-size:12px; color:rgba(255,255,255,0.3);">{{ c.created_at|date:"d.m.Y" }}</span>
+        <div style="display:flex; align-items:center; gap:10px;">
+          {% if c.user_vote_rating %}
+          <span style="color:#fbbf24; font-size:13px;">{% for i in "12345" %}{% if forloop.counter <= c.user_vote_rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</span>
+          {% endif %}
+          <span style="font-size:12px; color:rgba(255,255,255,0.3);">{{ c.created_at|date:"d.m.Y" }}</span>
+        </div>
       </div>
       <div style="font-size:14px; color:rgba(255,255,255,0.6); line-height:1.5;">{{ c.content|default:"" }}</div>
     </div>
+    {% endfor %}
+    {% else %}
+    <div class="fdt-empty">Пока нет отзывов</div>
+    {% endif %}
+  </div>
+
+  <!-- Related articles for SEO -->
+  {% if related_articles %}
+  <div style="margin-top:48px;">
+    <h3 style="font-family:Unbounded,sans-serif; font-size:20px; font-weight:500; color:#fff; margin-bottom:20px;">Статьи по теме</h3>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:16px;">
+    {% for article in related_articles %}
+      <a href="{% url 'news_detail' slug=article.slug %}" style="padding:16px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); text-decoration:none; transition:background 0.2s;">
+        <div style="font-size:14px; font-weight:500; color:#fff; margin-bottom:6px;">{{ article.title|truncatewords:10 }}</div>
+        <div style="font-size:12px; color:rgba(255,255,255,0.4);">{{ article.published_at|date:"d.m.Y" }}</div>
+      </a>
+    {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Franchise cities for SEO interlinking -->
+  {% if franchise_cities %}
+  <div style="margin-top:32px; padding:20px; border-radius:16px; background:rgba(255,255,255,0.03);">
+    <span style="font-size:13px; color:rgba(255,255,255,0.4);">Города присутствия:</span>
+    {% for city in franchise_cities %}
+      <a href="{% url 'franchises_list' %}?city={{ city.slug }}" style="font-size:13px; color:rgba(255,255,255,0.5); text-decoration:none; margin-left:8px;">{{ city.name }}{% if not forloop.last %},{% endif %}</a>
     {% endfor %}
   </div>
   {% endif %}
 
 </div>
 
-<!-- Lead modal (reuse existing) -->
+<!-- Lead modal -->
 {% include 'accounts/partials/_lead_modal.html' with entity_type='franchise' entity_id=franchise.franchise_id lead_type='franchise_info' cta_label='Запросить условия' %}
 
 {% endblock %}

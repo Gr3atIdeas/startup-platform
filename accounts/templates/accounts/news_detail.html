@@ -12,12 +12,19 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Great Ideas">
 <meta property="og:title" content="{{ article.title }} — Great Ideas">
-<meta property="og:description" content="{{ article.content|striptags|truncatewords:25 }}">
+<meta property="og:description" content="{{ article.content|striptags|truncatewords:30 }}">
+<meta property="og:locale" content="ru_RU">
 {% if article.image_url %}<meta property="og:image" content="{{ article.image_url }}">
 {% else %}<meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">{% endif %}
 <meta property="og:url" content="{{ canonical_url }}">
 {% if article.published_at %}<meta property="article:published_time" content="{{ article.published_at|date:'c' }}">{% endif %}
 {% if article.updated_at %}<meta property="article:modified_time" content="{{ article.updated_at|date:'c' }}">{% endif %}
+{% if article.category %}<meta property="article:section" content="{{ article.category.name }}">{% endif %}
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ article.title }} — Great Ideas">
+<meta name="twitter:description" content="{{ article.content|striptags|truncatewords:30 }}">
+{% if article.image_url %}<meta name="twitter:image" content="{{ article.image_url }}">{% endif %}
 {% endblock %}
 
 {% block structured_data %}
@@ -25,13 +32,57 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "{{ article.title }}",
-  "datePublished": "{{ article.published_at|date:'c' }}",
-  "author": {
-    "@type": "Organization",
-    "name": "Great Ideas"
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ canonical_url }}"
   },
-  "url": "{{ request.build_absolute_uri }}"
+  "headline": "{{ article.title }}",
+  "description": "{{ article.content|striptags|truncatewords:30 }}",
+  "datePublished": "{{ article.published_at|date:'c' }}",
+  {% if article.updated_at %}"dateModified": "{{ article.updated_at|date:'c' }}",{% endif %}
+  {% if article.get_image_url %}"image": "{{ article.get_image_url }}",{% endif %}
+  "author": {
+    "@type": {% if article.author %}"Person",
+    "name": "{{ article.author.first_name|default:'Great' }} {{ article.author.last_name|default:'Ideas' }}"
+    {% else %}"Organization",
+    "name": "Great Ideas"
+    {% endif %}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Great Ideas",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{% static 'accounts/images/layout/gi_logo.svg' %}"
+    }
+  },
+  "url": "{{ canonical_url }}"
+  {% if article.category %},"articleSection": "{{ article.category.name }}"{% endif %}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Главная",
+      "item": "https://www.greatideas.ru/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Блог",
+      "item": "https://www.greatideas.ru/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ article.title }}"
+    }
+  ]
 }
 </script>
 {% endblock %}
@@ -41,6 +92,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="reading-progress-bar" id="reading-progress-bar"></div>
 <div class="news-detail-wrapper">
   <div class="news-detail-container">
 
@@ -59,7 +111,7 @@
 
       <!-- Meta row: date + like + comments count -->
       <div class="article-meta-row">
-        <div class="publish-time">{{ article.published_at|date:"d M Y" }} ({{ article.published_at|timesince }} назад)</div>
+        <div class="publish-time">{{ article.published_at|date:"d M Y" }}</div>
         <div class="article-stats-small">
           <div class="stat-item">
             <form method="post" style="margin:0; display:flex;">
@@ -307,6 +359,31 @@
     const form = document.getElementById('reply-form-' + commentId);
     if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
   }
+
+  // Прогресс-бар чтения
+  (function() {
+    const bar = document.getElementById('reading-progress-bar');
+    const article = document.querySelector('.news-article-main');
+    if (!bar || !article) return;
+
+    function updateProgress() {
+      const articleRect = article.getBoundingClientRect();
+      const articleTop = articleRect.top + window.scrollY;
+      const articleHeight = article.offsetHeight;
+      const viewportHeight = window.innerHeight;
+      const scrollY = window.scrollY;
+
+      const start = articleTop;
+      const end = articleTop + articleHeight - viewportHeight;
+      const progress = Math.min(Math.max((scrollY - start) / (end - start), 0), 1);
+
+      bar.style.width = (progress * 100) + '%';
+      bar.style.opacity = scrollY > articleTop * 0.5 ? '1' : '0';
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+  })();
 
   // Подгрузка похожих статей
   const loadMoreBtn = document.getElementById('load-more-btn');

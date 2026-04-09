@@ -2217,6 +2217,14 @@ def franchise_detail(request, slug):
         if paybacks:
             avg_payback = int(sum(paybacks) / len(paybacks))
 
+    # Resolve logo URL for template
+    logo_url = None
+    if logo_urls:
+        logo_url = file_url_map.get(str(logo_urls[0]), "")
+
+    # Hero video: first video if available
+    hero_video = video_urls[0] if video_urls else None
+
     context = {
         "franchise": franchise,
         "similar_franchises": similar_franchises,
@@ -2229,10 +2237,12 @@ def franchise_detail(request, slug):
         "user_has_voted": user_has_voted,
         "rating_distribution": rating_distribution,
         "logo_urls": logo_urls,
+        "logo_url": logo_url,
         "creatives_urls": creatives_urls,
         "slider_images": slider_images,
         "all_creatives": all_creatives,
         "video_urls": video_urls,
+        "hero_video": hero_video,
         "proofs_urls": proofs_urls,
         "franchise_documents": franchise_documents,
         "ai_rating": ai_rating,
@@ -2256,7 +2266,7 @@ def franchise_detail(request, slug):
             franchise_locations__status="active",
         ).distinct().order_by("name")[:12],
     }
-    return render(request, "accounts/franchise_detail.html", context)
+    return render(request, "accounts/franchise_detail_test.html", context)
 
 def search_suggestions(request):
     query = request.GET.get("q", "").strip()
@@ -11390,9 +11400,11 @@ def create_lead(request):
     name = (data.get("name") or "").strip()
     email = (data.get("email") or "").strip()
     phone = (data.get("phone") or "").strip()
+    messenger = (data.get("messenger") or "").strip()
     budget_range = data.get("budget_range", "")
     message_text = (data.get("message") or "").strip()
     target_city_id = data.get("target_city") or None
+    target_city_text = (data.get("target_city_text") or "").strip()
     business_experience = data.get("business_experience", "")
     timeline = data.get("timeline", "")
 
@@ -11437,9 +11449,11 @@ def create_lead(request):
         name=name,
         email=email,
         phone=phone,
+        messenger=messenger,
         budget_range=budget_range,
         message=message_text,
         target_city=target_city,
+        target_city_text=target_city_text,
         business_experience=business_experience,
         timeline=timeline,
     )
@@ -11496,8 +11510,12 @@ def _send_lead_telegram_notification(lead, entity):
     )
     if lead.phone:
         text += f"\U0001F4DE {lead.phone}\n"
+    if lead.messenger:
+        text += f"\U0001F4AC Мессенджер: {lead.messenger}\n"
     if lead.budget_range:
         text += f"\U0001F4B0 \u0411\u044E\u0434\u0436\u0435\u0442: {lead.budget_range}\n"
+    if lead.target_city_text:
+        text += f"\U0001F3D9 Город: {lead.target_city_text}\n"
     if lead.message:
         msg_short = lead.message[:200] + ("..." if len(lead.message) > 200 else "")
         text += f"\n\U0001F4AC {msg_short}\n"

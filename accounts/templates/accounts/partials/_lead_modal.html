@@ -26,52 +26,78 @@
             placeholder="email@example.com">
         </div>
 
-        <div class="lead-form-group">
-          <label for="leadPhone">Телефон</label>
-          <input type="tel" id="leadPhone" name="phone" placeholder="+7 (___) ___-__-__">
+        <div class="lead-form-row">
+          <div class="lead-form-group">
+            <label for="leadPhone">Телефон</label>
+            <input type="tel" id="leadPhone" name="phone" placeholder="+7 (___) ___-__-__">
+          </div>
+          <div class="lead-form-group">
+            <label for="leadMessenger">Мессенджер</label>
+            <input type="text" id="leadMessenger" name="messenger" placeholder="@telegram или номер WhatsApp">
+          </div>
         </div>
 
         <div class="lead-form-group">
           <label for="leadBudget">Бюджет</label>
-          <select id="leadBudget" name="budget_range">
-            <option value="">Не указан</option>
-            <option value="до 500К">до 500 000 &#8381;</option>
-            <option value="500К-1М">500 000 — 1 000 000 &#8381;</option>
-            <option value="1М-5М">1 000 000 — 5 000 000 &#8381;</option>
-            <option value="5М-10М">5 000 000 — 10 000 000 &#8381;</option>
-            <option value="10М+">более 10 000 000 &#8381;</option>
-          </select>
+          <div class="lead-custom-select" data-name="budget_range">
+            <button type="button" class="lead-custom-select-trigger" id="leadBudgetTrigger">
+              <span class="lead-select-value">Не указан</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="lead-custom-select-dropdown">
+              <div class="lead-custom-select-option selected" data-value="">Не указан</div>
+              <div class="lead-custom-select-option" data-value="до 500К">до 500 000 ₽</div>
+              <div class="lead-custom-select-option" data-value="500К-1М">500 000 — 1 000 000 ₽</div>
+              <div class="lead-custom-select-option" data-value="1М-5М">1 000 000 — 5 000 000 ₽</div>
+              <div class="lead-custom-select-option" data-value="5М-10М">5 000 000 — 10 000 000 ₽</div>
+              <div class="lead-custom-select-option" data-value="10М+">более 10 000 000 ₽</div>
+            </div>
+            <input type="hidden" name="budget_range" id="leadBudget" value="">
+          </div>
         </div>
 
         <div class="lead-form-group">
           <label for="leadCity">Город открытия</label>
-          <select id="leadCity" name="target_city">
-            <option value="">Не указан</option>
-            {% for city in cities %}
-            <option value="{{ city.city_id }}">{{ city.name }}</option>
-            {% endfor %}
-          </select>
+          <div class="lead-city-autocomplete">
+            <input type="text" id="leadCity" name="target_city_text" placeholder="Начните вводить город..." autocomplete="off">
+            <div class="lead-city-suggestions" id="leadCitySuggestions"></div>
+          </div>
         </div>
 
-        <div class="lead-form-group">
-          <label for="leadExperience">Опыт в бизнесе</label>
-          <select id="leadExperience" name="business_experience">
-            <option value="">Не указан</option>
-            <option value="none">Нет опыта</option>
-            <option value="1-3">1–3 года</option>
-            <option value="3+">Более 3 лет</option>
-          </select>
-        </div>
-
-        <div class="lead-form-group">
-          <label for="leadTimeline">Когда планируете открыть</label>
-          <select id="leadTimeline" name="timeline">
-            <option value="">Не указан</option>
-            <option value="1m">До 1 месяца</option>
-            <option value="1-3m">1–3 месяца</option>
-            <option value="3-6m">3–6 месяцев</option>
-            <option value="6m+">Более 6 месяцев</option>
-          </select>
+        <div class="lead-form-row">
+          <div class="lead-form-group">
+            <label for="leadExperience">Опыт в бизнесе</label>
+            <div class="lead-custom-select" data-name="business_experience">
+              <button type="button" class="lead-custom-select-trigger">
+                <span class="lead-select-value">Не указан</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="lead-custom-select-dropdown">
+                <div class="lead-custom-select-option selected" data-value="">Не указан</div>
+                <div class="lead-custom-select-option" data-value="none">Нет опыта</div>
+                <div class="lead-custom-select-option" data-value="1-3">1–3 года</div>
+                <div class="lead-custom-select-option" data-value="3+">Более 3 лет</div>
+              </div>
+              <input type="hidden" name="business_experience" id="leadExperience" value="">
+            </div>
+          </div>
+          <div class="lead-form-group">
+            <label for="leadTimeline">Когда планируете открыть</label>
+            <div class="lead-custom-select" data-name="timeline">
+              <button type="button" class="lead-custom-select-trigger">
+                <span class="lead-select-value">Не указан</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="lead-custom-select-dropdown">
+                <div class="lead-custom-select-option selected" data-value="">Не указан</div>
+                <div class="lead-custom-select-option" data-value="1m">До 1 месяца</div>
+                <div class="lead-custom-select-option" data-value="1-3m">1–3 месяца</div>
+                <div class="lead-custom-select-option" data-value="3-6m">3–6 месяцев</div>
+                <div class="lead-custom-select-option" data-value="6m+">Более 6 месяцев</div>
+              </div>
+              <input type="hidden" name="timeline" id="leadTimeline" value="">
+            </div>
+          </div>
         </div>
 
         <div class="lead-form-group">

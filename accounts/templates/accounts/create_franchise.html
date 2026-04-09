@@ -6,6 +6,8 @@
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'accounts/css/quill_theme.css' %}?v={% now 'U' %}">
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
 {% endblock %}
 
 {% block title %}Создание франшизы{% endblock %}
@@ -28,35 +30,38 @@
         <div class="form-section-top">
             <div class="form-top-card">
             <div class="form-top-grid">
-                <div class="form-top-left">
-                <div class="form-group logo-upload-group">
-                    <div class="logo-upload-label">
-                    <div class="logo-placeholder" id="logoPlaceholder">
-                        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon" loading="lazy" decoding="async">
-                    </div>
-                    <img src="" alt="Логотип" class="logo-preview" id="logoPreview" style="display:none;">
-                    </div>
-                    {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
-                    <div class="custom-file-upload-button" id="logoUploadButton">*Выбрать логотип</div>
-                    {% if form.logo.errors %}
-                    <span class="error-message">{{ form.logo.errors|first }}</span>
-                    {% endif %}
-                </div>
-                <div class="form-group catalog-card-image-group">
-                    <div class="catalog-card-image-label">
-                        <div class="catalog-card-image-placeholder" id="catalogCardImagePlaceholder">
-                            <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Card Image Icon" loading="lazy" decoding="async">
+                <!-- Images row -->
+                <div class="form-top-images-row">
+                    <div class="form-group logo-upload-group">
+                        <div class="logo-upload-label">
+                            <div class="logo-placeholder" id="logoPlaceholder">
+                                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon" loading="lazy" decoding="async">
+                            </div>
+                            <img src="" alt="Логотип" class="logo-preview" id="logoPreview" style="display:none;">
                         </div>
-                        <img src="" alt="Изображение карточки" class="catalog-card-image-preview" id="catalogCardImagePreview" style="display:none;">
+                        {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
+                        <div class="custom-file-upload-button" id="logoUploadButton">*Выбрать логотип</div>
+                        {% if form.logo.errors %}
+                        <span class="error-message">{{ form.logo.errors|first }}</span>
+                        {% endif %}
                     </div>
-                    {{ form.catalog_card_image|add_class:"form-control-file"|attr:"id:id_catalog_card_image_input"|attr:"style:display:none;" }}
-                    <div class="custom-file-upload-button" id="catalogCardImageUploadButton">{{ form.catalog_card_image.label }}</div>
-                    <div class="help-text">{{ form.catalog_card_image.help_text }}</div>
-                    {% if form.catalog_card_image.errors %}
-                    <span class="error-message">{{ form.catalog_card_image.errors|first }}</span>
-                    {% endif %}
+                    <div class="form-group catalog-card-image-group">
+                        <div class="catalog-card-image-label">
+                            <div class="catalog-card-image-placeholder" id="catalogCardImagePlaceholder">
+                                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Card Image Icon" loading="lazy" decoding="async">
+                            </div>
+                            <img src="" alt="Изображение карточки" class="catalog-card-image-preview" id="catalogCardImagePreview" style="display:none;">
+                        </div>
+                        {{ form.catalog_card_image|add_class:"form-control-file"|attr:"id:id_catalog_card_image_input"|attr:"style:display:none;" }}
+                        <div class="custom-file-upload-button" id="catalogCardImageUploadButton">{{ form.catalog_card_image.label }}</div>
+                        <div class="help-text">{{ form.catalog_card_image.help_text }}</div>
+                        {% if form.catalog_card_image.errors %}
+                        <span class="error-message">{{ form.catalog_card_image.errors|first }}</span>
+                        {% endif %}
+                    </div>
                 </div>
-                </div>
+
+                <!-- Fields -->
                 <div class="form-top-right">
                     <div class="form-fields-left">
                         <div class="form-group">
@@ -315,49 +320,105 @@ window.ENTITY_FORM_CONFIG = {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
+    // === Image Cropper Utility ===
+    function openCropperModal(file, aspectRatio, title, onConfirm) {
+        var overlay = document.createElement('div');
+        overlay.className = 'cropper-modal-overlay';
+        overlay.innerHTML =
+            '<div class="cropper-modal-dialog">' +
+                '<h3>' + title + '</h3>' +
+                '<div class="cropper-modal-image-container">' +
+                    '<img id="cropperImage" style="max-width:100%;">' +
+                '</div>' +
+                '<div class="cropper-modal-actions">' +
+                    '<button type="button" class="cropper-btn-cancel">Отмена</button>' +
+                    '<button type="button" class="cropper-btn-confirm">Подтвердить</button>' +
+                '</div>' +
+            '</div>';
+        document.body.appendChild(overlay);
+
+        var img = overlay.querySelector('#cropperImage');
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            img.src = e.target.result;
+            var cropper = new Cropper(img, {
+                aspectRatio: aspectRatio,
+                viewMode: 1,
+                autoCropArea: 1,
+                responsive: true,
+                background: false,
+            });
+
+            overlay.querySelector('.cropper-btn-cancel').addEventListener('click', function() {
+                cropper.destroy();
+                overlay.remove();
+            });
+
+            overlay.querySelector('.cropper-btn-confirm').addEventListener('click', function() {
+                var canvas = cropper.getCroppedCanvas({
+                    maxWidth: 1200,
+                    maxHeight: 1200,
+                    imageSmoothingQuality: 'high',
+                });
+                canvas.toBlob(function(blob) {
+                    onConfirm(blob, file.name);
+                    cropper.destroy();
+                    overlay.remove();
+                }, 'image/png');
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+
+    var _croppingInProgress = {};
+    function setCroppedFile(inputId, blob, fileName) {
+        var dt = new DataTransfer();
+        var croppedFile = new File([blob], fileName, { type: blob.type });
+        dt.items.add(croppedFile);
+        var input = document.getElementById(inputId);
+        _croppingInProgress[inputId] = true;
+        input.files = dt.files;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        _croppingInProgress[inputId] = false;
+    }
+
     // --- Логотип ---
-    const logoInput = document.getElementById('id_logo_input');
-    const logoPlaceholder = document.getElementById('logoPlaceholder');
-    const logoPreviewImg = document.getElementById('logoPreview');
-    const logoUploadButton = document.getElementById('logoUploadButton');
+    var logoInput = document.getElementById('id_logo_input');
+    var logoPlaceholder = document.getElementById('logoPlaceholder');
+    var logoPreviewImg = document.getElementById('logoPreview');
 
     if (logoInput && logoPlaceholder && logoPreviewImg) {
-        // Обработчики клика управляются через file_upload_utils.js
-
         logoInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    logoPreviewImg.src = e.target.result;
-                    logoPreviewImg.style.display = 'block';
-                    logoPlaceholder.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            }
+            if (_croppingInProgress['id_logo_input']) return;
+            var file = this.files[0];
+            if (!file) return;
+            openCropperModal(file, 2 / 1, 'Обрезка логотипа', function(blob, name) {
+                // Show preview
+                logoPreviewImg.src = URL.createObjectURL(blob);
+                logoPreviewImg.style.display = 'block';
+                logoPlaceholder.style.display = 'none';
+                // Set cropped file back to input
+                setCroppedFile('id_logo_input', blob, name);
+            });
         });
     }
 
     // --- Изображение карточки каталога ---
-    const catalogCardImageInput = document.getElementById('id_catalog_card_image_input');
-    const catalogCardImagePlaceholder = document.getElementById('catalogCardImagePlaceholder');
-    const catalogCardImagePreview = document.getElementById('catalogCardImagePreview');
-    const catalogCardImageUploadButton = document.getElementById('catalogCardImageUploadButton');
+    var catalogCardImageInput = document.getElementById('id_catalog_card_image_input');
+    var catalogCardImagePlaceholder = document.getElementById('catalogCardImagePlaceholder');
+    var catalogCardImagePreview = document.getElementById('catalogCardImagePreview');
 
     if (catalogCardImageInput && catalogCardImagePlaceholder && catalogCardImagePreview) {
-        // Обработчики клика управляются через file_upload_utils.js
-
         catalogCardImageInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    catalogCardImagePreview.src = e.target.result;
-                    catalogCardImagePreview.style.display = 'block';
-                    catalogCardImagePlaceholder.style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            }
+            if (_croppingInProgress['id_catalog_card_image_input']) return;
+            var file = this.files[0];
+            if (!file) return;
+            openCropperModal(file, 16 / 9, 'Обрезка изображения карточки', function(blob, name) {
+                catalogCardImagePreview.src = URL.createObjectURL(blob);
+                catalogCardImagePreview.style.display = 'block';
+                catalogCardImagePlaceholder.style.display = 'none';
+                setCroppedFile('id_catalog_card_image_input', blob, name);
+            });
         });
     }
 

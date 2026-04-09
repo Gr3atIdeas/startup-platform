@@ -18,7 +18,9 @@
   border-radius: 16px;
   padding: 32px;
   width: 100%;
-  max-width: 460px;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
   position: relative;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
@@ -63,7 +65,13 @@
 .lead-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
+}
+
+.lead-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
 .lead-form-group {
@@ -104,23 +112,137 @@
   color: rgba(255, 255, 255, 0.3);
 }
 
-.lead-form-group select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
-}
-
-.lead-form-group select option {
-  background: #0d1b3e;
-  color: #fff;
-}
-
 .lead-form-group textarea {
   resize: vertical;
   min-height: 60px;
 }
+
+/* ── Custom Select ──────────────────────────────── */
+
+.lead-custom-select {
+  position: relative;
+}
+
+.lead-custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  text-align: left;
+}
+
+.lead-custom-select-trigger:focus {
+  border-color: #7b61ff;
+  outline: none;
+}
+
+.lead-custom-select-trigger svg {
+  flex-shrink: 0;
+  opacity: 0.5;
+  transition: transform 0.2s;
+}
+
+.lead-custom-select.open .lead-custom-select-trigger svg {
+  transform: rotate(180deg);
+}
+
+.lead-select-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lead-custom-select-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #1a2a52;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.lead-custom-select.open .lead-custom-select-dropdown {
+  display: block;
+}
+
+.lead-custom-select-option {
+  padding: 10px 12px;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lead-custom-select-option:hover {
+  background: rgba(123, 97, 255, 0.2);
+}
+
+.lead-custom-select-option.selected {
+  color: #7b61ff;
+  font-weight: 500;
+}
+
+/* ── City Autocomplete ──────────────────────────── */
+
+.lead-city-autocomplete {
+  position: relative;
+}
+
+.lead-city-suggestions {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #1a2a52;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.lead-city-suggestions.visible {
+  display: block;
+}
+
+.lead-city-suggestion {
+  padding: 10px 12px;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lead-city-suggestion:hover {
+  background: rgba(123, 97, 255, 0.2);
+}
+
+.lead-city-suggestion mark {
+  color: #7b61ff;
+  background: none;
+  font-weight: 500;
+}
+
+/* ── Error ──────────────────────────────────────── */
 
 .lead-form-error {
   font-family: Inter, sans-serif;
@@ -130,6 +252,8 @@
   border-radius: 6px;
   padding: 8px 12px;
 }
+
+/* ── Submit ─────────────────────────────────────── */
 
 .lead-form-submit {
   font-family: Unbounded, sans-serif;
@@ -185,8 +309,12 @@
   }
 
   .lead-form-group input,
-  .lead-form-group select,
-  .lead-form-group textarea {
+  .lead-form-group textarea,
+  .lead-custom-select-trigger {
     font-size: 16px; /* prevent iOS zoom on focus */
+  }
+
+  .lead-form-row {
+    grid-template-columns: 1fr;
   }
 }

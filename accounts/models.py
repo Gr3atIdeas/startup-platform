@@ -922,12 +922,14 @@ class Lead(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
     phone = models.CharField(max_length=50, blank=True, default='')
+    messenger = models.CharField(max_length=255, blank=True, default='', help_text='Telegram, WhatsApp или другой мессенджер')
     budget_range = models.CharField(max_length=100, blank=True, default='', choices=BUDGET_RANGE_CHOICES)
     message = models.TextField(blank=True, default='')
     target_city = models.ForeignKey(
         'City', on_delete=models.SET_NULL, null=True, blank=True,
         related_name='leads', db_column='target_city_id',
     )
+    target_city_text = models.CharField(max_length=255, blank=True, default='', help_text='Город (свободный ввод)')
     business_experience = models.CharField(
         max_length=20, blank=True, default='', choices=EXPERIENCE_CHOICES,
     )
