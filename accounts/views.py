@@ -12194,6 +12194,7 @@ def franchise_detail_test(request, slug):
         "comments_count": len(comments),
         "cities": City.objects.all().order_by("name"),
         "locations_count": locations_count,
+        "direction_seo_slug": get_direction_slug(franchise.direction) if franchise.direction else None,
     }
     return render(request, "accounts/franchise_detail_test.html", context)
 
