@@ -1,0 +1,715 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load file_tags %}
+{% load accounts_extras %}
+{% load html_sanitizer %}
+
+{% block title %}{{ startup.title|default:"Детали стартапа" }} — Great Ideas{% endblock %}
+
+{% block meta_description %}<meta name="description" content="{{ startup.short_description|default:startup.title|striptags|truncatewords:25 }}">{% endblock %}
+
+{% block canonical %}<link rel="canonical" href="{{ canonical_url }}">{% endblock %}
+
+{% block og_tags %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Great Ideas">
+<meta property="og:title" content="{{ startup.title|default:'Стартап' }} — Great Ideas">
+<meta property="og:description" content="{{ startup.short_description|default:startup.title|striptags|truncatewords:25 }}">
+{% if slider_images %}<meta property="og:image" content="{{ slider_images.0 }}">
+{% elif logo_url %}<meta property="og:image" content="{{ logo_url }}">
+{% else %}<meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">{% endif %}
+<meta property="og:url" content="{{ canonical_url }}">
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BusinessInvestmentOpportunity",
+  "name": "{{ startup.title }}",
+  "description": "{{ startup.short_description|striptags|truncatewords:30 }}",
+  "url": "{{ canonical_url }}"
+}
+</script>
+{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'accounts/css/lead_modal.css' %}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" media="print" onload="this.media='all'" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/css/glightbox.min.css" media="print" onload="this.media='all'" />
+<style>
+  .fdt { font-family: Inter, sans-serif; max-width: 1303px; margin: 0 auto; padding: 20px; }
+
+  /* Breadcrumbs + top bar */
+  .fdt-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+  .fdt-crumbs { font-size: 13px; }
+  .fdt-crumbs a { color: rgba(255,255,255,0.4); text-decoration: none; }
+  .fdt-crumbs a:hover { color: rgba(255,255,255,0.7); }
+  .fdt-crumbs span { color: rgba(255,255,255,0.2); margin: 0 6px; }
+  .fdt-crumbs .current { color: rgba(255,255,255,0.7); }
+
+  /* Moderation bar */
+  .fdt-mod-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .fdt-mod-bar select {
+    padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15); color: #fff; font-size: 13px;
+    font-family: Inter, sans-serif; cursor: pointer;
+  }
+  .fdt-mod-bar select option { background: #0d1b3e; }
+  .fdt-mod-bar a, .fdt-mod-bar button {
+    padding: 6px 14px; border-radius: 8px; font-size: 13px; font-family: Inter, sans-serif;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.8); text-decoration: none; cursor: pointer; transition: background 0.2s;
+  }
+  .fdt-mod-bar a:hover, .fdt-mod-bar button:hover { background: rgba(255,255,255,0.15); }
+
+  /* Carousel — full width, 16:9 */
+  .fdt-carousel {
+    position: relative; width: 100%; aspect-ratio: 16/9;
+    border-radius: 20px; overflow: hidden; margin-bottom: 28px;
+    background: rgba(255,255,255,0.03);
+  }
+  .fdt-slide {
+    position: absolute; inset: 0; opacity: 0; transition: opacity 0.5s;
+    pointer-events: none;
+  }
+  .fdt-slide.active { opacity: 1; pointer-events: auto; }
+  .fdt-slide img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
+  .fdt-slide video { width: 100%; height: 100%; object-fit: cover; background: #000; }
+  .fdt-slide-play {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.25); cursor: pointer; z-index: 3; transition: background 0.2s;
+  }
+  .fdt-slide-play:hover { background: rgba(0,0,0,0.15); }
+  .fdt-slide-play i {
+    font-size: 56px; color: rgba(255,255,255,0.9);
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+    transition: transform 0.2s;
+  }
+  .fdt-slide-play:hover i { transform: scale(1.1); }
+  .fdt-slide-play.hidden { display: none; }
+  .fdt-carousel-btn {
+    position: absolute; top: 0; bottom: 0; z-index: 5;
+    width: 80px; border: none; cursor: pointer;
+    background: transparent; color: rgba(255,255,255,0);
+    font-size: 22px; transition: all 0.3s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fdt-carousel-btn--prev {
+    left: 0; border-radius: 20px 0 0 20px;
+    background: linear-gradient(to right, rgba(0,0,0,0.4), transparent);
+    opacity: 0; padding-right: 16px;
+  }
+  .fdt-carousel-btn--next {
+    right: 0; border-radius: 0 20px 20px 0;
+    background: linear-gradient(to left, rgba(0,0,0,0.4), transparent);
+    opacity: 0; padding-left: 16px;
+  }
+  .fdt-carousel:hover .fdt-carousel-btn { opacity: 1; color: rgba(255,255,255,0.9); }
+  .fdt-carousel-btn:hover { width: 100px; background: linear-gradient(to right, rgba(0,0,0,0.6), transparent); }
+  .fdt-carousel-btn--next:hover { background: linear-gradient(to left, rgba(0,0,0,0.6), transparent); }
+  .fdt-dots {
+    position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; z-index: 5;
+  }
+  .fdt-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(99,102,241,0.35); cursor: pointer; transition: all 0.2s;
+  }
+  .fdt-dot.active { background: #6366f1; width: 24px; border-radius: 4px; }
+  .fdt-category-badge {
+    position: absolute; top: 16px; left: 16px; z-index: 5;
+    padding: 6px 16px; border-radius: 12px;
+    background: rgba(99,102,241,0.85); color: #fff;
+    font-size: 13px; font-weight: 500;
+  }
+  .fdt-no-images {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.15); font-size: 48px;
+  }
+
+  /* Title block */
+  .fdt-title-block { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+  .fdt-logo {
+    width: 52px; height: 52px; border-radius: 50%; overflow: hidden;
+    background: rgba(255,255,255,0.06); flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .fdt-logo img { width: 100%; height: 100%; object-fit: cover; }
+  .fdt-title {
+    font-family: Unbounded, sans-serif; font-size: clamp(22px, 4vw, 32px);
+    font-weight: 600; color: #fff; line-height: 1.2;
+  }
+
+  /* Description */
+  .fdt-desc {
+    font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.65;
+    margin-bottom: 24px; font-weight: 300;
+  }
+
+  /* Stats row */
+  .fdt-stats {
+    display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 24px;
+    padding: 20px 24px; border-radius: 16px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  }
+  .fdt-stat-item { }
+  .fdt-stat-label { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+  .fdt-stat-value { font-family: Unbounded, sans-serif; font-size: 18px; font-weight: 600; color: #fff; }
+
+  /* Progress bar */
+  .fdt-progress {
+    margin-bottom: 24px; padding: 20px 24px; border-radius: 16px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  }
+  .fdt-progress-bar-wrap {
+    width: 100%; height: 12px; border-radius: 6px;
+    background: rgba(255,255,255,0.08); overflow: hidden; margin-bottom: 10px;
+  }
+  .fdt-progress-bar {
+    height: 100%; border-radius: 6px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    transition: width 0.6s ease;
+  }
+  .fdt-progress-info {
+    display: flex; justify-content: space-between; font-size: 13px;
+    color: rgba(255,255,255,0.5);
+  }
+  .fdt-progress-info strong { color: #fff; font-weight: 600; }
+
+  /* CTA row */
+  .fdt-cta {
+    display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap;
+  }
+  .fdt-cta-primary {
+    padding: 14px 32px; border-radius: 14px; border: none;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff;
+    font-family: Inter, sans-serif; font-size: 16px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; text-decoration: none;
+  }
+  .fdt-cta-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.4); }
+  .fdt-cta-secondary {
+    padding: 14px 24px; border-radius: 14px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.8); font-family: Inter, sans-serif; font-size: 14px; font-weight: 500;
+    text-decoration: none; display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+  }
+  .fdt-cta-secondary:hover { background: rgba(255,255,255,0.1); }
+
+  /* Tabs */
+  .fdt-tabbed-area {
+    background: rgba(0, 8, 25, 0.82); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px; padding: 28px 32px; backdrop-filter: blur(6px);
+  }
+  .fdt-tabs {
+    display: flex; gap: 0; margin-bottom: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    justify-content: center;
+  }
+  .fdt-tab {
+    padding: 16px 32px; font-size: 16px; font-weight: 500; cursor: pointer;
+    color: rgba(255,255,255,0.45); border-bottom: 2px solid transparent;
+    transition: all 0.2s; background: none; border-top: none; border-left: none; border-right: none;
+    font-family: Unbounded, sans-serif;
+  }
+  .fdt-tab.active { color: #fff; border-bottom-color: #6366f1; }
+  .fdt-tab:hover { color: rgba(255,255,255,0.7); }
+  .fdt-panel { display: none; padding-top: 28px; }
+  .fdt-panel.active { display: block; }
+
+  /* Content */
+  .fdt-content {
+    font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.65; font-weight: 300;
+  }
+  .fdt-content h2, .fdt-content h3 {
+    font-family: Unbounded, sans-serif; font-weight: 500; color: #fff;
+    margin: 24px 0 12px; line-height: 1.3;
+  }
+  .fdt-content h2 { font-size: 22px; }
+  .fdt-content h3 { font-size: 18px; }
+  .fdt-content p { margin-bottom: 1em; }
+  .fdt-content img { max-width: 100%; border-radius: 12px; cursor: zoom-in; margin: 12px 0; }
+  .fdt-content ul, .fdt-content ol { padding-left: 20px; margin-bottom: 1em; }
+  .fdt-content li { margin-bottom: 6px; }
+  .fdt-content strong { color: #fff; font-weight: 500; }
+  .fdt-content a { color: #a78bfa; }
+
+  /* Gallery grid */
+  .fdt-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .fdt-gallery a {
+    border-radius: 12px; overflow: hidden; aspect-ratio: 4/3;
+    display: block; transition: all 0.2s;
+  }
+  .fdt-gallery a:hover { transform: scale(1.02); }
+  .fdt-gallery img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Calculator */
+  .fdt-calc {
+    margin-top: 32px; padding: 28px; border-radius: 16px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  }
+  .fdt-calc-title { font-family: Unbounded, sans-serif; font-size: 18px; font-weight: 500; color: #fff; margin-bottom: 20px; }
+  .fdt-calc-inputs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
+  .fdt-calc-field label { font-size: 12px; color: rgba(255,255,255,0.4); display: block; margin-bottom: 6px; }
+  .fdt-calc-field input {
+    width: 100%; padding: 12px 14px; border-radius: 10px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    color: #fff; font-size: 16px; font-family: Inter, sans-serif; outline: none;
+    box-sizing: border-box;
+  }
+  .fdt-calc-field input:focus { border-color: rgba(99,102,241,0.5); }
+  .fdt-calc-results { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .fdt-calc-result {
+    padding: 14px; border-radius: 12px;
+    background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.15);
+  }
+  .fdt-calc-result-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+  .fdt-calc-result-value { font-family: Unbounded, sans-serif; font-size: 16px; color: #fff; font-weight: 600; }
+
+  /* Timeline */
+  .fdt-timeline { position: relative; padding-left: 28px; }
+  .fdt-timeline::before {
+    content: ''; position: absolute; left: 8px; top: 4px; bottom: 4px;
+    width: 2px; background: rgba(99,102,241,0.2);
+  }
+  .fdt-timeline-item { position: relative; margin-bottom: 24px; }
+  .fdt-timeline-item::before {
+    content: ''; position: absolute; left: -24px; top: 6px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: rgba(99,102,241,0.3); border: 2px solid #6366f1;
+  }
+  .fdt-timeline-item.completed::before { background: #6366f1; }
+  .fdt-timeline-item-title {
+    font-family: Unbounded, sans-serif; font-size: 15px; font-weight: 500;
+    color: #fff; margin-bottom: 4px;
+  }
+  .fdt-timeline-item-desc { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+  .fdt-timeline-item-date { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 4px; }
+
+  /* Empty state */
+  .fdt-empty { text-align: center; padding: 40px; color: rgba(255,255,255,0.3); font-size: 14px; }
+
+  @media (max-width: 768px) {
+    .fdt { padding: 16px; }
+    .fdt-stats { gap: 16px; }
+    .fdt-calc-inputs { grid-template-columns: 1fr; }
+    .fdt-calc-results { grid-template-columns: repeat(2, 1fr); }
+    .fdt-gallery { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fdt" data-entity-type="startup" data-entity-id="{{ startup.startup_id }}">
+
+  <!-- Top bar: breadcrumbs + moderation -->
+  <div class="fdt-topbar">
+    <nav class="fdt-crumbs">
+      <a href="{% url 'home' %}">Главная</a><span>/</span>
+      <a href="{% url 'startups_list' %}">Стартапы</a><span>/</span>
+      {% if startup.direction %}<a href="{% url 'startups_list' %}?category={{ startup.direction.direction_id }}">{{ startup.direction.direction_name|translate_category }}</a><span>/</span>{% endif %}
+      <span class="current">{{ startup.title|truncatewords:5 }}</span>
+    </nav>
+    {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+    <div class="fdt-mod-bar">
+      <form method="post" style="display:inline;">
+        {% csrf_token %}
+        <select name="status" onchange="this.form.submit()">
+          <option value="approved" {% if startup.status == 'approved' %}selected{% endif %}>Одобрено</option>
+          <option value="blocked" {% if startup.status == 'blocked' %}selected{% endif %}>Заблокировано</option>
+          <option value="closed" {% if startup.status == 'closed' %}selected{% endif %}>Закрыто</option>
+          <option value="pending" {% if startup.status == 'pending' %}selected{% endif %}>На рассмотрении</option>
+          <option value="rejected" {% if startup.status == 'rejected' %}selected{% endif %}>Отклонено</option>
+        </select>
+      </form>
+      <a href="{% url 'edit_startup' startup_id=startup.startup_id %}">Редактировать</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Title -->
+  <div class="fdt-title-block">
+    {% if logo_urls %}
+    <div class="fdt-logo"><img src="{{ logo_urls.0|resolve_url:file_url_map }}" alt="Логотип"></div>
+    {% endif %}
+    <h1 class="fdt-title">{{ startup.title }}</h1>
+  </div>
+
+  {% if startup.short_description %}
+  <p class="fdt-desc">{{ startup.short_description|striptags }}</p>
+  {% endif %}
+
+  <!-- Hero: video (if available) or image carousel -->
+  <div class="fdt-carousel" id="carousel">
+    {% if startup.direction %}
+    <div class="fdt-category-badge">{{ startup.direction.direction_name|translate_category }}</div>
+    {% endif %}
+
+    {% if video_urls %}
+      {# Standalone video — no carousel, no auto-switching #}
+      <div class="fdt-slide active" data-type="video">
+        <video src="{{ video_urls.0|resolve_url:file_url_map }}" preload="metadata" playsinline></video>
+        <div class="fdt-slide-play" onclick="toggleVideo(this)">
+          <i class="fas fa-play"></i>
+        </div>
+      </div>
+    {% elif slider_images %}
+      {% for url in slider_images|slice:":6" %}
+      <div class="fdt-slide {% if forloop.first %}active{% endif %}">
+        <a href="{{ url|resolve_url:file_url_map }}" class="glightbox" data-gallery="main">
+          <img src="{{ url|resolve_url:file_url_map }}" alt="{{ startup.title }} — {{ forloop.counter }}" {% if not forloop.first %}loading="lazy"{% endif %}>
+        </a>
+      </div>
+      {% endfor %}
+      {% if slider_images|length > 1 %}
+      <button class="fdt-carousel-btn fdt-carousel-btn--prev" onclick="carNav(-1)"><i class="fas fa-chevron-left"></i></button>
+      <button class="fdt-carousel-btn fdt-carousel-btn--next" onclick="carNav(1)"><i class="fas fa-chevron-right"></i></button>
+      <div class="fdt-dots">
+        {% for url in slider_images|slice:":6" %}
+        <div class="fdt-dot {% if forloop.first %}active{% endif %}" onclick="carGo({{ forloop.counter0 }})"></div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% else %}
+      <div class="fdt-no-images">&#128640;</div>
+    {% endif %}
+  </div>
+
+  <script>
+  (function(){
+    /* ---- Image carousel ---- */
+    var slides = document.querySelectorAll('.fdt-slide');
+    var dots = document.querySelectorAll('.fdt-dot');
+    if (slides.length > 1) {
+      var cur = 0;
+      window.carNav = function(d) {
+        slides[cur].classList.remove('active'); if(dots[cur]) dots[cur].classList.remove('active');
+        cur = (cur + d + slides.length) % slides.length;
+        slides[cur].classList.add('active'); if(dots[cur]) dots[cur].classList.add('active');
+      };
+      window.carGo = function(i) {
+        if (i === cur) return;
+        slides[cur].classList.remove('active'); if(dots[cur]) dots[cur].classList.remove('active');
+        cur = i;
+        slides[cur].classList.add('active'); if(dots[cur]) dots[cur].classList.add('active');
+      };
+    }
+
+    /* ---- Hero video ---- */
+    window.toggleVideo = function(overlay) {
+      var video = overlay.parentElement.querySelector('video');
+      var icon = overlay.querySelector('i');
+      if (!video) return;
+      if (video.paused) {
+        video.play();
+        overlay.classList.add('hidden');
+      } else {
+        video.pause();
+        icon.className = 'fas fa-play';
+        overlay.classList.remove('hidden');
+      }
+    };
+
+    document.querySelectorAll('.fdt-slide[data-type="video"]').forEach(function(s) {
+      var v = s.querySelector('video');
+      var btn = s.querySelector('.fdt-slide-play');
+      if (v && btn) {
+        v.addEventListener('pause', function() {
+          if (!v.ended) { btn.classList.remove('hidden'); btn.querySelector('i').className = 'fas fa-play'; }
+        });
+        v.addEventListener('ended', function() {
+          btn.classList.remove('hidden'); btn.querySelector('i').className = 'fas fa-redo';
+        });
+        v.addEventListener('click', function() {
+          if (!v.paused) { v.pause(); }
+        });
+      }
+    });
+  })();
+  </script>
+
+  <!-- Stats -->
+  <div class="fdt-stats">
+    {% if startup.investment_size %}
+    <div class="fdt-stat-item">
+      <div class="fdt-stat-label">Цель инвестиций</div>
+      <div class="fdt-stat-value">{{ startup.investment_size|floatformat:0|intcomma }} &#8381;</div>
+    </div>
+    {% endif %}
+    {% if progress_percentage is not None %}
+    <div class="fdt-stat-item">
+      <div class="fdt-stat-label">Собрано</div>
+      <div class="fdt-stat-value">{{ progress_percentage }}%</div>
+    </div>
+    {% endif %}
+    {% if investors_count %}
+    <div class="fdt-stat-item">
+      <div class="fdt-stat-label">Инвесторов</div>
+      <div class="fdt-stat-value">{{ investors_count }}</div>
+    </div>
+    {% endif %}
+    <div class="fdt-stat-item">
+      <div class="fdt-stat-label">Рейтинг</div>
+      <div class="fdt-stat-value">
+        {% if startup.total_voters and startup.total_voters > 0 %}
+          <span style="color:#fbbf24;">&#9733;</span> {{ startup.total_voters }} оценок
+        {% elif average_rating %}
+          <span style="color:#fbbf24;">&#9733;</span> {{ average_rating }}
+        {% else %}
+          <span style="color:rgba(255,255,255,0.3);">Нет оценок</span>
+        {% endif %}
+      </div>
+    </div>
+    {% if startup.stage %}
+    <div class="fdt-stat-item">
+      <div class="fdt-stat-label">Стадия</div>
+      <div class="fdt-stat-value" style="font-size:14px;">{{ startup.stage }}</div>
+    </div>
+    {% endif %}
+    {% if ai_rating %}
+    <div class="fdt-stat-item">
+      <div class="fdt-stat-label">AI-рейтинг</div>
+      <div class="fdt-stat-value">{{ ai_rating }}</div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Progress bar -->
+  {% if progress_percentage is not None and startup.investment_size %}
+  <div class="fdt-progress">
+    <div class="fdt-progress-bar-wrap">
+      <div class="fdt-progress-bar" style="width: {{ progress_percentage|floatformat:0 }}%;"></div>
+    </div>
+    <div class="fdt-progress-info">
+      <span>Собрано <strong>{{ progress_percentage }}%</strong> от цели</span>
+      <span>Цель: <strong>{{ startup.investment_size|floatformat:0|intcomma }} &#8381;</strong></span>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- CTA -->
+  <div class="fdt-cta">
+    <button class="fdt-cta-primary" onclick="openLeadModal()">Инвестировать</button>
+    {% if startup.pitch_deck_url %}
+    <a href="{{ startup.pitch_deck_url }}" target="_blank" class="fdt-cta-secondary">
+      <i class="fas fa-file-pdf"></i> Скачать презентацию
+    </a>
+    {% endif %}
+    {% if startup.contact_website %}
+    <a href="{{ startup.contact_website }}" target="_blank" class="fdt-cta-secondary">
+      <i class="fas fa-globe"></i> Сайт
+    </a>
+    {% endif %}
+    {% if startup.contact_telegram %}
+    <a href="https://t.me/{{ startup.contact_telegram }}" target="_blank" class="fdt-cta-secondary">
+      <i class="fab fa-telegram"></i> Telegram
+    </a>
+    {% endif %}
+    {% if startup.contact_whatsapp %}
+    <a href="https://wa.me/{{ startup.contact_whatsapp }}" target="_blank" class="fdt-cta-secondary">
+      <i class="fab fa-whatsapp"></i> WhatsApp
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- Tabs -->
+  <div class="fdt-tabbed-area">
+  <div class="fdt-tabs">
+    <button class="fdt-tab active" onclick="fdtTab('info')">Информация</button>
+    <button class="fdt-tab" onclick="fdtTab('gallery')">Галерея</button>
+    <button class="fdt-tab" onclick="fdtTab('stages')">Этапы</button>
+    <button class="fdt-tab" onclick="fdtTab('docs')">Документы</button>
+    <button class="fdt-tab" onclick="fdtTab('conditions')">Условия</button>
+  </div>
+
+  <!-- Info panel -->
+  <div id="fdt-info" class="fdt-panel active">
+    <div class="fdt-content">
+      {{ startup.description|sanitize_html|safe|default:"<p>Описание не добавлено.</p>" }}
+    </div>
+
+    {% if startup.profit_calculation %}
+    <div class="fdt-content" style="margin-top:24px;">
+      <h3>Финансовая модель</h3>
+      {{ startup.profit_calculation|sanitize_html|safe }}
+    </div>
+    {% endif %}
+
+    {% if startup.customization_data %}
+    <div class="fdt-content" style="margin-top:24px;">
+      <h3>Дополнительная информация</h3>
+      {{ startup.customization_data|sanitize_html|safe }}
+    </div>
+    {% endif %}
+
+    <!-- Calculator -->
+    <div class="fdt-calc">
+      <div class="fdt-calc-title">Калькулятор доходности</div>
+      <div class="fdt-calc-inputs">
+        <div class="fdt-calc-field">
+          <label>Сумма инвестиций (&#8381;)</label>
+          <input type="number" id="tcInv" value="{{ startup.investment_size|default:0|floatformat:0 }}" min="0" step="10000">
+        </div>
+        <div class="fdt-calc-field">
+          <label>Ожидаемая прибыль/мес (&#8381;)</label>
+          <input type="number" id="tcProf" value="0" min="0" step="5000">
+        </div>
+      </div>
+      <div class="fdt-calc-results">
+        <div class="fdt-calc-result"><div class="fdt-calc-result-label">Общие вложения</div><div class="fdt-calc-result-value" id="tcTotal">0 &#8381;</div></div>
+        <div class="fdt-calc-result"><div class="fdt-calc-result-label">Окупаемость</div><div class="fdt-calc-result-value" id="tcPayback">&mdash;</div></div>
+        <div class="fdt-calc-result"><div class="fdt-calc-result-label">Прибыль за год</div><div class="fdt-calc-result-value" id="tcYear">&mdash;</div></div>
+        <div class="fdt-calc-result"><div class="fdt-calc-result-label">ROI за год</div><div class="fdt-calc-result-value" id="tcROI">&mdash;</div></div>
+      </div>
+    </div>
+    <script>
+    (function(){
+      var inv=document.getElementById('tcInv'), prof=document.getElementById('tcProf');
+      function c(){
+        var i=parseFloat(inv.value)||0, p=parseFloat(prof.value)||0, t=i;
+        document.getElementById('tcTotal').textContent=t.toLocaleString('ru-RU')+' \u20BD';
+        if(p>0){
+          document.getElementById('tcPayback').textContent=Math.ceil(t/p)+' мес';
+          document.getElementById('tcYear').textContent=(p*12-t).toLocaleString('ru-RU')+' \u20BD';
+          document.getElementById('tcROI').textContent=(t>0?Math.round((p*12/t)*100-100):0)+'%';
+        }else{
+          document.getElementById('tcPayback').textContent='\u2014';
+          document.getElementById('tcYear').textContent='\u2014';
+          document.getElementById('tcROI').textContent='\u2014';
+        }
+      }
+      if(inv){inv.addEventListener('input',c);prof.addEventListener('input',c);c();}
+    })();
+    </script>
+  </div>
+
+  <!-- Gallery panel -->
+  <div id="fdt-gallery" class="fdt-panel">
+    {% if slider_images %}
+    <div class="fdt-gallery">
+      {% for url in slider_images|slice:":10" %}
+      <a href="{{ url|resolve_url:file_url_map }}" class="glightbox" data-gallery="gallery">
+        <img src="{{ url|resolve_url:file_url_map }}" alt="Фото {{ forloop.counter }}" loading="lazy">
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="fdt-empty">Фото не добавлены</div>
+    {% endif %}
+  </div>
+
+  <!-- Stages / Timeline panel -->
+  <div id="fdt-stages" class="fdt-panel">
+    {% if timeline_events %}
+    <div class="fdt-timeline">
+      {% for event in timeline_events %}
+      <div class="fdt-timeline-item {% if event.is_completed %}completed{% endif %}">
+        <div class="fdt-timeline-item-title">{{ event.title }}</div>
+        {% if event.description %}
+        <div class="fdt-timeline-item-desc">{{ event.description }}</div>
+        {% endif %}
+        {% if event.target_date %}
+        <div class="fdt-timeline-item-date">{{ event.target_date|date:"d.m.Y" }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="fdt-empty">Этапы не добавлены</div>
+    {% endif %}
+  </div>
+
+  <!-- Documents panel -->
+  <div id="fdt-docs" class="fdt-panel">
+    {% if startup_documents %}
+    <div class="fdt-content">
+      {% for doc in startup_documents %}
+      <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06);">
+        <i class="fas fa-file-alt" style="color:rgba(255,255,255,0.4); font-size:20px;"></i>
+        <a href="{{ doc.file_url|resolve_url:file_url_map }}" target="_blank" style="color:#a78bfa; font-size:14px;">{{ doc.original_name|default:"Документ" }}</a>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="fdt-empty">Документы не добавлены</div>
+    {% endif %}
+  </div>
+
+  <!-- Conditions panel -->
+  <div id="fdt-conditions" class="fdt-panel">
+    {% if startup.terms %}
+    <div class="fdt-content">
+      {{ startup.terms|sanitize_html|safe }}
+    </div>
+    {% else %}
+    <div class="fdt-empty">Условия не добавлены</div>
+    {% endif %}
+  </div>
+  </div><!-- end fdt-tabbed-area -->
+
+  <!-- Comments -->
+  <div style="margin-top:48px;">
+    <h3 style="font-family:Unbounded,sans-serif; font-size:20px; font-weight:500; color:#fff; margin-bottom:20px;">
+      Отзывы {% if total_comments_count %}({{ total_comments_count }}){% endif %}
+    </h3>
+    {% if comments %}
+    {% for c in comments %}
+    <div style="padding:16px 0; border-bottom:1px solid rgba(255,255,255,0.06);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-weight:500; color:#fff;">{{ c.user.first_name|default:"Пользователь" }}</span>
+        <div style="display:flex; align-items:center; gap:10px;">
+          {% if c.user_vote_rating %}
+          <span style="color:#fbbf24; font-size:13px;">{% for i in "12345" %}{% if forloop.counter <= c.user_vote_rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</span>
+          {% endif %}
+          <span style="font-size:12px; color:rgba(255,255,255,0.3);">{{ c.created_at|date:"d.m.Y" }}</span>
+        </div>
+      </div>
+      <div style="font-size:14px; color:rgba(255,255,255,0.6); line-height:1.5;">{{ c.content|default:"" }}</div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="fdt-empty">Пока нет отзывов</div>
+    {% endif %}
+  </div>
+
+  <!-- Moderator comment -->
+  {% if startup.moderator_comment and user.is_authenticated and user.role.role_name == 'moderator' %}
+  <div style="margin-top:32px; padding:20px; border-radius:16px; background:rgba(251,191,36,0.08); border:1px solid rgba(251,191,36,0.2);">
+    <div style="font-size:13px; color:rgba(251,191,36,0.8); margin-bottom:8px; font-weight:500;">Комментарий модератора</div>
+    <div style="font-size:14px; color:rgba(255,255,255,0.7); line-height:1.5;">{{ startup.moderator_comment }}</div>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- Lead modal -->
+{% include 'accounts/partials/_lead_modal.html' with entity_type='startup' entity_id=startup.startup_id lead_type='invest' cta_label='Инвестировать' %}
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js" defer></script>
+<script src="{% static 'accounts/js/lead_form.js' %}" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Wrap content images with glightbox
+  document.querySelectorAll('.fdt-content img').forEach(function(img) {
+    if (img.closest('a')) return;
+    var link = document.createElement('a');
+    link.href = img.src; link.className = 'glightbox'; link.setAttribute('data-gallery', 'content');
+    img.parentNode.insertBefore(link, img); link.appendChild(img);
+  });
+  function initLB() { if (typeof GLightbox !== 'undefined') GLightbox({selector:'.glightbox'}); else setTimeout(initLB, 100); }
+  initLB();
+});
+
+function fdtTab(id) {
+  document.querySelectorAll('.fdt-tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.fdt-panel').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('fdt-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+{% endblock %}

@@ -1829,6 +1829,11 @@ def agency_detail(request, slug):
     else:
         ai_rating = 5
 
+    logo_url = None
+    if logo_urls:
+        logo_url = file_url_map.get(str(logo_urls[0]), "")
+    hero_video = video_urls[0] if video_urls else None
+
     context = {
         "agency": agency,
         "similar_agencies": similar_agencies,
@@ -1841,17 +1846,19 @@ def agency_detail(request, slug):
         "user_has_voted": user_has_voted,
         "rating_distribution": rating_distribution,
         "logo_urls": logo_urls,
+        "logo_url": logo_url,
         "creatives_urls": creatives_urls,
         "slider_images": slider_images,
         "all_creatives": all_creatives,
         "video_urls": video_urls,
+        "hero_video": hero_video,
         "proofs_urls": proofs_urls,
         "agency_documents": agency_documents,
         "ai_rating": ai_rating,
         "canonical_url": request.build_absolute_uri(),
         "file_url_map": file_url_map,
     }
-    return render(request, "accounts/agency_detail.html", context)
+    return render(request, "accounts/agency_detail_v2.html", context)
 
 def specialist_detail_by_id(request, specialist_id):
     specialist = get_object_or_404(Specialists, specialist_id=specialist_id)
@@ -2002,6 +2009,11 @@ def specialist_detail(request, slug):
     else:
         ai_rating = 5
 
+    logo_url = None
+    if logo_urls:
+        logo_url = file_url_map.get(str(logo_urls[0]), "")
+    hero_video = video_urls[0] if video_urls else None
+
     context = {
         "specialist": specialist,
         "similar_specialists": similar_specialists,
@@ -2014,17 +2026,19 @@ def specialist_detail(request, slug):
         "user_has_voted": user_has_voted,
         "rating_distribution": rating_distribution,
         "logo_urls": logo_urls,
+        "logo_url": logo_url,
         "creatives_urls": creatives_urls,
         "slider_images": slider_images,
         "all_creatives": all_creatives,
         "video_urls": video_urls,
+        "hero_video": hero_video,
         "proofs_urls": proofs_urls,
         "specialist_documents": specialist_documents,
         "ai_rating": ai_rating,
         "canonical_url": request.build_absolute_uri(),
         "file_url_map": file_url_map,
     }
-    return render(request, "accounts/specialist_detail.html", context)
+    return render(request, "accounts/specialist_detail_v2.html", context)
 def franchise_detail_by_id(request, franchise_id):
     franchise = get_object_or_404(Franchises, franchise_id=franchise_id)
     if franchise.slug:
@@ -2630,6 +2644,11 @@ def startup_detail(request, slug):
         ai_rating = startup.customization_data.get('ai_rating', 5)
     else:
         ai_rating = 5
+    logo_url = None
+    if logo_urls:
+        logo_url = file_url_map.get(str(logo_urls[0]), "")
+    hero_video = video_urls[0] if video_urls else None
+
     context = {
         "startup": startup,
         "comments": comments_with_rating,
@@ -2641,10 +2660,12 @@ def startup_detail(request, slug):
         "rating_distribution": rating_distribution,
         "similar_startups": similar_startups,
         "logo_urls": logo_urls,
+        "logo_url": logo_url,
         "creatives_urls": creatives_urls,
         "slider_images": slider_images,
         "all_creatives": all_creatives,
         "video_urls": video_urls,
+        "hero_video": hero_video,
         "show_moderator_comment": show_moderator_comment,
         "progress_percentage": progress_percentage,
         "investors_count": investors_count,
@@ -2654,7 +2675,7 @@ def startup_detail(request, slug):
         "canonical_url": request.build_absolute_uri(),
         "file_url_map": file_url_map,
     }
-    return render(request, "accounts/startup_detail.html", context)
+    return render(request, "accounts/startup_detail_v2.html", context)
 def load_similar_startups(request, startup_id: int):
     current_startup_id = startup_id
     similar_startups = (
