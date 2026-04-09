@@ -55,11 +55,11 @@
 
 
 body {
-  font-family: Unbounded, sans-serif; 
-  background-color: #1e1e1e; 
-  color: #fff; 
+  font-family: Unbounded, sans-serif;
+  background-color: #1e1e1e;
+  color: #fff;
   margin: 0;
-  padding: 20px;
+  padding: 0;
 }
 
 html, body { overflow-x: hidden; }
