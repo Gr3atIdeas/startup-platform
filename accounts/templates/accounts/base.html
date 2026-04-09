@@ -9,6 +9,7 @@
   <title>{% block title %}Great Ideas{% endblock %}</title>
   {% block meta_description %}<meta name="description" content="Great Ideas — платформа для стартапов, франшиз, агентств и специалистов. Найдите инвестиции и партнёров.">{% endblock %}
   {% block canonical %}{% endblock %}
+  {% block pagination_links %}{% endblock %}
   {% block og_tags %}
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Great Ideas">
@@ -52,21 +53,21 @@
   <link rel="manifest" href="{% static 'accounts/images/favicons/site.webmanifest' %}">
 
   <!-- Render-critical CSS (above the fold) -->
-  <link rel="stylesheet" href="{% static 'accounts/css/bootstrap_replacements.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/fonts.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/global.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/header.css' %}?v={% now 'U' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/bootstrap_replacements.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/fonts.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/global.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/header.css' %}">
 
   <!-- Non-critical CSS — load async, apply when ready -->
-  <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
-  <link rel="stylesheet" href="{% static 'accounts/css/footer.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
-  <link rel="stylesheet" href="{% static 'accounts/css/contacts.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/footer.css' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/contacts.css' %}" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="{% static 'accounts/css/notifications.css' %}" media="print" onload="this.media='all'">
-  <link rel="stylesheet" href="{% static 'accounts/css/modal_overlay.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
-  <link rel="stylesheet" href="{% static 'accounts/css/scroll_arrows.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
-  <link rel="stylesheet" href="{% static 'accounts/css/image_responsive.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
-  <link rel="stylesheet" href="{% static 'accounts/css/layout_responsive.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
-  <link rel="stylesheet" href="{% static 'accounts/css/modern_responsive.css' %}?v={% now 'U' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/modal_overlay.css' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/scroll_arrows.css' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/image_responsive.css' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/layout_responsive.css' %}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{% static 'accounts/css/modern_responsive.css' %}" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="{% static 'accounts/css/global_search.css' %}" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" media="print" onload="this.media='all'">
@@ -357,9 +358,9 @@
             <div class="footer-copyright-section">
                 <div class="footer-copyright-text">© 2025 Great Ideas</div>
                 <div class="footer-legal-links">
-                    <a href="#" id="footerPrivacyLink" class="footer-legal-link">Политика конфиденциальности</a>
-                    <a href="#" id="footerOfferLink" class="footer-legal-link">Оферта</a>
-                    <a href="#" id="footerLegalInfoLink" class="footer-legal-link">Правовая информация</a>
+                    <a href="{% url 'legal' %}" class="footer-legal-link">Политика конфиденциальности</a>
+                    <a href="{% url 'legal' %}" class="footer-legal-link">Оферта</a>
+                    <a href="{% url 'legal' %}" class="footer-legal-link">Правовая информация</a>
                 </div>
             </div>
         </div>

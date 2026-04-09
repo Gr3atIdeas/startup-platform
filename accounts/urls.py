@@ -20,6 +20,7 @@ urlpatterns = [
     path("franchises/city/<slug:city_slug>/", views.franchises_by_city, name="franchises_by_city"),
     path("franchises/direction/<slug:direction_slug>/", views.franchises_by_direction, name="franchises_by_direction"),
     path("franchises/direction/<int:direction_id>/", views.franchises_by_direction_legacy, name="franchises_by_direction_legacy"),
+    path("franchises/investicii/<slug:range_slug>/", views.franchises_by_investment, name="franchises_by_investment"),
     path("franchises/<slug:slug>/", views.franchise_detail, name="franchise_detail"),
     path("franchises/id/<int:franchise_id>/", views.franchise_detail_by_id, name="franchise_detail_by_id"),
     path("agencies/", views.agencies_list, name="agencies_list"),

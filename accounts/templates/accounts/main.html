@@ -1,14 +1,45 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
 
-{% block title %}Главная страница{% endblock %}
+{% block title %}Great Ideas — платформа франшиз, стартапов и бизнес-решений{% endblock %}
+
+{% block meta_description %}<meta name="description" content="Great Ideas — каталог проверенных франшиз и стартапов. Купить франшизу, найти инвестиции, подобрать подрядчика. Все бизнес-возможности на одной платформе.">{% endblock %}
+
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}/">{% endblock %}
+
+{% block og_tags %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Great Ideas">
+<meta property="og:title" content="Great Ideas — платформа франшиз, стартапов и бизнес-решений">
+<meta property="og:description" content="Каталог проверенных франшиз и стартапов. Купить франшизу, найти инвестиции, подобрать подрядчика.">
+<meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
+<meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}/">
+<meta property="og:locale" content="ru_RU">
+{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Great Ideas",
+  "url": "https://www.greatideas.ru/",
+  "description": "Платформа для поиска франшиз, стартапов и бизнес-подрядчиков",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://www.greatideas.ru/franchises/?search={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+{% endblock %}
 
 {% block head_extra %}
     <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/main.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/featured_blocks_shared.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/faq.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}">
-    <link rel="stylesheet" href="{% static 'accounts/css/planetary_system.css' %}?v={% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/planetary_system.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -16,7 +47,7 @@
 <div class="div">
     <div class="featured">
         <div class="group">
-            <div class="div6">Создавай </div>
+            <h1 class="div6">Создавай </h1>
             <div class="div7">будущее</div>
             <div class="div5">
                 <span class="txt">
@@ -751,7 +782,7 @@
 </script>
 
 <script src="{% static 'accounts/js/main.js' %}"></script>
-<script src="{% static 'accounts/js/planetary_system.js' %}?v={% now 'U' %}"></script>
-<script src="{% static 'accounts/js/faq.js' %}?v={% now 'U' %}"></script>
-<script src="{% static 'accounts/js/particles.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'accounts/js/planetary_system.js' %}"></script>
+<script src="{% static 'accounts/js/faq.js' %}"></script>
+<script src="{% static 'accounts/js/particles.js' %}"></script>
 {% endblock %}

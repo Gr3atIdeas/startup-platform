@@ -1,7 +1,29 @@
 {% extends "accounts/base.html" %}
 {% load static %}
 
-{% block title %}FAQ - Great Ideas{% endblock %}
+{% block title %}FAQ — Часто задаваемые вопросы о франшизах и стартапах | Great Ideas{% endblock %}
+
+{% block meta_description %}<meta name="description" content="Ответы на частые вопросы о платформе Great Ideas: как купить франшизу, как разместить стартап, как найти инвестора и подрядчика.">{% endblock %}
+
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'faq' %}">{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "Что такое «Great Ideas»?", "acceptedAnswer": {"@type": "Answer", "text": "Great Ideas — это маркетплейс стартапов, где стартаперы размещают свои проекты, а пользователи исследуют их в поисках лучших идей для инвестиций или покупки."}},
+    {"@type": "Question", "name": "Как зарегистрироваться на платформе «Great Ideas»?", "acceptedAnswer": {"@type": "Answer", "text": "Зарегистрируйтесь через Telegram или форму на главной странице. Подтвердите почту и заполните профиль."}},
+    {"@type": "Question", "name": "Какие виды франшиз можно размещать?", "acceptedAnswer": {"@type": "Answer", "text": "Франшизы в сферах общественного питания, розничной торговли, услуг для бизнеса, образования, здоровья/красоты, IT и других."}},
+    {"@type": "Question", "name": "Проверяет ли платформа франшизы перед публикацией?", "acceptedAnswer": {"@type": "Answer", "text": "Да, все франшизы проходят модерацию на соответствие требованиям платформы. Great Ideas не несет ответственности за финансовое состояние или успех франшизы. Инвесторам рекомендуется самостоятельно изучать и проверять проекты перед инвестированием."}},
+    {"@type": "Question", "name": "Какие категории стартапов можно размещать?", "acceptedAnswer": {"@type": "Answer", "text": "Технологические, электронная коммерция, инновационные продукты, гейминг, образование, креативные индустрии, наука, экология."}},
+    {"@type": "Question", "name": "Как найти подходящие стартапы?", "acceptedAnswer": {"@type": "Answer", "text": "Используйте фильтры поиска по категориям, стадиям стартапов (Идея, MVP, рост), размерам."}},
+    {"@type": "Question", "name": "Каких специалистов можно найти на платформе?", "acceptedAnswer": {"@type": "Answer", "text": "Разработчики, дизайнеры, маркетологи, юристы, бухгалтеры, копирайтеры, консультанты и другие."}}
+  ]
+}
+</script>
+{% endblock %}
 
 {% block head_extra %}
     <link rel="stylesheet" href="{% static 'accounts/css/faq.css' %}">

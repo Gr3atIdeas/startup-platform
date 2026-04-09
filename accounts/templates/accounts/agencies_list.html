@@ -8,7 +8,12 @@
 
 {% block meta_description %}<meta name="description" content="Каталог агентств на платформе Great Ideas. Найдите надёжное агентство для развития вашего бизнеса.">{% endblock %}
 
-{% block canonical %}<link rel="canonical" href="{{ request.build_absolute_uri }}">{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'agencies_list' %}">{% endblock %}
+
+{% block pagination_links %}
+{% if page_obj.has_previous %}<link rel="prev" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}?page={{ page_obj.previous_page_number }}">{% endif %}
+{% if page_obj.has_next %}<link rel="next" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}?page={{ page_obj.next_page_number }}">{% endif %}
+{% endblock %}
 
 {% block og_tags %}
 <meta property="og:type" content="website">
@@ -19,11 +24,11 @@
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 {% endblock %}
 
-{% block catalog_css %}<link rel="stylesheet" href="{% static 'accounts/css/catalog_sidebar.css' %}?v={% now 'U' %}">{% endblock %}
+{% block catalog_css %}<link rel="stylesheet" href="{% static 'accounts/css/catalog_sidebar.css' %}">{% endblock %}
 
 {% block head_extra %}
   {{ block.super }}
-  <link rel="stylesheet" href="{% static 'accounts/css/agencies_list.css' %}?v={% now 'U' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/agencies_list.css' %}">
 {% endblock %}
 
 {% block content %}

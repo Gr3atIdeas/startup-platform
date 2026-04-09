@@ -19,11 +19,11 @@
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 {% endblock %}
 
-{% block catalog_css %}<link rel="stylesheet" href="{% static 'accounts/css/catalog_sidebar.css' %}?v={% now 'U' %}">{% endblock %}
+{% block catalog_css %}<link rel="stylesheet" href="{% static 'accounts/css/catalog_sidebar.css' %}">{% endblock %}
 
 {% block head_extra %}
   {{ block.super }}
-  <link rel="stylesheet" href="{% static 'accounts/css/franchises_list.css' %}?v={% now 'U' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/franchises_list.css' %}">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",

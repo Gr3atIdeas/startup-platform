@@ -31,7 +31,32 @@
   "@type": "BusinessInvestmentOpportunity",
   "name": "{{ franchise.title }}",
   "description": "{{ franchise.short_description|striptags|truncatewords:30 }}",
-  "url": "{{ canonical_url }}"
+  "url": "{{ canonical_url }}"{% if logo_url %},
+  "image": "{{ logo_url }}"{% endif %}{% if franchise.investment_size %},
+  "investmentAmount": {
+    "@type": "MonetaryAmount",
+    "currency": "RUB",
+    "value": "{{ franchise.investment_size }}"
+  }{% endif %}{% if franchise.total_voters > 0 %},
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ average_rating }}",
+    "bestRating": "5",
+    "ratingCount": "{{ franchise.total_voters }}"
+  }{% endif %}{% if franchise.direction %},
+  "category": "{{ franchise.direction.direction_name|translate_category }}"{% endif %}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Главная", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+    {"@type": "ListItem", "position": 2, "name": "Франшизы", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_list' %}"}{% if franchise.direction %},
+    {"@type": "ListItem", "position": 3, "name": "{{ franchise.direction.direction_name|translate_category }}", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_slug=direction_seo_slug %}"}{% endif %},
+    {"@type": "ListItem", "position": {% if franchise.direction %}4{% else %}3{% endif %}, "name": "{{ franchise.title }}"}
+  ]
 }
 </script>
 {% endblock %}
@@ -71,7 +96,7 @@
       <a href="{% url 'franchises_list' %}">Франшизы</a>
       {% if franchise.direction %}
       <span>/</span>
-      <a href="{% url 'franchises_list' %}?category={{ franchise.direction.direction_id }}">{{ franchise.direction.direction_name|translate_category }}</a>
+      <a href="{% url 'franchises_by_direction' direction_slug=direction_seo_slug %}">{{ franchise.direction.direction_name|translate_category }}</a>
       {% endif %}
       <span>/</span>
       <span class="current">{{ franchise.title|truncatewords:5 }}</span>

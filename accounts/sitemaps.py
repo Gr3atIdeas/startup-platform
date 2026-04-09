@@ -8,6 +8,7 @@ from .models import (
 
 
 class StaticViewSitemap(Sitemap):
+    protocol = "https"
     priority = 0.8
     changefreq = "daily"
 
@@ -26,6 +27,7 @@ class StaticViewSitemap(Sitemap):
 
 
 class StartupSitemap(Sitemap):
+    protocol = "https"
     changefreq = "weekly"
     priority = 0.7
 
@@ -40,6 +42,7 @@ class StartupSitemap(Sitemap):
 
 
 class FranchiseSitemap(Sitemap):
+    protocol = "https"
     changefreq = "weekly"
     priority = 0.7
 
@@ -54,6 +57,7 @@ class FranchiseSitemap(Sitemap):
 
 
 class AgencySitemap(Sitemap):
+    protocol = "https"
     changefreq = "weekly"
     priority = 0.7
 
@@ -68,6 +72,7 @@ class AgencySitemap(Sitemap):
 
 
 class SpecialistSitemap(Sitemap):
+    protocol = "https"
     changefreq = "weekly"
     priority = 0.7
 
@@ -83,6 +88,7 @@ class SpecialistSitemap(Sitemap):
 
 class FranchiseCitySitemap(Sitemap):
     """Городские лендинги франшиз — /franchises/city/{slug}/."""
+    protocol = "https"
     changefreq = "weekly"
     priority = 0.6
 
@@ -101,6 +107,7 @@ class FranchiseCitySitemap(Sitemap):
 
 class FranchiseDirectionSitemap(Sitemap):
     """Категорийные лендинги франшиз — /franchises/direction/{slug}/."""
+    protocol = "https"
     changefreq = "weekly"
     priority = 0.6
 
@@ -119,7 +126,22 @@ class FranchiseDirectionSitemap(Sitemap):
         return reverse("franchises_by_direction", kwargs={"direction_slug": slug})
 
 
+class FranchiseInvestmentSitemap(Sitemap):
+    """Инвестиционные лендинги франшиз — /franchises/investicii/{slug}/."""
+    protocol = "https"
+    changefreq = "weekly"
+    priority = 0.6
+
+    def items(self):
+        from .views import INVESTMENT_RANGE_SLUGS
+        return INVESTMENT_RANGE_SLUGS
+
+    def location(self, item):
+        return reverse("franchises_by_investment", kwargs={"range_slug": item})
+
+
 class NewsSitemap(Sitemap):
+    protocol = "https"
     changefreq = "daily"
     priority = 0.8
 

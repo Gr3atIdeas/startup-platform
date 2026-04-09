@@ -2265,6 +2265,7 @@ def franchise_detail(request, slug):
         "canonical_url": request.build_absolute_uri(),
         "file_url_map": file_url_map,
         "franchise_locations": franchise_locations,
+        "direction_seo_slug": get_direction_slug(franchise.direction) if franchise.direction else None,
         "locations_by_region": locations_by_region,
         "locations_count": len(active_locations),
         "avg_monthly_profit": avg_monthly_profit,
@@ -8682,11 +8683,13 @@ def custom_404(request, exception):
 def robots_txt(request):
     lines = [
         "User-agent: *",
+        "Allow: /",
         "Allow: /startups/",
         "Allow: /franchises/",
         "Allow: /agencies/",
         "Allow: /specialists/",
         "Allow: /blog/",
+        "Allow: /faq/",
         "",
         "Disallow: /profile/",
         "Disallow: /admin/",
@@ -8695,6 +8698,24 @@ def robots_txt(request):
         "Disallow: /api/",
         "Disallow: /vote-",
         "Disallow: /silk/",
+        "Disallow: /cosmochat/",
+        "Disallow: /deals/",
+        "Disallow: /investments/",
+        "Disallow: /moderator-main/",
+        "Disallow: /moderator-dashboard/",
+        "Disallow: /my_startups/",
+        "Disallow: /my-analytics/",
+        "Disallow: /my-leads/",
+        "Disallow: /settings/",
+        "Disallow: /support/",
+        "Disallow: /accounts/",
+        "Disallow: /franchise-landing-b/",
+        "Disallow: /franchise-landing-c/",
+        "Disallow: /franchise-landing-d/",
+        "Disallow: /franchise-cards-test/",
+        "Disallow: /franchise-detail-test/",
+        "",
+        "Crawl-delay: 1",
         "",
         "Sitemap: https://www.greatideas.ru/sitemap.xml",
     ]
@@ -12320,6 +12341,126 @@ def franchises_by_direction(request, direction_slug):
         "direction": direction,
         "direction_slug": direction_slug,
         "cat_name": cat_name,
+        "franchises_count": count,
+    }
+    return render(request, "accounts/franchises_list.html", context)
+
+
+# ── Franchise Investment Range SEO Pages ─────────────────────
+
+INVESTMENT_RANGE_CONFIGS = {
+    "do-500k": {
+        "min": 0, "max": 500000,
+        "title": "Франшизы до 500 000 ₽",
+        "page_title": "Франшизы до 500 тысяч рублей — недорогие франшизы | Great Ideas",
+        "desc": "Каталог недорогих франшиз с инвестициями до 500 000 ₽. "
+                "Бюджетные франшизы для начинающих предпринимателей с минимальными вложениями.",
+    },
+    "do-1m": {
+        "min": 0, "max": 1000000,
+        "title": "Франшизы до 1 000 000 ₽",
+        "page_title": "Франшизы до 1 миллиона рублей — купить франшизу | Great Ideas",
+        "desc": "Каталог франшиз с инвестициями до 1 млн рублей. "
+                "Проверенные бизнес-модели с доступным порогом входа.",
+    },
+    "ot-1m-do-5m": {
+        "min": 1000000, "max": 5000000,
+        "title": "Франшизы от 1 до 5 млн ₽",
+        "page_title": "Франшизы от 1 до 5 миллионов рублей | Great Ideas",
+        "desc": "Каталог франшиз среднего ценового сегмента — от 1 до 5 млн рублей. "
+                "Стабильные бизнес-модели с хорошей окупаемостью.",
+    },
+    "ot-5m": {
+        "min": 5000000, "max": None,
+        "title": "Франшизы от 5 000 000 ₽",
+        "page_title": "Крупные франшизы от 5 миллионов рублей | Great Ideas",
+        "desc": "Каталог крупных франшиз с инвестициями от 5 млн рублей. "
+                "Премиальные бизнес-возможности для серьёзных инвесторов.",
+    },
+}
+
+INVESTMENT_RANGE_SLUGS = list(INVESTMENT_RANGE_CONFIGS.keys())
+
+
+def franchises_by_investment(request, range_slug):
+    """SEO landing page for franchises filtered by investment range."""
+    config = INVESTMENT_RANGE_CONFIGS.get(range_slug)
+    if not config:
+        raise Http404("Investment range not found")
+
+    franchises_qs = Franchises.objects.filter(
+        status="approved"
+    ).select_related("owner", "direction", "stage")
+
+    if config["max"] is not None:
+        franchises_qs = franchises_qs.filter(investment_size__lte=config["max"])
+    if config["min"] > 0:
+        franchises_qs = franchises_qs.filter(investment_size__gte=config["min"])
+
+    franchises_qs = franchises_qs.order_by("investment_size", "-created_at")
+
+    paginator = Paginator(franchises_qs, 12)
+    page_obj = paginator.get_page(request.GET.get("page", 1))
+    count = franchises_qs.count()
+
+    seo_text = f"{config['desc']} {count} франшиз доступно на платформе Great Ideas."
+
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    if is_ajax:
+        ajax_context = {"page_obj": page_obj}
+        cards_html = render_to_string("accounts/partials/_franchise_cards.html", ajax_context, request=request)
+        return JsonResponse({
+            "html": cards_html,
+            "catalog_title": config["title"],
+            "seo_description": seo_text,
+            "page_title": config["page_title"],
+            "page_number": page_obj.number,
+            "num_pages": paginator.num_pages,
+            "has_next": page_obj.has_next(),
+        })
+
+    # Full page render: reuse main catalog template with sidebar
+    all_dir_ids = (
+        Franchises.objects
+        .filter(status="approved", direction__isnull=False)
+        .values_list("direction_id", flat=True)
+        .distinct()
+    )
+    franchise_directions = Directions.objects.filter(direction_id__in=all_dir_ids).order_by("direction_name")
+    for d in franchise_directions:
+        d.seo_slug = get_direction_slug(d)
+
+    from accounts.promotions import get_active_ads
+    context = {
+        "page_obj": page_obj,
+        "paginator": paginator,
+        "initial_has_next": page_obj.has_next(),
+        "selected_categories": [],
+        "search_query": "",
+        "min_investment": config["min"],
+        "max_investment": config["max"] or 10000000,
+        "min_payback": 0,
+        "max_payback": 60,
+        "min_rating": 0,
+        "max_rating": 5,
+        "sort_order": "newest",
+        "franchise_directions": franchise_directions,
+        "pinned_items": [],
+        "sidebar_ads": get_active_ads("catalog_sidebar"),
+        "available_cities": City.objects.filter(
+            franchise_locations__status="active"
+        ).distinct().order_by("name"),
+        "canonical_url": request.build_absolute_uri(
+            reverse("franchises_by_investment", kwargs={"range_slug": range_slug})
+        ),
+        "investment_range_url": reverse("franchises_by_investment", kwargs={"range_slug": range_slug}),
+        # SEO fields
+        "direction_seo_title": config["title"],
+        "direction_seo_desc": seo_text,
+        "direction_page_title": config["page_title"],
+        # JSON-LD data
+        "investment_range": range_slug,
+        "investment_range_title": config["title"],
         "franchises_count": count,
     }
     return render(request, "accounts/franchises_list.html", context)
