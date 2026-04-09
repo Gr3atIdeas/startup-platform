@@ -1067,6 +1067,10 @@ class Franchises(models.Model):
     contact_website = models.URLField(max_length=500, blank=True, null=True)
     contact_telegram = models.CharField(max_length=255, blank=True, null=True)
     contact_whatsapp = models.CharField(max_length=255, blank=True, null=True)
+    excluded_cities = models.ManyToManyField(
+        'City', blank=True, related_name='excluded_franchises',
+        help_text="Города, в которых франшиза НЕ доступна для открытия",
+    )
     slug = models.SlugField(max_length=280, unique=True, blank=True, null=True)
 
     class Meta:

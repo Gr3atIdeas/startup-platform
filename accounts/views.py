@@ -1336,6 +1336,12 @@ def franchises_list(request):
             city__slug=selected_city, status="active"
         ).values_list("franchise_id", flat=True)
         franchises_qs = franchises_qs.filter(franchise_id__in=franchise_ids_in_city)
+        # Exclude franchises that blacklisted this city
+        try:
+            city_obj = City.objects.get(slug=selected_city)
+            franchises_qs = franchises_qs.exclude(excluded_cities=city_obj)
+        except City.DoesNotExist:
+            pass
 
     filters_active = (
         bool(selected_categories) or
@@ -4013,10 +4019,18 @@ def create_franchise(request):
                 franchise.status_id = ReviewStatuses.objects.get(status_name="Pending")
             except ReviewStatuses.DoesNotExist:
                 messages.error(request, "Статус 'Pending' не найден в базе данных.")
-                return render(request, "accounts/create_franchise.html", {"form": form})
+                return render(request, "accounts/create_franchise.html", {
+                    "form": form,
+                    "all_cities": City.objects.all().order_by("name"),
+                })
             franchise.planet_image = form.cleaned_data.get("planet_image")
             franchise.save()
-            
+
+            # Save excluded cities (black list)
+            excluded_city_ids = request.POST.getlist("excluded_cities")
+            if excluded_city_ids:
+                franchise.excluded_cities.set(excluded_city_ids)
+
             def try_save_file(file_obj, file_path):
                 try:
                     default_storage.save(file_path, file_obj)
@@ -4170,11 +4184,17 @@ def create_franchise(request):
             }, status=500)
         messages.error(request, f"Ошибка при создании франшизы: {exc}")
         form = FranchiseForm(request.POST)
-        return render(request, "accounts/create_franchise.html", {"form": form})
+        return render(request, "accounts/create_franchise.html", {
+            "form": form,
+            "all_cities": City.objects.all().order_by("name"),
+        })
     else:
         form = FranchiseForm()
         clear_temp_files(request, 'franchiseForm')
-    return render(request, "accounts/create_franchise.html", {"form": form})
+    return render(request, "accounts/create_franchise.html", {
+        "form": form,
+        "all_cities": City.objects.all().order_by("name"),
+    })
 
 @login_required
 def create_agency(request):
@@ -9486,19 +9506,19 @@ def edit_franchise(request, franchise_id):
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Максимально 10 изображений"}, status=400)
                 messages.error(request, "Максимально 10 изображений")
-                return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
+                return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise, "all_cities": City.objects.all().order_by("name"), "excluded_cities": franchise.excluded_cities.all().order_by("name")})
 
             if len(proofs) > 15:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Максимально 15 документов"}, status=400)
                 messages.error(request, "Максимально 15 документов")
-                return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
+                return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise, "all_cities": City.objects.all().order_by("name"), "excluded_cities": franchise.excluded_cities.all().order_by("name")})
 
             if len(videos) > 1:
                 if request.headers.get("x-requested-with") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Максимально 1 видео"}, status=400)
                 messages.error(request, "Максимально 1 видео")
-                return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise})
+                return render(request, "accounts/edit_franchise.html", {"form": form, "franchise": franchise, "all_cities": City.objects.all().order_by("name"), "excluded_cities": franchise.excluded_cities.all().order_by("name")})
 
             if creatives:
                 for creative_file in creatives:
@@ -9676,7 +9696,11 @@ def edit_franchise(request, franchise_id):
                     messages.warning(request, "Не удалось сохранить изображение для карточки.")
             
             franchise.save()
-            
+
+            # Save excluded cities (black list)
+            excluded_city_ids = request.POST.getlist("excluded_cities")
+            franchise.excluded_cities.set(excluded_city_ids)
+
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
@@ -9694,10 +9718,12 @@ def edit_franchise(request, franchise_id):
             messages.error(request, "Форма содержит ошибки.")
     else:
         form = FranchiseEditForm(instance=franchise)
-    
+
     context = {
         'form': form,
         'franchise': franchise,
+        'all_cities': City.objects.all().order_by("name"),
+        'excluded_cities': franchise.excluded_cities.all().order_by("name"),
     }
     return render(request, 'accounts/edit_franchise.html', context)
 
@@ -12079,6 +12105,8 @@ def franchises_by_city(request, city_slug):
 
     franchises_qs = Franchises.objects.filter(
         franchise_id__in=franchise_ids, status="approved"
+    ).exclude(
+        excluded_cities=city
     ).select_related("owner", "direction", "stage").order_by("-created_at")
 
     paginator = Paginator(franchises_qs, 12)

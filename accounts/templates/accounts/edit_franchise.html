@@ -428,6 +428,18 @@ if (window.FileUploadUtils) {
                         {% if form.contact_whatsapp.errors %}<span class="error-message">{{ form.contact_whatsapp.errors|first }}</span>{% endif %}
                     </div>
                     <div class="form-group">
+                        <label>Чёрный список городов</label>
+                        <div class="small-text" style="margin-bottom:8px;">Города, в которых франшизу <strong>нельзя</strong> открыть.</div>
+                        <select id="excludedCitiesSelect" class="form-control" style="margin-bottom:8px;">
+                            <option value="">Добавить город в чёрный список...</option>
+                            {% for city in all_cities %}
+                            <option value="{{ city.city_id }}">{{ city.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <div id="excludedCitiesTags" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+                        <div id="excludedCitiesInputs"></div>
+                    </div>
+                    <div class="form-group">
                         <label for="{{ form.profit_calculation.id_for_label }}">{{ form.profit_calculation.label }}</label>
                         <div class="input-wrapper">
                             {{ form.profit_calculation|add_class:"form-control ckeditor-full"|attr:"placeholder:Описание расчета прибыли" }}
@@ -668,4 +680,53 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script src="{% static 'accounts/js/quill_init.js' %}"></script>
+<script>
+(function() {
+  var select = document.getElementById('excludedCitiesSelect');
+  var tagsContainer = document.getElementById('excludedCitiesTags');
+  var inputsContainer = document.getElementById('excludedCitiesInputs');
+  var excluded = {};
+
+  // Pre-populate with existing excluded cities
+  {% for city in excluded_cities %}
+  excluded["{{ city.city_id }}"] = "{{ city.name }}";
+  {% endfor %}
+
+  function render() {
+    tagsContainer.innerHTML = '';
+    inputsContainer.innerHTML = '';
+    Object.keys(excluded).forEach(function(id) {
+      var tag = document.createElement('span');
+      tag.style.cssText = 'display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;font-size:12px;font-family:Inter,sans-serif;';
+      tag.textContent = excluded[id];
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = '×';
+      btn.style.cssText = 'background:none;border:none;color:#fca5a5;cursor:pointer;font-size:14px;padding:0;line-height:1;';
+      btn.onclick = function() { delete excluded[id]; render(); };
+      tag.appendChild(btn);
+      tagsContainer.appendChild(tag);
+
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'excluded_cities';
+      input.value = id;
+      inputsContainer.appendChild(input);
+    });
+    Array.from(select.options).forEach(function(opt) {
+      opt.hidden = !!excluded[opt.value];
+    });
+  }
+
+  select.addEventListener('change', function() {
+    if (this.value) {
+      excluded[this.value] = this.options[this.selectedIndex].text;
+      this.value = '';
+      render();
+    }
+  });
+
+  render();
+})();
+</script>
 {% endblock %}
