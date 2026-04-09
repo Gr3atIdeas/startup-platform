@@ -38,7 +38,7 @@
     "@type": "CollectionPage",
     "name": "Франшизы: {{ cat_name }}",
     "description": "{{ direction_seo_desc|truncatewords:25 }}",
-    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_slug=direction_slug %}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}/franchises/{{ direction_slug }}/",
     "numberOfItems": {{ franchises_count }},
     "breadcrumb": {
       "@type": "BreadcrumbList",

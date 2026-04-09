@@ -75,7 +75,7 @@
       <div style="font-family:Inter,sans-serif; font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:8px;">Категории в {{ city.name }}:</div>
       <div style="display:flex; flex-wrap:wrap; gap:8px;">
         {% for d in city_directions %}
-        <a href="{% url 'franchises_by_direction' direction_slug=d.seo_slug %}" style="font-family:Inter,sans-serif; font-size:12px; padding:6px 14px; border-radius:var(--radius-full); background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.25); color:rgba(255,255,255,0.8); text-decoration:none;">{{ d.direction_name|translate_category }}</a>
+        <a href="/franchises/{{ d.seo_slug }}/" style="font-family:Inter,sans-serif; font-size:12px; padding:6px 14px; border-radius:var(--radius-full); background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.25); color:rgba(255,255,255,0.8); text-decoration:none;">{{ d.direction_name|translate_category }}</a>
         {% endfor %}
       </div>
     </div>

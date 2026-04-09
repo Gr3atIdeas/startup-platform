@@ -54,7 +54,7 @@
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Главная", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
     {"@type": "ListItem", "position": 2, "name": "Франшизы", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_list' %}"}{% if franchise.direction %},
-    {"@type": "ListItem", "position": 3, "name": "{{ franchise.direction.direction_name|translate_category }}", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_direction' direction_slug=direction_seo_slug %}"}{% endif %},
+    {"@type": "ListItem", "position": 3, "name": "{{ franchise.direction.direction_name|translate_category }}", "item": "{{ request.scheme }}://{{ request.get_host }}/franchises/{{ direction_seo_slug }}/"}{% endif %},
     {"@type": "ListItem", "position": {% if franchise.direction %}4{% else %}3{% endif %}, "name": "{{ franchise.title }}"}
   ]
 }
@@ -96,7 +96,7 @@
       <a href="{% url 'franchises_list' %}">Франшизы</a>
       {% if franchise.direction %}
       <span>/</span>
-      <a href="{% url 'franchises_by_direction' direction_slug=direction_seo_slug %}">{{ franchise.direction.direction_name|translate_category }}</a>
+      <a href="/franchises/{{ direction_seo_slug }}/">{{ franchise.direction.direction_name|translate_category }}</a>
       {% endif %}
       <span>/</span>
       <span class="current">{{ franchise.title|truncatewords:5 }}</span>

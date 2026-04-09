@@ -269,7 +269,7 @@
     <nav class="fdt-crumbs">
       <a href="{% url 'home' %}">Главная</a><span>/</span>
       <a href="{% url 'franchises_list' %}">Франшизы</a><span>/</span>
-      {% if franchise.direction %}<a href="{% url 'franchises_by_direction' direction_slug=direction_seo_slug %}">{{ franchise.direction.direction_name|translate_category }}</a><span>/</span>{% endif %}
+      {% if franchise.direction %}<a href="/franchises/{{ direction_seo_slug }}/">{{ franchise.direction.direction_name|translate_category }}</a><span>/</span>{% endif %}
       <span class="current">{{ franchise.title|truncatewords:5 }}</span>
     </nav>
     {% if user.is_authenticated and user.role.role_name == 'moderator' %}

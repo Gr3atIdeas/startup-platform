@@ -156,6 +156,11 @@ def get_direction_slug(direction):
     return DIRECTION_NAME_TO_SLUG.get(direction.direction_name, str(direction.direction_id))
 
 
+def get_direction_url(direction_slug):
+    """Get the absolute URL path for a direction slug (without /direction/ prefix)."""
+    return f"/franchises/{direction_slug}/"
+
+
 def is_moderator(user):
     """Централизованная проверка прав модератора."""
     if not user or not user.is_authenticated:
@@ -1422,9 +1427,7 @@ def franchises_list(request):
                 dir_id = int(selected_categories[0])
                 direction_obj = Directions.objects.get(direction_id=dir_id)
                 slug = get_direction_slug(direction_obj)
-                canonical_url = request.build_absolute_uri(
-                    reverse("franchises_by_direction", kwargs={"direction_slug": slug})
-                )
+                canonical_url = request.build_absolute_uri(get_direction_url(slug))
             except (ValueError, TypeError, Directions.DoesNotExist):
                 pass
 
@@ -12247,15 +12250,17 @@ def franchise_landing_d(request):
     return render(request, "accounts/franchise_landing_d.html", _franchise_landing_context())
 
 
+def franchises_by_direction_redirect(request, direction_slug):
+    """301-redirect from old /franchises/direction/<slug>/ to /franchises/<slug>/."""
+    return redirect(get_direction_url(direction_slug), permanent=True)
+
+
 def franchises_by_direction_legacy(request, direction_id):
-    """301-redirect from old /direction/<id>/ to new /direction/<slug>/."""
+    """301-redirect from old /direction/<id>/ to new /franchises/<slug>/."""
     from .models import Directions
     direction = get_object_or_404(Directions, direction_id=direction_id)
     slug = get_direction_slug(direction)
-    return redirect(
-        reverse("franchises_by_direction", kwargs={"direction_slug": slug}),
-        permanent=True,
-    )
+    return redirect(get_direction_url(slug), permanent=True)
 
 
 def franchises_by_direction(request, direction_slug):
