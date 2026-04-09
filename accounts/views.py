@@ -12410,6 +12410,21 @@ INVESTMENT_RANGE_CONFIGS = {
 
 INVESTMENT_RANGE_SLUGS = list(INVESTMENT_RANGE_CONFIGS.keys())
 
+INVESTMENT_SLUG_TO_URL_NAME = {
+    "do-500k": "franchises_by_investment_500k",
+    "do-1m": "franchises_by_investment_1m",
+    "ot-1m-do-5m": "franchises_by_investment_1m5m",
+    "ot-5m": "franchises_by_investment_5m",
+}
+
+
+def get_investment_url(range_slug):
+    """Get the absolute URL path for an investment range slug."""
+    url_name = INVESTMENT_SLUG_TO_URL_NAME.get(range_slug)
+    if url_name:
+        return reverse(url_name)
+    return f"/franchises/{range_slug}/"
+
 
 def franchises_by_investment(request, range_slug):
     """SEO landing page for franchises filtered by investment range."""
@@ -12479,10 +12494,8 @@ def franchises_by_investment(request, range_slug):
         "available_cities": City.objects.filter(
             franchise_locations__status="active"
         ).distinct().order_by("name"),
-        "canonical_url": request.build_absolute_uri(
-            reverse("franchises_by_investment", kwargs={"range_slug": range_slug})
-        ),
-        "investment_range_url": reverse("franchises_by_investment", kwargs={"range_slug": range_slug}),
+        "canonical_url": request.build_absolute_uri(get_investment_url(range_slug)),
+        "investment_range_url": get_investment_url(range_slug),
         # SEO fields
         "direction_seo_title": config["title"],
         "direction_seo_desc": seo_text,

@@ -137,7 +137,8 @@ class FranchiseInvestmentSitemap(Sitemap):
         return INVESTMENT_RANGE_SLUGS
 
     def location(self, item):
-        return reverse("franchises_by_investment", kwargs={"range_slug": item})
+        from .views import get_investment_url
+        return get_investment_url(item)
 
 
 class NewsSitemap(Sitemap):

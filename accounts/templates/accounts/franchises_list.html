@@ -58,7 +58,7 @@
     "@type": "CollectionPage",
     "name": "{{ investment_range_title }}",
     "description": "{{ direction_seo_desc|truncatewords:25 }}",
-    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'franchises_by_investment' range_slug=investment_range %}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}/franchises/{{ investment_range }}/",
     "numberOfItems": {{ franchises_count }},
     "breadcrumb": {
       "@type": "BreadcrumbList",
@@ -111,22 +111,22 @@
         <h2 class="categories-title">Бюджет</h2>
         <ul class="categories-list">
           <li class="category-item">
-            <a href="{% url 'franchises_by_investment' range_slug='do-500k' %}" class="category-label{% if investment_range == 'do-500k' %} investment-active{% endif %}">
+            <a href="/franchises/do-500k/" class="category-label{% if investment_range == 'do-500k' %} investment-active{% endif %}">
               <span class="category-name">до 500 тыс ₽</span>
             </a>
           </li>
           <li class="category-item">
-            <a href="{% url 'franchises_by_investment' range_slug='do-1m' %}" class="category-label{% if investment_range == 'do-1m' %} investment-active{% endif %}">
+            <a href="/franchises/do-1m/" class="category-label{% if investment_range == 'do-1m' %} investment-active{% endif %}">
               <span class="category-name">до 1 млн ₽</span>
             </a>
           </li>
           <li class="category-item">
-            <a href="{% url 'franchises_by_investment' range_slug='ot-1m-do-5m' %}" class="category-label{% if investment_range == 'ot-1m-do-5m' %} investment-active{% endif %}">
+            <a href="/franchises/ot-1m-do-5m/" class="category-label{% if investment_range == 'ot-1m-do-5m' %} investment-active{% endif %}">
               <span class="category-name">1 — 5 млн ₽</span>
             </a>
           </li>
           <li class="category-item">
-            <a href="{% url 'franchises_by_investment' range_slug='ot-5m' %}" class="category-label{% if investment_range == 'ot-5m' %} investment-active{% endif %}">
+            <a href="/franchises/ot-5m/" class="category-label{% if investment_range == 'ot-5m' %} investment-active{% endif %}">
               <span class="category-name">от 5 млн ₽</span>
             </a>
           </li>
