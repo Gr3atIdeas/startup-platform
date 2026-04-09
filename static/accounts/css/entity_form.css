@@ -178,10 +178,9 @@ html, body { overflow-x: hidden; }
 
 .logo-upload-group .logo-upload-label {
   display: block;
-  width: 100%;
-  max-width: 400px;
-  aspect-ratio: 2 / 1;
-  border-radius: var(--radius-xs);
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
   background-color: #333;
   position: relative;
   overflow: hidden;
@@ -207,7 +206,7 @@ html, body { overflow-x: hidden; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: var(--radius-xs);
+  border-radius: 50%;
 }
 
 .form-fields-left {
@@ -237,45 +236,12 @@ html, body { overflow-x: hidden; }
 }
 
 .investment-type-card {
-  border-radius: var(--radius-md);
-  border: 1px solid #d9d9d9;
-  background-color: white;
-  padding: 25px 21px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  box-sizing: border-box;
-  box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);
 }
 
-/* Card inputs - dark text on white background */
-.investment-type-card .form-control,
-.investment-type-card input,
-.investment-type-card select,
-.investment-type-card textarea {
-  background: white;
-  color: #1e1e1e;
-  border-color: #d9d9d9;
-}
-
-.investment-type-card .form-control:focus,
-.investment-type-card input:focus,
-.investment-type-card select:focus,
-.investment-type-card textarea:focus {
-  color: #1e1e1e;
-  background: white;
-  border-color: #ffc85e;
-}
-
-.investment-type-card .form-control::placeholder,
-.investment-type-card input::placeholder,
-.investment-type-card textarea::placeholder {
-  color: #c7c7c7;
-}
-
-.investment-type-card label {
-  color: #1e1e1e;
-}
+/* investment-type-card inherits form-top-card styles */
 
 /* investment card full width in vertical layout */
 .form-top-right .investment-type-card {
@@ -1915,6 +1881,12 @@ body,
   color: #1e1e1e;
 }
 
+/* Circular crop guide for logo */
+.cropper-circular .cropper-view-box,
+.cropper-circular .cropper-face {
+  border-radius: 50%;
+}
+
 @media (max-width: 1200px) {
   .startup-form-container,
 .franchise-form-container,
@@ -1990,10 +1962,10 @@ body,
   }
   
   .logo-upload-group .logo-upload-label {
-    width: 150px;
-    height: 75px;
+    width: 120px;
+    height: 120px;
   }
-  
+
   .form-control {
     font-size: 13px;
     padding: 8px 12px;
@@ -2036,10 +2008,10 @@ body,
   }
   
   .logo-upload-group .logo-upload-label {
-    width: 120px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
   }
-  
+
   .form-control {
     font-size: 12px;
     padding: 6px 10px;
@@ -2092,8 +2064,8 @@ body,
   }
   
   .logo-upload-group .logo-upload-label {
-    width: 100px;
-    height: 50px;
+    width: 80px;
+    height: 80px;
   }
   
   .form-control {

@@ -321,9 +321,10 @@ window.ENTITY_FORM_CONFIG = {
 
 document.addEventListener('DOMContentLoaded', function() {
     // === Image Cropper Utility ===
-    function openCropperModal(file, aspectRatio, title, onConfirm) {
+    function openCropperModal(file, aspectRatio, title, onConfirm, circular) {
         var overlay = document.createElement('div');
         overlay.className = 'cropper-modal-overlay';
+        if (circular) overlay.classList.add('cropper-circular');
         overlay.innerHTML =
             '<div class="cropper-modal-dialog">' +
                 '<h3>' + title + '</h3>' +
@@ -392,14 +393,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (_croppingInProgress['id_logo_input']) return;
             var file = this.files[0];
             if (!file) return;
-            openCropperModal(file, 2 / 1, 'Обрезка логотипа', function(blob, name) {
-                // Show preview
+            openCropperModal(file, 1, 'Обрезка логотипа', function(blob, name) {
                 logoPreviewImg.src = URL.createObjectURL(blob);
                 logoPreviewImg.style.display = 'block';
                 logoPlaceholder.style.display = 'none';
-                // Set cropped file back to input
                 setCroppedFile('id_logo_input', blob, name);
-            });
+            }, true);
         });
     }
 
