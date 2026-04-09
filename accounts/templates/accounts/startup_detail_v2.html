@@ -440,8 +440,8 @@
     {% endif %}
     {% if progress_percentage is not None %}
     <div class="fdt-stat-item">
-      <div class="fdt-stat-label">Собрано</div>
-      <div class="fdt-stat-value">{{ progress_percentage }}%</div>
+      <div class="fdt-stat-label">Собрано ({{ progress_percentage }}%)</div>
+      <div class="fdt-stat-value">{{ amount_raised|floatformat:0|intcomma }} &#8381;</div>
     </div>
     {% endif %}
     {% if investors_count %}
@@ -483,7 +483,7 @@
       <div class="fdt-progress-bar" style="width: {{ progress_percentage|floatformat:0 }}%;"></div>
     </div>
     <div class="fdt-progress-info">
-      <span>Собрано <strong>{{ progress_percentage }}%</strong> от цели</span>
+      <span>Собрано <strong>{{ amount_raised|floatformat:0|intcomma }} &#8381;</strong> ({{ progress_percentage }}%)</span>
       <span>Цель: <strong>{{ startup.investment_size|floatformat:0|intcomma }} &#8381;</strong></span>
     </div>
   </div>

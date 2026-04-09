@@ -2631,6 +2631,7 @@ def startup_detail(request, slug):
     ):
         show_moderator_comment = True
     progress_percentage = startup.get_progress_percentage()
+    amount_raised = startup.total_invested or Decimal("0")
     investors_count = startup.get_investors_count()
     timeline_events = StartupTimeline.objects.filter(startup=startup).order_by(
         "step_number"
@@ -2668,6 +2669,7 @@ def startup_detail(request, slug):
         "hero_video": hero_video,
         "show_moderator_comment": show_moderator_comment,
         "progress_percentage": progress_percentage,
+        "amount_raised": amount_raised,
         "investors_count": investors_count,
         "timeline_events": timeline_events,
         "startup_documents": startup_documents,
