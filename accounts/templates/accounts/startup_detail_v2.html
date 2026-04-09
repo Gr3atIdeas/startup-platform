@@ -537,10 +537,10 @@
     </div>
     {% endif %}
 
-    {% if startup.customization_data %}
+    {% if startup.customization_data.additional_info %}
     <div class="fdt-content" style="margin-top:24px;">
       <h3>Дополнительная информация</h3>
-      {{ startup.customization_data|sanitize_html|safe }}
+      {{ startup.customization_data.additional_info|sanitize_html|safe }}
     </div>
     {% endif %}
 
