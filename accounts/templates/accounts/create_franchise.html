@@ -84,14 +84,16 @@
                         <div class="form-group">
                             <label for="{{ form.investment_size.id_for_label }}">{{ form.investment_size.label }}</label>
                             <div class="input-wrapper">
-                                {{ form.investment_size|add_class:"form-control"|attr:"placeholder:Размер инвестиций ₽"|attr:"type:number"|attr:"min:0" }}
+                                {{ form.investment_size|add_class:"form-control"|attr:"placeholder:Общая сумма входа ₽"|attr:"type:number"|attr:"min:0"|attr:"id:id_investment_size" }}
                             </div>
+                            <div class="small-text" style="color:#6c757d;font-size:11px;margin-top:2px;">Общая сумма для запуска (включая паушальный взнос, оборудование, аренду и т.д.)</div>
                         </div>
                         <div class="form-group">
                             <label for="{{ form.franchise_cost.id_for_label }}">{{ form.franchise_cost.label }}</label>
                             <div class="input-wrapper">
-                                {{ form.franchise_cost|add_class:"form-control"|attr:"placeholder:Паушальный взнос ₽"|attr:"type:number"|attr:"min:0" }}
+                                {{ form.franchise_cost|add_class:"form-control"|attr:"placeholder:Паушальный взнос ₽"|attr:"type:number"|attr:"min:0"|attr:"id:id_franchise_cost" }}
                             </div>
+                            <div class="small-text" style="color:#6c757d;font-size:11px;margin-top:2px;">Разовый платёж франчайзеру (входит в размер инвестиций)</div>
                         </div>
                     </div>
                 </div>
@@ -682,6 +684,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = parentDiv || agreeDataProcessingCheckbox;
                 }
                 console.log('[FranchiseForm] Checkbox agree_data:', agreeDataProcessingCheckbox.checked ? '✓ checked' : '✗ unchecked');
+            }
+
+            // Валидация: паушальный взнос не может быть больше размера инвестиций
+            var invField = document.getElementById('id_investment_size');
+            var costField = document.getElementById('id_franchise_cost');
+            if (invField && costField) {
+                var invVal = parseFloat(invField.value) || 0;
+                var costVal = parseFloat(costField.value) || 0;
+                if (costVal > 0 && invVal > 0 && costVal > invVal) {
+                    validationPassed = false;
+                    costField.classList.add('input-error');
+                    var errEl = displayValidationMessage(costField, 'Паушальный взнос не может превышать размер инвестиций');
+                    if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = costField;
+                    if (!firstErrorText) firstErrorText = errEl.textContent;
+                }
             }
 
             const submitButton = this.querySelector('button[type="submit"]');

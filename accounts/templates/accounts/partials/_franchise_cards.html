@@ -71,14 +71,8 @@
 
       <!-- Размер инвестиций -->
       <div class="franchise-amount-row">
-        <span class="amount-label">Размер инвестиций</span>
+        <span class="amount-label">Инвестиции</span>
         <span class="amount-value">от {{ franchise.investment_size|default:0|floatformat:0|intcomma }} ₽</span>
-      </div>
-
-      <!-- Паушальный взнос -->
-      <div class="franchise-cost-row">
-        <span class="cost-label">Паушальный взнос</span>
-        <span class="cost-value">{{ franchise.franchise_cost|default:0|floatformat:0|intcomma }} ₽</span>
       </div>
 
       <!-- Окупаемость -->

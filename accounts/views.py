@@ -3995,6 +3995,13 @@ def create_franchise(request):
             form.add_error("creatives", "Загрузите хотя бы одно изображение.")
         
         if form.is_valid():
+            # Validate: franchise_cost cannot exceed investment_size
+            inv = form.cleaned_data.get("investment_size") or 0
+            cost = form.cleaned_data.get("franchise_cost") or 0
+            if cost > 0 and inv > 0 and cost > inv:
+                form.add_error("franchise_cost", "Паушальный взнос не может превышать размер инвестиций.")
+
+        if form.is_valid():
             logger.info("Form is valid, creating franchise...")
             franchise = form.save(commit=False)
             franchise.owner = request.user
