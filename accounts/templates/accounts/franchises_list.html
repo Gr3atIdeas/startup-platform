@@ -108,10 +108,34 @@
         </ul>
 
         
+        <h2 class="categories-title">Бюджет</h2>
+        <ul class="categories-list">
+          <li class="category-item">
+            <a href="{% url 'franchises_by_investment' range_slug='do-500k' %}" class="category-label{% if investment_range == 'do-500k' %} investment-active{% endif %}">
+              <span class="category-name">до 500 тыс ₽</span>
+            </a>
+          </li>
+          <li class="category-item">
+            <a href="{% url 'franchises_by_investment' range_slug='do-1m' %}" class="category-label{% if investment_range == 'do-1m' %} investment-active{% endif %}">
+              <span class="category-name">до 1 млн ₽</span>
+            </a>
+          </li>
+          <li class="category-item">
+            <a href="{% url 'franchises_by_investment' range_slug='ot-1m-do-5m' %}" class="category-label{% if investment_range == 'ot-1m-do-5m' %} investment-active{% endif %}">
+              <span class="category-name">1 — 5 млн ₽</span>
+            </a>
+          </li>
+          <li class="category-item">
+            <a href="{% url 'franchises_by_investment' range_slug='ot-5m' %}" class="category-label{% if investment_range == 'ot-5m' %} investment-active{% endif %}">
+              <span class="category-name">от 5 млн ₽</span>
+            </a>
+          </li>
+        </ul>
+
         {% if available_cities %}
-        <div class="city-filter" style="margin-bottom: 16px;">
-          <label class="sidebar-label" style="display:block; margin-bottom:6px;">Город</label>
-          <select name="city" id="cityFilter" class="sidebar-select" style="width:100%;">
+        <h2 class="categories-title">Город</h2>
+        <div class="city-filter">
+          <select id="cityFilter" class="sidebar-select" style="width:100%;">
             <option value="">Все города</option>
             {% for city in available_cities %}
               <option value="{{ city.slug }}" {% if selected_city == city.slug %}selected{% endif %}>{{ city.name }}</option>
@@ -121,29 +145,16 @@
         {% endif %}
 
         <div class="payback-period-filter">
-          <div class="payback-label-container"> 
+          <div class="payback-label-container">
             <label class="payback-label">Срок окупаемости</label>
-            
+
             <span id="paybackValueDisplay" class="payback-value-display">{{ min_payback|default:0|floatformat:0 }} - {{ max_payback|default:60|floatformat:0 }} мес</span>
           </div>
-          <div id="paybackSlider"></div> 
-          
+          <div id="paybackSlider"></div>
+
           <input type="hidden" name="min_payback" id="minPaybackInput" value="{{ min_payback|default:0|floatformat:0 }}">
           <input type="hidden" name="max_payback" id="maxPaybackInput" value="{{ max_payback|default:60|floatformat:0 }}">
-          <div class="payback-range-label">Диапозон</div> 
-        </div>
-
-        <div class="investment-size-filter">
-          <div class="investment-label-container"> 
-            <label class="investment-label">Размер инвестиций</label>
-            
-            <span id="investmentValueDisplay" class="investment-value-display">{{ min_investment|default:0|floatformat:0 }} - {{ max_investment|default:10000000|floatformat:0 }} ₽</span>
-          </div>
-          <div id="investmentSlider"></div> 
-          
-          <input type="hidden" name="min_investment" id="minInvestmentInput" value="{{ min_investment|default:0|floatformat:0 }}">
-          <input type="hidden" name="max_investment" id="maxInvestmentInput" value="{{ max_investment|default:10000000|floatformat:0 }}">
-          <div class="investment-range-label">Диапозон</div> 
+          <div class="payback-range-label">Диапозон</div>
         </div>
 
         
@@ -306,6 +317,19 @@
     // Инициализируем слайдеры после загрузки DOM
     initNoUiSlider();
     initFranchiseSliders();
+
+    // City dropdown → navigate to SEO city page
+    var cityFilter = document.getElementById('cityFilter');
+    if (cityFilter) {
+      cityFilter.addEventListener('change', function() {
+        var slug = this.value;
+        if (slug) {
+          window.location.href = '/franchises/city/' + slug + '/';
+        } else {
+          window.location.href = '{% url "franchises_list" %}';
+        }
+      });
+    }
 
     // --- Логика поиска ---
     var searchInput = document.querySelector('.catalog-search-input');
@@ -479,55 +503,6 @@
         });
     }
 
-    var investmentSlider = document.getElementById('investmentSlider');
-    var investmentValueDisplay = document.getElementById('investmentValueDisplay');
-    var minInvestmentInput = document.getElementById('minInvestmentInput');
-    var maxInvestmentInput = document.getElementById('maxInvestmentInput');
-
-    if (investmentSlider && investmentValueDisplay && minInvestmentInput && maxInvestmentInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
-        var initialMin = 0;
-        var initialMax = 10000000;
-
-        // Устанавливаем стартовые значения в скрытые инпуты и отображение
-        minInvestmentInput.value = String(initialMin);
-        maxInvestmentInput.value = String(initialMax);
-        var investMaxBoundary = 10000000;
-        if (investmentValueDisplay) {
-          investmentValueDisplay.textContent = initialMin + ' - ' + (initialMax >= investMaxBoundary ? '∞' : initialMax + ' ₽');
-        }
-
-        noUiSlider.create(investmentSlider, {
-            start: [initialMin, initialMax],
-            connect: true,
-            range: {
-                'min': 0,
-                'max': 10000000
-            },
-            step: 100000,
-            format: wNumb({
-                decimals: 0,
-                thousand: '',
-                suffix: ''
-            }),
-            tooltips: false,
-            behaviour: 'tap-drag',
-            pips: false
-        });
-
-        // Принудительно выставляем корректный дефолт после инициализации, если инпуты были пустые/некорректные
-        try { investmentSlider.noUiSlider.set([initialMin, initialMax]); } catch (e) {}
-
-        investmentSlider.noUiSlider.on('update', function (values, handle) {
-            var minValue = values[0];
-            var maxValue = values[1];
-            var investMaxBoundary = 10000000;
-            if (investmentValueDisplay) {
-              investmentValueDisplay.textContent = minValue + ' - ' + (parseFloat(maxValue) >= investMaxBoundary ? '∞' : (maxValue + ' ₽'));
-            }
-            minInvestmentInput.value = minValue;
-            maxInvestmentInput.value = maxValue;
-        });
-    }
   }
 </script>
 {% endblock %}

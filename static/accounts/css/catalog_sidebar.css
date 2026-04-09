@@ -253,6 +253,18 @@ select.native-hidden {
   color: #fff;
 }
 
+/* Investment range links (reuse category-label style) */
+a.category-label {
+  text-decoration: none;
+}
+a.category-label.investment-active {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+a.category-label.investment-active .category-name {
+  color: #fff;
+}
+
 /* ── Slider Filters (shared) ─────────────── */
 
 .rating-filter,
