@@ -141,6 +141,66 @@ class FranchiseInvestmentSitemap(Sitemap):
         return get_investment_url(item)
 
 
+class StartupCategorySitemap(Sitemap):
+    """Категорийные лендинги стартапов — /startups/<slug>/."""
+    protocol = "https"
+    changefreq = "weekly"
+    priority = 0.6
+
+    def items(self):
+        from .views import STARTUP_CATEGORY_SLUGS
+        return STARTUP_CATEGORY_SLUGS
+
+    def location(self, item):
+        from .views import get_startup_category_url
+        return get_startup_category_url(item)
+
+
+class StartupFundingSitemap(Sitemap):
+    """Бюджетные лендинги стартапов — /startups/<slug>/."""
+    protocol = "https"
+    changefreq = "weekly"
+    priority = 0.6
+
+    def items(self):
+        from .views import STARTUP_FUNDING_SLUGS
+        return STARTUP_FUNDING_SLUGS
+
+    def location(self, item):
+        from .views import get_startup_funding_url
+        return get_startup_funding_url(item)
+
+
+class AgencyCategorySitemap(Sitemap):
+    """Категорийные лендинги агентств — /agencies/<slug>/."""
+    protocol = "https"
+    changefreq = "weekly"
+    priority = 0.6
+
+    def items(self):
+        from .views import AGENCY_CATEGORY_SLUGS
+        return AGENCY_CATEGORY_SLUGS
+
+    def location(self, item):
+        from .views import get_agency_category_url
+        return get_agency_category_url(item)
+
+
+class SpecialistCategorySitemap(Sitemap):
+    """Категорийные лендинги специалистов — /specialists/<slug>/."""
+    protocol = "https"
+    changefreq = "weekly"
+    priority = 0.6
+
+    def items(self):
+        from .views import SPECIALIST_CATEGORY_SLUGS
+        return SPECIALIST_CATEGORY_SLUGS
+
+    def location(self, item):
+        from .views import get_specialist_category_url
+        return get_specialist_category_url(item)
+
+
 class NewsSitemap(Sitemap):
     protocol = "https"
     changefreq = "daily"

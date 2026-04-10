@@ -4,11 +4,11 @@
 {% load humanize %}
 {% load accounts_extras %}
 
-{% block title %}Каталог агентств — Great Ideas{% endblock %}
+{% block title %}{% if agency_category_page_title %}{{ agency_category_page_title }}{% else %}Каталог агентств — Great Ideas{% endif %}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="Каталог агентств на платформе Great Ideas. Найдите надёжное агентство для развития вашего бизнеса.">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if agency_category_seo_desc %}{{ agency_category_seo_desc|truncatewords:30 }}{% else %}Каталог агентств на платформе Great Ideas. Найдите надёжное агентство для развития вашего бизнеса.{% endif %}">{% endblock %}
 
-{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'agencies_list' %}">{% endblock %}
+{% block canonical %}<link rel="canonical" href="{% if canonical_url %}{{ canonical_url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% url 'agencies_list' %}{% endif %}">{% endblock %}
 
 {% block pagination_links %}
 {% if page_obj.has_previous %}<link rel="prev" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}?page={{ page_obj.previous_page_number }}">{% endif %}
@@ -18,8 +18,8 @@
 {% block og_tags %}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Great Ideas">
-<meta property="og:title" content="Каталог агентств — Great Ideas">
-<meta property="og:description" content="Каталог агентств на платформе Great Ideas. Найдите надёжное агентство для развития вашего бизнеса.">
+<meta property="og:title" content="{% if agency_category_seo_title %}{{ agency_category_seo_title }}{% else %}Каталог агентств{% endif %} — Great Ideas">
+<meta property="og:description" content="{% if agency_category_seo_desc %}{{ agency_category_seo_desc|truncatewords:25 }}{% else %}Каталог агентств на платформе Great Ideas.{% endif %}">
 <meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 {% endblock %}
@@ -29,6 +29,27 @@
 {% block head_extra %}
   {{ block.super }}
   <link rel="stylesheet" href="{% static 'accounts/css/agencies_list.css' %}">
+
+  {% if category_slug %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "{{ agency_category_seo_title }}",
+    "description": "{{ agency_category_seo_desc|truncatewords:25 }}",
+    "url": "{{ canonical_url }}",
+    "numberOfItems": {{ agency_category_count|default:0 }},
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Главная", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+        {"@type": "ListItem", "position": 2, "name": "Агентства", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'agencies_list' %}"},
+        {"@type": "ListItem", "position": 3, "name": "{{ agency_category_seo_title }}"}
+      ]
+    }
+  }
+  </script>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -49,14 +70,14 @@
         
         <h2 class="categories-title">Категории</h2>
         <ul class="categories-list">
-          {% for c in agency_categories %}
-            <li class="category-item">
-              <label class="category-label">
-                <input type="checkbox" name="category" value="{{ c }}" class="category-checkbox" {% if c in selected_categories %}checked{% endif %}>
-                <span class="category-name">{{ c }}</span>
-              </label>
-            </li>
-          {% endfor %}
+          <li class="category-item"><a href="/agencies/web-razrabotka/" class="category-label{% if category_slug == 'web-razrabotka' %} investment-active{% endif %}"><span class="category-name">Веб-разработка</span></a></li>
+          <li class="category-item"><a href="/agencies/mobilnaya-razrabotka/" class="category-label{% if category_slug == 'mobilnaya-razrabotka' %} investment-active{% endif %}"><span class="category-name">Мобильная разработка</span></a></li>
+          <li class="category-item"><a href="/agencies/dizajn/" class="category-label{% if category_slug == 'dizajn' %} investment-active{% endif %}"><span class="category-name">Дизайн</span></a></li>
+          <li class="category-item"><a href="/agencies/marketing/" class="category-label{% if category_slug == 'marketing' %} investment-active{% endif %}"><span class="category-name">Маркетинг</span></a></li>
+          <li class="category-item"><a href="/agencies/ai/" class="category-label{% if category_slug == 'ai' %} investment-active{% endif %}"><span class="category-name">ИИ</span></a></li>
+          <li class="category-item"><a href="/agencies/brending/" class="category-label{% if category_slug == 'brending' %} investment-active{% endif %}"><span class="category-name">Брендинг</span></a></li>
+          <li class="category-item"><a href="/agencies/video/" class="category-label{% if category_slug == 'video' %} investment-active{% endif %}"><span class="category-name">Видео и мультимедиа</span></a></li>
+          <li class="category-item"><a href="/agencies/perevod/" class="category-label{% if category_slug == 'perevod' %} investment-active{% endif %}"><span class="category-name">Перевод</span></a></li>
         </ul>
 
         
@@ -105,8 +126,11 @@
 
     <div class="franchises-content">
       
-      <div class="catalog-header-bar">
-        <h1 class="catalog-header-title">Каталог агентств</h1>
+      <div class="catalog-header-bar" style="flex-wrap:wrap;">
+        <div style="flex:1; min-width:0;">
+          <h1 class="catalog-header-title">{% if agency_category_seo_title %}{{ agency_category_seo_title }}{% else %}Каталог агентств{% endif %}</h1>
+          {% if agency_category_seo_desc %}<p style="color:rgba(255,255,255,0.7); font-size:12px; font-family:Inter,sans-serif; line-height:1.4; margin:4px 0 0; opacity:0.75;">{{ agency_category_seo_desc }}</p>{% endif %}
+        </div>
         <div class="catalog-header-right">
           <div class="catalog-header-search">
             <input type="text" class="catalog-search-input" placeholder="Поиск..." value="{{ search_query|default_if_none:'' }}">

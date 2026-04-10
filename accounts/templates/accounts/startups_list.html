@@ -3,11 +3,11 @@
 {% load file_tags %}
 {% load humanize %}
 
-{% block title %}Каталог стартапов — Great Ideas{% endblock %}
+{% block title %}{% if startup_category_page_title %}{{ startup_category_page_title }}{% else %}Каталог стартапов — Great Ideas{% endif %}{% endblock %}
 
-{% block meta_description %}<meta name="description" content="Каталог стартапов на платформе Great Ideas. Найдите перспективные стартапы для инвестиций и сотрудничества.">{% endblock %}
+{% block meta_description %}<meta name="description" content="{% if startup_category_seo_desc %}{{ startup_category_seo_desc|truncatewords:30 }}{% else %}Каталог стартапов на платформе Great Ideas. Найдите перспективные стартапы для инвестиций и сотрудничества.{% endif %}">{% endblock %}
 
-{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'startups_list' %}">{% endblock %}
+{% block canonical %}<link rel="canonical" href="{% if canonical_url %}{{ canonical_url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% url 'startups_list' %}{% endif %}">{% endblock %}
 
 {% block pagination_links %}
 {% if page_obj.has_previous %}<link rel="prev" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}?page={{ page_obj.previous_page_number }}">{% endif %}
@@ -17,8 +17,8 @@
 {% block og_tags %}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Great Ideas">
-<meta property="og:title" content="Каталог стартапов — Great Ideas">
-<meta property="og:description" content="Каталог стартапов на платформе Great Ideas. Найдите перспективные стартапы для инвестиций и сотрудничества.">
+<meta property="og:title" content="{% if startup_category_seo_title %}{{ startup_category_seo_title }}{% else %}Каталог стартапов{% endif %} — Great Ideas">
+<meta property="og:description" content="{% if startup_category_seo_desc %}{{ startup_category_seo_desc|truncatewords:25 }}{% else %}Каталог стартапов на платформе Great Ideas.{% endif %}">
 <meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 {% endblock %}
@@ -29,6 +29,27 @@
   {{ block.super }}
 
   <link rel="stylesheet" href="{% static 'accounts/css/startups_list.css' %}">
+
+  {% if category_slug or funding_range %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "{{ startup_category_seo_title }}",
+    "description": "{{ startup_category_seo_desc|truncatewords:25 }}",
+    "url": "{{ canonical_url }}",
+    "numberOfItems": {{ startup_category_count|default:0 }},
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Главная", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+        {"@type": "ListItem", "position": 2, "name": "Стартапы", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'startups_list' %}"},
+        {"@type": "ListItem", "position": 3, "name": "{{ startup_category_seo_title }}"}
+      ]
+    }
+  }
+  </script>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -48,39 +69,23 @@
 
         
         <h2 class="categories-title">Категории</h2>
-        
-        
         <ul class="categories-list">
-          {% for dir in directions %}
-            <li class="category-item">
-              <label class="category-label">
-                
-                <input type="checkbox" name="category" value="{{ dir.direction_name }}" class="category-checkbox" {% if dir.direction_name in selected_categories %}checked{% endif %}>
-                <span class="category-name">
-                    {% with original_name=dir.direction_name|default:"" %}
-                        {% if original_name == "Medicine" %}Здоровье
-                        {% elif original_name == "Auto" %}Автомобили
-                        {% elif original_name == "Delivery" %}Доставка
-                        {% elif original_name == "Cafe" %}Кафе/рестораны
-                        {% elif original_name == "Fastfood" %}Фастфуд
-                        {% elif original_name == "Health" %}Здоровье 
-                        {% elif original_name == "Beauty" %}Красота
-                        {% elif original_name == "Transport" %}Транспорт
-                        {% elif original_name == "Sport" %}Спорт
-                        {% elif original_name == "Psychology" %}Психология
-                        {% elif original_name == "AI" %}ИИ
-                        {% elif original_name == "Finance" %}Финансы
-                        {% elif original_name == "Healthcare" %}Здоровье
-                        {% elif original_name == "Technology" %}Технологии
-                        {% else %}{{ original_name|default:"Не указано" }}
-                        {% endif %}
-                    {% endwith %}
-                </span>
-              </label>
-            </li>
-          {% empty %}
-            <li>Категории не найдены.</li>
-          {% endfor %}
+          <li class="category-item"><a href="/startups/tehnologii/" class="category-label{% if category_slug == 'tehnologii' %} investment-active{% endif %}"><span class="category-name">Технологии</span></a></li>
+          <li class="category-item"><a href="/startups/ai/" class="category-label{% if category_slug == 'ai' %} investment-active{% endif %}"><span class="category-name">ИИ</span></a></li>
+          <li class="category-item"><a href="/startups/finansy/" class="category-label{% if category_slug == 'finansy' %} investment-active{% endif %}"><span class="category-name">Финансы</span></a></li>
+          <li class="category-item"><a href="/startups/obrazovanie/" class="category-label{% if category_slug == 'obrazovanie' %} investment-active{% endif %}"><span class="category-name">Образование</span></a></li>
+          <li class="category-item"><a href="/startups/zdorove/" class="category-label{% if category_slug == 'zdorove' %} investment-active{% endif %}"><span class="category-name">Здоровье</span></a></li>
+          <li class="category-item"><a href="/startups/eda/" class="category-label{% if category_slug == 'eda' %} investment-active{% endif %}"><span class="category-name">Еда</span></a></li>
+          <li class="category-item"><a href="/startups/ekologiya/" class="category-label{% if category_slug == 'ekologiya' %} investment-active{% endif %}"><span class="category-name">Экология</span></a></li>
+          <li class="category-item"><a href="/startups/sport/" class="category-label{% if category_slug == 'sport' %} investment-active{% endif %}"><span class="category-name">Спорт</span></a></li>
+        </ul>
+
+        <h2 class="categories-title">Бюджет</h2>
+        <ul class="categories-list">
+          <li class="category-item"><a href="/startups/do-1m/" class="category-label{% if funding_range == 'do-1m' %} investment-active{% endif %}"><span class="category-name">до 1 млн ₽</span></a></li>
+          <li class="category-item"><a href="/startups/do-5m/" class="category-label{% if funding_range == 'do-5m' %} investment-active{% endif %}"><span class="category-name">до 5 млн ₽</span></a></li>
+          <li class="category-item"><a href="/startups/ot-5m-do-20m/" class="category-label{% if funding_range == 'ot-5m-do-20m' %} investment-active{% endif %}"><span class="category-name">5 — 20 млн ₽</span></a></li>
+          <li class="category-item"><a href="/startups/ot-20m/" class="category-label{% if funding_range == 'ot-20m' %} investment-active{% endif %}"><span class="category-name">от 20 млн ₽</span></a></li>
         </ul>
 
         <!-- Фильтр микроинвестиций временно скрыт -->
@@ -139,8 +144,11 @@
 
     <div class="startups-content">
       
-      <div class="catalog-header-bar">
-        <h1 class="catalog-header-title">Каталог стартапов</h1>
+      <div class="catalog-header-bar" style="flex-wrap:wrap;">
+        <div style="flex:1; min-width:0;">
+          <h1 class="catalog-header-title">{% if startup_category_seo_title %}{{ startup_category_seo_title }}{% else %}Каталог стартапов{% endif %}</h1>
+          {% if startup_category_seo_desc %}<p style="color:rgba(255,255,255,0.7); font-size:12px; font-family:Inter,sans-serif; line-height:1.4; margin:4px 0 0; opacity:0.75;">{{ startup_category_seo_desc }}</p>{% endif %}
+        </div>
         <div class="catalog-header-right">
           <div class="catalog-header-search">
             <input type="text" class="catalog-search-input" placeholder="Поиск..." value="{{ search_query|default_if_none:'' }}">

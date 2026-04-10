@@ -6,13 +6,17 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 
 from accounts.sitemaps import (
+    AgencyCategorySitemap,
     AgencySitemap,
     FranchiseCitySitemap,
     FranchiseDirectionSitemap,
     FranchiseInvestmentSitemap,
     FranchiseSitemap,
     NewsSitemap,
+    SpecialistCategorySitemap,
     SpecialistSitemap,
+    StartupCategorySitemap,
+    StartupFundingSitemap,
     StartupSitemap,
     StaticViewSitemap,
 )
@@ -20,12 +24,16 @@ from accounts.sitemaps import (
 sitemaps = {
     "static": StaticViewSitemap,
     "startups": StartupSitemap,
+    "startup_categories": StartupCategorySitemap,
+    "startup_funding": StartupFundingSitemap,
     "franchises": FranchiseSitemap,
     "franchise_cities": FranchiseCitySitemap,
     "franchise_directions": FranchiseDirectionSitemap,
     "franchise_investments": FranchiseInvestmentSitemap,
     "agencies": AgencySitemap,
+    "agency_categories": AgencyCategorySitemap,
     "specialists": SpecialistSitemap,
+    "specialist_categories": SpecialistCategorySitemap,
     "news": NewsSitemap,
 }
 

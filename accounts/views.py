@@ -12513,6 +12513,482 @@ def franchises_by_investment(request, range_slug):
     return render(request, "accounts/franchises_list.html", context)
 
 
+# ── Startup Category SEO Pages ────────────────────────────────
+
+STARTUP_CATEGORY_CONFIGS = {
+    "tehnologii": {
+        "directions": ["Technology", "IT"],
+        "title": "Технологические стартапы",
+        "page_title": "Технологические стартапы — IT-проекты для инвестиций | Great Ideas",
+        "desc": "Каталог технологических стартапов и IT-проектов. Инновационные решения, которые ищут инвесторов и партнёров.",
+    },
+    "finansy": {
+        "directions": ["Finance"],
+        "title": "Финансовые стартапы",
+        "page_title": "Финансовые стартапы — финтех проекты | Great Ideas",
+        "desc": "Каталог финтех стартапов — платёжные сервисы, инвестиционные платформы, цифровые банки и страхование.",
+    },
+    "obrazovanie": {
+        "directions": ["Education"],
+        "title": "Стартапы в образовании",
+        "page_title": "Образовательные стартапы — EdTech проекты | Great Ideas",
+        "desc": "Каталог EdTech стартапов — онлайн-курсы, образовательные платформы, детское и корпоративное обучение.",
+    },
+    "ai": {
+        "directions": ["AI"],
+        "title": "AI-стартапы",
+        "page_title": "AI-стартапы — проекты на искусственном интеллекте | Great Ideas",
+        "desc": "Каталог стартапов на базе искусственного интеллекта. Машинное обучение, нейросети, генеративный AI.",
+    },
+    "zdorove": {
+        "directions": ["Health", "Healthcare", "Medicine"],
+        "title": "Стартапы в здоровье и медицине",
+        "page_title": "Стартапы в здравоохранении — HealthTech и MedTech | Great Ideas",
+        "desc": "Каталог стартапов в сфере здоровья и медицины — телемедицина, диагностика, фитнес, биотех.",
+    },
+    "eda": {
+        "directions": ["Food"],
+        "title": "Стартапы в сфере еды",
+        "page_title": "FoodTech стартапы — проекты в сфере еды | Great Ideas",
+        "desc": "Каталог стартапов в FoodTech — доставка еды, рестораны, кулинарные сервисы, продукты питания.",
+    },
+    "ekologiya": {
+        "directions": ["Environment"],
+        "title": "Эко-стартапы",
+        "page_title": "Экологические стартапы — GreenTech проекты | Great Ideas",
+        "desc": "Каталог экологических стартапов — переработка, возобновляемая энергия, устойчивое развитие.",
+    },
+    "sport": {
+        "directions": ["Sport"],
+        "title": "Спортивные стартапы",
+        "page_title": "Спортивные стартапы — SportTech проекты | Great Ideas",
+        "desc": "Каталог спортивных стартапов — фитнес-приложения, спортивное оборудование, тренировочные платформы.",
+    },
+}
+
+STARTUP_CATEGORY_SLUGS = list(STARTUP_CATEGORY_CONFIGS.keys())
+
+STARTUP_CATEGORY_SLUG_TO_URL_NAME = {
+    slug: f"startups_cat_{slug.replace('-', '_')}" for slug in STARTUP_CATEGORY_SLUGS
+}
+
+
+def get_startup_category_url(slug):
+    return f"/startups/{slug}/"
+
+
+def startups_by_category(request, category_slug):
+    """SEO landing page for startups in a specific category."""
+    config = STARTUP_CATEGORY_CONFIGS.get(category_slug)
+    if not config:
+        raise Http404("Category not found")
+
+    startups_qs = Startups.objects.filter(
+        status="approved",
+        direction__direction_name__in=config["directions"],
+    ).select_related("owner", "direction", "stage").annotate(
+        rating_agg=ExpressionWrapper(
+            Coalesce(Avg("uservotes__rating"), 0.0), output_field=FloatField()
+        ),
+        rating_bucket=Floor(Coalesce(Avg("uservotes__rating"), 0.0)),
+    ).order_by("-created_at")
+
+    paginator = Paginator(startups_qs, 12)
+    page_obj = paginator.get_page(request.GET.get("page", 1))
+    count = startups_qs.count()
+    seo_text = f"{config['desc']} {count} стартапов на платформе Great Ideas."
+
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    if is_ajax:
+        html = render_to_string("accounts/partials/_startup_cards.html", {"page_obj": page_obj}, request=request)
+        return JsonResponse({
+            "html": html,
+            "catalog_title": config["title"],
+            "page_title": config["page_title"],
+            "seo_description": seo_text,
+            "page_number": page_obj.number,
+            "num_pages": paginator.num_pages,
+            "has_next": page_obj.has_next(),
+        })
+
+    from accounts.promotions import get_active_ads
+    context = {
+        "page_obj": page_obj,
+        "paginator": paginator,
+        "initial_has_next": page_obj.has_next(),
+        "selected_categories": [],
+        "search_query": "",
+        "min_goal": 0, "max_goal": 10000000,
+        "min_micro": 0, "max_micro": 1000000,
+        "min_rating": 0, "max_rating": 5,
+        "micro_investment": False,
+        "sort_order": "newest",
+        "directions": [],
+        "pinned_items": [],
+        "sidebar_ads": get_active_ads("catalog_sidebar"),
+        "canonical_url": request.build_absolute_uri(get_startup_category_url(category_slug)),
+        # SEO fields
+        "category_slug": category_slug,
+        "startup_category_seo_title": config["title"],
+        "startup_category_seo_desc": seo_text,
+        "startup_category_page_title": config["page_title"],
+        "startup_category_count": count,
+    }
+    return render(request, "accounts/startups_list.html", context)
+
+
+# ── Startup Funding Range SEO Pages ──────────────────────────
+
+STARTUP_FUNDING_CONFIGS = {
+    "do-1m": {
+        "min": 0, "max": 1000000,
+        "title": "Стартапы до 1 млн ₽",
+        "page_title": "Стартапы до 1 миллиона рублей — небольшие проекты | Great Ideas",
+        "desc": "Стартапы с минимальным бюджетом до 1 млн ₽. Низкий порог входа для инвесторов и партнёров.",
+    },
+    "do-5m": {
+        "min": 0, "max": 5000000,
+        "title": "Стартапы до 5 млн ₽",
+        "page_title": "Стартапы до 5 миллионов рублей | Great Ideas",
+        "desc": "Каталог стартапов с финансированием до 5 млн ₽. Доступные проекты для частных и корпоративных инвесторов.",
+    },
+    "ot-5m-do-20m": {
+        "min": 5000000, "max": 20000000,
+        "title": "Стартапы 5–20 млн ₽",
+        "page_title": "Стартапы от 5 до 20 миллионов рублей | Great Ideas",
+        "desc": "Каталог стартапов среднего сегмента с финансированием от 5 до 20 млн ₽.",
+    },
+    "ot-20m": {
+        "min": 20000000, "max": None,
+        "title": "Крупные стартапы от 20 млн ₽",
+        "page_title": "Крупные стартапы от 20 миллионов рублей | Great Ideas",
+        "desc": "Каталог крупных стартапов с финансированием от 20 млн ₽. Серьёзные проекты для опытных инвесторов.",
+    },
+}
+
+STARTUP_FUNDING_SLUGS = list(STARTUP_FUNDING_CONFIGS.keys())
+
+
+def get_startup_funding_url(slug):
+    return f"/startups/{slug}/"
+
+
+def startups_by_funding(request, range_slug):
+    """SEO landing page for startups filtered by funding range."""
+    config = STARTUP_FUNDING_CONFIGS.get(range_slug)
+    if not config:
+        raise Http404("Funding range not found")
+
+    startups_qs = Startups.objects.filter(status="approved").select_related("owner", "direction", "stage")
+    if config["max"] is not None:
+        startups_qs = startups_qs.filter(funding_goal__lte=config["max"])
+    if config["min"] > 0:
+        startups_qs = startups_qs.filter(funding_goal__gte=config["min"])
+
+    startups_qs = startups_qs.annotate(
+        rating_agg=ExpressionWrapper(
+            Coalesce(Avg("uservotes__rating"), 0.0), output_field=FloatField()
+        ),
+        rating_bucket=Floor(Coalesce(Avg("uservotes__rating"), 0.0)),
+    ).order_by("funding_goal", "-created_at")
+
+    paginator = Paginator(startups_qs, 12)
+    page_obj = paginator.get_page(request.GET.get("page", 1))
+    count = startups_qs.count()
+    seo_text = f"{config['desc']} {count} стартапов доступно на Great Ideas."
+
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    if is_ajax:
+        html = render_to_string("accounts/partials/_startup_cards.html", {"page_obj": page_obj}, request=request)
+        return JsonResponse({
+            "html": html,
+            "catalog_title": config["title"],
+            "page_title": config["page_title"],
+            "seo_description": seo_text,
+            "page_number": page_obj.number,
+            "num_pages": paginator.num_pages,
+            "has_next": page_obj.has_next(),
+        })
+
+    from accounts.promotions import get_active_ads
+    context = {
+        "page_obj": page_obj,
+        "paginator": paginator,
+        "initial_has_next": page_obj.has_next(),
+        "selected_categories": [],
+        "search_query": "",
+        "min_goal": config["min"], "max_goal": config["max"] or 10000000,
+        "min_micro": 0, "max_micro": 1000000,
+        "min_rating": 0, "max_rating": 5,
+        "micro_investment": False,
+        "sort_order": "newest",
+        "directions": [],
+        "pinned_items": [],
+        "sidebar_ads": get_active_ads("catalog_sidebar"),
+        "canonical_url": request.build_absolute_uri(get_startup_funding_url(range_slug)),
+        "funding_range": range_slug,
+        "startup_category_seo_title": config["title"],
+        "startup_category_seo_desc": seo_text,
+        "startup_category_page_title": config["page_title"],
+        "startup_category_count": count,
+    }
+    return render(request, "accounts/startups_list.html", context)
+
+
+# ── Agency Category SEO Pages ────────────────────────────────
+
+AGENCY_CATEGORY_CONFIGS = {
+    "web-razrabotka": {
+        "name": "Веб-разработка",
+        "title": "Агентства веб-разработки",
+        "page_title": "Агентства веб-разработки — заказать сайт | Great Ideas",
+        "desc": "Каталог агентств веб-разработки. Создание сайтов, интернет-магазинов, веб-приложений и корпоративных порталов.",
+    },
+    "mobilnaya-razrabotka": {
+        "name": "Мобильная разработка",
+        "title": "Агентства мобильной разработки",
+        "page_title": "Агентства мобильной разработки — заказать приложение | Great Ideas",
+        "desc": "Каталог агентств мобильной разработки. Создание приложений для iOS и Android, кросс-платформенные решения.",
+    },
+    "dizajn": {
+        "name": "Дизайн",
+        "title": "Дизайн-агентства",
+        "page_title": "Дизайн-агентства — UX/UI и графический дизайн | Great Ideas",
+        "desc": "Каталог дизайн-агентств. UX/UI дизайн, графический дизайн, иллюстрации и фирменный стиль.",
+    },
+    "marketing": {
+        "name": "Маркетинг",
+        "title": "Маркетинговые агентства",
+        "page_title": "Маркетинговые агентства — продвижение бизнеса | Great Ideas",
+        "desc": "Каталог маркетинговых агентств. SEO, контекстная и таргетированная реклама, SMM, контент-маркетинг.",
+    },
+    "ai": {
+        "name": "ИИ",
+        "title": "AI-агентства",
+        "page_title": "Агентства искусственного интеллекта | Great Ideas",
+        "desc": "Каталог агентств, специализирующихся на искусственном интеллекте, машинном обучении и нейросетях.",
+    },
+    "brending": {
+        "name": "Брендинг",
+        "title": "Брендинговые агентства",
+        "page_title": "Брендинговые агентства — разработка бренда | Great Ideas",
+        "desc": "Каталог брендинговых агентств. Создание брендов, нейминг, фирменный стиль, бренд-стратегия.",
+    },
+    "video": {
+        "name": "Видео и мультимедиа",
+        "title": "Видео и мультимедиа агентства",
+        "page_title": "Видеопродакшн агентства — заказать видеоролик | Great Ideas",
+        "desc": "Каталог агентств видео и мультимедиа. Производство видеороликов, моушн-дизайн, анимация, постпродакшн.",
+    },
+    "perevod": {
+        "name": "Перевод",
+        "title": "Переводческие агентства",
+        "page_title": "Переводческие агентства — заказать перевод | Great Ideas",
+        "desc": "Каталог переводческих агентств. Письменный и устный перевод, локализация, технический перевод.",
+    },
+}
+
+AGENCY_CATEGORY_SLUGS = list(AGENCY_CATEGORY_CONFIGS.keys())
+
+
+def get_agency_category_url(slug):
+    return f"/agencies/{slug}/"
+
+
+def agencies_by_category(request, category_slug):
+    """SEO landing page for agencies in a specific category."""
+    config = AGENCY_CATEGORY_CONFIGS.get(category_slug)
+    if not config:
+        raise Http404("Category not found")
+
+    agencies_qs = Agencies.objects.filter(
+        status="approved",
+        customization_data__agency_category=config["name"],
+    ).select_related("owner", "direction").distinct().annotate(
+        rating_agg=ExpressionWrapper(
+            Case(
+                When(total_voters__gt=0, then=F('sum_votes') * 1.0 / F('total_voters')),
+                default=Value(0.0),
+                output_field=FloatField(),
+            ),
+            output_field=FloatField()
+        ),
+        rating_bucket=Floor(
+            Case(
+                When(total_voters__gt=0, then=F('sum_votes') * 1.0 / F('total_voters')),
+                default=Value(0.0),
+                output_field=FloatField(),
+            )
+        ),
+    ).order_by("-created_at")
+
+    paginator = Paginator(agencies_qs, 12)
+    page_obj = paginator.get_page(request.GET.get("page", 1))
+    count = agencies_qs.count()
+    seo_text = f"{config['desc']} {count} агентств на платформе Great Ideas."
+
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    if is_ajax:
+        html = render_to_string("accounts/partials/_agency_cards.html", {"page_obj": page_obj}, request=request)
+        return JsonResponse({
+            "html": html,
+            "catalog_title": config["title"],
+            "page_title": config["page_title"],
+            "seo_description": seo_text,
+            "page_number": page_obj.number,
+            "num_pages": paginator.num_pages,
+            "has_next": page_obj.has_next(),
+        })
+
+    from accounts.promotions import get_active_ads
+    context = {
+        "page_obj": page_obj,
+        "paginator": paginator,
+        "initial_has_next": page_obj.has_next(),
+        "selected_categories": [config["name"]],
+        "search_query": "",
+        "min_rating": 0, "max_rating": 5,
+        "sort_order": "newest",
+        "agency_categories": list(AGENCY_CATEGORY_CONFIGS[s]["name"] for s in AGENCY_CATEGORY_SLUGS),
+        "pinned_items": [],
+        "sidebar_ads": get_active_ads("catalog_sidebar"),
+        "canonical_url": request.build_absolute_uri(get_agency_category_url(category_slug)),
+        "category_slug": category_slug,
+        "agency_category_seo_title": config["title"],
+        "agency_category_seo_desc": seo_text,
+        "agency_category_page_title": config["page_title"],
+        "agency_category_count": count,
+    }
+    return render(request, "accounts/agencies_list.html", context)
+
+
+# ── Specialist Category SEO Pages ────────────────────────────
+
+SPECIALIST_CATEGORY_CONFIGS = {
+    "web-razrabotka": {
+        "name": "Веб-разработка",
+        "title": "Специалисты по веб-разработке",
+        "page_title": "Специалисты по веб-разработке — нанять разработчика | Great Ideas",
+        "desc": "Каталог специалистов по веб-разработке. Frontend, backend, fullstack разработчики для ваших проектов.",
+    },
+    "mobilnaya-razrabotka": {
+        "name": "Мобильная разработка",
+        "title": "Специалисты по мобильной разработке",
+        "page_title": "Специалисты по мобильной разработке — iOS и Android | Great Ideas",
+        "desc": "Каталог мобильных разработчиков. Специалисты iOS, Android и кросс-платформенной разработки.",
+    },
+    "dizajn": {
+        "name": "Дизайн",
+        "title": "Дизайнеры",
+        "page_title": "Дизайнеры — нанять UX/UI и графического дизайнера | Great Ideas",
+        "desc": "Каталог дизайнеров. UX/UI, графический дизайн, веб-дизайн, иллюстрация для бизнеса.",
+    },
+    "marketing": {
+        "name": "Маркетинг",
+        "title": "Маркетологи",
+        "page_title": "Маркетологи — нанять специалиста по маркетингу | Great Ideas",
+        "desc": "Каталог маркетологов. SEO, SMM, контекстная реклама, аналитика и стратегия продвижения.",
+    },
+    "ai": {
+        "name": "ИИ",
+        "title": "AI-специалисты",
+        "page_title": "Специалисты по ИИ — Machine Learning эксперты | Great Ideas",
+        "desc": "Каталог специалистов по искусственному интеллекту. ML инженеры, data scientists, AI-консультанты.",
+    },
+    "brending": {
+        "name": "Брендинг",
+        "title": "Брендинг-специалисты",
+        "page_title": "Специалисты по брендингу — создание бренда | Great Ideas",
+        "desc": "Каталог специалистов по брендингу. Создание брендов, нейминг, бренд-стратегия.",
+    },
+    "video": {
+        "name": "Видео и мультимедиа",
+        "title": "Видеопродюсеры и мультимедиа специалисты",
+        "page_title": "Видеопродюсеры — заказать видеоролик | Great Ideas",
+        "desc": "Каталог видеопродюсеров и мультимедиа специалистов. Видеосъёмка, монтаж, моушн-дизайн.",
+    },
+    "perevod": {
+        "name": "Перевод",
+        "title": "Переводчики",
+        "page_title": "Переводчики — заказать профессиональный перевод | Great Ideas",
+        "desc": "Каталог переводчиков. Письменный и устный перевод, технический перевод, локализация.",
+    },
+}
+
+SPECIALIST_CATEGORY_SLUGS = list(SPECIALIST_CATEGORY_CONFIGS.keys())
+
+
+def get_specialist_category_url(slug):
+    return f"/specialists/{slug}/"
+
+
+def specialists_by_category(request, category_slug):
+    """SEO landing page for specialists in a specific category."""
+    config = SPECIALIST_CATEGORY_CONFIGS.get(category_slug)
+    if not config:
+        raise Http404("Category not found")
+
+    specialists_qs = Specialists.objects.filter(
+        status="approved",
+        customization_data__specialist_category=config["name"],
+    ).select_related("owner", "direction").annotate(
+        rating_agg=ExpressionWrapper(
+            Case(
+                When(total_voters__gt=0, then=F('sum_votes') * 1.0 / F('total_voters')),
+                default=Value(0.0),
+                output_field=FloatField(),
+            ),
+            output_field=FloatField()
+        ),
+        rating_bucket=Floor(
+            Case(
+                When(total_voters__gt=0, then=F('sum_votes') * 1.0 / F('total_voters')),
+                default=Value(0.0),
+                output_field=FloatField(),
+            )
+        ),
+    ).order_by("-created_at")
+
+    paginator = Paginator(specialists_qs, 12)
+    page_obj = paginator.get_page(request.GET.get("page", 1))
+    count = specialists_qs.count()
+    seo_text = f"{config['desc']} {count} специалистов на Great Ideas."
+
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    if is_ajax:
+        html = render_to_string("accounts/partials/_specialist_cards.html", {"page_obj": page_obj}, request=request)
+        return JsonResponse({
+            "html": html,
+            "catalog_title": config["title"],
+            "page_title": config["page_title"],
+            "seo_description": seo_text,
+            "page_number": page_obj.number,
+            "num_pages": paginator.num_pages,
+            "has_next": page_obj.has_next(),
+        })
+
+    from accounts.promotions import get_active_ads
+    context = {
+        "page_obj": page_obj,
+        "paginator": paginator,
+        "initial_has_next": page_obj.has_next(),
+        "selected_categories": [config["name"]],
+        "search_query": "",
+        "min_rating": 0, "max_rating": 5,
+        "sort_order": "newest",
+        "specialist_categories": list(SPECIALIST_CATEGORY_CONFIGS[s]["name"] for s in SPECIALIST_CATEGORY_SLUGS),
+        "pinned_items": [],
+        "sidebar_ads": get_active_ads("catalog_sidebar"),
+        "canonical_url": request.build_absolute_uri(get_specialist_category_url(category_slug)),
+        "category_slug": category_slug,
+        "specialist_category_seo_title": config["title"],
+        "specialist_category_seo_desc": seo_text,
+        "specialist_category_page_title": config["page_title"],
+        "specialist_category_count": count,
+    }
+    return render(request, "accounts/specialists_list.html", context)
+
+
 # ── Franchise AI Importer ────────────────────────────────────
 
 @login_required
