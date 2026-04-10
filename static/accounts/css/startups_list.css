@@ -132,7 +132,7 @@ body {
   max-width: 1032px;
   padding: 0;
   box-sizing: border-box;
-  margin-top: 17px;
+  margin-top: 0;
 }
 
 .pagination-controls {

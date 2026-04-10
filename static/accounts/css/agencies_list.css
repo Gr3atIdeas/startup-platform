@@ -267,7 +267,7 @@ body {
   max-width: 1032px;
   padding: 0;
   box-sizing: border-box;
-  margin-top: 35px;
+  margin-top: 0;
 }
 
 @media (width <= 1320px) {
