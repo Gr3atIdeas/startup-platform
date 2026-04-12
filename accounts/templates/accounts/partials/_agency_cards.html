@@ -5,9 +5,14 @@
 
 {% for agency in page_obj %}
   <div class="agency-card" data-agency-id="{{ agency.agency_id }}">
-    <!-- Шапка с изображением -->
+    <!-- Шапка с изображением / видео -->
     <div class="agency-card-header">
-      {% if agency.get_catalog_card_image_url %}
+      {% if agency.video_urls and agency.video_urls.0 %}
+        <video class="agency-header-video" muted loop playsinline preload="none"
+               data-src="{% get_file_url_tag agency.video_urls.0 agency.agency_id 'video' 'agency' %}"
+               poster="{{ agency.get_catalog_card_image_url|default:'' }}">
+        </video>
+      {% elif agency.get_catalog_card_image_url %}
         <img src="{{ agency.get_catalog_card_image_url }}" alt="Изображение {{ agency.title }}" class="agency-header-image" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="agency-header-placeholder" style="display:none;">
           <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">

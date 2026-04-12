@@ -116,6 +116,51 @@
     } catch(e) {}
   })();
   </script>
+  <script>
+  /* Lazy video autoplay — loads & plays card videos only when visible */
+  (function(){
+    if (!('IntersectionObserver' in window)) return;
+    var played = new WeakSet();
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var v = e.target;
+        if (e.isIntersecting && !played.has(v)) {
+          var src = v.getAttribute('data-src');
+          if (src && !v.querySelector('source')) {
+            var s = document.createElement('source');
+            s.src = src;
+            s.type = 'video/mp4';
+            v.appendChild(s);
+            v.load();
+          }
+          v.play().catch(function(){});
+          played.add(v);
+        } else if (!e.isIntersecting && played.has(v)) {
+          v.pause();
+          played.delete(v);
+        }
+      });
+    }, {rootMargin: '200px'});
+
+    function observeVideos(){
+      document.querySelectorAll('video[data-src]').forEach(function(v){ io.observe(v); });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', observeVideos);
+    } else {
+      observeVideos();
+    }
+    /* Re-observe after AJAX catalog updates */
+    new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        m.addedNodes && m.addedNodes.forEach(function(n){
+          if (n && n.tagName === 'VIDEO' && n.hasAttribute('data-src')) io.observe(n);
+          else if (n && n.querySelectorAll) n.querySelectorAll('video[data-src]').forEach(function(v){ io.observe(v); });
+        });
+      });
+    }).observe(document.documentElement, {childList:true, subtree:true});
+  })();
+  </script>
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
     (function(m,e,t,r,i,k,a){

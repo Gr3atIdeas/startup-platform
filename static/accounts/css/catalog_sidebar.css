@@ -620,6 +620,19 @@ a.category-label.investment-active .category-name {
   outline-offset: -2px;
 }
 
+/* ── Card Header Video ──────────────────── */
+
+.franchise-header-video,
+.startup-header-video,
+.agency-header-video,
+.specialist-header-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: inherit;
+}
+
 /* ── Catalog Header Bar ──────────────────── */
 
 .catalog-header-bar {

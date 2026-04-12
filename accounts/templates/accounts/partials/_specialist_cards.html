@@ -5,9 +5,14 @@
 
 {% for specialist in page_obj %}
   <div class="specialist-card" data-specialist-id="{{ specialist.specialist_id }}">
-    <!-- Шапка с изображением -->
+    <!-- Шапка с изображением / видео -->
     <div class="specialist-card-header">
-      {% if specialist.get_catalog_card_image_url %}
+      {% if specialist.video_urls and specialist.video_urls.0 %}
+        <video class="specialist-header-video" muted loop playsinline preload="none"
+               data-src="{% get_file_url_tag specialist.video_urls.0 specialist.specialist_id 'video' 'specialist' %}"
+               poster="{{ specialist.get_catalog_card_image_url|default:'' }}">
+        </video>
+      {% elif specialist.get_catalog_card_image_url %}
         <img src="{{ specialist.get_catalog_card_image_url }}" alt="Изображение {{ specialist.title }}" class="specialist-header-image" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="specialist-header-placeholder" style="display:none;">
           <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">
