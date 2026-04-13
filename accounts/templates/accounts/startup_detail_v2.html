@@ -360,7 +360,7 @@
     <nav class="fdt-crumbs">
       <a href="{% url 'home' %}">Главная</a><span>/</span>
       <a href="{% url 'startups_list' %}">Стартапы</a><span>/</span>
-      {% if startup.direction %}<a href="{% url 'startups_list' %}?category={{ startup.direction.direction_id }}">{{ startup.direction.direction_name|translate_category }}</a><span>/</span>{% endif %}
+      {% if startup.direction and direction_seo_slug %}<a href="/startups/{{ direction_seo_slug }}/">{{ startup.direction.direction_name|translate_category }}</a><span>/</span>{% elif startup.direction %}<a href="{% url 'startups_list' %}">{{ startup.direction.direction_name|translate_category }}</a><span>/</span>{% endif %}
       <span class="current">{{ startup.title|truncatewords:5 }}</span>
     </nav>
     {% if user.is_authenticated and user.role.role_name == 'moderator' %}

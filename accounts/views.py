@@ -2698,6 +2698,7 @@ def startup_detail(request, slug):
         "ai_rating": ai_rating,
         "canonical_url": request.build_absolute_uri(),
         "file_url_map": file_url_map,
+        "direction_seo_slug": get_startup_direction_seo_slug(startup.direction.direction_name) if startup.direction else "",
     }
     return render(request, "accounts/startup_detail_v2.html", context)
 def load_similar_startups(request, startup_id: int):
@@ -12655,6 +12656,18 @@ STARTUP_CATEGORY_CONFIGS = {
 }
 
 STARTUP_CATEGORY_SLUGS = list(STARTUP_CATEGORY_CONFIGS.keys())
+
+# Reverse map: direction_name → SEO slug
+STARTUP_DIRECTION_TO_SLUG = {}
+for _slug, _cfg in STARTUP_CATEGORY_CONFIGS.items():
+    for _d in _cfg["directions"]:
+        STARTUP_DIRECTION_TO_SLUG[_d] = _slug
+
+
+def get_startup_direction_seo_slug(direction_name):
+    """Get SEO slug for a startup direction name."""
+    return STARTUP_DIRECTION_TO_SLUG.get(direction_name, "")
+
 
 STARTUP_CATEGORY_SLUG_TO_URL_NAME = {
     slug: f"startups_cat_{slug.replace('-', '_')}" for slug in STARTUP_CATEGORY_SLUGS
