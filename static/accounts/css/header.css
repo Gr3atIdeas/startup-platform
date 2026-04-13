@@ -12,7 +12,8 @@
   width: 1303px;
   max-width: 95%;
   align-items: center;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   gap: 12px;
 }
 
@@ -134,7 +135,6 @@
   align-items: center;
   flex-wrap: nowrap;
   gap: 16px;
-  flex: 1;
   justify-content: center;
 }
 
@@ -393,11 +393,7 @@
 }
 
 .nav-menu {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  min-width: 0;
-  gap: 16px;
+  display: contents;
 }
 
 
