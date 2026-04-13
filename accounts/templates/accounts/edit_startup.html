@@ -437,11 +437,15 @@ if (window.FileUploadUtils) {
                              {% endfor %}
                         </div>
                         {% if form.video.errors %}<span class="error-message">{{ form.video.errors|first }}</span>{% endif %}
+                        <div style="margin-top:10px;">
+                            <label for="video_url_input" style="font-size:13px; color:rgba(255,255,255,0.7);">Или вставьте ссылку на видео</label>
+                            <input type="url" name="video_url" id="video_url_input" class="form-control" placeholder="https://storage.yandexcloud.net/.../video.mp4" style="margin-top:4px;">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            
+
              <div class="form-content-section">
                 <div class="presentation-finance-group">
                     <div class="form-group">

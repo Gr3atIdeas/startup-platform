@@ -3909,8 +3909,16 @@ def create_startup(request):
             startup.creatives_urls = creatives_ids
             startup.proofs_urls = proofs_ids
             startup.video_urls = video_ids
-            logger.info(f"UUID сохранены: logo={logo_ids}, creatives={creatives_ids}, proofs={proofs_ids}, videos={video_ids}. Файлы загружаются асинхронно через Celery.")
-            
+
+            # Append direct video URL if provided
+            video_url_direct = request.POST.get("video_url", "").strip()
+            if video_url_direct and video_url_direct.startswith("http"):
+                if not isinstance(startup.video_urls, list):
+                    startup.video_urls = []
+                startup.video_urls.append(video_url_direct)
+
+            logger.info(f"UUID сохранены: logo={logo_ids}, creatives={creatives_ids}, proofs={proofs_ids}, videos={startup.video_urls}. Файлы загружаются асинхронно через Celery.")
+
             # При создании автоматически добавляем первые 4 креатива в слайдер
             # (при редактировании пользователь может выбрать вручную через чекбоксы)
             slider_images = request.POST.getlist("slider_images")
@@ -4139,7 +4147,15 @@ def create_franchise(request):
             franchise.creatives_urls = creatives_ids
             franchise.proofs_urls = proofs_ids
             franchise.video_urls = video_ids
-            logger.info(f"UUID сохранены: logo={logo_ids}, creatives={creatives_ids}, proofs={proofs_ids}, videos={video_ids}. Файлы загружаются асинхронно через Celery.")
+
+            # Append direct video URL if provided
+            video_url_direct = request.POST.get("video_url", "").strip()
+            if video_url_direct and video_url_direct.startswith("http"):
+                if not isinstance(franchise.video_urls, list):
+                    franchise.video_urls = []
+                franchise.video_urls.append(video_url_direct)
+
+            logger.info(f"UUID сохранены: logo={logo_ids}, creatives={creatives_ids}, proofs={proofs_ids}, videos={franchise.video_urls}. Файлы загружаются асинхронно через Celery.")
             
             # При создании автоматически добавляем первые 4 креатива в слайдер
             # (при редактировании пользователь может выбрать вручную через чекбоксы)
@@ -4379,8 +4395,16 @@ def create_agency(request):
             agency.creatives_urls = creatives_ids
             agency.proofs_urls = proofs_ids
             agency.video_urls = video_ids
-            logger.info(f"UUID сохранены: logo={logo_ids}, creatives={creatives_ids}, proofs={proofs_ids}, videos={video_ids}. Файлы загружаются асинхронно через Celery.")
-            
+
+            # Append direct video URL if provided
+            video_url_direct = request.POST.get("video_url", "").strip()
+            if video_url_direct and video_url_direct.startswith("http"):
+                if not isinstance(agency.video_urls, list):
+                    agency.video_urls = []
+                agency.video_urls.append(video_url_direct)
+
+            logger.info(f"UUID сохранены: logo={logo_ids}, creatives={creatives_ids}, proofs={proofs_ids}, videos={agency.video_urls}. Файлы загружаются асинхронно через Celery.")
+
             # При создании автоматически добавляем первые 4 креатива в слайдер
             # (при редактировании пользователь может выбрать вручную через чекбоксы)
             slider_images = request.POST.getlist("slider_images")
@@ -4607,8 +4631,16 @@ def create_specialist(request):
             spec.creatives_urls = creatives_ids
             spec.proofs_urls = proofs_ids
             spec.video_urls = video_ids
-            logger.info(f"UUID сохранены: logo={logo_ids}, creatives={creatives_ids}, proofs={proofs_ids}, videos={video_ids}. Файлы загружаются асинхронно через Celery.")
-            
+
+            # Append direct video URL if provided
+            video_url_direct = request.POST.get("video_url", "").strip()
+            if video_url_direct and video_url_direct.startswith("http"):
+                if not isinstance(spec.video_urls, list):
+                    spec.video_urls = []
+                spec.video_urls.append(video_url_direct)
+
+            logger.info(f"UUID сохранены: logo={logo_ids}, creatives={creatives_ids}, proofs={proofs_ids}, videos={spec.video_urls}. Файлы загружаются асинхронно через Celery.")
+
             # При создании автоматически добавляем первые 4 креатива в слайдер
             # (при редактировании пользователь может выбрать вручную через чекбоксы)
             slider_images = request.POST.getlist("slider_images")
@@ -5371,6 +5403,14 @@ def edit_startup(request, startup_id):
                     logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки.")
             
+            # Append direct video URL if provided (edit form)
+            video_url_direct = request.POST.get("video_url", "").strip()
+            if video_url_direct and video_url_direct.startswith("http"):
+                if not isinstance(startup.video_urls, list):
+                    startup.video_urls = []
+                if video_url_direct not in startup.video_urls:
+                    startup.video_urls.append(video_url_direct)
+
             logger.info("=== ФИНАЛЬНОЕ СОХРАНЕНИЕ ===")
             startup.save()
             logger.info("Стартап финально сохранен")
@@ -9709,7 +9749,15 @@ def edit_franchise(request, franchise_id):
                 except Exception as e:
                     logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки.")
-            
+
+            # Append direct video URL if provided (edit form)
+            video_url_direct = request.POST.get("video_url", "").strip()
+            if video_url_direct and video_url_direct.startswith("http"):
+                if not isinstance(franchise.video_urls, list):
+                    franchise.video_urls = []
+                if video_url_direct not in franchise.video_urls:
+                    franchise.video_urls.append(video_url_direct)
+
             franchise.save()
 
             # Save excluded cities (black list)
@@ -10052,9 +10100,17 @@ def edit_agency(request, agency_id):
                 except Exception as e:
                     logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки.")
-            
+
+            # Append direct video URL if provided (edit form)
+            video_url_direct = request.POST.get("video_url", "").strip()
+            if video_url_direct and video_url_direct.startswith("http"):
+                if not isinstance(agency.video_urls, list):
+                    agency.video_urls = []
+                if video_url_direct not in agency.video_urls:
+                    agency.video_urls.append(video_url_direct)
+
             agency.save()
-            
+
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,
@@ -10386,9 +10442,17 @@ def edit_specialist(request, specialist_id):
                 except Exception as e:
                     logger.error(f"Ошибка сохранения изображения карточки: {e}", exc_info=True)
                     messages.warning(request, "Не удалось сохранить изображение для карточки.")
-            
+
+            # Append direct video URL if provided (edit form)
+            video_url_direct = request.POST.get("video_url", "").strip()
+            if video_url_direct and video_url_direct.startswith("http"):
+                if not isinstance(specialist.video_urls, list):
+                    specialist.video_urls = []
+                if video_url_direct not in specialist.video_urls:
+                    specialist.video_urls.append(video_url_direct)
+
             specialist.save()
-            
+
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({
                     "success": True,

@@ -145,11 +145,15 @@
                         <div class="small-text">Допустимый формат MOV, MP4 (до 3 файлов)</div>
                         <div id="videoPreview" class="file-preview-area"></div>
                         {% if form.video.errors %}<span class="error-message">{{ form.video.errors|first }}</span>{% endif %}
+                        <div style="margin-top:10px;">
+                            <label for="video_url_input" style="font-size:13px; color:rgba(255,255,255,0.7);">Или вставьте ссылку на видео</label>
+                            <input type="url" name="video_url" id="video_url_input" class="form-control" placeholder="https://storage.yandexcloud.net/.../video.mp4" style="margin-top:4px;">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            
+
             <div class="form-content-section">
                 <div class="form-group full-width">
                     <label for="{{ form.successful_projects.id_for_label }}">{{ form.successful_projects.label }}</label>
