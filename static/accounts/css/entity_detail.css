@@ -609,9 +609,8 @@ a:hover {
   gap: 19px;
   flex-shrink: 0;
   border-radius: var(--radius-sm);
-  background: rgba(0, 0, 0, 0.11);
+  background: rgba(0, 8, 25, 0.35);
   box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(20px);
   box-sizing: border-box;
   justify-content: center;
 }
@@ -1685,8 +1684,7 @@ a:hover {
 .agency-info-badge,
 .franchise-info-badge,
 .specialist-info-badge {
-  background-color: rgb(0 8 25 / 60%);
-  backdrop-filter: blur(5px);
+  background-color: rgb(0 8 25 / 85%);
   color: var(--text-primary);
   padding: 8px 16px;
   border-radius: var(--radius-sm);
@@ -1705,8 +1703,7 @@ a:hover {
 
 
 .tabbed-content-wrapper {
-  background-color: rgba(0, 8, 25, 0.75);
-  backdrop-filter: blur(8px);
+  background-color: rgba(0, 8, 25, 0.92);
   padding: 25px 30px;
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1848,12 +1845,11 @@ a:hover {
 
 .content-section#info-section .about-section {
   margin-top: 0;
-  background-color: rgba(0, 8, 25, 0.82);
+  background-color: rgba(0, 8, 25, 0.94);
   padding: 24px 28px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: var(--radius-md);
   margin-bottom: 20px;
-  backdrop-filter: blur(6px);
 }
 
 .content-section#info-section .about-section + .about-section {
