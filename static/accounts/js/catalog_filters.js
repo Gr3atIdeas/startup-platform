@@ -195,7 +195,7 @@
   function updatePageFromJsonResponse(data, newUrl) {
     var oldGrid = gridElement || findGridElement(document);
     if (oldGrid && data.html !== undefined) {
-      oldGrid.innerHTML = data.html;
+      oldGrid.innerHTML = (data.pinned_html || '') + data.html;
     }
 
     // Update catalog title and SEO description

@@ -1,0 +1,3 @@
+{% for entity in pinned_items %}
+  {% include 'accounts/partials/_pinned_card.html' with entity=entity entity_type=entity_type %}
+{% endfor %}

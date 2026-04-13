@@ -1399,7 +1399,8 @@ def franchises_list(request):
         if pinned_ids:
             franchises_qs = franchises_qs.exclude(franchise_id__in=pinned_ids)
 
-    paginator = Paginator(franchises_qs, 12)
+    per_page = 12 - len(pinned_franchises)
+    paginator = Paginator(franchises_qs, max(per_page, 1))
     page_obj = paginator.get_page(page_number)
 
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
@@ -1407,9 +1408,20 @@ def franchises_list(request):
         html = render_to_string(
             "accounts/partials/_franchise_cards.html", {"page_obj": page_obj}
         )
+        # Include pinned cards HTML when returning to page 1
+        pinned_html = ""
+        if page_obj.number == 1 and not filters_active:
+            pinned_franchises_ajax = get_pinned_entities("franchise", Franchises, "franchise_id")
+            if pinned_franchises_ajax:
+                pinned_html = render_to_string(
+                    "accounts/partials/_pinned_cards_fragment.html",
+                    {"pinned_items": pinned_franchises_ajax, "entity_type": "franchise"},
+                    request=request,
+                )
         return JsonResponse(
             {
                 "html": html,
+                "pinned_html": pinned_html,
                 "has_next": page_obj.has_next(),
                 "page_number": page_obj.number,
                 "num_pages": paginator.num_pages,

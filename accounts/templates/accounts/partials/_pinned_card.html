@@ -72,8 +72,16 @@
 <div class="franchise-card franchise-card--pinned" data-franchise-id="{{ entity.franchise_id }}">
   <div class="pinned-badge">TOP</div>
   <div class="franchise-card-header">
-    {% if entity.get_catalog_card_image_url %}
-      <img src="{{ entity.get_catalog_card_image_url }}" alt="{{ entity.title }}" class="franchise-header-image" onerror="this.style.display='none';">
+    {% if entity.video_urls and entity.video_urls.0 %}
+      <video class="franchise-header-video" muted loop playsinline preload="none"
+             data-src="{% get_file_url_tag entity.video_urls.0 entity.franchise_id 'video' 'franchise' %}"
+             poster="{{ entity.get_catalog_card_image_url|default:'' }}">
+      </video>
+    {% elif entity.get_catalog_card_image_url %}
+      <img src="{{ entity.get_catalog_card_image_url }}" alt="{{ entity.title }}" class="franchise-header-image" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="franchise-header-placeholder" style="display:none;">
+        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">
+      </div>
     {% else %}
       <div class="franchise-header-placeholder">
         <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder" style="width: 60px; height: 60px; opacity: 0.5;">
@@ -81,8 +89,46 @@
     {% endif %}
   </div>
   <div class="franchise-card-content">
-    <h3 class="franchise-title">{{ entity.title }}</h3>
-    <p class="franchise-description">{{ entity.short_description|striptags|truncatewords:20|default:"Описание не указано" }}</p>
+    <div class="franchise-title-row">
+      <div class="franchise-logo">
+        {% if entity.logo_urls %}
+          <img src="{% get_file_url_tag entity.logo_urls.0 entity.franchise_id 'logo' 'franchise' %}" alt="Логотип {{ entity.title }}" loading="lazy" decoding="async">
+        {% else %}
+          <div class="logo-placeholder"></div>
+        {% endif %}
+      </div>
+      <h3 class="franchise-title">{{ entity.title }}</h3>
+    </div>
+    <div class="franchise-category-row" style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
+      {% if entity.direction and entity.direction.direction_name %}
+        <span class="category-tag">{{ entity.direction.direction_name|translate_category }}</span>
+      {% else %}
+        <span class="category-tag">Другое</span>
+      {% endif %}
+    </div>
+    {% if entity.total_voters and entity.total_voters > 0 %}
+    <div style="display:flex; align-items:center; gap:4px; margin:4px 0 6px;">
+      {% with avg_rating=entity.rating_agg|default:0 %}
+      <span style="color:#fbbf24; font-size:13px;">
+        {% for i in "12345" %}{% if forloop.counter <= avg_rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+      </span>
+      <span style="color:rgba(255,255,255,0.5); font-size:12px; font-family:Inter,sans-serif;">{{ avg_rating|floatformat:1 }} ({{ entity.total_voters }})</span>
+      {% endwith %}
+    </div>
+    {% endif %}
+    <div class="franchise-description-row">
+      <p class="franchise-description">{{ entity.short_description|striptags|truncatewords:40|default:"Описание не указано" }}</p>
+    </div>
+    <div class="franchise-amount-row">
+      <span class="amount-label">Инвестиции</span>
+      <span class="amount-value">от {{ entity.investment_size|default:0|floatformat:0|intcomma }} ₽</span>
+    </div>
+    {% if entity.payback_period %}
+    <div class="franchise-cost-row" style="margin-top:4px;">
+      <span class="cost-label">Окупаемость</span>
+      <span class="cost-value">{{ entity.payback_period }} мес.</span>
+    </div>
+    {% endif %}
   </div>
   <a href="{% url 'franchise_detail' slug=entity.slug|default:entity.franchise_id %}" class="detail-link" aria-label="{{ entity.title }}"></a>
 </div>
