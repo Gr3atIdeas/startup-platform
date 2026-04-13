@@ -11,10 +11,10 @@
 .header-content-wrapper {
   width: 1303px;
   max-width: 95%;
-  justify-content: space-between;
   align-items: center;
   display: flex;
   gap: 12px;
+  position: relative;
 }
 
 
@@ -394,7 +394,6 @@
   min-width: 0;
   gap: 16px;
   justify-content: flex-end;
-  position: relative;
 }
 
 
