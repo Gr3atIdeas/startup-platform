@@ -135,8 +135,9 @@
   align-items: center;
   flex-wrap: nowrap;
   gap: 16px;
-  flex: 1;
-  justify-content: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .header-nav-link {
@@ -392,6 +393,8 @@
   flex: 1;
   min-width: 0;
   gap: 16px;
+  justify-content: flex-end;
+  position: relative;
 }
 
 
