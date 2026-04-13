@@ -1,16 +1,21 @@
 from django.contrib import admin
-from django.contrib.admin.models import LogEntry
 from django.utils.html import format_html
 
-# Fix: django_admin_log FK points at auth_user, but we use custom Users table.
-# Silently skip admin log writes to avoid IntegrityError on every save.
-_original_log_save = LogEntry.save
-def _safe_log_save(self, *args, **kwargs):
-    try:
-        return _original_log_save(self, *args, **kwargs)
-    except Exception:
+
+# Fix: django_admin_log has FK to auth_user, but we use custom Users table.
+# Override AdminSite.log_* methods to skip writing to django_admin_log entirely.
+class _NoLogAdminSite(admin.AdminSite):
+    def log_addition(self, *args, **kwargs):
         pass
-LogEntry.save = _safe_log_save
+
+    def log_change(self, *args, **kwargs):
+        pass
+
+    def log_deletion(self, *args, **kwargs):
+        pass
+
+# Replace the default admin site globally
+admin.site.__class__ = _NoLogAdminSite
 
 from .models import (
     Startups,
