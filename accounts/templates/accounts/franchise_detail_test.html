@@ -308,13 +308,22 @@
     {% endif %}
 
     {% if hero_video %}
-      {# Standalone video — no carousel, no auto-switching #}
+      {# Standalone video — autoplay muted, click to unmute #}
       <div class="fdt-slide active" data-type="video">
-        <video src="{{ hero_video|resolve_url:file_url_map }}" preload="metadata" playsinline></video>
-        <div class="fdt-slide-play" onclick="toggleVideo(this)">
-          <i class="fas fa-play"></i>
-        </div>
+        <video src="{{ hero_video|resolve_url:file_url_map }}" autoplay muted loop playsinline preload="auto" id="heroVideo"></video>
+        <button class="fdt-slide-mute" onclick="toggleHeroMute(this)" title="Включить звук" style="position:absolute;bottom:16px;right:16px;z-index:5;background:rgba(0,0,0,0.5);border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;transition:background 0.2s;">
+          <i class="fas fa-volume-mute"></i>
+        </button>
       </div>
+      <script>
+      function toggleHeroMute(btn) {
+        var v = document.getElementById('heroVideo');
+        if (!v) return;
+        v.muted = !v.muted;
+        btn.querySelector('i').className = v.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+        btn.title = v.muted ? 'Включить звук' : 'Выключить звук';
+      }
+      </script>
     {% elif slider_images %}
       {% for url in slider_images|slice:":6" %}
       <div class="fdt-slide {% if forloop.first %}active{% endif %}">
