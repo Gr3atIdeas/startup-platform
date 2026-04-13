@@ -384,9 +384,14 @@ if (window.FileUploadUtils) {
                             {% for video_url in franchise.video_urls %}
                                 {% get_file_url_tag video_url franchise.franchise_id 'video' 'franchise' as video_file_url %}
                                 {% if video_file_url %}
-                                <div class="file-preview-item existing-file" data-file-id="{{ video_url }}">
+                                <div class="file-preview-item existing-file" data-file-id="{{ video_url }}" style="position:relative;">
                                     <video controls src="{{ video_file_url }}" style="max-width: 200px; max-height: 150px;"></video>
                                     <p>{% get_file_original_name video_url franchise.franchise_id 'video' 'franchise' %}</p>
+                                    {% if forloop.first %}
+                                    <span style="display:inline-block;padding:2px 8px;background:#28a745;color:#fff;border-radius:4px;font-size:11px;margin-bottom:4px;">Главное</span>
+                                    {% else %}
+                                    <button type="button" class="set-primary-video-btn" data-file-id="{{ video_url }}" style="display:inline-block;padding:2px 8px;background:#007bff;color:#fff;border:none;border-radius:4px;font-size:11px;cursor:pointer;margin-bottom:4px;">Сделать главным</button>
+                                    {% endif %}
                                     <button type="button" class="delete-existing-file-btn" data-file-id="{{ video_url }}" data-file-type="video">Удалить</button>
                                 </div>
                                 {% endif %}
@@ -525,6 +530,42 @@ document.addEventListener('click', function(event) {
       arr.push({ id: fileId, type: fileType });
       deletedFilesInput.value = JSON.stringify(arr);
     } catch (_) {}
+  }
+});
+
+// "Сделать главным" video handler
+document.addEventListener('click', function(event) {
+  var btn = event.target.closest ? event.target.closest('.set-primary-video-btn') : null;
+  if (!btn) return;
+  var fileId = btn.getAttribute('data-file-id');
+  if (!fileId) return;
+  event.stopPropagation();
+  // Add hidden input to tell the server which video to make primary
+  var existing = document.getElementById('primary-video-input');
+  if (!existing) {
+    existing = document.createElement('input');
+    existing.type = 'hidden';
+    existing.id = 'primary-video-input';
+    existing.name = 'primary_video_id';
+    var form = document.getElementById('franchiseForm');
+    if (form) form.appendChild(existing);
+  }
+  existing.value = fileId;
+  // Visual feedback: update badges
+  var preview = document.getElementById('videoPreview');
+  if (preview) {
+    preview.querySelectorAll('.set-primary-video-btn').forEach(function(b) {
+      var parent = b.closest('.file-preview-item');
+      if (parent) {
+        var badge = parent.querySelector('span[style*="28a745"]');
+        if (badge) { badge.replaceWith(b); }
+      }
+    });
+    var item = btn.closest('.file-preview-item');
+    var badge = document.createElement('span');
+    badge.style.cssText = 'display:inline-block;padding:2px 8px;background:#28a745;color:#fff;border-radius:4px;font-size:11px;margin-bottom:4px;';
+    badge.textContent = 'Главное';
+    btn.replaceWith(badge);
   }
 });
 

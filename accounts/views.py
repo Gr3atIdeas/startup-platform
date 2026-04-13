@@ -5411,6 +5411,12 @@ def edit_startup(request, startup_id):
                 if video_url_direct not in startup.video_urls:
                     startup.video_urls.append(video_url_direct)
 
+            # Reorder videos: move selected primary video to first position
+            primary_video_id = request.POST.get("primary_video_id", "").strip()
+            if primary_video_id and isinstance(startup.video_urls, list) and primary_video_id in startup.video_urls:
+                startup.video_urls.remove(primary_video_id)
+                startup.video_urls.insert(0, primary_video_id)
+
             logger.info("=== ФИНАЛЬНОЕ СОХРАНЕНИЕ ===")
             startup.save()
             logger.info("Стартап финально сохранен")
@@ -9757,6 +9763,12 @@ def edit_franchise(request, franchise_id):
                     franchise.video_urls = []
                 if video_url_direct not in franchise.video_urls:
                     franchise.video_urls.append(video_url_direct)
+
+            # Reorder videos: move selected primary video to first position
+            primary_video_id = request.POST.get("primary_video_id", "").strip()
+            if primary_video_id and isinstance(franchise.video_urls, list) and primary_video_id in franchise.video_urls:
+                franchise.video_urls.remove(primary_video_id)
+                franchise.video_urls.insert(0, primary_video_id)
 
             franchise.save()
 

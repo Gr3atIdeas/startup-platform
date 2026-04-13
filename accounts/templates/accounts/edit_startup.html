@@ -425,16 +425,21 @@ if (window.FileUploadUtils) {
                         <div class="custom-file-upload-button">Выбрать файлы</div>
                         <div class="small-text">Допустимый формат MOV, MP4 (до 3 файлов)</div>
                         <div id="videoPreview" class="file-preview-area">
-                                                         {% for video_url in startup.video_urls %}
-                                 {% get_file_url_tag video_url startup.startup_id 'video' 'startup' as video_file_url %}
-                                 {% if video_file_url %}
-                                 <div class="file-preview-item existing-file" data-file-id="{{ video_url }}">
-                                     <video controls src="{{ video_file_url }}" style="max-width: 200px; max-height: 150px;"></video>
-                                     <p>{% get_file_original_name video_url startup.startup_id 'video' 'startup' %}</p>
-                                     <button type="button" class="delete-existing-file-btn" data-file-id="{{ video_url }}" data-file-type="video">Удалить</button>
-                                 </div>
-                                 {% endif %}
-                             {% endfor %}
+                            {% for video_url in startup.video_urls %}
+                                {% get_file_url_tag video_url startup.startup_id 'video' 'startup' as video_file_url %}
+                                {% if video_file_url %}
+                                <div class="file-preview-item existing-file" data-file-id="{{ video_url }}" style="position:relative;">
+                                    <video controls src="{{ video_file_url }}" style="max-width: 200px; max-height: 150px;"></video>
+                                    <p>{% get_file_original_name video_url startup.startup_id 'video' 'startup' %}</p>
+                                    {% if forloop.first %}
+                                    <span style="display:inline-block;padding:2px 8px;background:#28a745;color:#fff;border-radius:4px;font-size:11px;margin-bottom:4px;">Главное</span>
+                                    {% else %}
+                                    <button type="button" class="set-primary-video-btn" data-file-id="{{ video_url }}" style="display:inline-block;padding:2px 8px;background:#007bff;color:#fff;border:none;border-radius:4px;font-size:11px;cursor:pointer;margin-bottom:4px;">Сделать главным</button>
+                                    {% endif %}
+                                    <button type="button" class="delete-existing-file-btn" data-file-id="{{ video_url }}" data-file-type="video">Удалить</button>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
                         </div>
                         {% if form.video.errors %}<span class="error-message">{{ form.video.errors|first }}</span>{% endif %}
                         <div style="margin-top:10px;">
@@ -612,6 +617,45 @@ document.addEventListener('click', function(event) {
       arr.push({ id: fileId, type: fileType });
       deletedFilesInput.value = JSON.stringify(arr);
     } catch (_) {}
+  }
+});
+
+// "Сделать главным" video handler
+document.addEventListener('click', function(event) {
+  var btn = event.target.closest ? event.target.closest('.set-primary-video-btn') : null;
+  if (!btn) return;
+  var fileId = btn.getAttribute('data-file-id');
+  if (!fileId) return;
+  event.stopPropagation();
+  var existing = document.getElementById('primary-video-input');
+  if (!existing) {
+    existing = document.createElement('input');
+    existing.type = 'hidden';
+    existing.id = 'primary-video-input';
+    existing.name = 'primary_video_id';
+    var form = document.getElementById('startupForm') || document.querySelector('form');
+    if (form) form.appendChild(existing);
+  }
+  existing.value = fileId;
+  var preview = document.getElementById('videoPreview');
+  if (preview) {
+    preview.querySelectorAll('.file-preview-item').forEach(function(item) {
+      var badge = item.querySelector('span[style*="28a745"]');
+      if (badge) {
+        var newBtn = document.createElement('button');
+        newBtn.type = 'button';
+        newBtn.className = 'set-primary-video-btn';
+        newBtn.setAttribute('data-file-id', item.getAttribute('data-file-id'));
+        newBtn.style.cssText = 'display:inline-block;padding:2px 8px;background:#007bff;color:#fff;border:none;border-radius:4px;font-size:11px;cursor:pointer;margin-bottom:4px;';
+        newBtn.textContent = 'Сделать главным';
+        badge.replaceWith(newBtn);
+      }
+    });
+    var item = btn.closest('.file-preview-item');
+    var badge = document.createElement('span');
+    badge.style.cssText = 'display:inline-block;padding:2px 8px;background:#28a745;color:#fff;border-radius:4px;font-size:11px;margin-bottom:4px;';
+    badge.textContent = 'Главное';
+    btn.replaceWith(badge);
   }
 });
 
