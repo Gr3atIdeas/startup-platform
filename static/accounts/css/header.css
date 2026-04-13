@@ -389,7 +389,7 @@
 .nav-menu {
   display: flex;
   align-items: center;
-  flex-shrink: 1;
+  flex: 1;
   min-width: 0;
   gap: 16px;
 }
