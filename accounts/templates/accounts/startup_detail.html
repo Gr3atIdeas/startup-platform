@@ -99,24 +99,12 @@
             </form>
           {% endif %}
           
-          {% if hero_video or slider_images %}
-          <div class="startup-detail-carousel-track" id="mediaCarousel">
-            {% if hero_video %}
-              <div class="startup-detail-carousel-slide active" style="position:relative;">
-                <video src="{{ hero_video|resolve_url:file_url_map }}" autoplay muted loop playsinline preload="auto" id="heroVideo" class="startup-detail-carousel-image" style="width:100%;height:100%;object-fit:cover;"></video>
-                <button onclick="toggleHeroMute(this)" title="Включить звук" style="position:absolute;bottom:16px;right:16px;z-index:5;background:rgba(0,0,0,0.5);border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;">
-                  <i class="fas fa-volume-mute"></i>
-                </button>
-              </div>
-            {% endif %}
-            {% for url in slider_images|slice:":4" %}
-              <div class="startup-detail-carousel-slide {% if not hero_video and forloop.first %}active{% endif %}">
-                <img src="{{ url|resolve_url:file_url_map }}"
-                     alt="Изображение {{ forloop.counter }}"
-                     class="startup-detail-carousel-image"
-                     {% if not forloop.first %}loading="lazy"{% endif %} decoding="async">
-              </div>
-            {% endfor %}
+          {% if hero_video %}
+          <div style="position:relative; width:100%; border-radius:16px; overflow:hidden; aspect-ratio:16/9; background:#000;">
+            <video src="{{ hero_video|resolve_url:file_url_map }}" autoplay muted loop playsinline preload="auto" id="heroVideo" style="width:100%;height:100%;object-fit:cover;display:block;"></video>
+            <button onclick="toggleHeroMute(this)" title="Включить звук" style="position:absolute;bottom:16px;right:16px;z-index:5;background:rgba(0,0,0,0.5);border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;">
+              <i class="fas fa-volume-mute"></i>
+            </button>
           </div>
           <script>
           function toggleHeroMute(btn) {
@@ -127,6 +115,17 @@
             btn.title = v.muted ? 'Включить звук' : 'Выключить звук';
           }
           </script>
+          {% elif slider_images %}
+          <div class="startup-detail-carousel-track" id="mediaCarousel">
+            {% for url in slider_images|slice:":4" %}
+              <div class="startup-detail-carousel-slide {% if forloop.first %}active{% endif %}">
+                <img src="{{ url|resolve_url:file_url_map }}"
+                     alt="Изображение {{ forloop.counter }}"
+                     class="startup-detail-carousel-image"
+                     {% if not forloop.first %}loading="lazy"{% endif %} decoding="async">
+              </div>
+            {% endfor %}
+          </div>
           <div class="startup-detail-carousel-indicators">
             {% for url in slider_images|slice:":4" %}
               <span class="startup-detail-indicator {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></span>
