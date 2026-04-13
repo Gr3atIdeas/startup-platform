@@ -228,6 +228,10 @@ class StartupsAdmin(BaseEntityAdmin):
         ("Финансы", {
             "fields": ("funding_goal", "amount_raised", "total_invested", "valuation", "percent_amount"),
         }),
+        ("Медиа", {
+            "fields": ("video_urls",),
+            "description": "JSON-список ссылок на видео. Можно вставить прямой URL на S3, например: [\"https://storage.yandexcloud.net/bucket/video.mp4\"]",
+        }),
         ("Модерация", {
             "fields": ("status", "moderator_comment", "status_id"),
         }),
@@ -269,6 +273,10 @@ class FranchisesAdmin(BaseEntityAdmin):
         ("Финансы", {
             "fields": ("investment_size", "franchise_cost", "payback_period", "total_invested", "valuation"),
         }),
+        ("Медиа", {
+            "fields": ("video_urls",),
+            "description": "JSON-список ссылок на видео. Можно вставить прямой URL на S3, например: [\"https://storage.yandexcloud.net/bucket/video.mp4\"]",
+        }),
         ("Модерация", {
             "fields": ("status", "moderator_comment", "status_id"),
         }),
@@ -307,6 +315,10 @@ class AgenciesAdmin(BaseEntityAdmin):
         ("Классификация", {
             "fields": ("direction", "stage"),
         }),
+        ("Медиа", {
+            "fields": ("video_urls",),
+            "description": "JSON-список ссылок на видео. Пример: [\"https://storage.yandexcloud.net/bucket/video.mp4\"]",
+        }),
         ("Модерация", {
             "fields": ("status", "moderator_comment"),
         }),
@@ -344,6 +356,10 @@ class SpecialistsAdmin(BaseEntityAdmin):
         }),
         ("Классификация", {
             "fields": ("direction", "stage"),
+        }),
+        ("Медиа", {
+            "fields": ("video_urls",),
+            "description": "JSON-список ссылок на видео. Пример: [\"https://storage.yandexcloud.net/bucket/video.mp4\"]",
         }),
         ("Модерация", {
             "fields": ("status", "moderator_comment"),
