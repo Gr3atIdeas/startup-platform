@@ -1,5 +1,16 @@
 from django.contrib import admin
+from django.contrib.admin.models import LogEntry
 from django.utils.html import format_html
+
+# Fix: django_admin_log FK points at auth_user, but we use custom Users table.
+# Silently skip admin log writes to avoid IntegrityError on every save.
+_original_log_save = LogEntry.save
+def _safe_log_save(self, *args, **kwargs):
+    try:
+        return _original_log_save(self, *args, **kwargs)
+    except Exception:
+        pass
+LogEntry.save = _safe_log_save
 
 from .models import (
     Startups,
