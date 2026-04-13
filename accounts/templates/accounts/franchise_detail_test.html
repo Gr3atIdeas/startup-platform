@@ -342,6 +342,15 @@
         v.addEventListener('canplay', tryPlay);
         v.addEventListener('loadeddata', tryPlay);
         tryPlay();
+        /* Pause when scrolled out of viewport to free GPU */
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver(function(entries){
+            entries.forEach(function(e){
+              if (e.isIntersecting) { v.muted = true; tryPlay(); }
+              else { v.pause(); }
+            });
+          }, {threshold: 0.1}).observe(v);
+        }
       })();
       </script>
     {% elif slider_images %}
