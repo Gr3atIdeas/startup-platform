@@ -135,6 +135,8 @@
   align-items: center;
   flex-wrap: nowrap;
   gap: 16px;
+  flex: 1;
+  justify-content: center;
 }
 
 .header-nav-link {

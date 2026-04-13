@@ -204,100 +204,24 @@
         <div class="burger-overlay"></div>
       <nav class="nav-menu">
             <div class="header-nav-links">
-                {% if not user.is_authenticated %}
+                {# Unified nav: Главная, Каталог, Блог — same for all roles #}
                     <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
                     <div class="catalog-dropdown-container">
                         <button class="header-nav-link catalog-dropdown-button">Каталог</button>
                         <div class="catalog-dropdown-menu">
-                            <a href="{% url 'startups_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Стартапы
-                            </a>
-                            <a href="{% url 'franchises_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Франшизы
-                            </a>
-                            <a href="{% url 'agencies_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Агентства
-                            </a>
-                            <a href="{% url 'specialists_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Специалисты
-                            </a>
+                            <a href="{% url 'startups_list' %}" class="catalog-dropdown-item no-wave-effect">Стартапы</a>
+                            <a href="{% url 'franchises_list' %}" class="catalog-dropdown-item no-wave-effect">Франшизы</a>
+                            <a href="{% url 'agencies_list' %}" class="catalog-dropdown-item no-wave-effect">Агентства</a>
+                            <a href="{% url 'specialists_list' %}" class="catalog-dropdown-item no-wave-effect">Специалисты</a>
                         </div>
                     </div>
                     <div class="catalog-dropdown-overlay"></div>
                     <a href="{% url 'news' %}" class="header-nav-link">Блог</a>
-                    <a href="{% url 'faq' %}" class="header-nav-link">FAQ</a>
-                {% elif user.role.role_name == 'investor' %}
-                    <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
-                    <div class="catalog-dropdown-container">
-                        <button class="header-nav-link catalog-dropdown-button">Каталог</button>
-                        <div class="catalog-dropdown-menu">
-                            <a href="{% url 'startups_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Стартапы
-                            </a>
-                            <a href="{% url 'franchises_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Франшизы
-                            </a>
-                            <a href="{% url 'agencies_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Агентства
-                            </a>
-                            <a href="{% url 'specialists_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Специалисты
-                            </a>
-                        </div>
-                    </div>
-                    <div class="catalog-dropdown-overlay"></div>
-                    <a href="{% url 'investments' %}" class="header-nav-link">Портфель</a>
-                    <a href="{% url 'news' %}" class="header-nav-link">Блог</a>
-                    {% comment %}Hidden: CosmoChat temporarily disabled{% endcomment %}
-                {% elif user.role.role_name == 'startuper' %}
-                    <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
-                    <div class="catalog-dropdown-container">
-                        <button class="header-nav-link catalog-dropdown-button">Каталог</button>
-                        <div class="catalog-dropdown-menu">
-                            <a href="{% url 'startups_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Стартапы
-                            </a>
-                            <a href="{% url 'franchises_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Франшизы
-                            </a>
-                            <a href="{% url 'agencies_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Агентства
-                            </a>
-                            <a href="{% url 'specialists_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Специалисты
-                            </a>
-                        </div>
-                    </div>
-                    <div class="catalog-dropdown-overlay"></div>
-                    <a href="{% url 'my_startups' %}" class="header-nav-link">Мои стартапы</a>
-                    <a href="{% url 'news' %}" class="header-nav-link">Блог</a>
-                    {% comment %}Hidden: CosmoChat temporarily disabled{% endcomment %}
-                {% elif user.role.role_name == 'moderator' %}
-                    <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
-                    <div class="catalog-dropdown-container">
-                        <button class="header-nav-link catalog-dropdown-button">Каталог</button>
-                        <div class="catalog-dropdown-menu">
-                            <a href="{% url 'startups_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Стартапы
-                            </a>
-                            <a href="{% url 'franchises_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Франшизы
-                            </a>
-                            <a href="{% url 'agencies_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Агентства
-                            </a>
-                            <a href="{% url 'specialists_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                Специалисты
-                            </a>
-                        </div>
-                    </div>
-                    <div class="catalog-dropdown-overlay"></div>
-                    <a href="{% url 'news' %}" class="header-nav-link">Блог</a>
-                    {% comment %}Hidden: CosmoChat temporarily disabled{% endcomment %}
+                    {# Role-specific links #}
+                    {% if user.is_authenticated and user.role.role_name == 'moderator' %}
                     <a href="{% url 'moderator_dashboard' %}" class="header-nav-link">Заявки</a>
-                    {% comment %}Hidden: Deals temporarily disabled — only "Запросить условия" button remains{% endcomment %}
                     <a href="{% url 'franchise_import' %}" class="header-nav-link">AI-импорт</a>
-                {% endif %}
+                    {% endif %}
 
                 <div class="header-search-bar">
                     <input type="text" placeholder="Поиск..." class="header-search-input">
@@ -374,9 +298,7 @@
                     <div class="footer-menu-title">Меню</div>
                     <div class="footer-menu-links">
                         <a href="{% url 'startups_list' %}" class="footer-menu-link">Каталог</a>
-                        {% if user.is_authenticated and user.role.role_name == 'investor' %}
-                        <a href="{% url 'investments' %}" class="footer-menu-link">Портфель</a>
-                        {% endif %}
+                        {% comment %}Hidden: Портфель temporarily disabled — see HIDDEN_FEATURES.md{% endcomment %}
                         <a href="{% url 'startups_list' %}" class="footer-menu-link">Стартапы</a>
                         <a href="{% url 'franchises_list' %}" class="footer-menu-link">Франшизы</a>
                         <a href="{% url 'agencies_list' %}" class="footer-menu-link">Агентства</a>
