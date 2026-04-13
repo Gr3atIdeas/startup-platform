@@ -323,6 +323,20 @@
         btn.querySelector('i').className = v.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
         btn.title = v.muted ? 'Включить звук' : 'Выключить звук';
       }
+      (function(){
+        var v = document.getElementById('heroVideo');
+        if (!v) return;
+        function tryPlay() {
+          v.muted = true;
+          v.play().catch(function(){});
+        }
+        if (v.readyState >= 2) { tryPlay(); }
+        else { v.addEventListener('loadeddata', tryPlay); }
+        document.addEventListener('click', function once() {
+          v.play().catch(function(){});
+          document.removeEventListener('click', once);
+        });
+      })();
       </script>
     {% elif slider_images %}
       {% for url in slider_images|slice:":6" %}
