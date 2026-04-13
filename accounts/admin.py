@@ -402,7 +402,7 @@ class ModerationLogAdmin(admin.ModelAdmin):
         return False
 
     def has_delete_permission(self, request, obj=None):
-        return request.user.is_superuser
+        return getattr(request.user, 'is_superuser', False)
 
     def action_badge(self, obj):
         colors = {
