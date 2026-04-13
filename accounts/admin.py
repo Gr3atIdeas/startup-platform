@@ -1,21 +1,13 @@
 from django.contrib import admin
+from django.contrib.admin.options import ModelAdmin
 from django.utils.html import format_html
 
 
-# Fix: django_admin_log has FK to auth_user, but we use custom Users table.
-# Override AdminSite.log_* methods to skip writing to django_admin_log entirely.
-class _NoLogAdminSite(admin.AdminSite):
-    def log_addition(self, *args, **kwargs):
-        pass
-
-    def log_change(self, *args, **kwargs):
-        pass
-
-    def log_deletion(self, *args, **kwargs):
-        pass
-
-# Replace the default admin site globally
-admin.site.__class__ = _NoLogAdminSite
+# Fix: django_admin_log FK points at auth_user, but we use custom Users table.
+# Patch ModelAdmin to skip all log writes so no rows touch django_admin_log.
+ModelAdmin.log_addition = lambda self, *a, **kw: None
+ModelAdmin.log_change = lambda self, *a, **kw: None
+ModelAdmin.log_deletion = lambda self, *a, **kw: None
 
 from .models import (
     Startups,
