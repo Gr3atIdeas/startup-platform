@@ -15,19 +15,14 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install git (for hot-update) + curl (for GeoIP DB) in one layer to save RAM
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends git curl ca-certificates && \
-    mkdir -p /app/geoip && \
-    (curl -sSL -o /app/geoip/GeoLite2-City.mmdb \
-      "https://github.com/P3TERX/GeoLite.mmdb/releases/latest/download/GeoLite2-City.mmdb" || \
-    echo "WARNING: GeoLite2 download failed, geo features will be disabled") && \
-    apt-get purge -y curl && apt-get autoremove -y && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 COPY requirements.txt .
 
 RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt
+
+# Download GeoLite2 using Python (no apt-get needed)
+RUN mkdir -p /app/geoip && \
+    python -c "import urllib.request; urllib.request.urlretrieve('https://github.com/P3TERX/GeoLite.mmdb/releases/latest/download/GeoLite2-City.mmdb', '/app/geoip/GeoLite2-City.mmdb')" \
+    || echo "WARNING: GeoLite2 download failed, geo features will be disabled"
 
 COPY marketplace/ ./marketplace/
 COPY accounts/ ./accounts/
@@ -41,9 +36,8 @@ COPY static/accounts/ ./static/accounts/
 COPY sql/ ./sql/
 COPY content/ ./content/
 COPY entrypoint.sh .
-COPY update.sh .
 
-RUN chmod +x health_check.py entrypoint.sh update.sh \
+RUN chmod +x health_check.py entrypoint.sh \
     && mkdir -p /app/news_collector/data \
     && useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
