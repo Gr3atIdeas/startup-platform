@@ -3,509 +3,274 @@
 {% load socialaccount %}
 {% load accounts_extras %}
 
-{% block title %}Вход{% endblock %}
+{% block title %}Вход — Great Ideas{% endblock %}
 
 {% block head_extra %}
 {{ block.super }}
 <style>
-    /* Убираем старые стили фона */
-    /* #liquid-background-container ... */
-    /* #liquid-background-svg ... */
+    #main-header { display: none !important; }
+    .site-footer .footer-main-content { display: none; }
 
-    /* Устанавливаем черный фон для body */
-    body {
-        background: #000 !important;
-        overflow-x: hidden !important;
-        min-height: 100vh;
-    }
-
-    /* Скрываем header на странице входа */
-    #main-header {
-        display: none !important;
-    }
-
-    /* Стили для canvas звездного поля */
-    #starfield-canvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1; /* Позади всего контента */
-        display: block; /* Предотвращаем лишние отступы */
-    }
-
-    /* Позиционируем main.content для страницы входа */
     main.content {
         display: flex;
         justify-content: center;
         align-items: center;
         flex-grow: 1;
         padding: 20px !important;
-        padding-top: 0 !important;
-        position: relative;
-        z-index: 1;
         min-height: 100vh;
         box-sizing: border-box;
     }
 
-    /* Стили для основного контента (auth-container) */
-    .auth-container {
+    .login-wrapper {
+        width: 100%;
+        max-width: 420px;
         position: relative;
         z-index: 10;
-        background: rgba(40, 40, 40, 0.6);
-        backdrop-filter: blur(5px);
-        padding: 30px;
-        border-radius: var(--radius-md);
-        max-width: 450px;
+    }
+
+    .login-logo {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 32px;
+    }
+    .login-logo img {
+        height: 48px;
+        width: auto;
+    }
+
+    .login-card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 40px 32px;
+    }
+
+    .login-card h1 {
+        color: #fff;
+        font-family: Unbounded, sans-serif;
+        font-weight: 600;
+        font-size: 24px;
+        text-align: center;
+        margin: 0 0 28px;
+    }
+
+    .login-field {
+        margin-bottom: 18px;
+    }
+    .login-field label {
+        display: block;
+        color: rgba(255, 255, 255, 0.6);
+        font-family: Inter, sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        margin-bottom: 6px;
+    }
+    .login-field input {
         width: 100%;
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: #fff;
+        font-family: Inter, sans-serif;
+        font-size: 15px;
+        font-weight: 300;
+        outline: none;
+        transition: border-color 0.2s, background 0.2s;
         box-sizing: border-box;
-        margin: 0;
-        margin-top: 0;
     }
-    .auth-box {
-         background: transparent; /* Делаем внутренний бокс прозрачным */
-         box-shadow: none; /* Убираем тень */
-         padding: 0; /* Убираем внутренние отступы */
-         text-align: center; /* Центрируем текст внутри */
+    .login-field input:focus {
+        border-color: rgba(88, 101, 242, 0.6);
+        background: rgba(255, 255, 255, 0.08);
+    }
+    .login-field input::placeholder {
+        color: rgba(255, 255, 255, 0.25);
+    }
+    .login-field .errors {
+        color: #ff6b6b;
+        font-size: 12px;
+        margin-top: 4px;
+        list-style: none;
+        padding: 0;
     }
 
-    /* Дополнительные стили для формы, чтобы она выглядела хорошо на темном фоне */
-     .auth-box h1 {
-        color: #fff; /* Белый текст для заголовка */
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.5); /* Тень для читаемости */
-        margin-bottom: 25px; /* Добавим отступ снизу */
-     }
-     .auth-box .form-group {
-         margin-bottom: 15px; /* Отступ между полями */
-         text-align: left; /* Выравнивание текста по левому краю для полей */
-     }
-     .auth-box form label {
-        color: #eee; /* Светлый цвет для меток */
-        font-weight: bold;
-        display: block; /* Метка над полем */
-        margin-bottom: 5px;
-     }
-     /* Стилизуем стандартные виджеты Django */
-     .auth-box input[type="email"],
-     .auth-box input[type="password"] {
-         background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный фон для полей */
-         border: 1px solid rgba(255, 255, 255, 0.5);
-         color: #333;
-         padding: 10px;
-         border-radius: var(--radius-xs);
-         width: 100%;
-         box-sizing: border-box;
-     }
-     /* Убираем стили Django для ошибок по умолчанию, если они мешают */
-     .auth-box .errors {
-         color: #ffdddd;
-         font-size: 0.9em;
-         list-style: none;
-         padding: 5px 0 0 0;
-         margin: 0;
-     }
-      .auth-box button {
-         background-color: blue !important; /* Тест: Ярко-синяя кнопка */
-         border: 1px solid #FFFFFF; /* Белая рамка для контраста */
-         transition: background-color 0.3s, color 0.3s;
-         color: #FFFFFF !important; /* Белый текст, принудительно */
-         font-weight: bold;
-         padding: 12px 20px;
-         border-radius: var(--radius-xs);
-         cursor: pointer;
-         width: 100%;
-         margin-top: 10px;
-      }
-      .auth-box button:hover {
-         background-color: rgba(255, 239, 43, 0.9); /* Яркий желтый при наведении */
-         color: #333;
-      }
-     .auth-box p, .auth-box p a {
-         color: #eee; /* Светлый текст для ссылки регистрации */
-         text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-         margin-top: 20px; /* Отступ сверху для ссылки */
-         font-size: 0.9em;
-     }
-     .auth-box p a:hover {
-         color: #fff;
-         text-decoration: underline;
-     }
-     /* Стили для сообщений */
-     .messages {
-         padding: 0;
-         margin-bottom: 15px;
-     }
-     .messages li {
-         color: #fff;
-         background-color: rgba(0,0,0,0.5);
-         padding: 10px;
-         border-radius: var(--radius-xs);
-         margin-bottom: 10px;
-         list-style: none;
-         text-align: left;
-     }
-     .messages li.success { background-color: rgba(40, 167, 69, 0.7); }
-     .messages li.error { background-color: rgba(220, 53, 69, 0.7); }
-     .messages li.warning { background-color: rgba(255, 193, 7, 0.7); }
-     .messages li.info { background-color: rgba(23, 162, 184, 0.7); }
-
-    /* Стили для кнопки Telegram */
-    .telegram-login-btn {
-        display: inline-block;
-        background-color: #54A9EB; /* Telegram blue */
-        border: 1px solid #54A9EB;
-        transition: background-color 0.3s, color 0.3s;
-        color: #FFFFFF !important;
-        font-weight: bold;
-        padding: 12px 20px;
-        border-radius: var(--radius-xs);
+    .login-btn {
+        width: 100%;
+        padding: 14px;
+        margin-top: 8px;
+        background: linear-gradient(135deg, #5865f2 0%, #7b6cf6 100%);
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        font-family: Unbounded, sans-serif;
+        font-size: 15px;
+        font-weight: 500;
         cursor: pointer;
+        transition: opacity 0.2s, transform 0.15s;
+    }
+    .login-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+    .login-btn:active {
+        transform: translateY(0);
+    }
+
+    .login-divider {
+        display: flex;
+        align-items: center;
+        margin: 24px 0;
+        gap: 12px;
+    }
+    .login-divider::before,
+    .login-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.08);
+    }
+    .login-divider span {
+        color: rgba(255, 255, 255, 0.3);
+        font-family: Inter, sans-serif;
+        font-size: 12px;
+    }
+
+    .telegram-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
         width: 100%;
+        padding: 13px;
+        background: rgba(88, 101, 242, 0.12);
+        border: 1px solid rgba(88, 101, 242, 0.25);
+        border-radius: 12px;
+        color: #fff;
+        font-family: Inter, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
         text-decoration: none;
+        transition: background 0.2s, border-color 0.2s;
         box-sizing: border-box;
-        margin-top: 10px;
     }
-    .telegram-login-btn:hover {
-        background-color: #4894cf;
+    .telegram-btn:hover {
+        background: rgba(88, 101, 242, 0.2);
+        border-color: rgba(88, 101, 242, 0.4);
+        color: #fff;
+    }
+    .telegram-btn svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+    }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 24px;
+    }
+    .login-footer p {
+        color: rgba(255, 255, 255, 0.45);
+        font-family: Inter, sans-serif;
+        font-size: 14px;
+        font-weight: 300;
+        margin: 0;
+    }
+    .login-footer a {
+        color: #7b6cf6;
         text-decoration: none;
+        font-weight: 400;
+        transition: color 0.2s;
+    }
+    .login-footer a:hover {
+        color: #9b8fff;
     }
 
-    /* Скрытие основной части футера на странице входа */
-    .site-footer .footer-main-content {
-        display: none;
+    /* Messages */
+    .login-messages {
+        margin-bottom: 20px;
     }
-    /* Можно добавить стили для copyright bar, если нужно */
-    .footer-copyright-bar {
-         background-color: rgba(0, 0, 0, 0.8);
-         border-top: 1px solid rgba(255, 255, 255, 0.1);
+    .login-messages li {
+        color: #fff;
+        padding: 10px 14px;
+        border-radius: 10px;
+        margin-bottom: 8px;
+        list-style: none;
+        font-family: Inter, sans-serif;
+        font-size: 13px;
+        font-weight: 300;
     }
-
-    @media (max-width: 768px) {
-        main.content {
-            padding: 10px !important;
-            padding-top: 0 !important;
-            align-items: flex-start;
-        }
-
-        .auth-container {
-            padding: 20px 15px;
-            margin-top: 40px;
-            max-width: 100%;
-            position: relative;
-            z-index: 10;
-        }
-
-        .auth-box {
-            padding-top: 30px;
-        }
-
-        .auth-box h1 {
-            font-size: 20px;
-            margin-bottom: 15px;
-        }
-
-        .auth-box .form-group {
-            margin-bottom: 10px;
-        }
-
-        .auth-box input[type="email"],
-        .auth-box input[type="password"],
-        .auth-box input[type="text"] {
-            padding: 8px 10px;
-            font-size: 16px;
-        }
-
-        .auth-box button,
-        .telegram-login-btn {
-            padding: 10px 16px;
-            font-size: 15px;
-            margin-top: 12px;
-        }
-
-        .auth-box p {
-            margin-top: 12px;
-            font-size: 0.85em;
-        }
-    }
+    .login-messages li.success { background: rgba(40, 167, 69, 0.25); border: 1px solid rgba(40, 167, 69, 0.3); }
+    .login-messages li.error { background: rgba(220, 53, 69, 0.2); border: 1px solid rgba(220, 53, 69, 0.3); }
+    .login-messages li.warning { background: rgba(255, 193, 7, 0.15); border: 1px solid rgba(255, 193, 7, 0.25); }
 
     @media (max-width: 480px) {
-        main.content {
-            padding: 8px !important;
-            padding-top: 0 !important;
-            align-items: flex-start;
-        }
-
-        .auth-container {
-            padding: 18px 12px;
-            border-radius: var(--radius-sm);
-            position: relative;
-            z-index: 10;
-            margin-top: 40px;
-        }
-
-        .auth-box {
-            padding-top: 30px;
-        }
-
-        .auth-box h1 {
-            font-size: 18px;
-            margin-bottom: 12px;
-        }
-
-        .auth-box .form-group {
-            margin-bottom: 8px;
-        }
-
-        .auth-box input[type="email"],
-        .auth-box input[type="password"],
-        .auth-box input[type="text"] {
-            padding: 8px;
-            font-size: 16px;
-        }
-
-        .auth-box button,
-        .telegram-login-btn {
-            padding: 10px 14px;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-
-        .auth-box p {
-            margin-top: 10px;
-            font-size: 0.8em;
-        }
-    }
-
-    @media (max-height: 700px) {
-        main.content {
-            padding-top: 8px;
-        }
-
-        .auth-container {
-            padding: 15px 12px;
-            margin-top: 0;
-        }
-
-        .auth-box h1 {
-            font-size: 18px;
-            margin-bottom: 12px;
-        }
-
-        .auth-box .form-group {
-            margin-bottom: 8px;
-        }
-
-        .auth-box input[type="email"],
-        .auth-box input[type="password"],
-        .auth-box input[type="text"] {
-            padding: 7px;
-            font-size: 15px;
-        }
-
-        .auth-box button,
-        .telegram-login-btn {
-            padding: 9px 12px;
-            font-size: 14px;
-            margin-top: 8px;
-        }
+        .login-card { padding: 28px 20px; border-radius: 16px; }
+        .login-card h1 { font-size: 20px; }
     }
 </style>
 {% endblock %}
 
-
 {% block content %}
-    
-    <canvas id="starfield-canvas"></canvas>
-
-    
-    
-
-    <div class="auth-container">
-        <div class="auth-box">
-            <h1>Вход</h1>
-            <form method="post" autocomplete="off">
-                {% csrf_token %}
-                
-                <input type="hidden" name="next" value="{{ next|default:'' }}" />
-                <div style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">
-                    <label for="id_hp_field">Не заполняйте это поле</label>
-                    <input type="text" name="hp_field" id="id_hp_field" tabindex="-1" autocomplete="off" />
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-                    {{ form.email }}
-                    {% if form.email.errors %}
-                        <div class="errors">{{ form.email.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
-                    {{ form.password }}
-                    {% if form.password.errors %}
-                        <div class="errors">{{ form.password.errors }}</div>
-                    {% endif %}
-                </div>
-                {% if captcha_question %}
-                <div class="form-group">
-                    <label for="id_captcha_answer">{{ captcha_question }}</label>
-                    <input type="text" name="captcha_answer" id="id_captcha_answer" inputmode="numeric" pattern="[0-9]*" />
-                </div>
-                {% endif %}
-                <button type="submit">Войти</button>
-            </form>
-            <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
-            
-            <div style="display: flex; align-items: center; text-align: center; margin: 20px 0;">
-                <div style="flex-grow: 1; height: 1px; background-color: #555;"></div>
-                <span style="padding: 0 10px; color: #ccc;">или</span>
-                <div style="flex-grow: 1; height: 1px; background-color: #555;"></div>
-            </div>
-
-            <a href="{% get_telegram_login_url %}" class="telegram-login-btn">
-                Войти через Telegram
-            </a>
-
-        </div>
+<div class="login-wrapper">
+    <div class="login-logo">
+        <a href="{% url 'home' %}">
+            <img src="{% static 'accounts/images/white_logo_header.svg' %}" alt="Great Ideas">
+        </a>
     </div>
 
+    <div class="login-card">
+        <h1>Вход</h1>
 
+        {% if messages %}
+        <ul class="login-messages">
+            {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
+        <form method="post" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next|default:'' }}" />
+            <div style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
+                <label for="id_hp_field">Не заполняйте это поле</label>
+                <input type="text" name="hp_field" id="id_hp_field" tabindex="-1" autocomplete="off" />
+            </div>
 
-<script>
-// Оборачиваем в DOMContentLoaded для гарантии наличия canvas
-document.addEventListener('DOMContentLoaded', () => {
-    const D=document;
-    // Убрано прямое изменение стилей body: d=D.body.style;d.margin=0;d.overflow="hidden";
-    const c=window;
-    let d=c.innerWidth; // Ширина окна
-    let e=c.innerHeight; // Высота окна
-    // Изменено: Получаем canvas по ID
-    const g=D.getElementById('starfield-canvas'); // g = canvas element
-    if (!g) {
-        return;
-    }
-    let i=d/2; // mouse x center
-    let j=e/2; // mouse y center
-    g.width=d;
-    g.height=e;
-    const k=g.getContext("2d"); // k = context
-    if (!k) {
-        return;
-    }
-    // Добавляем переменные для плавного смещения
-    let targetOffsetX = d / 2;
-    let targetOffsetY = e / 2;
-    let currentOffsetX = d / 2;
-    let currentOffsetY = e / 2;
+            <div class="login-field">
+                <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email }}
+                {% if form.email.errors %}<div class="errors">{{ form.email.errors }}</div>{% endif %}
+            </div>
 
-    k.globalAlpha = 0.7; // Возвращаем полупрозрачность для эффекта свечения
-    const l=Math;
-    const m=l.random;
-    const n=l.sin;
-    const o=l.floor;
-    const p=10; // Начальный множитель для координат (z-координата?)
-    const q=[]; // Массив звезд
-    let r=0; // Переменная для синуса (цвет)
-    let s=0.05; // Скорость приближения звезд - ЗАМЕДЛИЛИ ЕЩЕ
-    const V=750; // Количество звезд - УВЕЛИЧИЛИ
-    const W=190; // Базовое значение для цвета
-    const Q=0.3; // Множитель для синуса (разнообразие цветов)
+            <div class="login-field">
+                <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                {{ form.password }}
+                {% if form.password.errors %}<div class="errors">{{ form.password.errors }}</div>{% endif %}
+            </div>
 
-    function E(eventName, handler) {
-        // Используем window вместо canvas для событий мыши, чтобы они работали по всему экрану
-        c.addEventListener(eventName, handler, false);
-    }
+            {% if captcha_question %}
+            <div class="login-field">
+                <label for="id_captcha_answer">{{ captcha_question }}</label>
+                <input type="text" name="captcha_answer" id="id_captcha_answer" inputmode="numeric" pattern="[0-9]*" />
+            </div>
+            {% endif %}
 
-    // Обработчик движения мыши - Обновляем целевое смещение
-    E("mousemove", function(a){
-        targetOffsetX=a.clientX;
-        targetOffsetY=a.clientY;
-    });
+            <button type="submit" class="login-btn">Войти</button>
+        </form>
 
-    // Инициализация/Сброс звезды
-    function u(a) { // a = star object
-        a.x=(m()*d - d*0.5)*p; // Случайное X в пределах (-d/2*p, d/2*p)
-        a.y=(m()*e - e*0.5)*p; // Случайное Y в пределах (-e/2*p, e/2*p)
-        a.a = p; // Z-координата (глубина/масштаб), НАЧИНАЕТСЯ ДАЛЕКО
-        // a.b=0; // Предыдущая экранная X координата - НЕ НУЖНА
-        // a.c=0; // Предыдущая экранная Y координата - НЕ НУЖНА
-    }
+        <div class="login-divider"><span>или</span></div>
 
-    // Создаем начальные звезды
-    for(let v=0; v<V; v++) {
-        let w={}; // w = star object
-        u(w);
-        q.push(w);
-    }
+        <a href="{% get_telegram_login_url %}" class="telegram-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            Войти через Telegram
+        </a>
 
-    // Функция основного цикла анимации
-    function drawFrame() {
-        k.fillStyle="#000"; // Черный фон на каждом кадре
-        k.fillRect(0,0,d,e);
-
-        // Центр смещения (зависит от положения мыши) - ЗАМЕНЕНО НА ПЛАВНОЕ СМЕЩЕНИЕ
-        // const offsetX = i; // Используем напрямую позицию мыши
-        // const offsetY = j;
-
-        // Плавно интерполируем текущее смещение к целевому
-        const interpolationFactor = 0.03; // Меньше значение = ЕЩЕ более плавное/медленное движение
-        currentOffsetX += (targetOffsetX - currentOffsetX) * interpolationFactor;
-        currentOffsetY += (targetOffsetY - currentOffsetY) * interpolationFactor;
-
-        for(let h=0; h<V; h++) {
-            const b = q[h]; // b = текущая звезда
-            const currentX = b.x / b.a; // Экранная X = Мировая X / Глубина
-            const currentY = b.y / b.a; // Экранная Y = Мировая Y / Глубина
-            // Увеличиваем базовый размер звезд для видимости
-            const baseSize = 1 / b.a * 2.5 + 0.5; // Сделали звезды чуть меньше
-            // Добавляем фактор мерцания
-            const twinkleFactor = 0.8 + Math.random() * 0.4; // Сделали мерцание менее резким
-            const z = baseSize * twinkleFactor; // Итоговый размер с мерцанием
-
-            // Рисуем белую круглую "голову" звезды
-            k.fillStyle = '#fff'; // Устанавливаем белый цвет
-            k.beginPath();
-            // Рисуем круг: arc(x, y, radius, startAngle, endAngle) - ИСПОЛЬЗУЕМ ПЛАВНОЕ СМЕЩЕНИЕ и размер z
-            k.arc(currentX + currentOffsetX, currentY + currentOffsetY, z / 2, 0, Math.PI * 2); // Делим z на 2 для радиуса
-            k.fill();
-
-            // Приближаем звезду (уменьшаем глубину)
-            b.a -= s;
-
-            // Если звезда вышла за пределы глубины или экрана, сбрасываем её
-            // Проверяем экранные координаты со смещением - ИСПОЛЬЗУЕМ ПЛАВНОЕ СМЕЩЕНИЕ
-            const screenX = currentX + currentOffsetX;
-            const screenY = currentY + currentOffsetY;
-            // Условие сброса: звезда слишком близко или ушла за экран
-            if(b.a < 0.01 || screenX < -z || screenX > d + z || screenY < -z || screenY > e + z) {
-                 u(b); // Сбросить звезду в центр "туннеля"
-                 // Сбрасываем предыдущие координаты - НЕ НУЖНО
-                 // b.b = 0;
-                 // b.c = 0;
-            }
-        }
-        r += 0.015; // Увеличиваем фазу для пульсации цвета (сейчас не влияет на цвет звезд)
-    }
-
-    // Обработчик изменения размера окна
-    function onResize() {
-        d = c.innerWidth;
-        e = c.innerHeight;
-        g.width = d;
-        g.height = e;
-        // Сбрасываем предыдущие координаты звезд при ресайзе, чтобы избежать артефактов
-        for(let star of q) {
-           star.b = 0;
-           star.c = 0;
-        }
-    }
-    c.addEventListener('resize', onResize, false);
-
-    // Запускаем анимацию
-    setInterval(drawFrame, 25);
-});
-</script>
-
+        <div class="login-footer">
+            <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+        </div>
+    </div>
+</div>
 {% endblock %}
