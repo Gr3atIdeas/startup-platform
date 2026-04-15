@@ -13158,3 +13158,91 @@ def franchise_import(request):
         "warnings": warnings,
         "franchise": franchise,
     })
+
+
+def franchise_quiz(request):
+    """Franchise quiz/calculator page."""
+    from .models import Directions
+
+    directions_qs = Directions.objects.filter(
+        franchises__status='approved'
+    ).distinct().order_by('direction_name')
+    directions = [{"id": d.direction_id, "name": d.direction_name} for d in directions_qs]
+    return render(request, "accounts/franchise_quiz.html", {"directions": directions})
+
+
+def franchise_quiz_results(request):
+    """AJAX endpoint returning matching franchises for the quiz."""
+    from django.http import JsonResponse
+    from .models import Franchises
+    from django.db.models import F, Value, FloatField
+    from django.db.models.functions import Coalesce
+
+    if request.method != "POST":
+        return JsonResponse({"error": "POST only"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+    budget_min = int(data.get("budget_min", 0))
+    budget_max = int(data.get("budget_max", 99999999))
+    direction_id = data.get("direction_id")
+    payback_max = int(data.get("payback_max", 60))
+
+    qs = Franchises.objects.filter(status="approved")
+
+    if budget_max < 99999999:
+        qs = qs.filter(investment_size__lte=budget_max)
+    if budget_min > 0:
+        qs = qs.filter(investment_size__gte=budget_min)
+    if direction_id:
+        qs = qs.filter(direction_id=direction_id)
+    if payback_max < 60:
+        qs = qs.filter(payback_period__lte=payback_max)
+
+    qs = qs.annotate(
+        rating=Coalesce(
+            F('sum_votes') * 1.0 / F('total_voters'),
+            Value(0.0),
+            output_field=FloatField()
+        )
+    ).order_by('-rating', '-created_at')[:12]
+
+    base_url = getattr(settings, "S3_PUBLIC_BASE_URL", "")
+
+    results = []
+    for f in qs:
+        logo = ""
+        if f.catalog_card_image:
+            logo = f"{base_url}/{f.catalog_card_image}"
+        elif f.logo_urls and len(f.logo_urls) > 0:
+            url = f.logo_urls[0]
+            if not url.startswith("http"):
+                url = f"{base_url}/{url}"
+            logo = url
+
+        investment = ""
+        if f.investment_size:
+            inv = int(f.investment_size)
+            if inv >= 1000000:
+                investment = f"от {inv / 1000000:.1f} млн ₽".replace(".0 ", " ")
+            else:
+                investment = f"от {inv:,} ₽".replace(",", " ")
+
+        results.append({
+            "title": f.title,
+            "slug": f.slug,
+            "short_description": (f.short_description or "")[:120],
+            "investment": investment,
+            "investment_raw": int(f.investment_size) if f.investment_size else 0,
+            "direction": f.direction.direction_name if f.direction else "",
+            "logo": logo,
+            "payback": f.payback_period,
+        })
+
+    return JsonResponse({
+        "count": len(results),
+        "franchises": results,
+    })

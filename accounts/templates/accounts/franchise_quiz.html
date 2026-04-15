@@ -1,0 +1,762 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load accounts_extras %}
+
+{% block title %}Подбор франшизы — найдите идеальный бизнес | GreatIdeas{% endblock %}
+{% block meta_description %}<meta name="description" content="Пройдите короткий тест и подберите идеальную франшизу по вашему бюджету, сфере интересов и срокам окупаемости. Бесплатный калькулятор подбора франшиз на GreatIdeas.">{% endblock %}
+{% block canonical %}<link rel="canonical" href="https://www.greatideas.ru/franchise-quiz/">{% endblock %}
+{% block og_tags %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Great Ideas">
+<meta property="og:title" content="Подбор франшизы — найдите идеальный бизнес | GreatIdeas">
+<meta property="og:description" content="Пройдите короткий тест и подберите идеальную франшизу по вашему бюджету и интересам.">
+<meta property="og:image" content="{% static 'accounts/images/layout/gi_logo.svg' %}">
+<meta property="og:url" content="https://www.greatideas.ru/franchise-quiz/">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Подбор франшизы — найдите идеальный бизнес | GreatIdeas">
+<meta name="twitter:description" content="Пройдите короткий тест и подберите идеальную франшизу.">
+{% endblock %}
+
+{% block custom_styles %}
+<style>
+/* ===== Franchise Quiz Styles ===== */
+.fq-container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+  min-height: 60vh;
+}
+
+.fq-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.fq-header h1 {
+  font-family: Unbounded, sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 12px;
+  color: #fff;
+}
+
+.fq-header p {
+  font-family: Inter, sans-serif;
+  font-size: 1.05rem;
+  color: rgba(255,255,255,.65);
+  margin: 0;
+}
+
+/* Progress bar */
+.fq-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 36px;
+}
+
+.fq-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.fq-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5865f2, #7c8aff);
+  border-radius: 3px;
+  transition: width .4s ease;
+  width: 25%;
+}
+
+.fq-progress-text {
+  font-family: Inter, sans-serif;
+  font-size: .85rem;
+  color: rgba(255,255,255,.5);
+  white-space: nowrap;
+}
+
+/* Step container */
+.fq-step {
+  display: none;
+  animation: fqFadeIn .35s ease;
+}
+
+.fq-step.fq-active {
+  display: block;
+}
+
+@keyframes fqFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fq-step-title {
+  font-family: Unbounded, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 28px;
+  text-align: center;
+}
+
+/* Option cards grid */
+.fq-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.fq-option {
+  background: rgba(255,255,255,.05);
+  border: 2px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  padding: 22px 20px;
+  cursor: pointer;
+  transition: all .25s ease;
+  text-align: center;
+  font-family: Inter, sans-serif;
+  font-size: .95rem;
+  color: rgba(255,255,255,.85);
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.fq-option::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  opacity: 0;
+  background: radial-gradient(circle at center, rgba(88,101,242,.15), transparent 70%);
+  transition: opacity .25s ease;
+}
+
+.fq-option:hover {
+  border-color: rgba(88,101,242,.4);
+  background: rgba(255,255,255,.08);
+  transform: translateY(-2px);
+}
+
+.fq-option:hover::before {
+  opacity: 1;
+}
+
+.fq-option.fq-selected {
+  border-color: #5865f2;
+  background: rgba(88,101,242,.12);
+  box-shadow: 0 0 24px rgba(88,101,242,.2), inset 0 0 20px rgba(88,101,242,.06);
+}
+
+.fq-option.fq-selected::after {
+  content: '\2713';
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: .85rem;
+  color: #5865f2;
+  font-weight: 700;
+}
+
+.fq-option-icon {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.fq-option-label {
+  position: relative;
+  z-index: 1;
+}
+
+/* Navigation */
+.fq-nav {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 36px;
+}
+
+.fq-btn {
+  font-family: Inter, sans-serif;
+  font-size: .95rem;
+  font-weight: 600;
+  padding: 12px 32px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.fq-btn-back {
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.7);
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.fq-btn-back:hover {
+  background: rgba(255,255,255,.12);
+  color: #fff;
+}
+
+/* Loading */
+.fq-loading {
+  display: none;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.fq-loading.fq-active {
+  display: block;
+  animation: fqFadeIn .3s ease;
+}
+
+.fq-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255,255,255,.1);
+  border-top-color: #5865f2;
+  border-radius: 50%;
+  animation: fqSpin .8s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes fqSpin {
+  to { transform: rotate(360deg); }
+}
+
+.fq-loading-text {
+  font-family: Inter, sans-serif;
+  font-size: 1.05rem;
+  color: rgba(255,255,255,.6);
+}
+
+/* Results */
+.fq-results {
+  display: none;
+  animation: fqFadeIn .4s ease;
+}
+
+.fq-results.fq-active {
+  display: block;
+}
+
+.fq-results-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.fq-results-header h2 {
+  font-family: Unbounded, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.fq-results-header p {
+  font-family: Inter, sans-serif;
+  color: rgba(255,255,255,.55);
+  font-size: .95rem;
+  margin: 0;
+}
+
+.fq-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.fq-card {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform .2s ease, border-color .2s ease;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+}
+
+.fq-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(88,101,242,.35);
+}
+
+.fq-card-img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  background: rgba(255,255,255,.03);
+}
+
+.fq-card-img-placeholder {
+  width: 100%;
+  height: 170px;
+  background: linear-gradient(135deg, rgba(88,101,242,.15), rgba(88,101,242,.05));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: rgba(88,101,242,.4);
+}
+
+.fq-card-body {
+  padding: 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.fq-card-title {
+  font-family: Unbounded, sans-serif;
+  font-size: .95rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 8px;
+  line-height: 1.3;
+}
+
+.fq-card-desc {
+  font-family: Inter, sans-serif;
+  font-size: .85rem;
+  color: rgba(255,255,255,.55);
+  margin: 0 0 14px;
+  line-height: 1.45;
+  flex: 1;
+}
+
+.fq-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fq-card-tag {
+  font-family: Inter, sans-serif;
+  font-size: .75rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(88,101,242,.12);
+  color: rgba(255,255,255,.7);
+  border: 1px solid rgba(88,101,242,.2);
+}
+
+/* Empty state */
+.fq-empty {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.fq-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: .4;
+}
+
+.fq-empty h3 {
+  font-family: Unbounded, sans-serif;
+  font-size: 1.15rem;
+  color: #fff;
+  margin: 0 0 12px;
+}
+
+.fq-empty p {
+  font-family: Inter, sans-serif;
+  color: rgba(255,255,255,.5);
+  font-size: .95rem;
+  margin: 0 0 24px;
+}
+
+/* Action buttons */
+.fq-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.fq-btn-primary {
+  background: linear-gradient(135deg, #5865f2, #4752c4);
+  color: #fff;
+  padding: 13px 34px;
+  border-radius: 10px;
+  border: none;
+  font-family: Inter, sans-serif;
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all .2s ease;
+}
+
+.fq-btn-primary:hover {
+  background: linear-gradient(135deg, #6872f5, #5865f2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(88,101,242,.35);
+  color: #fff;
+}
+
+.fq-btn-secondary {
+  background: rgba(255,255,255,.07);
+  color: rgba(255,255,255,.75);
+  padding: 13px 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  font-family: Inter, sans-serif;
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all .2s ease;
+}
+
+.fq-btn-secondary:hover {
+  background: rgba(255,255,255,.12);
+  color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .fq-container { padding: 24px 16px 60px; }
+  .fq-header h1 { font-size: 1.45rem; }
+  .fq-step-title { font-size: 1.1rem; }
+  .fq-options { grid-template-columns: 1fr; gap: 10px; }
+  .fq-option { padding: 16px; }
+  .fq-results-grid { grid-template-columns: 1fr; }
+  .fq-results-header h2 { font-size: 1.2rem; }
+  .fq-actions { flex-direction: column; align-items: stretch; }
+  .fq-btn-primary, .fq-btn-secondary { text-align: center; }
+}
+
+@media (min-width: 641px) and (max-width: 900px) {
+  .fq-options { grid-template-columns: repeat(2, 1fr); }
+  .fq-results-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="fq-container">
+  <div class="fq-header">
+    <h1>Подберём франшизу для вас</h1>
+    <p>Ответьте на 4 вопроса и получите персональную подборку</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="fq-progress" id="fqProgress">
+    <div class="fq-progress-bar">
+      <div class="fq-progress-fill" id="fqProgressFill"></div>
+    </div>
+    <span class="fq-progress-text" id="fqProgressText">Шаг 1 из 4</span>
+  </div>
+
+  <!-- Step 1: Budget -->
+  <div class="fq-step fq-active" data-step="1">
+    <h2 class="fq-step-title">Сколько вы готовы вложить?</h2>
+    <div class="fq-options">
+      <div class="fq-option" data-budget-min="0" data-budget-max="300000" onclick="fqSelect(this, 'budget')">
+        <span class="fq-option-icon">💰</span>
+        <span class="fq-option-label">До 300 000 ₽</span>
+      </div>
+      <div class="fq-option" data-budget-min="300000" data-budget-max="700000" onclick="fqSelect(this, 'budget')">
+        <span class="fq-option-icon">💰</span>
+        <span class="fq-option-label">300 000 – 700 000 ₽</span>
+      </div>
+      <div class="fq-option" data-budget-min="700000" data-budget-max="1500000" onclick="fqSelect(this, 'budget')">
+        <span class="fq-option-icon">💎</span>
+        <span class="fq-option-label">700 000 – 1 500 000 ₽</span>
+      </div>
+      <div class="fq-option" data-budget-min="1500000" data-budget-max="3000000" onclick="fqSelect(this, 'budget')">
+        <span class="fq-option-icon">💎</span>
+        <span class="fq-option-label">1 500 000 – 3 000 000 ₽</span>
+      </div>
+      <div class="fq-option" data-budget-min="3000000" data-budget-max="99999999" onclick="fqSelect(this, 'budget')">
+        <span class="fq-option-icon">🏦</span>
+        <span class="fq-option-label">Более 3 000 000 ₽</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Direction -->
+  <div class="fq-step" data-step="2">
+    <h2 class="fq-step-title">Какая сфера бизнеса вам ближе?</h2>
+    <div class="fq-options">
+      <div class="fq-option" data-direction-id="" onclick="fqSelect(this, 'direction')">
+        <span class="fq-option-icon">🌐</span>
+        <span class="fq-option-label">Любая</span>
+      </div>
+      {% for d in directions %}
+      <div class="fq-option" data-direction-id="{{ d.id }}" onclick="fqSelect(this, 'direction')">
+        <span class="fq-option-label">{{ d.name }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="fq-nav">
+      <button class="fq-btn fq-btn-back" onclick="fqBack()">&#8592; Назад</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Payback -->
+  <div class="fq-step" data-step="3">
+    <h2 class="fq-step-title">Какой срок окупаемости вас устроит?</h2>
+    <div class="fq-options">
+      <div class="fq-option" data-payback="12" onclick="fqSelect(this, 'payback')">
+        <span class="fq-option-icon">⚡</span>
+        <span class="fq-option-label">До 12 месяцев</span>
+      </div>
+      <div class="fq-option" data-payback="24" onclick="fqSelect(this, 'payback')">
+        <span class="fq-option-icon">📈</span>
+        <span class="fq-option-label">12–24 месяца</span>
+      </div>
+      <div class="fq-option" data-payback="36" onclick="fqSelect(this, 'payback')">
+        <span class="fq-option-icon">📊</span>
+        <span class="fq-option-label">24–36 месяцев</span>
+      </div>
+      <div class="fq-option" data-payback="60" onclick="fqSelect(this, 'payback')">
+        <span class="fq-option-icon">♾️</span>
+        <span class="fq-option-label">Не важно</span>
+      </div>
+    </div>
+    <div class="fq-nav">
+      <button class="fq-btn fq-btn-back" onclick="fqBack()">&#8592; Назад</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Experience -->
+  <div class="fq-step" data-step="4">
+    <h2 class="fq-step-title">Есть ли у вас опыт в бизнесе?</h2>
+    <div class="fq-options">
+      <div class="fq-option" data-experience="none" onclick="fqSelect(this, 'experience')">
+        <span class="fq-option-icon">🌱</span>
+        <span class="fq-option-label">Нет, я новичок</span>
+      </div>
+      <div class="fq-option" data-experience="some" onclick="fqSelect(this, 'experience')">
+        <span class="fq-option-icon">💼</span>
+        <span class="fq-option-label">Есть опыт, но не во франчайзинге</span>
+      </div>
+      <div class="fq-option" data-experience="franchise" onclick="fqSelect(this, 'experience')">
+        <span class="fq-option-icon">🏆</span>
+        <span class="fq-option-label">Да, у меня есть опыт с франшизами</span>
+      </div>
+    </div>
+    <div class="fq-nav">
+      <button class="fq-btn fq-btn-back" onclick="fqBack()">&#8592; Назад</button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="fq-loading" id="fqLoading">
+    <div class="fq-spinner"></div>
+    <p class="fq-loading-text">Подбираем франшизы по вашим критериям...</p>
+  </div>
+
+  <!-- Results -->
+  <div class="fq-results" id="fqResults">
+    <div class="fq-results-header">
+      <h2 id="fqResultsTitle"></h2>
+      <p id="fqResultsSubtitle"></p>
+    </div>
+    <div class="fq-results-grid" id="fqResultsGrid"></div>
+    <div class="fq-empty" id="fqEmpty" style="display:none;">
+      <div class="fq-empty-icon">🔍</div>
+      <h3>К сожалению, по вашим критериям ничего не найдено</h3>
+      <p>Попробуйте изменить параметры или посмотрите весь каталог</p>
+      <div class="fq-actions">
+        <button class="fq-btn-primary" onclick="fqRestart()">Смягчить критерии</button>
+        <a href="/franchises/" class="fq-btn-secondary">Посмотреть все франшизы</a>
+      </div>
+    </div>
+    <div class="fq-actions" id="fqResultsActions">
+      <a href="/franchises/" class="fq-btn-primary" id="fqCatalogLink">Показать все в каталоге</a>
+      <button class="fq-btn-secondary" onclick="fqRestart()">Пройти заново</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var state = { step: 1, budget_min: 0, budget_max: 99999999, direction_id: null, payback_max: 60, experience: null };
+  var totalSteps = 4;
+  var csrfToken = '{{ csrf_token }}';
+
+  function updateProgress() {
+    var pct = (state.step / totalSteps) * 100;
+    document.getElementById('fqProgressFill').style.width = pct + '%';
+    document.getElementById('fqProgressText').textContent = 'Шаг ' + state.step + ' из ' + totalSteps;
+  }
+
+  function showStep(n) {
+    state.step = n;
+    var steps = document.querySelectorAll('.fq-step');
+    steps.forEach(function(s) { s.classList.remove('fq-active'); });
+    var target = document.querySelector('.fq-step[data-step="' + n + '"]');
+    if (target) target.classList.add('fq-active');
+    updateProgress();
+    document.getElementById('fqProgress').style.display = (n > totalSteps) ? 'none' : '';
+  }
+
+  window.fqSelect = function(el, type) {
+    // Deselect siblings
+    var siblings = el.parentElement.querySelectorAll('.fq-option');
+    siblings.forEach(function(s) { s.classList.remove('fq-selected'); });
+    el.classList.add('fq-selected');
+
+    if (type === 'budget') {
+      state.budget_min = parseInt(el.dataset.budgetMin) || 0;
+      state.budget_max = parseInt(el.dataset.budgetMax) || 99999999;
+    } else if (type === 'direction') {
+      state.direction_id = el.dataset.directionId ? parseInt(el.dataset.directionId) : null;
+    } else if (type === 'payback') {
+      state.payback_max = parseInt(el.dataset.payback) || 60;
+    } else if (type === 'experience') {
+      state.experience = el.dataset.experience;
+    }
+
+    // Auto-advance after short delay
+    setTimeout(function() {
+      if (state.step < totalSteps) {
+        showStep(state.step + 1);
+      } else {
+        submitQuiz();
+      }
+    }, 300);
+  };
+
+  window.fqBack = function() {
+    if (state.step > 1) {
+      showStep(state.step - 1);
+    }
+  };
+
+  function submitQuiz() {
+    // Hide steps, show loading
+    document.querySelectorAll('.fq-step').forEach(function(s) { s.classList.remove('fq-active'); });
+    document.getElementById('fqProgress').style.display = 'none';
+    document.getElementById('fqLoading').classList.add('fq-active');
+
+    var body = JSON.stringify({
+      budget_min: state.budget_min,
+      budget_max: state.budget_max,
+      direction_id: state.direction_id,
+      payback_max: state.payback_max
+    });
+
+    fetch('/franchise-quiz/results/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken
+      },
+      body: body
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      document.getElementById('fqLoading').classList.remove('fq-active');
+      renderResults(data);
+    })
+    .catch(function(err) {
+      document.getElementById('fqLoading').classList.remove('fq-active');
+      renderResults({ count: 0, franchises: [] });
+    });
+  }
+
+  function renderResults(data) {
+    var container = document.getElementById('fqResults');
+    var grid = document.getElementById('fqResultsGrid');
+    var empty = document.getElementById('fqEmpty');
+    var actions = document.getElementById('fqResultsActions');
+    var title = document.getElementById('fqResultsTitle');
+    var subtitle = document.getElementById('fqResultsSubtitle');
+
+    grid.innerHTML = '';
+
+    if (data.count === 0) {
+      empty.style.display = '';
+      actions.style.display = 'none';
+      title.textContent = '';
+      subtitle.textContent = '';
+    } else {
+      empty.style.display = 'none';
+      actions.style.display = '';
+      title.textContent = 'Найдено ' + data.count + ' ' + pluralize(data.count, 'франшиза', 'франшизы', 'франшиз') + ' для вас';
+      subtitle.textContent = 'Подобрано на основе ваших ответов';
+
+      data.franchises.forEach(function(f) {
+        var card = document.createElement('a');
+        card.className = 'fq-card';
+        card.href = '/franchises/' + f.slug + '/';
+
+        var imgHtml;
+        if (f.logo) {
+          imgHtml = '<img class="fq-card-img" src="' + escapeHtml(f.logo) + '" alt="' + escapeHtml(f.title) + '" loading="lazy">';
+        } else {
+          imgHtml = '<div class="fq-card-img-placeholder">&#9733;</div>';
+        }
+
+        var desc = f.short_description || '';
+        if (desc.length > 120) desc = desc.substring(0, 117) + '...';
+
+        var tags = '';
+        if (f.investment) {
+          tags += '<span class="fq-card-tag">' + escapeHtml(f.investment) + '</span>';
+        }
+        if (f.direction) {
+          tags += '<span class="fq-card-tag">' + escapeHtml(f.direction) + '</span>';
+        }
+        if (f.payback && f.payback < 60) {
+          tags += '<span class="fq-card-tag">Окупаемость: ' + f.payback + ' мес.</span>';
+        }
+
+        card.innerHTML = imgHtml +
+          '<div class="fq-card-body">' +
+            '<h3 class="fq-card-title">' + escapeHtml(f.title) + '</h3>' +
+            '<p class="fq-card-desc">' + escapeHtml(desc) + '</p>' +
+            '<div class="fq-card-meta">' + tags + '</div>' +
+          '</div>';
+
+        grid.appendChild(card);
+      });
+    }
+
+    container.classList.add('fq-active');
+  }
+
+  function pluralize(n, one, few, many) {
+    var abs = Math.abs(n) % 100;
+    var n1 = abs % 10;
+    if (abs > 10 && abs < 20) return many;
+    if (n1 > 1 && n1 < 5) return few;
+    if (n1 === 1) return one;
+    return many;
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  window.fqRestart = function() {
+    state = { step: 1, budget_min: 0, budget_max: 99999999, direction_id: null, payback_max: 60, experience: null };
+    document.getElementById('fqResults').classList.remove('fq-active');
+    document.getElementById('fqLoading').classList.remove('fq-active');
+    // Clear selections
+    document.querySelectorAll('.fq-option').forEach(function(o) { o.classList.remove('fq-selected'); });
+    showStep(1);
+  };
+
+  // Init
+  updateProgress();
+})();
+</script>
+{% endblock %}
