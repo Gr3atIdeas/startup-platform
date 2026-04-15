@@ -685,8 +685,9 @@ class NewsArticlesAdmin(admin.ModelAdmin):
         if not filepath.exists():
             return JsonResponse({"error": f"File not found: {filename}"}, status=404)
 
+        force = request.POST.get("force") == "1"
         published = self._get_published()
-        if filename in published:
+        if filename in published and not force:
             return JsonResponse({"error": "Already published"}, status=400)
 
         try:
@@ -753,29 +754,48 @@ class NewsArticlesAdmin(admin.ModelAdmin):
                         inserted = True
             content = "".join(new_parts)
 
-        # ── Create article ────────────────────────────────────
+        # ── Create or update article ──────────────────────────
         category = None
         if category_slug:
             category = NewsCategories.objects.filter(slug=category_slug).first()
 
         now = timezone.now()
-        article = NewsArticles(
-            title=title,
-            content=content,
-            tags=tags,
-            status="published",
-            content_type=content_type,
-            entity_focus=entity_focus,
-            category=category,
-            image_url=cover_image_url,
-            published_at=now,
-            updated_at=now,
-        )
-        article.save()
+
+        # If force-republishing, update the existing article by title
+        existing = None
+        if force:
+            existing = NewsArticles.objects.filter(title=title).first()
+
+        if existing:
+            existing.content = content
+            existing.tags = tags
+            existing.content_type = content_type
+            existing.entity_focus = entity_focus
+            existing.category = category
+            existing.image_url = cover_image_url
+            existing.updated_at = now
+            existing.status = "published"
+            existing.save()
+            article = existing
+        else:
+            article = NewsArticles(
+                title=title,
+                content=content,
+                tags=tags,
+                status="published",
+                content_type=content_type,
+                entity_focus=entity_focus,
+                category=category,
+                image_url=cover_image_url,
+                published_at=now,
+                updated_at=now,
+            )
+            article.save()
 
         # Mark as published
-        with open(self._published_log(), "a", encoding="utf-8") as f:
-            f.write(filename + "\n")
+        if filename not in published:
+            with open(self._published_log(), "a", encoding="utf-8") as f:
+                f.write(filename + "\n")
 
         return JsonResponse({
             "success": True,

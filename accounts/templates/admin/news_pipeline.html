@@ -26,6 +26,12 @@
     background: #e9ecef; color: #666; padding: 8px 20px;
     border-radius: 6px; font-size: 13px; border: none;
   }
+  .btn-republish {
+    background: #fd7e14; color: #fff; border: none; padding: 8px 16px;
+    border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px;
+    transition: background 0.2s;
+  }
+  .btn-republish:hover { background: #e8590c; }
   .pipeline-status { margin-left: 12px; font-size: 13px; }
   .pipeline-status.success { color: #28a745; }
   .pipeline-status.error { color: #dc3545; }
@@ -64,11 +70,14 @@
         {% if a.tags %}<span>{{ a.tags|truncatechars:50 }}</span>{% endif %}
       </div>
     </div>
-    <div style="display:flex;align-items:center">
+    <div style="display:flex;align-items:center;gap:8px">
       {% if a.is_published %}
         <button class="btn-published" disabled>Опубликована</button>
+        <button class="btn-republish" onclick="publishArticle('{{ a.filename }}', this, true)">
+          Переопубликовать
+        </button>
       {% else %}
-        <button class="btn-publish" onclick="publishArticle('{{ a.filename }}', this)">
+        <button class="btn-publish" onclick="publishArticle('{{ a.filename }}', this, false)">
           Опубликовать
         </button>
       {% endif %}
@@ -79,12 +88,16 @@
 </div>
 
 <script>
-function publishArticle(filename, btn) {
-  if (!confirm('Опубликовать статью «' + btn.closest('.pipeline-card').querySelector('h3').textContent + '»?')) return;
+function publishArticle(filename, btn, force) {
+  var action = force ? 'Переопубликовать' : 'Опубликовать';
+  if (!confirm(action + ' статью «' + btn.closest('.pipeline-card').querySelector('h3').textContent + '»?')) return;
 
   btn.disabled = true;
   btn.textContent = 'Публикация...';
   var status = document.getElementById('status-' + filename);
+
+  var body = 'filename=' + encodeURIComponent(filename);
+  if (force) body += '&force=1';
 
   fetch('publish/', {
     method: 'POST',
@@ -93,7 +106,7 @@ function publishArticle(filename, btn) {
       'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value ||
                      document.cookie.match(/csrftoken=([^;]+)/)?.[1] || ''
     },
-    body: 'filename=' + encodeURIComponent(filename)
+    body: body
   })
   .then(function(r) { return r.json().then(function(d) { return {ok: r.ok, data: d}; }); })
   .then(function(res) {
