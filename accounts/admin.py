@@ -1,5 +1,13 @@
+import json
+import os
+from pathlib import Path
+
 from django.contrib import admin
 from django.contrib.admin.options import ModelAdmin
+from django.http import JsonResponse
+from django.template.response import TemplateResponse
+from django.urls import path
+from django.utils import timezone
 from django.utils.html import format_html
 
 
@@ -547,6 +555,140 @@ class NewsArticlesAdmin(admin.ModelAdmin):
         from .models import NewsLikes
         return NewsLikes.objects.filter(article=obj).count()
     likes_count.short_description = "Лайки"
+
+    # ── Content pipeline: publish from content/articles/ ───────────
+    change_list_template = "admin/news_articles_changelist.html"
+
+    def get_urls(self):
+        custom_urls = [
+            path(
+                "pipeline/",
+                self.admin_site.admin_view(self.pipeline_view),
+                name="news_pipeline",
+            ),
+            path(
+                "pipeline/publish/",
+                self.admin_site.admin_view(self.pipeline_publish),
+                name="news_pipeline_publish",
+            ),
+        ]
+        return custom_urls + super().get_urls()
+
+    def _articles_dir(self):
+        return Path(__file__).resolve().parent.parent / "content" / "articles"
+
+    def _published_log(self):
+        return self._articles_dir() / ".published"
+
+    def _get_published(self):
+        log = self._published_log()
+        if not log.exists():
+            return set()
+        return set(log.read_text(encoding="utf-8").strip().splitlines())
+
+    def _get_pipeline_articles(self):
+        """Return list of articles available in the content pipeline."""
+        articles_dir = self._articles_dir()
+        if not articles_dir.exists():
+            return []
+        published = self._get_published()
+        result = []
+        files = sorted(
+            f for f in os.listdir(articles_dir)
+            if f.endswith(".json") and not f.startswith("_")
+        )
+        for fname in files:
+            try:
+                with open(articles_dir / fname, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                result.append({
+                    "filename": fname,
+                    "title": data.get("title", "Без заголовка"),
+                    "category": data.get("category_slug", ""),
+                    "tags": data.get("tags", ""),
+                    "is_published": fname in published,
+                })
+            except (json.JSONDecodeError, OSError):
+                continue
+        return result
+
+    def pipeline_view(self, request):
+        """Page listing all pipeline articles with publish buttons."""
+        articles = self._get_pipeline_articles()
+        context = {
+            **self.admin_site.each_context(request),
+            "title": "Контент-пайплайн",
+            "articles": articles,
+        }
+        return TemplateResponse(request, "admin/news_pipeline.html", context)
+
+    def pipeline_publish(self, request):
+        """AJAX endpoint to publish a specific article."""
+        if request.method != "POST":
+            return JsonResponse({"error": "POST only"}, status=405)
+
+        filename = request.POST.get("filename")
+        if not filename:
+            return JsonResponse({"error": "No filename"}, status=400)
+
+        articles_dir = self._articles_dir()
+        filepath = articles_dir / filename
+
+        if not filepath.exists():
+            return JsonResponse({"error": f"File not found: {filename}"}, status=404)
+
+        published = self._get_published()
+        if filename in published:
+            return JsonResponse({"error": "Already published"}, status=400)
+
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except (json.JSONDecodeError, OSError) as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+        from .models import NewsArticles, NewsCategories
+
+        title = data.get("title", "")[:255]
+        content = data.get("content", "")
+        tags = data.get("tags", "")[:255]
+        category_slug = data.get("category_slug", "")
+        content_type = data.get("content_type", "article")
+        entity_focus = data.get("entity_focus", "franchise")
+        image_url = data.get("image_url", "") or None
+
+        if not title or not content:
+            return JsonResponse({"error": "Empty title or content"}, status=400)
+
+        category = None
+        if category_slug:
+            category = NewsCategories.objects.filter(slug=category_slug).first()
+
+        now = timezone.now()
+        article = NewsArticles(
+            title=title,
+            content=content,
+            tags=tags,
+            status="published",
+            content_type=content_type,
+            entity_focus=entity_focus,
+            category=category,
+            image_url=image_url,
+            published_at=now,
+            updated_at=now,
+        )
+        article.save()
+
+        # Mark as published
+        with open(self._published_log(), "a", encoding="utf-8") as f:
+            f.write(filename + "\n")
+
+        return JsonResponse({
+            "success": True,
+            "article_id": article.article_id,
+            "title": article.title,
+            "slug": article.slug,
+        })
 
 
 @admin.register(NewsCategories)

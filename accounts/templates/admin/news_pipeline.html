@@ -1,0 +1,131 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}Контент-пайплайн{% endblock %}
+
+{% block content %}
+<style>
+  .pipeline-wrap { max-width: 900px; margin: 0 auto; }
+  .pipeline-card {
+    background: #fff; border: 1px solid #ddd; border-radius: 8px;
+    padding: 16px 20px; margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .pipeline-card.published { opacity: 0.55; }
+  .pipeline-info h3 { margin: 0 0 4px; font-size: 15px; }
+  .pipeline-meta { font-size: 12px; color: #888; }
+  .pipeline-meta span { margin-right: 12px; }
+  .btn-publish {
+    background: #28a745; color: #fff; border: none; padding: 8px 20px;
+    border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;
+    transition: background 0.2s;
+  }
+  .btn-publish:hover { background: #218838; }
+  .btn-publish:disabled { background: #999; cursor: default; }
+  .btn-published {
+    background: #e9ecef; color: #666; padding: 8px 20px;
+    border-radius: 6px; font-size: 13px; border: none;
+  }
+  .pipeline-status { margin-left: 12px; font-size: 13px; }
+  .pipeline-status.success { color: #28a745; }
+  .pipeline-status.error { color: #dc3545; }
+  .pipeline-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .pipeline-header h2 { margin: 0; }
+  .pipeline-stats { font-size: 13px; color: #666; }
+  .back-link { margin-bottom: 16px; display: inline-block; }
+</style>
+
+<div class="pipeline-wrap">
+  <a href="../" class="back-link">&larr; Назад к статьям</a>
+
+  {% with total=articles|length %}
+  {% with published_count=0 %}
+  <div class="pipeline-header">
+    <h2>Контент-пайплайн</h2>
+    <div class="pipeline-stats" id="stats"></div>
+  </div>
+  {% endwith %}
+  {% endwith %}
+
+  {% if not articles %}
+    <p style="color:#888">Нет статей в <code>content/articles/</code></p>
+  {% endif %}
+
+  {% for a in articles %}
+  <div class="pipeline-card {% if a.is_published %}published{% endif %}" id="card-{{ a.filename }}">
+    <div class="pipeline-info">
+      <h3>{{ a.title }}</h3>
+      <div class="pipeline-meta">
+        <span>{{ a.filename }}</span>
+        {% if a.category %}<span>{{ a.category }}</span>{% endif %}
+        {% if a.tags %}<span>{{ a.tags|truncatechars:50 }}</span>{% endif %}
+      </div>
+    </div>
+    <div style="display:flex;align-items:center">
+      {% if a.is_published %}
+        <button class="btn-published" disabled>Опубликована</button>
+      {% else %}
+        <button class="btn-publish" onclick="publishArticle('{{ a.filename }}', this)">
+          Опубликовать
+        </button>
+      {% endif %}
+      <span class="pipeline-status" id="status-{{ a.filename }}"></span>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+function publishArticle(filename, btn) {
+  if (!confirm('Опубликовать статью «' + btn.closest('.pipeline-card').querySelector('h3').textContent + '»?')) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Публикация...';
+  var status = document.getElementById('status-' + filename);
+
+  fetch('publish/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value ||
+                     document.cookie.match(/csrftoken=([^;]+)/)?.[1] || ''
+    },
+    body: 'filename=' + encodeURIComponent(filename)
+  })
+  .then(function(r) { return r.json().then(function(d) { return {ok: r.ok, data: d}; }); })
+  .then(function(res) {
+    if (res.ok && res.data.success) {
+      btn.textContent = 'Опубликована';
+      btn.className = 'btn-published';
+      btn.closest('.pipeline-card').classList.add('published');
+      status.className = 'pipeline-status success';
+      status.textContent = 'ID: ' + res.data.article_id + ', slug: ' + res.data.slug;
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Опубликовать';
+      status.className = 'pipeline-status error';
+      status.textContent = res.data.error || 'Ошибка';
+    }
+  })
+  .catch(function(e) {
+    btn.disabled = false;
+    btn.textContent = 'Опубликовать';
+    status.className = 'pipeline-status error';
+    status.textContent = 'Сетевая ошибка';
+  });
+}
+
+// Stats
+(function() {
+  var cards = document.querySelectorAll('.pipeline-card');
+  var published = document.querySelectorAll('.pipeline-card.published');
+  document.getElementById('stats').textContent =
+    published.length + ' / ' + cards.length + ' опубликовано';
+})();
+</script>
+
+{% csrf_token %}
+{% endblock %}
