@@ -29,7 +29,7 @@ FONTS_DIR = ROOT / "static" / "accounts" / "fonts"
 GRADIENT_TOP = (0, 0, 0)           # #000000
 GRADIENT_MID = (0, 52, 107)        # #00346b
 GRADIENT_BOT = (0, 78, 159)        # #004e9f
-ACCENT_YELLOW = (255, 239, 43)     # #ffef2b
+ACCENT = (88, 101, 242)            # #5865f2 — brand purple
 WHITE = (255, 255, 255)
 WHITE_70 = (255, 255, 255, 178)
 OVERLAY = (0, 0, 0, 100)
@@ -142,8 +142,8 @@ def generate_cover(title, category_slug="", tags="", output_path=None):
     bbox = draw.textbbox((0, 0), badge_text, font=font_cat)
     bw = bbox[2] - bbox[0] + 32
     bh = bbox[3] - bbox[1] + 16
-    _draw_rounded_rect(draw, (60, 60, 60 + bw, 60 + bh), radius=bh // 2, fill=ACCENT_YELLOW)
-    draw.text((60 + 16, 60 + 5), badge_text, fill=(0, 0, 0), font=font_cat)
+    _draw_rounded_rect(draw, (60, 60, 60 + bw, 60 + bh), radius=bh // 2, fill=ACCENT)
+    draw.text((60 + 16, 60 + 5), badge_text, fill=WHITE, font=font_cat)
 
     # Title
     font_title = _load_font("Unbounded-Bold", 42)
@@ -197,7 +197,7 @@ def generate_section_image(
     draw.rectangle([0, 0, W, H], fill=(10, 15, 30))
 
     # Accent top border
-    draw.rectangle([0, 0, W, 4], fill=ACCENT_YELLOW)
+    draw.rectangle([0, 0, W, 4], fill=ACCENT)
 
     # Title
     font_title = _load_font("Unbounded-SemiBold", 28)
@@ -248,12 +248,12 @@ def _draw_infographic(draw, items, start_y, W, H):
 
         # Number circle
         cx, cy = 90, y + 22
-        draw.ellipse([cx - 22, cy - 22, cx + 22, cy + 22], fill=ACCENT_YELLOW)
+        draw.ellipse([cx - 22, cy - 22, cx + 22, cy + 22], fill=ACCENT)
         num_text = str(i)
         bbox = draw.textbbox((0, 0), num_text, font=font_num)
         nw = bbox[2] - bbox[0]
         nh = bbox[3] - bbox[1]
-        draw.text((cx - nw // 2, cy - nh // 2 - 4), num_text, fill=(0, 0, 0), font=font_num)
+        draw.text((cx - nw // 2, cy - nh // 2 - 4), num_text, fill=WHITE, font=font_num)
 
         # Label
         draw.text((130, y), label, fill=WHITE, font=font_item)
@@ -273,8 +273,8 @@ def _draw_comparison(draw, items, start_y, W, H):
 
     # Column headers
     if items and isinstance(items[0], dict) and "left_title" in items[0]:
-        draw.text((60, start_y), items[0]["left_title"], fill=ACCENT_YELLOW, font=font_head)
-        draw.text((mid + 30, start_y), items[0]["right_title"], fill=ACCENT_YELLOW, font=font_head)
+        draw.text((60, start_y), items[0]["left_title"], fill=ACCENT, font=font_head)
+        draw.text((mid + 30, start_y), items[0]["right_title"], fill=ACCENT, font=font_head)
         items = items[1:]
         start_y += 45
 
@@ -291,8 +291,7 @@ def _draw_comparison(draw, items, start_y, W, H):
 
 def _draw_stats(draw, items, start_y, W, H):
     """Big numbers with labels (items = [{"value": "500K", "label": "..."}, ...])."""
-    font_val = _load_font("Unbounded-Bold", 52)
-    font_lbl = _load_font("Inter-Variable", 16)
+    font_lbl = _load_font("Inter-Variable", 14)
 
     count = min(len(items), 4)
     if count == 0:
@@ -306,8 +305,15 @@ def _draw_stats(draw, items, start_y, W, H):
         val = item.get("value", "")
         lbl = item.get("label", "")
 
-        draw.text((x, start_y + 20), val, fill=ACCENT_YELLOW, font=font_val)
-        draw.text((x, start_y + 85), lbl, fill=WHITE_70, font=font_lbl)
+        # Auto-size font to fit column width
+        for size in (44, 38, 32, 26):
+            font_val = _load_font("Unbounded-Bold", size)
+            bbox = draw.textbbox((0, 0), val, font=font_val)
+            if bbox[2] - bbox[0] <= col_w - 20:
+                break
+
+        draw.text((x, start_y + 20), val, fill=ACCENT, font=font_val)
+        draw.text((x, start_y + 80), lbl, fill=WHITE_70, font=font_lbl)
 
 
 def _draw_checklist(draw, items, start_y, W, H):
@@ -318,7 +324,7 @@ def _draw_checklist(draw, items, start_y, W, H):
     for item in items[:8]:
         text = item if isinstance(item, str) else item.get("label", str(item))
         # Checkmark
-        draw.text((60, y), "✓", fill=ACCENT_YELLOW, font=font_item)
+        draw.text((60, y), "✓", fill=ACCENT, font=font_item)
         draw.text((95, y), text, fill=WHITE, font=font_item)
         y += 45
 
