@@ -34,8 +34,8 @@
     :root{--radius-xs:4px;--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:20px;--radius-full:9999px;--border-radius-small:4px;--border-radius-medium:12px;--transition-speed:.3s}
     *,*::before,*::after{box-sizing:border-box}
     body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(180deg,#000 0%,#00346b 25%,#004e9f 48%,#01366d 64%,#020202 100%);color:#fff;min-height:100vh}
-    #main-header{width:100%;padding:20px 0}
-    .header-content-wrapper{max-width:1303px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between}
+    #main-header{width:100%;padding:20px 0;display:flex;justify-content:center}
+    .header-content-wrapper{width:1303px;max-width:95%;display:flex;align-items:center;gap:12px}
     .content{flex:1}
     @keyframes skeleton-shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}
     .skeleton-loading [class*="-card"]{overflow:hidden;position:relative}
@@ -222,58 +222,58 @@
                     <a href="{% url 'moderator_dashboard' %}" class="header-nav-link">Заявки</a>
                     <a href="{% url 'franchise_import' %}" class="header-nav-link">AI-импорт</a>
                     {% endif %}
+            </div>
 
-                <div class="header-right-actions">
-                    <div class="header-search-bar">
-                        <input type="text" placeholder="Поиск..." class="header-search-input">
-                        <button type="button" class="header-search-toggle" title="Поиск" aria-label="Поиск">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                        </button>
-                    </div>
-
-                    {% if user.is_authenticated %}
-                        <div class="create-dropdown-container">
-                            <button class="header-nav-link header-role-button create-startup-button create-dropdown-button">
-                                Создать
-                            </button>
-                            <div class="create-dropdown-menu">
-                                <a href="{% url 'create_startup' %}" class="create-dropdown-item no-wave-effect">Стартап</a>
-                                <a href="{% url 'create_franchise' %}" class="create-dropdown-item no-wave-effect">Франшиза</a>
-                                <a href="{% url 'create_agency' %}" class="create-dropdown-item no-wave-effect">Агентство</a>
-                                <a href="{% url 'create_specialist' %}" class="create-dropdown-item no-wave-effect">Профиль специалиста</a>
-                            </div>
-                            <div class="create-dropdown-overlay"></div>
-                        </div>
-                    {% endif %}
-
-                    {% if user.is_authenticated %}
-                        <div class="profile-dropdown-container">
-                            <button class="profile-dropdown-button no-wave-effect">
-                                <div class="profile-avatar-wrapper">
-                                    <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" class="profile-dropdown-avatar">
-                                </div>
-                                <span class="profile-button-label">Профиль</span>
-                            </button>
-                            <div class="profile-dropdown-menu">
-                                <a href="{% url 'profile' %}" class="profile-dropdown-item">Профиль</a>
-                                {% if request.user.is_authenticated %}
-                                <a href="{% url 'my_analytics' %}" class="profile-dropdown-item">Аналитика и заявки</a>
-                                {% endif %}
-                                <div class="profile-dropdown-divider"></div>
-                                <a href="{% url 'support_orders' %}" class="profile-dropdown-item">Поддержка</a>
-                                <a href="{% url 'contacts' %}" class="profile-dropdown-item">Контакты</a>
-                                <a href="{% url 'faq' %}" class="profile-dropdown-item">FAQ</a>
-                                <div class="profile-dropdown-divider"></div>
-                                <a href="{% url 'logout' %}" class="profile-dropdown-item profile-dropdown-logout">Выйти</a>
-                            </div>
-                        </div>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="header-auth-button-link header-login-button">
-                            Войти
-                            <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="icon" class="header-auth-button-icon">
-                        </a>
-                    {% endif %}
+            <div class="header-right-actions">
+                <div class="header-search-bar">
+                    <input type="text" placeholder="Поиск..." class="header-search-input">
+                    <button type="button" class="header-search-toggle" title="Поиск" aria-label="Поиск">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </button>
                 </div>
+
+                {% if user.is_authenticated %}
+                    <div class="create-dropdown-container">
+                        <button class="header-nav-link header-role-button create-startup-button create-dropdown-button">
+                            Создать
+                        </button>
+                        <div class="create-dropdown-menu">
+                            <a href="{% url 'create_startup' %}" class="create-dropdown-item no-wave-effect">Стартап</a>
+                            <a href="{% url 'create_franchise' %}" class="create-dropdown-item no-wave-effect">Франшиза</a>
+                            <a href="{% url 'create_agency' %}" class="create-dropdown-item no-wave-effect">Агентство</a>
+                            <a href="{% url 'create_specialist' %}" class="create-dropdown-item no-wave-effect">Профиль специалиста</a>
+                        </div>
+                        <div class="create-dropdown-overlay"></div>
+                    </div>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                    <div class="profile-dropdown-container">
+                        <button class="profile-dropdown-button no-wave-effect">
+                            <div class="profile-avatar-wrapper">
+                                <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" class="profile-dropdown-avatar">
+                            </div>
+                            <span class="profile-button-label">Профиль</span>
+                        </button>
+                        <div class="profile-dropdown-menu">
+                            <a href="{% url 'profile' %}" class="profile-dropdown-item">Профиль</a>
+                            {% if request.user.is_authenticated %}
+                            <a href="{% url 'my_analytics' %}" class="profile-dropdown-item">Аналитика и заявки</a>
+                            {% endif %}
+                            <div class="profile-dropdown-divider"></div>
+                            <a href="{% url 'support_orders' %}" class="profile-dropdown-item">Поддержка</a>
+                            <a href="{% url 'contacts' %}" class="profile-dropdown-item">Контакты</a>
+                            <a href="{% url 'faq' %}" class="profile-dropdown-item">FAQ</a>
+                            <div class="profile-dropdown-divider"></div>
+                            <a href="{% url 'logout' %}" class="profile-dropdown-item profile-dropdown-logout">Выйти</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="header-auth-button-link header-login-button">
+                        Войти
+                        <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="icon" class="header-auth-button-icon">
+                    </a>
+                {% endif %}
             </div>
         </nav>
     </div>

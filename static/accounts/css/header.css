@@ -130,14 +130,21 @@
   display: flex;
 }
 
+.nav-menu {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
 .header-nav-links {
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
   gap: 16px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  grid-column: 1 / -1;
+  grid-row: 1;
+  justify-self: center;
   z-index: 10;
 }
 
@@ -146,6 +153,10 @@
   align-items: center;
   gap: 16px;
   flex-shrink: 0;
+  grid-column: 1 / -1;
+  grid-row: 1;
+  justify-self: end;
+  z-index: 11;
 }
 
 .header-nav-link {
@@ -395,13 +406,7 @@
   font-size: 14px;
 }
 
-.nav-menu {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  min-width: 0;
-  justify-content: flex-end;
-}
+/* .nav-menu styles are defined above (line ~133) */
 
 
 .header-search-icon-img {
@@ -958,6 +963,14 @@ nav.nav-menu
   .header-nav-link.active {
     background: rgba(88, 101, 242, 0.35);
     color: #fff;
+  }
+
+  /* ── Right actions inside drawer ──────────────────── */
+  .header-right-actions {
+    flex-direction: column;
+    width: 100%;
+    margin-left: 0;
+    gap: 0;
   }
 
   /* ── Catalog dropdown inside drawer ───────────────── */
