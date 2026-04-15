@@ -25,6 +25,7 @@ urlpatterns = [
     path("startups/<slug:slug>/", views.startup_detail, name="startup_detail"),
     path("startups/id/<int:startup_id>/", views.startup_detail_by_id, name="startup_detail_by_id"),
     path("franchises/", views.franchises_list, name="franchises_list"),
+    path("test-landing/", views.test_landings, name="test_landings"),
     path("franchise-landing/", views.franchise_landing, name="franchise_landing"),
     path("franchise-cards-test/", views.franchise_cards_test, name="franchise_cards_test"),
     path("franchise-detail-test/<slug:slug>/", views.franchise_detail_test, name="franchise_detail_test"),

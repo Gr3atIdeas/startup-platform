@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Тестовые лендинги — Great Ideas</title>
+  <style>
+    @font-face{font-family:Unbounded;src:url('{% static "accounts/fonts/Unbounded-Variable.woff2" %}') format('woff2');font-weight:200 900;font-display:swap}
+    @font-face{font-family:Inter;src:url('{% static "accounts/fonts/Inter/Inter-Variable.woff2" %}') format('woff2');font-weight:100 900;font-display:swap}
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;font-family:Inter,sans-serif;background:linear-gradient(180deg,#000 0%,#00346b 25%,#004e9f 48%,#01366d 64%,#020202 100%);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:60px 20px}
+    h1{font-family:Unbounded,sans-serif;font-weight:600;font-size:28px;margin:0 0 12px}
+    .subtitle{color:rgba(255,255,255,.6);font-size:15px;margin-bottom:48px}
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;width:100%;max-width:1000px}
+    .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:28px;text-decoration:none;color:#fff;transition:background .2s,border-color .2s,transform .15s}
+    .card:hover{background:rgba(88,101,242,.15);border-color:rgba(88,101,242,.4);transform:translateY(-2px)}
+    .card-label{font-family:Unbounded,sans-serif;font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.45);margin-bottom:10px}
+    .card-title{font-family:Unbounded,sans-serif;font-weight:500;font-size:18px;margin-bottom:8px}
+    .card-desc{font-size:14px;line-height:1.5;color:rgba(255,255,255,.65)}
+    .back{margin-top:48px;color:rgba(255,255,255,.4);font-size:13px;text-decoration:none;transition:color .2s}
+    .back:hover{color:#fff}
+  </style>
+</head>
+<body>
+  <h1>Тестовые лендинги</h1>
+  <p class="subtitle">Все варианты посадочных страниц для быстрого доступа</p>
+
+  <div class="cards">
+    <a href="{% url 'franchise_landing' %}" class="card">
+      <div class="card-label">Концепт A</div>
+      <div class="card-title">Доверие и проверка</div>
+      <div class="card-desc">«Проверенные франшизы — инвестируйте с уверенностью». Акцент на верификации и надёжности.</div>
+    </a>
+
+    <a href="{% url 'franchise_landing_b' %}" class="card">
+      <div class="card-label">Концепт B</div>
+      <div class="card-title">Двойной лендинг</div>
+      <div class="card-desc">«Платформа №1 для франшиз в России». Два пути: покупатель франшизы vs владелец.</div>
+    </a>
+
+    <a href="{% url 'franchise_landing_c' %}" class="card">
+      <div class="card-label">Концепт C</div>
+      <div class="card-title">Каталог-first</div>
+      <div class="card-desc">«Найдите франшизу мечты». Минималистичный подход в стиле Avito/ЦИАН с поиском и фильтрами.</div>
+    </a>
+
+    <a href="{% url 'franchise_landing_d' %}" class="card">
+      <div class="card-label">Концепт D</div>
+      <div class="card-title">Сторителлинг</div>
+      <div class="card-desc">«От идеи — к бизнесу за 30 дней». 4-шаговый путь от выбора до запуска.</div>
+    </a>
+  </div>
+
+  <a href="{% url 'home' %}" class="back">&larr; На главную</a>
+</body>
+</html>

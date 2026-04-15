@@ -12319,6 +12319,11 @@ def franchise_detail_test(request, slug):
     return render(request, "accounts/franchise_detail_test.html", context)
 
 
+def test_landings(request):
+    """Index page listing all test landing pages."""
+    return render(request, "accounts/test_landings.html")
+
+
 def franchise_landing(request):
     """Concept A: Trust & Verification."""
     return render(request, "accounts/franchise_landing.html", _franchise_landing_context())
