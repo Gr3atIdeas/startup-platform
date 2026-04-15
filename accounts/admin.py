@@ -1,7 +1,13 @@
 import json
+import logging
 import os
+import re
+import uuid
 from pathlib import Path
 
+import boto3
+from botocore.config import Config as BotoConfig
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.options import ModelAdmin
 from django.http import JsonResponse
@@ -9,6 +15,8 @@ from django.template.response import TemplateResponse
 from django.urls import path
 from django.utils import timezone
 from django.utils.html import format_html
+
+logger = logging.getLogger(__name__)
 
 
 # Fix: django_admin_log FK points at auth_user, but we use custom Users table.
@@ -622,8 +630,48 @@ class NewsArticlesAdmin(admin.ModelAdmin):
         }
         return TemplateResponse(request, "admin/news_pipeline.html", context)
 
+    def _upload_to_s3(self, file_path, s3_key):
+        """Upload a local file to S3 and return the relative key."""
+        access_key = getattr(settings, "AWS_ACCESS_KEY_ID", "")
+        secret_key = getattr(settings, "AWS_SECRET_ACCESS_KEY", "")
+        bucket = getattr(settings, "AWS_STORAGE_BUCKET_NAME", "")
+        endpoint = getattr(settings, "AWS_S3_ENDPOINT_URL", "https://storage.yandexcloud.net")
+
+        if not access_key or not secret_key or not bucket:
+            logger.warning("S3 credentials not configured, skipping upload")
+            return None
+
+        ext = file_path.suffix.lower().lstrip(".")
+        content_type = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png", "webp": "image/webp"}.get(ext, "image/jpeg")
+
+        try:
+            s3 = boto3.client(
+                "s3",
+                endpoint_url=endpoint,
+                aws_access_key_id=access_key,
+                aws_secret_access_key=secret_key,
+                region_name="ru-central1",
+                config=BotoConfig(signature_version="s3v4"),
+            )
+            with open(file_path, "rb") as f:
+                s3.put_object(
+                    Bucket=bucket,
+                    Key=s3_key,
+                    Body=f.read(),
+                    ContentType=content_type,
+                    ACL="public-read",
+                )
+            logger.info("Uploaded to S3: %s", s3_key)
+            return s3_key
+        except Exception as e:
+            logger.error("S3 upload failed for %s: %s", s3_key, e)
+            return None
+
+    def _images_dir(self):
+        return Path(__file__).resolve().parent.parent / "content" / "images"
+
     def pipeline_publish(self, request):
-        """AJAX endpoint to publish a specific article."""
+        """AJAX endpoint to publish a specific article with S3 images."""
         if request.method != "POST":
             return JsonResponse({"error": "POST only"}, status=405)
 
@@ -655,11 +703,57 @@ class NewsArticlesAdmin(admin.ModelAdmin):
         category_slug = data.get("category_slug", "")
         content_type = data.get("content_type", "article")
         entity_focus = data.get("entity_focus", "franchise")
-        image_url = data.get("image_url", "") or None
+        section_images = data.get("section_images", [])
 
         if not title or not content:
             return JsonResponse({"error": "Empty title or content"}, status=400)
 
+        # ── Upload images to S3 ──────────────────────────────
+        slug = filepath.stem  # e.g. "001_kak-vybrat-franshizu..."
+        img_dir = self._images_dir() / slug
+        base_url = getattr(settings, "S3_PUBLIC_BASE_URL", "")
+        cover_image_url = None
+
+        # Upload cover
+        cover_path = img_dir / "cover.jpg"
+        if cover_path.exists():
+            s3_key = f"news/articles/{slug}/cover.jpg"
+            if self._upload_to_s3(cover_path, s3_key):
+                cover_image_url = s3_key
+
+        # Upload section images and insert <img> tags into content
+        for idx, spec in enumerate(section_images):
+            img_path = img_dir / f"section_{idx + 1}.jpg"
+            if not img_path.exists():
+                continue
+
+            s3_key = f"news/articles/{slug}/section_{idx + 1}.jpg"
+            if not self._upload_to_s3(img_path, s3_key):
+                continue
+
+            full_url = f"{base_url}/{s3_key}"
+            alt = spec.get("alt", spec.get("title", ""))
+            img_tag = f'<img src="{full_url}" alt="{alt}" loading="lazy" decoding="async">'
+
+            # Insert after the Nth </h2> tag (after_section)
+            after_section = spec.get("after_section", idx + 1)
+            h2_pattern = r"(</h2>)"
+            parts = re.split(h2_pattern, content)
+            # parts = [before_h2, </h2>, between, </h2>, ...]
+            # We need to insert after the Nth </h2>
+            h2_count = 0
+            new_parts = []
+            inserted = False
+            for part in parts:
+                new_parts.append(part)
+                if part == "</h2>":
+                    h2_count += 1
+                    if h2_count == after_section and not inserted:
+                        new_parts.append(f"\n{img_tag}\n")
+                        inserted = True
+            content = "".join(new_parts)
+
+        # ── Create article ────────────────────────────────────
         category = None
         if category_slug:
             category = NewsCategories.objects.filter(slug=category_slug).first()
@@ -673,7 +767,7 @@ class NewsArticlesAdmin(admin.ModelAdmin):
             content_type=content_type,
             entity_focus=entity_focus,
             category=category,
-            image_url=image_url,
+            image_url=cover_image_url,
             published_at=now,
             updated_at=now,
         )
