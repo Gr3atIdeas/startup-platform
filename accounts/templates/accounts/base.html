@@ -216,6 +216,7 @@
                         </div>
                     </div>
                     <div class="catalog-dropdown-overlay"></div>
+                    <a href="{% url 'franchise_quiz' %}" class="header-nav-link">Подбор</a>
                     <a href="{% url 'news' %}" class="header-nav-link">Блог</a>
                     {# Role-specific links #}
                     {% if user.is_authenticated and user.role.role_name == 'moderator' %}
