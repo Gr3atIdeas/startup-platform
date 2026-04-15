@@ -15,8 +15,15 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Установка git для возможности обновления кода
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+# Install git (for hot-update) + curl (for GeoIP DB) in one layer to save RAM
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git curl ca-certificates && \
+    mkdir -p /app/geoip && \
+    (curl -sSL -o /app/geoip/GeoLite2-City.mmdb \
+      "https://github.com/P3TERX/GeoLite.mmdb/releases/latest/download/GeoLite2-City.mmdb" || \
+    echo "WARNING: GeoLite2 download failed, geo features will be disabled") && \
+    apt-get purge -y curl && apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY requirements.txt .
 
@@ -32,18 +39,9 @@ COPY --from=frontend-builder /app/static/dist ./static/dist/
 
 COPY static/accounts/ ./static/accounts/
 COPY sql/ ./sql/
+COPY content/ ./content/
 COPY entrypoint.sh .
 COPY update.sh .
-
-# Download GeoLite2-City database for GeoIP resolution
-RUN mkdir -p /app/geoip && \
-    apt-get update && apt-get install -y --no-install-recommends curl && \
-    curl -sSL -o /app/geoip/GeoLite2-City.mmdb \
-      "https://git.io/GeoLite2-City.mmdb" || \
-    curl -sSL -o /app/geoip/GeoLite2-City.mmdb \
-      "https://github.com/P3TERX/GeoLite.mmdb/releases/latest/download/GeoLite2-City.mmdb" || \
-    echo "WARNING: GeoLite2 download failed, geo features will be disabled" && \
-    apt-get purge -y curl && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
 RUN chmod +x health_check.py entrypoint.sh update.sh \
     && mkdir -p /app/news_collector/data \
