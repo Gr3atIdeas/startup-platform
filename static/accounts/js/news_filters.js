@@ -82,6 +82,30 @@
       paginationElement = oldPagination;
     }
 
+    // Remove skeleton shimmer from newly inserted grid
+    if (newsGridElement && newsGridElement.classList.contains('skeleton-loading')) {
+      var imgs = Array.from(newsGridElement.querySelectorAll('img'));
+      var readyCount = 0;
+      var needed = Math.min(imgs.length, 4) || 1;
+      var removed = false;
+
+      function removeSkeleton() {
+        if (removed) return;
+        removed = true;
+        newsGridElement.classList.add('skeleton-done');
+        setTimeout(function() { newsGridElement.classList.remove('skeleton-loading', 'skeleton-done'); }, 400);
+      }
+
+      imgs.forEach(function(img) {
+        if (img.naturalWidth > 0 && img.complete) { readyCount++; return; }
+        img.addEventListener('load', function() { readyCount++; if (readyCount >= needed) removeSkeleton(); });
+        img.addEventListener('error', function() { readyCount++; if (readyCount >= needed) removeSkeleton(); });
+      });
+
+      if (readyCount >= needed) removeSkeleton();
+      setTimeout(removeSkeleton, 4000);
+    }
+
     history.pushState({}, '', newUrl);
     bindNewsPaginationHandlers();
     bindDeleteNewsHandlers();

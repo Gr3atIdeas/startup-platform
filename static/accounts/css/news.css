@@ -94,18 +94,24 @@ body {
   align-items: center;
   justify-content: center;
   padding: 12px 20px;
-  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
-  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  background: linear-gradient(135deg, #5865f2 0%, #7b6cf6 100%);
+  box-shadow: none;
   border-radius: var(--radius-xl);
-  color: black;
+  color: #fff;
   font-size: 14px;
   font-family: Unbounded, sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 16px;
   text-decoration: none;
   text-align: center;
   width: 100%;
   box-sizing: border-box;
+  transition: opacity 0.2s;
+}
+
+.suggest-news-btn:hover {
+  opacity: 0.9;
+  color: #fff;
 }
 
 /* .sidebar-label, .sidebar-select, .sidebar-title from catalog_sidebar.css */
