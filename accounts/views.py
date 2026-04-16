@@ -1929,6 +1929,10 @@ def agency_detail(request, slug):
     if logo_urls:
         logo_url = file_url_map.get(str(logo_urls[0]), "")
     hero_video = video_urls[0] if video_urls else None
+    if not hero_video and slider_images:
+        first_slide = str(slider_images[0]).lower()
+        if any(first_slide.endswith(ext) for ext in ('.mp4', '.webm', '.mov', '.avi')):
+            hero_video = slider_images[0]
 
     context = {
         "agency": agency,
@@ -2109,6 +2113,10 @@ def specialist_detail(request, slug):
     if logo_urls:
         logo_url = file_url_map.get(str(logo_urls[0]), "")
     hero_video = video_urls[0] if video_urls else None
+    if not hero_video and slider_images:
+        first_slide = str(slider_images[0]).lower()
+        if any(first_slide.endswith(ext) for ext in ('.mp4', '.webm', '.mov', '.avi')):
+            hero_video = slider_images[0]
 
     context = {
         "specialist": specialist,
@@ -2334,6 +2342,10 @@ def franchise_detail(request, slug):
 
     # Hero video: first video if available
     hero_video = video_urls[0] if video_urls else None
+    if not hero_video and slider_images:
+        first_slide = str(slider_images[0]).lower()
+        if any(first_slide.endswith(ext) for ext in ('.mp4', '.webm', '.mov', '.avi')):
+            hero_video = slider_images[0]
 
     context = {
         "franchise": franchise,
@@ -2746,6 +2758,11 @@ def startup_detail(request, slug):
     if logo_urls:
         logo_url = file_url_map.get(str(logo_urls[0]), "")
     hero_video = video_urls[0] if video_urls else None
+    # Fallback: check if first slider_image is actually a video file
+    if not hero_video and slider_images:
+        first_slide = str(slider_images[0]).lower()
+        if any(first_slide.endswith(ext) for ext in ('.mp4', '.webm', '.mov', '.avi')):
+            hero_video = slider_images[0]
 
     context = {
         "startup": startup,
