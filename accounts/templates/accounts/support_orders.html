@@ -26,13 +26,6 @@
 {% block content %}
 <div class="support-orders-page">
   <div class="support-orders-container">
-    <div class="back-link-container">
-      <a href="{% url 'support_orders' %}" class="back-link">
-        <img src="{% static 'accounts/images/support/arrow_left.svg' %}" alt="Назад" class="back-link-icon">
-        <span>Назад</span>
-      </a>
-    </div>
-
     <section class="page-header-section">
       <h1>{% if is_moderator %}Все заявки{% else %}Мои заявки{% endif %}</h1>
       <a href="{% url 'support_contact' %}" class="btn btn-primary">Новая заявка</a>

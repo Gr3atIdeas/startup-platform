@@ -194,7 +194,7 @@
 }
 
 .no-orders-message p {
-  color: rgba(255,255,255,0.5) !important;
+  color: rgba(255,255,255,0.8) !important;
   font-size: 15px;
   font-family: Inter, sans-serif;
   font-weight: 300;
@@ -229,7 +229,7 @@
 }
 
 .additional-info-section p {
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.75);
   font-size: 13px;
   font-family: Inter, sans-serif;
   font-weight: 300;
