@@ -99,14 +99,13 @@
 
           {% if hero_video %}
           <div style="position:relative; width:100%; border-radius:16px; overflow:hidden; aspect-ratio:16/9; background:#000;">
-            <video src="{{ hero_video }}" autoplay muted loop playsinline preload="auto" id="heroVideo" style="width:100%;height:100%;object-fit:cover;display:block;"></video>
+            <video data-src="{{ hero_video }}" muted loop playsinline preload="none" id="heroVideo" style="width:100%;height:100%;object-fit:cover;display:block;"></video>
             <button onclick="toggleHeroMute(this)" title="Включить звук" style="position:absolute;bottom:16px;right:16px;z-index:5;background:rgba(0,0,0,0.5);border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;">
               <i class="fas fa-volume-mute"></i>
             </button>
           </div>
           <script>
           function toggleHeroMute(btn){var v=document.getElementById('heroVideo');if(!v)return;v.muted=!v.muted;btn.querySelector('i').className=v.muted?'fas fa-volume-mute':'fas fa-volume-up';btn.title=v.muted?'Включить звук':'Выключить звук';}
-          (function(){var v=document.getElementById('heroVideo');if(!v)return;v.muted=true;function tryPlay(){var p=v.play();if(p&&p.catch)p.catch(function(){});}var r=setInterval(function(){if(!v.paused){clearInterval(r);return;}v.muted=true;tryPlay();},300);setTimeout(function(){clearInterval(r);},10000);v.addEventListener('canplay',tryPlay);v.addEventListener('loadeddata',tryPlay);tryPlay();if('IntersectionObserver' in window){new IntersectionObserver(function(e){e.forEach(function(en){if(en.isIntersecting){v.muted=true;tryPlay();}else{v.pause();}});},{threshold:0.1}).observe(v);}})();
           </script>
           {% elif slider_images %}
           <div class="agency-detail-carousel-track" id="mediaCarousel">
