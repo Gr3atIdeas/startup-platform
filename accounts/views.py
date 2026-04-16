@@ -1928,11 +1928,21 @@ def agency_detail(request, slug):
     logo_url = None
     if logo_urls:
         logo_url = file_url_map.get(str(logo_urls[0]), "")
-    hero_video = video_urls[0] if video_urls else None
-    if not hero_video and slider_images:
+    hero_video_raw = video_urls[0] if video_urls else None
+    if not hero_video_raw and slider_images:
         first_slide = str(slider_images[0]).lower()
         if any(first_slide.endswith(ext) for ext in ('.mp4', '.webm', '.mov', '.avi')):
-            hero_video = slider_images[0]
+            hero_video_raw = slider_images[0]
+    hero_video = None
+    if hero_video_raw:
+        from .utils import is_uuid, get_file_url
+        raw = str(hero_video_raw)
+        if raw.startswith('http'):
+            hero_video = raw
+        elif is_uuid(raw):
+            hero_video = get_file_url(raw, agency.agency_id, 'video', 'agency') or file_url_map.get(raw, '')
+        else:
+            hero_video = file_url_map.get(raw, raw)
 
     context = {
         "agency": agency,
@@ -2112,11 +2122,21 @@ def specialist_detail(request, slug):
     logo_url = None
     if logo_urls:
         logo_url = file_url_map.get(str(logo_urls[0]), "")
-    hero_video = video_urls[0] if video_urls else None
-    if not hero_video and slider_images:
+    hero_video_raw = video_urls[0] if video_urls else None
+    if not hero_video_raw and slider_images:
         first_slide = str(slider_images[0]).lower()
         if any(first_slide.endswith(ext) for ext in ('.mp4', '.webm', '.mov', '.avi')):
-            hero_video = slider_images[0]
+            hero_video_raw = slider_images[0]
+    hero_video = None
+    if hero_video_raw:
+        from .utils import is_uuid, get_file_url
+        raw = str(hero_video_raw)
+        if raw.startswith('http'):
+            hero_video = raw
+        elif is_uuid(raw):
+            hero_video = get_file_url(raw, specialist.specialist_id, 'video', 'specialist') or file_url_map.get(raw, '')
+        else:
+            hero_video = file_url_map.get(raw, raw)
 
     context = {
         "specialist": specialist,
@@ -2341,11 +2361,21 @@ def franchise_detail(request, slug):
         logo_url = file_url_map.get(str(logo_urls[0]), "")
 
     # Hero video: first video if available
-    hero_video = video_urls[0] if video_urls else None
-    if not hero_video and slider_images:
+    hero_video_raw = video_urls[0] if video_urls else None
+    if not hero_video_raw and slider_images:
         first_slide = str(slider_images[0]).lower()
         if any(first_slide.endswith(ext) for ext in ('.mp4', '.webm', '.mov', '.avi')):
-            hero_video = slider_images[0]
+            hero_video_raw = slider_images[0]
+    hero_video = None
+    if hero_video_raw:
+        from .utils import is_uuid, get_file_url
+        raw = str(hero_video_raw)
+        if raw.startswith('http'):
+            hero_video = raw
+        elif is_uuid(raw):
+            hero_video = get_file_url(raw, franchise.franchise_id, 'video', 'franchise') or file_url_map.get(raw, '')
+        else:
+            hero_video = file_url_map.get(raw, raw)
 
     context = {
         "franchise": franchise,
@@ -2757,12 +2787,23 @@ def startup_detail(request, slug):
     logo_url = None
     if logo_urls:
         logo_url = file_url_map.get(str(logo_urls[0]), "")
-    hero_video = video_urls[0] if video_urls else None
+    hero_video_raw = video_urls[0] if video_urls else None
     # Fallback: check if first slider_image is actually a video file
-    if not hero_video and slider_images:
+    if not hero_video_raw and slider_images:
         first_slide = str(slider_images[0]).lower()
         if any(first_slide.endswith(ext) for ext in ('.mp4', '.webm', '.mov', '.avi')):
-            hero_video = slider_images[0]
+            hero_video_raw = slider_images[0]
+    # Resolve hero_video to a full URL
+    hero_video = None
+    if hero_video_raw:
+        from .utils import is_uuid, get_file_url
+        raw = str(hero_video_raw)
+        if raw.startswith('http'):
+            hero_video = raw
+        elif is_uuid(raw):
+            hero_video = get_file_url(raw, startup.startup_id, 'video', 'startup') or file_url_map.get(raw, '')
+        else:
+            hero_video = file_url_map.get(raw, raw)
 
     context = {
         "startup": startup,
