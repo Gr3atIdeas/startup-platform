@@ -236,7 +236,7 @@ class StartupsAdmin(BaseEntityAdmin):
 
     fieldsets = (
         ("Основное", {
-            "fields": ("title", "short_description", "description", "terms", "owner"),
+            "fields": ("title", "slug", "short_description", "description", "terms", "owner"),
         }),
         ("Классификация", {
             "fields": ("direction", "stage"),
@@ -281,7 +281,7 @@ class FranchisesAdmin(BaseEntityAdmin):
 
     fieldsets = (
         ("Основное", {
-            "fields": ("title", "short_description", "description", "terms", "owner"),
+            "fields": ("title", "slug", "short_description", "description", "terms", "owner"),
         }),
         ("Классификация", {
             "fields": ("direction", "stage"),
@@ -326,7 +326,7 @@ class AgenciesAdmin(BaseEntityAdmin):
 
     fieldsets = (
         ("Основное", {
-            "fields": ("title", "short_description", "description", "terms", "owner"),
+            "fields": ("title", "slug", "short_description", "description", "terms", "owner"),
         }),
         ("Классификация", {
             "fields": ("direction", "stage"),
@@ -368,7 +368,7 @@ class SpecialistsAdmin(BaseEntityAdmin):
 
     fieldsets = (
         ("Основное", {
-            "fields": ("title", "short_description", "description", "terms", "owner"),
+            "fields": ("title", "slug", "short_description", "description", "terms", "owner"),
         }),
         ("Классификация", {
             "fields": ("direction", "stage"),
