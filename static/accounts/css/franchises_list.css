@@ -794,4 +794,85 @@ body {
   }
 }
 
+/* ── FAQ Section ───────────────────────────────────────────── */
+
+.franchise-faq-section {
+  max-width: 900px;
+  margin: 40px auto 0;
+  padding: 0 20px;
+}
+
+.franchise-faq-title {
+  color: #fff;
+  font-family: Unbounded, sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.franchise-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.franchise-faq-item {
+  background: rgba(0,8,25,0.6);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.franchise-faq-question {
+  width: 100%;
+  padding: 16px 20px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.85);
+  font-family: Inter, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: background 0.2s;
+}
+
+.franchise-faq-question:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+.franchise-faq-chevron {
+  flex-shrink: 0;
+  color: rgba(255,255,255,0.3);
+  transition: transform 0.2s;
+}
+
+.franchise-faq-item.open .franchise-faq-chevron {
+  transform: rotate(180deg);
+}
+
+.franchise-faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.franchise-faq-item.open .franchise-faq-answer {
+  max-height: 300px;
+}
+
+.franchise-faq-answer p {
+  padding: 0 20px 16px;
+  margin: 0;
+  color: rgba(255,255,255,0.55);
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
 /* Sidebar ad styles moved to catalog_sidebar.css */
