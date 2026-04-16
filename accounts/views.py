@@ -11441,6 +11441,36 @@ def my_analytics(request):
     leads_paginator = Paginator(filtered_leads, 15)
     leads_page = leads_paginator.get_page(request.GET.get('leads_page', 1))
 
+    # Aggregate daily stats for overview chart (last 30 days)
+    from .models import AnalyticsDailyStat
+    overview_thirty_ago = timezone.now().date() - timedelta(days=29)
+    daily_agg = {}
+    for ent in all_entities:
+        if ent.get('status') != 'approved':
+            continue
+        daily_rows = AnalyticsDailyStat.objects.filter(
+            entity_type=ent['type'],
+            entity_id=ent['id'],
+            stat_date__gte=overview_thirty_ago,
+        ).values_list('stat_date', 'total_views', 'clicks_contact', 'clicks_website', 'clicks_telegram', 'clicks_whatsapp', 'clicks_pitch_deck', 'impressions')
+        for row in daily_rows:
+            d = str(row[0])
+            if d not in daily_agg:
+                daily_agg[d] = {'views': 0, 'clicks': 0, 'impressions': 0}
+            daily_agg[d]['views'] += row[1] or 0
+            daily_agg[d]['clicks'] += sum(v or 0 for v in row[2:7])
+            daily_agg[d]['impressions'] += row[7] or 0
+
+    overview_views = []
+    overview_clicks = []
+    overview_impressions = []
+    for i in range(30):
+        d = str(overview_thirty_ago + timedelta(days=i))
+        stats = daily_agg.get(d, {})
+        overview_views.append(stats.get('views', 0))
+        overview_clicks.append(stats.get('clicks', 0))
+        overview_impressions.append(stats.get('impressions', 0))
+
     context = {
         'all_entities': filtered_entities,
         'total_views': total_views,
@@ -11458,6 +11488,10 @@ def my_analytics(request):
         'selected_entity': selected_entity,
         'selected_stats_json': json.dumps(selected_stats) if selected_stats else '{}',
         'status_filter': status_filter,
+        # Overview chart data
+        'overview_views_json': json.dumps(overview_views),
+        'overview_clicks_json': json.dumps(overview_clicks),
+        'overview_impressions_json': json.dumps(overview_impressions),
         # Lead data
         'lead_stats': lead_stats,
         'leads_page': leads_page,

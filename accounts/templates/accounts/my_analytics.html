@@ -18,13 +18,8 @@
 .analytics-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
 .analytics-card { background: rgba(0,8,25,0.82); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-lg); padding: 22px; text-align: center; transition: border-color 0.2s; position: relative; }
 .analytics-card:hover { border-color: rgba(255,255,255,0.12); }
-.analytics-card__value { font-size: 32px; font-weight: 700; color: #FFD700; font-family: Unbounded, sans-serif; }
+.analytics-card__value { font-size: 32px; font-weight: 700; color: #fff; font-family: Unbounded, sans-serif; }
 .analytics-card__label { color: rgba(255,255,255,0.5); margin-top: 6px; font-size: 13px; font-family: Inter, sans-serif; }
-.analytics-card__value--green { color: #4CAF50; }
-.analytics-card__value--blue { color: #2196F3; }
-.analytics-card__value--cyan { color: #00BCD4; }
-.analytics-card__value--orange { color: #FF9800; }
-.analytics-card__value--purple { color: #AB47BC; }
 .analytics-card__change { position: absolute; top: 10px; right: 12px; font-size: 11px; font-family: Inter, sans-serif; padding: 2px 6px; border-radius: var(--radius-xs); }
 .analytics-card__change--up { color: #4CAF50; background: rgba(76,175,80,0.15); }
 .analytics-card__change--down { color: #f44336; background: rgba(244,67,54,0.15); }
@@ -38,7 +33,7 @@
 /* Source bars */
 .source-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .source-row:last-child { margin-bottom: 0; }
-.source-label { color: rgba(255,255,255,0.6); font-size: 13px; min-width: 90px; font-family: Inter, sans-serif; }
+.source-label { color: rgba(255,255,255,0.6); font-size: 13px; min-width: 110px; font-family: Inter, sans-serif; }
 .source-bar-bg { flex: 1; height: 20px; background: rgba(255,255,255,0.06); border-radius: var(--radius-xs); overflow: hidden; }
 .source-bar-fill { height: 100%; border-radius: var(--radius-xs); transition: width 0.5s ease; }
 .source-bar-fill--search { background: #4CAF50; }
@@ -57,10 +52,10 @@
 .engagement-item__bar-fill { height: 100%; border-radius: var(--radius-full); background: linear-gradient(90deg, #00BCD4, #4CAF50); transition: width 0.5s ease; }
 
 /* ── Selected entity detail ── */
-.analytics-detail { background: rgba(0,8,25,0.82); border: 1px solid rgba(255,215,0,0.2); border-radius: var(--radius-lg); padding: 28px; margin-bottom: 28px; }
+.analytics-detail { background: rgba(0,8,25,0.82); border: 1px solid rgba(88,101,242,0.2); border-radius: var(--radius-lg); padding: 28px; margin-bottom: 28px; }
 .analytics-detail__header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
 .analytics-detail__name { color: #fff; font-size: 20px; font-weight: 600; font-family: Unbounded, sans-serif; }
-.analytics-detail__badge { font-size: 12px; color: #FFD700; background: rgba(255,215,0,0.15); padding: 4px 12px; border-radius: var(--radius-xs); text-transform: uppercase; letter-spacing: 0.5px; font-family: Inter, sans-serif; }
+.analytics-detail__badge { font-size: 12px; color: #5865f2; background: rgba(88,101,242,0.15); padding: 4px 12px; border-radius: var(--radius-xs); text-transform: uppercase; letter-spacing: 0.5px; font-family: Inter, sans-serif; }
 .analytics-detail__close { margin-left: auto; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 22px; line-height: 1; padding: 4px 8px; border-radius: var(--radius-xs); transition: color 0.2s, background 0.2s; }
 .analytics-detail__close:hover { color: #fff; background: rgba(255,255,255,0.1); text-decoration: none; }
 
@@ -79,7 +74,7 @@
 /* Click breakdown */
 .analytics-clicks-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
 .analytics-click-item { background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 14px; text-align: center; }
-.analytics-click-item__value { font-size: 22px; font-weight: 700; color: #2196F3; font-family: Unbounded, sans-serif; }
+.analytics-click-item__value { font-size: 22px; font-weight: 700; color: #fff; font-family: Unbounded, sans-serif; }
 .analytics-click-item__label { color: rgba(255,255,255,0.5); margin-top: 4px; font-size: 12px; font-family: Inter, sans-serif; }
 
 /* Geo table */
@@ -97,15 +92,15 @@
   transition: color 0.2s, background 0.2s; font-size: 14px; font-family: Inter, sans-serif;
 }
 .analytics-status-filter a:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.1); }
-.analytics-status-filter a.active { color: #FFD700; background: rgba(255,215,0,0.15); }
+.analytics-status-filter a.active { color: #5865f2; background: rgba(88,101,242,0.15); }
 
 /* ── Entity grid ── */
 .analytics-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
 .analytics-subtitle { color: #fff; font-size: 20px; font-weight: 500; margin: 0; font-family: Unbounded, sans-serif; }
 .analytics-entities { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-bottom: 32px; }
 .analytics-entity { background: rgba(0,8,25,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-md); padding: 16px; text-decoration: none; color: #fff; transition: border-color 0.2s, background 0.2s; display: block; }
-.analytics-entity:hover { border-color: rgba(255,215,0,0.3); color: #fff; text-decoration: none; background: rgba(0,8,25,0.8); }
-.analytics-entity--active { border-color: #FFD700; background: rgba(255,215,0,0.08); }
+.analytics-entity:hover { border-color: rgba(88,101,242,0.3); color: #fff; text-decoration: none; background: rgba(0,8,25,0.8); }
+.analytics-entity--active { border-color: #5865f2; background: rgba(88,101,242,0.08); }
 .analytics-entity__header { display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center; }
 .analytics-entity__type { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; font-family: Inter, sans-serif; }
 .analytics-entity__status { font-size: 11px; padding: 2px 8px; border-radius: var(--radius-xs); font-family: Inter, sans-serif; }
@@ -116,6 +111,8 @@
 .analytics-entity__stats { font-size: 13px; color: rgba(255,255,255,0.5); display: flex; gap: 14px; font-family: Inter, sans-serif; flex-wrap: wrap; }
 .analytics-entity__stats span { display: flex; align-items: center; gap: 4px; }
 .analytics-empty { color: rgba(255,255,255,0.5); font-size: 16px; text-align: center; padding: 40px 0; font-family: Inter, sans-serif; }
+
+.analytics-overview-chart { margin-bottom: 28px; }
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
@@ -151,7 +148,7 @@
       <div class="analytics-card__label">Просмотров страниц</div>
     </div>
     <div class="analytics-card">
-      <div class="analytics-card__value analytics-card__value--green">{{ total_unique }}</div>
+      <div class="analytics-card__value">{{ total_unique }}</div>
       <div class="analytics-card__label">Уникальных посетителей</div>
     </div>
     <div class="analytics-card">
@@ -160,7 +157,7 @@
         {% if agg_comparison.clicks > 0 %}+{% endif %}{{ agg_comparison.clicks }}%
       </span>
       {% endif %}
-      <div class="analytics-card__value analytics-card__value--blue">{{ total_clicks }}</div>
+      <div class="analytics-card__value">{{ total_clicks }}</div>
       <div class="analytics-card__label">Кликов по контактам</div>
     </div>
     <div class="analytics-card">
@@ -169,16 +166,26 @@
         {% if agg_comparison.impressions > 0 %}+{% endif %}{{ agg_comparison.impressions }}%
       </span>
       {% endif %}
-      <div class="analytics-card__value analytics-card__value--cyan">{{ total_impressions }}</div>
+      <div class="analytics-card__value">{{ total_impressions }}</div>
       <div class="analytics-card__label">Показов в каталоге</div>
     </div>
     <div class="analytics-card">
-      <div class="analytics-card__value analytics-card__value--orange">{{ total_ctr }}%</div>
+      <div class="analytics-card__value">{{ total_ctr }}%</div>
       <div class="analytics-card__label">Конверсия (просмотры → клики)</div>
     </div>
     <div class="analytics-card">
-      <div class="analytics-card__value analytics-card__value--purple" id="avgTimeDisplay">0с</div>
+      <div class="analytics-card__value" id="avgTimeDisplay">0с</div>
       <div class="analytics-card__label">Среднее время на странице</div>
+    </div>
+  </div>
+
+  <!-- ══════ Overview Chart ══════ -->
+  <div class="analytics-overview-chart">
+    <div class="analytics-panel">
+      <div class="analytics-panel__title">Динамика за 30 дней</div>
+      <div style="height: 320px; position: relative;">
+        <canvas id="overviewChart"></canvas>
+      </div>
     </div>
   </div>
 
@@ -218,19 +225,19 @@
     <!-- Mini summary -->
     <div class="analytics-detail-summary">
       <div class="analytics-detail-stat">
-        <div class="analytics-detail-stat__value" style="color: #FFD700;">{{ selected_stats.total_views }}</div>
+        <div class="analytics-detail-stat__value">{{ selected_stats.total_views }}</div>
         <div class="analytics-detail-stat__label">Просмотров</div>
       </div>
       <div class="analytics-detail-stat">
-        <div class="analytics-detail-stat__value" style="color: #4CAF50;">{{ selected_stats.unique_views }}</div>
+        <div class="analytics-detail-stat__value">{{ selected_stats.unique_views }}</div>
         <div class="analytics-detail-stat__label">Уникальных</div>
       </div>
       <div class="analytics-detail-stat">
-        <div class="analytics-detail-stat__value" style="color: #2196F3;">{{ selected_stats.ctr_views }}%</div>
+        <div class="analytics-detail-stat__value">{{ selected_stats.ctr_views }}%</div>
         <div class="analytics-detail-stat__label">CTR (клики/просмотры)</div>
       </div>
       <div class="analytics-detail-stat">
-        <div class="analytics-detail-stat__value" style="color: #00BCD4;">{{ selected_stats.total_impressions }}</div>
+        <div class="analytics-detail-stat__value">{{ selected_stats.total_impressions }}</div>
         <div class="analytics-detail-stat__label">Показов в каталоге</div>
       </div>
     </div>
@@ -375,19 +382,19 @@
       <div class="analytics-card__label">Всего заявок</div>
     </div>
     <div class="analytics-card">
-      <div class="analytics-card__value analytics-card__value--blue">{{ lead_stats.new }}</div>
+      <div class="analytics-card__value">{{ lead_stats.new }}</div>
       <div class="analytics-card__label">Новые</div>
     </div>
     <div class="analytics-card">
-      <div class="analytics-card__value analytics-card__value--cyan">{{ lead_stats.viewed }}</div>
+      <div class="analytics-card__value">{{ lead_stats.viewed }}</div>
       <div class="analytics-card__label">Просмотрено</div>
     </div>
     <div class="analytics-card">
-      <div class="analytics-card__value analytics-card__value--green">{{ lead_stats.responded }}</div>
+      <div class="analytics-card__value">{{ lead_stats.responded }}</div>
       <div class="analytics-card__label">Отвечено</div>
     </div>
     <div class="analytics-card">
-      <div class="analytics-card__value analytics-card__value--purple">{{ lead_stats.converted }}</div>
+      <div class="analytics-card__value">{{ lead_stats.converted }}</div>
       <div class="analytics-card__label">Конвертировано</div>
     </div>
   </div>
@@ -539,6 +546,92 @@ document.addEventListener('DOMContentLoaded', function() {
     var el3 = document.getElementById('selTimeVal');
     if (el3) el3.textContent = fmtTime(selTime);
     {% endif %}
+
+    // ── Overview chart — aggregate daily stats ──
+    var overviewCtx = document.getElementById('overviewChart');
+    if (overviewCtx && typeof Chart !== 'undefined') {
+      var ovLabels = [];
+      var today = new Date();
+      for (var i = 29; i >= 0; i--) {
+        var d = new Date(today);
+        d.setDate(d.getDate() - i);
+        ovLabels.push(d.toLocaleDateString('ru-RU', {day: 'numeric', month: 'short'}));
+      }
+
+      new Chart(overviewCtx, {
+        type: 'line',
+        data: {
+          labels: ovLabels,
+          datasets: [
+            {
+              label: 'Просмотры',
+              data: {{ overview_views_json|default:"[]" }},
+              borderColor: '#5865f2',
+              backgroundColor: 'rgba(88,101,242,0.1)',
+              fill: true,
+              tension: 0.4,
+              borderWidth: 2,
+              pointRadius: 0,
+              pointHoverRadius: 4,
+            },
+            {
+              label: 'Клики',
+              data: {{ overview_clicks_json|default:"[]" }},
+              borderColor: '#4CAF50',
+              backgroundColor: 'rgba(76,175,80,0.05)',
+              fill: true,
+              tension: 0.4,
+              borderWidth: 2,
+              pointRadius: 0,
+              pointHoverRadius: 4,
+            },
+            {
+              label: 'Показы',
+              data: {{ overview_impressions_json|default:"[]" }},
+              borderColor: '#FF9800',
+              backgroundColor: 'rgba(255,152,0,0.05)',
+              fill: true,
+              tension: 0.4,
+              borderWidth: 2,
+              pointRadius: 0,
+              pointHoverRadius: 4,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: {
+              labels: { color: 'rgba(255,255,255,0.6)', font: { family: 'Inter', size: 12 }, usePointStyle: true, pointStyle: 'circle' }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0,8,25,0.95)',
+              titleColor: '#fff',
+              bodyColor: 'rgba(255,255,255,0.8)',
+              borderColor: 'rgba(255,255,255,0.1)',
+              borderWidth: 1,
+              titleFont: { family: 'Inter' },
+              bodyFont: { family: 'Inter' },
+              padding: 12,
+              cornerRadius: 8
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              ticks: { color: 'rgba(255,255,255,0.3)', font: { family: 'Inter', size: 11 }, maxRotation: 0 }
+            },
+            y: {
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              ticks: { color: 'rgba(255,255,255,0.3)', font: { family: 'Inter', size: 11 } },
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
 
     // ── Source bars ──
     var sources = {{ agg_sources|safe }};
